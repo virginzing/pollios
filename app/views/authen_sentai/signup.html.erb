@@ -1,0 +1,55 @@
+<div class="container">
+
+<form action="/authen/signup_sentai" method="post" enctype="multipart/form-data">
+  <div class="row">
+		<div class="authen-form small-12 large-6 large-offset-3">
+		  <li class="title">Sign Up</li>
+		  <li class="bullet-item">
+		  	<div class="row">
+	        <div class="small-2 columns">
+	          <label for="right-label" class="right inline">Username</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="text" id="right-label" class="left inline" name="username" autofocus>
+	        </div>
+	       	<div class="small-2 columns">
+	          <label for="right-label" class="right inline">Email</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="email" id="right-label" class="left inline" name="email">
+	        </div>
+
+	        <div class="small-2 columns">
+	          <label for="right-label" class="right inline">Password</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="password" id="right-label" class="left inline" name="password">
+	        </div>
+
+	        <div class="small-2 columns">
+	          <label for="right-label" class="right inline">Fullname</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="text" id="right-label" class="left inline" name="fullname">
+	        </div>
+
+	        <div class="small-2 columns">
+	          <label for="right-label" class="right inline">Avatar</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="file" id="right-label" class="left inline" name="avatar">
+	        </div>
+
+
+	        <div class="small-10 columns">
+	        	<div class="link_signin left inline" ><p>If you have account already <%= link_to "(Sign in)", authen_signin_url %></p></div>
+	      	</div>
+	     </div>
+		  </li>
+		  <li class="cta-button"><input type="submit" class="button small" value="Signup"></li>
+		</div>
+  </div>
+</form>
+
+</div>
+

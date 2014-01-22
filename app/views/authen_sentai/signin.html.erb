@@ -1,0 +1,29 @@
+<div class="container">
+<form action="/authen/signin_sentai" method="post">
+  <div class="row">
+		<div class="authen-form small-12 large-6 large-offset-3">
+		  <li class="title">Sign in</li>
+		  <li class="bullet-item">
+		  	<div class="row">
+	        <div class="small-2 columns">
+	          <label for="right-label" class="right inline">Username</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="text" id="right-label" class="left inline" placeholder="username" name="authen" autofocus>
+	        </div>
+	       	<div class="small-2 columns">
+	          <label for="right-label" class="right inline">Password</label>
+	        </div>
+	        <div class="small-10 columns">
+	          <input type="password" id="right-label" class="left inline" placeholder="username" name="password">
+	        </div>
+	        <div class="small-10 columns">
+	        	<div class="link_signup left inline" ><p>Do you have account? <%= link_to "(Sign up)", authen_signup_url %></p></div>
+	      	</div>
+	     </div>
+		  </li>
+		  <li class="cta-button"><input type="submit" class="button small" value="Signin"></li>
+		</div>
+  </div>
+</form>
+</div>

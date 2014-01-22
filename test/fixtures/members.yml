@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  sentai_id: MyString
+  sentai_name: MyString
+  username: MyString
+  avatar: MyString
+  token: MyString
+  email: MyString
+  gender: 1
+
+two:
+  sentai_id: MyString
+  sentai_name: MyString
+  username: MyString
+  avatar: MyString
+  token: MyString
+  email: MyString
+  gender: 1

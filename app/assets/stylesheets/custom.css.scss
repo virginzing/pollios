@@ -1,0 +1,126 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+html, body {
+  width:    100%;
+  height:   100%;         
+  padding:  0;
+  margin:   0;
+  overflow: auto; /* when page gets too small */
+  font-family: 'Open Sans';
+}
+.ng-scope {
+  font-family: 'Open Sans';
+}
+nav.top-bar {
+  font-family: 'Open Sans';
+}
+#container {
+  /*padding-top: 60px;*/
+  height:   100%;
+  margin:   0 auto;
+  width:    100%;
+}
+
+.pane {
+  display:  none; /* will appear when layout inits */
+}
+
+.row {
+  padding-top: 15px;
+}
+
+div.liveview {
+  padding: 30px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  line-height:150%;
+}
+
+img.avatar {
+  margin-top: 20px;
+}
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.img-profile {
+  position: absolute;
+  margin-left: 4px;
+  margin-top: 6px;
+}
+
+.name-profile {
+  margin-left: 25px;
+}
+
+
+.top-bar {
+  margin-bottom: 0px;
+}
+
+.link_signup p {
+  font-size: 11px;
+}
+
+.link_signin p{
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.authen-form {
+  border: solid 1px #dddddd;
+  margin-bottom: 1.25em; }
+  .authen-form * {
+    list-style: none;
+    line-height: 1; }
+  .authen-form .title {
+    background-color: #dddddd;
+    padding: 0.9375em 1.25em;
+    text-align: center;
+    color: #333333;
+    font-weight: bold;
+    font-size: 1em; }
+  .authen-form .price {
+    background-color: #eeeeee;
+    padding: 0.9375em 1.25em;
+    text-align: center;
+    color: #333333;
+    font-weight: normal;
+    font-size: 1.25em; }
+  .authen-form .description {
+    background-color: white;
+    padding: 0.9375em;
+    text-align: center;
+    color: #777777;
+    font-size: 0.75em;
+    font-weight: normal;
+    line-height: 1.4;
+    border-bottom: dotted 1px #dddddd; }
+  .authen-form .bullet-item {
+    background-color: white;
+    padding: 0.9375em;
+    text-align: center;
+    color: #333333;
+    font-size: 0.875em;
+    font-weight: normal;
+    border-bottom: dotted 1px #dddddd; }
+  .authen-form .cta-button {
+    background-color: whitesmoke;
+    text-align: center;
+    padding: 0.8em 1.25em 0; }
+
+
+.header {
+  float: left;
+  margin-bottom: 6px;
+  margin-top: -15px; }
+  .header h1 {
+    color:  dimgray;
+  }
+
+
+.line {
+  border-bottom: 1px solid rgb(248, 248, 248);
+  margin-top: 10px;
+}

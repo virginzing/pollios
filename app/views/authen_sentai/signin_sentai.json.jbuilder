@@ -1,0 +1,1 @@
+json.partial! 'login_response/login'
