@@ -4,6 +4,7 @@ if @friend.present?
 	json.name @friend.sentai_name
 	json.username @friend.username
 	json.avatar @friend.avatar.present? ? @friend.avatar : "No Image"
+  json.friend @current_member.add_friend_already(@friend)
 else
 	json.response_status "ERROR"
 	json.response_message "No found member."

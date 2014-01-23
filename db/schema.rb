@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140122061535) do
+ActiveRecord::Schema.define(version: 20140123102318) do
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
@@ -28,7 +28,10 @@ ActiveRecord::Schema.define(version: 20140122061535) do
     t.integer  "followed_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "status",      default: 0
+    t.boolean  "active"
+    t.boolean  "block",        default: false
+    t.boolean  "mute",         default: false
+    t.boolean  "visible_poll", default: true
   end
 
   add_index "friends", ["followed_id"], name: "index_friends_on_followed_id"
@@ -41,6 +44,8 @@ ActiveRecord::Schema.define(version: 20140122061535) do
     t.boolean  "is_master",  default: true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",     default: true
+    t.integer  "invite_id"
   end
 
   add_index "group_members", ["group_id"], name: "index_group_members_on_group_id"
@@ -61,21 +66,27 @@ ActiveRecord::Schema.define(version: 20140122061535) do
     t.string   "avatar"
     t.string   "token"
     t.string   "email"
-    t.integer  "gender",        default: 0
+    t.integer  "gender",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "public_member", default: true
+    t.boolean  "public_id",    default: true
+    t.boolean  "group_active", default: true
   end
 
   create_table "polls", force: true do |t|
     t.integer  "member_id"
     t.string   "title"
-    t.boolean  "public",     default: false
-    t.integer  "vote_all",   default: 0
+    t.boolean  "public",      default: false
+    t.integer  "vote_all",    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "photo_poll"
+    t.date     "expire_date"
+    t.integer  "view_all",    default: 0
+    t.integer  "group_id"
   end
 
+  add_index "polls", ["group_id"], name: "index_polls_on_group_id"
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"
 
 end
