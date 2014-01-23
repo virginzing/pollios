@@ -1,7 +1,12 @@
 class PollController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member
+  before_action :set_current_member, except: [:index]
+  before_action :signed_user, only: [:index]
+
+  def index
+    
+  end
 
   def create_poll
     @poll = @current_member.create_poll(poll_params)

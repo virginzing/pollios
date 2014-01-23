@@ -36,6 +36,6 @@ Pollios::Application.routes.draw do
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
   end
 
-  root to: 'authen_sentai#signin'
+  root to: 'poll#index'
 
 end

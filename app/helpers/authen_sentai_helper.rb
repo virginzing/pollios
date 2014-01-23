@@ -10,6 +10,7 @@ module AuthenSentaiHelper
 
 	def current_login?
 		if current_member
+			flash[:notice] = "You already signin !"
 			redirect_back_or(root_url)
 		end
 	end

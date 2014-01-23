@@ -12,7 +12,25 @@
   </head>
 
   <body>
-
+    <% flash.each do |key, value| %>
+      <div data-alert class="<%= flash_class(key) %> fade in">
+        <% if value.class == Array %>
+          <dl style="margin-bottom: 0.25em;">
+            <% value.each do |data| %>
+              <li><%= data %></li>
+            <% end %>
+          </dl>
+        <% else %>
+          <%= value %>
+        <% end %>
+        <a href="#" class="close">&times;</a>
+      </div>
+    <% end %>
+  
+    <% if current_member %>
+    <%= current_member.username %> | <%= link_to "Log out", authen_signout_path %>
+    <% end %>
+  
     <%= yield %>
     <%= javascript_include_tag "application" %>
   </body>

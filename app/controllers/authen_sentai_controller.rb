@@ -17,7 +17,7 @@ class AuthenSentaiController < ApplicationController
 		session[:member_id] = nil
 		session[:return_to] = nil
 		flash[:success] = "Signout sucessfully."
-		redirect_to root_url
+		redirect_to authen_signin_path
 	end
 
 	def signin_sentai

@@ -35,3 +35,21 @@ end
 #     "member_id": 1,
 #     "friend_id": [3]
 # }' -X POST http://localhost:3000/group/add_friend_to_group.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": "1",
+#     "title": "ทดสอบระบบครับ",
+#     "expire_date": "3",
+#     "group_id": "17",
+#     "choices": [
+#         "สุดยอดมาก",
+#         "แย่มาก",
+#         "ให้ตายเถอะ"
+#     ]
+# }' -X POST http://localhost:3000/poll/create_poll.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": "1",
+#     "poll_id": "6",
+#     "choice_id": "6"
+# }' -X POST http://localhost:3000/poll/vote_poll.json -i
