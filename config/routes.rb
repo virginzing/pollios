@@ -20,12 +20,14 @@ Pollios::Application.routes.draw do
     post 'deny_group',      to: 'group#deny_group'
     post 'leave_group',     to: 'group#leave_group'
     post 'delete_group',    to: 'group#delete_group'
+    post 'my_group',        to: 'group#my_group'
   end
 
   scope 'poll' do
     get 'polls'       ,     to: 'poll#index', as: :index_poll
     post 'create_poll',     to: 'poll#create_poll'
     post 'vote_poll',       to: 'poll#vote_poll'
+    post 'list_group_poll', to: 'poll#list_group_poll'
   end
 
   scope "authen" do

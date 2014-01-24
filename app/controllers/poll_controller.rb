@@ -8,6 +8,10 @@ class PollController < ApplicationController
     
   end
 
+  def list_group_poll
+    @poll = @current_member.get_poll_friends
+  end
+
   def create_poll
     @poll = @current_member.create_poll(poll_params)
   end

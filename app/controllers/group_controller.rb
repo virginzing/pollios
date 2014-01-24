@@ -3,6 +3,10 @@ class GroupController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_current_member
 
+  def my_group
+    
+  end
+
   def create_group
     @group = @current_member.create_group(create_group_params)
   end

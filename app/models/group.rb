@@ -9,4 +9,10 @@ class Group < ActiveRecord::Base
     return friend_id - find(group_id).group_members.map(&:member_id) if find(group_id).present?
   end
 
+  def cached_created_by
+    Rails.cache.fetch([ self, 'created_by' ]) do
+      group_members.where(is_master: true).first.member.username
+    end
+  end
+
 end

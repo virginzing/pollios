@@ -35,6 +35,7 @@ group :development do
   gem 'sqlite3'
   gem 'thin'
   gem 'quiet_assets'
+  gem 'bullet'
 end
 
 group :production do
@@ -51,6 +52,7 @@ gem 'dalli'
 gem 'memcachier'
 gem 'carrierwave'
 gem 'cloudinary'
+gem 'newrelic_rpm'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

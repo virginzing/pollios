@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   include AuthenSentaiHelper
-
+  include PollHelper
   helper_method :current_member, :signed_in?, :render_to_string
 
   def set_current_member

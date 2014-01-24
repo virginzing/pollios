@@ -14,8 +14,8 @@ class Member < ActiveRecord::Base
   has_many :poll_of_friends, -> { where(active: true, mute: false, visible_poll: true) }, class_name: "Friend", foreign_key: "follower_id"
 
   def get_poll_friends
-    list_friend = poll_of_friends.map(&:followed_id) << id
-    Poll.where(member_id: list_friend)
+    list_friend = poll_of_friends.map(&:followed_id) #<< id
+    Poll.joins(:member).select('polls.*, members.username as member_username').where(member_id: list_friend)
   end
 
   ########### Authen Sentai #############
@@ -202,10 +202,9 @@ class Member < ActiveRecord::Base
     begin
       find_poll = Poll.find(poll_id)
       find_choice = find_poll.choices.where(id: choice_id).first
-      if find_choice && find_poll
-        find_poll.increment!(:vote_all)
-        find_choice.increment!(:vote)
-      end
+      find_poll.increment!(:vote_all)
+      find_choice.increment!(:vote)
+
     rescue => e
       puts "error => #{e}"
       nil

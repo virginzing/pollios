@@ -41,7 +41,7 @@ class FriendsController < ApplicationController
   end
 
   def list_friend
-    @list_friend = @current_member.my_normally_friends
+    @list_friend = @current_member.get_be_friends
   end
 
   private 
