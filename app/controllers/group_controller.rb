@@ -7,16 +7,16 @@ class GroupController < ApplicationController
     
   end
 
-  def create_group
-    @group = @current_member.create_group(create_group_params)
+  def build_group
+    @group =  Group.build_group(group_params)
   end
 
   def add_friend_to_group
-    @group = @current_member.add_friends_to_group(group_params[:friend_id], group_params)
+    @group = Group.add_friend_to_group(group_params)
   end
 
   def accept_group
-    @group = @current_member.accept_group(group_params[:group_id])
+    @group = Group.accept_group(group_params)
   end
 
   def deny_group
@@ -33,11 +33,7 @@ class GroupController < ApplicationController
 
   private
 
-  def create_group_params
-    params.permit(:name, :photo_group, :group_id, :friend_id)
-  end
-
   def group_params
-    params.permit(:name, :photo_group, :group_id, :friend_id => [])
+    params.permit(:name, :photo_group, :group_id, :member_id, :friend_id)
   end
 end

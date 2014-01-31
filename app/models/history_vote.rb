@@ -1,7 +1,6 @@
-class HistoryVote
-  include Mongoid::Document
-  
-  field :member_id, type: Integer
-  field :poll_id, type: Integer
-  field :choice_id, type: Integer
+class HistoryVote < ActiveRecord::Base
+  belongs_to :member
+  belongs_to :poll
+
+  validates :poll_id, :member_id, :choice_id, presence: true
 end

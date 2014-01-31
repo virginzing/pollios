@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140123102318) do
+ActiveRecord::Schema.define(version: 20140131075845) do
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
@@ -28,10 +28,11 @@ ActiveRecord::Schema.define(version: 20140123102318) do
     t.integer  "followed_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active"
+    t.boolean  "active",       default: true
     t.boolean  "block",        default: false
     t.boolean  "mute",         default: false
     t.boolean  "visible_poll", default: true
+    t.integer  "status"
   end
 
   add_index "friends", ["followed_id"], name: "index_friends_on_followed_id"
@@ -44,7 +45,7 @@ ActiveRecord::Schema.define(version: 20140123102318) do
     t.boolean  "is_master",  default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",     default: true
+    t.boolean  "active",     default: false
     t.integer  "invite_id"
   end
 
@@ -59,6 +60,37 @@ ActiveRecord::Schema.define(version: 20140123102318) do
     t.datetime "updated_at"
   end
 
+  create_table "hidden_polls", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "hidden_polls", ["member_id"], name: "index_hidden_polls_on_member_id"
+  add_index "hidden_polls", ["poll_id"], name: "index_hidden_polls_on_poll_id"
+
+  create_table "history_views", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_views", ["member_id"], name: "index_history_views_on_member_id"
+  add_index "history_views", ["poll_id"], name: "index_history_views_on_poll_id"
+
+  create_table "history_votes", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.integer  "choice_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id"
+  add_index "history_votes", ["poll_id"], name: "index_history_votes_on_poll_id"
+
   create_table "members", force: true do |t|
     t.string   "sentai_id"
     t.string   "sentai_name"
@@ -69,9 +101,22 @@ ActiveRecord::Schema.define(version: 20140123102318) do
     t.integer  "gender",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "public_id",    default: true
-    t.boolean  "group_active", default: true
+    t.integer  "friend_limit"
+    t.integer  "friend_count", default: 0
+    t.integer  "member_type",  default: 0
+    t.boolean  "group_active", default: false
+    t.date     "birthday"
   end
+
+  create_table "poll_groups", force: true do |t|
+    t.integer  "poll_id"
+    t.integer  "group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_groups", ["group_id"], name: "index_poll_groups_on_group_id"
+  add_index "poll_groups", ["poll_id"], name: "index_poll_groups_on_poll_id"
 
   create_table "polls", force: true do |t|
     t.integer  "member_id"
@@ -81,12 +126,28 @@ ActiveRecord::Schema.define(version: 20140123102318) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "photo_poll"
-    t.date     "expire_date"
+    t.datetime "expire_date"
     t.integer  "view_all",    default: 0
-    t.integer  "group_id"
+    t.datetime "start_date",  default: '2014-01-29 06:19:55'
   end
 
-  add_index "polls", ["group_id"], name: "index_polls_on_group_id"
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"
+
+  create_table "taggings", force: true do |t|
+    t.integer  "tag_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "taggings", ["poll_id"], name: "index_taggings_on_poll_id"
+  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id"
+
+  create_table "tags", force: true do |t|
+    t.string   "name"
+    t.integer  "tag_count",  default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

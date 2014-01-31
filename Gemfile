@@ -26,6 +26,8 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'foundation-rails'
 
+gem 'enumerize'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -36,6 +38,7 @@ group :development do
   gem 'thin'
   gem 'quiet_assets'
   gem 'bullet'
+  gem 'faker'
 end
 
 group :production do
@@ -53,6 +56,7 @@ gem 'memcachier'
 gem 'carrierwave'
 gem 'cloudinary'
 gem 'newrelic_rpm'
+# gem "squeel" 
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -6,8 +6,13 @@ class ApplicationController < ActionController::Base
   include PollHelper
   helper_method :current_member, :signed_in?, :render_to_string
 
+  def history_voted_viewed
+    @history_voted  = @current_member.history_votes.collect!  { |voted| [voted.poll_id, voted.choice_id] }
+    @history_viewed = @current_member.history_views.collect!  { |viewed| viewed.poll_id }
+  end
+
   def set_current_member
-    @current_member = Member.find(params[:member_id])
+    @current_member = Member.find_by(id: params[:member_id])
     unless @current_member.present?
       respond_to do |format|
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}

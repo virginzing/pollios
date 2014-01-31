@@ -71,7 +71,7 @@ class AuthenSentaiController < ApplicationController
 	  end
 
 	  def update_profile_params
-	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :first_name, :last_name, :app_name, :sentai_id, :fullname)
+	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday)
 	  end
 
 end

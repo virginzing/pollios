@@ -8,7 +8,7 @@ if @login.present?
     json.email @login.email
     json.avatar @login.avatar
     json.member_token @login.token
-    json.public_id @login.public_id
+    json.member_type @login.member_type_text
     json.group_active @login.group_active
   end
 

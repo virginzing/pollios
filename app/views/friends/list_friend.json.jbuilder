@@ -1,13 +1,15 @@
-if @list_friend.nil?
+if @friend_active && @friend_inactive
   json.response_status "OK"
-else
-  json.response_status "OK"
-  json.data @list_friend do |friend|
-    json.friend_id friend.id
-    json.sentai_name friend.sentai_name
-    json.username friend.username
-    json.email friend.email
-    json.avatar friend.avatar.present? ? friend.avatar : "No Image"
+  json.citizen_active do
+    json.array! @friend_active.citizen, partial: 'members/short_detail', as: :friend
   end
+  json.citizen_inactive do
+    json.array! @friend_inactive.citizen, partial: 'members/short_detail', as: :friend
+  end
+  json.celebrity do
+    json.array! @friend_active.celebrity, partial: 'members/short_detail', as: :friend
+  end
+else
+  json.response_status "ERROR"
 end
 
