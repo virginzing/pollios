@@ -45,7 +45,7 @@
             <%= image_tag(current_member.avatar, size: '32x32', class: 'img-profile img-circle') %>
             <a href="#"><div class="name-profile"><%= truncate(current_member.sentai_name, length: 15) %></div></a>
               <ul class="dropdown">
-                <li><%= link_to 'Profile', "#" %></li>
+                <li><%= link_to 'Profile', member_profile_path %></li>
                 <li><%= link_to 'Sign out', authen_signout_url, method: :delete %></li>
               </ul>
             </li>

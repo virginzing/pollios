@@ -4,7 +4,7 @@ Pollios::Application.routes.draw do
     resources :choices
   end
   resources :members 
-  
+
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'
     post 'add_friend' ,     to: 'friends#add_friend'
@@ -32,6 +32,8 @@ Pollios::Application.routes.draw do
 
   scope 'member' do
     get 'detail_friend',   to: 'members#detail_friend'
+    get 'profile',         to: 'members#profile', as: :member_profile
+    get 'clear',           to: 'members#clear', as: :clear_history
   end
 
   scope 'poll' do

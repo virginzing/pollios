@@ -73,10 +73,11 @@ class Poll < ActiveRecord::Base
     member_id = poll[:member_id]
     friend_id = poll[:friend_id]
     buy_poll = poll[:buy_poll]
+    poll_series_id = poll[:poll_series_id]
 
     convert_expire_date = Time.now + expire_date.to_i.days
     set_public = buy_poll || member.celebrity?
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: poll_series_id)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")
