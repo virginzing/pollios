@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140131075845) do
+ActiveRecord::Schema.define(version: 20140203041007) do
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
@@ -118,20 +118,44 @@ ActiveRecord::Schema.define(version: 20140131075845) do
   add_index "poll_groups", ["group_id"], name: "index_poll_groups_on_group_id"
   add_index "poll_groups", ["poll_id"], name: "index_poll_groups_on_poll_id"
 
+  create_table "poll_members", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.integer  "share_poll_of_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_members", ["member_id"], name: "index_poll_members_on_member_id"
+  add_index "poll_members", ["poll_id"], name: "index_poll_members_on_poll_id"
+
+  create_table "poll_series", force: true do |t|
+    t.integer  "member_id"
+    t.text     "description"
+    t.integer  "number_of_poll"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id"
+
   create_table "polls", force: true do |t|
     t.integer  "member_id"
     t.string   "title"
-    t.boolean  "public",      default: false
-    t.integer  "vote_all",    default: 0
+    t.boolean  "public",         default: false
+    t.integer  "vote_all",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "photo_poll"
     t.datetime "expire_date"
-    t.integer  "view_all",    default: 0
-    t.datetime "start_date",  default: '2014-01-29 06:19:55'
+    t.integer  "view_all",       default: 0
+    t.datetime "start_date",     default: '2014-01-29 06:19:55'
+    t.boolean  "series",         default: false
+    t.integer  "poll_series_id"
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"
+  add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id"
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

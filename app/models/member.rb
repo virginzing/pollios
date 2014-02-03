@@ -92,13 +92,14 @@ class Member < ActiveRecord::Base
       member.save
     end
     
-    member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, token: token) unless member.new_record?
+    member.update_attributes!(username: username,sentai_name: sentai_fullname, avatar: avatar, token: token) unless member.new_record?
     return member
   end
 
   def self.update_profile(response)
     sentai_name = response["name"]
     sentai_fullname = response["fullname"]
+    username = response["username"]
     sentai_id = response["sentai_id"]
     email = response["email"]
     avatar = response["avatar_thumbnail"]
@@ -106,7 +107,7 @@ class Member < ActiveRecord::Base
     
     find_member = where(sentai_id: sentai_id.to_s).first
     if find_member.present? 
-      find_member.update_attributes(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday)
+      find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday, username: username)
       return find_member
     end
   end

@@ -1,2 +1,35 @@
-<h1>Poll#index</h1>
-<p>Find me in app/views/poll/index.html.erb</p>
+<ul class="breadcrumbs">
+  <li><a href="#">Home</a></li>
+  <li class="current"><a href="#">Poll</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th width="50">#</th>
+      <th width="400">Title</th>
+      <th>Vote All</th>
+      <th>View All</th>
+      <th width="150">Expire At</th>
+      <th width="200">Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @polls.each do |poll| %>
+      <tr>
+        <td><%= link_to poll.id, poll_choices_path(poll.id) %></td>
+        <td><%= poll.title %></td>
+        <td><%= poll.vote_all %></td>
+        <td><%= poll.view_all %></td>
+        <td><%= time_ago_in_words(poll.expire_date) %></td>
+        <td><%= poll.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="pagination-centered">
+    <%= will_paginate @polls, renderer: FoundationPagination::Rails %>
+  </div>
+</div>

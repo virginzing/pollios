@@ -1,5 +1,9 @@
 Pollios::Application.routes.draw do
 
+  resources :polls do
+    resources :choices
+  end
+
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'
     post 'add_friend' ,     to: 'friends#add_friend'
@@ -41,7 +45,7 @@ Pollios::Application.routes.draw do
   scope "authen" do
     get 'signin',           to: 'authen_sentai#signin', as: :authen_signin
     get 'signup',           to: 'authen_sentai#signup', as: :authen_signup
-    get 'signout',          to: 'authen_sentai#signout', as: :authen_signout
+    delete 'signout',          to: 'authen_sentai#signout', as: :authen_signout
     post 'signin_sentai',   to: 'authen_sentai#signin_sentai'
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
     post 'update_sentai',   to: 'authen_sentai#update_sentai'

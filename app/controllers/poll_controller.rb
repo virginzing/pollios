@@ -4,9 +4,13 @@ class PollController < ApplicationController
   before_action :set_current_member, except: [:index]
   before_action :signed_user, only: [:index]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
-
+  before_action :set_poll, only: [:show]
   def index
-    
+    @polls = @current_member.polls.paginate(page: params[:page])
+  end
+
+  def show
+    puts params[:id]
   end
 
   def public_poll
@@ -31,6 +35,10 @@ class PollController < ApplicationController
   end
 
   private
+
+  def set_poll
+    @poll = Poll.find(params[:id])
+  end
 
   def vote_params
     params.permit(:poll_id, :choice_id, :member_id)

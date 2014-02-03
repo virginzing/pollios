@@ -6,6 +6,13 @@ module ApplicationHelper
           when :error then "alert-box alert"
       end
   end
+
+  def active_class(name)
+    if controller_name == name
+      'active'
+    end
+  end
+  
 end
 
 
@@ -40,10 +47,10 @@ end
 # # }' -X POST http://localhost:3000/group/add_friend_to_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": "1",
-#     "title": "คิดว่าใครเป็น Batman ที่ดีที่สุด (เฉพาะที่เป็นคนแสดง ไม่นับการ์ตูน)",
+#     "member_id": "1", 
+#     "title": "ชอบหนังเรื่องไหนมากกว่ากัน ?",
 #     "expire_date": "1",
-#     "choices": "Christian Bale, Christian Bale, Christian Bale, Christian Bale"
+#     "choices": "Bruno, Bruno!!"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{

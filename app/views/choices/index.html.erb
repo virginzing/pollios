@@ -1,0 +1,26 @@
+<ul class="breadcrumbs">
+  <li><a href="<%= root_url %>">Home</a></li>
+  <li><a href="<%= root_url %>"><%= @poll.title %></a></li>
+  <li class="current"><a href="#"></a>Choices</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th width="50">#</th>
+      <th width="700">Answer</th>
+      <th>Vote</th>
+      <th width="150">Updated at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @choices.each do |choice| %>
+      <tr>
+        <td><%= choice.id %></td>
+        <td><%= choice.answer %></td>
+        <td><%= choice.vote %></td>
+        <td><%= time_ago_in_words(choice.updated_at) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

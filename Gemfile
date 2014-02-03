@@ -56,6 +56,7 @@ gem 'memcachier'
 gem 'carrierwave'
 gem 'cloudinary'
 gem 'newrelic_rpm'
+gem 'will_paginate-foundation'
 # gem "squeel" 
 
 # Use ActiveModel has_secure_password

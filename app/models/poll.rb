@@ -17,6 +17,8 @@ class Poll < ActiveRecord::Base
 
   default_scope { order("created_at desc").limit(10) }
 
+  self.per_page = 20
+
   validates :member_id, :title , presence: true
 
   def self.get_public_poll(member, option = {})

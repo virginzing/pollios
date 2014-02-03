@@ -12,6 +12,41 @@
   </head>
 
   <body>
+  <div class="">
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+        <!-- Title Area -->
+        <li class="name">
+          <h1><a href="<%= root_url %>">Pollios</a></h1>
+        </li>
+        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="divider hide-for-small"></li>
+          <% if signed_in? %>
+            <li class="<%= active_class("poll") %>"><a href="<%= index_poll_path %>">My Poll</a></li>
+            <li class="divider"></li>
+            <li class="has-dropdown <%= active_class("profile") %>">
+            <%= image_tag(current_member.avatar, size: '32x32', class: 'img-profile img-circle') %>
+            <a href="#"><div class="name-profile"><%= truncate(current_member.sentai_name, length: 15) %></div></a>
+              <ul class="dropdown">
+                <li><%= link_to 'Profile', "#" %></li>
+                <li><%= link_to 'Sign out', authen_signout_url, method: :delete %></li>
+              </ul>
+            </li>
+            <% else %>
+            <li><%= link_to 'Sign in', authen_signin_url %></li>
+          <% end %>
+        </ul>
+      </section>
+    </nav>
+  </div>
+
     <% flash.each do |key, value| %>
       <div data-alert class="<%= flash_class(key) %> fade in">
         <% if value.class == Array %>
@@ -27,11 +62,10 @@
       </div>
     <% end %>
   
-    <% if current_member %>
-    <%= current_member.username %> | <%= link_to "Log out", authen_signout_path %>
-    <% end %>
-  
-    <%= yield %>
+    <div class="row">
+      <div class="large-12 columns"><%= yield %></div>
+    </div>
+
     <%= javascript_include_tag "application" %>
   </body>
 </html>
