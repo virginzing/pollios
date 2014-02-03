@@ -3,20 +3,25 @@ class PollsController < ApplicationController
   before_action :set_current_member, only: [:qrcode, :public_poll, :group_poll, :vote_poll, :view_poll]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
-  before_action :set_poll, only: [:show]
-
+  before_action :set_poll, only: [:show, :destroy]
+  before_action :compress_gzip, only: [:public_poll]
+  
   def new
     @poll = Poll.new
   end
 
   def index
-    @polls = @current_member.polls.paginate(page: params[:page])
+    @polls = Poll.where(member_id: current_member.id).paginate(page: params[:page])
   end
 
   def create
     params[:poll][:member_id] = current_member.id
     params[:poll][:expire_date] = Time.now + params[:expire_date].to_i.days
+    params[:poll][:public] = false
+    params[:poll][:public] = true if current_member.celebrity?
     @poll = Poll.new(polls_params)
+
+
     if @poll.save
       current_member.poll_members.create!(poll_id: @poll.id)
       puts "success"
@@ -44,8 +49,13 @@ class PollsController < ApplicationController
     puts "version => #{derived_version}"
     if derived_version >= 2
       friend_list = @current_member.poll_of_friends.map(&:followed_id) << @current_member.id
+      if params[:type] == "active"
+      @poll = Poll.active_poll.joins(:poll_members).includes(:poll_series, :member, :choices)
+                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+      else
       @poll = Poll.joins(:poll_members).includes(:poll_series, :member, :choices)
                   .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+      end
     end
   end
 
@@ -66,6 +76,12 @@ class PollsController < ApplicationController
     @poll = Poll.view_poll(vote_params)
   end
 
+  def destroy
+    @poll.destroy
+    flash[:notice] = "Destroy successfully."
+    redirect_to root_url
+  end
+
   private
 
   def set_poll
@@ -81,6 +97,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:member_id, :title, :expire_date, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:member_id, :title, :expire_date, :public, choices_attributes: [:id, :answer, :_destroy])
   end
 end

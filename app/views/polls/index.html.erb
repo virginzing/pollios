@@ -12,6 +12,7 @@
       <th>View All</th>
       <th width="150">Expire At</th>
       <th width="200">Created At</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -23,6 +24,7 @@
         <td><%= poll.view_all %></td>
         <td><%= time_ago_in_words(poll.expire_date) %></td>
         <td><%= poll.created_at %></td>
+        <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
