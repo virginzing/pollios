@@ -51,3 +51,5 @@ if @poll
 
   end
 end
+
+# PollMember.where(poll_id: 6).first.destroy

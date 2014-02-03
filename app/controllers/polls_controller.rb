@@ -16,11 +16,10 @@ class PollsController < ApplicationController
 
   def create
     params[:poll][:member_id] = current_member.id
-    params[:poll][:expire_date] = Time.now + params[:expire_date].to_i.days
+    params[:poll][:expire_date] = Time.now + params[:poll][:expire_date].to_i.days
     params[:poll][:public] = false
     params[:poll][:public] = true if current_member.celebrity?
     @poll = Poll.new(polls_params)
-
 
     if @poll.save
       current_member.poll_members.create!(poll_id: @poll.id)
