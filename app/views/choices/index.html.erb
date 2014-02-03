@@ -11,6 +11,7 @@
       <th width="700">Answer</th>
       <th>Vote</th>
       <th width="150">Updated at</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -20,6 +21,7 @@
         <td><%= choice.answer %></td>
         <td><%= choice.vote %></td>
         <td><%= time_ago_in_words(choice.updated_at) %></td>
+        <td><%= link_to 'Edit', edit_poll_choice_path(params[:poll_id],choice) %></td>
       </tr>
     <% end %>
   </tbody>

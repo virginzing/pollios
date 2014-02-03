@@ -1,0 +1,6 @@
+<h3>Choice : <%= @choice.answer %></h3>
+
+<%= form_for @choice, url: :poll_choice, method: :put do |f| %>
+  <%= f.number_field :vote %>
+  <%= f.submit %>
+<% end %>
