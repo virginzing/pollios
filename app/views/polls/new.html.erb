@@ -1,0 +1,18 @@
+<script type="text/javascript" src="/javascripts/nested_form.js"></script>
+
+<%= nested_form_for @poll do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <select name="poll[expire_date]">
+    <option value="">Select expire day</option>
+    <option value="1">1 day</option>
+    <option value="2">2 day</option>
+    <option value="3">5 day</option>
+  </select>
+  <%= f.fields_for :choices do |choice| %>
+      <%= choice.text_field :answer %>
+      <%= choice.link_to_remove "Remove" %>
+  <% end %>
+  <p><%= f.link_to_add "Add choice", :choices %></p>
+  <%= f.submit class: 'button' %>
+<% end %>

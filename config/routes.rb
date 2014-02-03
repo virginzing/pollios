@@ -30,16 +30,17 @@ Pollios::Application.routes.draw do
   end
 
   scope 'member' do
-    post 'detail_friend',   to: 'members#detail_friend'
+    get 'detail_friend',   to: 'members#detail_friend'
   end
 
   scope 'poll' do
-    get 'polls',            to: 'poll#index', as: :index_poll
-    post 'create',          to: 'poll#create_poll'
-    post 'vote',            to: 'poll#vote_poll'
-    post 'view',            to: 'poll#view_poll'
-    post 'public',          to: 'poll#public_poll'
-    post 'group',           to: 'poll#group_poll'
+    get 'series',           to: 'polls#series',  as: :series_poll
+    post 'create',          to: 'polls#create_poll'
+    post 'vote',            to: 'polls#vote_poll'
+    post 'view',            to: 'polls#view_poll'
+    get 'public_timeline',  to: 'polls#public_poll'
+    post 'group',           to: 'polls#group_poll'
+    get 'qrcode',           to: 'polls#qrcode'
   end
 
   scope "authen" do
@@ -51,6 +52,6 @@ Pollios::Application.routes.draw do
     post 'update_sentai',   to: 'authen_sentai#update_sentai'
   end
 
-  root to: 'poll#index'
+  root to: 'polls#index'
 
 end

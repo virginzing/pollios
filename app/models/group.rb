@@ -49,7 +49,7 @@ class Group < ActiveRecord::Base
   def self.add_friend_to_group(group, option = {})
     member_id   = option[:member_id] || group[:member_id]
     list_friend = option[:friend_id] || group[:friend_id].split(",")
-    group_id = group || group[:group_id]
+    group_id =  group[:group_id] || group
 
     check_valid_friend = friend_exist_group(list_friend, group_id)
 
@@ -62,6 +62,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.friend_exist_group(list_friend, group_id)
+    puts "group id => #{group_id}"
     return list_friend - find(group_id).group_members.map(&:member_id) if find(group_id).present?
   end
 
@@ -70,7 +71,7 @@ class Group < ActiveRecord::Base
   def self.add_poll(poll_id, group_id)
     list_group = group_id.split(",")
     where(id: list_group).each do |group|
-      group.polls.create!(poll_id: poll_id)
+      group.poll_groups.create!(poll_id: poll_id)
     end
   end
 

@@ -1,0 +1,41 @@
+<ul class="breadcrumbs">
+  <li><a href="#">Home</a></li>
+  <li class="current"><a href="#">Series Poll</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th width="50">#</th>
+      <th width="400">Description</th>
+      <th>Vote All</th>
+      <th>View All</th>
+      <th width="150">Expire At</th>
+      <th width="200">Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @series.each do |series| %>
+      <tr>
+        <td><%= link_to series.id, "#" %></td>
+        <td><%= series.description %></td>
+        <td><%= series.vote_all %></td>
+        <td><%= series.view_all %></td>
+        <td><%= time_ago_in_words(series.expire_date) %></td>
+        <td><%= series.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% unless @series.count > 0 %>
+  <div data-alert class="alert-box">
+    No have series poll yet.
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="pagination-centered">
+    <%= will_paginate @series, renderer: FoundationPagination::Rails %>
+  </div>
+</div>

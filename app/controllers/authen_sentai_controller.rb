@@ -27,7 +27,7 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
 			if @login.present?
 				session[:member_id] = @login.id
-				wants.html { redirect_to index_poll_path }
+				wants.html { redirect_to polls_path }
 				wants.json
 			else
 				flash[:error] = "Invalid username or password."

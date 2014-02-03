@@ -1,14 +1,20 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
 
+
   has_many :choices, dependent: :destroy
   has_many :taggings
   has_many :tags, through: :taggings, source: :tag
 
+
   belongs_to :member
+  belongs_to :poll_series
 
   has_many :poll_groups, dependent: :destroy
   has_many :groups, through: :poll_groups, source: :group
+
+  has_many :poll_members, dependent: :destroy
+  has_many :members, through: :poll_members, source: :member
 
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
@@ -16,6 +22,8 @@ class Poll < ActiveRecord::Base
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
   default_scope { order("created_at desc").limit(10) }
+
+  accepts_nested_attributes_for :choices, :allow_destroy => true
 
   self.per_page = 20
 
@@ -44,6 +52,10 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def find_poll_series(member_id, series_id)
+    Poll.includes(:choices).where(member_id: member_id, poll_series_id: series_id).order("id asc")
+  end
+
   def self.get_group_poll(member, option = {})
     list_group = member.groups.map(&:id)
     if option[:next_poll]
@@ -69,8 +81,13 @@ class Poll < ActiveRecord::Base
     if @poll.valid? && choices
       list_choice = choices.split(",")
       @choices = Choice.create_choices(@poll.id ,list_choice)
-      unless @choices.present?
-        Group.add_poll(@poll.id, group_id) if group_id
+
+      if @choices.present?
+        if group_id
+          Group.add_poll(@poll.id, group_id)
+        else
+          @poll.poll_members.create!(member_id: member_id)
+        end
       end
     end
     @poll

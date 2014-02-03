@@ -19,6 +19,9 @@ module Pollios
 
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
 
+    config.default_version = 1
+    config.view_versions = (1...3)
+
     config.generators do |g| 
         g.orm :active_record 
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140203041007) do
+ActiveRecord::Schema.define(version: 20140203064511) do
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
@@ -135,6 +135,10 @@ ActiveRecord::Schema.define(version: 20140203041007) do
     t.integer  "number_of_poll"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "vote_all",       default: 0
+    t.integer  "view_all",       default: 0
+    t.datetime "expire_date"
+    t.datetime "start_date",     default: '2014-02-03 06:45:53'
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id"

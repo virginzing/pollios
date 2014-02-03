@@ -1,4 +1,14 @@
 GIT
+  remote: git://github.com/bwillis/versioncake.git
+  revision: 2abb6c58847691da609dd9e34a53809f07ea2e02
+  specs:
+    versioncake (1.3.0)
+      actionpack (>= 3.2)
+      activesupport (>= 3.2)
+      railties (>= 3.2)
+      tzinfo
+
+GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: a6903b74a97254affe72cb0758ecc40d521f9288
   specs:
@@ -69,6 +79,9 @@ GEM
     foundation-rails (5.0.2.0)
       railties (>= 3.1.0)
       sass (>= 3.2.0)
+    foundation_rails_helper (0.4)
+      actionpack (>= 3.0)
+      railties (>= 3.0)
     hike (1.2.3)
     i18n (0.6.9)
     jbuilder (1.5.3)
@@ -90,6 +103,7 @@ GEM
       bson (~> 2.0.0.rc3)
       optionable (~> 0.1.1)
     multi_json (1.8.4)
+    nested_form (0.3.2)
     newrelic_rpm (3.6.6.147)
     optionable (0.1.1)
     origin (2.1.0)
@@ -177,11 +191,13 @@ DEPENDENCIES
   enumerize
   faker
   foundation-rails
+  foundation_rails_helper
   jbuilder (~> 1.2)
   jquery-rails
   memcachier
   mongoid!
   mongoid_auto_increment_id (= 0.6.3)
+  nested_form
   newrelic_rpm
   pg (= 0.17.0)
   quiet_assets
@@ -194,4 +210,5 @@ DEPENDENCIES
   thin
   turbolinks
   uglifier (>= 1.3.0)
+  versioncake!
   will_paginate-foundation

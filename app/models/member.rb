@@ -1,8 +1,6 @@
 class Member < ActiveRecord::Base
   include MemberHelper
   
-  has_many :polls, dependent: :destroy
-
   has_many :hidden_polls, dependent: :destroy
 
   has_many :history_views, dependent: :destroy
@@ -32,6 +30,10 @@ class Member < ActiveRecord::Base
 
   has_many :poll_of_friends, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
   
+  has_many :poll_members, dependent: :destroy
+  has_many :polls, through: :poll_members, source: :poll
+
+  has_many :poll_series
   before_create :set_friend_limit
 
   scope :citizen,   -> { where(member_type: 0).order("username desc") }
