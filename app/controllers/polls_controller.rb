@@ -1,11 +1,11 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:qrcode, :public_poll, :group_poll, :vote_poll, :view_poll]
+  before_action :set_current_member, only: [:create_poll, :qrcode, :public_poll, :group_poll, :vote_poll, :view_poll]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
   before_action :set_poll, only: [:show, :destroy]
   before_action :compress_gzip, only: [:public_poll]
-  
+
   def new
     @poll = Poll.new
   end
@@ -51,6 +51,9 @@ class PollsController < ApplicationController
       friend_list = @current_member.poll_of_friends.map(&:followed_id) << @current_member.id
       if params[:type] == "active"
       @poll = Poll.active_poll.joins(:poll_members).includes(:poll_series, :member, :choices)
+                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+      elsif params[:type] == "inactive"
+      @poll = Poll.inactive_poll.joins(:poll_members).includes(:poll_series, :member, :choices)
                   .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
       else
       @poll = Poll.joins(:poll_members).includes(:poll_series, :member, :choices)

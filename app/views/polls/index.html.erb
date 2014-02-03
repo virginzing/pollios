@@ -7,10 +7,10 @@
   <thead>
     <tr>
       <th width="50">#</th>
-      <th width="400">Title</th>
+      <th width="350">Title</th>
       <th>Vote All</th>
       <th>View All</th>
-      <th width="150">Expire At</th>
+      <th width="200">Expire At</th>
       <th width="200">Created At</th>
       <th></th>
     </tr>
@@ -22,8 +22,8 @@
         <td><%= poll.title %></td>
         <td><%= poll.vote_all %></td>
         <td><%= poll.view_all %></td>
-        <td><%= time_ago_in_words(poll.expire_date) %></td>
-        <td><%= poll.created_at %></td>
+        <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
+        <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
         <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
