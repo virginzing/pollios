@@ -3,7 +3,8 @@ Pollios::Application.routes.draw do
   resources :polls do
     resources :choices
   end
-
+  resources :members 
+  
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'
     post 'add_friend' ,     to: 'friends#add_friend'

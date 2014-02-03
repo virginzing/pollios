@@ -1,0 +1,26 @@
+<h1>Members</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th width="50">#</th>
+      <th>Sentai ID</th>
+      <th width="400">Name</th>
+      <th width="200">Username</th>
+      <th>Type</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @members.each do |member| %>
+      <tr>
+        <td><%= member.id %></td>
+        <td><%= member.sentai_id %></td>
+        <td><%= member.sentai_name %></td>
+        <td><%= member.username %></td>
+        <td><%= member.member_type_text %></td>
+        <td><%= time_ago_in_words(member.created_at) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
