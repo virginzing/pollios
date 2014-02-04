@@ -22,3 +22,13 @@
 
 
 # PollMember.select("poll_id").where("member_id = ? OR member_id IN (?)", 1, [2, 3]).group.order("poll_id asc")
+
+# @series = PollSeries.create!(member_id: 8, description: "แบบสำรวจความพึงพอใจการให้บริการในการจัดโครงการสัมมนาผู้รับผิดชอบด้านพลังงาน", vote_all: 0, view_all: 0, expire_date: Time.now + 2.days)
+
+# @polls = @series.polls.create!(title: "คุณชอบตัวละครตัวไหนมากที่สุด")
+# @polls.choices.create!(answer: "จิโทเกะ")
+
+
+
+
+# Member.last.update_attribute(member_type: 1)

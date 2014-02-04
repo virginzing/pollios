@@ -21,7 +21,7 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  default_scope { order("created_at desc").limit(10) }
+  default_scope { order("created_at desc").limit(100) }
 
   accepts_nested_attributes_for :choices, :allow_destroy => true
 
@@ -74,10 +74,10 @@ class Poll < ActiveRecord::Base
     friend_id = poll[:friend_id]
     buy_poll = poll[:buy_poll]
     poll_series_id = poll[:poll_series_id]
-
+    series = poll[:series]
     convert_expire_date = Time.now + expire_date.to_i.days
     set_public = buy_poll || member.celebrity?
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: poll_series_id)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: poll_series_id, series: series)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")

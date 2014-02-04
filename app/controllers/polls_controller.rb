@@ -95,7 +95,7 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id)
+    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series)
   end
 
   def polls_params

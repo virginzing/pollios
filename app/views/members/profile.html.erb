@@ -1,1 +1,8 @@
 <%= link_to "Clear History", clear_history_path, method: :get, data: { confirm: "Are you sure?"}, class: "button" %>
+
+<h3>Friend</h3>
+<ol>
+<% current_member.get_friend_active.each do |friend| %>
+  <li><%= friend.sentai_name %></li>
+<% end %>
+</ol>
