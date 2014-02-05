@@ -1,6 +1,6 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
-
+  attr_reader :poll
 
   has_many :choices, dependent: :destroy
   has_many :taggings
@@ -96,7 +96,7 @@ class Poll < ActiveRecord::Base
 
   def self.vote_poll(poll)
     member_id = poll[:member_id]
-    poll_id = poll[:poll_id]
+    poll_id = poll[:id]
     choice_id = poll[:choice_id]
   
     begin
@@ -118,15 +118,13 @@ class Poll < ActiveRecord::Base
 
   def self.view_poll(poll)
     member_id = poll[:member_id]
-    poll_id = poll[:poll_id]
+    poll_id = poll[:id]
 
-    HistoryView.where(member_id: member_id, poll_id: poll_id).first_or_initialize.tap do |history|
-      history.member_id = member_id
-      history.poll_id = poll_id
-      history.save!
-
-      find(poll_id).increment!(:view_all) if find(poll_id).present?
+    unless HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
+      HistoryView.create!(member_id: member_id, poll_id: poll_id)
+      find(poll_id).increment!(:view_all)
     end
+
   end
-  
+
 end

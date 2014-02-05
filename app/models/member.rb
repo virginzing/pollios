@@ -59,15 +59,6 @@ class Member < ActiveRecord::Base
     history_viewed.include?(poll_id)
   end
 
-  def voted?(poll_id)
-    history_voted = history_votes.where(poll_id: poll_id).first
-    if history_voted.present?
-      Hash["voted" => true, "choice_id" => history_voted.choice_id]
-    else
-      Hash["voted" => false]
-    end
-  end
-
   def viewed?(poll_id)
     find_viewed = history_views.where(poll_id: poll_id).first
     find_viewed.present?

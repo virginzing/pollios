@@ -44,7 +44,9 @@ Pollios::Application.routes.draw do
     get 'public_timeline',  to: 'polls#public_poll'
     post 'group',           to: 'polls#group_poll'
     get 'qrcode',           to: 'polls#qrcode'
-    get ':id/choices',      to: 'polls#choices'
+    get   ':id/choices',      to: 'polls#choices'
+    post  ':id/vote',         to: 'polls#vote'
+    post  ':id/view',         to: 'polls#view'
   end
 
 
