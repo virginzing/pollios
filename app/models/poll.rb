@@ -30,7 +30,7 @@ class Poll < ActiveRecord::Base
   validates :member_id, :title , presence: true
 
   def self.get_public_poll(member, option = {})
-    list_friend = member.poll_of_friends.map(&:followed_id) << member.id
+    list_friend = member.whitish_friend.map(&:followed_id) << member.id
     query_poll = Poll.includes(:member, :choices).where("member_id IN (?) OR public = ?", list_friend, true)
 
     if option[:next_poll]
@@ -53,7 +53,7 @@ class Poll < ActiveRecord::Base
   end
 
   def find_poll_series(member_id, series_id)
-    Poll.includes(:choices).where(member_id: member_id, poll_series_id: series_id).order("id asc")
+    Poll.where(member_id: member_id, poll_series_id: series_id).order("id asc")
   end
 
   def self.get_group_poll(member, option = {})

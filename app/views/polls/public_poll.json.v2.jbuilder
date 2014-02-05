@@ -26,10 +26,10 @@ if @poll
             json.expire_date poll.expire_date.to_i
             
             json.list_choices poll.choices do |choice|
-            json.choice_id choice.id
-            json.answer choice.answer
-            json.vote choice.vote if @current_member.list_voted?(@history_voted, poll.id)["voted"] || poll.expire_date < Time.now
-          end
+              json.choice_id choice.id
+              json.answer choice.answer
+              json.vote choice.vote if @current_member.list_voted?(@history_voted, poll.id)["voted"] || poll.expire_date < Time.now
+            end
           end
         end
       else
@@ -51,5 +51,3 @@ if @poll
 
   end
 end
-
-# PollMember.where(poll_id: 6).first.destroy

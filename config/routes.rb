@@ -44,7 +44,9 @@ Pollios::Application.routes.draw do
     get 'public_timeline',  to: 'polls#public_poll'
     post 'group',           to: 'polls#group_poll'
     get 'qrcode',           to: 'polls#qrcode'
+    get ':id/choices',      to: 'polls#choices'
   end
+
 
   scope "authen" do
     get 'signin',           to: 'authen_sentai#signin', as: :authen_signin

@@ -28,7 +28,7 @@ class Member < ActiveRecord::Base
   has_many :friend_request, -> { where(status: 2, active: true) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_request, through: :friend_request, source: :followed
 
-  has_many :poll_of_friends, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
+  has_many :whitish_friend, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
   
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll

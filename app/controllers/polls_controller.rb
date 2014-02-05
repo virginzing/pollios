@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   before_action :set_current_member, only: [:create_poll, :qrcode, :public_poll, :group_poll, :vote_poll, :view_poll]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
-  before_action :set_poll, only: [:show, :destroy]
+  before_action :set_poll, only: [:show, :destroy, :choices]
   before_action :compress_gzip, only: [:public_poll]
 
   def new
@@ -43,21 +43,28 @@ class PollsController < ApplicationController
     @poll = Poll.find_by(id: params[:poll_id])
   end
 
+  def choices
+    @choices = Choice.query_choices(choices_params)
+  end
+
   def public_poll
-    @poll = Poll.get_public_poll(@current_member, { next_poll: params[:next_poll], type: params[:type]})
     puts "version => #{derived_version}"
-    if derived_version >= 2
-      friend_list = @current_member.poll_of_friends.map(&:followed_id) << @current_member.id
+    if derived_version == 1
+      @poll = Poll.get_public_poll(@current_member, { next_poll: params[:next_poll], type: params[:type]})
+    else derived_version >= 2
+      friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
       if params[:type] == "active"
-      @poll = Poll.active_poll.joins(:poll_members).includes(:poll_series, :member, :choices)
-                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+        query_poll = Poll.active_poll
       elsif params[:type] == "inactive"
-      @poll = Poll.inactive_poll.joins(:poll_members).includes(:poll_series, :member, :choices)
-                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+        query_poll = Poll.inactive_poll
       else
-      @poll = Poll.joins(:poll_members).includes(:poll_series, :member, :choices)
-                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+        query_poll = Poll.all
       end
+      
+      @poll_series = query_poll.where(series: true).joins(:poll_members).includes(:poll_series, :member)
+                    .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+      @poll_nonseries = query_poll.where(series: false).joins(:poll_members).includes(:poll_series, :member)
+                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
     end
   end
 
@@ -88,6 +95,10 @@ class PollsController < ApplicationController
 
   def set_poll
     @poll = Poll.find(params[:id])
+  end
+
+  def choices_params
+    params.permit(:id, :member_id, :voted)
   end
 
   def vote_params
