@@ -9,7 +9,7 @@ if @poll_series || @poll_nonseries
       json.avatar poll.member.avatar.present? ? poll.member.avatar : "No Image"
     end
 
-    json.series_poll do
+    json.list_of_poll do
       json.id poll.poll_series_id
       json.vote_count poll.poll_series.vote_all
       json.view_count poll.poll_series.view_all
@@ -17,8 +17,9 @@ if @poll_series || @poll_nonseries
       json.created_at poll.poll_series.created_at.strftime("%B #{poll.created_at.day.ordinalize}, %Y")
       json.title poll.poll_series.description
       json.choice_count poll.choice_count
+      json.series poll.series
 
-      json.list_poll poll.find_poll_series(poll.member_id, poll.poll_series_id) do |poll|
+      json.poll poll.find_poll_series(poll.member_id, poll.poll_series_id) do |poll|
         json.id poll.id
         json.title poll.title
         json.vote_count poll.vote_all
@@ -47,7 +48,9 @@ if @poll_series || @poll_nonseries
       json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
       json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       json.choice_count poll.choice_count
+      json.series poll.series
     end
   end
+  json.next_cursor @next_cursor
 
 end

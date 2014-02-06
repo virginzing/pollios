@@ -15,7 +15,7 @@ Pollios::Application.routes.draw do
     post 'accept',          to: 'friends#accept_friend'
     post 'deny',            to: 'friends#deny_friend'
     post 'unfriend',        to: 'friends#unfriend'
-    post 'all',             to: 'friends#list_friend'
+    get 'all',              to: 'friends#list_friend'
     post 'request',         to: 'friends#list_request'
     post 'search',          to: 'friends#search_friend'
   end

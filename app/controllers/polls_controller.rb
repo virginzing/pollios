@@ -21,6 +21,7 @@ class PollsController < ApplicationController
     params[:poll][:expire_date] = Time.now + params[:poll][:expire_date].to_i.days
     params[:poll][:public] = false
     params[:poll][:public] = true if current_member.celebrity?
+    params[:poll][:choice_count] = params[:poll][:choices_attributes].keys.count
     @poll = Poll.new(polls_params)
 
     if @poll.save
@@ -71,6 +72,7 @@ class PollsController < ApplicationController
                     .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
 
     else
+      friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
       if params[:type] == "active"
         query_poll = Poll.active_poll
       elsif params[:type] == "inactive"
@@ -79,10 +81,18 @@ class PollsController < ApplicationController
         query_poll = Poll.all
       end
 
-      @poll_series = query_poll.where(series: true).joins(:poll_members).includes(:poll_series, :member)
-                    .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
-      @poll_nonseries = query_poll.where(series: false).joins(:poll_members).includes(:poll_series, :member)
-                  .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+      if params[:since_id]
+        @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+                          .where("poll_members.id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:since_id], friend_list, true)
+                          .order("poll_members.created_at desc")
+      else
+        @poll = query_poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
+                          .order("poll_members.created_at desc")
+      end
+
+      @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll, @current_member.id)
+      puts "series => #{@poll_series.map(&:id)}"
+      puts "nonseries => #{@poll_nonseries.map(&:id)}"
     end
   end
 
@@ -130,7 +140,7 @@ class PollsController < ApplicationController
   end
 
   def view_and_vote_params
-    params.permit(:id, :member_id, :choice_id, :series)
+    params.permit(:id, :member_id, :choice_id)
   end
 
   def vote_params
@@ -142,6 +152,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:member_id, :title, :expire_date, :public, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:member_id, :title, :expire_date, :public, :choice_count, choices_attributes: [:id, :answer, :_destroy])
   end
 end

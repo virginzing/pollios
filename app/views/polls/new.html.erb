@@ -3,6 +3,10 @@
 <%= nested_form_for @poll do |f| %>
   <%= f.label :title %>
   <%= f.text_field :title %>
+  <%= f.label :series %>
+  <%= radio_button  "poll", "series" , true %><%= f.label :yes %>
+  <%= radio_button  "poll", "series" , false %><%= f.label :no %>
+
   <select name="poll[expire_date]">
     <option value="">Select expire day</option>
     <option value="1">1 day</option>

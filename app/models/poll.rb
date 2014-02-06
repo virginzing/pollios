@@ -20,7 +20,9 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  default_scope { order("created_at desc").limit(100) }
+  LIMIT_POLL = 10
+
+  default_scope { order("created_at desc").limit(LIMIT_POLL) }
 
   accepts_nested_attributes_for :choices, :allow_destroy => true
 
@@ -49,6 +51,27 @@ class Poll < ActiveRecord::Base
         query_poll
       end
     end
+  end
+
+  def self.split_poll(list_of_poll, member_id)
+
+    poll_series = []
+    poll_nonseries = []
+    next_cursor = ""
+    list_of_poll.each do |poll|
+      if poll.series
+        poll_series << poll
+      else
+        poll_nonseries << poll
+      end
+    end
+
+    if poll_nonseries.count + poll_series.count == LIMIT_POLL
+      cursor_id = PollMember.find_by_poll_id(poll_nonseries.last).id
+      next_cursor = "/poll/public_timeline.json?member_id=#{member_id}&api_version=3&since_id=#{cursor_id}"
+    end
+
+    [poll_series, poll_nonseries, next_cursor]
   end
 
   def find_poll_series(member_id, series_id)
@@ -104,7 +127,6 @@ class Poll < ActiveRecord::Base
     member_id = poll[:member_id]
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
-    series = poll[:series]
   
     begin
       ever_vote = HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
@@ -114,7 +136,7 @@ class Poll < ActiveRecord::Base
         find_poll.increment!(:vote_all)
         find_choice.increment!(:vote)
 
-        find_poll.poll_series.increment!(:vote_all) if series
+        find_poll.poll_series.increment!(:vote_all) if find_poll.series
 
         history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id)
         [find_poll, history_voted]
@@ -128,12 +150,11 @@ class Poll < ActiveRecord::Base
   def self.view_poll(poll)
     member_id = poll[:member_id]
     poll_id = poll[:id]
-    series = poll[:series]
-    
+ 
     unless HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
       HistoryView.create!(member_id: member_id, poll_id: poll_id)
       find(poll_id).increment!(:view_all)
-      find(poll_id).poll_series.increment!(:view_all) if series
+      find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
     end
 
   end
