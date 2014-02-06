@@ -104,6 +104,7 @@ class Poll < ActiveRecord::Base
     member_id = poll[:member_id]
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
+    series = poll[:series]
   
     begin
       ever_vote = HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
@@ -112,6 +113,8 @@ class Poll < ActiveRecord::Base
         find_choice = find_poll.choices.where(id: choice_id).first
         find_poll.increment!(:vote_all)
         find_choice.increment!(:vote)
+
+        find_poll.poll_series.increment!(:vote_all) if series
 
         history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id)
         [find_poll, history_voted]
@@ -125,12 +128,18 @@ class Poll < ActiveRecord::Base
   def self.view_poll(poll)
     member_id = poll[:member_id]
     poll_id = poll[:id]
-
+    series = poll[:series]
+    
     unless HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
       HistoryView.create!(member_id: member_id, poll_id: poll_id)
       find(poll_id).increment!(:view_all)
+      find(poll_id).poll_series.increment!(:view_all) if series
     end
 
+  end
+
+  def get_choice_scroll
+    choices.collect! {|choice| choice.vote }
   end
 
 end

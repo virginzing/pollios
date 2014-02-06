@@ -3,8 +3,10 @@ class PollsController < ApplicationController
   before_action :set_current_member, only: [:create_poll, :qrcode, :public_poll, :group_poll, :vote_poll, :view_poll, :vote, :view]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
-  before_action :set_poll, only: [:show, :destroy, :vote, :view]
+  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
   before_action :compress_gzip, only: [:public_poll]
+
+  respond_to :json
 
   def new
     @poll = Poll.new
@@ -46,9 +48,7 @@ class PollsController < ApplicationController
   def choices
     @choices = Choice.query_choices(choices_params)
     unless choices_params[:voted] == "no"
-      set_current_member
-      set_poll
-      @voted = HistoryVote.voted?(@current_member.id, @poll.id)["voted"]
+      @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)["voted"]
       @expired = @poll.expire_date < Time.now
     end
   end
@@ -121,7 +121,7 @@ class PollsController < ApplicationController
   end
 
   def view_and_vote_params
-    params.permit(:id, :member_id)
+    params.permit(:id, :member_id, :choice_id, :series)
   end
 
   def vote_params
