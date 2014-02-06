@@ -1,6 +1,5 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
-  attr_reader :poll
 
   has_many :choices, dependent: :destroy
   has_many :taggings
@@ -75,9 +74,11 @@ class Poll < ActiveRecord::Base
     buy_poll = poll[:buy_poll]
     poll_series_id = poll[:poll_series_id]
     series = poll[:series]
+    choice_count = get_choice_count(poll[:choices])
+
     convert_expire_date = Time.now + expire_date.to_i.days
     set_public = buy_poll || member.celebrity?
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: poll_series_id, series: series)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: poll_series_id, series: series, choice_count: choice_count)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")
@@ -93,6 +94,11 @@ class Poll < ActiveRecord::Base
     end
     @poll
   end
+
+  def self.get_choice_count(choices)
+    choices.split(",").count if choices.presence
+  end
+
 
   def self.vote_poll(poll)
     member_id = poll[:member_id]

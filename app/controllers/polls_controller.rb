@@ -30,7 +30,7 @@ class PollsController < ApplicationController
       puts "#{@poll.errors.full_messages}"
     end
   end
-
+  
   def series
     @series = @current_member.poll_series.paginate(page: params[:page])
   end
@@ -129,7 +129,7 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series)
+    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count)
   end
 
   def polls_params
