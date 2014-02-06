@@ -59,8 +59,17 @@ class PollsController < ApplicationController
       @poll = Poll.get_public_poll(@current_member, { next_poll: params[:next_poll], type: params[:type]})
     elsif derived_version == 2
       friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
-      @poll = Poll.joins(:poll_members).includes(:poll_series, :member)
+      if params[:type] == "active"
+        query_poll = Poll.active_poll.includes(:choices)
+      elsif params[:type] == "inactive"
+        query_poll = Poll.inactive_poll.includes(:choices)
+      else
+        query_poll = Poll.includes(:choices)
+      end
+
+      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
                     .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
+
     else
       if params[:type] == "active"
         query_poll = Poll.active_poll
