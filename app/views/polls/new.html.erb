@@ -13,10 +13,13 @@
     <option value="2">2 day</option>
     <option value="3">5 day</option>
   </select>
+  <%= f.label :group %>
+  <%= f.select :group_id, current_member.get_group_active.map {|r| [r.name, r.id] }, options ={:prompt => "Select a group"} %>
   <%= f.fields_for :choices do |choice| %>
       <%= choice.text_field :answer %>
       <%= choice.link_to_remove "Remove" %>
   <% end %>
+
   <p><%= f.link_to_add "Add choice", :choices %></p>
   <%= f.submit class: 'button' %>
 <% end %>

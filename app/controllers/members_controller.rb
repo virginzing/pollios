@@ -5,9 +5,10 @@ class MembersController < ApplicationController
   before_action :compress_gzip, only: [:detail_friend]
 
   def detail_friend
-    find_friend = Member.find(params[:friend_id])
-    @detail_friend = find_friend
-    @is_friend = Friend.add_friend?(@current_member.id, find_friend.id) if find_friend.present?
+    @find_friend = Member.find(params[:friend_id])
+    poll = @find_friend.polls.includes(:member)
+    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll, @current_member.id)
+    @is_friend = Friend.add_friend?(@current_member.id, @find_friend.id) if @find_friend.present?
   end
 
   def index

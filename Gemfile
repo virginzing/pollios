@@ -60,6 +60,7 @@ gem 'cloudinary'
 gem 'newrelic_rpm'
 gem 'will_paginate-foundation'
 gem 'nested_form'
+gem 'simple_form'
 # gem "squeel" 
 
 # Use ActiveModel has_secure_password

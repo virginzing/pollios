@@ -22,10 +22,12 @@ class PollsController < ApplicationController
     params[:poll][:public] = false
     params[:poll][:public] = true if current_member.celebrity?
     params[:poll][:choice_count] = params[:poll][:choices_attributes].keys.count
+    group_id = params[:poll][:group_id]
     @poll = Poll.new(polls_params)
 
     if @poll.save
-      current_member.poll_members.create!(poll_id: @poll.id)
+      current_member.poll_members.create!(poll_id: @poll.id) unless group_id.presence
+      @poll.poll_groups.create!(group_id: group_id) if group_id.presence
       puts "success"
       flash[:success] = "Create poll successfully."
       redirect_to root_url
