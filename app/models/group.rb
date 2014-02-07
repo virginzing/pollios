@@ -22,7 +22,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.accept_group(group)
-    group_id = group[:group_id]
+    group_id = group[:id]
     member_id = group[:member_id]
 
     find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
@@ -41,16 +41,13 @@ class Group < ActiveRecord::Base
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
-      add_friend_to_group(@group.id, {:member_id => member_id, :friend_id => friend_id.split(",")} ) if friend_id
+      add_friend_to_group(@group.id, member_id, friend_id) if friend_id
     end
     @group
   end
 
-  def self.add_friend_to_group(group, option = {})
-    member_id   = option[:member_id] || group[:member_id]
-    list_friend = option[:friend_id] || group[:friend_id].split(",")
-    group_id =  group[:group_id] || group
-
+  def self.add_friend_to_group(group_id, member_id, friend)
+    list_friend = friend.split(",")
     check_valid_friend = friend_exist_group(list_friend, group_id)
 
     if check_valid_friend.count > 0

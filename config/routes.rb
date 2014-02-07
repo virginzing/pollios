@@ -21,13 +21,13 @@ Pollios::Application.routes.draw do
   end
 
   scope 'group' do
-    post 'build',           to: 'group#build_group'
-    post 'add_friend',      to: 'group#add_friend_to_group'
-    post 'accept',          to: 'group#accept_group'
-    post 'deny_group',      to: 'group#deny_group'
-    post 'leave_group',     to: 'group#leave_group'
-    post 'delete_group',    to: 'group#delete_group'
-    post 'my_group',        to: 'group#my_group'
+    post 'build',             to: 'group#build_group'
+    post 'add_friend',        to: 'group#add_friend_to_group'
+    post ':id/accept',        to: 'group#accept_group'
+    post 'deny_group',        to: 'group#deny_group'
+    post 'leave_group',       to: 'group#leave_group'
+    post 'delete_group',      to: 'group#delete_group'
+    get 'my_group',           to: 'group#my_group'
   end
 
   scope 'member' do
@@ -53,7 +53,7 @@ Pollios::Application.routes.draw do
   scope "authen" do
     get 'signin',           to: 'authen_sentai#signin', as: :authen_signin
     get 'signup',           to: 'authen_sentai#signup', as: :authen_signup
-    delete 'signout',          to: 'authen_sentai#signout', as: :authen_signout
+    delete 'signout',       to: 'authen_sentai#signout', as: :authen_signout
     post 'signin_sentai',   to: 'authen_sentai#signin_sentai'
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
     post 'update_sentai',   to: 'authen_sentai#update_sentai'

@@ -10,6 +10,12 @@ class Member < ActiveRecord::Base
   has_many :group_members, dependent: :destroy
   has_many :groups, through: :group_members, source: :group
 
+  has_many :group_active, -> { where("group_members.active = ?", true) } , dependent: :destroy, class_name: "GroupMember"
+  has_many :get_group_active , through: :group_active, source: :group
+
+  has_many :group_inactive, -> { where("group_members.active = ?", false) } , dependent: :destroy, class_name: "GroupMember"
+  has_many :get_group_inactive , through: :group_inactive, source: :group
+
   has_many :reverse_friend ,foreign_key: "followed_id", class_name: "Friend"
   has_many :following, through: :reverse_friend, source: :follower
 

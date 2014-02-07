@@ -4,7 +4,7 @@ if @choices.present?
   json.choices @choices do |choice|
     json.id choice.id
     json.answer choice.answer
-    unless params[:voted] == "no"
+    unless params[:voted] == "no" && !@expired
       json.vote choice.vote if @voted || @expired
     end
   end

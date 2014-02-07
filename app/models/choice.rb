@@ -8,12 +8,12 @@ class Choice < ActiveRecord::Base
     list_choice.collect! { |answer| create(poll_id: poll_id, answer: answer) }
   end
 
-  def self.query_choices(choices)
+  def self.query_choices(choices, expired)
     poll_id = choices[:id]
     member_id = choices[:member_id]
     voted = choices[:voted]
 
-    if voted == "no"
+    if voted == "no" && !expired
       Rails.cache.fetch(['Poll', poll_id, name]) do
         find_choice(poll_id)
       end
