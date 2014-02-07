@@ -1,7 +1,7 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:my_group]
+  before_action :set_current_member, only: [:my_group, :accept_group]
 
   def my_group
     @group_active = @current_member.get_group_active
@@ -18,6 +18,7 @@ class GroupController < ApplicationController
 
   def accept_group
     @group = Group.accept_group(group_params)
+    @group_active = @current_member.get_group_active
   end
 
   def deny_group

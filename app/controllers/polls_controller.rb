@@ -84,7 +84,7 @@ class PollsController < ApplicationController
 
       if params[:since_id]
         @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-                          .where("poll_members.id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:since_id], friend_list, true)
+                          .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:since_id], friend_list, true)
                           .order("poll_members.created_at desc")
       else
         @poll = query_poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.member_id IN (?) OR public = ?", friend_list, true)

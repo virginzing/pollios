@@ -67,7 +67,8 @@ class Poll < ActiveRecord::Base
     end
 
     if poll_nonseries.count + poll_series.count == LIMIT_POLL
-      cursor_id = PollMember.find_by_poll_id(poll_nonseries.last).id
+      # cursor_id = PollMember.find_by_poll_id(poll_nonseries.last).id
+      cursor_id = poll_nonseries.last.id
       next_cursor = "/poll/public_timeline.json?member_id=#{member_id}&api_version=3&since_id=#{cursor_id}"
     end
 
