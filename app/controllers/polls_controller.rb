@@ -20,14 +20,23 @@ class PollsController < ApplicationController
     params[:poll][:member_id] = current_member.id
     params[:poll][:expire_date] = Time.now + params[:poll][:expire_date].to_i.days
     params[:poll][:public] = false
+    params[:poll][:series] = false
     params[:poll][:public] = true if current_member.celebrity?
-    params[:poll][:choice_count] = params[:poll][:choices_attributes].keys.count
+    choice_array = []
+    choice_array << params[:poll][:choice_one]
+    choice_array << params[:poll][:choice_two]
+    choice_array = choice_array + params[:choices]
+
+    filter_choice = choice_array.collect!{|value| value unless value.blank? }.compact
+ 
+    params[:poll][:choice_count] = filter_choice.count
     group_id = params[:poll][:group_id]
     @poll = Poll.new(polls_params)
 
     if @poll.save
+      Choice.create_choices(@poll.id, filter_choice)
       current_member.poll_members.create!(poll_id: @poll.id) unless group_id.presence
-      @poll.poll_groups.create!(group_id: group_id) if group_id.presence
+      Group.add_poll(@poll.id, group_id) if group_id.present?
       puts "success"
       flash[:success] = "Create poll successfully."
       redirect_to root_url
@@ -84,19 +93,39 @@ class PollsController < ApplicationController
         query_poll = Poll.all
       end
 
-      if params[:since_id]
+      if params[:next_cursor]
         @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-                          .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:since_id], friend_list, true)
+                          .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
                           .order("poll_members.created_at desc")
       else
         @poll = query_poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
                           .order("poll_members.created_at desc")
       end
 
-      @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll, @current_member.id)
+      @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
       puts "series => #{@poll_series.map(&:id)}"
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
     end
+  end
+
+  def group_poll
+    group_of_member = @current_member.groups.pluck(:id)
+    if params[:type] == "active"
+      query_poll = Poll.active_poll
+    elsif params[:type] == "inactive"
+      query_poll = Poll.inactive_poll
+    else
+      query_poll = Poll.all
+    end
+
+    if params[:next_cursor]
+      @poll ||= query_poll.joins(:poll_groups).uniq.includes(:poll_series, :member).where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
+    else
+      @poll ||= query_poll.joins(:poll_groups).uniq.includes(:poll_series, :member).where("poll_groups.group_id IN (?)", group_of_member)
+    end
+
+    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+
   end
 
   def vote
@@ -106,11 +135,6 @@ class PollsController < ApplicationController
 
   def view
     @poll = Poll.view_poll(view_and_vote_params)
-  end
-
-
-  def group_poll
-    @poll = Poll.get_group_poll(@current_member, {next_poll: params[:next_poll]})
   end
 
   def create_poll
@@ -155,6 +179,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:member_id, :title, :expire_date, :public, :choice_count, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:member_id, :title, :expire_date, :public, :choice_count ,choices_attributes: [:id, :answer, :_destroy])
   end
 end

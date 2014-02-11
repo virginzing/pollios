@@ -17,18 +17,19 @@ class Poll < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
 
+  validates :title, :expire_date, presence: true
+
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  LIMIT_POLL = 1000
+  LIMIT_POLL = 10
+  self.per_page = 20
 
   default_scope { order("created_at desc").limit(LIMIT_POLL) }
 
   accepts_nested_attributes_for :choices, :allow_destroy => true
-
-  self.per_page = 20
 
   validates :member_id, :title , presence: true
 
@@ -55,7 +56,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.split_poll(list_of_poll, member_id)
+  def self.split_poll(list_of_poll)
 
     poll_series = []
     poll_nonseries = []
@@ -71,7 +72,7 @@ class Poll < ActiveRecord::Base
     if poll_nonseries.count + poll_series.count == LIMIT_POLL
       # cursor_id = PollMember.find_by_poll_id(poll_nonseries.last).id
       cursor_id = poll_nonseries.last.id
-      next_cursor = "/poll/public_timeline.json?member_id=#{member_id}&api_version=3&since_id=#{cursor_id}"
+      next_cursor = "#{cursor_id}"
     end
 
     [poll_series, poll_nonseries, next_cursor]

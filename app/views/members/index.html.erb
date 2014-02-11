@@ -5,10 +5,11 @@
     <tr>
       <th width="50">#</th>
       <th>Sentai ID</th>
-      <th width="400">Name</th>
+      <th width="300">Name</th>
       <th width="200">Username</th>
       <th>Type</th>
       <th>Created At</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +21,17 @@
         <td><%= member.username %></td>
         <td><%= member.member_type_text %></td>
         <td><%= time_ago_in_words(member.created_at) %></td>
+        <% if current_member == member %>
+        <td></td>
+        <% elsif list_friend.include?(member.id) %>
+        <td><%= link_to 'UnFriend', '#', class: 'button tiny btn-gray' %></td>
+        <% elsif friend_request.include?(member.id) %>
+        <td><span data-tooltip class="has-tip tip-right" title="Waiting approve"><%= link_to 'Cancel', '#', class: 'button tiny btn-gray' %></span></td>
+        <% else %>
+        <td><%= link_to 'Add Friend', '#', class: 'button tiny' %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
+

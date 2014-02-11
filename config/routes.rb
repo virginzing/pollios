@@ -16,7 +16,7 @@ Pollios::Application.routes.draw do
     post 'deny',            to: 'friends#deny_friend'
     post 'unfriend',        to: 'friends#unfriend'
     get 'all',              to: 'friends#list_friend'
-    post 'request',         to: 'friends#list_request'
+    get 'request',          to: 'friends#list_request'
     post 'search',          to: 'friends#search_friend'
   end
 
@@ -42,7 +42,7 @@ Pollios::Application.routes.draw do
     post 'vote',            to: 'polls#vote_poll'
     post 'view',            to: 'polls#view_poll'
     get 'public_timeline',  to: 'polls#public_poll'
-    post 'group',           to: 'polls#group_poll'
+    get 'group_timeline',            to: 'polls#group_poll'
     get 'qrcode',           to: 'polls#qrcode'
     get   ':id/choices',      to: 'polls#choices'
     post  ':id/vote',         to: 'polls#vote'

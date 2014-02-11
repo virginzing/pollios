@@ -45,7 +45,7 @@ class Member < ActiveRecord::Base
   scope :citizen,   -> { where(member_type: 0).order("username desc") }
   scope :celebrity, -> { where(member_type: 1).order("username desc") }
 
-
+  self.per_page = 20
   FRIEND_LIMIT = 500
 
   def set_friend_limit

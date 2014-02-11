@@ -4,6 +4,9 @@ class MembersController < ApplicationController
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:detail_friend]
 
+  expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
+  expose(:friend_request) { current_member.get_your_request.pluck(:id) }
+ 
   def detail_friend
     @find_friend = Member.find(params[:friend_id])
     poll = @find_friend.polls.includes(:member)
@@ -12,7 +15,7 @@ class MembersController < ApplicationController
   end
 
   def index
-    @members = Member.all
+    @members = Member.paginate(page: params[:page])
   end
 
   def profile

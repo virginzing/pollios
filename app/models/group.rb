@@ -66,7 +66,11 @@ class Group < ActiveRecord::Base
 
 
   def self.add_poll(poll_id, group_id)
-    list_group = group_id.split(",")
+    if group_id.class == Array
+      list_group = group_id
+    else
+      list_group = group_id.split(",")
+    end
     where(id: list_group).each do |group|
       group.poll_groups.create!(poll_id: poll_id)
     end

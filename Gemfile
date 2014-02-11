@@ -24,7 +24,7 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-gem 'foundation-rails'
+gem 'foundation-rails', github: 'zurb/foundation-rails'
 gem 'foundation_rails_helper'
 
 gem 'enumerize'
@@ -61,6 +61,7 @@ gem 'newrelic_rpm'
 gem 'will_paginate-foundation'
 gem 'nested_form'
 gem 'simple_form'
+gem 'decent_exposure'
 # gem "squeel" 
 
 # Use ActiveModel has_secure_password
