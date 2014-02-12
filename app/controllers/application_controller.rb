@@ -4,6 +4,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include AuthenSentaiHelper
   include PollHelper
+
+  decent_configuration do
+    strategy DecentExposure::StrongParametersStrategy
+  end
+
   helper_method :current_member, :signed_in?, :render_to_string
 
   def history_voted_viewed
@@ -16,6 +21,15 @@ class ApplicationController < ActionController::Base
     unless @current_member.present?
       respond_to do |format|
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
+      end
+    end
+  end
+
+  def restrict_access  
+    current_member = APN::Device.find_by(id: params[:access_id], api_token: params[:access_token])
+    unless current_member.present?
+      respond_to do |format|
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"]}
       end
     end
   end

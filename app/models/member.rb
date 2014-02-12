@@ -1,6 +1,6 @@
 class Member < ActiveRecord::Base
   include MemberHelper
-  
+  has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy
   has_many :hidden_polls, dependent: :destroy
 
   has_many :history_views, dependent: :destroy

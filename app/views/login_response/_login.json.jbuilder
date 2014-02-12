@@ -7,8 +7,9 @@ if @login.present?
     json.member_username @login.username
     json.email @login.email
     json.avatar @login.avatar
-    json.member_token @login.token
     json.member_type @login.member_type_text
+    json.access_id @apn_device.id
+    json.access_token @apn_device.api_token
     json.group_active @login.group_active
   end
 

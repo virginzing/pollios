@@ -1,6 +1,9 @@
 class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
 	before_action :current_login?, only: [:signin]
+
+  expose(:current_member_id) { session[:member_id] }
+
 	include Authenticate
 
 	layout "authen"
@@ -26,6 +29,7 @@ class AuthenSentaiController < ApplicationController
 
 		respond_to do |wants|
 			if @login.present?
+        @apn_device = check_device?(@login, sessions_params["device_token"]) if sessions_params["device_token"].present?
 				session[:member_id] = @login.id
 				wants.html { redirect_to polls_path }
 				wants.json
@@ -39,16 +43,18 @@ class AuthenSentaiController < ApplicationController
 
 
   def signup_sentai
-  	@outh_sentai = Authenticate::Sentai.signup( IP + '/codeapp/signup.json', signup_params, "pollios")
+  	@response, member = Authenticate::Sentai.signup( IP + '/codeapp/signup.json', signup_params, "pollios")
+    puts "response : #{response}, member : #{member}"
   	respond_to do |wants|
-  		if @outh_sentai["response_status"] == "OK"
-  			session[:member_id] = Member.find_by(username: @outh_sentai["username"]).id
-  			@member = current_member
+  		if @response["response_status"] == "OK"
+        @apn_device = check_device?(member, signup_params["device_token"]) if signup_params["device_token"].present?
+        puts "apn_device => #{@apn_device}"
+  			session[:member_id] = member.id
   			flash[:success] = "Sign up sucessfully."
-  			wants.html { redirect_to(home_url(current_member.username)) }
+  			wants.html { redirect_to root_url }
   			wants.json
   		else
-  			flash[:error] = @outh_sentai["response_message"]
+  			flash[:error] = @response["response_message"]
   			wants.html { redirect_to(:back) }
   			wants.json
   		end
@@ -59,19 +65,35 @@ class AuthenSentaiController < ApplicationController
   	@outh_sentai = Authenticate::Sentai.update_profile( IP + '/codeapp/update_profile.json', update_profile_params)
   end
 
+  def check_device?(member, device_token)
+    member_device = member.apn_devices.find_by(token: device_token)
+    find_device = APN::Device.find_by_token(device_token)
+
+    if member_device.present?
+      api_token = Device.generate_api_token
+      member_device.api_token = api_token
+      member_device.save!
+      device = member_device
+    elsif find_device.present?
+      device = Device.change_member(device_token, member.id)
+    else
+      device = Device.create_device(device_token, member.id)
+    end
+    device
+  end
 
   private
 
 	  def sessions_params
-	  	params.permit(:authen, :password)
+	  	params.permit(:authen, :password, :device_token)
 	  end
 
 	  def signup_params
-	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname)
+	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday)
 	  end
 
 	  def update_profile_params
-	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday)
+	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday)
 	  end
 
 end

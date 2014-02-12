@@ -1,10 +1,11 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
+
   before_action :set_current_member, only: [:create_poll, :qrcode, :public_poll, :group_poll, :vote_poll, :view_poll, :vote, :view]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
-  before_action :compress_gzip, only: [:public_poll]
+  before_action :compress_gzip, :restrict_access, only: [:public_poll]
 
   respond_to :json
 

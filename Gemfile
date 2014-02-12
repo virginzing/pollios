@@ -38,7 +38,6 @@ group :development do
   gem 'sqlite3'
   gem 'thin'
   gem 'quiet_assets'
-  gem 'bullet'
   gem 'faker'
 end
 
@@ -62,6 +61,7 @@ gem 'will_paginate-foundation'
 gem 'nested_form'
 gem 'simple_form'
 gem 'decent_exposure'
+gem 'apn_on_rails', github: 'Nuttapon/apn_on_rails'
 # gem "squeel" 
 
 # Use ActiveModel has_secure_password

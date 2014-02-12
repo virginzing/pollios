@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th width="50">#</th>
+      <th>Avatar</th>
       <th>Sentai ID</th>
       <th width="300">Name</th>
       <th width="200">Username</th>
@@ -13,9 +14,10 @@
     </tr>
   </thead>
   <tbody>
-    <% @members.each do |member| %>
+    <% members.each do |member| %>
       <tr>
         <td><%= member.id %></td>
+        <td><%= image_tag(member.avatar, size: "50x50") %></td>
         <td><%= member.sentai_id %></td>
         <td><%= member.sentai_name %></td>
         <td><%= member.username %></td>
@@ -34,4 +36,10 @@
     <% end %>
   </tbody>
 </table>
+
+<div class="row">
+  <div class="pagination-centered">
+    <%= will_paginate members, renderer: FoundationPagination::Rails %>
+  </div>
+</div>
 
