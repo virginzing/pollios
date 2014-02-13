@@ -37,6 +37,7 @@ if @poll_series || @poll_nonseries
       json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       json.choice_count poll.choice_count
       json.series poll.series
+      json.tags poll.cached_tags
     end
   end
   json.next_cursor @next_cursor

@@ -59,6 +59,8 @@ Pollios::Application.routes.draw do
     post 'update_sentai',   to: 'authen_sentai#update_sentai'
   end
 
+  get '/tags',  to: 'tags#index'
+
   root to: 'polls#index'
 
 end

@@ -1,7 +1,6 @@
 <script type="text/javascript" src="/javascripts/nested_form.js"></script>
 <script type="text/javascript" src="/javascripts/validateform.js"></script>
-
-<%= nested_form_for(@poll, :html => { :id => "build_poll"} )  do |f| %>
+<%= simple_nested_form_for(@poll, :html => { :id => "build_poll"} )  do |f| %>
 
   <%= f.label :title %>
   <%= f.text_field :title %>
@@ -25,6 +24,8 @@
   </select> 
   <br><br>
 
+  <%= f.input :tag_tokens,:label => "Tag", :input_html => {:class => "tag_token", data: {load: @poll.tags} } %>
+  <br>
   <label>Choice</label>
     <input type="text" name="poll[choice_one]">
     <input type="text" name="poll[choice_two]">
@@ -50,7 +51,6 @@
   });
 </script>
 <script>
-
 $('.multi-field-wrapper').each(function() {
     var $wrapper = $('.multi-fields', this);
     $(".add-field", $(this)).click(function(e) {
@@ -62,3 +62,4 @@ $('.multi-field-wrapper').each(function() {
     });
 });
 </script>
+

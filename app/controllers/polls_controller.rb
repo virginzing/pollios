@@ -5,7 +5,9 @@ class PollsController < ApplicationController
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
-  before_action :compress_gzip, :restrict_access, only: [:public_poll]
+  before_action :compress_gzip, only: [:public_poll]
+
+  # :restrict_access
 
   respond_to :json
 
@@ -180,6 +182,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:member_id, :title, :expire_date, :public, :choice_count ,choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:member_id, :title, :expire_date, :public, :choice_count ,:tag_tokens, choices_attributes: [:id, :answer, :_destroy])
   end
 end

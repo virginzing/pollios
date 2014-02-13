@@ -1,7 +1,7 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
 
-  attr_accessor :group_id
+  attr_accessor :group_id, :tag_tokens
 
   has_many :choices, dependent: :destroy
   has_many :taggings
@@ -32,6 +32,25 @@ class Poll < ActiveRecord::Base
   accepts_nested_attributes_for :choices, :allow_destroy => true
 
   validates :member_id, :title , presence: true
+
+  def tag_tokens=(tokens)
+    puts "tokens => #{tokens}"
+    self.tag_ids = Tag.ids_from_tokens(tokens)
+  end
+
+  def cached_tags
+    Rails.cache.fetch([self, 'tags']) do
+      tags.pluck(:name)
+    end
+  end
+
+  def self.tag_counts
+    Tag.select("tags.*, count(taggings.tag_id) as count").joins(:taggings).group("taggings.tag_id")
+  end
+
+  # def tag_list
+  #   tags.map(&:name).join(",")
+  # end
 
   def self.get_public_poll(member, option = {})
     list_friend = member.whitish_friend.map(&:followed_id) << member.id
