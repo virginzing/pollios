@@ -7,8 +7,10 @@ if @response.present? && @response["response_status"] != "ERROR"
 		json.member_username @response["username"]
 		json.email @response["email"]
 		json.avatar @response["avatar_thumbnail"]
-		json.access_id @apn_device.id
-		json.access_token @apn_device.api_token
+		if @apn_device.present?
+      json.access_id @apn_device.id
+      json.access_token @apn_device.api_token
+    end
 	end
 else
 	json.response_status @response["response_status"]

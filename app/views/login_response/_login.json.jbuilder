@@ -8,8 +8,10 @@ if @login.present?
     json.email @login.email
     json.avatar @login.avatar
     json.member_type @login.member_type_text
-    json.access_id @apn_device.id
-    json.access_token @apn_device.api_token
+    if @apn_device.present?
+      json.access_id @apn_device.id
+      json.access_token @apn_device.api_token
+    end
     json.group_active @login.group_active
   end
 
