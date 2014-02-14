@@ -37,7 +37,7 @@
             <li class="divider"></li>
             <li class="has-dropdown not-click"><a href="<%= polls_path %>">Poll</a>
             <ul class="dropdown"><li class="title back js-generated"></li>
-              <li><a href="<%= series_poll_path %>">Series Poll</a></li>
+              <li><a href="<%= poll_series_index_path %>">Series Poll</a></li>
             </ul>
             </li>
             <li class="divider"></li>
@@ -88,6 +88,9 @@
           preventDuplicates: true,
           tokenLimit: 3
         });
+    </script>
+    <script>
+      $('#datetimepicker').datetimepicker();
     </script>
   </body>
 </html>

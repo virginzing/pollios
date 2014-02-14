@@ -4,6 +4,7 @@ Pollios::Application.routes.draw do
     resources :choices
   end
   resources :members 
+  resources :poll_series
 
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'

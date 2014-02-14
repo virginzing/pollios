@@ -47,10 +47,10 @@ class PollsController < ApplicationController
       puts "#{@poll.errors.full_messages}"
     end
   end
-  
-  def series
-    @series = @current_member.poll_series.paginate(page: params[:page])
-  end
+
+  # def series
+  #   @series = @current_member.poll_series.paginate(page: params[:page])
+  # end
 
   def show
     puts params[:id]

@@ -7,7 +7,6 @@ class Poll < ActiveRecord::Base
   has_many :taggings
   has_many :tags, through: :taggings, source: :tag
 
-
   belongs_to :member
   belongs_to :poll_series
 
@@ -17,7 +16,7 @@ class Poll < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
 
-  validates :title, :expire_date, presence: true
+  validates :title, presence: true
 
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
@@ -29,7 +28,7 @@ class Poll < ActiveRecord::Base
 
   default_scope { order("created_at desc").limit(LIMIT_POLL) }
 
-  accepts_nested_attributes_for :choices, :allow_destroy => true
+  accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
   validates :member_id, :title , presence: true
 
