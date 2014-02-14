@@ -44,7 +44,7 @@ class Poll < ActiveRecord::Base
   end
 
   def self.tag_counts
-    Tag.select("tags.*, count(taggings.tag_id) as count").joins(:taggings).group("taggings.tag_id")
+    Tag.joins(:taggings).select("tags.*, count(tag_id) as count").group("tags.id")
   end
 
   # def tag_list
