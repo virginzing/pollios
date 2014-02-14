@@ -24,7 +24,7 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  LIMIT_POLL = 10
+  LIMIT_POLL = 1000
   self.per_page = 20
 
   default_scope { order("created_at desc").limit(LIMIT_POLL) }

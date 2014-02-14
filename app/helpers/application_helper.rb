@@ -13,7 +13,15 @@ module ApplicationHelper
       'active'
     end
   end
-  
+
+  def tag_clound(tags, classes)
+    max = tags.sort_by(&:count).last
+    tags.each do |tag|
+      index = tag.count.to_f / max.count * (classes.size - 1)
+      yield(tag, classes[index.round])
+    end
+    
+  end
 end
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 3, "friend_id": 4}' -X POST http://localhost:3000/friend/add_friend.json -i
@@ -79,11 +87,20 @@ end
 #     "member_id": "1"
 # }' -X POST http://localhost:3000/poll/group.json -i
 
+# curl -H "Content-Type: application/json" -d '{
+#     "email": "manchester@gmail.com",
+#     "password": "mefuwfhfu",
+#     "username": "manchester",
+#     "fullname": "Manchester United",
+#     "device_token": "acf9561f 1a50d7d2 37d1266e eefdd714 330a42ee dfd4525d df57268f b045fd59"
+# }' -X POST http://localhost:3000/authen/signup_sentai.json -i
+
 # http://localhost:3000/member/detail_friend.json?member_id=4&friend_id=1
 # Choice.find(39).update_attributes(vote: 76842)
 # Poll.find(3).update(vote_all: 542388)
+
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon509","password":"mefuwfhfu"}' -X POST http://localhost:3000/authen/signin_sentai.json -i
-# curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -F "avatar=@avatar/manu.png" -X POST http://localhost:3000/authen/signup_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"goodmail","password":"025713420" }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
+# curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=33" -F "username=nisekoi" -X POST http://localhost:3000/authen/update_sentai.json -i

@@ -35,3 +35,9 @@
     <%= will_paginate @polls, renderer: FoundationPagination::Rails %>
   </div>
 </div>
+
+<div class="tag_cloud">
+  <% tag_clound Poll.tag_counts, %w{s m l} do |tag, css_class| %>
+    <%= link_to tag.name, '#', class: css_class %>
+  <% end %>
+</div>
