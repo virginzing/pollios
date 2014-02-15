@@ -25,6 +25,8 @@ if @poll_series || @poll_nonseries
         json.vote_count poll.vote_all
         json.view_count poll.view_all
         json.expire_date poll.expire_date.to_i
+        json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
+        json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       end
     end
   end
