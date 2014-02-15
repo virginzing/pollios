@@ -14,7 +14,7 @@ if @poll_series || @poll_nonseries
       json.vote_count poll.poll_series.vote_all
       json.view_count poll.poll_series.view_all
       json.expire_date poll.poll_series.expire_date.to_i
-      json.created_at poll.poll_series.created_at.strftime("%B #{poll.created_at.day.ordinalize}, %Y")
+      json.created_at poll.poll_series.to_i
       json.title poll.poll_series.description
       json.choice_count poll.choice_count
       json.series poll.series
@@ -44,7 +44,7 @@ if @poll_series || @poll_nonseries
       json.vote_count poll.vote_all
       json.view_count poll.view_all
       json.expire_date poll.expire_date.to_i
-      json.created_at poll.created_at.strftime("%B #{poll.created_at.day.ordinalize}, %Y")
+      json.created_at poll.created_at.to_i
       json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
       json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       json.choice_count poll.choice_count

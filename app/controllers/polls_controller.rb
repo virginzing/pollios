@@ -1,7 +1,7 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :qrcode, :public_poll, :group_poll, :vote_poll, :view_poll, :vote, :view]
+  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :vote, :view]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
@@ -10,6 +10,18 @@ class PollsController < ApplicationController
   # :restrict_access
 
   respond_to :json
+
+  def generate_qrcode
+    @qrurl = PollSeries.find(10).to_json
+    respond_to do |format|
+      format.html
+      format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }
+      format.png  { render :qrcode => @qrurl, :level => :h, :unit => 4 }
+      format.gif  { render :qrcode => @qrurl }
+      format.jpeg { render :qrcode => @qrurl }
+    end
+  end
+
 
   def new
     @poll = Poll.new

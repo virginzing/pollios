@@ -61,6 +61,7 @@ Pollios::Application.routes.draw do
   end
 
   get '/tags',  to: 'tags#index'
+  get '/qrcode',  to: 'polls#generate_qrcode'
 
   root to: 'polls#index'
 
