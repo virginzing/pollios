@@ -1,3 +1,4 @@
+<div class="panel">
 <%= f.input :title, input_html: { class: "answer" } %>
 <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
 <%= f.link_to_remove "Remove", class: "tiny button btn-gray" %>
@@ -6,3 +7,4 @@
   <%= render 'choice_fields', :f => builder %>
 <% end %>
 <p><%= f.link_to_add "More Choice", :choices, class: ' tiny button secondary ' %></p>
+</div>

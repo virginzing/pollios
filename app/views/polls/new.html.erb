@@ -1,5 +1,7 @@
 <script type="text/javascript" src="/javascripts/nested_form.js"></script>
 <script type="text/javascript" src="/javascripts/validateform.js"></script>
+
+<div class="panel">
 <%= simple_nested_form_for(@poll, :html => { :id => "build_poll"} )  do |f| %>
 
   <%= f.label :title %>
@@ -17,7 +19,7 @@
   <%= f.label :group %>
 <!--   <%= f.select :group_id, current_member.get_group_active.map {|r| [r.name, r.id] }, options ={:prompt => "Select a group" } %> -->
   
-  <select multiple id="poll_group_id" name="poll[group_id][]" style="width: 970px; ">
+  <select multiple id="poll_group_id" name="poll[group_id][]" style="width: 928px; ">
     <% current_member.get_group_active.each do |group| %>
       <option value="<%= group.id %>"><%= group.name %></option>
     <% end %>
@@ -42,6 +44,7 @@
 
   <%= f.submit class: 'button' %>
 <% end %>
+</div>
 
 
 <script id="script_e1">

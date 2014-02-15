@@ -5,9 +5,10 @@
 <%= simple_nested_form_for @poll_series do |f| %>
 <%= f.input :description, input_html: { autofocus: "autofocus"} %>
 <%= f.input :expire_date, input_html: { id: "datetimepicker" }, as: :string %>
-  <%= f.fields_for :polls do |poll_form| %>
-    <%= render 'poll_form',  :f => poll_form %>    
-  <% end %>
+
+<%= f.fields_for :polls do |poll_form| %>
+  <%= render 'poll_form',  :f => poll_form %>    
+<% end %>
 
   <p><%= f.link_to_add "More Poll", :polls, class: 'button primary' %></p>
 
