@@ -32,6 +32,8 @@ class Poll < ActiveRecord::Base
 
   validates :member_id, :title , presence: true
 
+
+
   def tag_tokens=(tokens)
     puts "tokens => #{tokens}"
     self.tag_ids = Tag.ids_from_tokens(tokens)

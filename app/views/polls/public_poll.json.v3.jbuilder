@@ -18,6 +18,7 @@ if @poll_series || @poll_nonseries
       json.title poll.poll_series.description
       json.choice_count poll.choice_count
       json.series poll.series
+      json.tags poll.poll_series.cached_tags
 
       json.poll poll.find_poll_series(poll.member_id, poll.poll_series_id) do |poll|
         json.id poll.id

@@ -83,9 +83,9 @@
     
     <script type="text/javascript" src="/javascripts/jquery.tokeninput.js"></script>
     <script>
-        $("#poll_tag_tokens").tokenInput("/tags.json", {
+        $("#tag_list").tokenInput("/tags.json", {
           theme: "facebook",
-          prePopulate: $('#poll_tag_tokens').data('load'),
+          prePopulate: $('#tag_list').data('load'),
           preventDuplicates: true,
           tokenLimit: 3
         });

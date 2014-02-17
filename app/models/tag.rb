@@ -2,6 +2,9 @@ class Tag < ActiveRecord::Base
   has_many :taggings
   has_many :polls, through: :taggings, source: :poll
 
+  has_many :poll_series_tags
+  has_many :poll_series, through: :poll_series_tags, source: :poll
+
   def self.tokens(query)
     tags = where("name like ?","%#{query}%")
     if tags.empty?

@@ -26,7 +26,7 @@
   </select> 
   <br><br>
 
-  <%= f.input :tag_tokens,:label => "Tag", :input_html => {:class => "tag_token", data: {load: @poll.tags} } %>
+  <%= f.input :tag_tokens,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list" , data: {load: @poll.tags} } %>
   <br>
   <label>Choice</label>
     <input type="text" name="poll[choice_one]">

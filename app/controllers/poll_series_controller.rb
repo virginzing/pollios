@@ -1,6 +1,7 @@
 class PollSeriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new]
+  before_action :set_poll_series, only: [:edit, :update, :destroy]
 
   def index
     @series = @current_member.poll_series.paginate(page: params[:page])
@@ -12,6 +13,19 @@ class PollSeriesController < ApplicationController
       poll = @poll_series.polls.build
       2.times { poll.choices.build }
     end
+  end
+
+  def edit
+  end
+
+  def update
+    if @poll_series.update(poll_series_params)
+      flash[:notice] = "Successfully updated poll series."
+      redirect_to poll_series_index_path
+    else
+      render action: 'edit'
+    end
+    puts "error: #{@poll_series.errors.full_messages}"
   end
 
   def create
@@ -38,7 +52,11 @@ class PollSeriesController < ApplicationController
 
   private
 
+  def set_poll_series
+    @poll_series = PollSeries.find(params[:id])
+  end
+
   def poll_series_params
-    params.require(:poll_series).permit(:description, :member_id, :expire_date, polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:description, :member_id, :expire_date, :tag_tokens, polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

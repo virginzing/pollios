@@ -12,7 +12,11 @@ class PollsController < ApplicationController
   respond_to :json
 
   def generate_qrcode
-    @qrurl = PollSeries.find(10).to_json
+    @qrurl = PollSeries.find(10).as_json(
+                only: [:id, :description],
+                methods: [:creator],
+                include: { polls: { only: [:id, :title] } } 
+              )
     respond_to do |format|
       format.html
       format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }

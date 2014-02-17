@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140212045234) do
+ActiveRecord::Schema.define(version: 20140217053636) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -217,6 +217,16 @@ ActiveRecord::Schema.define(version: 20140212045234) do
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id"
+
+  create_table "poll_series_tags", force: true do |t|
+    t.integer  "poll_series_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_series_tags", ["poll_series_id"], name: "index_poll_series_tags_on_poll_series_id"
+  add_index "poll_series_tags", ["tag_id"], name: "index_poll_series_tags_on_tag_id"
 
   create_table "polls", force: true do |t|
     t.integer  "member_id"
