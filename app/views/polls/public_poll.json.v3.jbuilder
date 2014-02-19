@@ -1,5 +1,7 @@
 if @poll_series || @poll_nonseries
+
   json.response_status "OK"
+  
   json.poll_series @poll_series do |poll|
     json.creator do
       json.id poll.member_id

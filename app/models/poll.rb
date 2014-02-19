@@ -7,14 +7,15 @@ class Poll < ActiveRecord::Base
   has_many :taggings
   has_many :tags, through: :taggings, source: :tag
 
-  belongs_to :member
-  belongs_to :poll_series
-
   has_many :poll_groups, dependent: :destroy
   has_many :groups, through: :poll_groups, source: :group
 
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
+
+  belongs_to :member
+  belongs_to :poll_series
+  belongs_to :campaign
 
   validates :title, presence: true
 
@@ -146,39 +147,59 @@ class Poll < ActiveRecord::Base
     choices.split(",").count if choices.presence
   end
 
-
   def self.vote_poll(poll)
     member_id = poll[:member_id]
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
-  
+    guest_id = poll[:guest_id]
+
     begin
-      ever_vote = HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
+      ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
       unless ever_vote.present?
         find_poll = Poll.find(poll_id)
         find_choice = find_poll.choices.where(id: choice_id).first
-        find_poll.increment!(:vote_all)
-        find_choice.increment!(:vote)
 
-        find_poll.poll_series.increment!(:vote_all) if find_poll.series
+        if guest_id.present?
+          find_poll.increment!(:vote_all_guest)
+          find_choice.increment!(:vote_guest)
+          find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
+          history_voted = HistoryVoteGuest.create(guest_id: guest_id, poll_id: poll_id, choice_id: choice_id)
+        else
+          find_poll.increment!(:vote_all)
+          find_choice.increment!(:vote)
+          find_poll.poll_series.increment!(:vote_all) if find_poll.series
+          history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id)
+        end
 
-        history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id)
+        # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
+
         [find_poll, history_voted]
       end
     rescue => e
       puts "error => #{e}"
       nil
-    end    
+    end  
+
   end
 
   def self.view_poll(poll)
     member_id = poll[:member_id]
     poll_id = poll[:id]
- 
-    unless HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
-      HistoryView.create!(member_id: member_id, poll_id: poll_id)
-      find(poll_id).increment!(:view_all)
-      find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
+    guest_id = poll[:guest_id]
+
+    ever_view = guest_id.present? ? HistoryViewGuest.where(guest_id: guest_id, poll_id: poll_id).first.present? : HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
+    unless ever_view.present?
+
+      if guest_id.present?
+        HistoryViewGuest.create!(guest_id: guest_id, poll_id: poll_id)
+        find(poll_id).increment!(:view_all_guest)
+        find(poll_id).poll_series.increment!(:view_all_guest) if find(poll_id).series
+      else
+        HistoryView.create!(member_id: member_id, poll_id: poll_id)
+        find(poll_id).increment!(:view_all)
+        find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
+      end
+
     end
 
   end

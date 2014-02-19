@@ -1,7 +1,6 @@
-<script type="text/javascript" src="/javascripts/nested_form.js"></script>
 <script type="text/javascript" src="/javascripts/validateform.js"></script>
 
-<div class="panel">
+
 <%= simple_nested_form_for(@poll, :html => { :id => "build_poll"} )  do |f| %>
 
   <%= f.label :title %>
@@ -19,7 +18,7 @@
   <%= f.label :group %>
 <!--   <%= f.select :group_id, current_member.get_group_active.map {|r| [r.name, r.id] }, options ={:prompt => "Select a group" } %> -->
   
-  <select multiple id="poll_group_id" name="poll[group_id][]" style="width: 928px; ">
+  <select multiple id="poll_group_id" name="poll[group_id][]">
     <% current_member.get_group_active.each do |group| %>
       <option value="<%= group.id %>"><%= group.name %></option>
     <% end %>
@@ -27,6 +26,10 @@
   <br><br>
 
   <%= f.input :tag_tokens,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list" , data: {load: @poll.tags} } %>
+  <br>
+  <%= f.label "Campaign" %>
+  <%= f.select :campaign_id, current_member.campaigns.order('name').map {|r| [r.name, r.id ]}, prompt: "Choose a Campaign" %>
+
   <br>
   <label>Choice</label>
     <input type="text" name="poll[choice_one]">
@@ -44,15 +47,7 @@
 
   <%= f.submit class: 'button' %>
 <% end %>
-</div>
 
-
-<script id="script_e1">
-  $("#poll_group_id").select2({
-    placeholder: "Select a group (Option)",
-    allowClear: true
-  });
-</script>
 <script>
 $('.multi-field-wrapper').each(function() {
     var $wrapper = $('.multi-fields', this);
@@ -65,4 +60,3 @@ $('.multi-field-wrapper').each(function() {
     });
 });
 </script>
-

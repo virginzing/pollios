@@ -39,6 +39,11 @@ class Member < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
+  has_many :campaigns, dependent: :destroy
+
+  has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"
+  has_many :have_campaigns, through: :campaign_members, source: :campaign
+  
   has_many :poll_series
   before_create :set_friend_limit
 

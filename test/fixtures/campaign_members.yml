@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  campaign_id: 
+  member_id: 
+  luck: false
+  serial_code: MyString
+
+two:
+  campaign_id: 
+  member_id: 
+  luck: false
+  serial_code: MyString

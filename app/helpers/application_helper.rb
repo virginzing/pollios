@@ -71,17 +71,17 @@ end
 # }' -X POST http://localhost:3000/poll/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": "1",
-#     "choice_id": "153",
-#     "series": true
-# }' -X POST http://localhost:3000/poll/64/vote.json -i
+#     "guest_id": "1",
+#     "choice_id": "79"
+# }' -X POST http://localhost:3000/poll/32/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": "1",
-#     "series": true
-# }' -X POST http://localhost:3000/poll/65/view.json -i
+#     "member_id": "1"
+# }' -X POST http://localhost:3000/poll/32/view.json -i
 
 # curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=4&api_version=2
+
+# http://localhost:3000/poll/tags.json?member_id=4
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "1"
@@ -104,3 +104,15 @@ end
 # curl -H "Content-Type: application/json" -d '{"authen":"goodmail","password":"025713420" }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
 # curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=33" -F "username=nisekoi" -X POST http://localhost:3000/authen/update_sentai.json -i
+
+
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "udid": "0000"
+# }' -X POST http://localhost:3000/guest/try_out.json -i
+
+
+
+
+

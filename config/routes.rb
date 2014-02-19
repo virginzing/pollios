@@ -1,10 +1,16 @@
 Pollios::Application.routes.draw do
 
+  resources :campaigns
+
   resources :polls do
     resources :choices
   end
   resources :members 
   resources :poll_series
+
+  scope 'guest' do
+    post 'try_out',         to: 'guests#try_out'
+  end
 
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'
@@ -43,7 +49,9 @@ Pollios::Application.routes.draw do
     post 'vote',            to: 'polls#vote_poll'
     post 'view',            to: 'polls#view_poll'
     get 'public_timeline',  to: 'polls#public_poll'
-    get 'group_timeline',            to: 'polls#group_poll'
+    get 'group_timeline',   to: 'polls#group_poll'
+    get 'guest_poll',       to: 'polls#guest_poll'
+    get 'tags',             to: 'polls#tags'
     get 'qrcode',           to: 'polls#qrcode'
     get   ':id/choices',      to: 'polls#choices'
     post  ':id/vote',         to: 'polls#vote'

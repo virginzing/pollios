@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
   include AuthenSentaiHelper
   include PollHelper
 
@@ -16,11 +16,25 @@ class ApplicationController < ActionController::Base
     @history_viewed = @current_member.history_views.collect!  { |viewed| viewed.poll_id }
   end
 
+  def history_voted_viewed_guest
+    @history_voted_guest  = @current_guest.history_vote_guests.collect!  { |voted| [voted.poll_id, voted.choice_id] }
+    @history_viewed_guest = @current_guest.history_view_guests.collect!  { |viewed| viewed.poll_id }
+  end
+
   def set_current_member
     @current_member = Member.find_by(id: params[:member_id])
     unless @current_member.present?
       respond_to do |format|
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
+      end
+    end
+  end
+
+  def set_current_guest
+    @current_guest = Guest.find_by(id: params[:guest_id])
+    unless @current_guest.present?
+      respond_to do |format|
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Error."]}
       end
     end
   end

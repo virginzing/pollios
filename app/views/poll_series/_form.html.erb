@@ -3,6 +3,9 @@
 <%= f.input :expire_date, input_html: { id: "datetimepicker" }, as: :string %>
 <%= f.input :tag_tokens, :label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list", data: {load: @poll_series.tags} } %>
 <br>
+<%= f.label "Campaign" %>
+<%= f.select :campaign_id, current_member.campaigns.order('name').map {|r| [r.name, r.id ]}, prompt: "Choose a Campaign" %>
+<br>
 <%= f.fields_for :polls do |poll_form| %>
   <%= render 'poll_form',  :f => poll_form %>    
 <% end %>

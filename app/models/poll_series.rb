@@ -3,6 +3,8 @@ class PollSeries < ActiveRecord::Base
   attr_accessor :tag_tokens
 
   belongs_to :member
+  belongs_to :campaign
+  
   has_many :polls, dependent: :destroy
 
   has_many :poll_series_tags, dependent: :destroy

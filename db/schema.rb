@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140217053636) do
+ActiveRecord::Schema.define(version: 20140219164942) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -88,12 +88,52 @@ ActiveRecord::Schema.define(version: 20140217053636) do
     t.boolean  "launch_notification"
   end
 
+  create_table "campaign_guests", force: true do |t|
+    t.integer  "campaign_id"
+    t.integer  "guest_id"
+    t.boolean  "luck"
+    t.string   "serail_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "campaign_guests", ["campaign_id"], name: "index_campaign_guests_on_campaign_id"
+  add_index "campaign_guests", ["guest_id"], name: "index_campaign_guests_on_guest_id"
+
+  create_table "campaign_members", force: true do |t|
+    t.integer  "campaign_id"
+    t.integer  "member_id"
+    t.boolean  "luck"
+    t.string   "serial_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "campaign_members", ["campaign_id"], name: "index_campaign_members_on_campaign_id"
+  add_index "campaign_members", ["member_id"], name: "index_campaign_members_on_member_id"
+
+  create_table "campaigns", force: true do |t|
+    t.string   "name"
+    t.string   "photo_campaign"
+    t.integer  "used",           default: 0
+    t.integer  "limit",          default: 0
+    t.integer  "member_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "begin_sample",   default: 1
+    t.integer  "end_sample"
+    t.datetime "expire"
+  end
+
+  add_index "campaigns", ["member_id"], name: "index_campaigns_on_member_id"
+
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
     t.string   "answer"
     t.integer  "vote",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "vote_guest", default: 0
   end
 
   add_index "choices", ["poll_id"], name: "index_choices_on_poll_id"
@@ -135,6 +175,12 @@ ActiveRecord::Schema.define(version: 20140217053636) do
     t.datetime "updated_at"
   end
 
+  create_table "guests", force: true do |t|
+    t.string   "udid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "hidden_polls", force: true do |t|
     t.integer  "member_id"
     t.integer  "poll_id"
@@ -145,6 +191,16 @@ ActiveRecord::Schema.define(version: 20140217053636) do
   add_index "hidden_polls", ["member_id"], name: "index_hidden_polls_on_member_id"
   add_index "hidden_polls", ["poll_id"], name: "index_hidden_polls_on_poll_id"
 
+  create_table "history_view_guests", force: true do |t|
+    t.integer  "guest_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_view_guests", ["guest_id"], name: "index_history_view_guests_on_guest_id"
+  add_index "history_view_guests", ["poll_id"], name: "index_history_view_guests_on_poll_id"
+
   create_table "history_views", force: true do |t|
     t.integer  "member_id"
     t.integer  "poll_id"
@@ -154,6 +210,17 @@ ActiveRecord::Schema.define(version: 20140217053636) do
 
   add_index "history_views", ["member_id"], name: "index_history_views_on_member_id"
   add_index "history_views", ["poll_id"], name: "index_history_views_on_poll_id"
+
+  create_table "history_vote_guests", force: true do |t|
+    t.integer  "guest_id"
+    t.integer  "poll_id"
+    t.integer  "choice_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_vote_guests", ["guest_id"], name: "index_history_vote_guests_on_guest_id"
+  add_index "history_vote_guests", ["poll_id"], name: "index_history_vote_guests_on_poll_id"
 
   create_table "history_votes", force: true do |t|
     t.integer  "member_id"
@@ -214,6 +281,9 @@ ActiveRecord::Schema.define(version: 20140217053636) do
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
     t.datetime "start_date",     default: '2014-02-03 06:45:53'
+    t.integer  "campaign_id"
+    t.integer  "vote_all_guest", default: 0
+    t.integer  "view_all_guest", default: 0
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id"
@@ -242,6 +312,9 @@ ActiveRecord::Schema.define(version: 20140217053636) do
     t.boolean  "series",         default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
+    t.integer  "campaign_id"
+    t.integer  "vote_all_guest", default: 0
+    t.integer  "view_all_guest", default: 0
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"

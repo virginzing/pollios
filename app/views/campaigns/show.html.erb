@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @campaign.name %>
+</p>
+
+<p>
+  <strong>Photo campaign:</strong>
+  <%= @campaign.photo_campaign %>
+</p>
+
+<p>
+  <strong>Used:</strong>
+  <%= @campaign.used %>
+</p>
+
+<p>
+  <strong>Limit:</strong>
+  <%= @campaign.limit %>
+</p>
+
+<p>
+  <strong>Member:</strong>
+  <%= @campaign.member %>
+</p>
+
+<%= link_to 'Edit', edit_campaign_path(@campaign) %> |
+<%= link_to 'Back', campaigns_path %>

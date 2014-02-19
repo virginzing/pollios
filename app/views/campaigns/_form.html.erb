@@ -1,0 +1,54 @@
+<%= simple_form_for(@campaign, html: {multipart: true}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <label><b>Condition</b></label>
+    
+    <div class="panel">
+      <div class="row">
+        <div class="large-2 columns">
+          <label>Chance
+            <input type="number" placeholder="" value="1" name="campaign[begin_sample]"/>
+          </label>
+        </div>
+              <div class="large-1 columns">
+          <span><p class="in">IN</p></span>
+        </div>
+        <div class="large-2 columns left">
+          <label>Total
+            <input type="number" placeholder="" value="10" name="campaign[end_sample]"/>
+          </label>
+        </div>
+
+          <div class="large-2 columns left">
+          <label>Limit
+            <input type="number" placeholder="" name="campaign[limit]"/>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <%= f.association :polls, collection: current_member.polls.where("campaign_id IS NULL"),multiple: 'multiple' %>
+    <br>
+  
+    <%= f.label "Photo Campaign" %>
+    <div class="fileinput fileinput-new" data-provides="fileinput">
+      <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 300px; max-height: 300px;"></div>
+      <div>
+      <br>
+        <span class="btn btn-default btn-file">
+        <span class="fileinput-new button tiny success">Select image</span>
+        <span class="fileinput-exists button tiny secondary">Change</span>
+        <input type="file" name="campaign[photo_campaign]"></span>
+        <a href="#" class="fileinput-exists button tiny secondary" data-dismiss="fileinput">Remove</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

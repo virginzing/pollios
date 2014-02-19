@@ -1,0 +1,35 @@
+<h1>Listing campaigns</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Photo campaign</th>
+      <th>Used</th>
+      <th>Chance</th>
+      <th>Limit</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @campaigns.each do |campaign| %>
+      <tr>
+        <td><%= campaign.name %></td>
+        <td><%= image_tag(campaign.photo_campaign.url(:thumbnail)) %></td>
+        <td><%= campaign.used %></td>
+        <td><%= campaign.begin_sample %> in <%= campaign.end_sample %></td>
+        <td><%= campaign.limit %></td>
+        <td><%= link_to 'Show', campaign %></td>
+        <td><%= link_to 'Edit', edit_campaign_path(campaign) %></td>
+        <td><%= link_to 'Destroy', campaign, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Campaign', new_campaign_path %>

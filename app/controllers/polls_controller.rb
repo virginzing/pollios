@@ -1,9 +1,11 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :vote, :view]
+  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags]
+  before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
-  before_action :history_voted_viewed, only: [:public_poll, :group_poll]
+  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags]
+  before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
   before_action :compress_gzip, only: [:public_poll]
 
@@ -127,6 +129,24 @@ class PollsController < ApplicationController
     end
   end
 
+  def guest_poll
+    if params[:type] == "active"
+      query_poll = Poll.active_poll
+    elsif params[:type] == "inactive"
+      query_poll = Poll.inactive_poll
+    else
+      query_poll = Poll.all
+    end
+
+    if params[:next_cursor]
+      @poll = query_poll.includes(:poll_series, :member).where("id < ? AND public = ?)", params[:next_cursor], true).order("created_at desc")
+    else
+      @poll = query_poll.includes(:poll_series, :member).where("public = ?", true).order("created_at desc")
+    end
+
+    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+  end
+
   def group_poll
     group_of_member = @current_member.groups.pluck(:id)
     if params[:type] == "active"
@@ -138,13 +158,37 @@ class PollsController < ApplicationController
     end
 
     if params[:next_cursor]
-      @poll ||= query_poll.joins(:poll_groups).uniq.includes(:poll_series, :member).where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
+      @poll ||= query_poll.joins(:poll_groups).uniq
+                          .includes(:poll_series, :member)
+                          .where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
     else
-      @poll ||= query_poll.joins(:poll_groups).uniq.includes(:poll_series, :member).where("poll_groups.group_id IN (?)", group_of_member)
+      @poll ||= query_poll.joins(:poll_groups).uniq
+                          .includes(:poll_series, :member)
+                          .where("poll_groups.group_id IN (?)", group_of_member)
     end
 
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+  end
 
+  def tags
+    @find_tag = Tag.find_by(name: params[:name])
+    friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
+
+    if params[:type] == "series"
+      query_poll = @find_tag.poll_series
+    else
+      query_poll = @find_tag.polls.where(series: false)
+    end
+    puts "query_poll => #{query_poll}"
+    if params[:next_cursor]
+      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+                          .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
+                          .order("poll_members.created_at desc")
+    else
+      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+                          .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
+                          .order("poll_members.created_at desc")
+    end
   end
 
   def vote
@@ -160,14 +204,14 @@ class PollsController < ApplicationController
     @poll = Poll.create_poll(poll_params, @current_member)
   end
 
-  def vote_poll
-    @poll, @history_voted = Poll.vote_poll(vote_params)
-    @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
-  end
+  # def vote_poll
+  #   @poll, @history_voted = Poll.vote_poll(vote_params)
+  #   @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
+  # end
 
-  def view_poll
-    @poll = Poll.view_poll(vote_params)
-  end
+  # def view_poll
+  #   @poll = Poll.view_poll(vote_params)
+  # end
 
   def destroy
     @poll.destroy
@@ -186,11 +230,11 @@ class PollsController < ApplicationController
   end
 
   def view_and_vote_params
-    params.permit(:id, :member_id, :choice_id)
+    params.permit(:id, :member_id, :choice_id, :guest_id)
   end
 
   def vote_params
-    params.permit(:poll_id, :choice_id, :member_id, :id)
+    params.permit(:poll_id, :choice_id, :member_id, :id, :guest)
   end
 
   def poll_params
@@ -198,6 +242,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:member_id, :title, :expire_date, :public, :choice_count ,:tag_tokens, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:campaign_id, :member_id, :title, :expire_date, :public, :choice_count ,:tag_tokens, choices_attributes: [:id, :answer, :_destroy])
   end
 end
