@@ -76,13 +76,14 @@ end
 # }' -X POST http://localhost:3000/poll/32/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": "1"
-# }' -X POST http://localhost:3000/poll/32/view.json -i
+#     "guest_id": "1"
+# }' -X POST http://localhost:3000/poll/33/view.json -i
 
-# curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=4&api_version=2
+# # curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=4&api_version=2
+# http://localhost:3000/poll/33/choices.json?guest_id=4&voted=no 
 
 # http://localhost:3000/poll/tags.json?member_id=4
-
+# http://localhost:3000/poll/guest_poll.json?guest_id=1
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "1"
 # }' -X POST http://localhost:3000/poll/group.json -i
