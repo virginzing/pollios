@@ -1,7 +1,7 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
 
-  attr_accessor :group_id, :tag_tokens
+  attr_accessor :group_id, :tag_tokens, :campaign_id
 
   has_many :choices, dependent: :destroy
   has_many :taggings
