@@ -155,6 +155,7 @@ class Member < ActiveRecord::Base
       id: id,
       type: member_type_text,
       name: sentai_name,
+      username: username,
       email: email,
       avatar: avatar.present? ? avatar : "No Image"
    }
