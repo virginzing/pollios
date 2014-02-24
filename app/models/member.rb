@@ -153,8 +153,8 @@ class Member < ActiveRecord::Base
   def as_json options={}
    {
       id: id,
+      type: member_type_text,
       name: sentai_name,
-      member_type: member_type_text,
       email: email,
       avatar: avatar.present? ? avatar : "No Image"
    }

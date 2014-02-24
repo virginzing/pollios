@@ -103,7 +103,7 @@ class Poll < ActiveRecord::Base
     if poll.count == LIMIT_POLL
       next_cursor = poll.last
     else
-      next_cursor = ""
+      next_cursor = 0
     end
 
     filter_poll(poll, next_cursor)
