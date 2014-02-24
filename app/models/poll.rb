@@ -126,14 +126,14 @@ class Poll < ActiveRecord::Base
     PollMember.includes(:poll, :member).where("id IN (?)", poll_ids).order("id desc").each do |poll_member|
 
       if poll_member.share_poll_of_id == 0
-        not_shared = Hash["shared" => false]
-        if poll_member.poll.series
-          poll_series << poll_member.poll
-          series_shared << not_shared
-        else
-          poll_nonseries << poll_member.poll
-          nonseries_shared << not_shared
-        end
+        # not_shared = Hash["shared" => false]
+        # if poll_member.poll.series
+        #   poll_series << poll_member.poll
+        #   series_shared << not_shared
+        # else
+        #   poll_nonseries << poll_member.poll
+        #   nonseries_shared << not_shared
+        # end
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
         shared = Hash["shared" => true, "shared_by" => poll_member.member.as_json()]
