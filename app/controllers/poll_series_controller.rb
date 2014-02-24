@@ -29,7 +29,7 @@ class PollSeriesController < ApplicationController
   end
 
   def create
-    puts params
+    # puts params
     @poll_series = current_member.poll_series.new(poll_series_params)
 
     if @poll_series.save

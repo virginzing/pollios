@@ -49,6 +49,7 @@ Pollios::Application.routes.draw do
     post 'vote',            to: 'polls#vote_poll'
     post 'view',            to: 'polls#view_poll'
     get 'public_timeline',  to: 'polls#public_poll'
+    get 'new_public_timeline',  to: 'polls#new_public_timeline'
     get 'group_timeline',   to: 'polls#group_poll'
     get 'guest_poll',       to: 'polls#guest_poll'
     get 'tags',             to: 'polls#tags'

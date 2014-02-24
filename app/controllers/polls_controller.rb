@@ -1,10 +1,10 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags]
+  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
-  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags]
+  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
   before_action :compress_gzip, only: [:public_poll]
@@ -56,7 +56,7 @@ class PollsController < ApplicationController
 
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
-      current_member.poll_members.create!(poll_id: @poll.id) unless group_id.presence
+      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0) unless group_id.presence
       Group.add_poll(@poll.id, group_id) if group_id.present?
       puts "success"
       flash[:success] = "Create poll successfully."
@@ -87,6 +87,10 @@ class PollsController < ApplicationController
     end
   end
 
+  def reshared
+    
+  end
+
   def public_poll
     puts "version => #{derived_version}"
     if derived_version == 1
@@ -104,7 +108,7 @@ class PollsController < ApplicationController
       @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
                     .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
 
-    else
+    elsif derived_version == 3
       friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
       if params[:type] == "active"
         query_poll = Poll.active_poll
@@ -126,7 +130,13 @@ class PollsController < ApplicationController
       @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
       puts "series => #{@poll_series.map(&:id)}"
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
+    else
+      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, params[:next_cursor])
     end
+  end
+
+  def new_public_timeline
+    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, params[:next_cursor])
   end
 
   def guest_poll

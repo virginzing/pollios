@@ -150,4 +150,15 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def as_json options={}
+   {
+      id: id,
+      name: sentai_name,
+      member_type: member_type_text,
+      email: email,
+      avatar: avatar.present? ? avatar : "No Image"
+   }
+  end
+
+
 end

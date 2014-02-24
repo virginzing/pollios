@@ -26,4 +26,6 @@ class MembersController < ApplicationController
     flash[:success] = "Clear successfully."
     redirect_to root_url
   end
+
+  
 end

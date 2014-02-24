@@ -1,7 +1,7 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
 
-  attr_accessor :group_id, :tag_tokens, :campaign_id
+  attr_accessor :group_id, :tag_tokens, :campaign_id, :share_poll_of_id
 
   has_many :choices, dependent: :destroy
   has_many :taggings
@@ -13,7 +13,7 @@ class Poll < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
 
-  belongs_to :member
+  belongs_to :member, touch: true
   belongs_to :poll_series
   belongs_to :campaign
 
@@ -33,8 +33,6 @@ class Poll < ActiveRecord::Base
 
   validates :member_id, :title , presence: true
 
-
-
   def tag_tokens=(tokens)
     puts "tokens => #{tokens}"
     self.tag_ids = Tag.ids_from_tokens(tokens)
@@ -43,6 +41,12 @@ class Poll < ActiveRecord::Base
   def cached_tags
     Rails.cache.fetch([self, 'tags']) do
       tags.pluck(:name)
+    end
+  end
+
+  def cached_member
+    Rails.cache.fetch([self, 'member'], expires_in: 30.minutes) do
+      member.as_json()
     end
   end
 
@@ -77,8 +81,81 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.split_poll(list_of_poll)
+  def self.list_of_poll(member_obj, options = {})
+    puts "options =>  #{options}"
+    next_cursor = options
 
+    if next_cursor.presence
+      next_cursor = next_cursor.to_i
+      @cache_polls = cached_timeline(member_obj)
+      # puts "cached poll (next_cursor): #{@cache_polls}"
+      index = @cache_polls.index(next_cursor)
+      poll = @cache_polls[(index+1)..(LIMIT_POLL+index)]
+      # puts "poll : #{poll}"
+    else
+      Rails.cache.delete(['list_poll', member_obj.id])
+      @cache_polls = cached_timeline(member_obj)
+      # puts "cached poll: #{@cache_polls}"
+      poll = @cache_polls[0..(LIMIT_POLL - 1)]
+      # puts "poll : #{poll}"
+    end
+
+    if poll.count == LIMIT_POLL
+      next_cursor = poll.last
+    else
+      next_cursor = ""
+    end
+
+    filter_poll(poll, next_cursor)
+
+  end
+
+  def self.cached_timeline(member_obj)
+    Rails.cache.fetch(['list_poll', member_obj.id ]) do
+      PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id))
+    end
+  end
+
+  def self.filter_poll(poll_ids, next_cursor)
+    puts "poll_ids (filter) : #{poll_ids}"
+    poll_series = []
+    poll_nonseries = []
+    series_shared = []
+    nonseries_shared = []
+
+    PollMember.includes(:poll, :member).where("id IN (?)", poll_ids).order("id desc").each do |poll_member|
+
+      if poll_member.share_poll_of_id == 0
+        not_shared = Hash["shared" => false]
+        if poll_member.poll.series
+          poll_series << poll_member.poll
+          series_shared << not_shared
+        else
+          poll_nonseries << poll_member.poll
+          nonseries_shared << not_shared
+        end
+      else
+        find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
+        shared = Hash["shared" => true, "shared_by" => poll_member.member.as_json()]
+        if find_poll.present?
+          if find_poll.series
+            poll_series << find_poll
+            series_shared << shared
+          else
+            poll_nonseries << find_poll
+            nonseries_shared << shared
+          end
+        end
+
+      end
+    end
+
+    # puts "poll series => #{poll_series.count}, series shared => #{series_shared}"
+    # puts "poll nonseries => #{poll_nonseries}, nonseries shared => #{nonseries_shared}"
+    [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
+  end
+
+  def self.split_poll(list_of_poll)
     poll_series = []
     poll_nonseries = []
     next_cursor = ""
@@ -136,7 +213,7 @@ class Poll < ActiveRecord::Base
         if group_id
           Group.add_poll(@poll.id, group_id)
         else
-          @poll.poll_members.create!(member_id: member_id)
+          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0)
         end
       end
     end
