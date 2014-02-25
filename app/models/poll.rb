@@ -217,7 +217,7 @@ class Poll < ActiveRecord::Base
   end
 
   def self.find_my_poll(member_id, type)
-    find_poll = where("member_id = ? AND series = ?", member_id, false).limit(LIMIT_TIMELINE) | where("member_id = ? AND series = ?", member_id, true).limit(LIMIT_TIMELINE).group("series")
+    find_poll = select("id").where("member_id = ? AND series = ?", member_id, false).limit(LIMIT_TIMELINE) | select("id").where("member_id = ? AND series = ?", member_id, true).group('poll_series_id').limit(LIMIT_TIMELINE)
     filter_type(find_poll, type).map(&:id)
   end
 
