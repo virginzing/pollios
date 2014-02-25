@@ -54,6 +54,7 @@ Pollios::Application.routes.draw do
     get 'guest_poll',       to: 'polls#guest_poll'
     get 'tags',             to: 'polls#tags'
     get 'qrcode',           to: 'polls#qrcode'
+    get 'my_poll',          to: 'polls#my_poll'
     get   ':id/choices',      to: 'polls#choices'
     post  ':id/vote',         to: 'polls#vote'
     post  ':id/view',         to: 'polls#view'

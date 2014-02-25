@@ -1,32 +1,32 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline]
+  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
-  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline]
+  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices]
-  before_action :compress_gzip, only: [:public_poll]
+  before_action :compress_gzip, only: [:public_poll, :my_poll]
 
   # :restrict_access
 
   respond_to :json
 
-  def generate_qrcode
-    @qrurl = PollSeries.find(10).as_json(
-                only: [:id, :description],
-                methods: [:creator],
-                include: { polls: { only: [:id, :title] } } 
-              )
-    respond_to do |format|
-      format.html
-      format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }
-      format.png  { render :qrcode => @qrurl, :level => :h, :unit => 4 }
-      format.gif  { render :qrcode => @qrurl }
-      format.jpeg { render :qrcode => @qrurl }
-    end
-  end
+  # def generate_qrcode
+  #   @qrurl = PollSeries.find(10).as_json(
+  #               only: [:id, :description],
+  #               methods: [:creator],
+  #               include: { polls: { only: [:id, :title] } } 
+  #             )
+  #   respond_to do |format|
+  #     format.html
+  #     format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }
+  #     format.png  { render :qrcode => @qrurl, :level => :h, :unit => 4 }
+  #     format.gif  { render :qrcode => @qrurl }
+  #     format.jpeg { render :qrcode => @qrurl }
+  #   end
+  # end
 
 
   def new
@@ -56,7 +56,7 @@ class PollsController < ApplicationController
 
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
-      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0) unless group_id.presence
+      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date) unless group_id.presence
       Group.add_poll(@poll.id, group_id) if group_id.present?
       puts "success"
       flash[:success] = "Create poll successfully."
@@ -131,7 +131,7 @@ class PollsController < ApplicationController
       puts "series => #{@poll_series.map(&:id)}"
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
     else
-      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, params[:next_cursor])
+      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, options_params)
     end
   end
 
@@ -178,6 +178,10 @@ class PollsController < ApplicationController
     end
 
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+  end
+
+  def my_poll
+    
   end
 
   def tags
@@ -233,6 +237,10 @@ class PollsController < ApplicationController
 
   def set_poll
     @poll = Poll.find(params[:id])
+  end
+
+  def options_params
+    params.permit(:next_cursor, :type)
   end
 
   def choices_params

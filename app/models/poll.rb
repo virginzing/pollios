@@ -24,7 +24,7 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  LIMIT_POLL = 10
+  LIMIT_POLL = 4
   self.per_page = 20
 
   default_scope { order("created_at desc").limit(LIMIT_POLL) }
@@ -83,7 +83,8 @@ class Poll < ActiveRecord::Base
 
   def self.list_of_poll(member_obj, options = {})
     puts "options =>  #{options}"
-    next_cursor = options
+    next_cursor = options[:next_cursor]
+    @type = options[:type]
 
     if next_cursor.presence
       next_cursor = next_cursor.to_i
@@ -91,13 +92,13 @@ class Poll < ActiveRecord::Base
       # puts "cached poll (next_cursor): #{@cache_polls}"
       index = @cache_polls.index(next_cursor)
       poll = @cache_polls[(index+1)..(LIMIT_POLL+index)]
-      # puts "poll : #{poll}"
+      puts "poll : #{poll}"
     else
-      Rails.cache.delete(['list_poll', member_obj.id])
+      Rails.cache.delete(['list_poll', member_obj.id, @type])
       @cache_polls = cached_timeline(member_obj)
       # puts "cached poll: #{@cache_polls}"
       poll = @cache_polls[0..(LIMIT_POLL - 1)]
-      # puts "poll : #{poll}"
+      puts "poll : #{poll}"
     end
 
     if poll.count == LIMIT_POLL
@@ -111,8 +112,8 @@ class Poll < ActiveRecord::Base
   end
 
   def self.cached_timeline(member_obj)
-    Rails.cache.fetch(['list_poll', member_obj.id ]) do
-      PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id))
+    Rails.cache.fetch(['list_poll', member_obj.id, @type ]) do
+      PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
     end
   end
 
@@ -213,7 +214,7 @@ class Poll < ActiveRecord::Base
         if group_id
           Group.add_poll(@poll.id, group_id)
         else
-          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0)
+          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: series, expire_date: convert_expire_date)
         end
       end
     end

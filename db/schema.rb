@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140219164942) do
+ActiveRecord::Schema.define(version: 20140225033653) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -266,6 +266,9 @@ ActiveRecord::Schema.define(version: 20140219164942) do
     t.integer  "share_poll_of_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "public"
+    t.boolean  "series"
+    t.datetime "expire_date"
   end
 
   add_index "poll_members", ["member_id"], name: "index_poll_members_on_member_id"
