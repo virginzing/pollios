@@ -13,6 +13,8 @@ class Poll < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
 
+  has_many :history_votes, dependent: :destroy
+
   belongs_to :member, touch: true
   belongs_to :poll_series
   belongs_to :campaign
@@ -275,6 +277,12 @@ class Poll < ActiveRecord::Base
         find_poll = Poll.find(poll_id)
         find_choice = find_poll.choices.where(id: choice_id).first
 
+        if find_poll.series
+          poll_series_id = find_poll.poll_series_id
+        else
+          poll_series_id = 0
+        end
+
         if guest_id.present?
           find_poll.increment!(:vote_all_guest)
           find_choice.increment!(:vote_guest)
@@ -284,7 +292,7 @@ class Poll < ActiveRecord::Base
           find_poll.increment!(:vote_all)
           find_choice.increment!(:vote)
           find_poll.poll_series.increment!(:vote_all) if find_poll.series
-          history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id)
+          history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
         end
 
         # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
