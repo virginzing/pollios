@@ -90,7 +90,7 @@ class Poll < ActiveRecord::Base
       if status == ENV["PUBLIC_POLL"]
         PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
       elsif status == ENV["MY_POLL"]
-        Poll.find_my_poll(member_obj.id, @type)
+        PollMember.find_my_poll(member_obj.id, @type)
       elsif status == ENV["MY_VOTE"]
           
       end
@@ -216,11 +216,6 @@ class Poll < ActiveRecord::Base
     Poll.where(member_id: member_id, poll_series_id: series_id).limit(20)
   end
 
-  def self.find_my_poll(member_id, type)
-    find_poll = select("id").where("member_id = ? AND series = ?", member_id, false).limit(LIMIT_TIMELINE) | select("id").where("member_id = ? AND series = ?", member_id, true).group('poll_series_id').limit(LIMIT_TIMELINE)
-    filter_type(find_poll, type).map(&:id)
-  end
-
   def self.get_group_poll(member, option = {})
     list_group = member.groups.map(&:id)
     if option[:next_poll]
@@ -341,3 +336,6 @@ class Poll < ActiveRecord::Base
   end
 
 end
+
+
+

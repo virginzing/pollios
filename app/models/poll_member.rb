@@ -29,6 +29,12 @@ class PollMember < ActiveRecord::Base
     @poll.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 
+  def self.find_my_poll(member_id, type)
+    find_poll = where("member_id = ? AND share_poll_of_id = 0", member_id).order("id desc").limit(LIMIT_TIMELINE)
+    filter_type(find_poll, type).map(&:poll_id)
+  end
+
+
   def self.timeline(member_id, friend_id, type)
 
     ids, poll_ids = find_poll_original(member_id, friend_id, type)
