@@ -87,11 +87,11 @@ class Poll < ActiveRecord::Base
 
   def self.cached_find_poll(member_obj, status)
     Rails.cache.fetch([ status, member_obj.id, @type ]) do
-      if status == Figaro.env["PUBLIC_POLL"]
+      if status == ENV["PUBLIC_POLL"]
         PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
-      elsif status == Figaro.env["MY_POLL"]
+      elsif status == ENV["MY_POLL"]
         Poll.find_my_poll(member_obj.id, @type)
-      elsif status == Figaro.env["MY_VOTE"]
+      elsif status == ENV["MY_VOTE"]
           
       end
     end
@@ -120,9 +120,9 @@ class Poll < ActiveRecord::Base
       next_cursor = 0
     end
 
-    if status == Figaro.env["PUBLIC_POLL"]
+    if status == ENV["PUBLIC_POLL"]
       filter_poll(poll, next_cursor)
-    elsif status == Figaro.env["MY_POLL"]
+    elsif status == ENV["MY_POLL"]
       filter_my_poll_my_vote(poll, next_cursor)
     end
   end

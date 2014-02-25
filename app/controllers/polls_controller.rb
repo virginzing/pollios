@@ -131,16 +131,16 @@ class PollsController < ApplicationController
       puts "series => #{@poll_series.map(&:id)}"
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
     else
-      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, Figaro.env["PUBLIC_POLL"], options_params)
+      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
     end
   end
 
   def my_poll
-    @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, Figaro.env["MY_POLL"], options_params)
+    @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, ENV["MY_POLL"], options_params)
   end
 
   def my_vote
-    @poll_series, @poll_nonseries, @next_cursor = Member.list_of_poll(@current_member, Figaro.env["MY_VOTE"], options_params)
+    @poll_series, @poll_nonseries, @next_cursor = Member.list_of_poll(@current_member, ENV["MY_VOTE"], options_params)
   end
 
   # def new_public_timeline
