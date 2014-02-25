@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140225033653) do
+ActiveRecord::Schema.define(version: 20140225053159) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -287,6 +287,7 @@ ActiveRecord::Schema.define(version: 20140225033653) do
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
+    t.integer  "share_count",    default: 0
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id"
@@ -318,6 +319,8 @@ ActiveRecord::Schema.define(version: 20140225033653) do
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
+    t.integer  "favorite_count", default: 0
+    t.integer  "share_count",    default: 0
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"

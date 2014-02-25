@@ -58,6 +58,7 @@ Pollios::Application.routes.draw do
     get   ':id/choices',      to: 'polls#choices'
     post  ':id/vote',         to: 'polls#vote'
     post  ':id/view',         to: 'polls#view'
+    post 'share/:id',       to: 'polls#share'
   end
 
 
