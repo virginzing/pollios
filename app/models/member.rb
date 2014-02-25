@@ -66,6 +66,15 @@ class Member < ActiveRecord::Base
     Hash["voted" => false]
   end
 
+  def list_voted_questionnaire?(history_voted, poll_series_id)
+    history_voted.each do |poll|
+      if poll.last == poll_series_id
+        return Hash["voted" => true]
+      end
+    end
+    Hash["voted" => false]
+  end
+
   def list_viewed?(history_viewed, poll_id)
     history_viewed.include?(poll_id)
   end

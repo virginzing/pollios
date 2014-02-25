@@ -1,13 +1,13 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share]
+  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
-  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll]
+  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share]
-  before_action :compress_gzip, only: [:public_poll, :my_poll]
+  before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
 
   # :restrict_access
 
@@ -131,13 +131,21 @@ class PollsController < ApplicationController
       puts "series => #{@poll_series.map(&:id)}"
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
     else
-      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, options_params)
+      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, Figaro.env["PUBLIC_POLL"], options_params)
     end
   end
 
-  def new_public_timeline
-    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, params[:next_cursor])
+  def my_poll
+    @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, Figaro.env["MY_POLL"], options_params)
   end
+
+  def my_vote
+    @poll_series, @poll_nonseries, @next_cursor = Member.list_of_poll(@current_member, Figaro.env["MY_VOTE"], options_params)
+  end
+
+  # def new_public_timeline
+  #   @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, params[:next_cursor])
+  # end
 
   def guest_poll
     if params[:type] == "active"
@@ -178,10 +186,6 @@ class PollsController < ApplicationController
     end
 
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  end
-
-  def my_poll
-    
   end
 
   def tags

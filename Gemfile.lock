@@ -94,6 +94,9 @@ GEM
     execjs (2.0.2)
     faker (1.2.0)
       i18n (~> 0.5)
+    figaro (0.7.0)
+      bundler (~> 1.0)
+      rails (>= 3, < 5)
     foundation_rails_helper (0.4)
       actionpack (>= 3.0)
       railties (>= 3.0)
@@ -228,6 +231,7 @@ DEPENDENCIES
   decent_exposure
   enumerize
   faker
+  figaro
   foundation-rails!
   foundation_rails_helper
   jbuilder (~> 1.2)

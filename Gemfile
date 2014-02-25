@@ -68,6 +68,7 @@ gem 'rqrcode'
 gem 'rqrcode-rails3'
 gem "mini_magick"
 gem 'randumb'
+gem 'figaro'
 # gem "squeel" 
 
 # Use ActiveModel has_secure_password

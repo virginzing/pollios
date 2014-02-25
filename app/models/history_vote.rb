@@ -4,6 +4,8 @@ class HistoryVote < ActiveRecord::Base
 
   validates :poll_id, :member_id, :choice_id, presence: true
 
+  default_scope { order("id desc") }
+
   def self.voted?(member_id, poll_id)
     history_voted = where(member_id: member_id, poll_id: poll_id).first
     if history_voted.present?

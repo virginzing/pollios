@@ -25,6 +25,7 @@ class Poll < ActiveRecord::Base
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
   LIMIT_POLL = 10
+  LIMIT_TIMELINE = 3000
   self.per_page = 20
 
   default_scope { order("created_at desc").limit(LIMIT_POLL) }
@@ -33,10 +34,6 @@ class Poll < ActiveRecord::Base
 
   validates :member_id, :title , presence: true
 
-  def tag_tokens=(tokens)
-    puts "tokens => #{tokens}"
-    self.tag_ids = Tag.ids_from_tokens(tokens)
-  end
 
   def cached_tags
     Rails.cache.fetch([self, 'tags']) do
@@ -48,6 +45,11 @@ class Poll < ActiveRecord::Base
     Rails.cache.fetch([self, 'member'], expires_in: 30.minutes) do
       member.as_json()
     end
+  end
+
+  def tag_tokens=(tokens)
+    puts "tokens => #{tokens}"
+    self.tag_ids = Tag.ids_from_tokens(tokens)
   end
 
   def self.tag_counts
@@ -81,25 +83,34 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.list_of_poll(member_obj, options = {})
+  def self.cached_find_poll(member_obj, status)
+    Rails.cache.fetch([ status, member_obj.id, @type ]) do
+      if status == Figaro.env["PUBLIC_POLL"]
+        PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
+      elsif status == Figaro.env["MY_POLL"]
+        Poll.find_my_poll(member_obj.id, @type)
+      elsif status == Figaro.env["MY_VOTE"]
+          
+      end
+    end
+  end
+
+  def self.list_of_poll(member_obj, status, options = {})
     puts "options =>  #{options}"
     next_cursor = options[:next_cursor]
     @type = options[:type]
 
-    if next_cursor.presence
+    if next_cursor.presence && next_cursor != "0"
       next_cursor = next_cursor.to_i
-      @cache_polls = cached_timeline(member_obj)
-      # puts "cached poll (next_cursor): #{@cache_polls}"
+      @cache_polls = cached_find_poll(member_obj, status)
       index = @cache_polls.index(next_cursor)
       poll = @cache_polls[(index+1)..(LIMIT_POLL+index)]
-      puts "poll : #{poll}"
     else
-      Rails.cache.delete(['list_poll', member_obj.id, @type])
-      @cache_polls = cached_timeline(member_obj)
-      # puts "cached poll: #{@cache_polls}"
+      Rails.cache.delete([status, member_obj.id, @type])
+      @cache_polls = cached_find_poll(member_obj, status)
       poll = @cache_polls[0..(LIMIT_POLL - 1)]
-      puts "poll : #{poll}"
     end
+    puts "cache poll id : #{@cache_polls}"
 
     if poll.count == LIMIT_POLL
       next_cursor = poll.last
@@ -107,25 +118,20 @@ class Poll < ActiveRecord::Base
       next_cursor = 0
     end
 
-    filter_poll(poll, next_cursor)
-
-  end
-
-  def self.cached_timeline(member_obj)
-    Rails.cache.fetch(['list_poll', member_obj.id, @type ]) do
-      PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
+    if status == Figaro.env["PUBLIC_POLL"]
+      filter_poll(poll, next_cursor)
+    elsif status == Figaro.env["MY_POLL"]
+      filter_my_poll_my_vote(poll, next_cursor)
     end
   end
 
   def self.filter_poll(poll_ids, next_cursor)
-    puts "poll_ids (filter) : #{poll_ids}"
     poll_series = []
     poll_nonseries = []
     series_shared = []
     nonseries_shared = []
 
     PollMember.includes(:poll, :member).where("id IN (?)", poll_ids).order("id desc").each do |poll_member|
-
       if poll_member.share_poll_of_id == 0
         not_shared = Hash["shared" => false]
         if poll_member.poll.series
@@ -147,19 +153,47 @@ class Poll < ActiveRecord::Base
             nonseries_shared << shared
           end
         end
+      end
+    end
+    [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
+  end
 
+  def self.filter_my_poll_my_vote(poll_ids, next_cursor)
+    poll_series = []
+    poll_nonseries = []
+
+    Poll.includes(:member).where("id IN (?)", poll_ids).order("id desc").each do |poll|
+      if poll.series
+        poll_series << poll
+      else
+        poll_nonseries << poll
       end
     end
 
-    # puts "poll series => #{poll_series.count}, series shared => #{series_shared}"
-    # puts "poll nonseries => #{poll_nonseries}, nonseries shared => #{nonseries_shared}"
-    [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
+    [poll_series, poll_nonseries, next_cursor]
+  end
+
+
+  def self.get_my_vote(member_obj, options = {})
+    type = options[:type]
+    next_cursor = options[:next_cursor]
+
+    find_my_vote = HistoryVote.where("member_id = ? AND poll_series_id = 0", member_obj.id) | HistoryVote.where("member_id = ? AND poll_series_id != 0", member_obj.id).group("poll_series_id")
+    query = filter_type(find_my_vote, type)
+
+    if next_cursor
+      @poll = query.includes(:poll_series, :member).load_more(next_cursor)
+    else
+      @poll = query.includes(:poll_series, :member)
+    end
+    split_poll(@poll)
   end
 
   def self.split_poll(list_of_poll)
     poll_series = []
     poll_nonseries = []
-    next_cursor = ""
+    next_cursor = 0
+
     list_of_poll.each do |poll|
       if poll.series
         poll_series << poll
@@ -169,16 +203,20 @@ class Poll < ActiveRecord::Base
     end
 
     if poll_nonseries.count + poll_series.count == LIMIT_POLL
-      # cursor_id = PollMember.find_by_poll_id(poll_nonseries.last).id
       cursor_id = poll_nonseries.last.id
-      next_cursor = "#{cursor_id}"
+      next_cursor = cursor_id
     end
 
     [poll_series, poll_nonseries, next_cursor]
   end
 
   def find_poll_series(member_id, series_id)
-    Poll.where(member_id: member_id, poll_series_id: series_id).order("id asc")
+    Poll.where(member_id: member_id, poll_series_id: series_id).limit(20)
+  end
+
+  def self.find_my_poll(member_id, type)
+    find_poll = where("member_id = ? AND series = ?", member_id, false).limit(LIMIT_TIMELINE) | where("member_id = ? AND series = ?", member_id, true).limit(LIMIT_TIMELINE).group("series")
+    filter_type(find_poll, type).map(&:id)
   end
 
   def self.get_group_poll(member, option = {})
@@ -284,6 +322,14 @@ class Poll < ActiveRecord::Base
 
   def get_choice_scroll
     choices.collect! {|choice| choice.vote }
+  end
+
+  def self.filter_type(query, type)
+    case type
+      when "active" then query.active_poll
+      when "inactive" then query.inactive_poll
+      else query
+    end
   end
 
 end

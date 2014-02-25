@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140225053159) do
+ActiveRecord::Schema.define(version: 20140225095203) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20140225053159) do
     t.integer  "choice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "poll_series_id", default: 0
   end
 
   add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id"
