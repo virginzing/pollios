@@ -139,12 +139,16 @@ class PollsController < ApplicationController
   #   @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, ENV["MY_POLL"], options_params)
   # end
 
+  # def my_vote
+  #   @poll_series, @poll_nonseries, @next_cursor = Member.list_of_poll(@current_member, ENV["MY_VOTE"], options_params)
+  # end
+
   def my_poll
-    @poll_nonseries, @next_cursor = Poll.get_my_poll(@current_member, options_params)
+    @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_POLL"], options_params)
   end
 
   def my_vote
-    @poll_series, @poll_nonseries, @next_cursor = Member.list_of_poll(@current_member, ENV["MY_VOTE"], options_params)
+    @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_VOTE"], options_params)
   end
 
   # def new_public_timeline

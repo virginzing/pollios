@@ -85,10 +85,15 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.get_my_poll(member_obj, options = {})
+  def self.get_my_vote_my_poll(member_obj, status, options = {})
     next_cursor = options[:next_cursor]
     type = options[:type]
-    query_poll = Poll.includes(:member).where("member_id = ? AND series = ?", member_obj.id, false)
+    if status == ENV["MY_POLL"]
+      query_poll = member_obj.get_my_poll
+    else
+      query_poll = member_obj.history_votes.includes(:poll).where("poll_series_id = '0'").collect { |p| p.poll }
+    end
+    
     @poll = filter_type(query_poll, type)
 
     if next_cursor.presence && next_cursor != "0"

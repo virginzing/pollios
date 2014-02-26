@@ -39,6 +39,8 @@ class Member < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
+  has_many :get_my_poll, -> { where(series: false) }, class_name: "Poll"
+
   has_many :campaigns, dependent: :destroy
 
   has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"
