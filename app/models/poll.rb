@@ -91,7 +91,7 @@ class Poll < ActiveRecord::Base
     if status == ENV["MY_POLL"]
       query_poll = member_obj.get_my_poll
     else
-      query_poll = Poll.unscoped.includes(:history_votes).where("history_votes.member_id = ?", member_obj.id).order("history_votes.id desc").limit(LIMIT_POLL)
+      query_poll = Poll.unscoped.includes(:history_votes).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_obj.id).order("history_votes.created_at desc").limit(LIMIT_POLL)
       puts "query poll => #{query_poll}"
     end
     
