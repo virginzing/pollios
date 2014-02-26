@@ -61,6 +61,7 @@ Pollios::Application.routes.draw do
     post  ':id/vote',         to: 'polls#vote'
     post  ':id/view',         to: 'polls#view'
     post 'share/:id',       to: 'polls#share'
+    post 'unshare/:id',     to: 'polls#unshare'
   end
 
 

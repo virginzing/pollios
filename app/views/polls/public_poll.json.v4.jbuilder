@@ -1,5 +1,6 @@
-if @poll_series || @poll_nonseries
-  count = 0  
+if @poll_series || @poll_nonseries 
+  count_series = 0
+  count_nonseries = 0 
   json.response_status "OK"
   
   json.poll_series @poll_series do |poll|
@@ -29,8 +30,8 @@ if @poll_series || @poll_nonseries
         json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       end
       
-      json.share_detail @series_shared[count]
-      count += 1
+      json.share_detail @series_shared[count_series]
+      count_series += 1
     end
 
   end
@@ -54,8 +55,8 @@ if @poll_series || @poll_nonseries
       json.is_public poll.public
     end
 
-    json.share_detail @nonseries_shared[count]
-    count += 1
+    json.share_detail @nonseries_shared[count_nonseries]
+    count_nonseries += 1
   end
 
   json.next_cursor @next_cursor

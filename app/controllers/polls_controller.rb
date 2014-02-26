@@ -1,12 +1,12 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote]
+  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
-  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share]
+  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare]
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
 
   # :restrict_access
@@ -85,10 +85,6 @@ class PollsController < ApplicationController
     unless choices_params[:voted] == "no"
       @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)["voted"]
     end
-  end
-
-  def share
-    
   end
 
   def public_poll
@@ -230,14 +226,29 @@ class PollsController < ApplicationController
     @poll = Poll.create_poll(poll_params, @current_member)
   end
 
-  # def vote_poll
-  #   @poll, @history_voted = Poll.vote_poll(vote_params)
-  #   @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
-  # end
+  def share
+    new_record = false
+    @share = @poll.poll_members.where("member_id = ?", @current_member.id).first_or_create do |pm|
+      pm.member_id = @current_member.id
+      pm.poll_id = @poll.id
+      pm.share_poll_of_id = @poll.id
+      pm.public = @poll.public
+      pm.series = @poll.series
+      pm.expire_date = @poll.expire_date
+      pm.save
+      new_record = true
+    end
+    @poll.increment!(:share_count) if new_record
+  end
 
-  # def view_poll
-  #   @poll = Poll.view_poll(vote_params)
-  # end
+  def unshare
+    find_poll = @poll.poll_members.find_by_member_id(@current_member.id)
+    if find_poll.present?
+      find_poll.destroy
+      @poll.decrement!(:share_count)
+    end
+    @poll
+  end
 
   def destroy
     @poll.destroy

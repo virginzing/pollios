@@ -188,6 +188,8 @@ class Poll < ActiveRecord::Base
         end
       end
     end
+    puts "poll nonseries : #{poll_nonseries}"
+    puts "share nonseries: #{nonseries_shared}"
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
   end
 
