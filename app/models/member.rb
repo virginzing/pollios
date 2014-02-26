@@ -41,8 +41,6 @@ class Member < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
-  has_many :get_my_poll, -> { where(series: false) }, class_name: "Poll"
-
   has_many :campaigns, dependent: :destroy
 
   has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"
@@ -63,7 +61,7 @@ class Member < ActiveRecord::Base
 
   def get_stats_all
     {
-      "my_poll" => get_my_poll.unscoped.count,
+      "my_poll" => Poll.unscoped.where("member_id = ? AND series = ?", id, false).count,
       "my_vote" => history_votes.where(poll_series_id: 0).count,
       "direct_msg" => 0,
       "status" => 0
