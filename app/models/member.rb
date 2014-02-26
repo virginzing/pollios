@@ -1,5 +1,7 @@
 class Member < ActiveRecord::Base
   include MemberHelper
+  belongs_to :province
+  
   has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy
   has_many :hidden_polls, dependent: :destroy
 
@@ -105,6 +107,9 @@ class Member < ActiveRecord::Base
     token = response["token"]
     email = response["email"]
     avatar = response["avatar_thumbnail"]
+    birthday = response["birthday"]
+    gender = response["gender"]
+    province_id = response["province"]["id"]
 
     member = where(sentai_id: sentai_id.to_s).first_or_initialize do |member|
       member.sentai_id = sentai_id.to_s
@@ -113,10 +118,13 @@ class Member < ActiveRecord::Base
       member.email = email
       member.avatar = avatar
       member.token = token
+      memmber.birthday = birthday
+      member.gender = gender
+      member.province_id = province_id
       member.save
     end
     
-    member.update_attributes!(username: username,sentai_name: sentai_fullname, avatar: avatar, token: token) unless member.new_record?
+    member.update_attributes!(username: username, sentai_name: sentai_fullname, avatar: avatar, token: token, gender: gender, province_id: province_id, birthday: birthday) unless member.new_record?
     return member
   end
 
@@ -128,10 +136,12 @@ class Member < ActiveRecord::Base
     email = response["email"]
     avatar = response["avatar_thumbnail"]
     birthday = response["birthday"]
-    
+    gender = response["gender"]
+    province_id = response["province"]["id"]
+
     find_member = where(sentai_id: sentai_id.to_s).first
     if find_member.present? 
-      find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday, username: username)
+      find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday, username: username, gender: gender, province_id: province_id)
       return find_member
     end
   end
@@ -169,6 +179,18 @@ class Member < ActiveRecord::Base
       find_group_member.group.destroy if find_group_member.is_master
     end
   end
+
+  def get_province
+    if province.present?
+      {
+        "id" => province.id,
+        "name" => province.name
+      }
+    else
+      ""
+    end
+  end
+
 
   def as_json options={}
    {

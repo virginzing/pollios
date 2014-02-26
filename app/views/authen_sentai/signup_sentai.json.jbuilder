@@ -6,6 +6,9 @@ if @response.present? && @response["response_status"] != "ERROR"
 		json.member_name @response["fullname"]
 		json.member_username @response["username"]
 		json.email @response["email"]
+		json.birthday @response["birthday"]
+		json.gender @response["gender"]
+		json.province @response["province"]
 		json.avatar @response["avatar_thumbnail"]
 		if @apn_device.present?
       json.access_id @apn_device.id

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140225095203) do
+ActiveRecord::Schema.define(version: 20140226091705) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -249,7 +249,10 @@ ActiveRecord::Schema.define(version: 20140225095203) do
     t.integer  "member_type",  default: 0
     t.boolean  "group_active", default: false
     t.date     "birthday"
+    t.integer  "province_id"
   end
+
+  add_index "members", ["province_id"], name: "index_members_on_province_id"
 
   create_table "poll_groups", force: true do |t|
     t.integer  "poll_id"
@@ -326,6 +329,12 @@ ActiveRecord::Schema.define(version: 20140225095203) do
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id"
+
+  create_table "provinces", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

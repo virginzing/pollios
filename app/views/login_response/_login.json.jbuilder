@@ -6,6 +6,9 @@ if @login.present?
     json.member_name @login.sentai_name
     json.member_username @login.username
     json.email @login.email
+    json.birthday @login.birthday.present? ? @login.birthday : ""
+    json.gender @login.gender.present? ? @login.gender : ""
+    json.province @login.get_province
     json.avatar @login.avatar
     json.member_type @login.member_type_text
     if @apn_device.present?
