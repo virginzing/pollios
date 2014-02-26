@@ -85,6 +85,25 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def self.get_my_poll(member_obj, options = {})
+    next_cursor = options[:next_cursor]
+    type = options[:type]
+    query_poll = Poll.includes(:member).where("member_id = ? AND series = ?", member_obj.id, false)
+    @poll = filter_type(query_poll, type)
+
+    if next_cursor.presence && next_cursor != "0"
+      @poll = @poll.load_more(next_cursor)
+    end
+
+    if @poll.count == LIMIT_POLL
+      next_cursor = @poll.last.id
+    else
+      next_cursor = 0
+    end
+    
+    [@poll, next_cursor]
+  end
+
   def self.cached_find_poll(member_obj, status)
     Rails.cache.fetch([ status, member_obj.id, @type ]) do
       if status == ENV["PUBLIC_POLL"]

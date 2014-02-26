@@ -135,8 +135,12 @@ class PollsController < ApplicationController
     end
   end
 
+  # def my_poll
+  #   @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, ENV["MY_POLL"], options_params)
+  # end
+
   def my_poll
-    @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, ENV["MY_POLL"], options_params)
+    @poll_nonseries, @next_cursor = Poll.get_my_poll(@current_member, options_params)
   end
 
   def my_vote

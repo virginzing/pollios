@@ -27,7 +27,7 @@ if @poll_series || @poll_nonseries
         json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
         json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       end
-
+      
     end
 
   end
