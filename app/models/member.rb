@@ -59,6 +59,15 @@ class Member < ActiveRecord::Base
     self.friend_limit = FRIEND_LIMIT
   end
 
+  def get_stats_all
+    {
+      "my_poll" => get_my_poll.count,
+      "my_vote" => history_votes.where(poll_series_id: 0).count,
+      "direct_msg" => 0,
+      "status" => 0
+    }
+  end
+
   def list_voted?(history_voted, poll_id)
     history_voted.each do |poll_choice|
       if poll_choice.first == poll_id

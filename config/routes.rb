@@ -39,6 +39,7 @@ Pollios::Application.routes.draw do
 
   scope 'member' do
     get 'detail_friend',   to: 'members#detail_friend'
+    get 'stats',           to: 'members#stats'
     get 'profile',         to: 'members#profile', as: :member_profile
     get 'clear',           to: 'members#clear', as: :clear_history
   end

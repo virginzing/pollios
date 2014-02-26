@@ -15,6 +15,10 @@ class MembersController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member.id, @find_friend.id) if @find_friend.present?
   end
 
+  def stats
+    @stats_all = @current_member.get_stats_all
+  end
+
   def index
   end
 
