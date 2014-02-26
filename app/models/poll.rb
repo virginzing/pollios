@@ -96,11 +96,11 @@ class Poll < ActiveRecord::Base
     end
 
     if @poll.count == LIMIT_POLL
-      next_cursor = @poll.last.id
+      next_cursor = @poll.to_a.last.id
     else
       next_cursor = 0
     end
-    
+
     [@poll, next_cursor]
   end
 
@@ -347,11 +347,13 @@ class Poll < ActiveRecord::Base
   end
 
   def self.filter_type(query, type)
+
     case type
       when "active" then query.active_poll
       when "inactive" then query.inactive_poll
       else query
     end
+
   end
 
 end
