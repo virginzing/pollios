@@ -91,17 +91,24 @@ class Poll < ActiveRecord::Base
     if status == ENV["MY_POLL"]
       query_poll = member_obj.get_my_poll
     else
-      query_poll = member_obj.history_votes.includes(:poll).where("poll_series_id = '0'").collect { |p| p.poll }
+      query_poll = Poll.unscoped.includes(:history_votes).where("history_votes.member_id = ?", member_obj.id).order("history_votes.id desc").limit(LIMIT_POLL)
+      puts "query poll => #{query_poll}"
     end
     
     @poll = filter_type(query_poll, type)
 
-    if next_cursor.presence && next_cursor != "0"
+    if next_cursor.presence && status == ENV["MY_POLL"]
       @poll = @poll.load_more(next_cursor)
+    elsif next_cursor.presence && status == ENV["MY_VOTE"]
+      @poll = @poll.where("history_votes.id < ?", next_cursor)
     end
 
     if @poll.count == LIMIT_POLL
-      next_cursor = @poll.to_a.last.id
+      if status == ENV["MY_POLL"]
+        next_cursor = @poll.to_a.last.id
+      elsif status == ENV["MY_VOTE"]
+        next_cursor = HistoryVote.find_by_poll_id(@poll.to_a.last.id).id
+      end
     else
       next_cursor = 0
     end
@@ -197,22 +204,6 @@ class Poll < ActiveRecord::Base
     end
 
     [poll_series, poll_nonseries, next_cursor]
-  end
-
-
-  def self.get_my_vote(member_obj, options = {})
-    type = options[:type]
-    next_cursor = options[:next_cursor]
-
-    find_my_vote = HistoryVote.where("member_id = ? AND poll_series_id = 0", member_obj.id) | HistoryVote.where("member_id = ? AND poll_series_id != 0", member_obj.id).group("poll_series_id")
-    query = filter_type(find_my_vote, type)
-
-    if next_cursor
-      @poll = query.includes(:poll_series, :member).load_more(next_cursor)
-    else
-      @poll = query.includes(:poll_series, :member)
-    end
-    split_poll(@poll)
   end
 
   def self.split_poll(list_of_poll)
