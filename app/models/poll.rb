@@ -250,13 +250,11 @@ class Poll < ActiveRecord::Base
     member_id = poll[:member_id]
     friend_id = poll[:friend_id]
     buy_poll = poll[:buy_poll]
-    poll_series_id = poll[:poll_series_id]
-    series = poll[:series]
     choice_count = get_choice_count(poll[:choices])
 
     convert_expire_date = Time.now + expire_date.to_i.days
     set_public = buy_poll || member.celebrity?
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: poll_series_id, series: series, choice_count: choice_count)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")
@@ -266,7 +264,7 @@ class Poll < ActiveRecord::Base
         if group_id
           Group.add_poll(@poll.id, group_id)
         else
-          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: series, expire_date: convert_expire_date)
+          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date)
         end
       end
     end
@@ -345,14 +343,18 @@ class Poll < ActiveRecord::Base
   end
 
   def self.filter_type(query, type)
-
     case type
       when "active" then query.active_poll
       when "inactive" then query.inactive_poll
       else query
     end
-
   end
+
+  # def self.get_poll_hourly
+  #   if Rails.env.production?
+  #     Poll.unscoped.where('extract(day from created_at) = ?', 26).count
+  #   end
+  # end
 
 end
 

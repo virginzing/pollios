@@ -30,6 +30,7 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
 			if @login.present?
         @apn_device = check_device?(@login, sessions_params["device_token"]) if sessions_params["device_token"].present?
+        @stats_all = @login.get_stats_all
 				session[:member_id] = @login.id
 				wants.html { redirect_to polls_path }
 				wants.json

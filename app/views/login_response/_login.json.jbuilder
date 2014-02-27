@@ -11,6 +11,7 @@ if @login.present?
     json.province @login.get_province
     json.avatar @login.avatar
     json.member_type @login.member_type_text
+    json.stats @stats_all
     if @apn_device.present?
       json.access_id @apn_device.id
       json.access_token @apn_device.api_token
