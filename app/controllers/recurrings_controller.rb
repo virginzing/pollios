@@ -69,6 +69,6 @@ class RecurringsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def recurring_params
-      params.require(:recurring).permit(:period, :status, :member_id, :end_recur)
+      params.require(:recurring).permit(:period, :status, :member_id, :end_recur, :description)
     end
 end

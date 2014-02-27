@@ -3,6 +3,7 @@
 <table>
   <thead>
     <tr>
+      <th>Description</th>
       <th>Period</th>
       <th>Status</th>
       <th>End recur</th>
@@ -15,6 +16,7 @@
   <tbody>
     <% @recurrings.each do |recurring| %>
       <tr>
+        <td><%= recurring.description %></td>
         <td><%= recurring.period %></td>
         <td><%= recurring.status %></td>
         <td><%= recurring.end_recur %></td>

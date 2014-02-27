@@ -31,7 +31,8 @@
   <%= f.select :campaign_id, current_member.campaigns.order('name desc').map {|r| [r.name, r.id ]}, include_blank: true %>
   
   <%= f.label "Recurring" %>
-  <%= f.select :recurring_id, current_member.recurrings.order('period asc').map{ |r| [r.period.strftime("%H:%M"), r.id.to_i]}, include_blank: true %>
+  <%= f.select :recurring_id, list_recurring.map{ |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, include_blank: true %>
+  <br>
   <br>
   <label>Choice</label>
     <input type="text" name="poll[choice_one]">

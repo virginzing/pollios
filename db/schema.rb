@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140227072746) do
+ActiveRecord::Schema.define(version: 20140227174405) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -345,6 +345,7 @@ ActiveRecord::Schema.define(version: 20140227072746) do
     t.datetime "end_recur"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
   end
 
   add_index "recurrings", ["member_id"], name: "index_recurrings_on_member_id"

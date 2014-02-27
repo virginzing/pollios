@@ -9,6 +9,8 @@ class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare]
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
 
+  expose(:list_recurring) { current_member.get_recurring_available }
+
   # :restrict_access
 
   respond_to :json

@@ -37,6 +37,11 @@ class Poll < ActiveRecord::Base
   amoeba do
     enable
     set [{:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:favorite_count => 0}, {:share_count => 0} ]
+    
+    customize(lambda { |original_poll, new_poll|
+      new_poll.expire_date = original_poll.expire_date + 1.day
+    })
+
     include_field :choices
   end
 
@@ -361,12 +366,20 @@ class Poll < ActiveRecord::Base
   end
 
   def self.get_poll_hourly
-    hour = Time.now.hour
-    start_time = Time.new(2000, 01, 01, hour, 00, 00).in_time_zone
+    hour = Time.zone.now.hour
+    start_time = Time.new(2000, 01, 01, hour, 00, 00)
     end_time = start_time.change(min: 59, sec: 59)
-    @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.now).having_status(:active)
+    @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.zone.now).having_status(:active)
     if @recurring.count > 0
       Recurring.re_create_poll(@recurring)
+    end
+  end
+
+  def check_recurring
+    if recurring_id != 0
+      recurring.description
+    else
+      "-"
     end
   end
 

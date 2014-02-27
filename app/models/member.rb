@@ -62,6 +62,16 @@ class Member < ActiveRecord::Base
     self.friend_limit = FRIEND_LIMIT
   end
 
+  def get_recurring_available
+    list_recurring = []
+    recurrings.includes(:polls).each do |rec|
+      unless rec.polls.present?
+        list_recurring << rec
+      end
+    end
+    list_recurring
+  end
+
   def get_stats_all
     {
       "my_poll" => Poll.unscoped.where("member_id = ? AND series = ?", id, false).count,
