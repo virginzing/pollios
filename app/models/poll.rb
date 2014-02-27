@@ -362,7 +362,7 @@ class Poll < ActiveRecord::Base
 
   def self.get_poll_hourly
     hour = Time.now.hour
-    start_time = Time.new(2000, 01, 01, hour, 00, 00)
+    start_time = Time.new(2000, 01, 01, hour, 00, 00).in_time_zone
     end_time = start_time.change(min: 59, sec: 59)
     @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.now).having_status(:active)
     if @recurring.count > 0
