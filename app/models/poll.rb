@@ -1,10 +1,10 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
-
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id
+  
 
   has_many :choices, dependent: :destroy
-  has_many :taggings
+  has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings, source: :tag
 
   has_many :poll_groups, dependent: :destroy
@@ -21,7 +21,10 @@ class Poll < ActiveRecord::Base
   belongs_to :recurring
 
   validates :title, presence: true
+  validates :member_id, :title , presence: true
+  accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
+  default_scope { order("created_at desc").limit(LIMIT_POLL) }
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
@@ -31,11 +34,11 @@ class Poll < ActiveRecord::Base
   LIMIT_TIMELINE = 3000
   self.per_page = 20
 
-  default_scope { order("created_at desc").limit(LIMIT_POLL) }
-
-  accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
-
-  validates :member_id, :title , presence: true
+  amoeba do
+    enable
+    set [{:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:favorite_count => 0}, {:share_count => 0} ]
+    include_field :choices
+  end
 
   before_save :set_default_value
 
