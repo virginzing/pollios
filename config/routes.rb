@@ -1,5 +1,7 @@
 Pollios::Application.routes.draw do
 
+  resources :recurrings
+
   resources :campaigns
 
   resources :polls do

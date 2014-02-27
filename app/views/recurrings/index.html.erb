@@ -1,0 +1,31 @@
+<h1>Listing recurrings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Period</th>
+      <th>Status</th>
+      <th>End recur</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @recurrings.each do |recurring| %>
+      <tr>
+        <td><%= recurring.period %></td>
+        <td><%= recurring.status %></td>
+        <td><%= recurring.end_recur %></td>
+        <td><%= link_to 'Show', recurring %></td>
+        <td><%= link_to 'Edit', edit_recurring_path(recurring) %></td>
+        <td><%= link_to 'Destroy', recurring, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Recurring', new_recurring_path %>

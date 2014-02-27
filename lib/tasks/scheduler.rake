@@ -1,9 +1,9 @@
 namespace :scheduler do
-  desc "test log"
-  task log: :environment do
-    puts "DATABASE DATABASE"
-    count_poll_current_year = Poll.get_poll_hourly
-    puts "count => #{count_poll_current_year}"
+  desc "test recurring"
+  task recurring: :environment do
+    puts "poll recurring"
+    poll = Poll.get_poll_hourly
+    puts "count => #{poll.count}"
   end
 
 

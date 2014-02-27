@@ -46,6 +46,8 @@ class Member < ActiveRecord::Base
 
   has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"
   has_many :have_campaigns, through: :campaign_members, source: :campaign
+
+  has_many :recurrings, dependent: :destroy
   
   has_many :poll_series
   before_create :set_friend_limit
@@ -110,17 +112,17 @@ class Member < ActiveRecord::Base
     gender = response["gender"]
     province_id = response["province"]["id"]
 
-    member = where(sentai_id: sentai_id.to_s).first_or_initialize do |member|
-      member.sentai_id = sentai_id.to_s
-      member.sentai_name = sentai_fullname
-      member.username = username
-      member.email = email
-      member.avatar = avatar
-      member.token = token
-      memmber.birthday = birthday
-      member.gender = gender
-      member.province_id = province_id
-      member.save
+    member = where(sentai_id: sentai_id.to_s).first_or_initialize do |m|
+      m.sentai_id = sentai_id.to_s
+      m.sentai_name = sentai_fullname
+      m.username = username
+      m.email = email
+      m.avatar = avatar
+      m.token = token
+      m.birthday = birthday
+      m.gender = gender
+      m.province_id = province_id
+      m.save
     end
     
     member.update_attributes!(username: username, sentai_name: sentai_fullname, avatar: avatar, token: token, gender: gender, province_id: province_id, birthday: birthday) unless member.new_record?

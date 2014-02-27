@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Period:</strong>
+  <%= @recurring.period %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @recurring.status %>
+</p>
+
+<p>
+  <strong>Member:</strong>
+  <%= @recurring.member %>
+</p>
+
+<p>
+  <strong>End recur:</strong>
+  <%= @recurring.end_recur %>
+</p>
+
+<%= link_to 'Edit', edit_recurring_path(@recurring) %> |
+<%= link_to 'Back', recurrings_path %>

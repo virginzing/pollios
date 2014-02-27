@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  period: 2014-02-27 14:26:13
+  status: 1
+  member_id: 
+  end_recur: 2014-02-27 14:26:13
+
+two:
+  period: 2014-02-27 14:26:13
+  status: 1
+  member_id: 
+  end_recur: 2014-02-27 14:26:13

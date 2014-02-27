@@ -2,6 +2,7 @@ class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
 
   attr_accessor :group_id, :tag_tokens, :campaign_id, :share_poll_of_id
+  attr_reader :recurring_id
 
   has_many :choices, dependent: :destroy
   has_many :taggings
@@ -18,6 +19,7 @@ class Poll < ActiveRecord::Base
   belongs_to :member, touch: true
   belongs_to :poll_series
   belongs_to :campaign
+  belongs_to :recurring
 
   validates :title, presence: true
 
@@ -350,11 +352,15 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  # def self.get_poll_hourly
-  #   if Rails.env.production?
-  #     Poll.unscoped.where('extract(day from created_at) = ?', 26).count
-  #   end
-  # end
+  def self.get_poll_hourly
+    hour = Time.now.hour
+    start_time = Time.new(2000, 01, 01, hour, 00, 00)
+    end_time = start_time.change(min: 59, sec: 59)
+    @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.now).having_status(:active)
+    if @recurring.count > 0
+      Recurring.re_create_poll(@recurring)
+    end
+  end
 
 end
 

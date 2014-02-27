@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140226091705) do
+ActiveRecord::Schema.define(version: 20140227072746) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -325,16 +325,29 @@ ActiveRecord::Schema.define(version: 20140226091705) do
     t.integer  "view_all_guest", default: 0
     t.integer  "favorite_count", default: 0
     t.integer  "share_count",    default: 0
+    t.integer  "recurring_id",   default: 0
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id"
+  add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id"
 
   create_table "provinces", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "recurrings", force: true do |t|
+    t.time     "period"
+    t.integer  "status"
+    t.integer  "member_id"
+    t.datetime "end_recur"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "recurrings", ["member_id"], name: "index_recurrings_on_member_id"
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

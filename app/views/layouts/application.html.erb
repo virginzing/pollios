@@ -38,6 +38,8 @@
           <% if signed_in? %>
             <li><a href="<%= campaigns_path %>">Campaign</a></li>
             <li class="divider"></li>
+            <li><a href="<%= recurrings_path %>">Recurring</a></li>
+            <li class="divider"></li>
             <li><a href="<%= new_poll_path %>">New Poll</a></li>
             <li class="divider"></li>
             <li class="has-dropdown not-click"><a href="<%= polls_path %>">Poll</a>

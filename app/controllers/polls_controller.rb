@@ -43,6 +43,7 @@ class PollsController < ApplicationController
     params[:poll][:public] = false
     params[:poll][:series] = false
     params[:poll][:public] = true if current_member.celebrity?
+
     choice_array = []
     choice_array << params[:poll][:choice_one]
     choice_array << params[:poll][:choice_two]
@@ -52,7 +53,9 @@ class PollsController < ApplicationController
  
     params[:poll][:choice_count] = filter_choice.count
     group_id = params[:poll][:group_id]
+
     @poll = Poll.new(polls_params)
+    @poll.poll_series_id = 0
 
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
@@ -279,10 +282,10 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count)
+    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id)
   end
 
   def polls_params
-    params.require(:poll).permit(:campaign_id, :member_id, :title, :expire_date, :public, :choice_count ,:tag_tokens, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:campaign_id, :member_id, :title, :expire_date, :public, :choice_count ,:tag_tokens, :recurring_id, choices_attributes: [:id, :answer, :_destroy])
   end
 end

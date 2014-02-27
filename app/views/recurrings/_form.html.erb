@@ -1,0 +1,22 @@
+<%= simple_form_for(@recurring) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :period , input_html: { id: "period_timepicker" }, as: :string %>
+    <%= f.input :status, :as => :radio_buttons %>
+    <%= f.input :end_recur, input_html: { id: "datetimepicker" }, as: :string %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+
+<script>
+    $(function() {
+        $('#period_timepicker').timepicker({
+          "step": 60,
+          "timeFormat": 'H:i'
+        });
+    });
+</script>
