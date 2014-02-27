@@ -1,8 +1,7 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
 
-  attr_accessor :group_id, :tag_tokens, :campaign_id, :share_poll_of_id
-  attr_reader :recurring_id
+  attr_accessor :group_id, :tag_tokens, :share_poll_of_id
 
   has_many :choices, dependent: :destroy
   has_many :taggings
@@ -38,6 +37,12 @@ class Poll < ActiveRecord::Base
 
   validates :member_id, :title , presence: true
 
+  before_save :set_default_value
+
+  def set_default_value
+    self.recurring_id = 0 unless self.recurring_id.present?
+    self.campaign_id = 0 unless self.campaign_id.present?
+  end
 
   def cached_tags
     Rails.cache.fetch([self, 'tags']) do

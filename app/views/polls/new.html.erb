@@ -28,9 +28,10 @@
   <%= f.input :tag_tokens,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list" , data: {load: @poll.tags} } %>
   <br>
   <%= f.label "Campaign" %>
-  <%= f.select :campaign_id, current_member.campaigns.order('name desc').map {|r| [r.name, r.id ]}, prompt: "Choose a Campaign" %>
-
-  <%= f.association :recurring, collection: current_member.recurrings.order('period asc').map{ |r| [r.period.strftime("%H:%M"), r.id]}, prompt: "Choose period" %>
+  <%= f.select :campaign_id, current_member.campaigns.order('name desc').map {|r| [r.name, r.id ]}, include_blank: true %>
+  
+  <%= f.label "Recurring" %>
+  <%= f.select :recurring_id, current_member.recurrings.order('period asc').map{ |r| [r.period.strftime("%H:%M"), r.id.to_i]}, include_blank: true %>
   <br>
   <label>Choice</label>
     <input type="text" name="poll[choice_one]">
