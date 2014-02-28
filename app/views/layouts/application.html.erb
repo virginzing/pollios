@@ -40,12 +40,19 @@
             <li class="divider"></li>
             <li><a href="<%= recurrings_path %>">Recurring</a></li>
             <li class="divider"></li>
-            <li><a href="<%= new_poll_path %>">New Poll</a></li>
+
+            <li class="has-dropdown not-click"><a href="<%= poll_series_index_path %>">Series Poll</a>
+            <ul class="dropdown"><li class="title back js-generated"></li>
+              <li><a href="<%= new_poll_series_path %>">New Series</a></li>
+            </ul>
+            </li>
             <li class="divider"></li>
+
             <li class="has-dropdown not-click"><a href="<%= polls_path %>">Poll</a>
             <ul class="dropdown"><li class="title back js-generated"></li>
-              <li><a href="<%= poll_series_index_path %>">Series Poll</a></li>
+              <li><a href="<%= new_poll_path %>">New Poll</a></li>
             </ul>
+
             </li>
             <li class="divider"></li>
             <li class="has-dropdown not-click <%= active_class("profile") %>">
@@ -103,8 +110,8 @@
     <script type="text/javascript" src="/javascripts/bootstrap-fileupload.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-      $("#tag_list").select2({
-          width: "970px",
+      $(".tag_token").select2({
+          width: "937px",
           placeholder: "Search tag",
           minimumInputLength: 2,
           tags: true,
@@ -139,7 +146,7 @@
     });
     </script>
     <script>
-      $('#datetimepicker').datetimepicker();
+      $('.datetimepicker').datetimepicker();
     </script>
   </body>
 </html>

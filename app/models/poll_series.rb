@@ -1,6 +1,6 @@
 class PollSeries < ActiveRecord::Base
 
-  attr_accessor :tag_tokens
+  attr_accessor :tag_tokens, :same_choices
 
   belongs_to :member
   belongs_to :campaign
@@ -30,7 +30,15 @@ class PollSeries < ActiveRecord::Base
   def set_poll_series
     self.number_of_poll = polls.count
     self.save
-    polls.collect{ |poll| poll.update(expire_date: self.expire_date, series: true, choice_count: poll.choices.count, public: true ) }
+    list_choice = self.same_choices
+
+    polls.order("id asc").each do |poll|
+      if list_choice.present?
+        list_choice.collect{ |answer| poll.choices.create!(answer: answer) }
+      end
+      poll.update(expire_date: self.expire_date, series: true, choice_count: list_choice.count, public: true )
+    end
+
     PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: true, series: true, expire_date: self.expire_date)
   end
 

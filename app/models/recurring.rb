@@ -19,5 +19,4 @@ class Recurring < ActiveRecord::Base
     end   
   end
 
-
 end

@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
-
+<div class="panel">
 <p>
   <strong>Period:</strong>
-  <%= @recurring.period %>
+  <%= @recurring.period.strftime("%H:%M") %>
 </p>
 
 <p>
@@ -11,14 +11,38 @@
 </p>
 
 <p>
-  <strong>Member:</strong>
-  <%= @recurring.member %>
-</p>
-
-<p>
   <strong>End recur:</strong>
-  <%= @recurring.end_recur %>
+  <%= time_ago_in_words(@recurring.end_recur) %> ago
 </p>
+</div>
+<h4>Poll</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th width="50">#</th>
+      <th width="350">Title</th>
+      <th>Vote All</th>
+      <th>View All</th>
+      <th width="200">Expire At</th>
+      <th width="200">Created At</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recurring.polls.each do |poll| %>
+      <tr>
+        <td><%= link_to poll.id, poll_choices_path(poll.id) %></td>
+        <td><%= poll.title %></td>
+        <td><%= poll.vote_all %></td>
+        <td><%= poll.view_all %></td>
+        <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
+        <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
+        <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_recurring_path(@recurring) %> |
 <%= link_to 'Back', recurrings_path %>

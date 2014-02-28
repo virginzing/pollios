@@ -1,0 +1,12 @@
+<fieldset>
+  <div class="row">
+    <div class="large-10 columns">
+    <%= f.input :title %>
+    <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
+    </div>
+    <div class="large-2 columns">
+    <%= f.hidden_field :_destroy %>
+    <%= f.label :_destroy, "Remove Question", class: "remove_fields_survey button tiny secondary" %>
+    </div>
+  </div>
+</fieldset>

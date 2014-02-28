@@ -1,4 +1,5 @@
 class PollSeriesController < ApplicationController
+  include PollSeriesHelper
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new]
   before_action :set_poll_series, only: [:edit, :update, :destroy]
@@ -29,17 +30,23 @@ class PollSeriesController < ApplicationController
   end
 
   def create
-    # puts params
+    puts params
     @poll_series = current_member.poll_series.new(poll_series_params)
+    type_series = poll_series_params["type_series"]
+
+    if type_series == "1"
+      @poll_series.same_choices = params[:same_choices].delete_if {|choice| choice == "" }
+    end
 
     if @poll_series.save
-
       flash[:notice] = "Successfully created poll series."
       redirect_to poll_series_index_path
     else
       render action: 'new'
     end
+    
     puts "error: #{@poll_series.errors.full_messages}"
+
   end
 
   def destroy
@@ -57,6 +64,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:campaign_id, :description, :member_id, :expire_date, :tag_tokens, polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

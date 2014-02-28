@@ -1,3 +1,14 @@
 // Place all the styles related to the poll_series controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.tabs-content {
+  border: 1px solid rgb(224, 224, 224);
+  padding: 15px;
+  margin-top: 10px;
+}
+
+.remove_fields_survey.button.tiny.secondary {
+  margin-top: 23px;
+  padding: 10px;
+}

@@ -39,14 +39,14 @@
     <input type="text" name="poll[choice_two]">
 
     <div class="multi-field-wrapper">
-      <div class="multi-fields">
-        <div class="multi-field">
-          <input type="text" name="choices[]" class="answer">
-          <button type="button" class="remove-field tiny btn-gray">Remove</button>
+        <div class="multi-fields">
+          <div class="multi-field">
+            <input type="text" name="choices[]" class="answer">
+            <button type="button" class="remove-field tiny btn-gray">Remove</button>
+          </div>
         </div>
-      </div>
-    <button type="button" class="add-field button tiny">More choice</button>
-  </div>
+      <button type="button" class="add-field button tiny">More choice</button>
+    </div>
 
   <%= f.submit class: 'button' %>
 <% end %>

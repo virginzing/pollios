@@ -22,9 +22,20 @@ module ApplicationHelper
     end
     
   end
+
+  def link_to_add_fields(name, f, association, class_name)
+    new_object = f.object.send(association).klass.new
+    id = new_object.object_id
+    fields = f.fields_for(association, new_object, child_index: id) do |builder|
+      render(association.to_s.singularize + "_fields", f: builder)
+    end
+    class_name = class_name + " add_fields"
+    link_to(name, '#', class: class_name, data: {id: id, fields: fields.gsub("\n", "")})
+  end
+
 end
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 3, "friend_id": 4}' -X POST http://localhost:3000/friend/add_friend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 10, "friend_id": 1}' -X POST http://codeapp-pollios.herokuapp.com/friend/add_friend.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": }' -X POST http://localhost:3000/friend/add_celebrity.json -i
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
@@ -34,14 +45,14 @@ end
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/unfriend.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 5, "friend_id": 4}' -X POST http://codeapp-pollios.herokuapp.com/friend/accept.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 10}' -X POST http://codeapp-pollios.herokuapp.com/friend/accept.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 90}' -X POST http://localhost:3000/friend/deny.json -i
 
 # http://localhost:3000/friend/all.json?member_id=1
 # curl -H "Content-Type: application/json" -d '{"member_id": 1}' -X POST http://localhost:3000/friend/request.json -i
 # curl -H "Content-Type: application/json" -d '{"q": "nuttapon509", "member_id": 90 }' -X POST http://localhost:3000/friend/search.json -i
 
-# curl -F "member_id=1" -F "name=Nutty" -F "friend_id=97,98,99" http://localhost:3000/group/build.json -i
+# curl -F "member_id=3" -F "name=Nutty" -F "friend_id=4,14" http://localhost:3000/group/build.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 2, "group_id": 33 }' -X POST http://localhost:3000/group/accept.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
@@ -54,26 +65,40 @@ end
 # }' -X POST http://localhost:3000/group/add_friend.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1, 
+#     "member_id": 3, 
 #     "title": "คุณชอบตัวเลขตัวไหนมากที่สุด",
-#     "expire_date": "1",
+#     "expire_date": "5",
 #     "choices": "0,1,2"
-# }' -X POST http://localhost:3000/poll/create.json -i
+# }' -X POST http://codeapp-pollios.herokuapp.com/poll/create.json -i
 
 # PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) | 
 # PollMember.select(:poll_id).where("member_id = ? OR member_id IN (?) AND share_poll_of_id == 0",1,[2,3]).group(:poll_id).map(&:poll_id)
 
-# PollMember.find_by_sql("SELECT p1.poll_id FROM poll_members p1 LEFT JOIN poll_members p2 ON p2.member_id IN (2,) AND p1.poll_id > p2.poll_id AND (p1.share_poll_of_id = p2.poll_id OR p1.share_poll_of_id AND p1.share_poll_of_id = p2.share_poll_of_id) WHERE p2.poll_id IS NULL AND (p1.member_id = 1 OR p1.member_id IN (2,3)) ORDER BY p1.poll_id DESC")
+# PollMember.find_by_sql("SELECT pl.poll_id FROM poll_members pl LEFT JOIN poll_members pr ON pr.member_id IN (2,3) AND pl.poll_id > pr.poll_id AND (pl.share_poll_of_id = pr.poll_id OR pl.share_poll_of_id AND pl.share_poll_of_id = pr.share_poll_of_id) WHERE pr.poll_id IS NULL AND (pl.member_id = 1 OR pl.member_id IN (2,3)) ORDER BY pl.poll_id DESC LIMIT 20")
+
+# PollMember.find_by_sql("SELECT pl.poll_id FROM poll_members pl LEFT JOIN poll_members pr ON pr.member_id IN (2,3) AND pl.poll_id > pr.poll_id")
+# Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "1",
 #     "poll_id": "3",
 #     "choice_id": "7"
 # }' -X POST http://localhost:3000/poll/vote.json -i
 
+# http://localhost:3000/new_public_timeline.json?member_id=3
+
 # curl -H "Content-Type: application/json" -d '{
-#     "guest_id": "1",
-#     "choice_id": "79"
-# }' -X POST http://localhost:3000/poll/32/vote.json -i
+#     "member_id": "4",
+#     "choice_id": "136"
+# }' -X POST http://localhost:3000/poll/54/vote.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1
+# }' -X POST http://codeapp-pollios.herokuapp.com/poll/share/115.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1
+# }' -X POST http://localhost:3000/poll/unshare/115.json -i
+
 
 # curl -H "Content-Type: application/json" -d '{
 #     "guest_id": "1"
@@ -102,9 +127,9 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"goodmail","password":"025713420" }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon509","password":"mefuwfhfu" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
-# curl -F "sentai_id=33" -F "username=nisekoi" -X POST http://localhost:3000/authen/update_sentai.json -i
+# curl -F "sentai_id=1" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
 
 
@@ -112,6 +137,8 @@ end
 # curl -H "Content-Type: application/json" -d '{
 #     "udid": "0000"
 # }' -X POST http://localhost:3000/guest/try_out.json -i
+
+
 
 
 

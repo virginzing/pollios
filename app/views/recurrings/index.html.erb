@@ -7,6 +7,7 @@
       <th>Period</th>
       <th>Status</th>
       <th>End recur</th>
+      <td>Use</td>
       <th></th>
       <th></th>
       <th></th>
@@ -14,12 +15,13 @@
   </thead>
 
   <tbody>
-    <% @recurrings.each do |recurring| %>
+    <% @recurrings.includes(:polls).each do |recurring| %>
       <tr>
         <td><%= recurring.description %></td>
         <td><%= recurring.period %></td>
-        <td><%= recurring.status %></td>
+        <td><span class="label"><%= recurring.status %></span></td>
         <td><%= recurring.end_recur %></td>
+        <td><%= recurring.polls.present? ? label_use("Yes") : label_use("No") %></td>
         <td><%= link_to 'Show', recurring %></td>
         <td><%= link_to 'Edit', edit_recurring_path(recurring) %></td>
         <td><%= link_to 'Destroy', recurring, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -30,4 +32,4 @@
 
 <br>
 
-<%= link_to 'New Recurring', new_recurring_path %>
+<%= link_to 'New Recurring', new_recurring_path, class: "button" %>
