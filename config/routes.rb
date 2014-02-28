@@ -74,6 +74,7 @@ Pollios::Application.routes.draw do
     post 'signin_sentai',   to: 'authen_sentai#signin_sentai'
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
     post 'update_sentai',   to: 'authen_sentai#update_sentai'
+    post 'facebook',        to: 'facebook#login'
   end
 
   get '/tags',  to: 'tags#index'

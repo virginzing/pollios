@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140228042825) do
+ActiveRecord::Schema.define(version: 20140228085650) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -250,6 +250,7 @@ ActiveRecord::Schema.define(version: 20140228042825) do
     t.boolean  "group_active", default: false
     t.date     "birthday"
     t.integer  "province_id"
+    t.string   "provider"
   end
 
   add_index "members", ["province_id"], name: "index_members_on_province_id"

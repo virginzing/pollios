@@ -122,7 +122,7 @@ class Member < ActiveRecord::Base
     gender = response["gender"]
     province_id = response["province"]["id"]
 
-    member = where(sentai_id: sentai_id.to_s).first_or_initialize do |m|
+    member = where(sentai_id: sentai_id.to_s, provider: "sentai").first_or_initialize do |m|
       m.sentai_id = sentai_id.to_s
       m.sentai_name = sentai_fullname
       m.username = username
@@ -132,6 +132,7 @@ class Member < ActiveRecord::Base
       m.birthday = birthday
       m.gender = gender
       m.province_id = province_id
+      m.provider = "sentai"
       m.save
     end
     
@@ -155,6 +156,33 @@ class Member < ActiveRecord::Base
       find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday, username: username, gender: gender, province_id: province_id)
       return find_member
     end
+  end
+
+  def self.facebook(response)
+    fb_id = response["id"]
+    fb_fullname = response["name"]
+    username = response["username"]
+    email = response["email"]
+    avatar = response["user_photo"]
+    birthday = response["birthday"]
+    gender = response["gender"]
+    province_id = response["province_id"]
+
+    member = where(sentai_id: fb_id, provider: "facebook").first_or_initialize do |m|
+      m.sentai_id = fb_id
+      m.sentai_name = fb_fullname
+      m.username = username
+      m.email = email
+      m.avatar = avatar
+      m.birthday = birthday
+      m.gender = gender
+      m.province_id = province_id
+      m.provider = "facebook"
+      m.save
+    end
+    
+    member.update_attributes!(username: username, sentai_name: fb_fullname, avatar: avatar, gender: gender, province_id: province_id, birthday: birthday) unless member.new_record?
+    return member
   end
 
   ########### Search Member #############
