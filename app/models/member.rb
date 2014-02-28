@@ -51,7 +51,7 @@ class Member < ActiveRecord::Base
   
   has_many :poll_series
   before_create :set_friend_limit
-
+  
   scope :citizen,   -> { where(member_type: 0).order("username desc") }
   scope :celebrity, -> { where(member_type: 1).order("username desc") }
 
@@ -108,6 +108,13 @@ class Member < ActiveRecord::Base
     find_viewed.present?
   end
 
+  def check_gender
+    if gender.present? && gender != 0
+      gender
+    else
+      "undefined"
+    end
+  end
   ########### Authen Sentai #############
 
   def self.identify_access(response)
@@ -151,7 +158,7 @@ class Member < ActiveRecord::Base
     gender = response["gender"]
     province_id = response["province"]["id"]
 
-    find_member = where(sentai_id: sentai_id.to_s).first
+    find_member = where(sentai_id: sentai_id.to_s, provider: "sentai").first
     if find_member.present? 
       find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday, username: username, gender: gender, province_id: province_id)
       return find_member
@@ -168,6 +175,7 @@ class Member < ActiveRecord::Base
     gender = response["gender"]
     province_id = response["province_id"]
 
+    puts "gender => #{gender}"
     member = where(sentai_id: fb_id, provider: "facebook").first_or_initialize do |m|
       m.sentai_id = fb_id
       m.sentai_name = fb_fullname
@@ -175,7 +183,7 @@ class Member < ActiveRecord::Base
       m.email = email
       m.avatar = avatar
       m.birthday = birthday
-      m.gender = gender
+      m.gender = gender.to_i
       m.province_id = province_id
       m.provider = "facebook"
       m.save

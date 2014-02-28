@@ -7,7 +7,7 @@ if @member.present?
     json.member_username @member.username
     json.email @member.email
     json.birthday @member.birthday.present? ? @member.birthday : ""
-    json.gender @member.gender.present? ? @member.gender : ""
+    json.gender @member.check_gender
     json.province @member.get_province
     json.avatar @member.avatar
     json.member_type @member.member_type_text

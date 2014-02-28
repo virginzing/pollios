@@ -8,7 +8,7 @@ if @outh_sentai.present?
 		json.member_username @outh_sentai.username
 		json.email @outh_sentai.email
 		json.birthday @outh_sentai.birthday.present? ? @outh_sentai.birthday : ""
-		json.gender @outh_sentai.gender.present? ? @outh_sentai.gender : ""
+		json.gender @outh_sentai.check_gender
 		json.province @outh_sentai.get_province
 		json.avatar @outh_sentai.avatar
 		json.member_token @outh_sentai.token
