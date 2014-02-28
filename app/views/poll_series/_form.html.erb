@@ -13,6 +13,7 @@
     <%= f.label "Campaign" %>
     <%= f.select :campaign_id, current_member.campaigns.order('name').map {|r| [r.name, r.id ]}, prompt: "Choose a Campaign" %>
     <br>
+    <h3>Poll</h3>
     <%= f.fields_for :polls do |poll_form| %>
       <%= render 'poll_form',  :f => poll_form %>    
     <% end %>
@@ -73,5 +74,12 @@ $('.multi-field-wrapper').each(function() {
         if ($('.multi-field', $wrapper).length > 1)
             $(this).parent('.multi-field').remove();
     });
+});
+$(document).foundation({
+    tab: {
+      callback : function (tab) {
+        // console.log(tab);
+      }
+    }
 });
 </script>
