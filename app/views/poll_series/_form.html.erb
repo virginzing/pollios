@@ -1,3 +1,12 @@
+<script type="text/javascript">
+  $(document).foundation({
+    tab: {
+      callback : function (tab) {
+        // console.log(tab);
+      }
+    }
+});
+</script>
 <dl class="tabs" data-tab>
   <dd class="active"><a href="#panel1">Normal</a></dd>
   <dd><a href="#panel2">Same Choice</a></dd>
@@ -75,11 +84,3 @@ $('.multi-field-wrapper').each(function() {
             $(this).parent('.multi-field').remove();
     });
 });
-$(document).foundation({
-    tab: {
-      callback : function (tab) {
-        // console.log(tab);
-      }
-    }
-});
-</script>

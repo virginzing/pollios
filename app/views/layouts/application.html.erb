@@ -43,7 +43,7 @@
 
             <li class="has-dropdown not-click"><a href="<%= poll_series_index_path %>">Series Poll</a>
             <ul class="dropdown"><li class="title back js-generated"></li>
-              <li><a href="<%= new_poll_series_path %>">New Series</a></li>
+              <li><%= link_to 'New Series', new_poll_series_path, method: :get %></li>
             </ul>
             </li>
             <li class="divider"></li>
