@@ -96,8 +96,8 @@ end
 # }' -X POST http://localhost:3000/poll/share/39.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1
-# }' -X POST http://localhost:3000/poll/unshare/115.json -i
+#     "member_id": 3
+# }' -X POST http://localhost:3000/poll/unshare/39.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{

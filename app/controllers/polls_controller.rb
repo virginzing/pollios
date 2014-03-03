@@ -254,6 +254,7 @@ class PollsController < ApplicationController
     find_poll = @poll.poll_members.find_by_member_id(@current_member.id)
     if find_poll.present?
       find_poll.destroy
+      @current_member.share_polls.find_by_poll_id(@poll.id).destroy
       @poll.decrement!(:share_count)
     end
     @poll
