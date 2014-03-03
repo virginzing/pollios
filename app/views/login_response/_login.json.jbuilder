@@ -3,14 +3,14 @@ if @login.present?
   json.member_detail do
     json.member_id @login.id
     json.sentai_id @login.sentai_id
-    json.member_name @login.sentai_name
-    json.member_username @login.username
+    json.name @login.sentai_name
+    json.username @login.username
     json.email @login.email
     json.birthday @login.birthday.present? ? @login.birthday : ""
     json.gender @login.check_gender
     json.province @login.get_province
     json.avatar @login.avatar
-    json.member_type @login.member_type_text
+    json.type @login.member_type_text
     json.stats @stats_all
     if @apn_device.present?
       json.access_id @apn_device.id

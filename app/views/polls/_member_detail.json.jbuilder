@@ -1,4 +1,4 @@
-json.id poll.member_id
+json.member_id poll.member_id
 json.type poll.member.member_type_text
 json.name poll.member.sentai_name
 json.username poll.member.username

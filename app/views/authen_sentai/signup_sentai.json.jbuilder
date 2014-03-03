@@ -3,8 +3,8 @@ if @response.present? && @response["response_status"] != "ERROR"
 	json.member_detail do
 		json.member_id current_member_id
 		json.sentai_id @response["sentai_id"]
-		json.member_name @response["fullname"]
-		json.member_username @response["username"]
+		json.name @response["fullname"]
+		json.username @response["username"]
 		json.email @response["email"]
 		json.birthday @response["birthday"]
 		json.gender @response["gender"]

@@ -5,7 +5,7 @@ else
   json.response_status "OK"
   json.poll_nonseries @poll do |poll|
     json.creator do
-      json.id poll.member_id
+      json.member_id poll.member_id
       json.type poll.member.member_type_text
       json.name poll.member.sentai_name
       json.username poll.member.username

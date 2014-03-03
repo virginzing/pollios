@@ -261,7 +261,7 @@ class Member < ActiveRecord::Base
 
   def as_json options={}
    {
-      id: id,
+      member_id: id,
       type: member_type_text,
       name: sentai_name,
       username: username,

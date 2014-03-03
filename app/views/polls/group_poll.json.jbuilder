@@ -2,7 +2,7 @@ if @poll_series || @poll_nonseries
   json.response_status "OK"
   json.poll_series @poll_series do |poll|
     json.creator do
-      json.id poll.member_id
+      json.member_id poll.member_id
       json.type poll.member.member_type_text
       json.name poll.member.sentai_name
       json.username poll.member.username
@@ -32,7 +32,7 @@ if @poll_series || @poll_nonseries
   json.poll_nonseries @poll_nonseries do |poll|
     json.group poll.groups.pluck(:id, :name)
     json.creator do
-      json.id poll.member_id
+      json.member_id poll.member_id
       json.type poll.member.member_type_text
       json.name poll.member.sentai_name
       json.username poll.member.username
