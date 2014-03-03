@@ -1,7 +1,7 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_friend]
+  before_action :compress_gzip, only: [:list_friend, :list_request]
   before_action :set_current_member
 
   def add_friend

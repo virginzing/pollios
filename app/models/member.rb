@@ -28,7 +28,7 @@ class Member < ActiveRecord::Base
   has_many :get_your_request, through: :your_request, source: :followed
 
   has_many :friend_active, -> { where(status: 1, active: true) }, foreign_key: "follower_id", class_name: "Friend"
-  has_many :get_friend_active, through: :friend_active, source: :followed
+  has_many :get_friend_active, through: :friend_active ,source: :followed
 
   has_many :friend_inactive, -> { where(status: 1, active: false) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_inactive, through: :friend_inactive, source: :followed
@@ -55,9 +55,8 @@ class Member < ActiveRecord::Base
   has_many :poll_series
   before_create :set_friend_limit
   
-  scope :citizen,   -> { where(member_type: 0).order("sentai_name desc") }
-  scope :celebrity, -> { where(member_type: 1).order("sentai_name desc") }
-
+  scope :citizen,   -> { where(member_type: 0) }
+  scope :celebrity, -> { where(member_type: 1) }
 
   self.per_page = 20
   FRIEND_LIMIT = 500
