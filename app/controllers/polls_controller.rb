@@ -10,7 +10,7 @@ class PollsController < ApplicationController
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
 
   expose(:list_recurring) { current_member.get_recurring_available }
-  expose(:share_poll_ids) { current_member.share_polls.pluck(:poll_id) }
+  expose(:share_poll_ids) { @current_member.share_polls.pluck(:poll_id) }
   # :restrict_access
 
   respond_to :json

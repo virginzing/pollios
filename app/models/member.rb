@@ -55,8 +55,8 @@ class Member < ActiveRecord::Base
   has_many :poll_series
   before_create :set_friend_limit
   
-  scope :citizen,   -> { where(member_type: 0).order("username desc") }
-  scope :celebrity, -> { where(member_type: 1).order("username desc") }
+  scope :citizen,   -> { where(member_type: 0).order("sentai_name desc") }
+  scope :celebrity, -> { where(member_type: 1).order("sentai_name desc") }
 
 
   self.per_page = 20
@@ -83,6 +83,10 @@ class Member < ActiveRecord::Base
       "direct_msg" => 0,
       "status" => 0
     }
+  end
+
+  def get_avatar
+    avatar.present? ? avatar : "No Image"
   end
 
   def set_share_poll(poll_id)
