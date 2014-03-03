@@ -1,7 +1,7 @@
-if @friend_active || @your_request || @friend_request
+if @friend_active
   json.response_status "OK"
   json.your_request do
-    json.array! @your_request.citizen do |member|
+    json.array! @your_request do |member|
       json.member_id member.id
       json.type member.member_type_text
       json.name member.sentai_name
@@ -10,7 +10,7 @@ if @friend_active || @your_request || @friend_request
     end
   end
   json.friend_request do
-    json.array! @friend_request.citizen do |member|
+    json.array! @friend_request do |member|
       json.member_id member.id
       json.type member.member_type_text
       json.name member.sentai_name
