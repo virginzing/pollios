@@ -10,7 +10,7 @@ class PollsController < ApplicationController
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
 
   expose(:list_recurring) { current_member.get_recurring_available }
-
+  expose(:share_poll_ids) { current_member.share_polls.pluck(:poll_id) }
   # :restrict_access
 
   respond_to :json
@@ -243,7 +243,11 @@ class PollsController < ApplicationController
       pm.save
       new_record = true
     end
-    @poll.increment!(:share_count) if new_record
+
+    if new_record
+      @poll.increment!(:share_count)
+      @current_member.set_share_poll(@poll.id)
+    end
   end
 
   def unshare

@@ -24,7 +24,7 @@ class PollMember < ActiveRecord::Base
   end
 
   def self.find_poll_shared(friend_id, type)
-    find_poll_shared = where("member_id IN (?) AND share_poll_of_id != 0",friend_id).limit(LIMIT_TIMELINE)
+    find_poll_shared = where("member_id IN (?) AND share_poll_of_id != 0", friend_id).limit(LIMIT_TIMELINE)
     @poll = filter_type(find_poll_shared, type)
     @poll.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
@@ -33,7 +33,6 @@ class PollMember < ActiveRecord::Base
     find_poll = where("member_id = ? AND share_poll_of_id = 0", member_id).order("id desc").limit(LIMIT_TIMELINE)
     filter_type(find_poll, type).map(&:poll_id)
   end
-
 
   def self.timeline(member_id, friend_id, type)
 

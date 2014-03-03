@@ -39,6 +39,8 @@ class Member < ActiveRecord::Base
   has_many :whitish_friend, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
   
   has_many :get_my_poll, -> { where("polls.series = ?", false) }, class_name: "Poll"
+  
+
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
@@ -47,6 +49,7 @@ class Member < ActiveRecord::Base
   has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"
   has_many :have_campaigns, through: :campaign_members, source: :campaign
 
+  has_many :share_polls, dependent: :destroy
   has_many :recurrings, dependent: :destroy
   
   has_many :poll_series
@@ -54,6 +57,7 @@ class Member < ActiveRecord::Base
   
   scope :citizen,   -> { where(member_type: 0).order("username desc") }
   scope :celebrity, -> { where(member_type: 1).order("username desc") }
+
 
   self.per_page = 20
   FRIEND_LIMIT = 500
@@ -79,6 +83,10 @@ class Member < ActiveRecord::Base
       "direct_msg" => 0,
       "status" => 0
     }
+  end
+
+  def set_share_poll(poll_id)
+    share_polls.create!(poll_id: poll_id)
   end
 
   def list_voted?(history_voted, poll_id)
@@ -227,6 +235,15 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def check_share_poll?(poll_id)
+    share_poll_ids = share_polls.pluck(:poll_id)
+    if share_poll_ids.include?(poll_id)
+      Hash["shared" => true]
+      else
+      Hash["shared" => false]
+    end
+  end
+
   def get_province
     if province.present?
       {
@@ -249,6 +266,7 @@ class Member < ActiveRecord::Base
       avatar: avatar.present? ? avatar : "No Image"
    }
   end
+
 
 
 end

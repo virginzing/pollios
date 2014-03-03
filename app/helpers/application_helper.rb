@@ -92,8 +92,8 @@ end
 # }' -X POST http://localhost:3000/poll/54/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1
-# }' -X POST http://codeapp-pollios.herokuapp.com/poll/share/115.json -i
+#     "member_id": 3
+# }' -X POST http://localhost:3000/poll/share/39.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1
@@ -127,7 +127,7 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon509","password":"mefuwfhfu" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"trueincube@gmail.com","password":"1234567" }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
 # curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=1" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
@@ -139,8 +139,21 @@ end
 # }' -X POST http://localhost:3000/guest/try_out.json -i
 
 
+# curl -H "Content-Type: application/json" -d '{
+#     "id": "633882377",
+#     "email": "funnysmart_online@hotmail.com",
+#     "username": "NuttaponAchachotipong",
+#     "name": "Nutty Nuttapon Achachotipong",
+#     "gender": 0,
+#     "user_photo": "http://sphotos-e.ak.fbcdn.net/hphotos-ak-prn2/t31/1398785_10152013477927378_1373506367_o.jpg"
+# }' -X POST http://localhost:3000/authen/facebook.json -i
 
 
 
-
+# Member.all.each do |p|
+#   if p.gender.nil?
+#     p.gender = 0
+#     p.save!
+#   end
+# end
 

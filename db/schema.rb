@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140228085650) do
+ActiveRecord::Schema.define(version: 20140303042335) do
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -351,6 +351,16 @@ ActiveRecord::Schema.define(version: 20140228085650) do
   end
 
   add_index "recurrings", ["member_id"], name: "index_recurrings_on_member_id"
+
+  create_table "share_polls", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "share_polls", ["member_id"], name: "index_share_polls_on_member_id"
+  add_index "share_polls", ["poll_id"], name: "index_share_polls_on_poll_id"
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

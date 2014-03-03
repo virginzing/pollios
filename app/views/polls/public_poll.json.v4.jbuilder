@@ -29,8 +29,8 @@ if @poll_series || @poll_nonseries
         json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
         json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       end
-      
-      json.share_detail @series_shared[count_series]
+      json.my_shared check_my_shared(share_poll_ids, poll.id)
+      json.other_shared @series_shared[count_series]
       count_series += 1
     end
 
@@ -54,8 +54,8 @@ if @poll_series || @poll_nonseries
       json.share_count poll.share_count
       json.is_public poll.public
     end
-
-    json.share_detail @nonseries_shared[count_nonseries]
+    json.my_shared check_my_shared(share_poll_ids, poll.id)
+    json.other_shared @nonseries_shared[count_nonseries]
     count_nonseries += 1
   end
 

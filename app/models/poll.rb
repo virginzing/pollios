@@ -14,6 +14,7 @@ class Poll < ActiveRecord::Base
   has_many :members, through: :poll_members, source: :member
 
   has_many :history_votes, dependent: :destroy
+  has_many :share_polls, dependent: :destroy
 
   belongs_to :member, touch: true
   belongs_to :poll_series
@@ -152,6 +153,7 @@ class Poll < ActiveRecord::Base
       next_cursor = next_cursor.to_i
       @cache_polls = cached_find_poll(member_obj, status)
       index = @cache_polls.index(next_cursor)
+      index = -1 if index.nil?
       poll = @cache_polls[(index+1)..(LIMIT_POLL+index)]
     else
       Rails.cache.delete([status, member_obj.id, @type])
@@ -203,8 +205,8 @@ class Poll < ActiveRecord::Base
         end
       end
     end
-    puts "poll nonseries : #{poll_nonseries}"
-    puts "share nonseries: #{nonseries_shared}"
+    # puts "poll nonseries : #{poll_nonseries}"
+    # puts "share nonseries: #{nonseries_shared}"
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
   end
 
