@@ -207,7 +207,7 @@ class Member < ActiveRecord::Base
   ########### Search Member #############
 
   def self.search_member(params)
-    where("email = ? OR username = ?", params, params).first
+    where("email LIKE ? OR sentai_name LIKE ?", "%#{params}%", "%#{params}%")
   end
 
   ################ Friend ###############

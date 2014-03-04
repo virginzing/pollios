@@ -99,16 +99,44 @@ class Friend < ActiveRecord::Base
     end
   end
 
-  def self.add_friend?(member_id, friend_id)
-    if where(follower_id: member_id, followed_id: friend_id).having_status(:friend).present?
-      Hash["add_friend_already" => true, "status" => :friend]
-    elsif where(follower_id: member_id, followed_id: friend_id).having_status(:invite).present?
-      Hash["add_friend_already" => true, "status" => :invite]
-    elsif where(follower_id: member_id, followed_id: friend_id).having_status(:invitee).present?
-      Hash["add_friend_already" => true, "status" => :invitee]
-    else
-      Hash["add_friend_already" => false, "status" => :nofriend]
+  # def self.add_friend?(member_id, friend_list)
+  #   check_friend_list = []
+  #   friend_list.each do |friend|
+  #     if where(follower_id: member_id, followed_id: friend.id).having_status(:friend).present?
+  #       check_friend_list << Hash["add_friend_already" => true, "status" => :friend]
+  #     elsif where(follower_id: member_id, followed_id: friend.id).having_status(:invite).present?
+  #       check_friend_list << Hash["add_friend_already" => true, "status" => :invite]
+  #     elsif where(follower_id: member_id, followed_id: friend.id).having_status(:invitee).present?
+  #       check_friend_list << Hash["add_friend_already" => true, "status" => :invitee]
+  #     else
+  #       check_friend_list << Hash["add_friend_already" => false, "status" => :nofriend]
+  #     end
+  #   end
+  #   check_friend_list
+  # end
+
+  def self.add_friend?(member_id, search_member)
+    check_my_friend = []
+    search_member_ids = search_member.map(&:id)
+    my_friend = where("follower_id = ? AND followed_id IN (?)", member_id, search_member_ids)
+    # puts "my_friend => #{my_friend}"
+    my_friend_ids = my_friend.collect{|friend| [friend.followed_id, friend] }
+    # puts "my friend ids => #{my_friend_ids}"
+    search_member_ids.each do |member_id|
+      @add_friend = nil
+      my_friend_ids.each do |friend|
+        if friend.first == member_id
+          @add_friend = Hash["add_friend_already" => true, "status" => friend.last.status_text ]
+        end
+      end
+
+      unless @add_friend.nil?
+        check_my_friend << @add_friend
+      else
+        check_my_friend << Hash["add_friend_already" => false, "status" => :nofriend ]
+      end
     end
+    check_my_friend
   end
 
 end
