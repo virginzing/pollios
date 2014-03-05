@@ -1,7 +1,8 @@
 class FacebookController < ApplicationController
 
   protect_from_forgery :except => [:login]
-
+  expose(:get_stats_all) { @member.get_stats_all }
+  
   def login
     @member = Member.facebook(fb_params)
     if @member.present?

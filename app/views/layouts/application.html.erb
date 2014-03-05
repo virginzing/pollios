@@ -75,6 +75,7 @@
       <div data-alert class="<%= flash_class(key) %> fade in">
         <% if value.class == Array %>
           <dl style="margin-bottom: 0.25em;">
+          <%= puts "values => #{value}" %>
             <% value.each do |data| %>
               <li><%= data %></li>
             <% end %>

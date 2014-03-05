@@ -3,6 +3,7 @@ class AuthenSentaiController < ApplicationController
 	before_action :current_login?, only: [:signin]
 
   expose(:current_member_id) { session[:member_id] }
+  expose(:get_stats_all) { @member.get_stats_all }
 
 	include Authenticate
 
@@ -24,14 +25,14 @@ class AuthenSentaiController < ApplicationController
 	end
 
 	def signin_sentai
-		@login = Authenticate::Sentai.signin( IP + '/codeapp/signin.json',
+		@member = Authenticate::Sentai.signin( IP + '/codeapp/signin.json',
 			{'authen'=> sessions_params["authen"], 'password'=> sessions_params["password"], 'app_name'=> "pollios"})
 
 		respond_to do |wants|
-			if @login.present?
-        @apn_device = check_device?(@login, sessions_params["device_token"]) if sessions_params["device_token"].present?
-        @stats_all = @login.get_stats_all
-				session[:member_id] = @login.id
+			if @member.present?
+        @apn_device = check_device?(@member, sessions_params["device_token"]) if sessions_params["device_token"].present?
+
+				session[:member_id] = @member.id
 				wants.html { redirect_to polls_path }
 				wants.json
 			else
@@ -44,18 +45,18 @@ class AuthenSentaiController < ApplicationController
 
 
   def signup_sentai
-  	@response, member = Authenticate::Sentai.signup( IP + '/codeapp/signup.json', signup_params, "pollios")
-    puts "response : #{response}, member : #{member}"
+  	@response, @member = Authenticate::Sentai.signup( IP + '/codeapp/signup.json', signup_params, "pollios")
+    puts "response : #{response}, member : #{@member}"
   	respond_to do |wants|
   		if @response["response_status"] == "OK"
-        @apn_device = check_device?(member, signup_params["device_token"]) if signup_params["device_token"].present?
+        @apn_device = check_device?(@member, signup_params["device_token"]) if signup_params["device_token"].present?
         puts "apn_device => #{@apn_device}"
-  			session[:member_id] = member.id
+  			session[:member_id] = @member.id
   			flash[:success] = "Sign up sucessfully."
   			wants.html { redirect_to root_url }
   			wants.json
   		else
-  			flash[:error] = @response["response_message"]
+  			flash[:error] = @response["response_message"].values
   			wants.html { redirect_to(:back) }
   			wants.json
   		end
@@ -63,7 +64,7 @@ class AuthenSentaiController < ApplicationController
   end
 
   def update_sentai
-  	@outh_sentai = Authenticate::Sentai.update_profile( IP + '/codeapp/update_profile.json', update_profile_params)
+  	@response, @member = Authenticate::Sentai.update_profile( IP + '/codeapp/update_profile.json', update_profile_params)
   end
 
   def check_device?(member, device_token)

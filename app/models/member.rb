@@ -1,6 +1,12 @@
 class Member < ActiveRecord::Base
   include MemberHelper
   belongs_to :province
+
+  has_many :follower , -> { where(following: true) }, foreign_key: "followed_id", class_name: "Friend"
+  has_many :get_follower, through: :follower, source: :follower
+
+  has_many :following, -> { where(following: true) }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
+  has_many :get_following, -> { where('members.member_type = 1') } ,through: :following, source: :followed
   
   has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy
   has_many :hidden_polls, dependent: :destroy
@@ -18,8 +24,6 @@ class Member < ActiveRecord::Base
   has_many :group_inactive, -> { where("group_members.active = ?", false) } , dependent: :destroy, class_name: "GroupMember"
   has_many :get_group_inactive , through: :group_inactive, source: :group
 
-  has_many :reverse_friend ,foreign_key: "followed_id", class_name: "Friend"
-  has_many :following, through: :reverse_friend, source: :follower
 
   has_many :group_members, dependent: :destroy
   has_many :groups, through: :group_members, source: :group, dependent: :destroy
@@ -40,7 +44,6 @@ class Member < ActiveRecord::Base
   
   has_many :get_my_poll, -> { where("polls.series = ?", false) }, class_name: "Poll"
   
-
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
@@ -55,8 +58,13 @@ class Member < ActiveRecord::Base
   has_many :poll_series
   before_create :set_friend_limit
   
+  has_many :providers, dependent: :destroy
+
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
+
+  validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
+  validates :username , :uniqueness => { :case_sensitive => true }
 
   self.per_page = 20
   FRIEND_LIMIT = 500
@@ -140,55 +148,40 @@ class Member < ActiveRecord::Base
     gender = response["gender"]
     province_id = response["province"]["id"]
 
-    member = where(sentai_id: sentai_id.to_s, provider: "sentai").first_or_initialize do |m|
-      m.sentai_id = sentai_id.to_s
+    member = where(email: email).first_or_initialize do |m|
       m.sentai_name = sentai_fullname
       m.username = username
       m.email = email
       m.avatar = avatar
-      m.token = token
       m.birthday = birthday
       m.gender = gender
       m.province_id = province_id
-      m.provider = "sentai"
       m.save
     end
-    
-    member.update_attributes!(username: username, sentai_name: sentai_fullname, avatar: avatar, token: token, gender: gender, province_id: province_id, birthday: birthday) unless member.new_record?
-    return member
-  end
 
-  def self.update_profile(response)
-    sentai_name = response["name"]
-    sentai_fullname = response["fullname"]
-    username = response["username"]
-    sentai_id = response["sentai_id"]
-    email = response["email"]
-    avatar = response["avatar_thumbnail"]
-    birthday = response["birthday"]
-    gender = response["gender"]
-    province_id = response["province"]["id"]
-
-    find_member = where(sentai_id: sentai_id.to_s, provider: "sentai").first
-    if find_member.present? 
-      find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, email: email, birthday: birthday, username: username, gender: gender, province_id: province_id)
-      return find_member
+    member_provider = member.providers.where("name = ?", "sentai").first_or_initialize do |provider|
+      provider.name = "sentai"
+      provider.pid = sentai_id
+      provider.token = token
+      provider.save
     end
+
+    member_provider.update_attributes!(token: token) unless member_provider.new_record?
+    member.update_attributes(username: member.username || username, avatar: member.avatar || avatar, birthday: member.birthday || birthday) unless member.new_record?
+    return member
   end
 
   def self.facebook(response)
     fb_id = response["id"]
     fb_fullname = response["name"]
-    username = response["username"]
+    username = check_username(response["username"])
     email = response["email"]
     avatar = response["user_photo"]
     birthday = response["birthday"]
     gender = response["gender"]
     province_id = response["province_id"]
 
-    puts "gender => #{gender}"
-    member = where(sentai_id: fb_id, provider: "facebook").first_or_initialize do |m|
-      m.sentai_id = fb_id
+    member = where(email: email).first_or_initialize do |m|
       m.sentai_name = fb_fullname
       m.username = username
       m.email = email
@@ -196,13 +189,52 @@ class Member < ActiveRecord::Base
       m.birthday = birthday
       m.gender = gender.to_i
       m.province_id = province_id
-      m.provider = "facebook"
       m.save
     end
-    
-    member.update_attributes!(username: username, sentai_name: fb_fullname, avatar: avatar, gender: gender, province_id: province_id, birthday: birthday) unless member.new_record?
+
+    member_provider = member.providers.where("name = ?", "facebook").first_or_initialize do |provider|
+      provider.name = "facebook"
+      provider.pid = fb_id
+      provider.token = generate_token
+      provider.save
+    end
+
+    member_provider.update_attributes!(token: generate_token) unless member_provider.new_record?
+
+    member.update_attributes!(username: member.username || username, avatar: member.avatar || avatar, birthday: member.birthday || birthday) unless member.new_record?
     return member
   end
+
+  def self.check_username(username)
+    find_username = Member.where(username: username)
+    if find_username.present?
+      return nil
+    else
+      return username
+    end
+  end
+
+  def self.generate_token
+    return SecureRandom.hex
+  end
+
+  def self.update_profile(response)
+    sentai_name = response["name"]
+    sentai_fullname = response["fullname"]
+    username = response["username"]
+    email = response["email"]
+    avatar = response["avatar_thumbnail"]
+    birthday = response["birthday"]
+    gender = response["gender"]
+    province_id = response["province"]["id"]
+
+    find_member = where(email: email).first
+    if find_member.present? 
+      find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, birthday: birthday, username: username, gender: gender, province_id: province_id)
+      return find_member
+    end
+  end
+
 
   ########### Search Member #############
 
@@ -256,6 +288,15 @@ class Member < ActiveRecord::Base
     else
       ""
     end
+  end
+
+  def get_birthday
+    birthday.present? ? birthday : ""
+  end
+
+  def get_token(provider_name)
+    find_provider = providers.find_by(name: provider_name)
+    find_provider.present? ? find_provider.token : ""
   end
 
 

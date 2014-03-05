@@ -1,0 +1,10 @@
+json.member_id member.id
+json.name member.sentai_name
+json.username member.username
+json.email member.email
+json.birthday member.get_birthday
+json.gender member.check_gender
+json.province member.get_province
+json.avatar member.get_avatar
+json.type member.member_type_text
+json.stats get_stats_all

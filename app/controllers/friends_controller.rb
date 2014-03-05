@@ -9,8 +9,12 @@ class FriendsController < ApplicationController
     @detail_friend, @status = @friend
   end
 
-  def add_celebrity
-    @friend = Friend.add_celebrity(friend_params)
+  def following
+    @friend = Friend.add_following(friend_params)
+  end
+
+  def unfollow
+    @friend = Friend.unfollow(friend_params)
   end
 
   def unfriend
@@ -49,7 +53,7 @@ class FriendsController < ApplicationController
   end
 
   def list_friend
-    @friend_active = @current_member.get_friend_active
+    @friend_active = @current_member.get_friend_active.citizen
     @your_request = @current_member.get_your_request
     @friend_request = @current_member.get_friend_request
     # @friend_inactive = @current_member.get_friend_inactive

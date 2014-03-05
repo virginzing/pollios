@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, except: [:index, :profile, :clear]
+  before_action :set_current_member, only: [:detail_friend, :stats, :update_profile]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:detail_friend]
 
@@ -13,6 +13,14 @@ class MembersController < ApplicationController
     poll = @find_friend.polls.includes(:member)
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll, @current_member.id)
     @is_friend = Friend.add_friend?(@current_member.id, @find_friend.id) if @find_friend.present?
+  end
+
+  def update_profile
+    if @current_member.update(update_profile_params.except("member_id"))
+      @current_member
+    else
+      @error_message = @current_member.errors.messages
+    end
   end
 
   def stats
@@ -29,6 +37,12 @@ class MembersController < ApplicationController
     current_member.history_votes.delete_all
     flash[:success] = "Clear successfully."
     redirect_to root_url
+  end
+
+  private
+
+  def update_profile_params
+    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id)
   end
 
   

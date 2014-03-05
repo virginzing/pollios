@@ -7,6 +7,7 @@ if @friend_active
       json.name member.sentai_name
       json.username member.username
       json.avatar member.get_avatar
+      json.email member.email
     end
   end
   json.friend_request do
@@ -16,6 +17,7 @@ if @friend_active
       json.name member.sentai_name
       json.username member.username
       json.avatar member.get_avatar
+      json.email member.email
     end
   end
   json.all @friend_active do |member|
@@ -24,6 +26,7 @@ if @friend_active
     json.name member.sentai_name
     json.username member.username
     json.avatar member.get_avatar
+    json.email member.email
   end
 else
   json.response_status "ERROR"

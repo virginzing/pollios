@@ -7,8 +7,9 @@ class Friend < ActiveRecord::Base
   validates :follower_id, presence: true
   validates :followed_id, presence: true
 
-  scope :search_member, -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).first }
-  scope :search_friend, -> (friend_id, member_id) { where(follower_id: friend_id, followed_id: member_id).first }
+  scope :search_member,     -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).first }
+  scope :search_friend,     -> (friend_id, member_id) { where(follower_id: friend_id, followed_id: member_id).first }
+  scope :search_no_friend,  -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).having_status(:nofriend).first }
 
   def self.add_friend(friend)
     friend_id = friend[:friend_id]
@@ -17,11 +18,23 @@ class Friend < ActiveRecord::Base
     begin
       find_friend = Member.find(friend_id)
       find_invitee = where(follower_id: member_id, followed_id: friend_id).having_status(:invitee).first
-      
+      find_used_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
+
       if find_invitee.present?
         find_invitee.update_attributes!(status: :friend)
         search_friend(friend_id, member_id).update_attributes!(status: :friend)
         status = :friend
+      elsif find_used_friend
+        is_friend = false
+
+        if find_used_friend.following
+          find_used_friend.update(status: :friend)
+          is_friend = true
+        else
+          find_used_friend.update(status: :invitee)
+        end
+        status = check_been_friend(is_friend, member_id, friend_id)
+
       else
         create!(follower_id: member_id, followed_id: friend_id, status: :invite)
         create!(follower_id: friend_id, followed_id: member_id, status: :invitee)
@@ -33,13 +46,36 @@ class Friend < ActiveRecord::Base
     end
   end
 
-  def self.add_celebrity(friend)
+  def self.check_been_friend(is_friend, member_id, friend_id)
+    find_no_friend = where(follower_id: member_id, followed_id: friend_id).having_status(:nofriend).first
+    if find_no_friend.present? && is_friend
+      status = :friend
+      find_no_friend.update(status: status)
+    elsif find_no_friend.present?
+      status = :invite
+      find_no_friend.update(status: status)
+    elsif is_friend
+      status = :friend
+      create!(follower_id: member_id, followed_id: friend_id, status: status)
+    else
+      status = :invite
+      create!(follower_id: member_id, followed_id: friend_id, status: status)
+    end
+    status
+  end
+
+  def self.add_following(friend)
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
     begin
       find_friend = Member.find(friend_id)
-      create!(follower_id: member_id, followed_id: friend_id, status: :friend)
+      find_unfollow = where(follower_id: member_id, followed_id: friend_id, following: false).first
+      if find_unfollow.present?
+        find_unfollow.update(following: true)
+      else
+        create!(follower_id: member_id, followed_id: friend_id, status: :nofriend)
+      end
       find_friend
     rescue => e
       puts "error => #{e}"
@@ -47,14 +83,40 @@ class Friend < ActiveRecord::Base
     
   end
 
+  def self.unfollow(friend)
+    friend_id = friend[:friend_id]
+    member_id = friend[:member_id]
+
+    begin
+      @member = search_no_friend(member_id, friend_id)
+      find_been_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
+
+      if @member.present?
+        @member.destroy
+        find_been_friend.destroy if find_been_friend.present?
+      else
+        search_member(member_id, friend_id).update(following: false)
+      end
+      @member
+      rescue => e
+      puts "error => #{e}"
+    end
+
+  end
+
   def self.unfriend(friend)
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
+    check_celebrity = Member.where("id IN (?)", [member_id, friend_id]).pluck(:member_type)
+
     find_member = search_member(member_id, friend_id)
     find_friend = search_friend(friend_id, member_id)
 
-    if find_friend.present? && find_member.present?
+    if check_celebrity.include?(1)
+      find_member.update(status: :nofriend)
+      find_friend.update(status: :nofriend)
+    else
       find_friend.destroy
       find_member.destroy
     end

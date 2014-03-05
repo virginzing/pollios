@@ -45,7 +45,7 @@ module Authenticate
       else
       	member = nil
 	    end
-	    return member
+	    return response, member
 		end
 
 	end

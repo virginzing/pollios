@@ -26,7 +26,9 @@ Pollios::Application.routes.draw do
     post 'unfriend',        to: 'friends#unfriend'
     get 'all',              to: 'friends#list_friend'
     get 'request',          to: 'friends#list_request'
-    get 'search',          to: 'friends#search_friend'
+    get 'search',           to: 'friends#search_friend'
+    post 'following',       to: 'friends#following'
+    post 'unfollow',        to: 'friends#unfollow'
   end
 
   scope 'group' do
@@ -40,10 +42,11 @@ Pollios::Application.routes.draw do
   end
 
   scope 'member' do
-    get 'detail_friend',   to: 'members#detail_friend'
-    get 'stats',           to: 'members#stats'
-    get 'profile',         to: 'members#profile', as: :member_profile
-    get 'clear',           to: 'members#clear', as: :clear_history
+    get 'detail_friend',      to: 'members#detail_friend'
+    get 'stats',              to: 'members#stats'
+    post 'update_profile',    to: 'members#update_profile'
+    get 'profile',            to: 'members#profile', as: :member_profile
+    get 'clear',              to: 'members#clear', as: :clear_history
   end
 
   scope 'poll' do

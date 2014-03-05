@@ -26,6 +26,7 @@ class Poll < ActiveRecord::Base
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
   default_scope { order("created_at desc").limit(LIMIT_POLL) }
+  
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
