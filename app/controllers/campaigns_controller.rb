@@ -28,6 +28,7 @@ class CampaignsController < ApplicationController
 
   # GET /campaigns/1/edit
   def edit
+    @poll_tags_new = Poll.all
     @poll_tags = @campaign.polls
   end
 
