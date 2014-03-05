@@ -21,4 +21,32 @@ namespace :poll do
     end
   end
 
+  desc "clear all data"
+  task :clear => :environment do
+    Member.all.each do |member|
+      member.destroy
+    end
+    Tagging.delete_all
+    Poll.delete_all
+    PollMember.delete_all
+    PollSeries.delete_all
+    Choice.delete_all
+    PollSeriesTag.delete_all
+    Campaign.delete_all
+    HistoryVoteGuest.delete_all
+    HistoryViewGuest.delete_all
+    CampaignMember.delete_all
+    CampaignGuest.delete_all
+    Group.delete_all
+    Recurring.delete_all
+    SharePoll.delete_all
+    Provider.delete_all
+    GroupMember.delete_all
+    PollGroup.delete_all
+    HiddenPoll.delete_all
+    HistoryVote.delete_all
+    HistoryView.delete_all
+    Friend.delete_all
+  end
+
 end

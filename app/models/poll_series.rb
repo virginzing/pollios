@@ -35,8 +35,11 @@ class PollSeries < ActiveRecord::Base
     polls.order("id asc").each do |poll|
       if list_choice.present?
         list_choice.collect{ |answer| poll.choices.create!(answer: answer) }
+        choices_count = list_choice.count
+      else
+        choices_count = poll.choices.count
       end
-      poll.update(expire_date: self.expire_date, series: true, choice_count: list_choice.count, public: true )
+      poll.update(expire_date: self.expire_date, series: true, choice_count: choices_count, public: true )
     end
 
     PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: true, series: true, expire_date: self.expire_date)

@@ -115,7 +115,7 @@
           width: "937px",
           placeholder: "Search tag",
           minimumInputLength: 2,
-          tags: true,
+          multiple: true,
           ajax: {
               url: "/tags.json",
               dataType: 'json',
@@ -134,12 +134,27 @@
         placeholder: "Select a group (Option)",
         allowClear: true
       });
+
+
       $("#campaign_poll_ids").select2({
         width: "970px",
+        multiple: true,
         placeholder: "Select a poll",
-        allowClear: true
+        query: function (query){
+          var data = {results: []};
+ 
+            $.each(<%= raw @poll_tags_new.to_json %>, function(){
+                if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                    data.results.push({id: this.id, text: this.text });
+                }
+            });
+   
+            query.callback(data);
+        }
       });
-        $("#poll_recurring_id").select2({
+      $('#campaign_poll_ids').select2('data', <%= raw @poll_tags.to_json %> )
+
+      $("#poll_recurring_id").select2({
           width: "970px",
           placeholder: "Select a recurring",
           allowClear: true
@@ -147,7 +162,9 @@
     });
     </script>
     <script>
-      $('.datetimepicker').datetimepicker();
+      $('#datetimepicker').datetimepicker();
+      $('#questionnaire_normal').datetimepicker();
+      $('#questionnaire_same_choice').datetimepicker();
     </script>
   </body>
 </html>

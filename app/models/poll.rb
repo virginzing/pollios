@@ -386,6 +386,13 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def as_json options={}
+   {
+      id: id,
+      text: title
+   }
+  end
+
 end
 
 

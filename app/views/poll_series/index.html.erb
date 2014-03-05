@@ -25,7 +25,7 @@
         <td><%= series.view_all %></td>
         <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
         <td><%= series.created_at %></td>
-        <td><%= link_to 'Edit', edit_poll_series_path(series) %> | <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> | <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

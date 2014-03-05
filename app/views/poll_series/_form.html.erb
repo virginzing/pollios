@@ -7,8 +7,8 @@
     <%= simple_nested_form_for @poll_series do |f| %>
     <%= f.input :type_series, input_html: { value: 0 }, as: :hidden %>
     <%= f.input :description, input_html: { autofocus: "autofocus"} %>
-    <%= f.input :expire_date, input_html: { class: "datetimepicker" }, as: :string %>
-    <%= f.input :tag_tokens, :label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list_normal", data: {load: @poll_series.tags} } %>
+    <%= f.input :expire_date, input_html: { id: "questionnaire_normal" }, as: :string %>
+    <%= f.input :tag_tokens, :label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list_normal" } %>
     <br>
     <%= f.label "Campaign" %>
     <%= f.select :campaign_id, current_member.campaigns.order('name').map {|r| [r.name, r.id ]}, prompt: "Choose a Campaign" %>
@@ -27,7 +27,7 @@
     <%= simple_nested_form_for @poll_series do |f| %>
     <%= f.input :type_series, input_html: { value: 1 }, as: :hidden %>
     <%= f.input :description, input_html: { autofocus: "autofocus"} %>
-    <%= f.input :expire_date, input_html: { class: "datetimepicker" }, as: :string %>
+    <%= f.input :expire_date, input_html: { id: "questionnaire_same_choice" }, as: :string %>
     <%= f.input :tag_tokens, :label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list_same_choice", data: {load: @poll_series.tags} } %>
     <br>
     <%= f.label "Campaign" %>

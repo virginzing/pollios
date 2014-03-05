@@ -243,10 +243,10 @@ ActiveRecord::Schema.define(version: 20140304152907) do
     t.integer  "gender",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "group_active", default: false
     t.integer  "friend_limit"
     t.integer  "friend_count", default: 0
     t.integer  "member_type",  default: 0
-    t.boolean  "group_active", default: false
     t.date     "birthday"
     t.integer  "province_id"
   end
@@ -287,7 +287,7 @@ ActiveRecord::Schema.define(version: 20140304152907) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2014-02-03 06:45:53'
+    t.datetime "start_date",     default: '2014-03-05 07:25:32'
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
@@ -317,7 +317,7 @@ ActiveRecord::Schema.define(version: 20140304152907) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",       default: 0
-    t.datetime "start_date",     default: '2014-01-29 06:19:55'
+    t.datetime "start_date",     default: '2014-03-05 07:25:31'
     t.boolean  "series",         default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"

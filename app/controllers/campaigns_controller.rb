@@ -1,7 +1,14 @@
 class CampaignsController < ApplicationController
-  before_action :set_campaign, only: [:show, :edit, :update, :destroy]
+  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls]
   before_action :signed_user, only: [:index, :new]
 
+
+  def polls
+    @poll = @campaign.polls
+    respond_to do |wants|
+      wants.json { render json: @poll.to_json() }
+    end
+  end
   # GET /campaigns
   # GET /campaigns.json
   def index
@@ -16,10 +23,12 @@ class CampaignsController < ApplicationController
   # GET /campaigns/new
   def new
     @campaign = Campaign.new
+    @poll_tags_new = Poll.where("campaign_id IS NULL OR campaign_id = 0")
   end
 
   # GET /campaigns/1/edit
   def edit
+    @poll_tags = @campaign.polls
   end
 
   # POST /campaigns
@@ -70,6 +79,6 @@ class CampaignsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def campaign_params
-      params.require(:campaign).permit(:name, :photo_campaign, :used, :limit, :begin_sample, :end_sample)
+      params.require(:campaign).permit(:name, :photo_campaign, :used, :limit, :begin_sample, :end_sample, :poll_ids)
     end
 end
