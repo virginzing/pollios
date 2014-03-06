@@ -22,20 +22,22 @@
         </div>
 
           <div class="large-2 columns left">
-          <label>Limit
-            <input type="number" placeholder="" name="campaign[limit]"/>
-          </label>
+            <%= f.input :limit %>
         </div>
 
       </div>
     </div>
     <!-- <%= f.association :polls, collection: current_member.polls.where("campaign_id IS NULL"),multiple: 'multiple' %> -->
+    <label>Poll</label>
     <input type="text" name="campaign[poll_ids]" id="campaign_poll_ids">
     <br>
   
     <%= f.label "Photo Campaign" %>
     <div class="fileinput fileinput-new" data-provides="fileinput">
-      <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 300px; max-height: 300px;"></div>
+      <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 300px; max-height: 300px;">
+      <%= image_tag(@campaign.photo_campaign.url) if @campaign.photo_campaign.present? %>
+      </div>
+
       <div>
       <br>
         <span class="btn btn-default btn-file">

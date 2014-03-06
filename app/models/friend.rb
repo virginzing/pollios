@@ -161,22 +161,6 @@ class Friend < ActiveRecord::Base
     end
   end
 
-  # def self.add_friend?(member_id, friend_list)
-  #   check_friend_list = []
-  #   friend_list.each do |friend|
-  #     if where(follower_id: member_id, followed_id: friend.id).having_status(:friend).present?
-  #       check_friend_list << Hash["add_friend_already" => true, "status" => :friend]
-  #     elsif where(follower_id: member_id, followed_id: friend.id).having_status(:invite).present?
-  #       check_friend_list << Hash["add_friend_already" => true, "status" => :invite]
-  #     elsif where(follower_id: member_id, followed_id: friend.id).having_status(:invitee).present?
-  #       check_friend_list << Hash["add_friend_already" => true, "status" => :invitee]
-  #     else
-  #       check_friend_list << Hash["add_friend_already" => false, "status" => :nofriend]
-  #     end
-  #   end
-  #   check_friend_list
-  # end
-
   def self.add_friend?(member_id, search_member)
     check_my_friend = []
     search_member_ids = search_member.map(&:id)

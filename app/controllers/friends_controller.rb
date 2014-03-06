@@ -1,7 +1,7 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend]
+  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend, :list_following]
   before_action :set_current_member
 
   def add_friend
@@ -57,6 +57,15 @@ class FriendsController < ApplicationController
     @your_request = @current_member.get_your_request
     @friend_request = @current_member.get_friend_request
     # @friend_inactive = @current_member.get_friend_inactive
+  end
+
+  def list_following
+    @list_following = @current_member.get_following
+  end
+
+  def list_follower
+    @list_follower = @current_member.get_follower
+    @is_friend = Friend.add_friend?(@current_member.id, @list_follower) if @list_follower.present?
   end
 
   # def list_request

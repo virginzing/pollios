@@ -23,13 +23,13 @@ class CampaignsController < ApplicationController
   # GET /campaigns/new
   def new
     @campaign = Campaign.new
-    @poll_tags_new = Poll.where("campaign_id IS NULL OR campaign_id = 0")
+    @poll_campaign_new = Poll.where("campaign_id IS NULL OR campaign_id = 0 AND series = ?", false)
   end
 
   # GET /campaigns/1/edit
   def edit
-    @poll_tags_new = Poll.all
-    @poll_tags = @campaign.polls
+    @poll_campaign_new = Poll.all
+    @poll_campaigns = @campaign.polls
   end
 
   # POST /campaigns

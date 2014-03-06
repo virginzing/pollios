@@ -3,7 +3,9 @@ class Campaign < ActiveRecord::Base
   belongs_to :member
   attr_accessor :poll_ids
 
-  validates :name, :begin_sample, :end_sample, :limit, presence: true
+  validates :name, :begin_sample, :end_sample, presence: true
+  validates :limit, presence: true, numericality: { greater_than: 0 }
+  
   has_many :polls
   has_many :poll_series
 

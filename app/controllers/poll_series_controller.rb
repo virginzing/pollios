@@ -17,6 +17,8 @@ class PollSeriesController < ApplicationController
   end
 
   def edit
+    @poll_tags = @poll_series.tags
+    puts "polltag = #{@poll_tags}"
   end
 
   def update

@@ -26,6 +26,8 @@ Pollios::Application.routes.draw do
     post 'unfriend',        to: 'friends#unfriend'
     get 'all',              to: 'friends#list_friend'
     get 'request',          to: 'friends#list_request'
+    get 'following',        to: 'friends#list_following'
+    get 'follower',         to: 'friends#list_follower'
     get 'search',           to: 'friends#search_friend'
     post 'following',       to: 'friends#following'
     post 'unfollow',        to: 'friends#unfollow'

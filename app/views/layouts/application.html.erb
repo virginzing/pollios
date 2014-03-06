@@ -130,12 +130,24 @@
               }
           }
       });
+
+      $('.tag_token').select2('data', <%= raw @poll_tags.to_json %> )
+
       $("#poll_group_id").select2({
         width: "970px",
         placeholder: "Select a group (Option)",
         allowClear: true
       });
 
+      $("#select_campaign").select2({
+        width: "970px",
+        placeholder: "Select a campaign",
+      });
+
+      $("#select_campaign_series").select2({
+        width: "940px",
+        placeholder: "Select a campaign",
+      });
 
       $("#campaign_poll_ids").select2({
         width: "970px",
@@ -144,7 +156,7 @@
         query: function (query){
           var data = {results: []};
  
-            $.each(<%= raw @poll_tags_new.to_json %>, function(){
+            $.each(<%= raw @poll_campaign_new.to_json %>, function(){
                 if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
                     data.results.push({id: this.id, text: this.text });
                 }
@@ -153,8 +165,8 @@
             query.callback(data);
         }
       });
-      $('#campaign_poll_ids').select2('data', <%= raw @poll_tags.to_json %> )
-
+      $('#campaign_poll_ids').select2('data', <%= raw @poll_campaigns.to_json %> )
+      
       $("#poll_recurring_id").select2({
           width: "970px",
           placeholder: "Select a recurring",
