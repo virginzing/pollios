@@ -1,13 +1,13 @@
 class FacebookController < ApplicationController
-
   protect_from_forgery :except => [:login]
-  expose(:get_stats_all) { @member.get_stats_all }
+
+  expose(:member) { @auth.member }
+  expose(:get_stats_all) { member.get_stats_all }
   
   def login
-    @member = Member.facebook(fb_params)
-    if @member.present?
-      @apn_device = check_device?(@member, fb_params[:device_token]) if fb_params[:device_token].present?
-      @stats_all = @member.get_stats_all
+    @auth = Authentication.new(fb_params.merge(Hash["provider" => "facebook"]))
+    if @auth.authenticated?
+      @apn_device = check_device?(member, fb_params[:device_token]) if fb_params[:device_token].present?
     end
   end
 

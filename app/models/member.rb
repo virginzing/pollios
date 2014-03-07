@@ -171,52 +171,6 @@ class Member < ActiveRecord::Base
     return member
   end
 
-  def self.facebook(response)
-    fb_id = response["id"]
-    fb_fullname = response["name"]
-    username = check_username(response["username"])
-    email = response["email"]
-    avatar = response["user_photo"]
-    birthday = response["birthday"]
-    gender = response["gender"]
-    province_id = response["province_id"]
-
-    member = where(email: email).first_or_initialize do |m|
-      m.sentai_name = fb_fullname
-      m.username = username
-      m.email = email
-      m.avatar = avatar
-      m.birthday = birthday
-      m.gender = gender.to_i
-      m.province_id = province_id
-      m.save
-    end
-
-    member_provider = member.providers.where("name = ?", "facebook").first_or_initialize do |provider|
-      provider.name = "facebook"
-      provider.pid = fb_id
-      provider.token = generate_token
-      provider.save
-    end
-
-    member_provider.update_attributes!(token: generate_token) unless member_provider.new_record?
-
-    member.update_attributes!(username: member.username || username, avatar: member.avatar || avatar, birthday: member.birthday || birthday) unless member.new_record?
-    return member
-  end
-
-  def self.check_username(username)
-    find_username = Member.where(username: username)
-    if find_username.present?
-      return nil
-    else
-      return username
-    end
-  end
-
-  def self.generate_token
-    return SecureRandom.hex
-  end
 
   def self.update_profile(response)
     sentai_name = response["name"]

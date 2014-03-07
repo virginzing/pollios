@@ -3,13 +3,12 @@ class AuthenSentaiController < ApplicationController
 	before_action :current_login?, only: [:signin]
 
   expose(:current_member_id) { session[:member_id] }
-  expose(:get_stats_all) { @member.get_stats_all }
+  expose(:member) { @auth.member }
+  expose(:get_stats_all) { member.get_stats_all }
 
 	include Authenticate
 
 	layout "authen"
-
-	IP = 'http://codeapp-user.herokuapp.com'
 
 	def signin
 	end
@@ -25,14 +24,15 @@ class AuthenSentaiController < ApplicationController
 	end
 
 	def signin_sentai
-		@member = Authenticate::Sentai.signin( IP + '/codeapp/signin.json',
-			{'authen'=> sessions_params["authen"], 'password'=> sessions_params["password"], 'app_name'=> "pollios"})
 
+		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
+    
 		respond_to do |wants|
-			if @member.present?
-        @apn_device = check_device?(@member, sessions_params["device_token"]) if sessions_params["device_token"].present?
+			if @response["response_status"] == "OK"
+        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
+        @apn_device = check_device?(member, sessions_params["device_token"]) if sessions_params["device_token"].present?
 
-				session[:member_id] = @member.id
+				session[:member_id] = member.id
 				wants.html { redirect_to polls_path }
 				wants.json
 			else
@@ -41,22 +41,24 @@ class AuthenSentaiController < ApplicationController
 				wants.json
 			end
 		end
+
   end
 
 
   def signup_sentai
-  	@response, @member = Authenticate::Sentai.signup( IP + '/codeapp/signup.json', signup_params, "pollios")
-    puts "response : #{response}, member : #{@member}"
+  	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
+    # puts "response : #{response}, member : #{@member}"
   	respond_to do |wants|
   		if @response["response_status"] == "OK"
+        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
         @apn_device = check_device?(@member, signup_params["device_token"]) if signup_params["device_token"].present?
         puts "apn_device => #{@apn_device}"
-  			session[:member_id] = @member.id
+  			session[:member_id] = member.id
   			flash[:success] = "Sign up sucessfully."
   			wants.html { redirect_to root_url }
   			wants.json
   		else
-  			flash[:error] = @response["response_message"].values
+  			flash[:error] = @response["response_message"]
   			wants.html { redirect_to(:back) }
   			wants.json
   		end
@@ -64,7 +66,7 @@ class AuthenSentaiController < ApplicationController
   end
 
   def update_sentai
-  	@response, @member = Authenticate::Sentai.update_profile( IP + '/codeapp/update_profile.json', update_profile_params)
+  	@response, @member = Authenticate::Sentai.update_profile(update_profile_params)
   end
 
   def check_device?(member, device_token)

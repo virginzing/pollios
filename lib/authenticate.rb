@@ -10,34 +10,18 @@ module Authenticate
 
 	class Sentai < Logger
 
-		def self.signin(url, params)
-			res_form_sentai = RestClient.post(url, params)
+		def self.signin(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/signin.json", params)
 			response = JSON.parse(res_form_sentai.body)
-			log("Signin", response)
-
-			if response["response_status"] == "OK" && response.present?
-				member = Member.identify_access(response)
-				log("signin detail", member)
-			else
-				member = nil
-			end
-			return member 
 		end
 
-		def self.signup(url, params, app_name)
-			res_form_sentai = RestClient.post(url, params.merge!({"app_name" => app_name}))
+		def self.signup(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/signup.json", params)
 			response = JSON.parse(res_form_sentai.body)
-			log("Signup", response)
-
-			if response["response_status"] == "OK" && response.present?
-	      member = Member.identify_access(response)
-	      log("signup detail", member)
-	    end
-	    return response, member
 		end
 
-		def self.update_profile(url, params)
-			res_form_sentai = RestClient.post(url, params)
+		def self.update_profile(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/update_profile.json", params)
 			response = JSON.parse(res_form_sentai.body)
 			log("UpdateProfile", response)
 			if response["response_status"] == "OK" && response.present?
