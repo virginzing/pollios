@@ -42,6 +42,7 @@ class Poll < ActiveRecord::Base
     
     customize(lambda { |original_poll, new_poll|
       new_poll.expire_date = original_poll.expire_date + 1.day
+      new_poll.created_at = Time.now
     })
 
     include_field :choices
@@ -272,6 +273,7 @@ class Poll < ActiveRecord::Base
 
     convert_expire_date = Time.now + expire_date.to_i.days
     set_public = buy_poll || member.celebrity?
+    
     @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count)
 
     if @poll.valid? && choices
