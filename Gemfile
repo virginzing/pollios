@@ -70,6 +70,7 @@ gem "mini_magick"
 gem 'randumb'
 gem 'figaro'
 gem 'amoeba'
+gem 'nprogress-rails'
 # gem "squeel" 
 
 # Use ActiveModel has_secure_password

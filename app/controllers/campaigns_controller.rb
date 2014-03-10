@@ -23,7 +23,7 @@ class CampaignsController < ApplicationController
   # GET /campaigns/new
   def new
     @campaign = Campaign.new
-    @poll_campaign_new = Poll.where("campaign_id IS NULL OR campaign_id = 0 AND series = ?", false)
+    @poll_campaign_new = Poll.where("campaign_id IS NULL OR campaign_id = 0 AND series = ? AND member_id = ?", false, current_member.id)
   end
 
   # GET /campaigns/1/edit

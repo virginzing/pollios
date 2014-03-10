@@ -134,43 +134,6 @@ class Member < ActiveRecord::Base
       "undefined"
     end
   end
-  ########### Authen Sentai #############
-
-  def self.identify_access(response)
-    sentai_id = response["sentai_id"]
-    sentai_name = response["name"]
-    sentai_fullname = response["fullname"]
-    username = response["username"]
-    token = response["token"]
-    email = response["email"]
-    avatar = response["avatar_thumbnail"]
-    birthday = response["birthday"]
-    gender = response["gender"]
-    province_id = response["province"]["id"]
-
-    member = where(email: email).first_or_initialize do |m|
-      m.sentai_name = sentai_fullname
-      m.username = username
-      m.email = email
-      m.avatar = avatar
-      m.birthday = birthday
-      m.gender = gender
-      m.province_id = province_id
-      m.save
-    end
-
-    member_provider = member.providers.where("name = ?", "sentai").first_or_initialize do |provider|
-      provider.name = "sentai"
-      provider.pid = sentai_id
-      provider.token = token
-      provider.save
-    end
-
-    member_provider.update_attributes!(token: token) unless member_provider.new_record?
-    member.update_attributes(username: member.username || username, avatar: member.avatar || avatar, birthday: member.birthday || birthday) unless member.new_record?
-    return member
-  end
-
 
   def self.update_profile(response)
     sentai_name = response["name"]

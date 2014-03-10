@@ -2,7 +2,6 @@ class Authentication
 
   def initialize(params)
     @params = params
-    puts "params => #{@params}"
     @new_member = false
     @new_member_provider = false
   end
