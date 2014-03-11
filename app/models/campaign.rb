@@ -48,23 +48,34 @@ class Campaign < ActiveRecord::Base
     if used < limit
       if sample % end_sample == 0
         unless campaign_members.find_by_member_id(member_id)
-          campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code)
+          @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code)
           increment!(:used)
         end
       else
         unless campaign_members.find_by_member_id(member_id)
-          campaign_members.create!(member_id: member_id, luck: false)
+          @campaign = campaign_members.create!(member_id: member_id, luck: false)
         end
       end
     else
       puts "This campaign is limit."
     end
+    @campaign
   end
-
-
 
   def generate_serial_code
     return "POLLIOSCODE" + id.to_s + Time.now.to_i.to_s
+  end
+
+  def as_json(options={})
+    {
+      id: id,
+      name: name,
+      expire: expire.to_i,
+      photo_campaign: photo_campaign.url(:thumbnail),
+      used: used,
+      limit: limit,
+      created_at: created_at.to_date.to_date
+    }
   end
   
 end

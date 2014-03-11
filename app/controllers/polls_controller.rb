@@ -1,12 +1,12 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
+  before_action :set_current_member, only: [:hide, :create_poll, :public_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
   before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
-  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare]
+  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide]
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
 
   expose(:list_recurring) { current_member.get_recurring_available }
@@ -260,6 +260,10 @@ class PollsController < ApplicationController
     @poll
   end
 
+  def hide
+    @hide = @current_member.hidden_polls.create!(poll_id: params[:id])
+  end
+
   def destroy
     @poll.destroy
     flash[:notice] = "Destroy successfully."
@@ -269,7 +273,13 @@ class PollsController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.find(params[:id])
+    begin
+      @poll = Poll.find(params[:id])
+    rescue => e
+      respond_to do |wants|
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
+      end
+    end
   end
 
   def options_params

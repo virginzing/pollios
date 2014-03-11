@@ -1,6 +1,6 @@
 <h1>Listing campaigns</h1>
 
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th>Name</th>
@@ -8,6 +8,7 @@
       <th>Used</th>
       <th>Chance</th>
       <th>Limit</th>
+      <th>Expire</th>
       <th></th>
       <th></th>
       <th></th>
@@ -22,6 +23,7 @@
         <td><%= campaign.used %></td>
         <td><%= campaign.begin_sample %> in <%= campaign.end_sample %></td>
         <td><%= campaign.limit %></td>
+        <td><%= campaign.expire %></td>
         <td><%= link_to 'Show', campaign %></td>
         <td><%= link_to 'Edit', edit_campaign_path(campaign) %></td>
         <td><%= link_to 'Destroy', campaign, method: :delete, data: { confirm: 'Are you sure?' } %></td>

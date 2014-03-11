@@ -14,6 +14,10 @@ Pollios::Application.routes.draw do
     post 'try_out',         to: 'guests#try_out'
   end
 
+  scope 'campaigns' do
+    post ':id/predict',        to: 'campaigns#predict'
+  end
+
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'
     post 'add_friend' ,     to: 'friends#add_friend'
@@ -64,9 +68,10 @@ Pollios::Application.routes.draw do
     get 'qrcode',           to: 'polls#qrcode'
     get 'my_poll',          to: 'polls#my_poll'
     get 'my_vote',          to: 'polls#my_vote'
-    get   ':id/choices',      to: 'polls#choices'
-    post  ':id/vote',         to: 'polls#vote'
-    post  ':id/view',         to: 'polls#view'
+    get   ':id/choices',    to: 'polls#choices'
+    post  ':id/vote',       to: 'polls#vote'
+    post  ':id/view',       to: 'polls#view'
+    post ':id/hide',        to: 'polls#hide'
     post 'share/:id',       to: 'polls#share'
     post 'unshare/:id',     to: 'polls#unshare'
   end

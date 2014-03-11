@@ -1,7 +1,14 @@
 class CampaignsController < ApplicationController
-  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls]
+  skip_before_action :verify_authenticity_token
+  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
+  before_action :set_current_member, only: [:predict]
   before_action :signed_user, only: [:index, :new]
 
+
+  def predict
+    @predict = @campaign.prediction(@current_member.id)
+    puts "predict => #{@predict}"
+  end
 
   def polls
     @poll = @campaign.polls
@@ -80,6 +87,6 @@ class CampaignsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def campaign_params
-      params.require(:campaign).permit(:name, :photo_campaign, :used, :limit, :begin_sample, :end_sample, :poll_ids)
+      params.require(:campaign).permit(:name, :photo_campaign, :used, :limit, :begin_sample, :end_sample, :poll_ids, :expire)
     end
 end

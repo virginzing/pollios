@@ -51,6 +51,7 @@ if @poll_series || @poll_nonseries
       json.choice_count poll.choice_count
       json.series poll.series
       json.tags poll.cached_tags
+      json.campaign poll.get_campaign
       json.share_count poll.share_count
       json.is_public poll.public
     end
