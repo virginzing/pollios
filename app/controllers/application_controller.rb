@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
+
   include AuthenSentaiHelper
   include PollHelper
 
@@ -28,6 +29,7 @@ class ApplicationController < ActionController::Base
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
       end
     end
+    @current_member
   end
 
   def set_current_guest
@@ -40,12 +42,17 @@ class ApplicationController < ActionController::Base
   end
 
   def restrict_access  
-    current_member = APN::Device.find_by(id: params[:access_id], api_token: params[:access_token])
-    unless current_member.present?
-      respond_to do |format|
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"]}
+    authenticate_or_request_with_http_token do |token, options|
+      access_token = set_current_member.providers.where("token = ?", token)
+      unless access_token.present?
+        respond_to do |format|
+          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"]}
+        end
+      else
+        true
       end
     end
+
   end
 
   def current_member

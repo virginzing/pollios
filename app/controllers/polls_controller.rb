@@ -8,6 +8,7 @@ class PollsController < ApplicationController
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide]
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote]
+  # before_action :restrict_access, only: [:public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.share_polls.pluck(:poll_id) }

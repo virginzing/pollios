@@ -1,6 +1,7 @@
 class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
 	before_action :current_login?, only: [:signin]
+  before_action :compress_gzip, only: [:signin_sentai]
 
   expose(:current_member_id) { session[:member_id] }
   expose(:member) { @auth.member }
