@@ -32,5 +32,9 @@ module Pollios
     # config.i18n.default_locale = :de
     I18n.enforce_available_locales = false
 
+    Kaminari.configure do |config|
+      config.page_method_name = :per_page_kaminari
+    end
+    
   end
 end
