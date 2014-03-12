@@ -10,7 +10,8 @@ RailsAdmin.config do |config|
   config.current_user_method(&:current_admin)
 
   # Rails.application.eager_load!
-  config.included_models = ['Admin', 'Poll', 'Member']
+  config.included_models = ['Admin', 'Poll', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest']
+  config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }
 
   ## == Cancan ==
   # config.authorize_with :cancan
@@ -29,7 +30,6 @@ RailsAdmin.config do |config|
     show
     edit
     delete
-    show_in_app
 
     ## With an audit adapter, you can add:
     # history_index

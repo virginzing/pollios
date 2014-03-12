@@ -42,7 +42,7 @@ class Member < ActiveRecord::Base
 
   has_many :whitish_friend, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
   
-  has_many :get_my_poll, -> { where("polls.series = ?", false) }, class_name: "Poll"
+  has_many :get_my_poll, -> { where("polls.series = ?", false).limit(LIMIT_POLL) }, class_name: "Poll"
   
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
@@ -66,6 +66,7 @@ class Member < ActiveRecord::Base
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
   validates :username , :uniqueness => { :case_sensitive => true }
 
+  LIMIT_POLL = 10
   self.per_page = 20
   FRIEND_LIMIT = 500
 

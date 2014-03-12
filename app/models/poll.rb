@@ -25,7 +25,7 @@ class Poll < ActiveRecord::Base
   validates :member_id, :title , presence: true
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
-  default_scope { order("created_at desc").limit(LIMIT_POLL) }
+  default_scope { order("created_at desc") }
   
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
@@ -272,7 +272,7 @@ class Poll < ActiveRecord::Base
 
   def self.create_poll(poll, member)
     title = poll[:title]
-    expire_date = poll[:expire_date]
+    expire_date = poll[:expire_within]
     choices = poll[:choices]
     group_id = poll[:group_id]
     member_id = poll[:member_id]
