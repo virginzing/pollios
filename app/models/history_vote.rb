@@ -1,7 +1,8 @@
 class HistoryVote < ActiveRecord::Base
   belongs_to :member
   belongs_to :poll
-
+  belongs_to :choice
+  
   validates :poll_id, :member_id, :choice_id, presence: true
 
   default_scope { order("id desc") }

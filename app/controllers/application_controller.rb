@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
     strategy DecentExposure::StrongParametersStrategy
   end
 
+
   helper_method :current_member, :signed_in?, :render_to_string
 
   def history_voted_viewed

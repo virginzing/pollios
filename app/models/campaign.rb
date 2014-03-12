@@ -1,5 +1,5 @@
 class Campaign < ActiveRecord::Base
-  has_paper_trail
+  # has_paper_trail
   mount_uploader :photo_campaign, PhotoCampaignUploader
   belongs_to :member
   attr_accessor :poll_ids

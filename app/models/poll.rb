@@ -1,5 +1,5 @@
 class Poll < ActiveRecord::Base
-  has_paper_trail
+
   mount_uploader :photo_poll, PhotoPollUploader
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id
   
