@@ -32,7 +32,5 @@ module Pollios
     # config.i18n.default_locale = :de
     I18n.enforce_available_locales = false
 
-    config.assets.paths << "#{Rails.root}/app/assets/fonts"
-
   end
 end
