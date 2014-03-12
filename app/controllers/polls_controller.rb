@@ -66,7 +66,7 @@ class PollsController < ApplicationController
       Group.add_poll(@poll.id, group_id) if group_id.present?
       puts "success"
       flash[:success] = "Create poll successfully."
-      redirect_to root_url
+      redirect_to polls_path
     else
       puts "#{@poll.errors.full_messages}"
     end

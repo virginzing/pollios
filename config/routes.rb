@@ -1,7 +1,9 @@
 Pollios::Application.routes.draw do
 
   devise_for :admins, :controllers => { :registrations => "admin/registrations" }
-  
+
+  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+
   resources :recurrings
 
   resources :campaigns

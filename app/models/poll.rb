@@ -34,7 +34,8 @@ class Poll < ActiveRecord::Base
 
   LIMIT_POLL = 10
   LIMIT_TIMELINE = 3000
-  self.per_page = 20
+
+  self.per_page = 10
 
   amoeba do
     enable
@@ -166,10 +167,14 @@ class Poll < ActiveRecord::Base
       @cache_polls = cached_find_poll(member_obj, status)
       poll = @cache_polls[0..(LIMIT_POLL - 1)]
     end
-    puts "cache poll id : #{@cache_polls}"
+    # puts "cache poll id : #{@cache_polls}"
 
-    if poll.count == LIMIT_POLL
-      next_cursor = poll.last
+    if @cache_polls.count > LIMIT_POLL
+      if poll.count == LIMIT_POLL
+        next_cursor = poll.last
+      else
+        next_cursor = 0
+      end
     else
       next_cursor = 0
     end
