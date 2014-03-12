@@ -1,5 +1,7 @@
 Pollios::Application.routes.draw do
 
+  devise_for :admins, :controllers => { :registrations => "admin/registrations" }
+  
   resources :recurrings
 
   resources :campaigns
@@ -89,8 +91,9 @@ Pollios::Application.routes.draw do
 
   get '/tags',  to: 'tags#index'
   get '/qrcode',  to: 'polls#generate_qrcode'
-
+  get '/home',  to: 'home#index'
   get '/campaigns_polls',  to: 'campaigns#polls'
-  root to: 'polls#index'
+
+  root to: 'home#index'
 
 end

@@ -3,6 +3,7 @@ class MembersController < ApplicationController
   before_action :set_current_member, only: [:detail_friend, :stats, :update_profile]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:detail_friend]
+  before_action :signed_user, only: [:index]
 
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
@@ -11,8 +12,8 @@ class MembersController < ApplicationController
   def detail_friend
     @find_friend = Member.find(params[:friend_id])
     poll = @find_friend.polls.includes(:member)
-    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll, @current_member.id)
-    @is_friend = Friend.add_friend?(@current_member.id, @find_friend.id) if @find_friend.present?
+    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
+    @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
   end
 
   def update_profile

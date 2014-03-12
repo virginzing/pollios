@@ -108,4 +108,11 @@ class ApplicationController < ActionController::Base
       end
   end
 
+  def redirect_unless_admin
+    unless current_admin
+      flash[:notice] = "Only Admin"
+      redirect_to root_path
+    end
+  end
+
 end
