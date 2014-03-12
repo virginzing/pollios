@@ -9,8 +9,8 @@ RailsAdmin.config do |config|
 
   config.current_user_method(&:current_admin)
 
-  # Rails.application.eager_load!
-  config.included_models = ['Admin', 'Poll', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest']
+  config.included_models = ['Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
+    'HistoryView', 'HistoryVote', 'Province']
   config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }
 
   ## == Cancan ==
