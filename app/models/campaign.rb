@@ -1,4 +1,5 @@
 class Campaign < ActiveRecord::Base
+  has_paper_trail
   mount_uploader :photo_campaign, PhotoCampaignUploader
   belongs_to :member
   attr_accessor :poll_ids
@@ -20,9 +21,8 @@ class Campaign < ActiveRecord::Base
 
   def set_campaign_poll
     if self.poll_ids.present?
-      poll_id = self.poll_ids
-      split_poll = poll_id.split(",").collect{|id| id.to_i }
-      Poll.where("id IN (?)", split_poll).each do |poll|
+      poll_id = self.poll_ids.class == Array ? self.poll_ids.delete_if{|e| e == "" } : self.poll_ids.split(",").collect{|id| id.to_i }.delete_if {|e| e == "" }
+      Poll.where("id IN (?)", poll_id).each do |poll|
         poll.update(campaign_id: id)
       end
     end
@@ -30,7 +30,7 @@ class Campaign < ActiveRecord::Base
 
   def check_campaign_poll
     old_poll_ids = polls.pluck(:id)
-    edit_poll_ids = poll_ids.split(",").collect{|id| id.to_i }
+    edit_poll_ids = poll_ids.class == Array ? poll_ids.delete_if {|e| e == "" } : poll_ids.split(",").collect{|id| id.to_i }.delete_if {|e| e == "" }
 
     old_poll_ids.each do |pid|
       Poll.find(pid).update_attributes!(campaign_id: nil) unless edit_poll_ids.include?(pid)

@@ -75,6 +75,7 @@ gem 'nprogress-rails'
 
 gem 'rails_admin'
 gem 'devise'
+gem 'paper_trail', '~> 3.0.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

@@ -1,4 +1,5 @@
 class Member < ActiveRecord::Base
+  has_paper_trail
   include MemberHelper
   belongs_to :province
 
