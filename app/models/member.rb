@@ -1,7 +1,7 @@
 class Member < ActiveRecord::Base
   has_paper_trail
   include MemberHelper
-  belongs_to :province
+  belongs_to :province, inverse_of: :members
 
   has_many :follower , -> { where(following: true) }, foreign_key: "followed_id", class_name: "Friend"
   has_many :get_follower, through: :follower, source: :follower
@@ -70,6 +70,51 @@ class Member < ActiveRecord::Base
   LIMIT_POLL = 10
   self.per_page = 20
   FRIEND_LIMIT = 500
+
+  rails_admin do 
+    list do
+      field :id
+      field :avatar do
+        formatted_value do
+          bindings[:view].tag(:img, { :src => bindings[:object].avatar, width: "50px", height: "50px"})
+        end
+      end
+      field :sentai_name
+      field :email
+      field :gender
+      field :member_type
+      field :created_at
+    end
+
+    configure :follower do
+      visible(false)
+    end
+
+    update do
+      field :email do
+       read_only true
+      end
+      field :sentai_name
+      field :username
+      field :gender
+      field :member_type
+      field :friend_limit
+      field :birthday
+      field :province
+
+    end
+
+    edit do
+      field :sentai_name
+      field :username
+      field :gender
+      field :member_type
+      field :friend_limit
+      field :birthday
+      field :province
+    end
+
+  end
 
   def set_friend_limit
     self.friend_limit = FRIEND_LIMIT

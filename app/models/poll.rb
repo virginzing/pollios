@@ -4,7 +4,7 @@ class Poll < ActiveRecord::Base
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id
   
 
-  has_many :choices, dependent: :destroy
+  has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings, source: :tag
 
