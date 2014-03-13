@@ -23,6 +23,10 @@ class Choice < ActiveRecord::Base
       Rails.cache.fetch(['Poll', poll_id, name]) do
         find_choice(poll_id)
       end
+    elsif expired
+      Rails.cache.fetch(['Poll', poll_id, name]) do
+        find_choice(poll_id)
+      end
     else
       find_choice(poll_id)
     end

@@ -19,7 +19,7 @@ class Poll < ActiveRecord::Base
 
   belongs_to :member, touch: true
   belongs_to :poll_series
-  belongs_to :campaign, touch: true
+  belongs_to :campaign
   belongs_to :recurring
 
   validates :title, presence: true
@@ -64,7 +64,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_member
-    Rails.cache.fetch([self, 'member'], expires_in: 30.minutes) do
+    Rails.cache.fetch(['member',self.member.updated_at.to_i]) do
       member.as_json()
     end
   end
@@ -193,7 +193,7 @@ class Poll < ActiveRecord::Base
     series_shared = []
     nonseries_shared = []
 
-    PollMember.includes([{:poll => [:campaign, :poll_series, :share_polls]}, :member]).where("id IN (?)", poll_ids).order("id desc").each do |poll_member|
+    PollMember.includes([{:poll => [:campaign, :poll_series, :share_polls, :member]}]).where("id IN (?)", poll_ids).order("id desc").each do |poll_member|
       if poll_member.share_poll_of_id == 0
         not_shared = Hash["shared" => false]
         if poll_member.poll.series
