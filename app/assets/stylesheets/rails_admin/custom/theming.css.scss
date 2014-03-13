@@ -1,9 +1,6 @@
 /* All real theming should happen here */
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
 .rails_admin {
-  background-color: red;
-  
-  .breadcrumb {
-    padding: 23px 15px;
-  }
+  font-family: 'Open Sans', sans-serif;
 }

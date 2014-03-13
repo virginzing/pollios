@@ -30,7 +30,11 @@
 
       <section class="top-bar-section">
       <ul class="left">
+      <li class="divider"></li>
       <li><a href="<%= members_path %>">Member All</a></li>
+      <li class="divider"></li>
+      <li><%= link_to 'Admin', rails_admin.dashboard_path, method: :get %></li>
+      <li class="divider"></li>
       </ul>
 
         <!-- Right Nav Section -->
