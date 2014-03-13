@@ -146,7 +146,7 @@ end
 #     "member_id": 1
 # }' -X POST http://localhost:3000/campaigns/6/predict.json -i
 
-# curl -F "member_id=42" -F "username=Coconuzz" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=1" -F "sentai_name=Nuttapon" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "633882377",

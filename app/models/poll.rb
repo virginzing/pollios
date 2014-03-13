@@ -64,7 +64,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_member
-    Rails.cache.fetch(['member',self.member.updated_at.to_i]) do
+    Rails.cache.fetch(['member', self.member.updated_at.to_i]) do
       member.as_json()
     end
   end
