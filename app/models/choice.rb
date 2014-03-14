@@ -20,6 +20,8 @@ class Choice < ActiveRecord::Base
     voted = choices[:voted]
 
     if voted == "no" && !expired
+      find_choice(poll_id)
+    elsif voted == "no" && expired
       Rails.cache.fetch(['Poll', poll_id, name]) do
         find_choice(poll_id)
       end
