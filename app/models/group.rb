@@ -47,7 +47,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.add_friend_to_group(group_id, member_id, friend)
-    list_friend = friend.split(",")
+    list_friend = friend.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group_id)
 
     if check_valid_friend.count > 0
@@ -59,7 +59,6 @@ class Group < ActiveRecord::Base
   end
 
   def self.friend_exist_group(list_friend, group_id)
-    puts "group id => #{group_id}"
     return list_friend - find(group_id).group_members.map(&:member_id) if find(group_id).present?
   end
 

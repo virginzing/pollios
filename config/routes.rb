@@ -43,9 +43,9 @@ Pollios::Application.routes.draw do
 
   scope 'group' do
     post 'build',             to: 'group#build_group'
-    post 'add_friend',        to: 'group#add_friend_to_group'
+    post ':id/invite',        to: 'group#add_friend_to_group'
     post ':id/accept',        to: 'group#accept_group'
-    post 'deny_group',        to: 'group#deny_group'
+    post ':id/deny',          to: 'group#deny_group'
     post 'leave_group',       to: 'group#leave_group'
     post 'delete_group',      to: 'group#delete_group'
     get 'all',                to: 'group#my_group'
