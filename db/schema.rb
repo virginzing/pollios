@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140312095502) do
+ActiveRecord::Schema.define(version: 20140317072155) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -192,7 +192,7 @@ ActiveRecord::Schema.define(version: 20140312095502) do
     t.string   "photo_group"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "friend_count", default: 0
+    t.integer  "member_count", default: 0
     t.integer  "poll_count",   default: 0
   end
 
