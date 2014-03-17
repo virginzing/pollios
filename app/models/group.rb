@@ -12,6 +12,7 @@ class Group < ActiveRecord::Base
   has_many :get_member_inactive, through: :member_inactive, source: :member
 
   validates :name, presence: true
+
   mount_uploader :photo_group, PhotoGroupUploader
 
 
@@ -34,10 +35,12 @@ class Group < ActiveRecord::Base
 
   def self.build_group(group)
     member_id = group[:member_id]
+    photo_group = group[:photo_group]
+
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name)
+    @group = create(name: name, photo_group: photo_group, member_count: 1)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
