@@ -4,7 +4,7 @@ class GroupController < ApplicationController
   before_action :set_current_member, only: [:my_group, :accept_group, :cancel_group, :leave_group, :poll_group]
   before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll]
   before_action :history_voted_viewed, only: [:poll_group]
-
+  before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
 
   def my_group
     @group_active = @current_member.get_group_active
