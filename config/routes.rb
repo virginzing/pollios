@@ -48,7 +48,7 @@ Pollios::Application.routes.draw do
     post 'deny_group',        to: 'group#deny_group'
     post 'leave_group',       to: 'group#leave_group'
     post 'delete_group',      to: 'group#delete_group'
-    get 'my_group',           to: 'group#my_group'
+    get 'all',                to: 'group#my_group'
   end
 
   scope 'member' do

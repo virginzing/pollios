@@ -1,4 +1,8 @@
 if @group_active || @group_inactive
-  json.group_active @group_active, partial: 'group/detail', as: :group
-  json.group_inactive @group_inactive, partial: 'group/detail', as: :group
+  json.response_status "OK"
+  json.my_group @group_active, partial: 'group/detail', as: :group
+  json.group_request @group_inactive, partial: 'group/detail', as: :group
+else
+  json.response_status "ERROR"
+  json.response_message "Unable..."
 end

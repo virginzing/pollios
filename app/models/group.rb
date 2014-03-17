@@ -17,7 +17,7 @@ class Group < ActiveRecord::Base
 
   def cached_created_by
     Rails.cache.fetch([ self, 'created_by' ]) do
-      group_members.where(is_master: true).first.member.username
+      group_members.where(is_master: true).first.member.sentai_name
     end
   end
 
