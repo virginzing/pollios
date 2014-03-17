@@ -50,7 +50,7 @@ Pollios::Application.routes.draw do
     post 'delete_group',      to: 'group#delete_group'
     get 'all',                to: 'group#my_group'
     get ':id/detail',         to: 'group#detail_group'
-    get ':id/poll',           to: 'group#poll_group'
+    get ':id/polls',           to: 'group#poll_group'
     post ':id/delete_poll',   to: 'group#delete_poll'
   end
 
