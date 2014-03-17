@@ -220,11 +220,13 @@ class Member < ActiveRecord::Base
   end
 
 
-  def deny_or_leave_group(group_id)
+  def cancel_or_leave_group(group_id, type)
     find_group_member = group_members.where(group_id: group_id).first
     if find_group_member
+      find_group_member.group.decrement!(:member_count) if type == "L" 
       find_group_member.destroy
     end
+    find_group_member.group
   end
 
   def delete_group(group_id)

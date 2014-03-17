@@ -45,12 +45,13 @@ Pollios::Application.routes.draw do
     post 'build',             to: 'group#build_group'
     post ':id/invite',        to: 'group#add_friend_to_group'
     post ':id/accept',        to: 'group#accept_group'
-    post ':id/deny',          to: 'group#deny_group'
-    post 'leave_group',       to: 'group#leave_group'
+    post ':id/cancel',        to: 'group#cancel_group'
+    post ':id/leave',          to: 'group#leave_group'
     post 'delete_group',      to: 'group#delete_group'
     get 'all',                to: 'group#my_group'
     get ':id/detail',         to: 'group#detail_group'
     get ':id/poll',           to: 'group#poll_group'
+    post ':id/delete_poll',   to: 'group#delete_poll'
   end
 
   scope 'member' do

@@ -28,8 +28,10 @@ class Group < ActiveRecord::Base
 
     find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
     if find_group_member
+      find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
     end
+    find_group_member.group
   end
 
 
@@ -68,13 +70,11 @@ class Group < ActiveRecord::Base
 
 
   def self.add_poll(poll_id, group_id)
-    if group_id.class == Array
-      list_group = group_id
-    else
-      list_group = group_id.split(",")
-    end
+    list_group = group_id.split(",")
     where(id: list_group).each do |group|
-      group.poll_groups.create!(poll_id: poll_id)
+      if group.poll_groups.create!(poll_id: poll_id)
+        group.increment!(:poll_count)
+      end
     end
   end
 
