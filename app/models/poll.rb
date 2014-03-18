@@ -22,6 +22,9 @@ class Poll < ActiveRecord::Base
   belongs_to :campaign
   belongs_to :recurring
 
+  after_commit :flush_cached
+  before_save :set_default_value
+
   validates :title, presence: true
   validates :member_id, :title , presence: true
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
@@ -50,7 +53,10 @@ class Poll < ActiveRecord::Base
     include_field :choices
   end
 
-  before_save :set_default_value
+  def flush_cached
+    puts "clear cached poll"
+    Rails.cache.delete([member, 'poll_count'])
+  end
 
   def set_default_value
     self.recurring_id = 0 unless self.recurring_id.present?

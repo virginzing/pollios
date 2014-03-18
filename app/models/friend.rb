@@ -4,12 +4,19 @@ class Friend < ActiveRecord::Base
   belongs_to :follower, class_name: "Member"
   belongs_to :followed, class_name: "Member"
 
+  after_commit :flush_cached
+
   validates :follower_id, presence: true
   validates :followed_id, presence: true
 
   scope :search_member,     -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).first }
   scope :search_friend,     -> (friend_id, member_id) { where(follower_id: friend_id, followed_id: member_id).first }
-  scope :search_no_friend,  -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).having_status(:nofriend).first }
+
+  def flush_cached
+    puts "clear cached #{self.follower.id}"
+    Rails.cache.delete([ self.follower, 'friend_count'])
+    Rails.cache.delete([ self.follower, 'following_count'])
+  end
 
   def self.add_friend(friend)
     friend_id = friend[:friend_id]
@@ -87,21 +94,20 @@ class Friend < ActiveRecord::Base
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
-    begin
-      @member = search_no_friend(member_id, friend_id)
+      @search_no_friend = where(follower_id: member_id, followed_id: friend_id, status: -1).first
       find_been_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
-
-      if @member.present?
-        @member.destroy
+      if @search_no_friend.present?
+        @search_no_friend.destroy
         find_been_friend.destroy if find_been_friend.present?
+        true
       else
-        search_member(member_id, friend_id).update(following: false)
+        following = where(follower_id: member_id, followed_id: friend_id, status: -1)
+        if following.present?
+          following.first.update(following: false)
+        else
+          false
+        end
       end
-      @member
-      rescue => e
-      puts "error => #{e}"
-    end
-
   end
 
   def self.unfriend(friend)

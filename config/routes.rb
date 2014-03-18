@@ -39,6 +39,9 @@ Pollios::Application.routes.draw do
     get 'search',           to: 'friends#search_friend'
     post 'following',       to: 'friends#following'
     post 'unfollow',        to: 'friends#unfollow'
+    get 'profile',          to: 'friends#profile'
+    get 'polls',            to: 'friends#list_of_poll'
+    get 'list_friend',      to: 'friends#list_of_friend'
   end
 
   scope 'group' do

@@ -1,8 +1,9 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend, :list_following]
+  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend, :list_following, :polls, :profile]
   before_action :set_current_member
+  before_action :set_friend, only: [:profile]
 
   def add_friend
     @friend = Friend.add_friend(friend_params)
@@ -15,6 +16,7 @@ class FriendsController < ApplicationController
 
   def unfollow
     @friend = Friend.unfollow(friend_params)
+    puts "friend => #{@friend}"
   end
 
   def unfriend
@@ -68,12 +70,32 @@ class FriendsController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member.id, @list_follower) if @list_follower.present?
   end
 
+  def profile
+    @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
+  end
+
+  # def list_of_poll
+  #   @find_friend = Member.find(params[:friend_id])
+  #   poll = @find_friend.polls.includes(:member, :campaign)
+  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
+  #   @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
+  # end
+
   # def list_request
   #   @your_request = @current_member.get_your_request
   #   @friend_request = @current_member.get_friend_request
   # end
 
-  private 
+  private
+
+  def set_friend
+     @find_friend = Member.find_by(id: params[:friend_id])
+     unless @find_friend.present?
+        respond_to do |format|
+          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Don't have this id of friend"]}
+        end
+     end
+  end 
 
   def friend_params
     params.permit(:friend_id, :q, :member_id)

@@ -116,6 +116,7 @@ class Member < ActiveRecord::Base
 
   end
 
+
   def set_friend_limit
     self.friend_limit = FRIEND_LIMIT
   end
@@ -137,6 +138,24 @@ class Member < ActiveRecord::Base
       "direct_msg" => 0,
       "status" => 0
     }
+  end
+
+  def cached_poll_count
+    Rails.cache.fetch([self, 'poll_count']) do
+      polls.count
+    end
+  end
+
+  def cached_friend_count
+    Rails.cache.fetch([self, 'friend_count']) do
+      friend_active.count
+    end
+  end
+
+  def cached_following_count
+    Rails.cache.fetch([self, 'following_count']) do
+      get_following.count
+    end
   end
 
   def get_avatar
@@ -276,7 +295,4 @@ class Member < ActiveRecord::Base
       avatar: avatar.present? ? avatar : "No Image"
    }
   end
-
-
-
 end
