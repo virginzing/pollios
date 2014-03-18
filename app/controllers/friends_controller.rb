@@ -1,9 +1,10 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend, :list_following, :polls, :profile]
+  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend, :list_following, :polls, :profile, :list_of_poll]
   before_action :set_current_member
-  before_action :set_friend, only: [:profile]
+  before_action :set_friend, only: [:profile, :list_of_poll]
+  before_action :history_voted_viewed, only: [:list_of_poll]
 
   def add_friend
     @friend = Friend.add_friend(friend_params)
@@ -74,12 +75,10 @@ class FriendsController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
   end
 
-  # def list_of_poll
-  #   @find_friend = Member.find(params[:friend_id])
-  #   poll = @find_friend.polls.includes(:member, :campaign)
-  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
-  #   @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
-  # end
+  def list_of_poll
+    poll = @find_friend.polls.includes(:member, :campaign)
+    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
+  end
 
   # def list_request
   #   @your_request = @current_member.get_your_request
