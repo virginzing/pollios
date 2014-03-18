@@ -11,7 +11,7 @@ class MembersController < ApplicationController
  
   def detail_friend
     @find_friend = Member.find(params[:friend_id])
-    poll = @find_friend.polls.includes(:member)
+    poll = @find_friend.polls.includes(:member, :campaign)
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
     @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
   end

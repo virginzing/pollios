@@ -8,7 +8,7 @@ if member.present?
       json.access_id @apn_device.id
       json.access_token @apn_device.api_token
     end
-    json.group_active member.group_active
+    # json.group_active member.group_active
   end
 
 else
