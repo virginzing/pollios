@@ -56,7 +56,7 @@ class FriendsController < ApplicationController
   end
 
   def list_friend
-    @friend_active = @current_member.get_friend_active.citizen
+    @friend_active = @current_member.get_friend_active
     @your_request = @current_member.get_your_request
     @friend_request = @current_member.get_friend_request
     # @friend_inactive = @current_member.get_friend_inactive
