@@ -241,8 +241,9 @@ class Member < ActiveRecord::Base
 
   def self.search_member(params)
     if params[:q].present?
-    else
       where("id != ? AND (email LIKE ? OR sentai_name LIKE ? OR username LIKE ?)", params[:member_id].to_i ,"%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
+    else
+      nil
     end
   end
 
