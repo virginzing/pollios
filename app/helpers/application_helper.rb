@@ -52,7 +52,7 @@ end
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
 # http://localhost:3000/friends/following.json?member_id=15
-http://localhost:3000/friend/search.json?member_id=1&q=N
+# http://localhost:3000/friend/search.json?member_id=1&q=N
 
 # curl -F "member_id=3" -F "name=Nutty" -F "friend_id=4,14" http://localhost:3000/group/build.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
