@@ -45,8 +45,7 @@ class PollsController < ApplicationController
     params[:poll][:expire_date] = Time.now + params[:poll][:expire_date].to_i.days
     params[:poll][:public] = false
     params[:poll][:series] = false
-    # params[:poll][:public] = true if current_member.celebrity? || params[:poll][:recurring_id].present?
-    params[:poll][:public] = true if params[:poll][:recurring_id].present?
+    params[:poll][:public] = true if current_member.celebrity? || params[:poll][:recurring_id].present?
 
     choice_array = []
     choice_array << params[:poll][:choice_one]
