@@ -51,7 +51,7 @@ class FriendsController < ApplicationController
   end
 
   def search_friend
-    @search = Member.search_member(friend_params[:q])
+    @search = Member.search_member(friend_params)
     @is_friend = Friend.add_friend?(@current_member.id, @search) if @search.present?
   end
 
