@@ -6,7 +6,7 @@ class Member < ActiveRecord::Base
   has_many :follower , -> { where(following: true) }, foreign_key: "followed_id", class_name: "Friend"
   has_many :get_follower, through: :follower, source: :follower
 
-  has_many :following, -> { where(following: true) }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
+  has_many :following, -> { where("following = ? AND status != ?", true, 1) }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
   has_many :get_following, -> { where('members.member_type = 1') } ,through: :following, source: :followed
   
   has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy

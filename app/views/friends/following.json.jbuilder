@@ -3,5 +3,5 @@ if @friend.present?
   json.partial! 'members/detail', member: @friend
 else
   json.response_status "ERROR"
-  json.response_message "Unable..."
+  json.response_message "You have ever been follow this celeb."
 end

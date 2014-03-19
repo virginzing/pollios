@@ -166,7 +166,7 @@ ActiveRecord::Schema.define(version: 20140317072155) do
     t.boolean  "mute",         default: false
     t.boolean  "visible_poll", default: true
     t.integer  "status"
-    t.boolean  "following",    default: true
+    t.boolean  "following",    default: false
   end
 
   add_index "friends", ["followed_id"], name: "index_friends_on_followed_id"
