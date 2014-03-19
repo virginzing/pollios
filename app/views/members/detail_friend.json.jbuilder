@@ -5,6 +5,7 @@ if @poll_series || @poll_nonseries
   json.partial! 'friends/profile_detail', member: @find_friend
 
     json.poll_series @poll_series do |poll|
+      json.creator poll.cached_member
       json.list_of_poll do
         json.id poll.poll_series_id
         json.vote_count poll.poll_series.vote_all
@@ -32,6 +33,7 @@ if @poll_series || @poll_nonseries
     end
 
     json.poll_nonseries @poll_nonseries do |poll|
+      json.creator poll.cached_member
       json.poll do
         json.id poll.id
         json.title poll.title
