@@ -6,6 +6,7 @@ class FriendsController < ApplicationController
   before_action :set_friend, only: [:profile, :list_of_poll]
   before_action :history_voted_viewed, only: [:list_of_poll]
 
+
   def add_friend
     @friend = Friend.add_friend(friend_params)
     @detail_friend, @status = @friend
@@ -52,7 +53,8 @@ class FriendsController < ApplicationController
 
   def search_friend
     @search = Member.search_member(friend_params)
-    @is_friend = Friend.add_friend?(@current_member.id, @search) if @search.present?
+    @is_friend = Friend.add_friend?(@current_member, @search) if @search.present?
+    puts "is_friend #{@is_friend}"
   end
 
   def list_friend
@@ -68,11 +70,11 @@ class FriendsController < ApplicationController
 
   def list_follower
     @list_follower = @current_member.get_follower
-    @is_friend = Friend.add_friend?(@current_member.id, @list_follower) if @list_follower.present?
+    @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
   end
 
   def profile
-    @is_friend = Friend.add_friend?(@current_member.id, [@find_friend]) if @find_friend.present?
+    @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
   end
 
   def list_of_poll
