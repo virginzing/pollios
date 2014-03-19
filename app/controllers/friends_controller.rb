@@ -58,19 +58,19 @@ class FriendsController < ApplicationController
   end
 
   def list_friend
-    @friend_active = @current_member.get_friend_active
-    @your_request = @current_member.get_your_request
-    @friend_request = @current_member.get_friend_request
+    @friend_active = @current_member.cached_get_friend_active
+    @your_request = @current_member.cached_get_your_request
+    @friend_request = @current_member.cached_get_friend_request
     # @friend_inactive = @current_member.get_friend_inactive
   end
 
   def list_following
-    @list_following = @current_member.get_following
+    @list_following = @current_member.cached_get_following
     @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
   end
 
   def list_follower
-    @list_follower = @current_member.get_follower
+    @list_follower = @current_member.cached_get_follower
     @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
   end
 

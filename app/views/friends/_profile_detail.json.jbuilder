@@ -7,6 +7,6 @@ json.email member.email
 
 json.count do
   json.poll member.cached_poll_count
-  json.friend member.cached_friend_count
-  json.following member.cached_following_count
+  json.friend member.cached_get_friend_active.count
+  json.following member.cached_get_following.count
 end

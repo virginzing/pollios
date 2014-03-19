@@ -15,7 +15,10 @@ class Friend < ActiveRecord::Base
   def flush_cached
     puts "clear cached #{self.follower.id}"
     Rails.cache.delete([ self.follower, 'friend_count'])
-    Rails.cache.delete([ self.follower, 'following_count'])
+    Rails.cache.delete([ self.follower , 'following' ])
+    Rails.cache.delete([ self.follower, 'friend_active'])
+    Rails.cache.delete([ self.follower, 'your_request'])
+    Rails.cache.delete([ self.follower, 'friend_request'])
   end
 
   def self.add_friend(friend)
@@ -78,12 +81,14 @@ class Friend < ActiveRecord::Base
 
     begin
       find_friend = Member.find(friend_id)
-      find_unfollow = where(follower_id: member_id, followed_id: friend_id, following: false).first
-      if find_unfollow.present?
-        find_unfollow.update(following: true)
+      find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).having_status(:friend).first
+
+      if find_is_friend.present?
+        find_is_friend.update(following: true)
       else
         create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
       end
+      Rails.cache.delete([ find_friend , 'follower' ])
       find_friend
     rescue => e
       puts "error => #{e}"
@@ -95,20 +100,13 @@ class Friend < ActiveRecord::Base
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
-      @search_no_friend = where(follower_id: member_id, followed_id: friend_id, status: -1).first
-      find_been_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
-      if @search_no_friend.present?
-        @search_no_friend.destroy
-        find_been_friend.destroy if find_been_friend.present?
-        true
-      else
-        following = where(follower_id: member_id, followed_id: friend_id, status: -1)
-        if following.present?
-          following.first.update(following: false)
-        else
-          false
-        end
-      end
+    find_following = where(follower_id: member_id, followed_id: friend_id, status: -1).first
+    if find_following.present?
+      Rails.cache.delete([ find_following.followed , 'follower' ])
+      find_following.destroy
+    else
+      false
+    end
   end
 
   def self.unfriend(friend)
@@ -167,10 +165,10 @@ class Friend < ActiveRecord::Base
 
   def self.add_friend?(member_obj, search_member)
     check_my_friend = []
-    my_friend = member_obj.get_friend_active.pluck(:id)
-    your_request = member_obj.get_your_request.pluck(:id)
-    friend_request = member_obj.get_friend_request.pluck(:id)
-    my_following = member_obj.get_following.pluck(:id)
+    my_friend = member_obj.cached_get_friend_active.map(&:id)
+    your_request = member_obj.cached_get_your_request.map(&:id)
+    friend_request = member_obj.cached_get_friend_request.map(&:id)
+    my_following = member_obj.cached_get_following.map(&:id)
     
     search_member.each do |member|
       if my_friend.include?(member.id)

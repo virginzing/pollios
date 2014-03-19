@@ -146,15 +146,33 @@ class Member < ActiveRecord::Base
     end
   end
 
-  def cached_friend_count
-    Rails.cache.fetch([self, 'friend_count']) do
-      friend_active.count
+  def cached_get_following
+    Rails.cache.fetch([self, 'following']) do
+      get_following.to_a
     end
   end
 
-  def cached_following_count
-    Rails.cache.fetch([self, 'following_count']) do
-      get_following.count
+  def cached_get_follower
+    Rails.cache.fetch([self, 'follower']) do
+      get_follower.to_a
+    end
+  end
+
+  def cached_get_friend_active
+    Rails.cache.fetch([self, 'friend_active']) do
+      get_friend_active.to_a
+    end
+  end
+
+  def cached_get_your_request
+    Rails.cache.fetch([self, 'your_request']) do
+      get_your_request.to_a
+    end
+  end
+
+  def cached_get_friend_request
+    Rails.cache.fetch([self, 'friend_request']) do
+      get_friend_request.to_a
     end
   end
 
