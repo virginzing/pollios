@@ -1,7 +1,7 @@
 if @poll_nonseries
   json.response_status "OK"
-  json.partial! 'members/profile', member: @poll_nonseries
-  json.poll_list do
+  json.partial! 'friends/profile_detail', member: @current_member
+
     json.poll_nonseries @poll_nonseries do |poll|
       json.poll do
         json.id poll.id
@@ -21,5 +21,4 @@ if @poll_nonseries
     end
 
     json.next_cursor @next_cursor
-  end
 end
