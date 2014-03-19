@@ -1,4 +1,5 @@
 if @list_following
+  count = 0
   json.response_status "OK"
   json.following @list_following do |member|
     json.member_id member.id
@@ -7,6 +8,8 @@ if @list_following
     json.username member.username
     json.avatar member.get_avatar
     json.email member.email
+    json.status @is_friend[count]
+    count += 1
   end
 else
   json.response_status "ERROR"
