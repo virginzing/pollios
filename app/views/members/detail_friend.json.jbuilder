@@ -1,10 +1,9 @@
 if @poll_series || @poll_nonseries
   json.response_status "OK"
 
-  json.is_friend @is_friend[0]
+  json.status @is_friend[0]
   json.partial! 'friends/profile_detail', member: @find_friend
 
-  json.poll_list do
     json.poll_series @poll_series do |poll|
       json.list_of_poll do
         json.id poll.poll_series_id
@@ -52,6 +51,5 @@ if @poll_series || @poll_nonseries
     end
   
     json.next_cursor @next_cursor
-  end
 
 end
