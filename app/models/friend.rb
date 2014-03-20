@@ -13,12 +13,12 @@ class Friend < ActiveRecord::Base
   scope :search_friend,     -> (friend_id, member_id) { where(follower_id: friend_id, followed_id: member_id).first }
 
   def flush_cached
-    puts "clear cached #{self.follower.id}"
+    # puts "clear cached #{self.follower.id}"
     # Rails.cache.delete([ self.follower, 'friend_count'])
     # Rails.cache.delete([ self.follower , 'following' ])
-    Rails.cache.delete([ self.follower, 'friend_active'])
-    Rails.cache.delete([ self.follower, 'your_request'])
-    Rails.cache.delete([ self.follower, 'friend_request'])
+    # Rails.cache.delete([ self.follower.id, 'friend_active'])
+    # Rails.cache.delete([ self.follower.id, 'your_request'])
+    # Rails.cache.delete([ self.follower.id, 'friend_request'])
   end
 
   def self.add_friend(friend)
@@ -51,6 +51,8 @@ class Friend < ActiveRecord::Base
         create!(follower_id: friend_id, followed_id: member_id, status: :invitee)
         status = :invite
       end
+      flush_cached_friend(member_id, friend_id)
+
       [find_friend, status]
     rescue  => e
       puts "error => #{e}"
@@ -125,6 +127,7 @@ class Friend < ActiveRecord::Base
     if find_member && find_friend
       find_friend.destroy
       find_member.destroy
+      flush_cached_friend(member_id, friend_id)
     end
   end
 
@@ -148,6 +151,7 @@ class Friend < ActiveRecord::Base
         find_member.destroy
         find_friend.destroy
       end
+      flush_cached_friend(member_id, friend_id)
       [friend, :friend, active_status]
     rescue => e
       puts "error => #{e}"
@@ -161,6 +165,7 @@ class Friend < ActiveRecord::Base
     begin
       search_member(member_id, friend_id).update_attributes!(block: type_block)
       search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
+      flush_cached_friend(member_id, friend_id)
     rescue => e
       puts "error => #{e}"
       nil
@@ -224,6 +229,16 @@ class Friend < ActiveRecord::Base
     #     check_my_friend << friend_list
     #   end
     # end
+  end
+
+  def self.flush_cached_friend(member_id, friend_id)
+    Rails.cache.delete([ member_id, 'friend_active'])
+    Rails.cache.delete([ member_id, 'your_request'])
+    Rails.cache.delete([ member_id, 'friend_request'])
+
+    Rails.cache.delete([ friend_id, 'friend_active'])
+    Rails.cache.delete([ friend_id, 'your_request'])
+    Rails.cache.delete([ friend_id, 'friend_request'])
   end
 
 end

@@ -18,7 +18,6 @@ class FriendsController < ApplicationController
 
   def unfollow
     @friend = Friend.unfollow(friend_params)
-    puts "friend => #{@friend}"
   end
 
   def unfriend
@@ -54,7 +53,7 @@ class FriendsController < ApplicationController
   def search_friend
     @search = Member.search_member(friend_params)
     @is_friend = Friend.add_friend?(@current_member, @search) if @search.present?
-    puts "is_friend #{@is_friend}"
+    # puts "is_friend #{@is_friend}"
   end
 
   def list_friend

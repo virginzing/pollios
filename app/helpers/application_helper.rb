@@ -37,9 +37,9 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2 }' -X POST http://localhost:3000/friend/following.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 3, "friend_id": 19 }' -X POST http://localhost:3000/friend/unfollow.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2 }' -X POST http://localhost:3000/friend/unfollow.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 9 }' -X POST http://localhost:3000/friend/add_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
+#  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/unblock.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/unmute_friend.json -i
@@ -47,7 +47,7 @@ end
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 9, "friend_id": 1 }' -X POST http://localhost:3000/friend/accept.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 3, "friend_id": 1 }' -X POST http://localhost:3000/friend/deny.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 9, "friend_id": 1 }' -X POST http://localhost:3000/friend/deny.json -i
 
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
@@ -82,8 +82,8 @@ end
 # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "choice_id": 110
-# }' -X POST http://localhost:3000/poll/50/vote.json -i
+#     "choice_id": 237
+# }' -X POST http://localhost:3000/poll/105/vote.json -i
 
 # http://localhost:3000/new_public_timeline.json?member_id=3
 
@@ -125,7 +125,7 @@ end
 #     "member_id": "1"
 # }' -X POST http://localhost:3000/poll/6/hide.json -i
 
-# http://codeapp-pollios.herokuapp.com/member/detail_friend.json?member_id=19&friend_id=20
+# http://localhost:3000/member/profile.json?member_id=1
 # Choice.find(39).update_attributes(vote: 76842)
 # Poll.find(3).update(vote_all: 542388)
 

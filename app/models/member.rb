@@ -171,19 +171,19 @@ class Member < ActiveRecord::Base
   end
 
   def cached_get_friend_active
-    Rails.cache.fetch([self, 'friend_active']) do
+    Rails.cache.fetch([self.id, 'friend_active']) do
       get_friend_active.to_a
     end
   end
 
   def cached_get_your_request
-    Rails.cache.fetch([self, 'your_request']) do
+    Rails.cache.fetch([self.id, 'your_request']) do
       get_your_request.to_a
     end
   end
 
   def cached_get_friend_request
-    Rails.cache.fetch([self, 'friend_request']) do
+    Rails.cache.fetch([self.id, 'friend_request']) do
       get_friend_request.to_a
     end
   end
