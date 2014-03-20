@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
     @history_viewed_guest = @current_guest.history_view_guests.collect!  { |viewed| viewed.poll_id }
   end
 
+
   def set_current_member
     @current_member = Member.find_by(id: params[:member_id])
     unless @current_member.present?

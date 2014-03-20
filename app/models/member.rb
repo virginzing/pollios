@@ -141,26 +141,31 @@ class Member < ActiveRecord::Base
   end
 
   def cached_poll_count
-    Rails.cache.fetch([self, 'poll_count']) do
+    Rails.cache.fetch([self.id, 'poll_count']) do
       polls.count
     end
   end
 
   def cached_poll_member_count
-    Rails.cache.fetch([self, 'poll_member']) do
+    Rails.cache.fetch([self.id, 'poll_member']) do
       Poll.where(member_id: id).count
     end
   end
 
+  def cached_voted_count
+    Rails.cache.fetch([self.id, 'vote_count']) do
+      history_votes.where(poll_series_id: 0).count
+    end
+  end
 
   def cached_get_following
-    Rails.cache.fetch([self, 'following']) do
+    Rails.cache.fetch([self.id, 'following']) do
       get_following.to_a
     end
   end
 
   def cached_get_follower
-    Rails.cache.fetch([self, 'follower']) do
+    Rails.cache.fetch([self.id, 'follower']) do
       get_follower.to_a
     end
   end

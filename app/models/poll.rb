@@ -22,7 +22,7 @@ class Poll < ActiveRecord::Base
   belongs_to :campaign
   belongs_to :recurring
 
-  after_commit :flush_cached
+  # after_commit :flush_cached
   before_save :set_default_value
 
   validates :title, presence: true
@@ -51,12 +51,6 @@ class Poll < ActiveRecord::Base
     })
 
     include_field :choices
-  end
-
-  def flush_cached
-    puts "clear cached poll"
-    Rails.cache.delete([member, 'poll_count'])
-    Rails.cache.delete([member, 'poll_member'])
   end
 
   def set_default_value
@@ -122,7 +116,7 @@ class Poll < ActiveRecord::Base
     if status == ENV["MY_POLL"]
       query_poll = member_obj.get_my_poll
     else
-      query_poll = Poll.unscoped.includes(:history_votes).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_obj.id).order("history_votes.created_at desc").limit(LIMIT_POLL)
+      query_poll = Poll.unscoped.joins(:history_votes).includes(:member).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_obj.id).order("history_votes.created_at desc").limit(LIMIT_POLL)
       puts "query poll => #{query_poll}"
     end
     
@@ -304,6 +298,8 @@ class Poll < ActiveRecord::Base
         else
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date)
         end
+        Rails.cache.delete([member_id, 'poll_member'])
+        Rails.cache.delete([member_id, 'poll_count'])
       end
     end
     @poll
@@ -344,7 +340,7 @@ class Poll < ActiveRecord::Base
         end
 
         # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
-
+        Rails.cache.delete([member_id, 'vote_count'])
         [find_poll, history_voted]
       end
     rescue => e

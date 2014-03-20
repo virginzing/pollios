@@ -7,9 +7,10 @@ json.email member.email
 
 json.count do
   json.poll member.cached_poll_member_count
-  json.vote member.history_votes.where(poll_series_id: 0).count
+  json.vote member.cached_voted_count
   json.message 0
   json.status 0
   json.friend member.cached_get_friend_active.count
   json.following member.cached_get_following.count
+  json.follower member.cached_get_follower.count if member.celebrity?
 end

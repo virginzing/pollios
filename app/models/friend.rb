@@ -14,8 +14,8 @@ class Friend < ActiveRecord::Base
 
   def flush_cached
     puts "clear cached #{self.follower.id}"
-    Rails.cache.delete([ self.follower, 'friend_count'])
-    Rails.cache.delete([ self.follower , 'following' ])
+    # Rails.cache.delete([ self.follower, 'friend_count'])
+    # Rails.cache.delete([ self.follower , 'following' ])
     Rails.cache.delete([ self.follower, 'friend_active'])
     Rails.cache.delete([ self.follower, 'your_request'])
     Rails.cache.delete([ self.follower, 'friend_request'])
@@ -88,7 +88,9 @@ class Friend < ActiveRecord::Base
       else
         create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
       end
-      Rails.cache.delete([ find_friend , 'follower' ])
+      Rails.cache.delete([ friend_id , 'follower' ])
+      Rails.cache.delete([ member_id, 'following' ])
+
       find_friend
     rescue => e
       puts "error => #{e}"
@@ -102,7 +104,9 @@ class Friend < ActiveRecord::Base
 
     find_following = where(follower_id: member_id, followed_id: friend_id, status: -1).first
     if find_following.present?
-      Rails.cache.delete([ find_following.followed , 'follower' ])
+      Rails.cache.delete([ friend_id , 'follower' ])
+      Rails.cache.delete([ member_id, 'following' ])
+
       find_following.destroy
     else
       false
