@@ -6,7 +6,7 @@ json.avatar member.get_avatar
 json.email member.email
 
 json.count do
-  json.poll member.cached_poll_count
+  json.poll member.cached_poll_member_count
   json.vote member.history_votes.where(poll_series_id: 0).count
   json.message 0
   json.status 0

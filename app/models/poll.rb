@@ -56,6 +56,7 @@ class Poll < ActiveRecord::Base
   def flush_cached
     puts "clear cached poll"
     Rails.cache.delete([member, 'poll_count'])
+    Rails.cache.delete([member, 'poll_member'])
   end
 
   def set_default_value

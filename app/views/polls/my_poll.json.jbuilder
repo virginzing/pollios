@@ -1,6 +1,8 @@
 if @poll_nonseries
   json.response_status "OK"
-  json.partial! 'friends/profile_detail', member: @current_member
+    json.count do
+      json.poll @current_member.cached_poll_member_count
+    end
 
     json.poll_nonseries @poll_nonseries do |poll|
       json.poll do
