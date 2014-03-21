@@ -84,6 +84,7 @@ Pollios::Application.routes.draw do
     post ':id/hide',        to: 'polls#hide'
     post 'share/:id',       to: 'polls#share'
     post 'unshare/:id',     to: 'polls#unshare'
+    get 'friend_following_timeline',  to: 'polls#friend_following_poll'
   end
 
 

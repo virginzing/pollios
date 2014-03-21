@@ -144,16 +144,19 @@ class Poll < ActiveRecord::Base
     Rails.cache.fetch([ status, member_obj.id, @type ]) do
       if status == ENV["PUBLIC_POLL"]
         PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
+      elsif status == ENV["FRIEND_FOLLOWING_POLL"]
+        PollMember.friend_following_timeline(member_obj, member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
       elsif status == ENV["MY_POLL"]
         PollMember.find_my_poll(member_obj.id, @type)
       elsif status == ENV["MY_VOTE"]
+      else
           
       end
     end
   end
 
   def self.list_of_poll(member_obj, status, options = {})
-    puts "options =>  #{options}"
+    # puts "options =>  #{options}"
     next_cursor = options[:next_cursor]
     @type = options[:type]
 
@@ -182,8 +185,12 @@ class Poll < ActiveRecord::Base
 
     if status == ENV["PUBLIC_POLL"]
       filter_poll(poll, next_cursor)
+    elsif status == ENV["FRIEND_FOLLOWING_POLL"]
+      filter_poll(poll, next_cursor)
     elsif status == ENV["MY_POLL"]
       filter_my_poll_my_vote(poll, next_cursor)
+    else
+        
     end
   end
 

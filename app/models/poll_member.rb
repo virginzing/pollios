@@ -16,6 +16,13 @@ class PollMember < ActiveRecord::Base
     filter_type(find_poll_member, type).map(&:id)
   end
 
+  def self.find_poll_following(member_obj, type)
+    following = member_obj.get_following.map(&:id)
+    query = where("(member_id IN (?)) AND share_poll_of_id = 0", following).limit(LIMIT_TIMELINE)   
+    find_poll_member = check_hidden(query)
+    filter_type(find_poll_member, type).map(&:id)
+  end
+
   def self.find_poll_original(member_id, friend_id, type)
     query = where("(member_id = ? OR member_id IN (?)) AND share_poll_of_id = 0", member_id, friend_id).limit(LIMIT_TIMELINE)
     find_poll = check_hidden(query)
@@ -52,6 +59,28 @@ class PollMember < ActiveRecord::Base
     poll_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + list_ids).sort! { |x,y| y <=> x }
     # puts "poll_ids_sort: #{poll_ids_sort}"
     poll_ids_sort
+  end
+
+  def self.friend_following_timeline(member_obj, member_id, friend_id, type)
+    @hidden_poll = HiddenPoll.my_hidden_poll(member_id)
+
+    ids, poll_ids = find_poll_original(member_id, friend_id, type)
+    list_ids = ids | find_poll_following(member_obj, type)
+    # puts "poll normal : #{ids}, #{poll_ids}"
+    shared = find_poll_shared(friend_id, type)
+
+    # puts "shared: #{shared}"
+    # puts "list_ids : #{list_ids}"
+    # puts "poll_ids : #{poll_ids}"
+    poll_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + list_ids).sort! { |x,y| y <=> x }
+    # puts "poll_ids_sort: #{poll_ids_sort}"
+    poll_ids_sort
+  end
+
+
+  def self.public_timeline(member_id, type)
+    @hidden_poll = HiddenPoll.my_hidden_poll(member_id)
+
   end
 
   def self.check_hidden(query)
