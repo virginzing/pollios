@@ -240,7 +240,6 @@ class Poll < ActiveRecord::Base
   def self.split_poll(list_of_poll)
     poll_series = []
     poll_nonseries = []
-    next_cursor = 0
 
     list_of_poll.each do |poll|
       if poll.series
@@ -250,12 +249,7 @@ class Poll < ActiveRecord::Base
       end
     end
 
-    if poll_nonseries.count + poll_series.count == LIMIT_POLL
-      cursor_id = poll_nonseries.last.id
-      next_cursor = cursor_id
-    end
-
-    [poll_series, poll_nonseries, next_cursor]
+    [poll_series, poll_nonseries]
   end
 
   def find_poll_series(member_id, series_id)

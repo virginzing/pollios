@@ -136,9 +136,38 @@ class PollsController < ApplicationController
       @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
       puts "series => #{@poll_series.map(&:id)}"
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
-    else
+    elsif derived_version == 4
       @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
+    else
+      @public_poll = PublicTimelinable.new(public_poll_params)
+      @polls = @public_poll.poll_public.paginate(page: params[:next_cursor])
+      @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+      @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
     end
+  end
+
+
+  def group_poll
+    group_of_member = @current_member.groups.pluck(:id)
+    if params[:type] == "active"
+      query_poll = Poll.active_poll
+    elsif params[:type] == "inactive"
+      query_poll = Poll.inactive_poll
+    else
+      query_poll = Poll.all
+    end
+
+    if params[:next_cursor]
+      @poll ||= query_poll.joins(:poll_groups).uniq
+                          .includes(:poll_series, :member)
+                          .where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
+    else
+      @poll ||= query_poll.joins(:poll_groups).uniq
+                          .includes(:poll_series, :member)
+                          .where("poll_groups.group_id IN (?)", group_of_member)
+    end
+
+    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
   end
 
   # def my_poll
@@ -179,28 +208,6 @@ class PollsController < ApplicationController
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
   end
 
-  def group_poll
-    group_of_member = @current_member.groups.pluck(:id)
-    if params[:type] == "active"
-      query_poll = Poll.active_poll
-    elsif params[:type] == "inactive"
-      query_poll = Poll.inactive_poll
-    else
-      query_poll = Poll.all
-    end
-
-    if params[:next_cursor]
-      @poll ||= query_poll.joins(:poll_groups).uniq
-                          .includes(:poll_series, :member)
-                          .where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
-    else
-      @poll ||= query_poll.joins(:poll_groups).uniq
-                          .includes(:poll_series, :member)
-                          .where("poll_groups.group_id IN (?)", group_of_member)
-    end
-
-    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  end
 
   def tags
     @find_tag = Tag.find_by(name: params[:name])
@@ -285,6 +292,10 @@ class PollsController < ApplicationController
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
       end
     end
+  end
+
+  def public_poll_params
+    params.permit(:member_id, :type)
   end
 
   def options_params

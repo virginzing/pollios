@@ -67,9 +67,9 @@ end
 # }' -X POST http://localhost:3000/group/add_friend.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1, 
+#     "member_id": 6, 
 #     "title": "คุณชอบตัวเลขตัวไหนมากที่สุด",
-#     "expire_date": "5",
+#     "expire_within": "5",
 #     "choices": "0,1,2"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
@@ -105,7 +105,7 @@ end
 #     "guest_id": "1"
 # }' -X POST http://localhost:3000/poll/33/view.json -i
 
-# # curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=4&api_version=2
+# curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5
 # http://localhost:3000/poll/33/choices.json?guest_id=4&voted=no 
 
 # http://localhost:3000/poll/tags.json?member_id=4
