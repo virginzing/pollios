@@ -21,7 +21,7 @@ class PublicTimelinable
   def poll_public
     @hidden_poll_ids = my_hidden
     if @hidden_poll_ids.empty?
-      query = Poll.joins(:poll_members).where("poll_members.public = ? AND share_poll_of_id = 0", true)
+      query = Poll.joins(:poll_members).includes(:member, :poll_series, :campaign).where("poll_members.public = ? AND share_poll_of_id = 0", true)
     else
       query = Poll.joins(:poll_members).includes(:member, :poll_series, :campaign).where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?)", true, @hidden_poll_ids)
     end

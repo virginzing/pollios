@@ -66,14 +66,10 @@ class PollMember < ActiveRecord::Base
 
     ids, poll_ids = find_poll_original(member_id, friend_id, type)
     list_ids = ids | find_poll_following(member_obj, type)
-    # puts "poll normal : #{ids}, #{poll_ids}"
-    shared = find_poll_shared(friend_id, type)
 
-    # puts "shared: #{shared}"
-    # puts "list_ids : #{list_ids}"
-    # puts "poll_ids : #{poll_ids}"
+    shared = find_poll_shared(friend_id, type)
     poll_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + list_ids).sort! { |x,y| y <=> x }
-    # puts "poll_ids_sort: #{poll_ids_sort}"
+
     poll_ids_sort
   end
 

@@ -1,13 +1,13 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:hide, :create_poll, :public_poll, :friend_following_poll, :group_poll, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
+  before_action :set_current_member, only: [:hide, :create_poll, :public_poll, :friend_following_poll, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
-  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll]
+  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide]
-  before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote, :friend_following_poll]
+  before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline]
   # before_action :restrict_access, only: [:public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
@@ -150,6 +150,14 @@ class PollsController < ApplicationController
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["FRIEND_FOLLOWING_POLL"], options_params)
   end
 
+  def group_timeline
+    @group_poll = GroupTimelinable.new(public_poll_params, @current_member)
+    @polls = @group_poll.group_poll.paginate(page: params[:next_cursor])
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    puts "page = #{@polls.next_page}"
+    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+  end
+
   def group_poll
     group_of_member = @current_member.groups.pluck(:id)
     if params[:type] == "active"
@@ -172,6 +180,8 @@ class PollsController < ApplicationController
 
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
   end
+
+
 
   # def my_poll
   #   @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, ENV["MY_POLL"], options_params)

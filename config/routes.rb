@@ -72,7 +72,7 @@ Pollios::Application.routes.draw do
     post 'view',            to: 'polls#view_poll'
     get 'public_timeline',  to: 'polls#public_poll'
     get 'new_public_timeline',  to: 'polls#new_public_timeline'
-    get 'group_timeline',   to: 'polls#group_poll'
+    # get 'group_timeline',   to: 'polls#group_poll'
     get 'guest_poll',       to: 'polls#guest_poll'
     get 'tags',             to: 'polls#tags'
     get 'qrcode',           to: 'polls#qrcode'
@@ -85,6 +85,7 @@ Pollios::Application.routes.draw do
     post 'share/:id',       to: 'polls#share'
     post 'unshare/:id',     to: 'polls#unshare'
     get 'friend_following_timeline',  to: 'polls#friend_following_poll'
+    get 'group_timeline',   to: 'polls#group_timeline'
   end
 
 
