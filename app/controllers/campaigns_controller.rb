@@ -16,6 +16,10 @@ class CampaignsController < ApplicationController
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page 
   end
 
+  def check_redeem
+    
+  end
+
   def polls
     @poll = @campaign.polls
     respond_to do |wants|
@@ -69,7 +73,7 @@ class CampaignsController < ApplicationController
     respond_to do |format|
       if @campaign.update(campaign_params)
         # @campaign.check_campaign_poll
-        Poll.find(campaign_params[:poll_id]).update_attributes!(campaign_id: @campaign.id )
+        Poll.find(@campaign.poll.id).update_attributes!(campaign_id: @campaign.id )
         format.html { redirect_to @campaign, notice: 'Campaign was successfully updated.' }
         format.json { head :no_content }
       else

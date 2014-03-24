@@ -18,8 +18,9 @@ Pollios::Application.routes.draw do
     post 'try_out',         to: 'guests#try_out'
   end
 
-  scope 'campaigns' do
-    post ':id/predict',        to: 'campaigns#predict'
+  scope 'campaign' do
+    # post ':id/predict',        to: 'campaigns#predict'
+    get 'check_redeem',     to: 'campaigns#check_redeem'
   end
 
   scope 'friend' do
