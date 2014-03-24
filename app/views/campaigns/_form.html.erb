@@ -8,17 +8,13 @@
     <div class="panel">
       <div class="row">
         <div class="large-2 columns">
-          <label>Chance
-            <input type="number" placeholder="" value="1" name="campaign[begin_sample]"/>
-          </label>
+            <%= f.input :begin_sample, label: "Change" %>
         </div>
               <div class="large-1 columns">
           <span><p class="in">IN</p></span>
         </div>
         <div class="large-2 columns left">
-          <label>Total
-            <input type="number" placeholder="" value="10" name="campaign[end_sample]"/>
-          </label>
+          <%= f.input :end_sample, label: "Total" %>
         </div>
 
           <div class="large-2 columns left">

@@ -283,7 +283,7 @@ class Poll < ActiveRecord::Base
     choice_count = get_choice_count(poll[:choices])
 
     convert_expire_date = Time.now + expire_date.to_i.day
-    set_public = buy_poll || member.celebrity?
+    set_public = true if buy_poll.present? || member.celebrity? || member.brand?
     # set_public = buy_poll
 
     @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count)

@@ -25,7 +25,7 @@ class CampaignsController < ApplicationController
   # GET /campaigns
   # GET /campaigns.json
   def index
-    @campaigns = Campaign.all
+    @campaigns = current_member.campaigns
   end
 
   # GET /campaigns/1

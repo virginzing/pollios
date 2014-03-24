@@ -93,6 +93,18 @@ class Member < ActiveRecord::Base
       visible(false)
     end
 
+    create do
+      field :email
+      field :sentai_name
+      field :username
+      field :gender
+      field :member_type
+      field :friend_limit
+      field :birthday
+      field :province
+      field :avatar
+    end
+
     update do
       field :email do
        read_only true
