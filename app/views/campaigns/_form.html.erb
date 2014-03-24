@@ -33,6 +33,7 @@
     <%= f.label "Poll" %>
     <%= f.select :poll_id, current_member.polls.where("polls.campaign_id = 0").order('title desc').map {|r| [r.title, r.id ]}, { include_blank: true },  { id: "select_poll" } %>
   
+
     <br>
   
     <%= f.label "Photo Campaign" %>
