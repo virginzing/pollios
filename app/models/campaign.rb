@@ -10,6 +10,8 @@ class Campaign < ActiveRecord::Base
   has_one :poll
   has_one :poll_series
 
+    accepts_nested_attributes_for :poll
+
   # has_one :poll
   # has_one :poll_series
 
