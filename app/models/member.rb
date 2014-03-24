@@ -61,6 +61,9 @@ class Member < ActiveRecord::Base
   
   has_many :providers, dependent: :destroy
 
+  has_many :lucky_campaign, -> { where("campaign_members.luck = ?", true) }, class_name: "CampaignMember"
+  has_many :get_lucky_campaign, through: :lucky_campaign, source: :campaign
+
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
 

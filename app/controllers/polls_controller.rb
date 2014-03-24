@@ -138,7 +138,7 @@ class PollsController < ApplicationController
       puts "nonseries => #{@poll_nonseries.map(&:id)}"
     elsif derived_version == 4
       @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
-    else
+    elsif derived_version == 5
       @public_poll = PublicTimelinable.new(public_poll_params)
       @polls = @public_poll.poll_public.paginate(page: params[:next_cursor])
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)

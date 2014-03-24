@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <!-- <%= f.association :polls, collection: current_member.polls.where("campaign_id IS NULL"),multiple: 'multiple' %> -->
+
     <%= f.input :expire, input_html: { id: "datetimepicker" }, as: :string %>
     <label>Poll</label>
     <input type="text" name="campaign[poll_ids]" id="campaign_poll_ids">

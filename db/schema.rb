@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140317072155) do
+ActiveRecord::Schema.define(version: 20140324064202) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -125,6 +125,8 @@ ActiveRecord::Schema.define(version: 20140317072155) do
     t.string   "serial_code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "redeem",      default: false
+    t.datetime "redeem_at"
   end
 
   add_index "campaign_members", ["campaign_id"], name: "index_campaign_members_on_campaign_id"

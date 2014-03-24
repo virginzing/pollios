@@ -20,8 +20,8 @@ module Pollios
 
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
 
-    config.default_version = 1
-    config.view_versions = (1...4)
+    config.versioncake.default_version = 5
+    config.versioncake.supported_version_numbers = (1...6)
 
     config.generators do |g| 
         g.orm :active_record 

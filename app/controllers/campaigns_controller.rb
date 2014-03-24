@@ -1,13 +1,18 @@
 class CampaignsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
-  before_action :set_current_member, only: [:predict]
+  before_action :set_current_member, only: [:predict, :list_reward]
   before_action :signed_user, only: [:index, :new]
 
 
   def predict
     @predict = @campaign.prediction(@current_member.id)
     puts "predict => #{@predict}"
+  end
+
+  def list_reward
+    @rewards = @current_member.lucky_campaign.paginate(page: params[:next_cursor])
+    @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page 
   end
 
   def polls
@@ -37,6 +42,7 @@ class CampaignsController < ApplicationController
   def edit
     @poll_campaign_new = Poll.all
     @poll_campaigns = @campaign.polls
+
   end
 
   # POST /campaigns
@@ -60,6 +66,7 @@ class CampaignsController < ApplicationController
   def update
     respond_to do |format|
       if @campaign.update(campaign_params)
+        @campaign.check_campaign_poll
         format.html { redirect_to @campaign, notice: 'Campaign was successfully updated.' }
         format.json { head :no_content }
       else
