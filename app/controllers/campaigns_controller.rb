@@ -43,7 +43,6 @@ class CampaignsController < ApplicationController
   def edit
     @poll_campaign_new = Poll.all
     @poll_campaigns = @campaign.poll
-
   end
 
   # POST /campaigns
@@ -53,6 +52,7 @@ class CampaignsController < ApplicationController
 
     respond_to do |format|
       if @campaign.save
+
         format.html { redirect_to @campaign, notice: 'Campaign was successfully created.' }
         format.json { render action: 'show', status: :created, location: @campaign }
       else
@@ -68,6 +68,7 @@ class CampaignsController < ApplicationController
     respond_to do |format|
       if @campaign.update(campaign_params)
         # @campaign.check_campaign_poll
+        Poll.find(campaign_params[:poll_id]).update_attributes!(campaign_id: params[:id] )
         format.html { redirect_to @campaign, notice: 'Campaign was successfully updated.' }
         format.json { head :no_content }
       else
@@ -95,6 +96,6 @@ class CampaignsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def campaign_params
-      params.require(:campaign).permit(:name, :photo_campaign, :used, :limit, :begin_sample, :end_sample, :poll_ids, :expire)
+      params.require(:campaign).permit(:name, :photo_campaign, :used, :limit, :begin_sample, :end_sample, :poll_ids, :expire, :poll_id)
     end
 end
