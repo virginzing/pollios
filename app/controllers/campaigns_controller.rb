@@ -3,6 +3,7 @@ class CampaignsController < ApplicationController
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
   before_action :set_current_member, only: [:predict, :list_reward]
   before_action :signed_user, only: [:index, :new]
+  before_action :history_voted_viewed, only: [:list_reward]
 
 
   def predict

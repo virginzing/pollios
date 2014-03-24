@@ -7,8 +7,8 @@ class Campaign < ActiveRecord::Base
   validates :name, :begin_sample, :end_sample, presence: true
   validates :limit, presence: true, numericality: { greater_than: 0 }
   
-  has_many :polls
-  has_many :poll_series
+  has_one :poll
+  has_one :poll_series
 
   # has_one :poll
   # has_one :poll_series

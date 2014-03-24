@@ -61,7 +61,7 @@ class Member < ActiveRecord::Base
   
   has_many :providers, dependent: :destroy
 
-  has_many :lucky_campaign, -> { where("campaign_members.luck = ?", true) }, class_name: "CampaignMember"
+  has_many :lucky_campaign, -> { where("campaign_members.luck = ? AND campaign_members.redeem = ?", true, false).includes(:campaign => [:poll, :member]) }, class_name: "CampaignMember"
   has_many :get_lucky_campaign, through: :lucky_campaign, source: :campaign
 
   scope :citizen,   -> { where(member_type: 0) }
