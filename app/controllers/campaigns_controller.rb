@@ -42,7 +42,7 @@ class CampaignsController < ApplicationController
   # GET /campaigns/1/edit
   def edit
     @poll_campaign_new = Poll.all
-    @poll_campaigns = @campaign.polls
+    @poll_campaigns = @campaign.poll
 
   end
 
@@ -67,7 +67,7 @@ class CampaignsController < ApplicationController
   def update
     respond_to do |format|
       if @campaign.update(campaign_params)
-        @campaign.check_campaign_poll
+        # @campaign.check_campaign_poll
         format.html { redirect_to @campaign, notice: 'Campaign was successfully updated.' }
         format.json { head :no_content }
       else

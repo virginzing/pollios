@@ -337,7 +337,7 @@ class Poll < ActiveRecord::Base
           find_choice.increment!(:vote)
           find_poll.poll_series.increment!(:vote_all) if find_poll.series
           history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
-          find_poll.find_campaign_for_predict?(member_id)
+          find_poll.find_campaign_for_predict?(member_id) if find_poll.campaign_id != 0
         end
         # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
         Rails.cache.delete([member_id, 'vote_count'])
@@ -351,7 +351,7 @@ class Poll < ActiveRecord::Base
   end
 
   def find_campaign_for_predict?(member_id)
-    campaign.prediction(member_id) if campaign != 0 && campaign.expire > Time.now && campaign.used <= campaign.limit
+    campaign.prediction(member_id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
   def self.view_poll(poll)
