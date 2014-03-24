@@ -154,6 +154,8 @@ class PollsController < ApplicationController
     @group_poll = GroupTimelinable.new(public_poll_params, @current_member)
     @polls = @group_poll.group_poll.paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    @your_group_ids = @group_poll.your_group
+    puts "your group = #{@your_group_ids}"
     puts "page = #{@polls.next_page}"
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
   end

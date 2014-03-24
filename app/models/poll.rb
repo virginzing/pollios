@@ -52,6 +52,10 @@ class Poll < ActiveRecord::Base
     include_field :choices
   end
 
+  def get_poll_in_groups(group_ids)
+    groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  end
+
   def set_default_value
     self.recurring_id = 0 unless self.recurring_id.present?
     self.campaign_id = 0 unless self.campaign_id.present?

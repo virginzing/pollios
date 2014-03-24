@@ -21,7 +21,9 @@ class GroupTimelinable
   end
 
   def group_poll
-    query = Poll.joins(:poll_groups).includes(:member, :poll_series, :campaign).where("poll_groups.group_id IN (?)", your_group)
+    query = Poll.joins(:poll_groups).uniq
+                .includes(:member, :poll_series, :campaign)
+                .where("poll_groups.group_id IN (?)", your_group)
     filter_type(query, type)
   end
 
