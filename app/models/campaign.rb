@@ -1,7 +1,7 @@
 class Campaign < ActiveRecord::Base
   # has_paper_trail
   mount_uploader :photo_campaign, PhotoCampaignUploader
-  belongs_to :member
+
   attr_accessor :poll_ids, :poll_id
 
   validates :name, :begin_sample, :end_sample, presence: true
@@ -20,6 +20,8 @@ class Campaign < ActiveRecord::Base
 
   has_many :campaign_members
   has_many :members, through: :campaign_members, source: :member
+
+  belongs_to :member
 
   after_create :set_campaign_poll
 
