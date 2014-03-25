@@ -1,6 +1,3 @@
-require 'rqrcode/export/svg'
-require 'rqrcode/export/png'
-
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
