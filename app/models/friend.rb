@@ -190,7 +190,7 @@ class Friend < ActiveRecord::Base
         hash = Hash["add_friend_already" => false, "status" => :nofriend]
       end
 
-      if member.celebrity?
+      if member.celebrity? || member.brand?
         my_following.include?(member.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
       else
         hash.merge!({"following" => nil })
