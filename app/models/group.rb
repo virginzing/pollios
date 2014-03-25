@@ -22,6 +22,10 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def get_photo_group
+    photo_group.present? ? photo_group.url(:thumbnail) : nil
+  end
+
   def self.accept_group(group)
     group_id = group[:id]
     member_id = group[:member_id]

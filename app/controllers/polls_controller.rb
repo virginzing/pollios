@@ -152,10 +152,10 @@ class PollsController < ApplicationController
 
   def group_timeline
     @group_poll = GroupTimelinable.new(public_poll_params, @current_member)
-    @polls = @group_poll.group_poll.paginate(page: params[:next_cursor])
+    @polls = @group_poll.group_poll.joins(:poll_groups).paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @your_group_ids = @group_poll.your_group
-    puts "your group = #{@your_group_ids}"
+    @group_by_name ||= @group_poll.group_by_name
+    puts "group_by_name = #{@group_by_name}"
     puts "page = #{@polls.next_page}"
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
   end

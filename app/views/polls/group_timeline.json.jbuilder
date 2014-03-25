@@ -49,10 +49,7 @@ if @poll_series || @poll_nonseries
       json.share_count poll.share_count
       json.is_public poll.public
     end
-
-    # json.group poll.groups.where("poll_groups.group_id IN (?)", @your_group_ids) do
-
-    # end
+    json.group poll.get_in_groups(@group_by_name)
   end
 
   json.next_cursor @next_cursor

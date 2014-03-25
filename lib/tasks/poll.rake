@@ -21,6 +21,19 @@ namespace :poll do
     end
   end
 
+  desc "update in_group_ids"
+
+  task :update_in_group_ids => :environment do
+    Poll.all.each do |poll|
+      if poll.groups.present?
+        group_ids = poll.groups.map(&:id)*","
+      else
+        group_ids = "0"
+      end
+      poll.update_attributes!(in_group_ids: group_ids)
+    end
+  end
+
   desc "clear all data"
   task :clear => :environment do
     Member.all.each do |member|

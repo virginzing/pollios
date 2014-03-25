@@ -52,8 +52,18 @@ class Poll < ActiveRecord::Base
     include_field :choices
   end
 
-  def get_poll_in_groups(group_ids)
-    groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  # def get_poll_in_groups(group_ids)
+  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  # end
+
+  def get_in_groups(groups_by_name)
+    group = []
+    in_group_ids.split(",").each do |id|
+      if groups_by_name.has_key?(id.to_i)
+        group << groups_by_name.fetch(id.to_i)
+      end
+    end
+    group
   end
 
   def set_default_value
@@ -285,12 +295,13 @@ class Poll < ActiveRecord::Base
     friend_id = poll[:friend_id]
     buy_poll = poll[:buy_poll]
     choice_count = get_choice_count(poll[:choices])
+    in_group_ids = group_id.present? ? group_id : "0"
 
     convert_expire_date = Time.now + expire_date.to_i.day
     set_public = true if buy_poll.present? || member.celebrity? || member.brand?
     # set_public = buy_poll
 
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")
