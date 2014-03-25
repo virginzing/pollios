@@ -298,7 +298,11 @@ class Poll < ActiveRecord::Base
     in_group_ids = group_id.present? ? group_id : "0"
 
     convert_expire_date = Time.now + expire_date.to_i.day
-    set_public = true if buy_poll.present? || member.celebrity? || member.brand?
+    if buy_poll.present? || member.celebrity? || member.brand?
+      set_public = true 
+    else
+      set_public = false
+    end
     # set_public = buy_poll
 
     @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids)
