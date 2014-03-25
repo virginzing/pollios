@@ -128,24 +128,17 @@ class Poll < ActiveRecord::Base
     type = options[:type]
     if status == ENV["MY_POLL"]
       query_poll = member_obj.get_my_poll
-    else
-      query_poll = Poll.unscoped.joins(:history_votes).includes(:member).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_obj.id).order("history_votes.created_at desc").limit(LIMIT_POLL)
-      puts "query poll => #{query_poll}"
     end
     
     @poll = filter_type(query_poll, type)
 
     if next_cursor.presence && status == ENV["MY_POLL"]
       @poll = @poll.load_more(next_cursor)
-    elsif next_cursor.presence && status == ENV["MY_VOTE"]
-      @poll = @poll.where("history_votes.id < ?", next_cursor)
     end
 
     if @poll.count == LIMIT_POLL
       if status == ENV["MY_POLL"]
         next_cursor = @poll.to_a.last.id
-      elsif status == ENV["MY_VOTE"]
-        next_cursor = HistoryVote.find_by_poll_id(@poll.to_a.last.id).id
       end
     else
       next_cursor = 0

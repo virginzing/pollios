@@ -159,33 +159,33 @@ class PollsController < ApplicationController
     @polls = @group_poll.group_poll.joins(:poll_groups).paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @group_by_name ||= @group_poll.group_by_name
-    puts "group_by_name = #{@group_by_name}"
-    puts "page = #{@polls.next_page}"
+    # puts "group_by_name = #{@group_by_name}"
+    # puts "page = #{@polls.next_page}"
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
   end
 
-  def group_poll
-    group_of_member = @current_member.groups.pluck(:id)
-    if params[:type] == "active"
-      query_poll = Poll.active_poll
-    elsif params[:type] == "inactive"
-      query_poll = Poll.inactive_poll
-    else
-      query_poll = Poll.all
-    end
+  # def group_poll
+  #   group_of_member = @current_member.groups.pluck(:id)
+  #   if params[:type] == "active"
+  #     query_poll = Poll.active_poll
+  #   elsif params[:type] == "inactive"
+  #     query_poll = Poll.inactive_poll
+  #   else
+  #     query_poll = Poll.all
+  #   end
 
-    if params[:next_cursor]
-      @poll ||= query_poll.joins(:poll_groups).uniq
-                          .includes(:poll_series, :member)
-                          .where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
-    else
-      @poll ||= query_poll.joins(:poll_groups).uniq
-                          .includes(:poll_series, :member)
-                          .where("poll_groups.group_id IN (?)", group_of_member)
-    end
+  #   if params[:next_cursor]
+  #     @poll ||= query_poll.joins(:poll_groups).uniq
+  #                         .includes(:poll_series, :member)
+  #                         .where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
+  #   else
+  #     @poll ||= query_poll.joins(:poll_groups).uniq
+  #                         .includes(:poll_series, :member)
+  #                         .where("poll_groups.group_id IN (?)", group_of_member)
+  #   end
 
-    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  end
+  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+  # end
 
 
 
@@ -202,7 +202,9 @@ class PollsController < ApplicationController
   end
 
   def my_vote
-    @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_VOTE"], options_params)
+    # @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_VOTE"], options_params)
+    @poll_nonseries = Poll.joins(:history_votes).includes(:member).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", @current_member.id).order("history_votes.created_at DESC").paginate(page: params[:next_cursor])
+    @next_cursor = @poll_nonseries.next_page.nil? ? 0 : @poll_nonseries.next_page
   end
 
   # def new_public_timeline
