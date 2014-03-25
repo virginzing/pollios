@@ -1,0 +1,7 @@
+<h1>QRcode</h1>
+
+
+<!-- <img src="https://api.qrserver.com/v1/create-qr-code/?data=<%= @qrcode %>&amp;size=200x200" alt="" title="" />
+ -->
+
+<img src="<%= qr_code(300, @qrcode) %>" alt="qrcode"/>

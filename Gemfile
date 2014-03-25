@@ -77,7 +77,7 @@ gem 'rails_admin'
 gem 'devise'
 gem 'paper_trail', '~> 3.0.0'
 gem "sass", "~> 3.2.5"
-
+gem 'rqrcode-with-patches'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

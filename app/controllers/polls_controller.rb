@@ -1,3 +1,6 @@
+require 'rqrcode/export/svg'
+require 'rqrcode/export/png'
+
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -18,15 +21,17 @@ class PollsController < ApplicationController
 
   def generate_qrcode
     @qrurl = Poll.find(params[:id]).as_json().to_json
+
     # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
+    @qrcode = URI.encode(@qrurl)
 
     puts "qrcode json => #{@qrurl}"
 
     respond_to do |format|
       format.json
       format.html
-      format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }
-      format.png  { render :qrcode => @qrurl, :level => :h, :unit => 3 }
+      format.svg  { render :qrcode => @qrurl, :level => :h, :size => 10 }
+      format.png  { render :qrcode => @qrcode, :level => :h, :unit => 4 }
       format.gif  { render :qrcode => @qrurl }
       format.jpeg { render :qrcode => @qrurl }
     end

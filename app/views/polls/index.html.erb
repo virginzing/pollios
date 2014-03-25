@@ -3,6 +3,7 @@
   <li class="current"><a href="#">Poll</a></li>
 </ul>
 
+
 <table>
   <thead>
     <tr>
@@ -27,7 +28,7 @@
         <td><%= poll.view_all %></td>
         <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
         <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
-        <td><a href="/poll/<%= poll.id %>/qrcode.png">QRCODE</a></td>
+        <td><a href="/poll/<%= poll.id %>/qrcode">QRCODE</a></td>
         <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

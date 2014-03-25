@@ -33,6 +33,11 @@ module ApplicationHelper
     link_to(name, '#', class: class_name, data: {id: id, fields: fields.gsub("\n", "")})
   end
 
+  def qr_code(size, url)
+    "https://chart.googleapis.com/chart?cht=qr&chld=H&chs=#{size}x#{size}&chl=#{url}"
+  end
+
+
 end
 
 
