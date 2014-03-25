@@ -2,7 +2,14 @@ class PollSeriesController < ApplicationController
   include PollSeriesHelper
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new]
-  before_action :set_poll_series, only: [:edit, :update, :destroy]
+  before_action :set_current_member, only: [:vote]
+  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote]
+
+
+  def vote
+    puts "#{vote_params}"
+    @votes = @poll_series.vote_questionnaire(vote_params)
+  end
 
   def index
     @series = @current_member.poll_series.paginate(page: params[:page])
@@ -63,6 +70,10 @@ class PollSeriesController < ApplicationController
 
   def set_poll_series
     @poll_series = PollSeries.find(params[:id])
+  end
+
+  def vote_params
+    params.permit(:id, :member_id, :answer => [:id, :choice_id])
   end
 
   def poll_series_params

@@ -51,4 +51,17 @@ class PollSeries < ActiveRecord::Base
     end
   end
 
+  def vote_questionnaire(params)
+    list_answer = params[:answer].collect!{ |poll| poll.merge({ :member_id => params[:member_id]}) }
+    list_answer.each do |answer|
+      @votes = Poll.vote_poll(answer)
+    end
+
+    if @votes.present?
+      increment!(:vote_all)
+      increment!(:view_all)
+    end
+    @votes
+  end
+
 end

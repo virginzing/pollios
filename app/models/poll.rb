@@ -349,12 +349,12 @@ class Poll < ActiveRecord::Base
         if guest_id.present?
           find_poll.increment!(:vote_all_guest)
           find_choice.increment!(:vote_guest)
-          find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
+          # find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
           history_voted = HistoryVoteGuest.create(guest_id: guest_id, poll_id: poll_id, choice_id: choice_id)
         else
           find_poll.increment!(:vote_all)
           find_choice.increment!(:vote)
-          find_poll.poll_series.increment!(:vote_all) if find_poll.series
+          # find_poll.poll_series.increment!(:vote_all) if find_poll.series
           history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
           find_poll.find_campaign_for_predict?(member_id) if find_poll.campaign_id != 0
         end

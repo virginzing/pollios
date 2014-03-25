@@ -36,8 +36,8 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2 }' -X POST http://localhost:3000/friend/following.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2 }' -X POST http://localhost:3000/friend/unfollow.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 9 }' -X POST http://localhost:3000/friend/add_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/unblock.json -i
@@ -66,9 +66,25 @@ end
 #     "friend_id": "2"
 # }' -X POST http://localhost:3000/group/add_friend.json -i
 
+
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 6, 
-#     "title": "คุณชอบตัวเลขตัวไหนมากที่สุด",
+#     "member_id": 1,
+#     "friend_id": "6"
+# }' -X POST http://localhost:3000/group/3/invite.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 6
+# }' -X POST http://localhost:3000/group/3/leave.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 6
+# }' -X POST http://localhost:3000/group/3/accept.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1, 
+#     "title": "test again no group",
 #     "expire_within": "5",
 #     "choices": "0,1,2"
 # }' -X POST http://localhost:3000/poll/create.json -i
@@ -82,8 +98,15 @@ end
 # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "choice_id": 237
-# }' -X POST http://localhost:3000/poll/105/vote.json -i
+#     "choice_id": 297
+# }' -X POST http://localhost:3000/poll/128/vote.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1,
+#     "answer": [{"id": 134, "choice_id": 310}, {"poll_id": 133, "choice_id": 312}]
+# }' -X POST http://localhost:3000/questionnaire/5/vote.json -i
+
 
 # http://localhost:3000/new_public_timeline.json?member_id=3
 
@@ -144,7 +167,10 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1
-# }' -X POST http://localhost:3000/campaigns/6/predict.json -i
+# }' -X POST http://localhost:3000/campaigns/9/predict.json -i
+
+
+# http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
 # curl -F "member_id=1" -F "sentai_name=Nuttapon" -X POST http://localhost:3000/member/update_profile.json -i
 

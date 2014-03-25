@@ -23,6 +23,10 @@ Pollios::Application.routes.draw do
     get 'check_redeem',     to: 'campaigns#check_redeem'
   end
 
+  scope 'questionnaire' do
+    post ':id/vote',        to: 'poll_series#vote'
+  end
+
   scope 'friend' do
     post 'add_celebrity',   to: 'friends#add_celebrity'
     post 'add_friend' ,     to: 'friends#add_friend'
