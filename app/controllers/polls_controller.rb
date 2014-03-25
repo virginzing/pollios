@@ -16,20 +16,21 @@ class PollsController < ApplicationController
 
   respond_to :json
 
-  # def generate_qrcode
-  #   @qrurl = PollSeries.find(10).as_json(
-  #               only: [:id, :description],
-  #               methods: [:creator],
-  #               include: { polls: { only: [:id, :title] } } 
-  #             )
-  #   respond_to do |format|
-  #     format.html
-  #     format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }
-  #     format.png  { render :qrcode => @qrurl, :level => :h, :unit => 4 }
-  #     format.gif  { render :qrcode => @qrurl }
-  #     format.jpeg { render :qrcode => @qrurl }
-  #   end
-  # end
+  def generate_qrcode
+    @qrurl = Poll.find(params[:id]).as_json().to_json
+    # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
+
+    puts "qrcode json => #{@qrurl}"
+
+    respond_to do |format|
+      format.json
+      format.html
+      format.svg  { render :qrcode => @qrurl, :level => :h, :unit => 10 }
+      format.png  { render :qrcode => @qrurl, :level => :h, :unit => 3 }
+      format.gif  { render :qrcode => @qrurl }
+      format.jpeg { render :qrcode => @qrurl }
+    end
+  end
 
 
   def new
@@ -37,7 +38,7 @@ class PollsController < ApplicationController
   end
 
   def index
-    @polls = Poll.where(member_id: current_member.id).paginate(page: params[:page])
+    @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
   end
 
   def create

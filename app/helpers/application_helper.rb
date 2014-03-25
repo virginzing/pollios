@@ -104,7 +104,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "answer": [{"id": 134, "choice_id": 310}, {"poll_id": 133, "choice_id": 312}]
+#     "answer": [{"id": 134, "choice_id": 312}, {"id": 133, "choice_id": 310}]
 # }' -X POST http://localhost:3000/questionnaire/5/vote.json -i
 
 

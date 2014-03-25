@@ -13,6 +13,7 @@
       <th>View All</th>
       <th width="200">Expire At</th>
       <th width="200">Created At</th>
+      <th>Qrcode</th>
       <th></th>
     </tr>
   </thead>
@@ -26,6 +27,7 @@
         <td><%= poll.view_all %></td>
         <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
         <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
+        <td><a href="/poll/<%= poll.id %>/qrcode.png">QRCODE</a></td>
         <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -38,6 +40,7 @@
   </div>
 </div>
 
+<h4>Tag Cloud</h4>
 <div class="tag_cloud">
   <% tag_clound Poll.tag_counts, %w{s m l} do |tag, css_class| %>
     <%= link_to tag.name, '#', class: css_class %>
