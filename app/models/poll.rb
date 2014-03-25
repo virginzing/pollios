@@ -298,7 +298,7 @@ class Poll < ActiveRecord::Base
     in_group_ids = group_id.present? ? group_id : "0"
 
     convert_expire_date = Time.now + expire_date.to_i.day
-    if buy_poll.present? || member.celebrity? || member.brand?
+    if (buy_poll.present? || member.celebrity? || member.brand?) && !group_id.present?
       set_public = true 
     else
       set_public = false
