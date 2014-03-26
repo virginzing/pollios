@@ -64,4 +64,21 @@ class PollSeries < ActiveRecord::Base
     @votes
   end
 
+  def as_json options={}
+    { creator: polls.first.cached_member,
+      list_of_poll: {
+        id: id,
+        vote_count: vote_all,
+        view_count: view_all,
+        expire_date: expire_date,
+        created_at: created_at.to_i,
+        title: description,
+        series: true,
+        tags: cached_tags,
+        share_count: share_count,
+        poll: polls.as_json()
+      }
+    }
+  end
+
 end

@@ -17,6 +17,7 @@ class PollsController < ApplicationController
   respond_to :json
 
   def generate_qrcode
+
     @qrurl = Poll.find(params[:id]).as_json().to_json
 
     # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
