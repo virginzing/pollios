@@ -8,8 +8,11 @@ if @choices.present?
   json.choices @choices do |choice|
     json.id choice.id
     json.answer choice.answer
-    unless !@voted["voted"] || !@expired
-      json.vote choice.vote if @voted["voted"] || @expired
+    if @expired
+      json.vote choice.vote
+    elsif @voted["voted"]
+      json.vote choice.vote
+    else
     end
   end
 else
