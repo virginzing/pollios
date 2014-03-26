@@ -34,7 +34,7 @@ module ApplicationHelper
   end
 
   def qr_code(size, url)
-    "https://chart.googleapis.com/chart?cht=qr&chld=H&chs=#{size}x#{size}&chl=#{url}"
+    "https://chart.googleapis.com/chart?cht=qr&chld=l&chs=#{size}x#{size}&chl=#{url}"
   end
 
 
