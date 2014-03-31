@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140325040117) do
+ActiveRecord::Schema.define(version: 20140327034439) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -350,6 +350,7 @@ ActiveRecord::Schema.define(version: 20140325040117) do
     t.integer  "share_count",    default: 0
     t.integer  "recurring_id",   default: 0
     t.string   "in_group_ids"
+    t.string   "qrcode_key"
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id"

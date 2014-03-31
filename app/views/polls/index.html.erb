@@ -15,6 +15,7 @@
       <th width="200">Expire At</th>
       <th width="200">Created At</th>
       <th>Qrcode</th>
+      <th>Re Generate</th>
       <th></th>
     </tr>
   </thead>
@@ -29,6 +30,12 @@
         <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
         <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
         <td><a href="/poll/<%= poll.id %>/qrcode">QRCODE</a></td>
+        <td>
+          <%= form_tag '/poll/new_generate_qrcode' do %>
+            <%= hidden_field_tag 'id', poll.id %>
+            <%= submit_tag 'Re new' %>
+          <% end %>
+        </td>
         <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

@@ -6,20 +6,21 @@ class PollSeriesController < ApplicationController
   before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode]
 
   def generate_qrcode
-    @qrurl = PollSeries.includes(:polls).find(params[:id]).as_json().to_json
-
+    # qrurl = PollSeries.includes(:polls).find(params[:id]).as_json().to_json
     # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
-    @qrcode = URI.encode(@qrurl)
+    qrurl = QrcodeSerializer.new(PollSeries.find(params[:id]).polls.last).as_json.to_json
+    base64_qrcode = Base64.strict_encode64(qrurl)
+    @qrcode = URI.encode(base64_qrcode)
 
-    puts "qrcode json => #{@qrurl}"
+    puts "qrcode json => #{base64_qrcode}"
 
     respond_to do |format|
       format.json
       format.html
-      format.svg  { render :qrcode => @qrurl, :level => :h, :size => 10 }
+      format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
       format.png  { render :qrcode => @qrcode, :level => :h, :unit => 4 }
-      format.gif  { render :qrcode => @qrurl }
-      format.jpeg { render :qrcode => @qrurl }
+      format.gif  { render :qrcode => qrurl }
+      format.jpeg { render :qrcode => qrurl }
     end
   end
 
@@ -29,7 +30,8 @@ class PollSeriesController < ApplicationController
   end
 
   def index
-    @series = @current_member.poll_series.paginate(page: params[:page])
+    @poll_series = current_member.poll_series.paginate(page: params[:page])
+    puts "#{@poll_series.to_a}"
   end
 
   def new

@@ -1,6 +1,8 @@
 class Poll < ActiveRecord::Base
 
   mount_uploader :photo_poll, PhotoPollUploader
+  include PollsHelper
+  
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id
   
   has_many :choices, inverse_of: :poll, dependent: :destroy
@@ -23,6 +25,7 @@ class Poll < ActiveRecord::Base
 
   # after_commit :flush_cached
   before_save :set_default_value
+  before_create :generate_qrcode_key
 
   validates :title, presence: true
   validates :member_id, :title , presence: true
@@ -55,6 +58,12 @@ class Poll < ActiveRecord::Base
   # def get_poll_in_groups(group_ids)
   #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
   # end
+
+  def generate_qrcode_key
+    begin
+      self.qrcode_key = SecureRandom.hex
+    end while self.class.exists?(qrcode_key: qrcode_key)
+  end
 
   def get_in_groups(groups_by_name)
     group = []
@@ -267,7 +276,7 @@ class Poll < ActiveRecord::Base
   end
 
   def find_poll_series(member_id, series_id)
-    Poll.where(member_id: member_id, poll_series_id: series_id).limit(20)
+    Poll.where(member_id: member_id, poll_series_id: series_id).order("id asc")
   end
 
   def self.get_group_poll(member, option = {})
@@ -418,31 +427,31 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  # def as_json options={}
-  #  {
-  #     id: id,
-  #     text: title
-  #  }
-  # end
-
   def as_json options={}
-    { creator: cached_member,
-      poll: {
-          id: id,
-          title: title,
-          vote_count: vote_all,
-          view_count: view_all,
-          expire_date: expire_date.to_i,
-          created_at: created_at.to_i,
-          choice_count: choice_count,
-          series: series,
-          tags: cached_tags,
-          campaign: get_campaign,
-          share_count: share_count,
-          is_public: public
-       }
-    }
+   {
+      id: id,
+      text: title
+   }
   end
+
+  # def as_json options={}
+  #   { creator: cached_member,
+  #     poll: {
+  #         id: id,
+  #         title: title,
+  #         vote_count: vote_all,
+  #         view_count: view_all,
+  #         expire_date: expire_date.to_i,
+  #         created_at: created_at.to_i,
+  #         choice_count: choice_count,
+  #         series: series,
+  #         tags: cached_tags,
+  #         campaign: get_campaign,
+  #         share_count: share_count,
+  #         is_public: public
+  #      }
+  #   }
+  # end
 
 end
 

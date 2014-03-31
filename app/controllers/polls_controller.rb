@@ -1,12 +1,12 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:hide, :create_poll, :public_poll, :friend_following_poll, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
+  before_action :set_current_member, only: [:scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:index, :series, :new]
-  before_action :history_voted_viewed, only: [:public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline]
+  before_action :history_voted_viewed, only: [:scan_qrcode, :public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
-  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide]
+  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode]
   before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline]
   # before_action :restrict_access, only: [:public_poll]
 
@@ -18,26 +18,42 @@ class PollsController < ApplicationController
 
   def generate_qrcode
 
-    @qrurl = Poll.find(params[:id]).as_json().to_json
+    qrurl = QrcodeSerializer.new(Poll.find(params[:id])).as_json.to_json
 
     # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
-    @qrcode = URI.encode(@qrurl)
+    base64_qrcode = Base64.strict_encode64(qrurl)
+    @qrcode = URI.encode(base64_qrcode)
 
-    puts "qrcode json => #{@qrurl}"
+    puts "qrcode json => #{base64_qrcode}"
 
     respond_to do |format|
       format.json
       format.html
-      format.svg  { render :qrcode => @qrurl, :level => :h, :size => 10 }
+      format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
       format.png  { render :qrcode => @qrcode, :level => :h, :unit => 4 }
-      format.gif  { render :qrcode => @qrurl }
-      format.jpeg { render :qrcode => @qrurl }
+      format.gif  { render :qrcode => qrurl }
+      format.jpeg { render :qrcode => qrurl }
     end
   end
 
+  def new_generate_qrcode
+    puts params[:id]
+    @poll.update!(qrcode_key: SecureRandom.hex(8))
+    flash[:success] = "Re-Generate QRCode"
+    respond_to do |wants|
+       wants.html { redirect_to polls_path }
+     end 
+  end
+
+  def scan_qrcode
+    from_scan = Qrcode.new(scan_qrcode_params)
+    @poll = from_scan.poll_detail
+    puts "@poll => #{@poll.as_json()}"
+  end
 
   def new
     @poll = Poll.new
+    @tags = Tag.all
   end
 
   def index
@@ -63,7 +79,7 @@ class PollsController < ApplicationController
 
     @poll = Poll.new(polls_params)
     @poll.poll_series_id = 0
-    
+
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date) unless group_id.presence
@@ -318,6 +334,10 @@ class PollsController < ApplicationController
 
   def public_poll_params
     params.permit(:member_id, :type)
+  end
+
+  def scan_qrcode_params
+    params.permit(:id, :member_id, :qrcode_key)
   end
 
   def options_params

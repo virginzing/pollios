@@ -34,6 +34,13 @@ namespace :poll do
     end
   end
 
+  desc "update qrcode key"
+  task :update_qrcode => :environment do
+    Poll.all.each do |poll|
+      poll.update!(qrcode_key: SecureRandom.hex(6))
+    end
+  end
+
   desc "clear all data"
   task :clear => :environment do
     Member.all.each do |member|

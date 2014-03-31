@@ -18,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @series.each do |series| %>
+    <% @poll_series.each do |series| %>
       <tr>
         <td><%= link_to series.id, "#" %></td>
         <td><%= series.description %></td>
@@ -33,7 +33,7 @@
   </tbody>
 </table>
 
-<% unless @series.count > 0 %>
+<% unless @poll_series.count > 0 %>
   <div data-alert class="alert-box">
     No have series poll yet.
   </div>
@@ -41,6 +41,6 @@
 
 <div class="row">
   <div class="pagination-centered">
-    <%= will_paginate @series, renderer: FoundationPagination::Rails %>
+    <%= will_paginate @poll_series, renderer: FoundationPagination::Rails %>
   </div>
 </div>

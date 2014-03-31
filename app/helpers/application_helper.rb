@@ -78,6 +78,12 @@ end
 # }' -X POST http://localhost:3000/group/3/invite.json -i
 
 # curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1,
+#     "id": 133,
+#     "qrcode_key": "368d4801e61d"
+# }' -X POST http://localhost:3000/scan_qrcode.json -i
+
+# curl -H "Content-Type: application/json" -d '{
 #     "member_id": 6
 # }' -X POST http://localhost:3000/group/3/leave.json -i
 

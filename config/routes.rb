@@ -74,6 +74,7 @@ Pollios::Application.routes.draw do
 
   scope 'poll' do
     get ':id/qrcode',       to: 'polls#generate_qrcode'
+    post 'new_generate_qrcode',      to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll
     post 'create',          to: 'polls#create_poll'
     post 'vote',            to: 'polls#vote_poll'
@@ -111,6 +112,7 @@ Pollios::Application.routes.draw do
   get '/qrcode',  to: 'polls#generate_qrcode'
   get '/home',  to: 'home#index'
   get '/campaigns_polls',  to: 'campaigns#polls'
+  post '/scan_qrcode',      to: 'polls#scan_qrcode'
 
   root to: 'home#index'
 

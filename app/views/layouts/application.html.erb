@@ -123,13 +123,14 @@
           multiple: true,
           ajax: {
               url: "/tags.json",
-              dataType: 'json',
+            dataType: 'json',
               data: function (term, page) {
                   return {
                     q: term
                   };
               },
               results: function (data, page) {
+                  console.log(data);
                   return { results: data };
               }
           }
