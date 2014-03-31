@@ -37,7 +37,7 @@ namespace :poll do
   desc "update qrcode key"
   task :update_qrcode => :environment do
     Poll.all.each do |poll|
-      poll.update!(qrcode_key: SecureRandom.hex(6))
+      poll.update!(qrcode_key: SecureRandom.hex
     end
   end
 

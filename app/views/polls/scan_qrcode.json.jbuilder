@@ -1,7 +1,7 @@
 if @poll.present?
   json.response_status "OK"
 
-  if @poll.questionnaire?
+  if @poll.series
     json.creator @poll.cached_member
     json.list_of_poll do
       json.id @poll.poll_series_id
