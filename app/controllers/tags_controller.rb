@@ -4,7 +4,6 @@ class TagsController < ApplicationController
     respond_to do |wants|
       wants.json { render json: @tags.tokens(params[:q]).as_json(), root: false }
     end
-
   end
   
 end

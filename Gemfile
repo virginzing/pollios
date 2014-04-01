@@ -78,6 +78,7 @@ gem 'devise'
 gem 'paper_trail', '~> 3.0.0'
 gem "sass", "~> 3.2.5"
 gem 'active_model_serializers'
+gem "squeel"
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
