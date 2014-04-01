@@ -24,21 +24,22 @@ class PollsController < ApplicationController
     base64_qrcode = Base64.strict_encode64(qrurl)
     @qrcode = URI.encode(base64_qrcode)
 
-    puts "qrcode json => #{base64_qrcode}"
+    puts "qrcode encode base64 => #{base64_qrcode}"
+    puts "qrcode => #{qrurl}"
 
     respond_to do |format|
       format.json
       format.html
       format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
-      format.png  { render :qrcode => @qrcode, :level => :h, :unit => 4 }
-      format.gif  { render :qrcode => qrurl }
+      format.png  { render :qrcode => base64_qrcode, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
+      format.gif  { render :qrcode => qrurl, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
       format.jpeg { render :qrcode => qrurl }
     end
   end
 
   def new_generate_qrcode
     puts params[:id]
-    @poll.update!(qrcode_key: SecureRandom.hex(8))
+    @poll.update!(qrcode_key: SecureRandom.hex(5))
     flash[:success] = "Re-Generate QRCode"
     respond_to do |wants|
        wants.html { redirect_to polls_path }
@@ -357,10 +358,10 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within)
+    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll)
   end
 
   def polls_params
-    params.require(:poll).permit(:campaign_id, :member_id, :title, :expire_date, :public, :expire_within,  :choice_count ,:tag_tokens, :recurring_id, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:campaign_id, :member_id, :title, :expire_date, :public, :expire_within,  :choice_count ,:tag_tokens, :recurring_id, :type_poll, choices_attributes: [:id, :answer, :_destroy])
   end
 end

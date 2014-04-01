@@ -19,6 +19,7 @@ if @poll.valid?
     json.campaign @poll.get_campaign
     json.share_count @poll.share_count
     json.is_public @poll.public
+    json.type_poll @poll.type_poll
   end
 
   json.list_choices @poll.choices do |choice|

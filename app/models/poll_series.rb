@@ -1,5 +1,5 @@
 class PollSeries < ActiveRecord::Base
-
+  include PollSeriesHelper
   attr_accessor :tag_tokens, :same_choices
 
   belongs_to :member

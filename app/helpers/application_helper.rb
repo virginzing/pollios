@@ -78,10 +78,10 @@ end
 # }' -X POST http://localhost:3000/group/3/invite.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1,
-#     "id": 133,
-#     "qrcode_key": "368d4801e61d"
-# }' -X POST http://localhost:3000/scan_qrcode.json -i
+#     "member_id": 21,
+#     "id": 143,
+#     "qrcode_key": "46357f8468f1e92f9206071aceffa137"
+# }' -X POST http://codeapp-pollios.herokuapp.com/scan_qrcode.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 6
@@ -97,7 +97,8 @@ end
 #     "member_id": 1, 
 #     "title": "test again no group",
 #     "expire_within": "5",
-#     "choices": "0,1,2"
+#     "choices": "1,2,3,4,5",
+#     "type_poll": "freeform"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) | 

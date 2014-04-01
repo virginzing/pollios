@@ -16,7 +16,8 @@ if @poll_series || @poll_nonseries
       json.tags poll.poll_series.cached_tags
       json.share_count poll.share_count
       json.is_public true
-
+      json.type_poll poll.type_poll
+      
       json.poll poll.find_poll_series(poll.member_id, poll.poll_series_id) do |poll|
         json.id poll.id
         json.title poll.title
@@ -49,6 +50,7 @@ if @poll_series || @poll_nonseries
       json.tags poll.cached_tags
       json.share_count poll.share_count
       json.is_public poll.public
+      json.type_poll poll.type_poll
     end
 
   end

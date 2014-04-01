@@ -1,7 +1,7 @@
 class Poll < ActiveRecord::Base
 
   mount_uploader :photo_poll, PhotoPollUploader
-  # include PollsHelper
+  include PollsHelper
   
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id
   
@@ -296,6 +296,7 @@ class Poll < ActiveRecord::Base
     member_id = poll[:member_id]
     friend_id = poll[:friend_id]
     buy_poll = poll[:buy_poll]
+    type_poll = poll[:type_poll]
     choice_count = get_choice_count(poll[:choices])
     in_group_ids = group_id.present? ? group_id : "0"
 
@@ -307,7 +308,7 @@ class Poll < ActiveRecord::Base
     end
     # set_public = buy_poll
 
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")
