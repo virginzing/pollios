@@ -73,7 +73,7 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1,
+#     "member_id": 7,
 #     "friend_id": "6"
 # }' -X POST http://localhost:3000/group/3/invite.json -i
 

@@ -29,11 +29,14 @@ class GroupTimelinable
   end
 
   def group_poll
-    query =  Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as choice_answer").
-                group("polls.id, choices.poll_id, choices.answer").order("vote_max desc, created_at desc").
-                joins(:poll_groups).uniq.
-                includes(:member, :poll_series, :campaign).
-                where("poll_groups.group_id IN (?)", your_group_ids)
+    # query =  Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as choice_answer").
+    #             group("polls.id, choices.poll_id, choices.answer").order("vote_max desc, created_at desc").
+    #             joins(:poll_groups).uniq.
+    #             includes(:member, :poll_series, :campaign).
+    #             where("poll_groups.group_id IN (?)", your_group_ids)
+    query =  Poll.joins(:poll_groups).uniq.
+                  includes(:choices, :member, :poll_series, :campaign).
+                  where("poll_groups.group_id IN (?)", your_group_ids)
     filter_type(query, type)
   end
 
