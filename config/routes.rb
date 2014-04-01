@@ -77,8 +77,8 @@ Pollios::Application.routes.draw do
     post 'new_generate_qrcode',      to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll
     post 'create',          to: 'polls#create_poll'
-    post 'vote',            to: 'polls#vote_poll'
-    post 'view',            to: 'polls#view_poll'
+    # post 'vote',            to: 'polls#vote_poll'
+    # post 'view',            to: 'polls#view_poll'
     get 'public_timeline',  to: 'polls#public_poll'
     get 'new_public_timeline',  to: 'polls#new_public_timeline'
     # get 'group_timeline',   to: 'polls#group_poll'

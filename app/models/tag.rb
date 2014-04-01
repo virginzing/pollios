@@ -8,7 +8,6 @@ class Tag < ActiveRecord::Base
   scope :top5, 
     select("tags.*, count(taggings.tag_id) as count").
     joins(:taggings).
-    where("taggings.created_at < ?", 1.day.ago)
     group("taggings.tag_id").
     order("count desc").
     limit(5)

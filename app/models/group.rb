@@ -1,4 +1,5 @@
 class Group < ActiveRecord::Base
+  include GroupHelper
   has_many :group_members, dependent: :destroy
   has_many :members, through: :group_members, source: :member
   
@@ -46,7 +47,7 @@ class Group < ActiveRecord::Base
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name, photo_group: photo_group, member_count: 1)
+    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
@@ -58,12 +59,16 @@ class Group < ActiveRecord::Base
   def self.add_friend_to_group(group_id, member_id, friend)
     list_friend = friend.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group_id)
+    find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
+    master_of_group = find_master_of_group.present? ? find_master_of_group.member_id : false
 
-    if check_valid_friend.count > 0
-      Member.where(id: check_valid_friend).each do |friend|
-        @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
+    if find(group_id).everyone? || (master_of_group == member_id)
+      if check_valid_friend.count > 0
+        Member.where(id: check_valid_friend).each do |friend|
+          @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
+        end
+        @group_member.group
       end
-      @group_member.group
     end
   end
 

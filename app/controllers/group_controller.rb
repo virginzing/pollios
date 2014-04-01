@@ -16,7 +16,7 @@ class GroupController < ApplicationController
   end
 
   def add_friend_to_group
-    Group.add_friend_to_group(group_params[:id], group_params[:member_id], group_params[:friend_id])
+    @group = Group.add_friend_to_group(group_params[:id], group_params[:member_id], group_params[:friend_id])
   end
 
   def accept_group
