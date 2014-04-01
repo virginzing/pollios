@@ -214,7 +214,7 @@ class Member < ActiveRecord::Base
   def list_voted?(history_voted, poll_id)
     history_voted.each do |poll_choice|
       if poll_choice.first == poll_id
-        return Hash["voted" => true, "choice_id" => poll_choice[1], "choice_text" => poll_choice[2]]
+        return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2]]
       end
     end
     Hash["voted" => false]

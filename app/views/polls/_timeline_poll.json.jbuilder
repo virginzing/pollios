@@ -14,6 +14,10 @@ if @poll_series || @poll_nonseries
 
     json.poll do
       json.partial! 'response/poll', poll: poll
+      json.vote_max do
+        json.answer poll.choice_answer
+        json.vote poll.vote_max
+      end
     end
   end
 

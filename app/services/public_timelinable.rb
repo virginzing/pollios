@@ -21,12 +21,13 @@ class PublicTimelinable
   def poll_public
     @hidden_poll_ids = my_hidden
     if @hidden_poll_ids.empty?
-      query = Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as answer").
-                    group("choices.poll_id").order("vote_max desc, created_at desc").
+      query = Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as choice_answer").
+                    group("polls.id, choices.poll_id").order("vote_max desc, created_at desc").
                     joins(:poll_members).includes(:member, :poll_series, :campaign).
                     where("poll_members.public = ? AND share_poll_of_id = 0", true)
     else
-      query = Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as answer").group("choices.poll_id").order("vote_max desc, created_at desc").
+      query = Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as choice_answer").
+                    group("polls.id, choices.poll_id").order("vote_max desc, created_at desc").
                     joins(:poll_members).includes(:member, :poll_series, :campaign).
                     where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?)", true, @hidden_poll_ids)
     end
