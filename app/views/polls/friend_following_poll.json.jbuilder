@@ -20,6 +20,7 @@ if @poll_series || @poll_nonseries
 
     json.poll do
       json.partial! 'response/poll', poll: poll
+      json.vote_max poll.get_vote_max
     end
     json.my_shared check_my_shared(share_poll_ids, poll.id)
     json.other_shared @nonseries_shared[count_nonseries]

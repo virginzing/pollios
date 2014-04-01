@@ -65,6 +65,10 @@ class Poll < ActiveRecord::Base
     end while self.class.exists?(qrcode_key: qrcode_key)
   end
 
+  def get_vote_max
+    choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by{|k, v| k["vote"]}
+  end
+
   def get_in_groups(groups_by_name)
     group = []
     in_group_ids.split(",").each do |id|
@@ -215,8 +219,9 @@ class Poll < ActiveRecord::Base
     poll_nonseries = []
     series_shared = []
     nonseries_shared = []
+    poll_member = PollMember.includes([{:poll => [:choices, :campaign, :poll_series, :share_polls, :member]}]).where("id IN (?)", poll_ids).order("id desc")
 
-    PollMember.includes([{:poll => [:campaign, :poll_series, :share_polls, :member]}]).where("id IN (?)", poll_ids).order("id desc").each do |poll_member|
+    poll_member.each do |poll_member|
       if poll_member.share_poll_of_id == 0
         not_shared = Hash["shared" => false]
         if poll_member.poll.series
