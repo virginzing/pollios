@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140401083756) do
+ActiveRecord::Schema.define(version: 20140401091935) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -253,6 +253,7 @@ ActiveRecord::Schema.define(version: 20140401083756) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "poll_series_id", default: 0
+    t.string   "choice_text"
   end
 
   add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id"

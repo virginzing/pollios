@@ -69,4 +69,13 @@ namespace :poll do
     Friend.delete_all
   end
 
+  # desc "Update choice_text to history voted"
+  # task :choice_text => :environment do
+  #   HsitoryVote.all.each do |h|
+  #     if choice.present?
+  #       h.update!(choice_text: h.choice.answer)
+  #     end
+  #   end
+  # end
+
 end
