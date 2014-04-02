@@ -84,7 +84,10 @@ class PollsController < ApplicationController
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date) unless group_id.presence
-      Group.add_poll(@poll.id, group_id) if group_id.present?
+      if group_id.present?
+        Group.add_poll(@poll.id, group_id)
+        current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: true) 
+      end
 
       Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'poll_count'])
