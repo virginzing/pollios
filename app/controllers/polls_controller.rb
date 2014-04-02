@@ -177,8 +177,11 @@ class PollsController < ApplicationController
   end
 
   def overall_timeline
-    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["OVERALL_TIMELINE"], options_params)
-    @group_by_name = OverallTimeline.new(@current_member, {}).group_by_name
+    # @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["OVERALL_TIMELINE"], options_params)
+
+    overall_timeline = OverallTimeline.new(@current_member, options_params)
+    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
+    @group_by_name = overall_timeline.group_by_name
   end
 
   def group_timeline
@@ -186,8 +189,6 @@ class PollsController < ApplicationController
     @polls = @group_poll.group_poll.joins(:poll_groups).paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @group_by_name ||= @group_poll.group_by_name
-    # puts "group_by_name = #{@group_by_name}"
-    # puts "page = #{@polls.next_page}"
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
   end
 
@@ -196,7 +197,6 @@ class PollsController < ApplicationController
   end
 
   def my_vote
-    # @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_VOTE"], options_params)
     @poll_nonseries = Poll.joins(:history_votes).includes(:member).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", @current_member.id).order("history_votes.created_at DESC").paginate(page: params[:next_cursor])
     @next_cursor = @poll_nonseries.next_page.nil? ? 0 : @poll_nonseries.next_page
   end

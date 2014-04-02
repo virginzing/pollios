@@ -211,6 +211,11 @@ class Member < ActiveRecord::Base
     share_polls.create!(poll_id: poll_id)
   end
 
+  def campaigns_available
+    campaign = campaigns.includes(:poll).order("name desc")
+    campaign.delete_if{|x| x.poll.present? }
+  end
+
   def list_voted?(history_voted, poll_id)
     history_voted.each do |poll_choice|
       if poll_choice.first == poll_id

@@ -28,7 +28,7 @@
   <%= f.input :tag_tokens,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_lists" } %>
   <br>
   <%= f.label "Campaign" %>
-  <%= f.select :campaign_id, current_member.campaigns.order('name desc').map {|r| [r.name, r.id ]}, { include_blank: true },  { id: "select_campaign" } %>
+  <%= f.select :campaign_id, current_member.campaigns_available.map {|r| [r.name, r.id ]}, { include_blank: true },  { id: "select_campaign" } %>
   <br>
   <%= f.label "Recurring" %>
   <%= f.select :recurring_id, list_recurring.map{ |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, include_blank: true %>

@@ -29,7 +29,7 @@ class CampaignsController < ApplicationController
   # GET /campaigns
   # GET /campaigns.json
   def index
-    @campaigns = current_member.campaigns
+    @campaigns = current_member.campaigns.includes(:poll)
   end
 
   # GET /campaigns/1

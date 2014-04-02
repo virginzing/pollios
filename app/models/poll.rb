@@ -175,17 +175,14 @@ class Poll < ActiveRecord::Base
 
   def self.cached_find_poll(member_obj, status)
     puts "status => #{status}"
-    
+
     Rails.cache.fetch([ status, member_obj.id, @type ]) do
       if status == ENV["PUBLIC_POLL"]
         PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
       elsif status == ENV["FRIEND_FOLLOWING_POLL"]
         PollMember.friend_following_timeline(member_obj, member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
-      elsif status == ENV["OVERALL_TIMELINE"]
-        OverallTimeline.new(member_obj, {}).overall_timeline
       elsif status == ENV["MY_POLL"]
         PollMember.find_my_poll(member_obj.id, @type)
-      elsif status == ENV["MY_VOTE"]
       else
           
       end
@@ -209,11 +206,13 @@ class Poll < ActiveRecord::Base
       poll = @cache_polls[0..(LIMIT_POLL - 1)]
     end
 
-    puts "cache poll id : #{poll}"
-
     if @cache_polls.count > LIMIT_POLL
       if poll.count == LIMIT_POLL
-        next_cursor = poll.last
+        if @cache_polls[-1] == poll.last
+          next_cursor = 0
+        else
+          next_cursor = poll.last
+        end
       else
         next_cursor = 0
       end
@@ -225,8 +224,6 @@ class Poll < ActiveRecord::Base
       filter_poll(poll, next_cursor)
     elsif status == ENV["FRIEND_FOLLOWING_POLL"]
       filter_poll(poll, next_cursor)
-    elsif status == ENV["OVERALL_TIMELINE"]
-      filter_overall_timeline(poll, next_cursor)
     elsif status == ENV["MY_POLL"]
       filter_my_poll_my_vote(poll, next_cursor)
     else
@@ -267,40 +264,6 @@ class Poll < ActiveRecord::Base
     end
     # puts "poll nonseries : #{poll_nonseries}"
     # puts "share nonseries: #{nonseries_shared}"
-    [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
-  end
-
-  def self.filter_overall_timeline(poll_ids, next_cursor)
-    poll_series = []
-    poll_nonseries = []
-    series_shared = []
-    nonseries_shared = []
-    poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", poll_ids).order("id desc")
-
-    poll_member.each do |poll_member|
-      if poll_member.share_poll_of_id == 0
-        not_shared = Hash["shared" => false]
-        if poll_member.poll.series
-          poll_series << poll_member.poll
-          series_shared << not_shared
-        else
-          poll_nonseries << poll_member.poll
-          nonseries_shared << not_shared
-        end
-      else
-        find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-        shared = Hash["shared" => true, "shared_by" => poll_member.member.as_json()]
-        if find_poll.present?
-          if find_poll.series
-            poll_series << find_poll
-            series_shared << shared
-          else
-            poll_nonseries << find_poll
-            nonseries_shared << shared
-          end
-        end
-      end
-    end
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
   end
 
@@ -365,7 +328,6 @@ class Poll < ActiveRecord::Base
     else
       set_public = false
     end
-    # set_public = buy_poll
 
     @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll)
 
