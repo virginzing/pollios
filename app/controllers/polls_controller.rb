@@ -191,39 +191,6 @@ class PollsController < ApplicationController
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
   end
 
-  # def group_poll
-  #   group_of_member = @current_member.groups.pluck(:id)
-  #   if params[:type] == "active"
-  #     query_poll = Poll.active_poll
-  #   elsif params[:type] == "inactive"
-  #     query_poll = Poll.inactive_poll
-  #   else
-  #     query_poll = Poll.all
-  #   end
-
-  #   if params[:next_cursor]
-  #     @poll ||= query_poll.joins(:poll_groups).uniq
-  #                         .includes(:poll_series, :member)
-  #                         .where("poll_groups.poll_id < ? AND poll_groups.group_id IN (?)", params[:next_cursor], group_of_member)
-  #   else
-  #     @poll ||= query_poll.joins(:poll_groups).uniq
-  #                         .includes(:poll_series, :member)
-  #                         .where("poll_groups.group_id IN (?)", group_of_member)
-  #   end
-
-  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  # end
-
-
-
-  # def my_poll
-  #   @poll_series, @poll_nonseries, @next_cursor = Poll.list_of_poll(@current_member, ENV["MY_POLL"], options_params)
-  # end
-
-  # def my_vote
-  #   @poll_series, @poll_nonseries, @next_cursor = Member.list_of_poll(@current_member, ENV["MY_VOTE"], options_params)
-  # end
-
   def my_poll
     @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_POLL"], options_params)
   end
@@ -234,9 +201,6 @@ class PollsController < ApplicationController
     @next_cursor = @poll_nonseries.next_page.nil? ? 0 : @poll_nonseries.next_page
   end
 
-  # def new_public_timeline
-  #   @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, params[:next_cursor])
-  # end
 
   def guest_poll
     if params[:type] == "active"
