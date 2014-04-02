@@ -80,6 +80,7 @@ class PollsController < ApplicationController
 
     @poll = Poll.new(polls_params)
     @poll.poll_series_id = 0
+    @poll.in_group_ids = group_id.present? ? group_id : "0"
 
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
@@ -177,7 +178,7 @@ class PollsController < ApplicationController
 
   def overall_timeline
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["OVERALL_TIMELINE"], options_params)
-    @group_by_name ||= OverallTimeline.new(@current_member, {}).group_by_name
+    @group_by_name = OverallTimeline.new(@current_member, {}).group_by_name
   end
 
   def group_timeline
