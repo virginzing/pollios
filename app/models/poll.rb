@@ -174,6 +174,8 @@ class Poll < ActiveRecord::Base
   end
 
   def self.cached_find_poll(member_obj, status)
+    puts "status => #{status}"
+    
     Rails.cache.fetch([ status, member_obj.id, @type ]) do
       if status == ENV["PUBLIC_POLL"]
         PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
@@ -206,6 +208,7 @@ class Poll < ActiveRecord::Base
       @cache_polls = cached_find_poll(member_obj, status)
       poll = @cache_polls[0..(LIMIT_POLL - 1)]
     end
+
     puts "cache poll id : #{poll}"
 
     if @cache_polls.count > LIMIT_POLL
