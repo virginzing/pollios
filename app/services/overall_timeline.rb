@@ -35,11 +35,18 @@ class OverallTimeline
   private
 
   def find_poll_me_and_friend_and_group_and_public
-    query = PollMember.where("(((member_id = ? OR member_id IN (?)) AND in_group = ?) OR (poll_id IN (?) AND in_group = ?) OR (public = ? AND in_group = ?)) AND share_poll_of_id = ?", 
-      member_id, your_friend_ids, false, find_poll_in_my_group, true, true, false, 0).limit(LIMIT_TIMELINE)
 
-    poll_member = check_hidden_poll(query)
-    ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
+    query = PollMember.where("(member_id = ? AND in_group = ? AND share_poll_of_id = 0) " \
+        "OR (member_id IN (?) AND in_group = ? AND share_poll_of_id = 0) " \
+        "OR (poll_id IN (?) AND in_group = ? AND share_poll_of_id = 0) " \
+        "OR (public = ? AND in_group = ? AND share_poll_of_id = 0)", 
+        member_id, false, 
+        your_friend_ids, false, 
+        find_poll_in_my_group, true, 
+        true, false).limit(LIMIT_TIMELINE)
+
+      poll_member = check_hidden_poll(query)
+      ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
   end
 
   def find_poll_in_my_group
