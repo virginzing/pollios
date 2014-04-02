@@ -80,13 +80,13 @@ class PollsController < ApplicationController
 
     @poll = Poll.new(polls_params)
     @poll.poll_series_id = 0
-    @poll.in_group_ids = group_id.present? ? group_id : "0"
+    @poll.in_group_ids = group_id.present? ? group_id.join(",") : "0"
 
     if @poll.save
       Choice.create_choices(@poll.id, filter_choice)
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date) unless group_id.presence
       if group_id.present?
-        Group.add_poll(@poll.id, group_id)
+        Group.add_poll(@poll.id, group_id.join(","))
         current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: true) 
       end
 
