@@ -18,13 +18,13 @@ class PollMember < ActiveRecord::Base
 
   def self.find_poll_following(member_obj, type)
     following = member_obj.get_following.map(&:id)
-    query = where("(member_id IN (?)) AND share_poll_of_id = 0", following).limit(LIMIT_TIMELINE)   
+    query = where("(member_id IN (?)) AND share_poll_of_id = 0 AND in_group = ?", following, false).limit(LIMIT_TIMELINE)   
     find_poll_member = check_hidden(query)
     filter_type(find_poll_member, type).map(&:id)
   end
 
   def self.find_poll_original(member_id, friend_id, type)
-    query = where("(member_id = ? OR member_id IN (?)) AND share_poll_of_id = 0", member_id, friend_id).limit(LIMIT_TIMELINE)
+    query = where("(member_id = ? OR member_id IN (?)) AND share_poll_of_id = 0 AND in_group = ?", member_id, friend_id, false).limit(LIMIT_TIMELINE)
     find_poll = check_hidden(query)
     @poll = filter_type(find_poll, type)
     ids = @poll.map(&:id)
@@ -65,8 +65,9 @@ class PollMember < ActiveRecord::Base
     @hidden_poll = HiddenPoll.my_hidden_poll(member_id)
 
     ids, poll_ids = find_poll_original(member_id, friend_id, type)
+        puts "test"
     list_ids = ids | find_poll_following(member_obj, type)
-
+    
     shared = find_poll_shared(friend_id, type)
     poll_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + list_ids).sort! { |x,y| y <=> x }
 

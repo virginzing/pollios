@@ -26,15 +26,10 @@ class PublicTimelinable
       #               joins(:poll_members).includes(:member, :poll_series, :campaign).
       #               where("poll_members.public = ? AND share_poll_of_id = 0", true)
       query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                   where("poll_members.public = ? AND share_poll_of_id = 0", true)
+                   where("poll_members.public = ? AND share_poll_of_id = 0 AND in_group = ?", true, false)
     else
-      # query = Poll.unscoped.joins(:choices).select("polls.*, max(choices.vote) as vote_max, choices.answer as choice_answer").
-      #               group("polls.id, choices.poll_id, choices.answer").order("vote_max desc, created_at desc").
-      #               joins(:poll_members).includes(:member, :poll_series, :campaign).
-      #               where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?)", true, @hidden_poll_ids)
-
     query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                 where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?)", true, @hidden_poll_ids)
+                 where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND in_group = ?", true, @hidden_poll_ids, false)
     end
     filter_type(query, type)
   end

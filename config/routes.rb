@@ -94,6 +94,7 @@ Pollios::Application.routes.draw do
     post 'share/:id',       to: 'polls#share'
     post 'unshare/:id',     to: 'polls#unshare'
     get 'friend_following_timeline',  to: 'polls#friend_following_poll'
+    get 'overall_timeline', to: 'polls#overall_timeline'
     get 'group_timeline',   to: 'polls#group_timeline'
   end
 
