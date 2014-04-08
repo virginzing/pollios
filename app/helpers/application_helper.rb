@@ -1,4 +1,3 @@
-include FoundationRailsHelper::FlashHelper
 module ApplicationHelper
   def flash_class(level)
       case level
@@ -12,6 +11,10 @@ module ApplicationHelper
     if controller_name == name
       'active'
     end
+  end
+
+  def is_active?(name)
+    controller_name == name ? 'active' : nil
   end
 
   def tag_clound(tags, classes)
@@ -41,7 +44,7 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 20, "friend_id": 24 }' -X POST http://codeapp-pollios.herokuapp.com/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 9 }' -X POST http://localhost:3000/friend/add_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
@@ -56,10 +59,10 @@ end
 
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
-# http://localhost:3000/friends/following.json?member_id=15
+# http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
 # http://localhost:3000/friend/search.json?member_id=1&q=N
 
-# curl -F "member_id=3" -F "name=Nutty" -F "friend_id=4,14" http://localhost:3000/group/build.json -i
+# curl -F "member_id=1" -F "name=Nutty" -F "friend_id=2,6" http://localhost:3000/group/build.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 2, "group_id": 33 }' -X POST http://localhost:3000/group/accept.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
@@ -95,10 +98,43 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1, 
-#     "title": "test again no group",
+#     "title": "my poll two",
 #     "expire_within": "5",
-#     "choices": "1,2,3,4,5",
+#     "choices": "1,2,3",
 #     "type_poll": "freeform"
+# }' -X POST http://localhost:3000/poll/create.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 8, 
+#     "title": "Friend 8 create two",
+#     "expire_within": "5",
+#     "choices": "1,2",
+#     "type_poll": "freeform"
+# }' -X POST http://localhost:3000/poll/create.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 9, 
+#     "title": "No friend create poll",
+#     "expire_within": "5",
+#     "choices": "1,2,3",
+#     "type_poll": "freeform"
+# }' -X POST http://localhost:3000/poll/create.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 11, 
+#     "title": "MK MK",
+#     "expire_within": "1",
+#     "choices": "yes,no",
+#     "type_poll": "binary"
+# }' -X POST http://localhost:3000/poll/create.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1, 
+#     "title": "create in group 1 and 3",
+#     "expire_within": "1",
+#     "choices": "yes,no",
+#     "type_poll": "binary",
+#     "group_id": "1,3"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) | 
@@ -128,8 +164,8 @@ end
 # }' -X POST http://localhost:3000/poll/60/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 3
-# }' -X POST http://localhost:3000/poll/share/39.json -i
+#     "member_id": 8
+# }' -X POST http://localhost:3000/poll/share/161.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 3
@@ -158,7 +194,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "1"
-# }' -X POST http://localhost:3000/poll/6/hide.json -i
+# }' -X POST http://localhost:3000/poll/163/hide.json -i
 
 # http://localhost:3000/member/profile.json?member_id=1
 # Choice.find(39).update_attributes(vote: 76842)

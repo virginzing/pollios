@@ -1,0 +1,108 @@
+<div class="header navbar navbar-inverse navbar-fixed-top">
+  <!-- BEGIN TOP NAVIGATION BAR -->
+  <div class="header-inner">
+    <!-- BEGIN LOGO -->  
+    <a class="navbar-brand" href="<%= root_url %>">
+    <img src="/img/logo-pollios.png" alt="logo" class="img-responsive" />
+    <!-- <h3 class="logo">Pollios</h3> -->
+    </a>
+    <!-- END LOGO -->
+    <!-- BEGIN RESPONSIVE MENU TOGGLER --> 
+    <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+    <img src="/img/menu-toggler.png" alt="" />
+    </a> 
+    <!-- END RESPONSIVE MENU TOGGLER -->
+    <!-- BEGIN TOP NAVIGATION MENU -->
+    <ul class="nav navbar-nav pull-right">
+            <!-- BEGIN NOTIFICATION DROPDOWN -->
+    <li class="dropdown" id="header_notification_bar">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-close-others="true" id="notification">
+      <i class="icon-warning-sign"></i>
+      <span class="badge">10</span>
+      </a>
+      <ul class="dropdown-menu extended inbox notification">
+        <li>
+          <p>You have 10 new notifications</p>
+        </li>
+        <li>
+          <ul class="dropdown-menu-list scroller" style="height: 400px;">
+            <!-- <li>  
+              <a href="#">
+              <span class="label label-sm label-icon label-success"><i class="icon-plus"></i></span>
+              <span class="time">Just now</span>
+              </a>
+            </li>
+            <li>  
+              <a href="#">
+              <span class="label label-sm label-icon label-danger"><i class="icon-bolt"></i></span>
+              Server #12 overloaded. 
+              <span class="time">15 mins</span>
+              </a>
+            </li>
+            <li>  
+              <a href="#">
+              <span class="label label-sm label-icon label-warning"><i class="icon-bell"></i></span>
+              Server #2 not responding.
+              <span class="time">22 mins</span>
+              </a>
+            </li>
+            <li>  
+              <a href="#">
+              <span class="label label-sm label-icon label-info"><i class="icon-bullhorn"></i></span>
+              Application error.
+              <span class="time">40 mins</span>
+              </a>
+            </li>
+            <li>  
+              <a href="#">
+              <span class="label label-sm label-icon label-danger"><i class="icon-bolt"></i></span>
+              Database overloaded 68%. 
+              <span class="time">2 hrs</span>
+              </a>
+            </li>
+            <li>  
+              <a href="#">
+              <span class="label label-sm label-icon label-danger"><i class="icon-bolt"></i></span>
+              2 user IP blocked.
+              <span class="time">5 hrs</span>
+              </a>
+            </li> -->
+          </ul>
+        </li>
+        <li class="external">   
+          <a href="#">See all notifications <i class="m-icon-swapright"></i></a>
+        </li>
+      </ul>
+    </li>
+    <!-- END NOTIFICATION DROPDOWN -->
+
+      <!-- BEGIN USER LOGIN DROPDOWN -->
+    <li class="dropdown user">
+      <% if current_member %>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+        <% if current_member.avatar.present? %>
+          <img alt="" src="<%= current_member.avatar %>" width="29px" height="29px"/>
+        <% else %>
+          <img alt="" src="/img/user.png" width="29px" height="29px" />
+        <% end %>
+        <span class="username"><%= current_member.sentai_name %></span>
+        <i class="icon-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="/profile"><i class="icon-user"></i> My Profile</a>
+          </li>
+          <li><a href="<%= authen_signout_path %>"><i class="icon-key"></i> Log Out</a>
+          </li>
+        </ul>
+      <% else %>
+        <li class="horizon-menu">
+          <a href="<%= authen_signin_path %>">Login</a>
+        </li>
+      <% end %>
+    </li>
+      <!-- END USER LOGIN DROPDOWN -->
+    </ul>
+    <!-- END TOP NAVIGATION MENU -->
+  </div>
+  <!-- END TOP NAVIGATION BAR -->
+</div>

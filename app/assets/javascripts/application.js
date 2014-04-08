@@ -12,11 +12,5 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require foundation
-//= require turbolinks
-//= require nprogress
-//= require nprogress-turbolinks
 //= require_tree ../../../vendor/assets/javascripts/.
 //= require_tree .
-
-$(function(){ $(document).foundation(); });

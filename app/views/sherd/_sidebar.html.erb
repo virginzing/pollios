@@ -1,0 +1,65 @@
+<div class="page-sidebar navbar-collapse collapse">
+  <!-- BEGIN SIDEBAR MENU -->         
+  <ul class="page-sidebar-menu">
+    <li>
+      <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+      <div class="sidebar-toggler hidden-phone"></div>
+      <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+    </li>
+    <li>
+      <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+      <form class="sidebar-search" action="/search" method="">
+        <div class="form-container">
+          <div class="input-box">
+            <a href="javascript:;" class="remove"></a>
+            <input type="text" name="q" placeholder="Search..."/>
+            <input type="button" class="submit" value=" "/>
+          </div>
+        </div>
+      </form>
+      <!-- END RESPONSIVE QUICK SEARCH FORM -->
+    </li>
+
+    <li class="start <%= is_active?('home') %>">
+      <a href="<%= dashboard_path %>">
+      <i class="icon-home"></i> 
+      <span class="title">Dashboard</span>          
+      <span class="selected"></span>
+      </a>
+    </li>
+
+    <li class="<%= is_active?('polls') %>">
+      <a href="javascript:;">
+      <i class="icon-gift"></i> 
+      <span class="title">Poll</span>          
+      <span class="arrow "></span>
+      </a>
+      <ul class="sub-menu">
+        <li >
+          <%= link_to 'New Poll', new_poll_path, method: :get %>
+        </li>
+        <li >
+          <%= link_to 'Your Poll', polls_path, method: :get %>
+        </li>
+      </ul>
+    </li>
+
+    <li class="<%= is_active?('poll_series') %>">
+      <a href="javascript:;">
+      <i class="icon-gift"></i> 
+      <span class="title">Questionnaire</span>          
+      <span class="arrow "></span>
+      </a>
+      <ul class="sub-menu">
+        <li >
+          <%= link_to 'New Questionnaire', new_poll_series_path, method: :get %>
+        </li>
+        <li >
+          <%= link_to 'Your Questionnaire', '/questionnaire', method: :get %>
+        </li>
+      </ul>
+    </li>
+
+  </ul>
+  <!-- END SIDEBAR MENU -->
+</div>

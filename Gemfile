@@ -25,8 +25,8 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-gem 'foundation-rails', github: 'zurb/foundation-rails'
-gem 'foundation_rails_helper'
+# gem 'foundation-rails', github: 'zurb/foundation-rails'
+# gem 'foundation_rails_helper'
 
 gem 'enumerize'
 
@@ -70,7 +70,7 @@ gem "mini_magick"
 gem 'randumb'
 gem 'figaro'
 gem 'amoeba'
-gem 'nprogress-rails'
+# gem 'nprogress-rails'
 # gem "squeel" 
 
 gem 'rails_admin'

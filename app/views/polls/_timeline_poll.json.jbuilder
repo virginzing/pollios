@@ -18,5 +18,6 @@ if @poll_series || @poll_nonseries
     end
   end
 
+  json.total_entries @total_entries
   json.next_cursor @next_cursor
 end

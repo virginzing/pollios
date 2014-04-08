@@ -28,5 +28,6 @@ if @poll_series || @poll_nonseries
     count_nonseries += 1
   end
 
+  json.total_entries @total_entries
   json.next_cursor @next_cursor
 end

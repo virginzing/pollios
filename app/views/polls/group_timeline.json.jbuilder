@@ -20,5 +20,6 @@ if @poll_series || @poll_nonseries
     json.group poll.get_in_groups(@group_by_name)
   end
 
+  json.total_entries @total_entries
   json.next_cursor @next_cursor
 end

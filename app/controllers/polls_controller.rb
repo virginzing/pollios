@@ -169,19 +169,23 @@ class PollsController < ApplicationController
       @polls = @public_poll.poll_public.paginate(page: params[:next_cursor])
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)
       @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+      @total_entries = @polls.total_entries
     end
   end
 
   def friend_following_poll
-    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["FRIEND_FOLLOWING_POLL"], options_params)
+    # @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["FRIEND_FOLLOWING_POLL"], options_params)
+    friend_following_timeline = FriendFollowingTimeline.new(@current_member, options_params)
+    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = friend_following_timeline.poll_friend_following
+    @total_entries = friend_following_timeline.total_entries.count
   end
 
   def overall_timeline
     # @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["OVERALL_TIMELINE"], options_params)
-
     overall_timeline = OverallTimeline.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
     @group_by_name = overall_timeline.group_by_name
+    @total_entries = overall_timeline.total_entries.count
   end
 
   def group_timeline
@@ -190,6 +194,7 @@ class PollsController < ApplicationController
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @group_by_name ||= @group_poll.group_by_name
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
   end
 
   def my_poll

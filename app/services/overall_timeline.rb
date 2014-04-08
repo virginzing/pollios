@@ -36,6 +36,10 @@ class OverallTimeline
     @overall_timeline ||= split_poll_and_filter
   end
 
+  def total_entries
+    cached_poll_ids_of_poll_member
+  end
+
   private
 
   def find_poll_me_and_friend_and_group_and_public
@@ -73,14 +77,13 @@ class OverallTimeline
   end
 
   def cached_poll_ids_of_poll_member
-    Rails.cache.fetch([ ENV["OVERALL_TIMELINE"], member_id]) do
+    @cache_poll_ids ||= Rails.cache.fetch([ ENV["OVERALL_TIMELINE"], member_id]) do
       overall_timeline
     end
   end
 
   def split_poll_and_filter
     next_cursor = @options["next_cursor"]
-    puts "next_cursor =>  #{next_cursor}"
 
     if next_cursor.presence && next_cursor != "0"
       next_cursor = next_cursor.to_i
@@ -93,9 +96,6 @@ class OverallTimeline
       cache_polls = cached_poll_ids_of_poll_member
       @poll_ids   = cache_polls[0..(LIMIT_POLL - 1)]
     end
-
-    puts "original cache : #{cache_polls}"
-    puts "cache poll id : #{@poll_ids}"
 
     if cache_polls.count > LIMIT_POLL
       if @poll_ids.count == LIMIT_POLL

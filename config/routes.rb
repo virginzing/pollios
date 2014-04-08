@@ -108,8 +108,9 @@ Pollios::Application.routes.draw do
 
   get '/tags',  to: 'tags#index'
   get '/qrcode',  to: 'polls#generate_qrcode'
-  get '/home',  to: 'home#index'
+  get '/home',  to: 'home#index', as: :dashboard
   get '/campaigns_polls',  to: 'campaigns#polls'
+  get 'questionnaire',  to: 'poll_series#index'
   post '/scan_qrcode',      to: 'polls#scan_qrcode'
 
   root to: 'home#index'

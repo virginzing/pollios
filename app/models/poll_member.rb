@@ -65,7 +65,7 @@ class PollMember < ActiveRecord::Base
     @hidden_poll = HiddenPoll.my_hidden_poll(member_id)
 
     ids, poll_ids = find_poll_original(member_id, friend_id, type)
-        puts "test"
+
     list_ids = ids | find_poll_following(member_obj, type)
     
     shared = find_poll_shared(friend_id, type)
