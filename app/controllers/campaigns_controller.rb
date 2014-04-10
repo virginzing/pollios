@@ -48,7 +48,8 @@ class CampaignsController < ApplicationController
   # GET /campaigns/1/edit
   def edit
     @poll_campaign_new = Poll.all
-    @poll_campaigns = @campaign.poll
+    @poll_campaigns = PollOfCampaignSerializer.new(@campaign.poll).to_json()
+    puts "#{@poll_campaigns}"
   end
 
   # POST /campaigns

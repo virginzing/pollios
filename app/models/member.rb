@@ -103,6 +103,7 @@ class Member < ActiveRecord::Base
       field :birthday
       field :province
       field :avatar
+      field :key_color
     end
 
     update do
@@ -116,6 +117,7 @@ class Member < ActiveRecord::Base
       field :friend_limit
       field :birthday
       field :province
+      field :key_color
 
     end
 
@@ -127,6 +129,7 @@ class Member < ActiveRecord::Base
       field :friend_limit
       field :birthday
       field :province
+      field :key_color
     end
 
   end
