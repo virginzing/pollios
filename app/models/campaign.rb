@@ -36,7 +36,7 @@ class Campaign < ActiveRecord::Base
     # end
 
     if self.poll_id.present?
-      Poll.find(self.poll_id).update_attributes!(campaign_id: self.poll_id)
+      Poll.find(self.poll_id).update_attributes!(campaign_id: id)
     end
   end
 
