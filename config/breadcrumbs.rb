@@ -45,6 +45,14 @@ crumb :same_choice_questionnaire do |same_choice_series|
 end
 
 
+crumb :new_recurring do |new_recurring|
+  link "New Recurring"
+end
+
+crumb :edit_recurring do |edit_recurring|
+  link "Edit Recurring"
+end
+
 # crumb :project do |project|
 #   link project.name, project_path(project)
 #   parent :projects
