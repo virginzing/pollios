@@ -1,5 +1,7 @@
 class Recurring < ActiveRecord::Base
   include RecurringsHelper
+  validates :description, :period, :end_recur, presence: true
+
   belongs_to :member
   has_many :polls
 

@@ -18,7 +18,11 @@
               </div>
               <div class="col-md-10">
                 <div class="input-group input-medium bootstrap-timepicker">                                       
-                  <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60" value="10:10">
+                  <% if action_name == "edit" %>
+                     <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60" value="<%= @recurring.period.strftime('%H:%M %p') %>">
+                  <% else %>
+                    <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60">
+                  <% end %>
                     <span class="input-group-btn">
                       <button class="btn default" type="button"><i class="icon-time"></i></button>
                     </span>
@@ -32,9 +36,13 @@
 
               <div class="col-md-10">
                 <div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy">
+                <% if action_name == "edit" %>
+                  <input class="string optional form-control input-small" id="datetimepicker" name="recurring[end_recur]" readonly="readonly" type="text" value="<%= @recurring.end_recur.strftime('%d-%m-%Y') %>">
+                <% else %>
                   <input class="string optional form-control input-small" id="datetimepicker" name="recurring[end_recur]" readonly="readonly" type="text">
+                <% end %>     
                   <span class="input-group-btn">
-                  <button class="btn default" type="button"><i class="icon-calendar"></i></button>
+                    <button class="btn default" type="button"><i class="icon-calendar"></i></button>
                   </span>
                 </div>
               </div>
@@ -60,13 +68,4 @@
     <% end %>
   </div>
 </div>
-
-        <div class="input-append bootstrap-timepicker">
-            <input id="timepicker1" type="text" class="input-small">
-            <span class="add-on"><i class="icon-time"></i></span>
-        </div>
- 
-        <script type="text/javascript">
-            $('#timepicker1').timepicker();
-        </script>
 

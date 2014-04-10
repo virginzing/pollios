@@ -346,7 +346,8 @@ class Member < ActiveRecord::Base
       name: sentai_name,
       username: username,
       email: email,
-      avatar: avatar.present? ? avatar : "No Image"
+      avatar: avatar.present? ? avatar : "No Image",
+      key_color: key_color
    }
   end
 end

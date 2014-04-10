@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140402043425) do
+ActiveRecord::Schema.define(version: 20140410113620) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -269,6 +269,7 @@ ActiveRecord::Schema.define(version: 20140402043425) do
     t.integer  "member_type",  default: 0
     t.date     "birthday"
     t.integer  "province_id"
+    t.string   "key_color"
   end
 
   add_index "members", ["province_id"], name: "index_members_on_province_id"

@@ -53,6 +53,9 @@ crumb :edit_recurring do |edit_recurring|
   link "Edit Recurring"
 end
 
+crumb :new_campaign do |new_campaign|
+  link "New Campaign"
+end
 # crumb :project do |project|
 #   link project.name, project_path(project)
 #   parent :projects

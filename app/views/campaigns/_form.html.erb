@@ -1,54 +1,72 @@
-<%= simple_form_for(@campaign, html: {multipart: true}) do |f| %>
-  <%= f.error_notification %>
+<div class="portlet box yellow">
+  <div class="portlet-title">
+     <div class="caption"><i class="icon-reorder"></i>Campaign</div>
+     <div class="tools">
+        <a href="javascript:;" class="collapse"></a>
+        <a href="javascript:;" class="remove"></a>
+     </div>
+  </div>
+  <div class="portlet-body">
+    <%= simple_form_for @campaign, :html => { :multipart => true, class: "form-horizontal" } do |f| %>
+      <div class="form-body">
+        <div class="row">
+          <div class="col-md-7">
+            <%= f.input :name, wrapper: :horizontal %>
 
-  <div class="form-inputs">
-    <%= f.input :name %>
-    <label><b>Condition</b></label>
-    
-    <div class="panel">
+            <div class="form-group">
+              <label class="control-label col-md-2">Poll</label>
+              <div class="col-md-10">
+                <%= f.select :poll_id, current_member.polls.where("polls.campaign_id = 0").order('title desc').map {|r| [r.title, r.id ]}, { include_blank: true },  { class: 'select2me_poll', placeholder: "Select a Poll"} %>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-hz col-md-2">
+                <label class="string optional control-label" for="datetimepicker">Expire date</label>
+              </div>
+
+              <div class="col-md-10">
+                <div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy">
+                <% if action_name == "edit" %>
+                  <input class="string optional form-control input-small" id="datetimepicker" name="campaign[expire]" readonly="readonly" type="text" value="<%= @campaign.expire.strftime('%d-%m-%Y') %>">
+                <% else %>
+                  <input class="string optional form-control input-small" id="datetimepicker" name="campaign[expire]" readonly="readonly" type="text">
+                <% end %>     
+                  <span class="input-group-btn">
+                    <button class="btn default" type="button"><i class="icon-calendar"></i></button>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-md-4 col-md-offset-1">
+            <%= f.input :begin_sample, wrapper: :horizontal ,:label => "Change", input_html: { class: "input-small"}, required: false %>
+            <%= f.input :end_sample, wrapper: :horizontal ,:label => "Total", input_html: { class: "input-small"}, required: false %>
+            <%= f.input :limit, wrapper: :horizontal ,:label => "Limit", input_html: { class: "input-small"}, required: false %>
+          </div>
+
+        </div>
+      </div>
+
+    <div class="form-actions fluid">
       <div class="row">
-        <div class="large-2 columns">
-            <%= f.input :begin_sample, label: "Change" %>
-        </div>
-              <div class="large-1 columns">
-          <span><p class="in">IN</p></span>
-        </div>
-        <div class="large-2 columns left">
-          <%= f.input :end_sample, label: "Total" %>
-        </div>
-
-          <div class="large-2 columns left">
-            <%= f.input :limit %>
-        </div>
+         <div class="col-md-7">
+            <div class="col-md-offset-2 col-md-9">
+              <button type="submit" class="btn blue"><i class="icon-ok"></i> Submit</button>
+              <%= link_to 'Discard', campaigns_path, method: :get, class: 'btn default' %>                              
+            </div>
+         </div>
+         <div class="col-md-6">
+         </div>
       </div>
     </div>
-
-    <%= f.input :expire, input_html: { id: "datetimepicker" }, as: :string %>
-<!--     <label>Poll</label>
-    <input type="text" name="campaign[poll_ids]" id="campaign_poll_ids"> -->
-    <%= f.label "Poll" %>
-    <%= f.select :poll_id, current_member.polls.where("polls.campaign_id = 0").order('title desc').map {|r| [r.title, r.id ]}, { include_blank: true }, { id: "select_poll" } %>
-    <br>
-  
-    <%= f.label "Photo Campaign" %>
-    <div class="fileinput fileinput-new" data-provides="fileinput">
-      <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 300px; max-height: 300px;">
-      <%= image_tag(@campaign.photo_campaign.url) if @campaign.photo_campaign.present? %>
-      </div>
-
-      <div>
-      <br>
-        <span class="btn btn-default btn-file">
-        <span class="fileinput-new button tiny success">Select image</span>
-        <span class="fileinput-exists button tiny secondary">Change</span>
-        <input type="file" name="campaign[photo_campaign]"></span>
-        <a href="#" class="fileinput-exists button tiny secondary" data-dismiss="fileinput">Remove</a>
-      </div>
-    </div>
-
+    <% end %>
   </div>
+</div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
-<% end %>
+<script>
+  $(".select2me_poll").select2("data", <%= raw @poll_campaigns %>);
+</script>

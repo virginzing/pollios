@@ -682,7 +682,13 @@ var App = function () {
         if (jQuery().select2) {
             $('.select2me').select2({
                 placeholder: "Select",
-                allowClear: true
+                allowClear: true,
+                width: '100%'
+            });
+            $('.select2me_poll').select2({
+                placeholder: "Select",
+                allowClear: true,
+                width: '100%'
             });
             $('.select2me_campaign').select2({
                 placeholder: "Select",
