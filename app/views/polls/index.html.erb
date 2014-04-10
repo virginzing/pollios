@@ -1,7 +1,4 @@
-<ul class="breadcrumbs">
-  <li><a href="#">Home</a></li>
-  <li class="current"><a href="#">Poll</a></li>
-</ul>
+<% breadcrumb :polls, @polls %>
 
 
 <table>
@@ -22,7 +19,7 @@
   <tbody>
     <% @polls.each do |poll| %>
       <tr>
-        <td><%= link_to poll.id, poll_choices_path(poll.id) %></td>
+        <td><%= link_to poll.id, poll_path(poll) %></td>
         <td><%= poll.title %></td>
         <td><%= poll.check_recurring %></td>
         <td><%= poll.vote_all %></td>

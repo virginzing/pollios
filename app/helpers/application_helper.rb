@@ -7,6 +7,25 @@ module ApplicationHelper
       end
   end
 
+  def is_active_new_poll(c_name, a_name)
+    if controller_name == c_name 
+      if action_name == a_name
+        'active'
+      end
+    end
+  end
+
+  def is_active_3_level(c_name, a_name)
+    if controller_name == c_name
+      if (action_name == 'binary') || (action_name == 'rating') || (action_name == 'freeform')
+        'active'
+      elsif (action_name == 'normal') || (action_name == 'same_choice')
+        'active'
+      else
+      end
+    end
+  end
+
   def active_class(name)
     if controller_name == name
       'active'
@@ -44,9 +63,9 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 20, "friend_id": 24 }' -X POST http://codeapp-pollios.herokuapp.com/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 9 }' -X POST http://localhost:3000/friend/add_friend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 7, "friend_id": 1 }' -X POST http://localhost:3000/friend/add_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/unblock.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
@@ -97,11 +116,11 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1, 
-#     "title": "my poll two",
+#     "member_id": 9, 
+#     "title": "poll of no friend",
 #     "expire_within": "5",
 #     "choices": "1,2,3",
-#     "type_poll": "freeform"
+#     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -164,11 +183,11 @@ end
 # }' -X POST http://localhost:3000/poll/60/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 8
-# }' -X POST http://localhost:3000/poll/share/161.json -i
+#     "member_id": 7
+# }' -X POST http://localhost:3000/poll/share/172.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 3
+#     "member_id": 7
 # }' -X POST http://localhost:3000/poll/unshare/39.json -i
 
 

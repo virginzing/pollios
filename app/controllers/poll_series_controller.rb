@@ -1,7 +1,7 @@
 class PollSeriesController < ApplicationController
   include PollSeriesHelper
   skip_before_action :verify_authenticity_token
-  before_action :signed_user, only: [:index, :new]
+  before_action :signed_user, only: [:index, :new, :normal, :same_choice]
   before_action :set_current_member, only: [:vote]
   before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode]
 
@@ -42,6 +42,21 @@ class PollSeriesController < ApplicationController
     end
   end
 
+  def normal
+    @poll_series = PollSeries.new
+    1.times do
+      poll = @poll_series.polls.build
+      2.times { poll.choices.build }
+    end
+  end
+
+  def same_choice
+    @poll_series = PollSeries.new
+    2.times do
+      @poll_series.polls.build
+    end
+  end
+
   def edit
     @poll_tags = @poll_series.tags
     puts "polltag = #{@poll_tags}"
@@ -60,6 +75,8 @@ class PollSeriesController < ApplicationController
   def create
     puts params
     @poll_series = current_member.poll_series.new(poll_series_params)
+    @poll_series.expire_date = Time.now + poll_series_params["expire_within"].to_i.days
+
     type_series = poll_series_params["type_series"]
 
     if type_series == "1"
@@ -70,7 +87,12 @@ class PollSeriesController < ApplicationController
       flash[:notice] = "Successfully created poll series."
       redirect_to poll_series_index_path
     else
-      render action: 'new'
+      flash[:error] = @poll_series.errors.full_messages
+      if poll_series_params["type_series"] == "0"
+        render action: 'normal'
+      else
+        render action: 'same_choice'
+      end
     end
     
     puts "error: #{@poll_series.errors.full_messages}"
@@ -96,6 +118,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

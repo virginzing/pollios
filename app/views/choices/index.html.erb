@@ -1,8 +1,4 @@
-<ul class="breadcrumbs">
-  <li><a href="<%= root_url %>">Home</a></li>
-  <li><a href="<%= root_url %>"><%= @poll.title %></a></li>
-  <li class="current"><a href="#"></a>Choices</li>
-</ul>
+<% breadcrumb :poll_choices, @choices %>
 
 <table>
   <thead>

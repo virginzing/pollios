@@ -21,7 +21,7 @@
     </li>
 
     <li class="start <%= is_active?('home') %>">
-      <a href="<%= dashboard_path %>">
+      <a href="<%= root_url %>">
       <i class="icon-home"></i> 
       <span class="title">Dashboard</span>          
       <span class="selected"></span>
@@ -29,21 +29,28 @@
     </li>
 
     <li class="<%= is_active?('polls') %>">
-      <a href="javascript:;">
-      <i class="icon-gift"></i> 
-      <span class="title">Poll</span>          
-      <span class="arrow "></span>
-      </a>
-      <ul class="sub-menu">
-        <li >
-          <%= link_to 'New Poll', new_poll_path, method: :get %>
-        </li>
-        <li >
-          <%= link_to 'Your Poll', polls_path, method: :get %>
-        </li>
-      </ul>
+       <a class="active" href="javascript:;">
+       <i class="icon-leaf"></i> 
+       <span class="title">Poll</span>
+       <span class="arrow "></span>
+       </a>
+       <ul class="sub-menu">
+          <li class="<%= is_active_3_level('polls', action_name) %>">
+             <a href="javascript:;">
+             New Poll
+             <span class="arrow"></span>
+             </a>
+             <ul class="sub-menu">
+                <li class="<%= is_active_new_poll('polls', 'binary') %>"><%= link_to 'Binary', binary_poll_path %></li>
+                <li class="<%= is_active_new_poll('polls', 'rating') %>"><%= link_to 'Rating', rating_poll_path %></li>
+                <li class="<%= is_active_new_poll('polls', 'freeform') %>"><%= link_to 'Freeform', freeform_poll_path %></li>
+             </ul>
+          </li>
+          <li class="<%= is_active_new_poll('polls', 'index') %>">
+            <%= link_to 'Your Poll', polls_path, method: :get %>
+          </li>
+       </ul>
     </li>
-
     <li class="<%= is_active?('poll_series') %>">
       <a href="javascript:;">
       <i class="icon-gift"></i> 
@@ -51,15 +58,55 @@
       <span class="arrow "></span>
       </a>
       <ul class="sub-menu">
-        <li >
-          <%= link_to 'New Questionnaire', new_poll_series_path, method: :get %>
+          <li class="<%= is_active_3_level('poll_series', action_name) %>">
+             <a href="javascript:;">
+             New Questionnaire
+             <span class="arrow"></span>
+             </a>
+             <ul class="sub-menu">
+                <li class="<%= is_active_new_poll('poll_series', 'normal') %>"><%= link_to 'Normal', normal_questionnaire_path %></li>
+                <li class="<%= is_active_new_poll('poll_series', 'same_choice') %>"><%= link_to 'Same Choice', same_choice_questionnaire_path %></li>
+             </ul>
+          </li>
+          <li class="<%= is_active_new_poll('poll_series', 'index') %>">
+            <%= link_to 'Your Questionnaire', poll_series_index_path, method: :get %>
+          </li>
+      </ul>
+    </li>
+    <li class="<%= is_active?('campaigns') %>">
+      <a href="javascript:;">
+      <i class="icon-gift"></i> 
+      <span class="title">Campaign</span>          
+      <span class="arrow "></span>
+      </a>
+      <ul class="sub-menu">
+        <li class="<%= is_active_new_poll('campaigns', 'new') %>">
+          <%= link_to 'New Campaign', new_campaign_path %>
         </li>
-        <li >
-          <%= link_to 'Your Questionnaire', '/questionnaire', method: :get %>
+        <li class="<%= is_active_new_poll('campaigns', 'index') %>">
+          <%= link_to 'Your Campaign', '/campaigns' %>
         </li>
       </ul>
     </li>
 
+    <li class="<%= is_active?('recurrings') %>">
+      <a href="javascript:;">
+      <i class="icon-gift"></i> 
+      <span class="title">Recurring</span>          
+      <span class="arrow "></span>
+      </a>
+      <ul class="sub-menu">
+        <li class="<%= is_active_new_poll('recurrings', 'new') %>">
+          <%= link_to 'New Recurring', new_recurring_path %>
+        </li>
+        <li class="<%= is_active_new_poll('recurrings', 'index') %>">
+          <%= link_to 'Your Recurring', '/recurrings' %>
+        </li>
+      </ul>
+    </li>
+
+
   </ul>
   <!-- END SIDEBAR MENU -->
+
 </div>

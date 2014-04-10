@@ -7,6 +7,75 @@
     <!-- <h3 class="logo">Pollios</h3> -->
     </a>
     <!-- END LOGO -->
+
+        <div class="hor-menu hidden-sm hidden-xs">
+      <ul class="nav navbar-nav">
+        <li>
+          <a data-toggle="dropdown" data-hover="dropdown" data-close-others="true" href="">
+          Sections
+          <i class="icon-angle-down"></i>     
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Section 1</a></li>
+            <li><a href="#">Section 2</a></li>
+            <li><a href="#">Section 3</a></li>
+            <li><a href="#">Section 4</a></li>
+            <li><a href="#">Section 5</a></li>
+            <li class="dropdown-submenu">
+              <a href="javascript:;">
+              More options
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Second level link</a></li>
+                <li class="dropdown-submenu">
+                  <a href="javascript:;">More options</a>
+                  <ul class="dropdown-menu">
+                    <li><a href="index.html">Third level link</a></li>
+                    <li><a href="index.html">Third level link</a></li>
+                    <li><a href="index.html">Third level link</a></li>
+                    <li><a href="index.html">Third level link</a></li>
+                    <li><a href="index.html">Third level link</a></li>
+                  </ul>
+                </li>
+                <li><a href="index.html">Second level link</a></li>
+                <li><a href="index.html">Second level link</a></li>
+                <li><a href="index.html">Second level link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="">Tables</a>
+        </li>
+        <li>
+          <a data-toggle="dropdown" data-hover="dropdown" data-close-others="true" href="">Extra 
+          <i class="icon-angle-down"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="index.html">About Us</a></li>
+            <li><a href="index.html">Services</a></li>
+            <li><a href="index.html">Pricing</a></li>
+            <li><a href="index.html">FAQs</a></li>
+            <li><a href="index.html">Gallery</a></li>
+            <li><a href="index.html">Registration</a></li>
+          </ul>
+        </li>
+        <li>
+          <span class="hor-menu-search-form-toggler">&nbsp;</span>
+          <div class="search-form">
+            <form class="form-search">
+              <div class="input-group">
+                <input type="text" placeholder="Search..." class="form-control">
+                <div class="input-group-btn">
+                  <button type="button" class="btn"></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+
     <!-- BEGIN RESPONSIVE MENU TOGGLER --> 
     <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
     <img src="/img/menu-toggler.png" alt="" />
@@ -91,7 +160,7 @@
         <ul class="dropdown-menu">
           <li><a href="/profile"><i class="icon-user"></i> My Profile</a>
           </li>
-          <li><a href="<%= authen_signout_path %>"><i class="icon-key"></i> Log Out</a>
+          <li><a href="<%= authen_signout_path %>" data-method="delete"><i class="icon-key"></i> Log Out</a>
           </li>
         </ul>
       <% else %>

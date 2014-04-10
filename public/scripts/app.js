@@ -684,6 +684,29 @@ var App = function () {
                 placeholder: "Select",
                 allowClear: true
             });
+            $('.select2me_campaign').select2({
+                placeholder: "Select",
+                width: '100%',
+                allowClear: true
+            });
+            $(".tag_token").select2({
+              width: "100%",
+              placeholder: "Search tag",
+              minimumInputLength: 2,
+              multiple: true,
+              ajax: {
+                  url: "/tags.json",
+                  dataType: 'json',
+                  data: function (term, page) {
+                      return {
+                        q: term
+                      };
+                  },
+                  results: function (data, page) {
+                      return { results: data };
+                  }
+              }
+            });
         }
     }
 

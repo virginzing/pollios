@@ -74,56 +74,35 @@ Customize css
 .extra-font {
   font-size: 16px;
 }
-.list-group.completed {
-  text-decoration: line-through;
+
+.remove-field {
+  float: right;
+  position: relative;
+  margin-top: -49px;
 }
 
-.allocate {
-  width: 400px;
+.add-field {
+  margin-left: -10px;
 }
 
-.stat-border {
-  border: 3px solid rgb(243, 243, 243);
-}
-.editable-error-block.help-block {
-  font-size: 12px;
+.rating-poll {
+  font-size: 20px
 }
 
-#remain_budget {
-  font-size: 42px;
-  font-weight: 700;
-  padding-top: 10px;
+.remove_nested_fields {
+  float: right;
+  position: relative;
+  margin-top: -49px;
 }
 
-.requirement-info {
-  font-size: 14px;
-  color: #646464;
-  text-transform: uppercase;
-  padding-bottom: 10px;
-}
-
-.alert-requirement {
-  color: #666;
-  background-color: #FFFFFF;
-  border-color: #E6E6E6;
-  font-size: 14px;
-  font-weight: 100;
+.add_nested_fields {
+  margin-left: 107px;
 }
 
 blockquote {
   color: #646464;
 }
 
-.offer_price {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1px;
-}
-
-.offer_detail {
-  font-weight: 200;
-  letter-spacing: 0.03em;
-}
 
 .hero {
   font-size: 14px;
@@ -137,20 +116,6 @@ blockquote {
   margin-top: 20px;
 }
 
-.panel-heading.offer {
-  margin-left: -10px;
-}
-
-.form-section.offer {
-  font-size: 16px;
-  text-transform: uppercase;
-  color: #646464;
-}
-
-td.img-couple > img {
-  margin-top: 10px;
-  margin-left: 13px;
-}
 /*
 Internet Explorer 10 doesn't differentiate device width from viewport width, and thus doesn't 
 properly apply the media queries in Bootstrap's CSS. To address this, 
@@ -1094,6 +1059,11 @@ Page breadcrumb
 
 .ie8 .row .page-breadcrumb.breadcrumb > li {
   margin-right: 1px;
+}
+
+.page-breadcrumb.breadcrumb > li {
+  margin-right: 4px;
+  margin-left: 4px;
 }
 
 .page-content .page-breadcrumb.breadcrumb {

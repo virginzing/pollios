@@ -3,7 +3,7 @@ class PollsController < ApplicationController
 
   before_action :set_current_member, only: [:scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
-  before_action :signed_user, only: [:index, :series, :new]
+  before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
   before_action :history_voted_viewed, only: [:scan_qrcode, :public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode]
@@ -54,7 +54,18 @@ class PollsController < ApplicationController
 
   def new
     @poll = Poll.new
-    @tags = Tag.all
+  end
+
+  def binary
+    @poll = Poll.new
+  end
+
+  def rating
+    @poll = Poll.new
+  end
+
+  def freeform
+    @poll = Poll.new
   end
 
   def index
@@ -62,42 +73,24 @@ class PollsController < ApplicationController
   end
 
   def create
-    params[:poll][:member_id] = current_member.id
-    params[:poll][:expire_date] = Time.now + params[:poll][:expire_date].to_i.days
-    params[:poll][:public] = false
-    params[:poll][:series] = false
-    params[:poll][:public] = true if current_member.celebrity? || params[:poll][:recurring_id].present? || current_member.brand?
-
-    choice_array = []
-    choice_array << params[:poll][:choice_one]
-    choice_array << params[:poll][:choice_two]
-    choice_array = choice_array + params[:choices]
-
-    filter_choice = choice_array.collect!{|value| value unless value.blank? }.compact
- 
-    params[:poll][:choice_count] = filter_choice.count
-    group_id = params[:poll][:group_id]
-
-    @poll = Poll.new(polls_params)
-    @poll.poll_series_id = 0
-    @poll.in_group_ids = group_id.present? ? group_id.join(",") : "0"
+    @build_poll = BuildPoll.new(current_member, polls_params, options_build_params)
+    new_poll_binary_params = @build_poll.poll_binary_params
+    puts "new_poll_binary_params => #{new_poll_binary_params}"
+    @poll = Poll.new(new_poll_binary_params)
 
     if @poll.save
-      Choice.create_choices(@poll.id, filter_choice)
-      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date) unless group_id.presence
-      if group_id.present?
-        Group.add_poll(@poll.id, group_id.join(","))
-        current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: true) 
-      end
+      puts "choices => #{@build_poll.list_of_choice}"
+      Choice.create_choices(@poll.id, @build_poll.list_of_choice)
+      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
       Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'poll_count'])
 
-      puts "success"
       flash[:success] = "Create poll successfully."
       redirect_to polls_path
     else
       puts "#{@poll.errors.full_messages}"
+      render @build_poll.type_poll
     end
   end
 
@@ -106,7 +99,7 @@ class PollsController < ApplicationController
   # end
 
   def show
-    puts params[:id]
+    puts "poll => #{@poll}"
   end
 
   def qrcode
@@ -323,6 +316,10 @@ class PollsController < ApplicationController
     params.permit(:next_cursor, :type)
   end
 
+  def options_build_params
+    params.permit(:choices => [])
+  end
+
   def choices_params
     params.permit(:id, :member_id, :voted)
   end
@@ -340,6 +337,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:campaign_id, :member_id, :title, :expire_date, :public, :expire_within,  :choice_count ,:tag_tokens, :recurring_id, :type_poll, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, choices_attributes: [:id, :answer, :_destroy])
   end
 end

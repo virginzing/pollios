@@ -1,6 +1,6 @@
 class PollSeries < ActiveRecord::Base
   include PollSeriesHelper
-  attr_accessor :tag_tokens, :same_choices
+  attr_accessor :tag_tokens, :same_choices, :expire_within
 
   belongs_to :member
   belongs_to :campaign
@@ -39,10 +39,10 @@ class PollSeries < ActiveRecord::Base
       else
         choices_count = poll.choices.count
       end
-      poll.update(expire_date: self.expire_date, series: true, choice_count: choices_count, public: true )
+      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: true, in_group_ids: "0")
     end
 
-    PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: true, series: true, expire_date: self.expire_date)
+    PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: true, series: true, expire_date: expire_date)
   end
 
   def cached_tags

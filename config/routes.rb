@@ -14,6 +14,17 @@ Pollios::Application.routes.draw do
   resources :members 
   resources :poll_series
 
+  scope 'build_poll' do
+    get 'binary',   to: 'polls#binary', as: :binary_poll
+    get 'rating',   to: 'polls#rating', as: :rating_poll
+    get 'freeform', to: 'polls#freeform', as: :freeform_poll
+  end
+
+  scope 'build_questionnaire' do
+    get 'normal', to: 'poll_series#normal', as: :normal_questionnaire
+    get 'same_choice',  to: 'poll_series#same_choice',  as: :same_choice_questionnaire
+  end
+
   scope 'guest' do
     post 'try_out',         to: 'guests#try_out'
   end

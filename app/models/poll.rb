@@ -1,9 +1,10 @@
 class Poll < ActiveRecord::Base
 
   mount_uploader :photo_poll, PhotoPollUploader
+  
   include PollsHelper
   
-  attr_accessor :group_id, :tag_tokens, :share_poll_of_id
+  attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
   
   has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy
@@ -114,7 +115,7 @@ class Poll < ActiveRecord::Base
   end
 
   def tag_tokens=(tokens)
-    puts "tokens => #{tokens}"
+    # puts "tokens => #{tokens}"
     self.tag_ids = Tag.ids_from_tokens(tokens)
   end
 
