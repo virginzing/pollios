@@ -68,5 +68,7 @@
 </div>
 
 <script type="text/javascript">
+$( document ).ready(function() {
   $(".select2me_poll").select2("data", <%= raw @poll_campaigns %>);
+});
 </script>
