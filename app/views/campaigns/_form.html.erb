@@ -40,6 +40,30 @@
 
             </div>
 
+            <div class="form-group last">
+              <label class="control-label col-md-2">Photo</label>
+              <div class="col-md-10">
+                 <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                      <% if @campaign.photo_campaign.present? %>
+                        <%= image_tag(@campaign.photo_campaign.url) %>
+                      <% else %>
+                        <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                      <% end %>
+                    </div>
+                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                    <div>
+                       <span class="btn default btn-file">
+                       <span class="fileupload-new"><i class="icon-paper-clip"></i> Select image</span>
+                       <span class="fileupload-exists"><i class="icon-undo"></i> Change</span>
+                       <input type="file" class="default" name="campaign[photo_campaign]"/>
+                       </span>
+                       <a href="#" class="btn red fileupload-exists" data-dismiss="fileupload"><i class="icon-trash"></i> Remove</a>
+                    </div>
+                 </div>
+              </div>
+           </div>
+
           </div>
 
           <div class="col-md-4 col-md-offset-1">

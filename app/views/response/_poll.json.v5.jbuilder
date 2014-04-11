@@ -1,3 +1,4 @@
+json.creator poll.cached_member
 json.id poll.id
 json.title poll.title
 json.vote_count poll.vote_all

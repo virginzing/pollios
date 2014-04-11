@@ -6,11 +6,10 @@ class Campaign < ActiveRecord::Base
 
   validates :name, :begin_sample, :end_sample, presence: true
   validates :limit, presence: true, numericality: { greater_than: 0 }
-  
+
+
   has_one :poll
   has_one :poll_series
-
-    accepts_nested_attributes_for :poll
 
   # has_one :poll
   # has_one :poll_series
@@ -23,7 +22,9 @@ class Campaign < ActiveRecord::Base
 
   belongs_to :member
 
-  after_create :set_campaign_poll
+  after_save :set_campaign_poll
+
+  accepts_nested_attributes_for :poll
 
   self.per_page = 10
   
