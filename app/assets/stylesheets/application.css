@@ -10,6 +10,5 @@
  *
  *= require_self
  *= require font-awesome.min
- *= require_tree ../../../vendor/assets/fonts/.
  *= require_tree .
  */
