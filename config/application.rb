@@ -31,7 +31,7 @@ module Pollios
         g.orm :active_record 
     end
 
-    # config.serve_static_assets = true
+    config.serve_static_assets = true
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
