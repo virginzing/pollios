@@ -11,5 +11,6 @@
  *= require_self
  *= require font-awesome.min
  *= require uniform.default
+ *= require select2_metro
  *= require_tree .
  */
