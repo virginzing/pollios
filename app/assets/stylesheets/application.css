@@ -10,5 +10,6 @@
  *
  *= require_self
  *= require font-awesome.min
+ *= require uniform.default
  *= require_tree .
  */
