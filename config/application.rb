@@ -21,6 +21,8 @@ module Pollios
     config.time_zone = 'Bangkok'
 
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
+    
+    config.assets.paths << Rails.root.join("app", "assets", "fonts")
 
     config.versioncake.default_version = 5
     config.versioncake.supported_version_numbers = (1...6)
