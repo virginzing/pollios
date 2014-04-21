@@ -42,6 +42,5 @@ module Pollios
       config.page_method_name = :per_page_kaminari
     end
 
-    config.serve_static_assets = true
   end
 end
