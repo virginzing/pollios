@@ -1,5 +1,20 @@
 var FormComponents = function () {
 
+    var handleValidetta = function() {
+        $("#new_poll").validetta({
+            realTime: true
+        });
+        $("#new_poll_series").validetta({
+            realTime: true
+        });
+        $("#campaign-form").validetta({
+            realTime: true
+        });
+        $("#recurring-form").validetta({
+            realTime: true
+        });        
+    }
+
     var handleBootstrapMaxlength = function() {
         $('#maxlength_defaultconfig').maxlength({
             limitReachedClass: "label label-danger",
@@ -714,6 +729,7 @@ var FormComponents = function () {
     return {
         //main function to initiate the module
         init: function () {
+            handleValidetta();
             handleBootstrapMaxlength();
             handleSpinners();
             handleWysihtml5();

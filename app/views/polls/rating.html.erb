@@ -17,7 +17,9 @@
           <div class="row">
             <div class="col-md-7">
               <%= f.input :type_poll, as: :hidden, input_html: { value: "rating" } %>
-              <%= f.input :title, wrapper: :horizontal, label: "Question" %>
+
+
+              <%= f.input :title, wrapper: :horizontal, label: "Question", input_html: { data: { 'validetta' => 'required,minLength[5]' } } %>
               <div class="form-group">
                 <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
                 <div class="col-md-10 rating-poll">
@@ -65,7 +67,7 @@
                   <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a recurring"} %>
                 </div>
               </div>
-              <%= f.input :expire_date, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false %>
+              <%= f.input :expire_date, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: 'input-xsmall'} %>
             </div>
 
           </div>

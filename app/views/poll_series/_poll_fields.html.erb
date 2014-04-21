@@ -1,5 +1,5 @@
 <div class="panel">
-<%= f.input :title, wrapper: :horizontal, input_html: { class: "answer" }, label: "Question" %>
+<%= f.input :title, wrapper: :horizontal, input_html: { class: "answer" }, label: "Question", input_html: { data: { 'validetta' => 'required' } } %>
 <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
 <%= f.link_to_remove "Remove", class: "tiny button btn btn-default" %>
 </div>

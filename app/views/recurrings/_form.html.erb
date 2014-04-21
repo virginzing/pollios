@@ -7,21 +7,21 @@
      </div>
   </div>
   <div class="portlet-body">
-    <%= simple_form_for @recurring, :html => { :multipart => true, class: "form-horizontal" } do |f| %>
+    <%= simple_form_for @recurring, :html => { :multipart => true, class: "form-horizontal", id: "recurring-form" } do |f| %>
       <div class="form-body">
         <div class="row">
           <div class="col-md-7 col-md-offset-2">
-            <%= f.input :description, wrapper: :horizontal, as: :text %>
+            <%= f.input :description, wrapper: :horizontal, as: :text, input_html: { data: { 'validetta' => "required"} } %>
             <div class="form-group string optional readonly recurring_period">
               <div class="label-hz col-md-2">
                 <label class="string optional control-label" for="period_timepicker">Period</label>
               </div>
               <div class="col-md-10">
-                <div class="input-group input-medium bootstrap-timepicker">                                       
+                <div class="input-group input-medium bootstrap-timepicker" style="display: -webkit-inline-box;">      
                   <% if action_name == "edit" %>
-                     <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60" value="<%= @recurring.period.strftime('%H:%M %p') %>">
+                     <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60" value="<%= @recurring.period.strftime('%H:%M %p') %>" data-validetta="required">
                   <% else %>
-                    <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60">
+                    <input type="text" class="form-control timepicker-default" name="recurring[period]" data-minute-step="60" data-validetta="required">
                   <% end %>
                     <span class="input-group-btn">
                       <button class="btn default" type="button"><i class="icon-time"></i></button>
@@ -35,11 +35,11 @@
               </div>
 
               <div class="col-md-10">
-                <div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy">
+                <div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy" style="display: -webkit-inline-box;">
                 <% if action_name == "edit" %>
-                  <input class="string optional form-control input-small" id="datetimepicker" name="recurring[end_recur]" readonly="readonly" type="text" value="<%= @recurring.end_recur.strftime('%d-%m-%Y') %>">
+                  <input class="string optional form-control input-small" id="datetimepicker" name="recurring[end_recur]" readonly="readonly" type="text" value="<%= @recurring.end_recur.strftime('%d-%m-%Y') %>" data-validetta="required">
                 <% else %>
-                  <input class="string optional form-control input-small" id="datetimepicker" name="recurring[end_recur]" readonly="readonly" type="text">
+                  <input class="string optional form-control input-small" id="datetimepicker" name="recurring[end_recur]" readonly="readonly" type="text" data-validetta="required">
                 <% end %>     
                   <span class="input-group-btn">
                     <button class="btn default" type="button"><i class="icon-calendar"></i></button>

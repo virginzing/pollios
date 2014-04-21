@@ -17,7 +17,7 @@
           <div class="row">
             <div class="col-md-7">
               <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 0 }, as: :hidden %>
-              <%= f.input :description, wrapper: :horizontal, input_html: { autofocus: "autofocus"}, required: false %>
+              <%= f.input :description, wrapper: :horizontal, input_html: { autofocus: "autofocus"}, required: false, input_html: { data: { 'validetta' => 'required' } } %>
 
               <h4 class="form-section">Poll</h4>
               <%= f.fields_for :polls do |poll_form| %>
@@ -35,7 +35,7 @@
                 </div>
               </div>
 
-              <%= f.input :expire_within, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false %>
+              <%= f.input :expire_within, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: 'input-xsmall'} %>
             </div>
             
           </div>
@@ -60,4 +60,9 @@
 </div>
 
 
+<script type="text/javascript">
+  $(".remove_nested_fields")[0].style.visibility='hidden';
+  $(".remove_nested_fields")[1].style.visibility='hidden';
+  $(".remove_nested_fields")[2].style.visibility='hidden';
+</script>
 

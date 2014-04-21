@@ -17,9 +17,9 @@
           <div class="row">
             <div class="col-md-7">
               <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
-              <%= f.input :title, wrapper: :horizontal, label: "Question" %>
-              <%= f.input :choice_one, wrapper: :horizontal, label: "Choice" %>
-              <%= f.input :choice_two, wrapper: :horizontal, label: "Choice" %>
+              <%= f.input :title, wrapper: :horizontal, label: "Question", input_html: { data: { 'validetta' => 'required,minLength[5]' } } %>
+              <%= f.input :choice_one, wrapper: :horizontal, label: "Choice", input_html: { data: { 'validetta' => 'required' } } %>
+              
 
               <div class="multi-field-wrapper">
                   <div class="multi-fields">
@@ -27,7 +27,7 @@
                       <div class="form-group string optional">
                         <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
                         <div class="col-md-10">
-                          <input type="text" name="choices[]" class="string optional form-control form-choice-list">
+                          <input type="text" name="choices[]" class="string optional form-control form-choice-list" data-validetta="required">
                         </div>
                       </div>
                       
@@ -57,7 +57,7 @@
                   <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a recurring"} %>
                 </div>
               </div>
-              <%= f.input :expire_date, collection: 1..10,  wrapper: :horizontal, label: "Expire with in", include_blank: false %>
+              <%= f.input :expire_date, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: 'input-xsmall'} %>
             </div>
 
           </div>
@@ -89,10 +89,12 @@
     var $wrapper = $('.multi-fields', this);
     $(".add-field", $(this)).click(function(e) {
         $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input').val('').focus();
+        $('.remove-field:last-child').get(-1).style.visibility='visible';
     });
     $('.multi-field .remove-field', $wrapper).click(function() {
         if ($('.multi-field', $wrapper).length > 1)
             $(this).parent('.multi-field').remove();
     });
+    $(".remove-field").get(0).style.visibility='hidden';
   });
 </script>

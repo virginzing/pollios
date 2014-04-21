@@ -9,7 +9,7 @@ class AuthenSentaiController < ApplicationController
 
 	include Authenticate
 
-	layout "authen"
+	layout "login"
 
 	def signin
 	end
@@ -34,7 +34,7 @@ class AuthenSentaiController < ApplicationController
         @apn_device = check_device?(member, sessions_params["device_token"]) if sessions_params["device_token"].present?
 
 				session[:member_id] = member.id
-				wants.html { redirect_to polls_path }
+				wants.html { redirect_back_or polls_path }
 				wants.json
 			else
 				flash[:error] = "Invalid username or password."
