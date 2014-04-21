@@ -22,7 +22,7 @@ module Pollios
 
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
 
-    config.assets.paths << Rails.root.join("app", "assets", "fonts")
+    config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
 
     config.versioncake.default_version = 5
     config.versioncake.supported_version_numbers = (1...6)
