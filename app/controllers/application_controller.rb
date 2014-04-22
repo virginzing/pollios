@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
 
   protect_from_forgery with: :null_session
+  before_action :restrict_only_admin
 
   include AuthenSentaiHelper
   include PollHelper
@@ -59,6 +60,16 @@ class ApplicationController < ActionController::Base
       end
     end
 
+  end
+
+  def restrict_only_admin
+    if current_member
+      unless current_member.brand?
+        reset_session
+        flash[:notice] = "Only Brand Account."
+        redirect_to authen_signin_path
+      end
+    end
   end
 
   def current_member

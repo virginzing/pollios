@@ -78,7 +78,6 @@ Pollios::Application.routes.draw do
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile'
-    get 'profile',            to: 'members#profile', as: :member_profile
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
   end
@@ -118,6 +117,7 @@ Pollios::Application.routes.draw do
   end
 
   get '/tags',  to: 'tags#index'
+  get '/profile', to: 'members#profile'
   get '/qrcode',  to: 'polls#generate_qrcode'
   get '/home',  to: 'home#index', as: :dashboard
   get '/campaigns_polls',  to: 'campaigns#polls'

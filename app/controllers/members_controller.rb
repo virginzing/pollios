@@ -1,9 +1,9 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:detail_friend, :stats, :update_profile, :profile]
+  before_action :set_current_member, only: [:detail_friend, :stats, :update_profile]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:detail_friend]
-  before_action :signed_user, only: [:index]
+  before_action :signed_user, only: [:index, :profile]
 
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
