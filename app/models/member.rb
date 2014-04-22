@@ -350,7 +350,7 @@ class Member < ActiveRecord::Base
       username: username,
       email: email,
       avatar: avatar.present? ? avatar : "No Image",
-      key_color: key_color.empty? || key_color.nil? ? nil : key_color
+      key_color: (key_color.empty? || key_color.nil?) ? "" : key_color
    }
   end
 
