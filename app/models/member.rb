@@ -360,9 +360,9 @@ class Member < ActiveRecord::Base
   end
 
   def detect_image(avatar)
-    if avatar.identifier.start_with?('http://') && avatar.identifier.end_with?('.jpg')
+    if avatar.identifier.start_with?('http://') && avatar.identifier.end_with?('.jpg') #sentai
       avatar.identifier
-    elsif avatar.identifier.start_with?('http://')
+    elsif avatar.identifier.start_with?('https://') #facebook
       avatar.model[:avatar] + ".jpg"
     else
       avatar.url(:thumbnail)
