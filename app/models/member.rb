@@ -82,7 +82,7 @@ class Member < ActiveRecord::Base
       field :id
       field :avatar do
         formatted_value do
-          bindings[:view].tag(:img, { :src => bindings[:object].avatar, width: "50px", height: "50px"})
+          bindings[:view].tag(:img, { :src => bindings[:object].avatar.url(:thumbnail), width: "50px", height: "50px"})
         end
       end
       field :sentai_name
@@ -212,7 +212,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    avatar.present? ? avatar.url(:thumbnail) : "No Image"
+    avatar.present? ? detect_image(avatar) : "No Image"
   end
 
   def set_share_poll(poll_id)
@@ -354,9 +354,19 @@ class Member < ActiveRecord::Base
       name: sentai_name,
       username: username,
       email: email,
-      avatar: avatar.present? ? avatar.url(:thumbnail) : "No Image",
+      avatar: avatar.present? ? detect_image(avatar) : "No Image",
       key_color: key_color.present? ? key_color : ""
    }
+  end
+
+  def detect_image(avatar)
+    if avatar.identifier.start_with?('http://') && avatar.identifier.end_with?('.jpg')
+      avatar.identifier
+    elsif avatar.identifier.start_with?('http://')
+      avatar.model[:avatar] + ".jpg"
+    else
+      avatar.url(:thumbnail)
+    end
   end
 
 end
