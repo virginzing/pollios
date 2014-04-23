@@ -68,7 +68,9 @@ class Poll < ActiveRecord::Base
   end
 
   def get_vote_max
-    choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by{|k, v| k["vote"]}
+    # max = choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by {|k, v| k["vote"]}
+    max = choices.map(&:vote).max
+    choices.collect {|c| Hash["answer" => c.answer, "vote" => c.vote] if c.vote == max }.compact
   end
 
   def get_in_groups(groups_by_name)
