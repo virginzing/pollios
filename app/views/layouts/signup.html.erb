@@ -86,6 +86,18 @@
       </div>
 
       <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">Type</label>
+        <div class="input-icon">
+          <select class="select optional form-control member-type" name="member_type">
+            <option>Select Type</option>
+            <option value="0">Citizen</option>
+            <option value="1">Celebrity</option>
+            <option value="2">Brand</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label class="control-label visible-ie8 visible-ie9">Avatar</label>
         <div class="input-icon">
           <i class="icon-picture"></i>
@@ -143,6 +155,10 @@
   </div>
   <!-- END LOGIN -->
   <!-- BEGIN COPYRIGHT -->
+
+  <script type="text/javascript">
+    $(".member-type").select2();
+  </script>
   <div class="copyright">
     2014 &copy; Pollios.
   </div>

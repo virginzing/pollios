@@ -1,6 +1,6 @@
 class Member < ActiveRecord::Base
   has_paper_trail
-  mount_uploader :avatar, AvatarUploader
+  # mount_uploader :avatar, AvatarUploader
 
   include MemberHelper
   belongs_to :province, inverse_of: :members

@@ -158,7 +158,10 @@ var Login = function () {
 	                    required: true
 	                },
 	                "username": {
-	                    required: true
+	                	required: true
+	                },
+	                "member_type": {
+	                	required: true
 	                },
 	               	"email": {
 	                    required: true,
