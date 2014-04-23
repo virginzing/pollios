@@ -212,7 +212,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    avatar.present? ? avatar : "No Image"
+    avatar.present? ? avatar.url(:thumbnail) : "No Image"
   end
 
   def set_share_poll(poll_id)
