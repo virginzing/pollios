@@ -123,6 +123,8 @@ Pollios::Application.routes.draw do
   get '/campaigns_polls',  to: 'campaigns#polls'
   get 'questionnaire',  to: 'poll_series#index'
   post '/scan_qrcode',      to: 'polls#scan_qrcode'
+  post '/check_valid_email', to: 'members#check_valid_email'
+  post '/check_valid_username', to: 'members#check_valid_username'
 
   root to: 'home#index'
 

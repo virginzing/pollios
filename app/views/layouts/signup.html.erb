@@ -76,6 +76,10 @@
     <form class="signup" action="/authen/signup_sentai" method="post" enctype="multipart/form-data">
 
       <h3 >Sign Up</h3>
+      <% if @flash_error.present? %>
+      <%= @flash_error %>
+
+      <% end %>
       <p>Enter your personal details below:</p>
       <div class="form-group">
         <label class="control-label visible-ie8 visible-ie9">Full Name</label>

@@ -158,14 +158,34 @@ var Login = function () {
 	                    required: true
 	                },
 	                "username": {
-	                	required: true
+	                	required: true,
+	                	"remote": {
+	                    	url: '/check_valid_username',
+	                    	dataType: 'json',
+	                    	type: "post",
+	                    	data: {
+	                    		email: function() {
+	                    			return $('.signup :input[name="username"]').val();
+	                    		}
+	                    	}
+	                    }
 	                },
 	                "member_type": {
 	                	required: true
 	                },
 	               	"email": {
 	                    required: true,
-	                    email: true
+	                    email: true,
+	                    "remote": {
+	                    	url: '/check_valid_email',
+	                    	dataType: 'json',
+	                    	type: "post",
+	                    	data: {
+	                    		email: function() {
+	                    			return $('.signup :input[name="email"]').val();
+	                    		}
+	                    	}
+	                    }
 	                },
 	                "password": {
 	                    required: true,
@@ -183,6 +203,15 @@ var Login = function () {
 	            messages: { // custom messages for radio buttons and checkboxes
 	                tnc_pollios: {
 	                    required: "Please accept TNC first."
+	                },
+	                email: {
+	                	required: "Please enter your email address.",
+	                	email: "Please enter a valid email address.",
+	                	remote: jQuery.validator.format("This email is already taken.")
+	                },
+	                username: {
+	                	required: "Please enter your username.",
+	                	remote: jQuery.validator.format("This username is already taken.")
 	                }
 	            },
 

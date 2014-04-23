@@ -29,7 +29,7 @@ class AuthenSentaiController < ApplicationController
 	def signin_sentai
 
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
-    
+    puts "signin => #{@response}"
 		respond_to do |wants|
 			if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
@@ -51,7 +51,7 @@ class AuthenSentaiController < ApplicationController
   def signup_sentai
 
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
-    # puts "response : #{response}, member : #{@member}"
+    puts "response : #{@response}"
   	respond_to do |wants|
   		if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
@@ -63,6 +63,8 @@ class AuthenSentaiController < ApplicationController
   			wants.json
   		else
   			flash[:error] = @response["response_message"]
+        puts "#{flash[:error]}"
+        @flash_error = flash[:error]
   			wants.html { redirect_to(:back) }
   			wants.json
   		end

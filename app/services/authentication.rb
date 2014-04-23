@@ -61,7 +61,6 @@ class Authentication
       member.sentai_name = name
       member.username = check_username(username)
       member.email = email
-      member.avatar = avatar
       member.birthday = birthday
       member.gender = gender.to_i
       member.province_id = province
@@ -71,6 +70,8 @@ class Authentication
     end
 
     if @member
+      @member.update_column(:avatar, avatar)
+      
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
         provider.pid = pid

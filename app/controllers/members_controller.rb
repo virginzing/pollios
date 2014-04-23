@@ -35,6 +35,20 @@ class MembersController < ApplicationController
   def profile
   end
 
+  def check_valid_email
+    @member_email = Member.where(email: params[:email]).present?
+    respond_to do |wants|
+      wants.json { render json: !@member_email }
+    end
+  end
+
+  def check_valid_username
+    @member_username = Member.where(username: params[:username]).present?
+    respond_to do |wants|
+      wants.json { render json: !@member_username }
+    end
+  end
+
   def clear
     current_member.history_votes.delete_all
     flash[:success] = "Clear successfully."
