@@ -363,7 +363,7 @@ class Member < ActiveRecord::Base
     if avatar.identifier.start_with?('http://') && avatar.identifier.end_with?('.jpg') #sentai
       avatar.identifier
     elsif avatar.identifier.start_with?('https://') #facebook
-      avatar.model[:avatar] + ".jpg"
+      avatar.model[:avatar]
     else
       avatar.url(:thumbnail)
     end
