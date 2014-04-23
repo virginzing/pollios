@@ -111,7 +111,7 @@ class Poll < ActiveRecord::Base
   end
 
   def get_campaign
-    campaign.present? ? campaign.as_json() : nil
+    campaign.present? ? true : false
   end
 
   def tag_tokens=(tokens)

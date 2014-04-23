@@ -36,7 +36,7 @@ class GroupTimelinable
     #             where("poll_groups.group_id IN (?)", your_group_ids)
     query =  Poll.joins(:poll_groups).uniq.
                   includes(:choices, :member, :poll_series, :campaign).
-                  where("poll_groups.group_id IN (?)", your_group_ids)
+                  where("poll_groups.group_id IN (?)", your_group_ids).active_poll
     filter_type(query, type)
   end
 

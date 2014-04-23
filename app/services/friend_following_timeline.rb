@@ -43,7 +43,7 @@ class FriendFollowingTimeline
         member_id, false, 
         your_friend_ids, false,
         your_following_ids, false
-        ).limit(LIMIT_TIMELINE)
+        ).active.limit(LIMIT_TIMELINE)
 
       poll_member = check_hidden_poll(query)
       ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
