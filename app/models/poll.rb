@@ -70,7 +70,7 @@ class Poll < ActiveRecord::Base
   def get_vote_max
     # max = choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by {|k, v| k["vote"]}
     max = choices.map(&:vote).max
-    choices.collect {|c| Hash["answer" => c.answer, "vote" => c.vote] if c.vote == max }.compact
+    choices.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
   end
 
   def get_in_groups(groups_by_name)
@@ -385,6 +385,7 @@ class Poll < ActiveRecord::Base
           # find_poll.poll_series.increment!(:vote_all) if find_poll.series
           history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
           find_poll.find_campaign_for_predict?(member_id) if find_poll.campaign_id != 0
+          # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
         end
         # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
         Rails.cache.delete([member_id, 'vote_count'])

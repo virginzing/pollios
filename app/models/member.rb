@@ -1,5 +1,7 @@
 class Member < ActiveRecord::Base
   has_paper_trail
+  mount_uploader :avatar, AvatarUploader
+
   include MemberHelper
   belongs_to :province, inverse_of: :members
 
@@ -102,7 +104,7 @@ class Member < ActiveRecord::Base
       field :friend_limit
       field :birthday
       field :province
-      field :avatar
+      field :avatar, :carrierwave
       field :key_color
     end
 
@@ -222,7 +224,7 @@ class Member < ActiveRecord::Base
   def list_voted?(history_voted, poll_id)
     history_voted.each do |poll_choice|
       if poll_choice.first == poll_id
-        return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2]]
+        return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => poll_choice[4]]
       end
     end
     Hash["voted" => false]

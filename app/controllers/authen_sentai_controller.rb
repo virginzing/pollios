@@ -9,12 +9,13 @@ class AuthenSentaiController < ApplicationController
 
 	include Authenticate
 
-	layout "login"
 
 	def signin
+    render layout: "login"
 	end
 
 	def signup
+    render layout: "signup"
 	end
 
 	def signout
@@ -47,6 +48,7 @@ class AuthenSentaiController < ApplicationController
 
 
   def signup_sentai
+
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{response}, member : #{@member}"
   	respond_to do |wants|

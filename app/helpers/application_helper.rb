@@ -205,10 +205,11 @@ end
 # }' -X POST http://localhost:3000/poll/group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "email": "gg@gmail.com",
+#     "email": "gg1234@gmail.com",
 #     "password": "mefuwfhfu",
 #     "fullname": "GG",
-#     "username": "coconuzz509"
+#     "username": "gg1234",
+#     "gender": 1
 # }' -X POST http://localhost:3000/authen/signup_sentai.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -268,4 +269,7 @@ end
 #     p.save!
 #   end
 # end
+
+
+#db = Mongoid::Sessions.default
 
