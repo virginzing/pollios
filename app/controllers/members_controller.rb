@@ -5,6 +5,7 @@ class MembersController < ApplicationController
   before_action :compress_gzip, only: [:detail_friend]
   before_action :signed_user, only: [:index, :profile]
 
+
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
   expose(:members) { |default| default.paginate(page: params[:page]) }

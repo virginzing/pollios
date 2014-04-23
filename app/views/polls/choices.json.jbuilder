@@ -6,7 +6,7 @@ if @choices.present?
   json.voted_detail @voted
 
   json.choices @choices do |choice|
-    json.id choice.id
+    json.choice_id choice.id
     json.answer choice.answer
     if @expired
       json.vote choice.vote

@@ -2,6 +2,7 @@ class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
 	before_action :current_login?, only: [:signin]
   before_action :compress_gzip, only: [:signin_sentai]
+  before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
 
   expose(:current_member_id) { session[:member_id] }
   expose(:member) { @auth.member }
@@ -53,7 +54,7 @@ class AuthenSentaiController < ApplicationController
     # puts "response : #{response}, member : #{@member}"
   	respond_to do |wants|
   		if @response["response_status"] == "OK"
-        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
+        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
         @apn_device = check_device?(@member, signup_params["device_token"]) if signup_params["device_token"].present?
         puts "apn_device => #{@apn_device}"
   			session[:member_id] = member.id
@@ -96,11 +97,11 @@ class AuthenSentaiController < ApplicationController
 	  end
 
 	  def signup_params
-	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :province_id)
+	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :province_id, :member_type)
 	  end
 
 	  def update_profile_params
-	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday, :gender, :province_id)
+	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday, :gender, :province_id, :member_type)
 	  end
 
 end

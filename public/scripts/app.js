@@ -700,6 +700,7 @@ var App = function () {
               placeholder: "Search tag",
               minimumInputLength: 2,
               multiple: true,
+              allowClear: true,
               ajax: {
                   url: "/tags.json",
                   dataType: 'json',

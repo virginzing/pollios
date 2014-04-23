@@ -1,8 +1,9 @@
 class Member < ActiveRecord::Base
   has_paper_trail
-  # mount_uploader :avatar, AvatarUploader
+  mount_uploader :avatar, AvatarUploader
 
   include MemberHelper
+
   belongs_to :province, inverse_of: :members
 
   has_many :follower , -> { where(following: true) }, foreign_key: "followed_id", class_name: "Friend"
@@ -104,7 +105,7 @@ class Member < ActiveRecord::Base
       field :friend_limit
       field :birthday
       field :province
-      field :avatar, :carrierwave
+      field :avatar
       field :key_color
     end
 
@@ -119,6 +120,7 @@ class Member < ActiveRecord::Base
       field :friend_limit
       field :birthday
       field :province
+      field :avatar, :carrierwave
       field :key_color
 
     end
@@ -131,6 +133,7 @@ class Member < ActiveRecord::Base
       field :friend_limit
       field :birthday
       field :province
+      field :avatar, :carrierwave
       field :key_color
     end
 
@@ -351,7 +354,7 @@ class Member < ActiveRecord::Base
       name: sentai_name,
       username: username,
       email: email,
-      avatar: avatar.present? ? avatar : "No Image",
+      avatar: avatar.present? ? avatar.url(:thumbnail) : "No Image",
       key_color: key_color.present? ? key_color : ""
    }
   end

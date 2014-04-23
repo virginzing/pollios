@@ -49,6 +49,10 @@ class Authentication
   def gender
     @params["gender"] || @params[:gender]
   end
+
+  def member_type
+    @params["member_type"]
+  end
   
   private
 
@@ -61,6 +65,7 @@ class Authentication
       member.birthday = birthday
       member.gender = gender.to_i
       member.province_id = province
+      member.member_type = member_type
       member.save
       @new_member = true
     end
