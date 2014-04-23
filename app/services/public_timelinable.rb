@@ -26,10 +26,10 @@ class PublicTimelinable
       #               joins(:poll_members).includes(:member, :poll_series, :campaign).
       #               where("poll_members.public = ? AND share_poll_of_id = 0", true)
       query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                   where("poll_members.public = ? AND share_poll_of_id = 0 AND in_group = ?", true, false).active_poll
+                   where("poll_members.public = ? AND share_poll_of_id = 0 AND poll_members.in_group = ? AND poll_members.expire_date > ?", true, false, Time.now)
     else
     query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                 where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND in_group = ?", true, @hidden_poll_ids, false).active_poll
+                 where("poll_members.public = ? AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND poll_members.in_group = ? AND poll_members.expire_date > ?", true, @hidden_poll_ids, false, Time.now)
     end
     filter_type(query, type)
   end
