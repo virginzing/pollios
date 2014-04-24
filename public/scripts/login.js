@@ -124,18 +124,15 @@ var Login = function () {
 	}
 
 	var handleRegister = function () {
-
-		function format(state) {
+				
+				function format(state) {
             if (!state.id) return state.text; // optgroup
             return "<img class='flag' src='assets/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
         }
 
-
 				$("#select2_sample4").select2({
 		  			placeholder: '<i class="icon-map-marker"></i>&nbsp;Select a Country',
             allowClear: true,
-            formatResult: format,
-            formatSelection: format,
             escapeMarkup: function (m) {
                 return m;
             }
@@ -146,9 +143,7 @@ var Login = function () {
         	$('.signup').validate().element($(this));
         });
 
-
-
-         $('.signup').validate({
+        $('.signup').validate({
 	            errorElement: 'span', //default input error message container
 	            errorClass: 'help-block', // default input error message class
 	            focusInvalid: false, // do not focus the last invalid input
@@ -258,11 +253,10 @@ var Login = function () {
     return {
         //main function to initiate the module
         init: function () {
-        	
+        		handleRegister();   
             handleLogin();
             handleForgetPassword();
-            handleRegister();        
-	       
+  	       
         }
 
     };

@@ -50,7 +50,7 @@ class OverallTimeline
         member_id, false, 
         your_friend_ids, false, 
         find_poll_in_my_group, true, 
-        true, false).active.limit(LIMIT_TIMELINE)
+        true, false).limit(LIMIT_TIMELINE)
 
       poll_member = check_hidden_poll(query)
       ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)

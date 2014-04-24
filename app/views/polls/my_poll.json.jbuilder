@@ -5,6 +5,6 @@ if @poll_nonseries
     end
 
   json.poll_nonseries @poll_nonseries, partial: 'response/poll', as: :poll
-  
+
   json.next_cursor @next_cursor
 end

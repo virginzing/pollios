@@ -14,3 +14,4 @@ json.campaign poll.get_campaign
 json.share_count poll.share_count
 json.is_public poll.public
 json.type_poll poll.type_poll
+json.vote_max poll.get_vote_max

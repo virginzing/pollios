@@ -20,7 +20,6 @@ if @poll_series || @poll_nonseries
 
     json.poll do
       json.partial! 'response/poll', poll: poll
-      json.vote_max poll.get_vote_max
       json.poll_within poll.get_within(@group_by_name)
     end
     json.my_shared check_my_shared(share_poll_ids, poll.id)

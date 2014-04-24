@@ -15,7 +15,6 @@ if @poll_series || @poll_nonseries
 
     json.poll do
       json.partial! 'response/poll', poll: poll
-      json.vote_max poll.get_vote_max
     end
     json.group poll.get_in_groups(@group_by_name)
   end
