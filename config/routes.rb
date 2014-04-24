@@ -103,6 +103,7 @@ Pollios::Application.routes.draw do
     get 'friend_following_timeline',  to: 'polls#friend_following_poll'
     get 'overall_timeline', to: 'polls#overall_timeline'
     get 'group_timeline',   to: 'polls#group_timeline'
+    get 'reward_timeline',  to: 'polls#reward_poll_timeline'
   end
 
 

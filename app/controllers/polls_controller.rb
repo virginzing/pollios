@@ -1,13 +1,13 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
+  before_action :set_current_member, only: [:scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :new_public_timeline, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
-  before_action :history_voted_viewed, only: [:scan_qrcode, :public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
+  before_action :history_voted_viewed, only: [:reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode]
-  before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
+  before_action :compress_gzip, only: [:public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
@@ -186,6 +186,14 @@ class PollsController < ApplicationController
     @polls = @group_poll.group_poll.joins(:poll_groups).paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @group_by_name ||= @group_poll.group_by_name
+    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
+  end
+
+  def reward_poll_timeline
+    @reward = PollRewardTimeline.new(public_poll_params)
+    @polls = @reward.reward_poll.paginate(page: params[:next_cursor])
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
     @total_entries = @polls.total_entries
   end

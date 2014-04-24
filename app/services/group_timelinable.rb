@@ -7,7 +7,6 @@ class GroupTimelinable
     @type = params["type"] || "all"
   end
 
-
   def filter_type(query, type)
     case type
       when "active" then query.where("expire_date > ?", Time.now)
