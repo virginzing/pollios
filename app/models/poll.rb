@@ -338,6 +338,8 @@ class Poll < ActiveRecord::Base
       list_choice = choices.split(",")
       @choices = Choice.create_choices(@poll.id ,list_choice)
 
+      @poll.create_tag(title)
+
       if @choices.present?
         if group_id
           Group.add_poll(@poll.id, group_id)
@@ -354,6 +356,18 @@ class Poll < ActiveRecord::Base
 
   def self.get_choice_count(choices)
     choices.split(",").count if choices.presence
+  end
+
+  def create_tag(title)
+    split_tags = []
+    title.gsub(/#(\S+)/) { split_tags << $1 }
+    if split_tags.count > 0
+      tag_list = []
+      split_tags.each do |tag_name|
+        tag_list << Tag.find_or_create_by(name: tag_name).id
+      end
+      self.tag_ids = tag_list
+    end
   end
 
   def self.vote_poll(poll)
