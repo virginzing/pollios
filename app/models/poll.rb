@@ -73,6 +73,14 @@ class Poll < ActiveRecord::Base
     choices.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
   end
 
+  def in_group?(group_detail)
+    if group_detail.present?
+      Hash["in" => "Group", "group_detail" => get_in_groups(group_detail)]
+    else
+      get_within
+    end
+  end
+
   def get_in_groups(groups_by_name)
     group = []
     in_group_ids.split(",").each do |id|
@@ -83,14 +91,14 @@ class Poll < ActiveRecord::Base
     group
   end
 
-  def get_within(groups_by_name)
+  def get_within(options = {})
     if public
       Hash["in" => "Public"]
     else
       if in_group_ids == "0"
         Hash["in" => "Friend & Following"]
       else
-        Hash["in" => "Group", "group_detail" => get_in_groups(groups_by_name)]
+        Hash["in" => "Group", "group_detail" => get_in_groups(options)]
       end
     end
   end
@@ -117,7 +125,6 @@ class Poll < ActiveRecord::Base
   end
 
   def tag_tokens=(tokens)
-    # puts "tokens => #{tokens}"
     self.tag_ids = Tag.ids_from_tokens(tokens)
   end
 

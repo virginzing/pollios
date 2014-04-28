@@ -700,6 +700,8 @@ var App = function () {
               placeholder: "Search tag",
               minimumInputLength: 2,
               multiple: true,
+              tokenSeparators: [",", " "],
+              tags: true,
               ajax: {
                   url: "/tags.json",
                   dataType: 'json',
@@ -711,6 +713,13 @@ var App = function () {
                   results: function (data, page) {
                       return { results: data };
                   }
+              },
+              createSearchChoice:function(term, data) { 
+                if ($(data).filter(function() { 
+                        return this.text.localeCompare(term)===0 ; 
+                    }).length===0 ) {
+                    return { id: term, text:term };
+                } 
               }
             });
         }

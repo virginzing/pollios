@@ -6,7 +6,6 @@ if @poll_series || @poll_nonseries
 
     json.list_of_poll do
       json.partial! 'response/questionnaire', poll: poll
-      json.poll_within Hash["in" => "Public"]
     end
   end
   
@@ -15,7 +14,6 @@ if @poll_series || @poll_nonseries
 
     json.poll do
       json.partial! 'response/poll', poll: poll
-      json.poll_within Hash["in" => "Public"]
     end
   end
 

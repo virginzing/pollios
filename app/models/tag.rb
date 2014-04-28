@@ -15,15 +15,27 @@ class Tag < ActiveRecord::Base
   def self.tokens(query)
     tags = where("name like ?","%#{query}%")
     if tags.empty?
-      [{id: "<<<#{query}>>>", text: "\"#{query}\""}]
+      []
     else
       tags
     end
   end
 
   def self.ids_from_tokens(tokens)
-    tokens.gsub!(/<<<(.+?)>>>/) { create!(name: $1).id }
-    tokens.split(',')
+    list_tag = []
+    tokens.split(",").each do |tag_name|
+      if tag_name.to_i == 0
+        list_tag << Tag.find_or_create_by(name: tag_name).id
+      else
+        if Tag.find_by(id: tag_name.to_i).present? 
+          list_tag << tag_name.to_i
+        else
+          list_tag << Tag.create!(name: tag_name).id
+        end
+      end
+    end
+
+    list_tag
   end
 
   def as_json options={}
