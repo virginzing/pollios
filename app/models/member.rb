@@ -79,6 +79,7 @@ class Member < ActiveRecord::Base
 
   rails_admin do 
     list do
+      filters [:gender, :member_type]
       field :id
       field :avatar do
         formatted_value do
@@ -87,8 +88,14 @@ class Member < ActiveRecord::Base
       end
       field :sentai_name
       field :email
-      field :gender
-      field :member_type
+      field :gender do
+        filterable true
+        queryable false
+      end
+      field :member_type do
+        filterable true
+        queryable false
+      end
       field :created_at
     end
 
