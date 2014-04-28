@@ -8,6 +8,7 @@ if @poll_series || @poll_nonseries
 
     json.list_of_poll do
       json.partial! 'response/questionnaire', poll: poll
+      json.poll_within Hash["in" => "Friend & Following"]
       json.my_shared check_my_shared(share_poll_ids, poll.id)
       json.other_shared @series_shared[count_series]
       count_series += 1
@@ -20,6 +21,7 @@ if @poll_series || @poll_nonseries
 
     json.poll do
       json.partial! 'response/poll', poll: poll
+      json.poll_within Hash["in" => "Friend & Following"]
     end
     
     json.my_shared check_my_shared(share_poll_ids, poll.id)
