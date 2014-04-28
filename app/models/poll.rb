@@ -28,6 +28,7 @@ class Poll < ActiveRecord::Base
   # after_commit :flush_cached
   before_save :set_default_value
   before_create :generate_qrcode_key
+  after_create :set_new_title_with_tag
 
   validates :title, presence: true
   validates :member_id, :title , presence: true
@@ -60,6 +61,14 @@ class Poll < ActiveRecord::Base
   # def get_poll_in_groups(group_ids)
   #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
   # end
+
+  def set_new_title_with_tag
+    poll_title = self.title
+    tags.pluck(:name).each do |tag|
+      poll_title = poll_title + " " + "#" + tag
+    end
+    update_attributes!(title: poll_title)
+  end
 
   def generate_qrcode_key
     begin
