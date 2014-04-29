@@ -429,7 +429,7 @@ class Poll < ActiveRecord::Base
 
   end
 
-  def find_campaign_for_predict?(member_id)
+  def find_campaign_for_predict?(member_id, poll_id)
     campaign.prediction(member_id, poll_id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
