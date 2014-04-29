@@ -13,7 +13,7 @@ class Tag < ActiveRecord::Base
     limit(5)
 
   scope :search_autocmp_tags, -> (query) {
-    where("name like ?", "%#{query}%"). 
+    where("name LIKE ?", "%#{query}%"). 
     select("tags.*, count(taggings.tag_id) as count").
     joins(:taggings).
     group("taggings.tag_id, tags.id").

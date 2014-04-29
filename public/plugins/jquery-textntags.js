@@ -26,7 +26,7 @@
         }
     };
     var trigger_defaults = {
-        minChars        : 2,
+        minChars        : 1,
         uniqueTags      : true,
         showImageOrIcon : false,
         keys_map        : {id: 'id', title: 'name', description: '', img: 'avatar', no_img_class: 'icon', type: 'type'},
