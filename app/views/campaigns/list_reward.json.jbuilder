@@ -19,20 +19,19 @@ if @rewards
   end
 
     json.poll do
-      json.id reward.campaign.poll.id
-      json.title reward.campaign.poll.title
-      json.vote_count reward.campaign.poll.vote_all
-      json.view_count reward.campaign.poll.view_all
-      json.expire_date reward.campaign.poll.expire_date.to_i
-      json.created_at reward.campaign.poll.created_at.to_i
-      json.voted_detail @current_member.list_voted?(@history_voted, reward.campaign.poll.id)
-      json.viewed @current_member.list_viewed?(@history_viewed, reward.campaign.poll.id)
-      json.choice_count reward.campaign.poll.choice_count
-      json.series reward.campaign.poll.series
-      json.tags reward.campaign.poll.cached_tags
-      # json.campaign reward.campaign.poll.get_campaign
-      json.share_count reward.campaign.poll.share_count
-      json.is_public reward.campaign.poll.public
+      json.id reward.poll.id
+      json.title reward.poll.title
+      json.vote_count reward.poll.vote_all
+      json.view_count reward.poll.view_all
+      json.expire_date reward.poll.expire_date.to_i
+      json.created_at reward.poll.created_at.to_i
+      json.voted_detail @current_member.list_voted?(@history_voted, reward.poll.id)
+      json.viewed @current_member.list_viewed?(@history_viewed, reward.poll.id)
+      json.choice_count reward.poll.choice_count
+      json.series reward.poll.series
+      json.tags reward.poll.cached_tags
+      json.share_count reward.poll.share_count
+      json.is_public reward.poll.public
     end
 
   end
