@@ -21,8 +21,8 @@ class Campaign < ActiveRecord::Base
 
   belongs_to :member
 
-  after_create :set_campaign_poll
-  before_update :check_campaign_poll
+  # after_create :set_campaign_poll
+  # before_update :check_campaign_poll
 
   accepts_nested_attributes_for :polls
 

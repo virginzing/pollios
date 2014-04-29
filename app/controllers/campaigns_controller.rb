@@ -61,7 +61,7 @@ class CampaignsController < ApplicationController
 
     respond_to do |format|
       if @campaign.save
-
+        @campaign.set_campaign_poll
         format.html { redirect_to @campaign, notice: 'Campaign was successfully created.' }
         format.json { render action: 'show', status: :created, location: @campaign }
       else
@@ -76,7 +76,7 @@ class CampaignsController < ApplicationController
   def update
     respond_to do |format|
       if @campaign.update(campaign_params)
-        # @campaign.check_campaign_poll
+        @campaign.check_campaign_poll
         # Poll.find(campaign_params[:poll_id] || params[:id]).update_attributes!(campaign_id: @campaign.id )
         format.html { redirect_to @campaign, notice: 'Campaign was successfully updated.' }
         format.json { head :no_content }
