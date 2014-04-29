@@ -21,7 +21,7 @@
     <% @campaigns.each do |campaign| %>
       <tr>
         <td><%= campaign.id %></td>
-        <td><%= campaign.poll.present? ? campaign.poll.title : "-" %></td>
+        <td><%= campaign.polls.present? ? campaign.polls.pluck(:title).join(', ') : "-" %></td>
         <td><%= campaign.name %></td>
         <td><%= image_tag(campaign.photo_campaign.url(:thumbnail)) %></td>
         <td><%= campaign.used %></td>

@@ -1,4 +1,4 @@
-<%= javascript_include_tag 'jquery-textntags' %>
+<%= javascript_include_tag 'jquery-textntags', 'jquery.highlighttextarea' %>
 <%= stylesheet_link_tag 'jquery-textntags' %>
 
 <% breadcrumb :new_poll, @poll %>
@@ -23,7 +23,12 @@
 
 
               <%= f.input :title, wrapper: :horizontal, label: "Question", input_html: { data: { 'validetta' => 'required,minLength[5]' } } %>
-              <textarea class='tagged_text' name="title_with_tag"></textarea>
+              <div class="form-group">
+                <div class="label-hz col-md-2"><label class="string optional control-label">Question</label></div>
+                <div class="col-md-10">
+                  <textarea class="form-control" id="tagged_text" rows="5" name="title_with_tag"></textarea>
+                </div>
+              </div>
 
               <div class="form-group">
                 <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
@@ -62,7 +67,7 @@
               <div class="form-group">
                 <label class="control-label col-md-2">Campaign</label>
                 <div class="col-md-10">
-                  <%= f.select :campaign_id, current_member.campaigns_available.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
+                  <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
                 </div>
               </div>
 
@@ -101,10 +106,10 @@
 <script type="text/javascript">
   $('.tag_token').select2('data', <%= raw @poll_tags.to_json %>);
   var ajax_request = false;
-  $('textarea.tagged_text').textntags({
-  triggers: {'#': {
-    uniqueTags   : true
-  }},
+  $('textarea#tagged_text').textntags({
+    triggers: {'#': {
+      uniqueTags   : true
+    }},
     onDataRequest: function (mode, query, triggerChar, callback) {
       // fix for overlapping requests
       if(ajax_request) ajax_request.abort();
@@ -119,5 +124,12 @@
       });
 
     }
+  });
+  $(document).ready(function() {
+    $("textarea#tagged_text").highlightTextarea({
+      words: ["\#(\\S+)"],
+      id: "demo-wrap",
+      color: "#FF8383"
+    });
   });
 </script>

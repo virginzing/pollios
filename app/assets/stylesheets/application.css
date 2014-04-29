@@ -13,5 +13,6 @@
  *= require uniform.default
  *= require select2_metro
  *= require jquery-textntags
+ *= require jquery.highlighttextarea
  *= require_tree .
  */

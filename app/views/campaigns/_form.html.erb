@@ -16,7 +16,7 @@
             <div class="form-group">
               <label class="control-label col-md-2">Poll</label>
               <div class="col-md-10">
-                <%= f.select :poll_id, current_member.polls.where("polls.campaign_id = 0").order('title desc').map {|r| [r.title, r.id ]}, { include_blank: true },  { class: 'select2me_poll', placeholder: "Select a Poll"} %>
+                <input type="text" name="campaign[poll_ids]" id="campaign_poll_ids">
               </div>
             </div>
 
@@ -93,6 +93,24 @@
 
 <script type="text/javascript">
 $( document ).ready(function() {
-  $(".select2me_poll").select2("data", <%= raw @poll_campaigns %>);
+  // $(".select2me_poll").select2("data", <%= raw @poll_campaigns %>);
+  $("#campaign_poll_ids").select2({
+      width: "100%",
+      multiple: true,
+      placeholder: "Select a poll",
+      query: function (query){
+        var data = {results: []};
+
+          $.each(<%= raw @poll_campaign_new.to_json %>, function(){
+              if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                  data.results.push({id: this.id, text: this.text });
+              }
+          });
+
+          query.callback(data);
+      }
+  });
+
+  $('#campaign_poll_ids').select2('data', <%= raw @poll_campaigns.to_json %> );
 });
 </script>

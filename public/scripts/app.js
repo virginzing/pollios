@@ -695,6 +695,7 @@ var App = function () {
                 width: '100%',
                 allowClear: true
             });
+
             $(".tag_token").select2({
               width: "100%",
               placeholder: "Search tag",

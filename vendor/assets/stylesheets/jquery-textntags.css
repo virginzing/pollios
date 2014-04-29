@@ -5,34 +5,7 @@
 }
 
 .textntags-wrapper textarea {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  display: block;
-  height: 18px;
-  padding: 9px;
-  margin: 0;
-  border: 1px solid #dcdcdc;
-  border-radius:3px;
-  overflow: hidden;
-  background: transparent;
-  outline: 0;
-  resize: none;
-  font-family: Arial;
-  font-size: 13px;
-  line-height: 17px;
 
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-}
-@-moz-document url-prefix() {
-  .textntags-wrapper textarea{
-    padding: 9px 8px;
-  }
 }
 
 .textntags-wrapper .textntags-tag-list {
@@ -105,7 +78,7 @@
 }
 
 .textntags-wrapper .textntags-beautifier {
-  position: relative;
+  position: absolute;
   padding: 10px;
   color: #fff;
 

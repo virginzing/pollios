@@ -12,5 +12,6 @@
 //
 //= require jquery
 //= require jquery-textntags
+//= require jquery.highlighttextarea
 //= require_tree ../../../vendor/assets/javascripts/.
 //= require_tree .

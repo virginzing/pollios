@@ -86,7 +86,7 @@
         var currentTriggerChar, currentDataQuery;
         var editorSelectionLength = 0, editorTextLength = 0, editorKeyCode = 0, editorAddingTag = false;
         var editorInPasteMode = false, editorPasteStartPosition = 0, editorPasteCutCharacters = 0;
-        var REGEX_ESCAPE_CHARS = ['[', '^', '$', '.', '|', '?', '*', '+', '(', ')', '\\'];
+        var REGEX_ESCAPE_CHARS = ['[', '^', '$', '.', '|', '?', '*', '+', '(', ')', '\\', '/', '...', '"', '-', ']', ':', ';', '1'];
         
         function setSettings (options) {
             if (settings != null) {
@@ -124,7 +124,7 @@
             
             if (settings.realValOnSubmit) {
                 elEditor.closest('form').bind('submit.textntags', function (event) {
-                    elContainer.css('visibility', 'hidden');
+                    // elContainer.css('visibility', 'hidden');
                     elEditor.val(getTaggedText());
                 });
             }

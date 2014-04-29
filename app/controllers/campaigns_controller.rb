@@ -29,7 +29,7 @@ class CampaignsController < ApplicationController
   # GET /campaigns
   # GET /campaigns.json
   def index
-    @campaigns = current_member.campaigns.includes(:poll)
+    @campaigns = current_member.campaigns.includes(:polls)
   end
 
   # GET /campaigns/1
@@ -40,16 +40,17 @@ class CampaignsController < ApplicationController
   # GET /campaigns/new
   def new
     @campaign = Campaign.new
-    # @poll_campaign_new = Poll.where("campaign_id IS NULL OR campaign_id = 0 AND series = ? AND member_id = ?", false, current_member.id)
+    @poll_campaign_new = Poll.where("campaign_id IS NULL OR campaign_id = 0 AND series = ? AND member_id = ?", false, current_member.id)
     # @poll_campaigns = @campaign.poll
-    @campaign.poll = Poll.new
+    # @campaign.polls = Poll.new
   end
 
   # GET /campaigns/1/edit
   def edit
     @poll_campaign_new = Poll.all
-    @poll_campaigns = PollOfCampaignSerializer.new(@campaign.poll).to_json()
-    puts "#{@poll_campaigns}"
+    @poll_campaigns = @campaign.polls
+    # @poll_campaigns = PollOfCampaignSerializer.new(@campaign.poll).to_json()
+    # puts "#{@poll_campaigns}"
   end
 
   # POST /campaigns
@@ -75,7 +76,7 @@ class CampaignsController < ApplicationController
     respond_to do |format|
       if @campaign.update(campaign_params)
         # @campaign.check_campaign_poll
-        Poll.find(campaign_params[:poll_id] || params[:id]).update_attributes!(campaign_id: @campaign.id )
+        # Poll.find(campaign_params[:poll_id] || params[:id]).update_attributes!(campaign_id: @campaign.id )
         format.html { redirect_to @campaign, notice: 'Campaign was successfully updated.' }
         format.json { head :no_content }
       else
