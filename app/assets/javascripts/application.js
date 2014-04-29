@@ -11,5 +11,6 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery-textntags
 //= require_tree ../../../vendor/assets/javascripts/.
 //= require_tree .

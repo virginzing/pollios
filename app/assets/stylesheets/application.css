@@ -12,5 +12,6 @@
  *= require font-awesome.min
  *= require uniform.default
  *= require select2_metro
+ *= require jquery-textntags
  *= require_tree .
  */
