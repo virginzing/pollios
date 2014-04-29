@@ -53,7 +53,7 @@ class Campaign < ActiveRecord::Base
     end
   end
 
-  def prediction(member_id)
+  def prediction(member_id, poll_id)
     sample = (begin_sample..end_sample).to_a.sample
     puts "your lucky : #{sample}"
     if expire < Time.now
@@ -67,10 +67,10 @@ class Campaign < ActiveRecord::Base
       message = "Used"
     else
       if sample % end_sample == 0
-        @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code)
+        @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_id: poll_id)
         increment!(:used)
       else
-        @campaign = campaign_members.create!(member_id: member_id, luck: false)
+        @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_id: poll_id)
       end
     end
     [@campaign, message]
