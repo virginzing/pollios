@@ -12,6 +12,15 @@ class Tag < ActiveRecord::Base
     order("count desc").
     limit(5)
 
+  scope :search_autocmp_tags, -> (query) {
+    where("name like ?", "%#{query}%"). 
+    select("tags.*, count(taggings.tag_id) as count").
+    joins(:taggings).
+    group("taggings.tag_id").
+    order("count desc").
+    limit(5)
+  }
+
   def self.tokens(query)
     tags = where("name like ?","%#{query}%")
     if tags.empty?

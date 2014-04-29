@@ -81,6 +81,7 @@ class PollsController < ApplicationController
     if @poll.save
       puts "choices => #{@build_poll.list_of_choice}"
       Choice.create_choices(@poll.id, @build_poll.list_of_choice)
+      @poll.create_tag(@build_poll.title_with_tag)
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
       Rails.cache.delete([current_member.id, 'poll_member'])
@@ -345,6 +346,6 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
   end
 end

@@ -13,5 +13,39 @@
 //= require jquery
 //= require jquery-textntags
 //= require jquery.highlighttextarea
+//= require bootstrap-maxlength.min
+//= require parsley
 //= require_tree ../../../vendor/assets/javascripts/.
 //= require_tree .
+
+$(function() {
+  var ajax_request = false;
+  $('textarea#tagged_text').textntags({
+    triggers: {'#': {
+      uniqueTags   : true
+    }},
+    onDataRequest: function (mode, query, triggerChar, callback) {
+      // fix for overlapping requests
+      if(ajax_request) ajax_request.abort();
+
+      ajax_request = $.getJSON('/search_autocmp_tags.json', { search: query }, function(responseData) {
+          query = query.toLowerCase();
+          responseData = _.filter(responseData, function(item) {
+            return item.name.toLowerCase().indexOf(query) > -1; 
+          });
+          callback.call(this, responseData);
+          ajax_request = false;
+      });
+
+    }
+  });
+
+  $("textarea#tagged_text").highlightTextarea({
+    words: ["#([a-zA-Z0-9ก-๙]+)"]
+  });
+
+  $('.maxlength_textarea').maxlength({
+      limitReachedClass: "label label-danger",
+      alwaysShow: true
+  });
+});

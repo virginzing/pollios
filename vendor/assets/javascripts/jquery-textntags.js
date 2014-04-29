@@ -26,13 +26,13 @@
         }
     };
     var trigger_defaults = {
-        minChars        : 1,
+        minChars        : 2,
         uniqueTags      : true,
-        showImageOrIcon : true,
+        showImageOrIcon : false,
         keys_map        : {id: 'id', title: 'name', description: '', img: 'avatar', no_img_class: 'icon', type: 'type'},
         syntax          : _.template('#<%= title %>'),
-        parser          : /(#)\[\[(\d+):([\w\s\.\-]+):([\w\s@\.,-\/#!$%\^&\*;:{}=\-_`~()]+)\]\]/gi,
-        parserGroups    : {id: 2, type: 3, title: 4},
+        parser          : /#([a-zA-Z0-9ก-๙]+)/gi,
+        parserGroups    : {title: 4},
         classes         : {
             tagsDropDown      : '',
             tagActiveDropDown : 'active',
@@ -86,7 +86,7 @@
         var currentTriggerChar, currentDataQuery;
         var editorSelectionLength = 0, editorTextLength = 0, editorKeyCode = 0, editorAddingTag = false;
         var editorInPasteMode = false, editorPasteStartPosition = 0, editorPasteCutCharacters = 0;
-        var REGEX_ESCAPE_CHARS = ['[', '^', '$', '.', '|', '?', '*', '+', '(', ')', '\\', '/', '...', '"', '-', ']', ':', ';', '1'];
+        var REGEX_ESCAPE_CHARS = ['[', '^', '$', '.', '|', '?', '*', '+', '(', ')', '\\', '/', '...', '"', '-', ']', ':', ';'];
         
         function setSettings (options) {
             if (settings != null) {
@@ -102,7 +102,7 @@
                 } else {
                   var regex_key = key;
                 }
-                settings.triggers[key].finder = new RegExp(regex_key + '\\w+(\\w+)?\\s?$', 'gi');
+                settings.triggers[key].finder = new RegExp(regex_key + '([a-zA-Z0-9ก-๙]+)?$', 'gi');
             });
             
             templates = settings.templates;
@@ -125,7 +125,7 @@
             if (settings.realValOnSubmit) {
                 elEditor.closest('form').bind('submit.textntags', function (event) {
                     // elContainer.css('visibility', 'hidden');
-                    elEditor.val(getTaggedText());
+                    // elEditor.val(getTaggedText());
                 });
             }
         }
@@ -235,7 +235,8 @@
         
         function updateBeautifier () {
             elBeautifier.find('div').html(getBeautifiedText());
-            elEditor.css('height', elBeautifier.outerHeight() + 'px');
+            // elEditor.css('height', elBeautifier.outerHeight() + 'px');
+            elEditor.css('height', '100' + 'px');
         }
         
         function checkForTrigger(look_ahead) {

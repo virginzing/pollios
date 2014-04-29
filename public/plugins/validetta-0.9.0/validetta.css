@@ -1,4 +1,9 @@
-.validetta-bubble { background-color:#FF675F; border-radius:5px; color:white; padding:8px 12px; }
+.validetta-bubble { 
+  background-color:#FF675F; 
+  border-radius:5px; 
+  color:white; 
+  padding:8px 12px;
+}
 /*.validetta-bubble:before { content:''; display:block; position:absolute; top:7px; left:-5px; width:0; height:0; border-right:5px solid #CD2E26; border-bottom: 5px solid transparent; border-top:5px solid transparent; }*/
 .validetta-bubbleClose {
   display: block;
@@ -10,7 +15,11 @@
   font-weight: bold;
 }
 
-.validetta-inline, .validetta-bubble { display:block; font-size: 12px; }
+.validetta-inline, .validetta-bubble { 
+  display:block; 
+  font-size: 12px;
+}
+
 .validetta-inline { color:#CD2E26; }
 
 

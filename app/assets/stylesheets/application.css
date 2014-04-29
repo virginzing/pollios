@@ -14,5 +14,6 @@
  *= require select2_metro
  *= require jquery-textntags
  *= require jquery.highlighttextarea
+ *= require parsley
  *= require_tree .
  */

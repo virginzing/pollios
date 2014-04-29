@@ -1,3 +1,5 @@
+<%= javascript_include_tag 'jquery-textntags', 'jquery.highlighttextarea', 'parsley', 'bootstrap-maxlength.min' %>
+
 <% breadcrumb :new_poll, @poll %>
 <% breadcrumb :binary_poll %>
 
@@ -11,24 +13,32 @@
   </div>
 
   <div class="portlet-body form">
-    <%= simple_form_for @poll, :html => { :multipart => true, class: "form-horizontal" } do |f| %>
+    <%= simple_form_for @poll, :html => { :multipart => true, class: "form-horizontal", id: "form-input" } do |f| %>
       <div class="form-body">
         <h3 class="form-section">Binary Poll</h3>
           <div class="row">
             <div class="col-md-7">
               <%= f.input :type_poll, as: :hidden, input_html: { value: "binary" } %>
-              <%= f.input :title, wrapper: :horizontal, label: "Question", input_html: { data: { 'validetta' => 'required,minLength[5]' } } %>
-              <%= f.input :choice_one, wrapper: :horizontal, label: "Choice 1", input_html: { data: { 'validetta' => 'required' } } %>
-              <%= f.input :choice_two, wrapper: :horizontal, label: "Choice 2", input_html: { data: { 'validetta' => 'required' } } %>
+              <!-- <%= f.input :title, wrapper: :horizontal, label: "Question" %> -->
+              <div class="form-group">
+                <div class="label-hz col-md-2"><label class="string optional control-label">Question</label></div>
+                <div class="col-md-10">
+                  <textarea class="form-control" id="tagged_text" rows="5" name="poll[title_with_tag]" required data-parsley-range="[5,250]"></textarea>
+                  <span class="help-block"><span class="label label-sm label-danger">Note:</span> Use tag by #</span>
+                </div>
+              </div>
+
+              <%= f.input :choice_one, wrapper: :horizontal, label: "Choice 1", input_html: { :"data-parsley-required" => "true" }  %>
+              <%= f.input :choice_two, wrapper: :horizontal, label: "Choice 2", input_html: { :"data-parsley-required" => "true" } %>
               <%= f.input :choice_three, wrapper: :horizontal, label: "Choice 3", input_html: { value: "No vote", :disabled => true} %>
             </div>
 
             <div class="col-md-5">
-              <%= f.input :tag_tokens,wrapper: :horizontal ,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_lists" } %>
+              <!--<%= f.input :tag_tokens,wrapper: :horizontal ,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_lists" } %> -->
               <div class="form-group">
                 <label class="control-label col-md-2">Campaign</label>
                 <div class="col-md-10">
-                  <%= f.select :campaign_id, current_member.campaigns_available.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
+                <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
                 </div>
               </div>
 
@@ -38,7 +48,7 @@
                   <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a recurring"} %>
                 </div>
               </div>
-              <%= f.input :expire_date, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: 'input-xsmall'} %>
+              <%= f.input :expire_date, collection: 1..20,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: 'input-xsmall'} %>
             </div>
 
           </div>
@@ -48,7 +58,7 @@
         <div class="row">
            <div class="col-md-7">
               <div class="col-md-offset-2 col-md-9">
-                 <button type="submit" class="btn blue"><i class="icon-ok"></i> Submit</button>
+                 <button type="submit" class="btn blue submit"><i class="icon-ok"></i> Submit</button>
                  <%= link_to 'Discard', polls_path, method: :get, class: 'btn default' %>                              
               </div>
            </div>
@@ -63,7 +73,7 @@
 </div>
 
 
-
 <script type="text/javascript">
   $('.tag_token').select2('data', <%= raw @poll_tags.to_json %>);
+  $("#form-input").parsley();
 </script>

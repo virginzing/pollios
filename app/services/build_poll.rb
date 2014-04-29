@@ -12,6 +12,10 @@ class BuildPoll
     Time.now + @params["expire_date"].to_i.days
   end
 
+  def title_with_tag
+    @params["title_with_tag"].rstrip
+  end
+
   def choice_freeform
     if @options["choices"]
       @options["choices"].collect! {|value| value unless value.blank? }.compact
@@ -41,7 +45,7 @@ class BuildPoll
   def poll_binary_params
     {
       "member_id" => @member.id,
-      "title" => @params["title"],
+      "title" => title_with_tag,
       "public" => set_poll_public,
       "series" => @series,
       "expire_date" => expire_date,
@@ -50,7 +54,7 @@ class BuildPoll
       "campaign_id" => @params["campaign_id"],
       "recurring_id" => @params["recurring_id"],
       "type_poll" => @params["type_poll"],
-      "tag_tokens" => @params["tag_tokens"],
+      # "tag_tokens" => @params["tag_tokens"],
       "in_group_ids" => 0
     }
   end

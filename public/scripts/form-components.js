@@ -1,9 +1,9 @@
 var FormComponents = function () {
 
     var handleValidetta = function() {
-        $("#new_poll").validetta({
+        $('#form-input').validetta({
             realTime: true
-        });
+        })
         $("#new_poll_series").validetta({
             realTime: true
         });
@@ -13,38 +13,6 @@ var FormComponents = function () {
         $("#recurring-form").validetta({
             realTime: true
         });        
-    }
-
-    var handleBootstrapMaxlength = function() {
-        $('#maxlength_defaultconfig').maxlength({
-            limitReachedClass: "label label-danger",
-        })
-    
-        $('#maxlength_thresholdconfig').maxlength({
-            limitReachedClass: "label label-danger",
-            threshold: 20
-        });
-
-        $('#maxlength_alloptions').maxlength({
-            alwaysShow: true,
-            warningClass: "label label-success",
-            limitReachedClass: "label label-danger",
-            separator: ' out of ',
-            preText: 'You typed ',
-            postText: ' chars available.',
-            validate: true
-        });
-
-        $('#maxlength_textarea').maxlength({
-            limitReachedClass: "label label-danger",
-            alwaysShow: true
-        });
-
-        $('#maxlength_placement').maxlength({
-            limitReachedClass: "label label-danger",
-            alwaysShow: true,
-            placement: App.isRTL() ? 'top-right' : 'top-left'
-        });
     }
 
     var handleSpinners = function () {
@@ -730,7 +698,6 @@ var FormComponents = function () {
         //main function to initiate the module
         init: function () {
             handleValidetta();
-            handleBootstrapMaxlength();
             handleSpinners();
             handleWysihtml5();
             handleTagsInput();
