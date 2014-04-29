@@ -127,9 +127,7 @@
   });
   $(document).ready(function() {
     $("textarea#tagged_text").highlightTextarea({
-      words: ["\#(\\S+)"],
-      id: "demo-wrap",
-      color: "#FF8383"
+      words: ["\#(\\w+)"]
     });
   });
 </script>
