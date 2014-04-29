@@ -16,7 +16,7 @@ class Tag < ActiveRecord::Base
     where("name like ?", "%#{query}%"). 
     select("tags.*, count(taggings.tag_id) as count").
     joins(:taggings).
-    group("taggings.tag_id").
+    group("taggings.tag_id, tags.id").
     order("count desc").
     limit(5)
   }
