@@ -12,7 +12,7 @@ class CampaignsController < ApplicationController
   end
 
   def list_reward
-    @rewards = @current_member.lucky_campaign.includes(:campaign => [:poll, :member]).paginate(page: params[:next_cursor])
+    @rewards = @current_member.lucky_campaign.includes(:campaign => [:polls, :member]).paginate(page: params[:next_cursor])
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page 
   end
 

@@ -11,10 +11,6 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery-textntags
-//= require jquery.highlighttextarea
-//= require bootstrap-maxlength.min
-//= require parsley
 //= require_tree ../../../vendor/assets/javascripts/.
 //= require_tree .
 

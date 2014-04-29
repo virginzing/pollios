@@ -15,7 +15,8 @@ class Poll < ActiveRecord::Base
 
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
-
+  has_many :campaign_members
+  
   has_many :history_votes, dependent: :destroy
   has_many :history_views, dependent: :destroy
   has_many :share_polls, dependent: :destroy
