@@ -43,11 +43,12 @@ class Group < ActiveRecord::Base
   def self.build_group(group)
     member_id = group[:member_id]
     photo_group = group[:photo_group]
+    description = group[:description]
 
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone)
+    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
