@@ -33,8 +33,20 @@ class HashtagTimeline
     @hashtag ||= tag_friend_group_public
   end
 
+  def get_hashtag_popular
+    @hashtag_popular ||= tag_popular.map(&:name).collect{|tag| '#' + tag }
+  end
+
 
   private
+
+  def tag_popular
+    Tag.joins(:taggings => [:poll => :poll_members]).
+      where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0)", true, your_friend_ids).
+      select("tags.*, count(taggings.tag_id) as count").
+      group("taggings.tag_id, tags.id").
+      order("count desc").limit(5)
+  end
 
   def tag_friend_group_public
     Tag.find_by_name(query_tag).polls.

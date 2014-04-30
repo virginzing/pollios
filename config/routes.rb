@@ -118,6 +118,7 @@ Pollios::Application.routes.draw do
   end
 
   get '/hashtag',  to: 'polls#hashtag'
+  get '/hashtag_popular', to: 'polls#hashtag_popular'
 
   get '/tags',  to: 'tags#index'
   get 'search_autocmp_tags',  to: 'tags#search_autocmp_tags'
