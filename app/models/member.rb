@@ -81,7 +81,7 @@ class Member < ActiveRecord::Base
 
     configure :new_avatar do
       pretty_value do
-        bindings[:view].tag(:img, { :src => bindings[:object].get_avatar, class: 'img-polaroid' width: "50px", height: "50px"})
+        bindings[:view].tag(:img, { :src => check_image_avatar(bindings[:object]), :class => 'img-polaroid', width: "50px", height: "50px"})
       end
     end
 
