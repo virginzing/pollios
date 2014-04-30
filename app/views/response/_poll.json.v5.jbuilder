@@ -15,4 +15,4 @@ json.share_count poll.share_count
 json.is_public poll.public
 json.type_poll poll.type_poll
 json.vote_max poll.get_vote_max
-json.poll_within poll.in_group?(@group_by_name)
+json.poll_within poll.get_within(@group_by_name, params[:action])

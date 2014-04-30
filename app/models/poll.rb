@@ -84,14 +84,6 @@ class Poll < ActiveRecord::Base
     choices.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
   end
 
-  def in_group?(group_detail)
-    if group_detail.present?
-      Hash["in" => "Group", "group_detail" => get_in_groups(group_detail)]
-    else
-      get_within
-    end
-  end
-
   def get_in_groups(groups_by_name)
     group = []
     in_group_ids.split(",").each do |id|
@@ -102,9 +94,13 @@ class Poll < ActiveRecord::Base
     group
   end
 
-  def get_within(options = {})
+  def get_within(options = {}, action_timeline = {})
     if public
-      Hash["in" => "Public"]
+      if action_timeline["friend_following_poll"]
+        Hash["in" => "Friend & Following"]
+      else
+        Hash["in" => "Public"]
+      end
     else
       if in_group_ids == "0"
         Hash["in" => "Friend & Following"]

@@ -254,7 +254,7 @@ class PollsController < ApplicationController
     hashtag = HashtagTimeline.new(@current_member, hashtag_params)
     @polls = hashtag.get_hashtag.paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= hashtag.group_by_name
+    @group_by_name = hashtag.group_by_name
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
     @total_entries = @polls.total_entries
   end
