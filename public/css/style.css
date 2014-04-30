@@ -99,6 +99,14 @@ Customize css
   margin-left: 110px;
 }
 
+a.removeclass {
+  position: absolute;
+  right: 0px;
+  top: 7px;
+  padding-right: 10px;
+  color: rgb(184, 184, 184);
+}
+
 blockquote {
   color: #646464;
 }

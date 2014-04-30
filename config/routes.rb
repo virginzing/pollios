@@ -117,6 +117,8 @@ Pollios::Application.routes.draw do
     post 'facebook',        to: 'facebook#login'
   end
 
+  get '/hashtag',  to: 'polls#hashtag'
+
   get '/tags',  to: 'tags#index'
   get 'search_autocmp_tags',  to: 'tags#search_autocmp_tags'
   get '/profile', to: 'members#profile'

@@ -15,12 +15,13 @@ class Poll < ActiveRecord::Base
 
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
-  has_many :campaign_members
-  
+  has_many :campaign_members, dependent: :destroy
+  has_many :campaign_guests, dependent: :destroy
+
   has_many :history_votes, dependent: :destroy
   has_many :history_views, dependent: :destroy
   has_many :share_polls, dependent: :destroy
-
+  has_many :hidden_polls, dependent: :destroy
   belongs_to :member, touch: true
   belongs_to :poll_series
   belongs_to :campaign
@@ -35,7 +36,7 @@ class Poll < ActiveRecord::Base
   validates :member_id, :title , presence: true
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
-  default_scope { order("created_at desc") }
+  default_scope { order("#{table_name}.created_at desc") }
   
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }

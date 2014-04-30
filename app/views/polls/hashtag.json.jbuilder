@@ -1,0 +1,1 @@
+json.partial! 'polls/timeline_poll'

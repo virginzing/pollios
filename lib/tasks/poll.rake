@@ -43,11 +43,14 @@ namespace :poll do
 
   desc "clear all data"
   task :clear => :environment do
-    Member.all.each do |member|
-      member.destroy
-    end
+    # Member.all.each do |member|
+    #   member.destroy
+    # end
+    Tag.delete_all
     Tagging.delete_all
-    Poll.delete_all
+    Poll.all.each do |poll|
+      poll.destroy
+    end
     PollMember.delete_all
     PollSeries.delete_all
     Choice.delete_all
@@ -67,6 +70,15 @@ namespace :poll do
     HistoryVote.delete_all
     HistoryView.delete_all
     Friend.delete_all
+  end
+
+  desc "clear some data"
+  task :clear_somedata => :environment do
+    Poll.all.each do |poll|
+      poll.destroy
+    end
+    Tag.delete_all
+    PollSeries.delete_all
   end
 
   # desc "Update choice_text to history voted"

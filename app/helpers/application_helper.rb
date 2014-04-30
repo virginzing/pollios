@@ -124,8 +124,8 @@ end
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 8, 
-#     "title": "Friend 8 create two",
+#     "member_id": 1, 
+#     "title": "Friend 8 create two #lovely #Nuttapon My name is #eiei",
 #     "expire_within": "5",
 #     "choices": "1,2",
 #     "type_poll": "freeform"
@@ -153,7 +153,7 @@ end
 #     "expire_within": "1",
 #     "choices": "yes,no",
 #     "type_poll": "binary",
-#     "group_id": "1,3"
+#     "group_id": "7,8"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) | 
@@ -165,9 +165,13 @@ end
 # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "choice_id": 297
-# }' -X POST http://localhost:3000/poll/128/vote.json -i
+#     "choice_id": 762
+# }' -X POST http://localhost:3000/poll/275/vote.json -i
 
+
+# Tag.find_by_name("codeapp").polls.
+# joins(:poll_members).
+# where("(polls.public = ?) OR (poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", true, 11, false)
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
