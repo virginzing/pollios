@@ -81,7 +81,7 @@ class Member < ActiveRecord::Base
 
     configure :new_avatar do
       pretty_value do
-        bindings[:view].tag(:img, { :src => check_image_avatar(bindings[:object]), :class => 'img-polaroid', width: "50px", height: "50px"})
+        bindings[:view].tag(:img, { :src => Member.check_image_avatar(bindings[:object].avatar), :class => 'img-polaroid', width: "50px", height: "50px"})
       end
     end
 
@@ -154,6 +154,22 @@ class Member < ActiveRecord::Base
 
   end
 
+  def Member.check_image_avatar(avatar)
+    for_campare_url_image = /\.(gif|jpg|png)\z/i
+    if for_campare_url_image.match(avatar.model[:avatar]).present?
+      if avatar.model[:avatar].start_with?('http')
+        avatar.model[:avatar]
+      else
+        avatar.url(:thumbnail)
+      end
+    else
+      if avatar.present?
+        avatar.model[:avatar] + ".jpg"
+      else
+        avatar.url(:thumbnail)
+      end
+    end
+  end
 
   def set_friend_limit
     self.friend_limit = FRIEND_LIMIT
