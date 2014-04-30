@@ -78,14 +78,22 @@ class Member < ActiveRecord::Base
   FRIEND_LIMIT = 500
 
   rails_admin do 
+
+    configure :new_avatar do
+      pretty_value do
+        bindings[:view].tag(:img, { :src => bindings[:object].get_avatar, class: 'img-polaroid' width: "50px", height: "50px"})
+      end
+    end
+
     list do
       filters [:gender, :member_type]
       field :id
-      field :avatar do
-        formatted_value do
-          bindings[:view].tag(:img, { :src => bindings[:object].avatar.url(:thumbnail), width: "50px", height: "50px"})
-        end
-      end
+      # field :avatar do
+      #   formatted_value do
+      #     bindings[:view].tag(:img, { :src => bindings[:object].avatar.url(:thumbnail), width: "50px", height: "50px"})
+      #   end
+      # end
+      field :new_avatar
       field :sentai_name
       field :email
       field :gender do

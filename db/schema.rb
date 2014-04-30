@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140429150204) do
+ActiveRecord::Schema.define(version: 20140430102537) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 20140429150204) do
     t.integer  "member_count",     default: 0
     t.integer  "poll_count",       default: 0
     t.integer  "authorize_invite"
+    t.text     "description"
   end
 
   create_table "guests", force: true do |t|

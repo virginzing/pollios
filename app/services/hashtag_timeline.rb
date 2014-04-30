@@ -34,7 +34,7 @@ class HashtagTimeline
   end
 
   def get_hashtag_popular
-    @hashtag_popular ||= tag_popular.map(&:name).collect{|tag| '#' + tag }
+    @hashtag_popular ||= tag_popular.map(&:name)
   end
 
 
