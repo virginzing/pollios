@@ -83,6 +83,7 @@ gem "gretel"
 
 # gem 'unicorn'
 gem 'newrelic_rpm'
+gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

@@ -88,11 +88,6 @@ class Member < ActiveRecord::Base
     list do
       filters [:gender, :member_type]
       field :id
-      # field :avatar do
-      #   formatted_value do
-      #     bindings[:view].tag(:img, { :src => bindings[:object].avatar.url(:thumbnail), width: "50px", height: "50px"})
-      #   end
-      # end
       field :new_avatar
       field :sentai_name
       field :email
@@ -152,6 +147,15 @@ class Member < ActiveRecord::Base
       field :key_color
     end
 
+    show do
+      include_all_fields
+      exclude_fields :avatar
+    end
+
+  end
+
+  def new_avatar
+    avatar.url
   end
 
   def Member.check_image_avatar(avatar)

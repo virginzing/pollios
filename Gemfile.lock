@@ -18,6 +18,13 @@ GIT
       tzinfo
 
 GIT
+  remote: git://github.com/konjoot/rails_admin_flatly_theme.git
+  revision: eec28094e8bbac4a1a9565e1dba26f76b95cf803
+  specs:
+    rails_admin_flatly_theme (1.1.0)
+      rails (> 3.1.3)
+
+GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: e93a4837b0266db46c24aae172e184f57c847b04
   specs:
@@ -296,6 +303,7 @@ DEPENDENCIES
   rails (= 4.0.0)
   rails_12factor
   rails_admin
+  rails_admin_flatly_theme!
   randumb
   rest-client
   rqrcode
