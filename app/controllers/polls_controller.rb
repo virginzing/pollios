@@ -201,11 +201,15 @@ class PollsController < ApplicationController
 
   def my_poll
     @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_POLL"], options_params)
+    your_group = @current_member.get_group_active
+    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
   def my_vote
     @poll_nonseries = Poll.joins(:history_votes).includes(:member).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", @current_member.id).order("history_votes.created_at DESC").paginate(page: params[:next_cursor])
     @next_cursor = @poll_nonseries.next_page.nil? ? 0 : @poll_nonseries.next_page
+    your_group = @current_member.get_group_active
+    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
 
