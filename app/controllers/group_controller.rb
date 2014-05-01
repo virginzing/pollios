@@ -27,6 +27,8 @@ class GroupController < ApplicationController
   def poll_group
     query = @group.polls.includes(:member).paginate(page: poll_group_params[:next_cursor]).order("created_at desc")
     @polls = Poll.filter_type(query, poll_group_params[:type])
+    your_group = @member.get_group_active
+    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
   end
 
