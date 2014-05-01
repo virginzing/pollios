@@ -81,7 +81,7 @@ gem 'active_model_serializers'
 gem "squeel"
 gem "gretel"
 
-gem 'unicorn'
+# gem 'unicorn'
 gem 'newrelic_rpm'
 
 # Use ActiveModel has_secure_password
