@@ -12,7 +12,15 @@ class PollFriendTimeline
   end
 
   def my_group_id
-    @group_poll_ids ||= @my_group.pluck(:id)  
+    @my_group_ids ||= @my_group.pluck(:id)  
+  end
+
+  def friend_group_id
+    @friend_group_ids ||= @friend_group.pluck(:id)
+  end
+
+  def my_and_friend_group
+    my_group_id & friend_group_id
   end
 
   def group_by_name
@@ -26,8 +34,8 @@ class PollFriendTimeline
   private
 
   def poll_of_friend
-    query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                 where("poll_members.member_id = ? AND poll_members.in_group = ?", friend_id, false)
+    query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
+                 where("(poll_members.member_id = ? AND poll_members.in_group = ?) OR (poll_groups.group_id IN (?))", friend_id, false, my_and_friend_group)
   end
   
 end
