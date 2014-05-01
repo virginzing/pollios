@@ -27,7 +27,7 @@ class PollFriendTimeline
 
   def poll_of_friend
     query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                 where("poll_members.member_id = ? AND poll_members.in_group = ?)", friend_id, false)
+                 where("poll_members.member_id = ? AND poll_members.in_group = ?", friend_id, false)
   end
   
 end
