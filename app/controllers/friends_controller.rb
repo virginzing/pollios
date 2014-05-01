@@ -82,6 +82,15 @@ class FriendsController < ApplicationController
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
   end
 
+  def list_of_poll
+    @poll_friend = PollFriendTimeline.new(@current_member, @find_friend, poll_friend_params)
+    @polls = @poll_friend.get_poll_friend.paginate(page: params[:next_cursor])
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    @group_by_name ||= @poll_friend.group_by_name
+    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
+  end
+
   # def list_request
   #   @your_request = @current_member.get_your_request
   #   @friend_request = @current_member.get_friend_request
@@ -96,7 +105,11 @@ class FriendsController < ApplicationController
           format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Don't have this id of friend"]}
         end
      end
-  end 
+  end
+
+  def poll_friend_params
+     params.permit(:friend_id, :member_id, :next_cursor, :type)
+   end 
 
   def friend_params
     params.permit(:friend_id, :q, :member_id)

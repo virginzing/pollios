@@ -1,23 +1,22 @@
-if @poll_series || @poll_nonseries
+if @poll_series || @poll_nonseries 
   json.response_status "OK"
-  json.count do
-    json.poll @find_friend.cached_poll_count
-  end
-
-  json.poll_list do
-    json.poll_series @poll_series do |poll|
-      json.list_of_poll do
-        json.partial! 'response/questionnaire', poll: poll
-      end
-    end
-
-    json.poll_nonseries @poll_nonseries do |poll|
-      json.poll do
-        json.partial! 'response/poll', poll: poll
-      end
-    end
   
-    json.next_cursor @next_cursor
+  json.poll_series @poll_series do |poll|
+    json.creator poll.cached_member
+
+    json.list_of_poll do
+      json.partial! 'response/questionnaire', poll: poll
+    end
+  end
+  
+  json.poll_nonseries @poll_nonseries do |poll|
+    json.creator poll.cached_member
+
+    json.poll do
+      json.partial! 'response/poll', poll: poll
+    end
   end
 
+  json.total_entries @total_entries
+  json.next_cursor @next_cursor
 end
