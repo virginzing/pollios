@@ -78,11 +78,6 @@ class FriendsController < ApplicationController
   end
 
   def list_of_poll
-    poll = @find_friend.polls.includes(:member, :campaign)
-    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(poll)
-  end
-
-  def list_of_poll
     @poll_friend = PollFriendTimeline.new(@current_member, @find_friend, poll_friend_params)
     @polls = @poll_friend.get_poll_friend.paginate(page: params[:next_cursor])
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
