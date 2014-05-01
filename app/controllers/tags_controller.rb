@@ -7,7 +7,7 @@ class TagsController < ApplicationController
   end
 
   def search_autocmp_tags
-    @tags = Tag.search_autocmp_tags(params["search"].rstrip)
+    @tags = Tag.search_autocmp_tags(params["q"].rstrip)
     if @tags.present?
       @tags = @tags
     else
@@ -15,7 +15,8 @@ class TagsController < ApplicationController
     end
     @tags_json = ActiveModel::ArraySerializer.new(@tags, each_serializer: SearchAutocmpTagSerializer)
     respond_to do |wants|
-      wants.json { render json: @tags_json, root: false }
+      # wants.json { render json: @tags_json, root: false }
+      wants.json { render json: @tags.map(&:name), root: false }
     end
   end
   

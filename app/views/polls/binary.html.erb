@@ -18,13 +18,17 @@
             <div class="col-md-7">
               <%= f.input :type_poll, as: :hidden, input_html: { value: "binary" } %>
               <!-- <%= f.input :title, wrapper: :horizontal, label: "Question" %> -->
+
               <div class="form-group">
                 <div class="label-hz col-md-2"><label class="string optional control-label">Question</label></div>
                 <div class="col-md-10">
-                  <textarea class="form-control maxlength_textarea" id="tagged_text" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,250]"></textarea>
+
+                  <textarea class="form-control maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,250]" style="display: block; width: 100%;"></textarea>
+
                   <span class="help-block"><span class="label label-sm label-danger">Note:</span> Use tag by #</span>
                 </div>
               </div>
+
 
               <%= f.input :choice_one, wrapper: :horizontal, label: "Choice 1", input_html: { :"data-parsley-required" => "true" }  %>
               <%= f.input :choice_two, wrapper: :horizontal, label: "Choice 2", input_html: { :"data-parsley-required" => "true" } %>
@@ -70,32 +74,6 @@
 
 </div>
 
-<textarea id="textarea3" class="form-control"></textarea>
-
-<script type="text/javascript">
-  $('#textarea3').textcomplete([
-    { // html
-        mentions: ['#yuku_t', '#eiei'],
-        match: /\B#(\w*)$/,
-        search: function (term, callback) {
-            callback($.map(this.mentions, function (mention) {
-                return mention.indexOf(term) === 0 ? mention : null;
-            }));
-        },
-        index: 1,
-        replace: function (mention) {
-            return mention + ' ';
-        }
-    }
-]).overlay([
-    {
-        match: /\B#\w+/g,
-        css: {
-            'background-color': '#d8dfea'
-        }
-    }
-]);
-</script>
 
 
 <script type="text/javascript">
