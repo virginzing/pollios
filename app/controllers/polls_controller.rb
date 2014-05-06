@@ -7,12 +7,11 @@ class PollsController < ApplicationController
   before_action :history_voted_viewed, only: [:hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode]
-  before_action :compress_gzip, only: [:hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
+  # before_action :compress_gzip, only: [:hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.share_polls.pluck(:poll_id) }
-  # :restrict_access
 
   respond_to :json
 
@@ -112,9 +111,6 @@ class PollsController < ApplicationController
     puts "expired => #{@expired}"
     @choices = Choice.query_choices(choices_params, @expired)
     @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)
-    # unless choices_params[:voted] == "no"
-      # @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)["voted"]
-    # end
   end
 
   def public_poll
@@ -168,14 +164,12 @@ class PollsController < ApplicationController
   end
 
   def friend_following_poll
-    # @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["FRIEND_FOLLOWING_POLL"], options_params)
     friend_following_timeline = FriendFollowingTimeline.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = friend_following_timeline.poll_friend_following
     @total_entries = friend_following_timeline.total_entries.count
   end
 
   def overall_timeline
-    # @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["OVERALL_TIMELINE"], options_params)
     overall_timeline = OverallTimeline.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
     @group_by_name = overall_timeline.group_by_name

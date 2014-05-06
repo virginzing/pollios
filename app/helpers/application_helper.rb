@@ -277,3 +277,7 @@ end
 
 #db = Mongoid::Sessions.default
 
+# connection = ActiveRecord::Base.connection
+# ActiveRecord::Base.connection.execute(query)
+# query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COUNT(r1.followed_id) as mutual_friend_count FROM friends r1 INNER JOIN friends r2 ON r1.followed_id = r2.followed_id AND r1.follower_id != r2.follower_id WHERE r1.status = 1 AND r2.status = 1 AND r1.follower_id = 21 GROUP BY r1.follower_id, r2.follower_id"
+

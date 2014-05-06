@@ -78,7 +78,6 @@ class Group < ActiveRecord::Base
   end
 
 
-
   def self.add_poll(poll_id, group_id)
     list_group = group_id.split(",")
     where(id: list_group).each do |group|
