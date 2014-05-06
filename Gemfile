@@ -62,7 +62,7 @@ gem 'will_paginate-foundation'
 gem 'nested_form'
 gem 'simple_form'
 gem 'decent_exposure'
-gem 'apn_on_rails', github: 'Nuttapon/apn_on_rails'
+# gem 'apn_on_rails', github: 'Nuttapon/apn_on_rails'
 
 gem 'rqrcode'
 gem 'rqrcode-rails3'
@@ -84,6 +84,9 @@ gem "gretel"
 # gem 'unicorn'
 gem 'newrelic_rpm'
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', :require => nil
+gem 'houston'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

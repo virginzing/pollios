@@ -1,3 +1,4 @@
+require 'sidekiq/web'
 Pollios::Application.routes.draw do
 
   devise_for :admins, :controllers => { :registrations => "admin/registrations" }
@@ -132,5 +133,5 @@ Pollios::Application.routes.draw do
   post '/check_valid_username', to: 'members#check_valid_username'
 
   root to: 'home#index'
-
+  mount Sidekiq::Web => '/sidekiq'
 end

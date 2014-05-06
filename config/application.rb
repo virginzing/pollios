@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'rqrcode'
+require 'houston'
 
 # require 'mongo'
 
@@ -45,3 +46,5 @@ module Pollios
 
   end
 end
+
+

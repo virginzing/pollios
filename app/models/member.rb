@@ -66,6 +66,7 @@ class Member < ActiveRecord::Base
   before_create :set_friend_limit
   
   has_many :providers, dependent: :destroy
+  has_many :devices, dependent: :destroy
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }

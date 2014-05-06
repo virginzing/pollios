@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140430102537) do
+ActiveRecord::Schema.define(version: 20140506082814) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -31,59 +31,9 @@ ActiveRecord::Schema.define(version: 20140430102537) do
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
 
-  create_table "apn_apps", force: true do |t|
-    t.text     "apn_dev_cert"
-    t.text     "apn_prod_cert"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "apn_device_groupings", force: true do |t|
-    t.integer "group_id"
-    t.integer "device_id"
-  end
-
-  add_index "apn_device_groupings", ["device_id"], name: "index_apn_device_groupings_on_device_id"
-  add_index "apn_device_groupings", ["group_id", "device_id"], name: "index_apn_device_groupings_on_group_id_and_device_id"
-  add_index "apn_device_groupings", ["group_id"], name: "index_apn_device_groupings_on_group_id"
-
-  create_table "apn_devices", force: true do |t|
-    t.string   "token",              null: false
-    t.integer  "member_id"
-    t.string   "api_token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "last_registered_at"
-    t.integer  "app_id"
-  end
-
-  add_index "apn_devices", ["member_id"], name: "index_apn_devices_on_member_id"
-  add_index "apn_devices", ["token"], name: "index_apn_devices_on_token"
-
-  create_table "apn_group_notifications", force: true do |t|
-    t.integer  "group_id",          null: false
-    t.string   "device_language"
-    t.string   "sound"
-    t.string   "alert"
-    t.integer  "badge"
-    t.text     "custom_properties"
-    t.datetime "sent_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "apn_group_notifications", ["group_id"], name: "index_apn_group_notifications_on_group_id"
-
-  create_table "apn_groups", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "app_id"
-  end
-
   create_table "apn_notifications", force: true do |t|
-    t.integer  "device_id",                     null: false
-    t.integer  "errors_nb",         default: 0
+    t.integer  "device_id",                   null: false
+    t.integer  "errors_nb",       default: 0
     t.string   "device_language"
     t.string   "sound"
     t.string   "alert"
@@ -91,20 +41,9 @@ ActiveRecord::Schema.define(version: 20140430102537) do
     t.datetime "sent_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "custom_properties"
   end
 
   add_index "apn_notifications", ["device_id"], name: "index_apn_notifications_on_device_id"
-
-  create_table "apn_pull_notifications", force: true do |t|
-    t.integer  "app_id"
-    t.string   "title"
-    t.string   "content"
-    t.string   "link"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "launch_notification"
-  end
 
   create_table "campaign_guests", force: true do |t|
     t.integer  "campaign_id"
@@ -158,6 +97,16 @@ ActiveRecord::Schema.define(version: 20140430102537) do
   end
 
   add_index "choices", ["poll_id"], name: "index_choices_on_poll_id"
+
+  create_table "devices", force: true do |t|
+    t.integer  "member_id"
+    t.text     "token",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "api_token"
+  end
+
+  add_index "devices", ["member_id"], name: "index_devices_on_member_id"
 
   create_table "friends", force: true do |t|
     t.integer  "follower_id"
@@ -254,11 +203,8 @@ ActiveRecord::Schema.define(version: 20140430102537) do
     t.integer  "choice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "poll_series_id", default: 0
+    t.integer  "poll_series_id"
   end
-
-  add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id"
-  add_index "history_votes", ["poll_id"], name: "index_history_votes_on_poll_id"
 
   create_table "members", force: true do |t|
     t.string   "sentai_name"
@@ -314,7 +260,7 @@ ActiveRecord::Schema.define(version: 20140430102537) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2014-05-01 19:32:02'
+    t.datetime "start_date",     default: '2014-03-05 07:25:32'
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
@@ -345,7 +291,7 @@ ActiveRecord::Schema.define(version: 20140430102537) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",       default: 0
-    t.datetime "start_date",     default: '2014-05-01 19:32:01'
+    t.datetime "start_date",     default: '2014-03-05 07:25:31'
     t.boolean  "series",         default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
