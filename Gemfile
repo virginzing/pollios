@@ -86,6 +86,7 @@ gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_fl
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'houston'
+gem 'unicorn'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

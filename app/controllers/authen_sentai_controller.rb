@@ -33,7 +33,7 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
 			if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
-        @apn_device = check_device?(member, sessions_params["device_token"]) if sessions_params["device_token"].present?
+        @apn_device = Device.check_device?(member, sessions_params["device_token"])
 
 				session[:member_id] = member.id
 				wants.html { redirect_back_or polls_path }
@@ -55,8 +55,7 @@ class AuthenSentaiController < ApplicationController
   	respond_to do |wants|
   		if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
-        @apn_device = check_device?(@member, signup_params["device_token"]) if signup_params["device_token"].present?
-        puts "apn_device => #{@apn_device}"
+        @apn_device = Device.check_device?(@member, signup_params["device_token"])
   			session[:member_id] = member.id
   			flash[:success] = "Sign up sucessfully."
   			wants.html { redirect_to root_url }
@@ -73,23 +72,6 @@ class AuthenSentaiController < ApplicationController
 
   def update_sentai
   	@response, @member = Authenticate::Sentai.update_profile(update_profile_params)
-  end
-
-  def check_device?(member, device_token)
-    member_device = member.apn_devices.find_by(token: device_token)
-    find_device = APN::Device.find_by_token(device_token)
-
-    if member_device.present?
-      api_token = Device.generate_api_token
-      member_device.api_token = api_token
-      member_device.save!
-      device = member_device
-    elsif find_device.present?
-      device = Device.change_member(device_token, member.id)
-    else
-      device = Device.create_device(device_token, member.id)
-    end
-    device
   end
 
   private

@@ -21,7 +21,7 @@ class NotifierWorker
         connection.write(notification.message)
       end
     end
-    Houston::Client.development.devices
+    # Houston::Client.development.devices
   end
   
 end
