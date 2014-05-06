@@ -12,7 +12,7 @@ class Member < ActiveRecord::Base
   has_many :following, -> { where("following = ? AND status != ?", true, 1) }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
   has_many :get_following, -> { where('members.member_type = 1 OR members.member_type = 2') } ,through: :following, source: :followed
   
-  has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy
+  # has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy
   has_many :hidden_polls, dependent: :destroy
 
   has_many :history_views, dependent: :destroy
