@@ -274,7 +274,7 @@ end
 #   end
 # end
 
-
+# 9494bda2 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811
 #db = Mongoid::Sessions.default
 
 # connection = ActiveRecord::Base.connection
