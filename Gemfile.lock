@@ -1,6 +1,7 @@
 GIT
   remote: git://github.com/Nuttapon/apn_on_rails.git
-  revision: a670e557c49de7905da4175fcd63838de200d6f6
+  revision: fc98528a5376045c67e5099c3eedfc9eec72ae54
+  branch: change_module_name_no_test
   specs:
     apn_on_rails (0.5.1)
       actionpack
