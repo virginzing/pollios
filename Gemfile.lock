@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Nuttapon/apn_on_rails.git
-  revision: fc98528a5376045c67e5099c3eedfc9eec72ae54
+  revision: 68a230c6243b388037732afad520e44cb37985b7
   branch: change_module_name_no_test
   specs:
     apn_on_rails (0.5.1)
@@ -124,6 +124,7 @@ GEM
     houston (2.0.2)
       commander (~> 4.1)
       json
+    htmlentities (4.3.1)
     i18n (0.6.9)
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
@@ -321,6 +322,7 @@ DEPENDENCIES
   figaro
   gretel
   houston
+  htmlentities
   jbuilder (~> 1.2)
   jquery-rails
   less-rails
