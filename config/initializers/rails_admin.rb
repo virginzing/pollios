@@ -18,6 +18,7 @@ RailsAdmin.config do |config|
   config.model 'Member' do
     navigation_icon 'icon-user'
   end
+
   ## == Cancan ==
   # config.authorize_with :cancan
 
