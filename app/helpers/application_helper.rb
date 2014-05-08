@@ -117,7 +117,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "poll_template": { "eiei": "eiei11234123412341234212", "seaj": "5099"}
+#     "poll_template": [{ "choices": ["1","2"], "seaj": "5099"}, {"choices": ["3","4"]}]
 # }' -X POST http://localhost:3000/templates.json -i
 
 
@@ -154,12 +154,12 @@ end
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1, 
-#     "title": "create in group 1 and 3",
+#     "member_id": 2, 
+#     "title": "create in group 8 kub",
 #     "expire_within": "1",
 #     "choices": "yes,no",
 #     "type_poll": "binary",
-#     "group_id": "7,8"
+#     "group_id": "8"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) | 
@@ -235,7 +235,7 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "b0e16fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda775" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"codeapp@code-app.com","password":"1234567", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
@@ -262,7 +262,7 @@ end
 #     "name": "Nutty Nuttapon Achachotipong",
 #     "gender": 1,
 #     "user_photo": "http://sphotos-e.ak.fbcdn.net/hphotos-ak-prn2/t31/1398785_10152013477927378_1373506367_o.jpg",
-#     "device_token": "9494bda2 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811"
+#     "device_token": "b80f3efb 29eeb8e8 8dc8f4e2 2b654403 de40a91f a32fb907 cbe86d5a cedbafb5"
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
 # curl "http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5" -H 'Authorization: Token token="c55d4b810641c62156c4f419127e0bc4"' -i
