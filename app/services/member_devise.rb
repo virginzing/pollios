@@ -29,27 +29,28 @@ class MemberDevise
   private
 
   def update_device
-    member_of_device.update_attributes!(api_token: Device.generate_api_token)
+    member_of_device.update_attributes!(api_token: ApnDevice.generate_api_token)
   end
 
   def change_device
-    Device.change_member(device_token, member_id)
+    ApnDevice.change_member(device_token, member_id)
   end
 
   def new_device
-    Device.create_device(device_token, member_id)
+    ApnDevice.create_device(device_token, member_id)
   end
 
   def device_token_api
-    Device.get_access_api(device_token, member_id)
+    ApnDevice.get_access_api(device_token, member_id)
   end
 
   def member_of_device
-    member_device ||= @member.devices.find_by(token: device_token)
+    # member_device ||= @member.devices.find_by(token: device_token)
+    @member.apn_devices.find_by(token: device_token)
   end
 
   def current_devise
-    current_devise ||= Device.find_by_token(device_token)
+    current_devise ||= APN::Device.find_by_token(device_token)
   end
 
   

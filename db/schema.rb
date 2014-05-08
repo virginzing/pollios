@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140506082814) do
+ActiveRecord::Schema.define(version: 20140508061910) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -31,9 +31,60 @@ ActiveRecord::Schema.define(version: 20140506082814) do
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
 
+  create_table "apn_apps", force: true do |t|
+    t.text     "apn_dev_cert"
+    t.text     "apn_prod_cert"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "apn_device_groupings", force: true do |t|
+    t.integer "group_id"
+    t.integer "device_id"
+  end
+
+  add_index "apn_device_groupings", ["device_id"], name: "index_apn_device_groupings_on_device_id"
+  add_index "apn_device_groupings", ["group_id", "device_id"], name: "index_apn_device_groupings_on_group_id_and_device_id"
+  add_index "apn_device_groupings", ["group_id"], name: "index_apn_device_groupings_on_group_id"
+
+  create_table "apn_devices", force: true do |t|
+    t.string   "token",              null: false
+    t.integer  "member_id"
+    t.string   "api_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "last_registered_at"
+    t.integer  "app_id"
+  end
+
+  add_index "apn_devices", ["member_id"], name: "index_apn_devices_on_member_id"
+  add_index "apn_devices", ["token", "member_id"], name: "index_apn_devices_on_token_and_member_id", unique: true
+  add_index "apn_devices", ["token"], name: "index_apn_devices_on_token"
+
+  create_table "apn_group_notifications", force: true do |t|
+    t.integer  "group_id",          null: false
+    t.string   "device_language"
+    t.string   "sound"
+    t.string   "alert"
+    t.integer  "badge"
+    t.text     "custom_properties"
+    t.datetime "sent_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "apn_group_notifications", ["group_id"], name: "index_apn_group_notifications_on_group_id"
+
+  create_table "apn_groups", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "app_id"
+  end
+
   create_table "apn_notifications", force: true do |t|
-    t.integer  "device_id",                   null: false
-    t.integer  "errors_nb",       default: 0
+    t.integer  "device_id",                     null: false
+    t.integer  "errors_nb",         default: 0
     t.string   "device_language"
     t.string   "sound"
     t.string   "alert"
@@ -41,9 +92,20 @@ ActiveRecord::Schema.define(version: 20140506082814) do
     t.datetime "sent_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "custom_properties"
   end
 
   add_index "apn_notifications", ["device_id"], name: "index_apn_notifications_on_device_id"
+
+  create_table "apn_pull_notifications", force: true do |t|
+    t.integer  "app_id"
+    t.string   "title"
+    t.string   "content"
+    t.string   "link"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "launch_notification"
+  end
 
   create_table "campaign_guests", force: true do |t|
     t.integer  "campaign_id"
@@ -128,11 +190,12 @@ ActiveRecord::Schema.define(version: 20140506082814) do
   create_table "group_members", force: true do |t|
     t.integer  "member_id"
     t.integer  "group_id"
-    t.boolean  "is_master",  default: true
+    t.boolean  "is_master",    default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "active",     default: false
+    t.boolean  "active",       default: false
     t.integer  "invite_id"
+    t.boolean  "notification", default: true
   end
 
   add_index "group_members", ["group_id"], name: "index_group_members_on_group_id"
@@ -320,6 +383,7 @@ ActiveRecord::Schema.define(version: 20140506082814) do
   end
 
   add_index "providers", ["member_id"], name: "index_providers_on_member_id"
+  add_index "providers", ["token"], name: "index_providers_on_token", unique: true
 
   create_table "provinces", force: true do |t|
     t.string   "name"

@@ -6,7 +6,8 @@ class CreateApnDevices < ActiveRecord::Migration # :nodoc:
       t.string :api_token
       t.timestamps
     end
-    add_index :apn_devices, :member_id
+      add_index :apn_devices, :member_id
+      add_index :apn_devices, [:token, :member_id], unique: true
   end
 
   def self.down

@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/Nuttapon/apn_on_rails.git
+  revision: a670e557c49de7905da4175fcd63838de200d6f6
+  specs:
+    apn_on_rails (0.5.1)
+      actionpack
+      activerecord
+      configatron
+
+GIT
   remote: git://github.com/bwillis/versioncake.git
   revision: 449a34e2d192794a5eda4db27a39865c055f1d24
   specs:
@@ -82,6 +91,7 @@ GEM
     commander (4.2.0)
       highline (~> 1.6.11)
     commonjs (0.2.7)
+    configatron (3.1.3)
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.1)
@@ -296,6 +306,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   amoeba
+  apn_on_rails!
   bson (= 2.0.0.rc3)
   bson_ext
   carrierwave

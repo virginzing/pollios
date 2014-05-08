@@ -4,10 +4,10 @@ if @auth.present?
     json.partial! 'login_response/member_detail', member: member
     json.token member.get_token("sentai")
 
-    if @apn_device.present?
-      json.access_id @apn_device.id
-      json.access_token @apn_device.api_token
-    end
+    # if @apn_device.present?
+    #   json.access_id @apn_device.id
+    #   json.token @apn_device.api_token
+    # end
     # json.group_active member.group_active
   end
 

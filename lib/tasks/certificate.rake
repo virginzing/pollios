@@ -15,4 +15,12 @@ namespace :certificate do
     puts "Clear certificates successfully."  
   end
 
+  desc "Update certificates"
+  task :update => :environment do
+    app = APN::App.first
+    app.apn_dev_cert   = Rails.root.join('config', 'certificates','apple_push_notification_pollios_dev.pem').read
+    app.apn_prod_cert  = Rails.root.join('config', 'certificates','apple_push_notification_pollios_pro.pem').read
+    app.save!
+  end
+
 end

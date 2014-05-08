@@ -7,7 +7,7 @@ class PollsController < ApplicationController
   before_action :history_voted_viewed, only: [:hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :new_public_timeline, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode]
-  # before_action :compress_gzip, only: [:hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
+  before_action :compress_gzip, only: [:reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }

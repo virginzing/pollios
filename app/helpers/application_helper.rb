@@ -209,12 +209,15 @@ end
 # }' -X POST http://localhost:3000/poll/group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "email": "gg1234@gmail.com",
+#     "email": "imouto@gmail.com",
 #     "password": "mefuwfhfu",
-#     "fullname": "GG",
-#     "username": "gg1234",
-#     "gender": 1
+#     "fullname": "imouto",
+#     "username": "imouto",
+#     "gender": 2,
+#     "device_token": "b0e16fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda775"
 # }' -X POST http://localhost:3000/authen/signup_sentai.json -i
+
+
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "1"
@@ -226,7 +229,7 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "b0e16fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda775" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
@@ -252,18 +255,19 @@ end
 #     "username": "coconuzz111",
 #     "name": "Nutty Nuttapon Achachotipong",
 #     "gender": 1,
-#     "user_photo": "http://sphotos-e.ak.fbcdn.net/hphotos-ak-prn2/t31/1398785_10152013477927378_1373506367_o.jpg"
+#     "user_photo": "http://sphotos-e.ak.fbcdn.net/hphotos-ak-prn2/t31/1398785_10152013477927378_1373506367_o.jpg",
+#     "device_token": "9494bda2 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811"
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
-# curl "http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=4" -H 'Authorization: Token token="6798454d83cd0c21fb5966fb751469f3"' -i
+# curl "http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5" -H 'Authorization: Token token="c55d4b810641c62156c4f419127e0bc4"' -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "123456",
-#     "email": "nuttapon@code-app.com",
-#     "username": "coconuzz111",
+#     "email": "testtest@gmail.com",
+#     "username": "nuttapon509",
 #     "name": "Nutty Nuttapon Achachotipong",
 #     "gender": 1,
-#     "user_photo": "http://sphotos-e.ak.fbcdn.net/hphotos-ak-prn2/t31/1398785_10152013477927378_1373506367_o.jpg"
+#     "device_token": "9494bda2 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811"
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
 

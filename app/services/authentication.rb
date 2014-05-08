@@ -23,7 +23,7 @@ class Authentication
   end
 
   def generate_token
-    @params["token"] || SecureRandom.hex
+    Authentication.generate_api_token
   end
 
   def province
@@ -59,7 +59,7 @@ class Authentication
   def member_from_authen
     @member = Member.where(email: email).first_or_initialize do |member|
       member.sentai_name = name
-      member.username = check_username(username)
+      member.username = check_username
       member.email = email
       member.birthday = birthday
       member.gender = gender.to_i
@@ -70,7 +70,7 @@ class Authentication
     end
 
     if @member
-      @member.update_column(:avatar, avatar)
+      @member.update_column(:avatar, avatar) if avatar.present?
       
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
@@ -88,17 +88,32 @@ class Authentication
   end
 
   def update_member(member)
-    member.update_attributes!(sentai_name: member.sentai_name || name, username: member.username || username, avatar: member.avatar || avatar, birthday: member.birthday || birthday)
+    if username.present?
+      member.update(sentai_name: member.sentai_name || name, avatar: member.avatar || avatar, birthday: member.birthday || birthday)
+    else
+      member.update(sentai_name: member.sentai_name || name, username: check_username, avatar: member.avatar || avatar, birthday: member.birthday || birthday)
+    end
   end
 
   def update_member_provider(member_provider)
     member_provider.update_attributes!(token: generate_token)
   end
 
-  def check_username(user_name)
-    find_username = Member.where(username: user_name)
-    return find_username.present? ? nil : user_name
+  def check_username
+    find_username = Member.where(username: username)
+    if find_username.present?
+      @username = nil
+    else
+      @username = username
+    end
+    @username
   end
 
+  def self.generate_api_token
+    begin
+      token = SecureRandom.hex
+    end while Provider.exists?(token: token)
+    return token
+  end
 end
 

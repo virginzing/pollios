@@ -12,6 +12,9 @@ class Group < ActiveRecord::Base
   has_many :member_inactive, -> { where(active: false) }, class_name: "GroupMember"
   has_many :get_member_inactive, through: :member_inactive, source: :member
 
+  has_many :open_notification, -> { where(notification: true, active: true) }, class_name: "GroupMember"
+  has_many :get_member_open_notification, through: :open_notification, source: :member
+
   validates :name, presence: true
 
   mount_uploader :photo_group, PhotoGroupUploader

@@ -357,7 +357,7 @@ class Poll < ActiveRecord::Base
         if group_id
           Group.add_poll(@poll.id, group_id)
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date, in_group: true)
-          # NotifierWorker.perform_async("My friend ask new Poll in groups.", [1])
+          # GroupNotificationWorker.perform_async(member_id, group_id, @poll.title)
         else
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date)
         end
