@@ -382,6 +382,9 @@ class Member < ActiveRecord::Base
     find_provider.present? ? find_provider.token : ""
   end
 
+  def get_template
+    Template.where(member_id: id).first
+  end
 
   def as_json options={}
    {

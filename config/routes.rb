@@ -132,6 +132,8 @@ Pollios::Application.routes.draw do
   post '/check_valid_email', to: 'members#check_valid_email'
   post '/check_valid_username', to: 'members#check_valid_username'
 
+  post 'templates',       to: 'templates#new_or_update'
+  get  'templates',        to: 'templates#poll_template'
   root to: 'home#index'
   mount Sidekiq::Web => '/sidekiq'
 end

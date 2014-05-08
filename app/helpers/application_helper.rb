@@ -116,6 +116,12 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
+#     "member_id": 1,
+#     "poll_template": { "eiei": "eiei11234123412341234212", "seaj": "5099"}
+# }' -X POST http://localhost:3000/templates.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
 #     "member_id": 9, 
 #     "title": "poll of no friend",
 #     "expire_within": "5",
