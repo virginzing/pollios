@@ -6,7 +6,7 @@ class Template
   index "member_id" => 1
 
   field :member_id, type: Integer
-  field :poll_template
+  field :poll_template, type: Array
 
 
 end

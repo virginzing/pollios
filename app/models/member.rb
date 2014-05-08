@@ -3,7 +3,7 @@ class Member < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
 
   include MemberHelper
-  has_many :apn_devices,  :class_name => 'APN::Device', :dependent => :destroy
+  has_many :apn_devices,  :class_name => 'Apn::Device', :dependent => :destroy
 
   belongs_to :province, inverse_of: :members
 
