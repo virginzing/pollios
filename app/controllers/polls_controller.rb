@@ -165,6 +165,8 @@ class PollsController < ApplicationController
   end
 
   def detail
+    @expired = @poll.expire_date < Time.now
+    @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)
   end
 
   def friend_following_poll
@@ -322,7 +324,7 @@ class PollsController < ApplicationController
 
   def set_poll
     begin
-      @poll = Poll.find(params[:id])
+      @poll = Poll.cached_find(params[:id])
     rescue => e
       respond_to do |wants|
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }

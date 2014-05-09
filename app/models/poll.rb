@@ -27,9 +27,11 @@ class Poll < ActiveRecord::Base
   belongs_to :recurring
 
   # after_commit :flush_cached
+
   before_save :set_default_value
   before_create :generate_qrcode_key
   after_create :set_new_title_with_tag
+
 
   validates :title, presence: true
   validates :member_id, :title , presence: true
@@ -59,10 +61,14 @@ class Poll < ActiveRecord::Base
     include_field :choices
   end
 
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id]) { find(id) }
+  end
+
   # def get_poll_in_groups(group_ids)
   #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
   # end
-  
+
   def set_new_title_with_tag
     poll_title = self.title
     tags.pluck(:name).each do |tag|
@@ -394,7 +400,7 @@ class Poll < ActiveRecord::Base
     begin
       ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
       unless ever_vote.present?
-        find_poll = Poll.find(poll_id)
+        find_poll = Poll.cached_find(poll_id)
         find_choice = find_poll.choices.where(id: choice_id).first
 
         if find_poll.series
@@ -418,6 +424,7 @@ class Poll < ActiveRecord::Base
         end
         # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
         Rails.cache.delete([member_id, 'vote_count'])
+        Rails.cache.delete([find_poll.class.name, find_poll.id])
         [find_poll, history_voted]
       end
     rescue => e

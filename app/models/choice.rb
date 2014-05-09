@@ -1,5 +1,6 @@
 class Choice < ActiveRecord::Base
-  belongs_to :poll, inverse_of: :choices
+  belongs_to :poll, inverse_of: :choices, touch: true
+
   validates :answer, presence: true
 
   default_scope { order("id asc") }
