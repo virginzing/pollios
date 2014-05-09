@@ -1,8 +1,8 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:my_group, :accept_group, :cancel_group, :leave_group, :poll_group]
-  before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll]
+  before_action :set_current_member, only: [:my_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification]
+  before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
   before_action :history_voted_viewed, only: [:poll_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
 
@@ -62,6 +62,10 @@ class GroupController < ApplicationController
 
   def delete_group
     @group  = @current_member.delete_group(group_params[:group_id])
+  end
+
+  def notification
+    @notification = @group.set_notification(group_params[:member_id]) 
   end
 
   private

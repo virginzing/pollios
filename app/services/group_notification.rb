@@ -1,10 +1,10 @@
 class GroupNotification
   include ActionView::Helpers::TextHelper
 
-  def initialize(member_id, group_id, poll_title)
+  def initialize(member_id, group_id, poll)
     @member_id = member_id
     @group_id = group_id
-    @poll_title = poll_title
+    @poll = poll
   end
 
   def group_member_ids
@@ -20,7 +20,7 @@ class GroupNotification
   end
 
   def custom_poll_title
-    truncate(@poll_title, escape: false, length: 150)
+    truncate(@poll.title, escape: false, length: 150)
     # @poll_title
   end
 

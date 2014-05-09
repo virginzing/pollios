@@ -30,6 +30,10 @@ class Group < ActiveRecord::Base
     photo_group.present? ? photo_group.url(:thumbnail) : nil
   end
 
+  def set_notification(member_id)
+    group_member = group_members.where("member_id = ?", member_id)
+  end
+
   def self.accept_group(group)
     group_id = group[:id]
     member_id = group[:member_id]

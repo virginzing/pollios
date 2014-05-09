@@ -1,9 +1,9 @@
 class GroupNotificationWorker
   include Sidekiq::Worker
 
-  def perform(member_id, group_id, poll_title, custom_data = nil)
+  def perform(member_id, group_id, poll, custom_data = nil)
 
-    @group_nofication = GroupNotification.new(member_id, group_id, poll_title)
+    @group_nofication = GroupNotification.new(member_id, group_id, poll)
 
     recipient_ids = @group_nofication.recipient_ids
     puts "ids => #{recipient_ids}"
@@ -15,6 +15,7 @@ class GroupNotificationWorker
       @notf.badge = 1
       @notf.alert = @group_nofication.custom_message
       @notf.sound = true
+      @notf.custom_properties = { poll_id: poll.id }
       @notf.save!
     end
     Apn::App.first.send_notifications
