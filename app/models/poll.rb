@@ -62,7 +62,7 @@ class Poll < ActiveRecord::Base
   # def get_poll_in_groups(group_ids)
   #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
   # end
-
+  
   def set_new_title_with_tag
     poll_title = self.title
     tags.pluck(:name).each do |tag|

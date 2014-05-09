@@ -106,6 +106,7 @@ Pollios::Application.routes.draw do
     get 'overall_timeline', to: 'polls#overall_timeline'
     get 'group_timeline',   to: 'polls#group_timeline'
     get 'reward_timeline',  to: 'polls#reward_poll_timeline'
+    get ':id/detail',       to: 'polls#detail'
   end
 
 

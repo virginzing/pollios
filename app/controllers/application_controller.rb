@@ -28,6 +28,11 @@ class ApplicationController < ActionController::Base
     @history_viewed_guest = @current_guest.history_view_guests.collect!  { |viewed| viewed.poll_id }
   end
 
+  def get_your_group
+    your_group = @current_member.get_group_active
+    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+  end
+
 
   def set_current_member
     @current_member = Member.find_by(id: params[:member_id])
