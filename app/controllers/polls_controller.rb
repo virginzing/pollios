@@ -109,8 +109,9 @@ class PollsController < ApplicationController
 
   def choices
     @expired = @poll.expire_date < Time.now
-    puts "expired => #{@expired}"
-    @choices = Choice.query_choices(choices_params, @expired)
+    # puts "expired => #{@expired}"
+    # @choices = Choice.query_choices(choices_params, @expired)
+    @choices = @poll.cached_choices
     @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)
   end
 
