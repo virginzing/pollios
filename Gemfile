@@ -78,7 +78,7 @@ gem 'devise'
 gem 'paper_trail', '~> 3.0.0'
 gem "sass", "~> 3.2.5"
 gem 'active_model_serializers'
-gem "squeel"
+# gem "squeel"
 gem "gretel"
 
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'

@@ -65,6 +65,12 @@ class Poll < ActiveRecord::Base
     Rails.cache.fetch([name, id]) { find(id) }
   end
 
+  def cached_choices
+    Rails.cache.fetch([self, 'choices']) do
+      choices.to_a
+    end
+  end
+
   # def get_poll_in_groups(group_ids)
   #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
   # end
@@ -85,8 +91,9 @@ class Poll < ActiveRecord::Base
 
   def get_vote_max
     # max = choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by {|k, v| k["vote"]}
-    max = choices.map(&:vote).max
-    choices.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
+    @choice = cached_choices
+    max = @choice.map(&:vote).max
+    @choice.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
   end
 
   def get_in_groups(groups_by_name)

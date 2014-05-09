@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_member, :signed_in?, :render_to_string
   
   def history_voted_viewed
-    @history_voted  = @current_member.history_votes.includes(:choice).collect!  { |voted| [voted.poll_id, voted.choice_id, voted.choice.answer, voted.poll_series_id, voted.choice.vote] }
+    @history_voted  = @current_member.history_votes.collect!  { |voted| [voted.poll_id, voted.choice_id, voted.choice.answer, voted.poll_series_id, voted.choice.vote] }
     @history_viewed = @current_member.history_views.collect!  { |viewed| viewed.poll_id }
   end
 

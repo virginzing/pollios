@@ -6,7 +6,7 @@ if @poll.present?
     json.partial! 'response/questionnaire', poll: @poll
   else
     json.partial! 'response/poll', poll: @poll
-    json.choices @poll.choices do |choice|
+    json.choices @poll.cached_choices do |choice|
       json.choice_id choice.id
       json.answer choice.answer
       if @expired
