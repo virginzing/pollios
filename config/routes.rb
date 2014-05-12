@@ -100,6 +100,12 @@ Pollios::Application.routes.draw do
     post ':id/hide',        to: 'polls#hide'
     post 'share/:id',       to: 'polls#share'
     post 'unshare/:id',     to: 'polls#unshare'
+    get 'public_timeline',            to: 'polls#public_poll'
+    get 'friend_following_timeline',  to: 'polls#friend_following_poll'
+    get 'overall_timeline',           to: 'polls#overall_timeline'
+    get 'group_timeline',             to: 'polls#group_timeline'
+    get 'reward_timeline',            to: 'polls#reward_poll_timeline'
+
     get ':member_id/public_timeline',            to: 'polls#public_poll'
     get ':member_id/friend_following_timeline',  to: 'polls#friend_following_poll'
     get ':member_id/overall_timeline',           to: 'polls#overall_timeline'
