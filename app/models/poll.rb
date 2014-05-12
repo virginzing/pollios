@@ -449,6 +449,7 @@ class Poll < ActiveRecord::Base
     member_id = poll[:member_id]
     poll_id = poll[:id]
     guest_id = poll[:guest_id]
+    find_poll = find(poll_id)
 
     ever_view = guest_id.present? ? HistoryViewGuest.where(guest_id: guest_id, poll_id: poll_id).first.present? : HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
     unless ever_view.present?
@@ -459,8 +460,10 @@ class Poll < ActiveRecord::Base
         find(poll_id).poll_series.increment!(:view_all_guest) if find(poll_id).series
       else
         HistoryView.create!(member_id: member_id, poll_id: poll_id)
-        find(poll_id).increment!(:view_all)
-        find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
+        # find(poll_id).increment!(:view_all)
+        find_poll.update_columns!(view_all: find_poll.view_all + 1)
+        # find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
+        find_poll.poll_series.update_columns!(view_all: find_poll.view_all + 1) if find_poll.series
       end
 
     end
