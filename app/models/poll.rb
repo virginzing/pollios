@@ -134,7 +134,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_member
-    Rails.cache.fetch(['member', self.member.updated_at.to_i]) do
+    Rails.cache.fetch([member, self.member.updated_at.to_i]) do
       member.as_json()
     end
   end
@@ -507,24 +507,6 @@ class Poll < ActiveRecord::Base
    }
   end
 
-  # def as_json options={}
-  #   { creator: cached_member,
-  #     poll: {
-  #         id: id,
-  #         title: title,
-  #         vote_count: vote_all,
-  #         view_count: view_all,
-  #         expire_date: expire_date.to_i,
-  #         created_at: created_at.to_i,
-  #         choice_count: choice_count,
-  #         series: series,
-  #         tags: cached_tags,
-  #         campaign: get_campaign,
-  #         share_count: share_count,
-  #         is_public: public
-  #      }
-  #   }
-  # end
 
 end
 
