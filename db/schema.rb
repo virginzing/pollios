@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140508061910) do
+ActiveRecord::Schema.define(version: 20140512050526) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -274,18 +274,20 @@ ActiveRecord::Schema.define(version: 20140508061910) do
     t.string   "username"
     t.string   "avatar"
     t.string   "email"
-    t.integer  "gender",       default: 0
+    t.integer  "gender",             default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "group_active", default: false
+    t.boolean  "group_active",       default: false
     t.integer  "friend_limit"
-    t.integer  "friend_count", default: 0
-    t.integer  "member_type",  default: 0
+    t.integer  "friend_count",       default: 0
+    t.integer  "member_type",        default: 0
     t.date     "birthday"
     t.integer  "province_id"
     t.string   "key_color"
+    t.datetime "poll_public_req_at", default: '2014-05-12 07:36:17'
   end
 
+  add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at"
   add_index "members", ["province_id"], name: "index_members_on_province_id"
   add_index "members", ["username"], name: "index_members_on_username"
 

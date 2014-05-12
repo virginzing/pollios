@@ -1,9 +1,10 @@
 class Member < ActiveRecord::Base
   has_paper_trail
+
   mount_uploader :avatar, AvatarUploader
 
   include MemberHelper
-  
+
   has_many :apn_devices,  :class_name => 'Apn::Device', :dependent => :destroy
   belongs_to :province, inverse_of: :members
 
@@ -400,11 +401,14 @@ class Member < ActiveRecord::Base
   end
 
   def detect_image(avatar)
-    if avatar.identifier.start_with?('http://') && avatar.identifier.end_with?('.jpg') #sentai
+    if avatar.identifier.start_with?('http://')
+      puts "sentai"
       avatar.identifier
     elsif avatar.identifier.start_with?('https://') #facebook
+      puts "facebook"
       avatar.model[:avatar]
     else
+      puts "No image"
       avatar.url(:thumbnail)
     end
   end
