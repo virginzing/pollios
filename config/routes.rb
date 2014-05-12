@@ -89,7 +89,6 @@ Pollios::Application.routes.draw do
     post 'new_generate_qrcode',      to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll
     post 'create',          to: 'polls#create_poll'
-    get 'public_timeline',  to: 'polls#public_poll'
     get 'guest_poll',       to: 'polls#guest_poll'
     get 'tags',             to: 'polls#tags'
     get 'qrcode',           to: 'polls#qrcode'
@@ -105,7 +104,7 @@ Pollios::Application.routes.draw do
     get ':member_id/friend_following_timeline',  to: 'polls#friend_following_poll'
     get ':member_id/overall_timeline',           to: 'polls#overall_timeline'
     get ':member_id/group_timeline',             to: 'polls#group_timeline'
-    get 'reward_timeline',  to: 'polls#reward_poll_timeline'
+    get ':member_id/reward_timeline',            to: 'polls#reward_poll_timeline'
     get ':id/detail',       to: 'polls#detail'
   end
 
