@@ -2,7 +2,7 @@ class PollMember < ActiveRecord::Base
   belongs_to :member
   belongs_to :poll
 
-  scope :active, -> { where("expire_date > ?", Time.now) }
+  scope :active, -> { where("poll_members.expire_date > ?", Time.now) }
   scope :inactive, -> { where("expire_date < ?", Time.now) }
   scope :hidden, -> (hidden_poll) { where("poll_id NOT IN (?)", hidden_poll) }
 

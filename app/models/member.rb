@@ -401,10 +401,14 @@ class Member < ActiveRecord::Base
   end
 
   def detect_image(avatar)
-    if avatar.identifier.start_with?('http://')
-      avatar.identifier
-    elsif avatar.identifier.start_with?('https://') #facebook
-      avatar.identifier
+    if avatar.present?
+      if avatar.identifier.start_with?('http://')
+        avatar.identifier
+      elsif avatar.identifier.start_with?('https://') #facebook
+        avatar.identifier
+      else
+        "No Image"
+      end
     else
       "No Image"
     end

@@ -10,6 +10,7 @@ class OverallTimeline
     @options = options
     @hidden_poll = HiddenPoll.my_hidden_poll(member_obj.id)
     @your_group = member_obj.get_group_active
+    @pull_request = options["pull_request"] || "no"
     @poll_series = []
     @poll_nonseries = []
     @series_shared = []
@@ -19,6 +20,11 @@ class OverallTimeline
   def member_id
     @member.id
   end
+
+  def since_id
+    @options["since_id"] || 0
+  end
+
 
   def your_friend_ids
     @friend_ids ||= @member.whitish_friend.map(&:followed_id)
@@ -43,17 +49,20 @@ class OverallTimeline
   private
 
   def find_poll_me_and_friend_and_group_and_public
-    query = PollMember.where("(member_id = ? AND in_group = ? AND share_poll_of_id = 0) " \
-        "OR (member_id IN (?) AND in_group = ? AND share_poll_of_id = 0) " \
-        "OR (poll_id IN (?) AND in_group = ? AND share_poll_of_id = 0) " \
-        "OR (public = ? AND in_group = ? AND share_poll_of_id = 0)", 
+    # puts "your friend ids #{your_friend_ids}"
+    query = PollMember.where("(poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
+        "OR (poll_members.member_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
+        "OR (poll_members.poll_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
+        "OR (poll_members.public = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", 
         member_id, false, 
         your_friend_ids, false, 
         find_poll_in_my_group, true, 
         true, false).active.limit(LIMIT_TIMELINE)
 
-      poll_member = check_hidden_poll(query)
-      ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
+    query = check_new_pull_request(query)
+
+    poll_member = check_hidden_poll(query)
+    ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
   end
 
   def find_poll_in_my_group
@@ -61,9 +70,17 @@ class OverallTimeline
   end
 
   def find_poll_share
-    query = PollMember.where("member_id IN (?) AND share_poll_of_id != ?", your_friend_ids, 0).limit(LIMIT_TIMELINE)
+    query = PollMember.where("poll_members.member_id IN (?) AND poll_members.share_poll_of_id != ?", your_friend_ids, 0).limit(LIMIT_TIMELINE)
+    query = check_new_pull_request(query)
     poll_member = check_hidden_poll(query)
     poll_member.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
+  end
+
+  def check_new_pull_request(query)
+    if to_bool(@pull_request)
+      query = query.joins(:poll).where("polls.updated_at > ? AND polls.id > ?", @member.poll_overall_req_at, since_id)
+    end
+    query
   end
   
   def check_hidden_poll(query)
@@ -82,6 +99,7 @@ class OverallTimeline
     end
   end
 
+
   def split_poll_and_filter
     next_cursor = @options["next_cursor"]
 
@@ -91,12 +109,16 @@ class OverallTimeline
       index = cache_polls.index(next_cursor)
       index = -1 if index.nil?
       @poll_ids = cache_polls[(index+1)..(LIMIT_POLL+index)]
+    elsif to_bool(@pull_request)
+      @poll_ids = overall_timeline
+      cache_polls = []
     else
       Rails.cache.delete([ ENV["OVERALL_TIMELINE"], member_id ])
       cache_polls = cached_poll_ids_of_poll_member
       @poll_ids   = cache_polls[0..(LIMIT_POLL - 1)]
     end
 
+    # puts "poll_ids => #{@poll_ids}"
     if cache_polls.count > LIMIT_POLL
       if @poll_ids.count == LIMIT_POLL
         if cache_polls[-1] == @poll_ids.last
@@ -145,5 +167,12 @@ class OverallTimeline
     end
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
   end
+
+  def to_bool(request)
+    return true   if request == "true"
+    return false  if request == "false"
+  end
+
+
 
 end
