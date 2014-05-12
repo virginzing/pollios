@@ -30,9 +30,9 @@ module Pollios
     config.versioncake.default_version = 5
     config.versioncake.supported_version_numbers = (1...6)
 
-    # config.generators do |g| 
-    #     g.orm :active_record 
-    # end
+    config.generators do |g| 
+        g.orm :active_record 
+    end
 
     # config.serve_static_assets = true
 

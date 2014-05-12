@@ -11,6 +11,8 @@ class PollsController < ApplicationController
   # before_action :restrict_access, only: [:public_poll]
   before_action :get_your_group, only: [:detail]
 
+  after_action :set_last_update_poll, only: [:public_poll]
+
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.share_polls.pluck(:poll_id) }
 
@@ -35,6 +37,10 @@ class PollsController < ApplicationController
       format.gif  { render :qrcode => qrurl, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
       format.jpeg { render :qrcode => qrurl }
     end
+  end
+
+  def set_last_update_poll
+    @current_member.update_columns(poll_public_req_at: Time.now)
   end
 
   def new_generate_qrcode
@@ -157,8 +163,12 @@ class PollsController < ApplicationController
     elsif derived_version == 4
       @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
     elsif derived_version == 5
-      @public_poll = PublicTimelinable.new(public_poll_params)
-      @polls = @public_poll.poll_public.paginate(page: params[:next_cursor])
+      @public_poll = PublicTimelinable.new(public_poll_params, @current_member)
+
+      @poll_paginate = @public_poll.poll_public.paginate(page: params[:next_cursor])
+
+      @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
+ 
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)
       @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
       @total_entries = @polls.total_entries
@@ -338,7 +348,7 @@ class PollsController < ApplicationController
   end
 
   def public_poll_params
-    params.permit(:member_id, :type)
+    params.permit(:member_id, :type, :since_id, :pull_request)
   end
 
   def scan_qrcode_params
