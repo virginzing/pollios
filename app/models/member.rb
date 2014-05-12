@@ -1,11 +1,12 @@
 class Member < ActiveRecord::Base
-  has_paper_trail
+  # has_paper_trail
 
   mount_uploader :avatar, AvatarUploader
 
   include MemberHelper
 
   has_many :apn_devices,  :class_name => 'Apn::Device', :dependent => :destroy
+
   belongs_to :province, inverse_of: :members
 
   has_many :follower , -> { where(following: true) }, foreign_key: "followed_id", class_name: "Friend"
@@ -68,7 +69,6 @@ class Member < ActiveRecord::Base
   
   has_many :providers, dependent: :destroy
 
-  # has_many :devices, dependent: :destroy
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
@@ -395,21 +395,18 @@ class Member < ActiveRecord::Base
       name: sentai_name,
       username: username,
       email: email,
-      # avatar: avatar.present? ? detect_image(avatar) : "No Image",
+      avatar: detect_image(avatar),
       key_color: key_color.present? ? key_color : ""
    }
   end
 
   def detect_image(avatar)
     if avatar.identifier.start_with?('http://')
-      puts "sentai"
       avatar.identifier
     elsif avatar.identifier.start_with?('https://') #facebook
-      puts "facebook"
-      avatar.model[:avatar]
+      avatar.identifier
     else
-      puts "No image"
-      avatar.url(:thumbnail)
+      "No Image"
     end
   end
 

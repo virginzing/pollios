@@ -15,9 +15,6 @@ RailsAdmin.config do |config|
 
   config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }
 
-  config.model 'Member' do
-    navigation_icon 'icon-user'
-  end
 
   ## == Cancan ==
   # config.authorize_with :cancan
