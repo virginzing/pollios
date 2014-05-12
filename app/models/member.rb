@@ -3,8 +3,8 @@ class Member < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
 
   include MemberHelper
+  
   has_many :apn_devices,  :class_name => 'Apn::Device', :dependent => :destroy
-
   belongs_to :province, inverse_of: :members
 
   has_many :follower , -> { where(following: true) }, foreign_key: "followed_id", class_name: "Friend"
@@ -66,6 +66,7 @@ class Member < ActiveRecord::Base
   before_create :set_friend_limit
   
   has_many :providers, dependent: :destroy
+
   # has_many :devices, dependent: :destroy
 
   scope :citizen,   -> { where(member_type: 0) }
