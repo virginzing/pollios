@@ -15,6 +15,25 @@ module ApplicationHelper
     end
   end
 
+  def manage_flash(flash, title = "", message = "", color = "", icon = "")
+    if flash.present?
+      flash.each do |name, msg|
+        if name == :warning
+          title = "Warning"
+          color = "#C46A69"
+          icon  = "fa fa-warning"
+        elsif name == :success
+          title = "Success"
+          color = "#739E73"
+          icon  = "fa fa-check"
+        end
+
+        message = msg
+      end
+    end
+    [title, message, color, icon]
+  end
+
   def is_active_3_level(c_name, a_name)
     if controller_name == c_name
       if (action_name == 'binary') || (action_name == 'rating') || (action_name == 'freeform')

@@ -92,8 +92,8 @@ class ApplicationController < ActionController::Base
   def signed_user
     unless current_member.present?
       store_location
-      flash[:notice] = "Please signin !"
-      redirect_to authen_signin_url
+      flash[:warning] = "Please sign in before access this page."
+      redirect_to users_signin_url
     end
   end
 

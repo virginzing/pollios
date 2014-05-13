@@ -20,14 +20,14 @@ GIT
 
 GIT
   remote: git://github.com/konjoot/rails_admin_flatly_theme.git
-  revision: eec28094e8bbac4a1a9565e1dba26f76b95cf803
+  revision: 0f70933dbc603d2f2f3b8ccb14e2f933aad95af6
   specs:
     rails_admin_flatly_theme (1.1.0)
       rails (> 3.1.3)
 
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: e93a4837b0266db46c24aae172e184f57c847b04
+  revision: 9be37a9266d8b703e8f549af7bb6977e7a3a8352
   specs:
     mongoid (4.0.0.beta1)
       activemodel (>= 4.0.0)
@@ -69,6 +69,7 @@ GEM
     arel (4.0.2)
     aws_cf_signer (0.1.2)
     bcrypt (3.1.7)
+    breadcrumbs_on_rails (2.3.0)
     bson (2.0.0.rc3)
     bson_ext (1.5.1)
     builder (3.1.4)
@@ -92,11 +93,11 @@ GEM
     commander (4.2.0)
       highline (~> 1.6.11)
     commonjs (0.2.7)
-    configatron (3.1.3)
+    configatron (3.2.0)
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.1)
-    decent_exposure (2.3.1)
+    decent_exposure (2.3.2)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -162,12 +163,12 @@ GEM
     multi_json (1.10.0)
     nested_form (0.3.2)
     newrelic_rpm (3.8.0.218)
-    nokogiri (1.6.1)
-      mini_portile (~> 0.5.0)
+    nokogiri (1.6.2)
+      mini_portile (~> 0.5.2)
     optionable (0.1.1)
     origin (2.1.1)
     orm_adapter (0.5.0)
-    paper_trail (3.0.1)
+    paper_trail (3.0.2)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     pg (0.17.0)
@@ -303,6 +304,7 @@ DEPENDENCIES
   active_model_serializers
   amoeba
   apn_on_rails!
+  breadcrumbs_on_rails
   bson (= 2.0.0.rc3)
   bson_ext
   carrierwave

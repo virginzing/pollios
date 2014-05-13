@@ -1,8 +1,8 @@
 class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
-	before_action :current_login?, only: [:signin]
+	# before_action :current_login?, only: [:signin]
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
-  before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
+  # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
 
   expose(:current_member_id) { session[:member_id] }
   expose(:member) { @auth.member }
@@ -12,18 +12,18 @@ class AuthenSentaiController < ApplicationController
 
 
 	def signin
-    render layout: "login"
+    render layout: "new_login"
 	end
 
 	def signup
-    render layout: "signup"
+    render layout: "new_signup"
 	end
 
 	def signout
 		session[:member_id] = nil
 		session[:return_to] = nil
 		flash[:success] = "Signout sucessfully."
-		redirect_to authen_signin_path
+		redirect_to users_signin_url
 	end
 
 	def signin_sentai
@@ -39,7 +39,7 @@ class AuthenSentaiController < ApplicationController
 				wants.html { redirect_back_or polls_path }
 				wants.json
 			else
-				flash[:error] = "Invalid username or password."
+				flash[:warning] = "Invalid username or password."
 				wants.html { redirect_to(:back) }
 				wants.json
 			end

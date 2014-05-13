@@ -118,7 +118,7 @@ Pollios::Application.routes.draw do
   scope "authen" do
     get 'signin',           to: 'authen_sentai#signin', as: :authen_signin
     get 'signup',           to: 'authen_sentai#signup', as: :authen_signup
-    delete 'signout',       to: 'authen_sentai#signout', as: :authen_signout
+    delete 'signout',          to: 'authen_sentai#signout', as: :authen_signout
     post 'signin_sentai',   to: 'authen_sentai#signin_sentai'
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
     post 'update_sentai',   to: 'authen_sentai#update_sentai'
@@ -132,7 +132,8 @@ Pollios::Application.routes.draw do
   get 'search_autocmp_tags',  to: 'tags#search_autocmp_tags'
   get '/profile', to: 'members#profile'
   get '/qrcode',  to: 'polls#generate_qrcode'
-  get '/home',  to: 'home#index', as: :dashboard
+  get '/dashboard',  to: 'home#dashboard', as: :dashboard
+  
   get '/campaigns_polls',  to: 'campaigns#polls'
   get 'questionnaire',  to: 'poll_series#index'
   post '/scan_qrcode',      to: 'polls#scan_qrcode'
@@ -141,6 +142,16 @@ Pollios::Application.routes.draw do
 
   post 'templates',       to: 'templates#new_or_update'
   get  'templates',        to: 'templates#poll_template'
+
+  get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
+  get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
+  get 'users_signout',     to: 'authen_sentai#signout', as: :users_signout
+  
+  post 'users_signin',     to: 'authen_sentai#signin_sentai'
+  post 'users_signup',     to: 'authen_sentai#signup_sentai'
+
+  match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
+
   root to: 'home#index'
   mount Sidekiq::Web => '/sidekiq'
 end

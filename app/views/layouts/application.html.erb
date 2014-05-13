@@ -1,198 +1,505 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-<head>
-   <meta charset="utf-8" />
-   <title>Pollios</title>
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-   <meta content="" name="description" />
-   <meta content="" name="author" />
-   <meta name="MobileOptimized" content="320">
-   
-  <link href="/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
-  
-  <link rel="stylesheet" type="text/css" href="/plugins/clockface/css/clockface.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-datepicker/css/datepicker.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-timepicker/compiled/timepicker.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-colorpicker/css/colorpicker.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-datetimepicker/css/datetimepicker.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/jquery-multi-select/css/multi-select.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch-metro.css"/>
-  <link rel="stylesheet" type="text/css" href="/plugins/jquery-tags-input/jquery.tagsinput.css" />
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css">
-  <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-editable/bootstrap3-editable/css/bootstrap-editable.css">
-  <!-- <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-editable/inputs-ext/address/address.css"> -->
+		<title> Pollios </title>
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-  <link href="/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
-  <link href="/plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" type="text/css"/>
-  <link href="/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>
-  <link href="/plugins/validetta-0.9.0/validetta.css" rel="stylesheet" type="text/css">
+		<!-- Use the correct meta names below for your web application
+			 Ref: http://davidbcalhoun.com/2010/viewport-metatag 
+			 
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">-->
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <link href="/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-  <link href="/css/style.css" rel="stylesheet" type="text/css"/>
-  <link href="/css/style-responsive.css" rel="stylesheet" type="text/css"/>
-  <link href="/css/plugins.css" rel="stylesheet" type="text/css"/>
-  <link href="/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
-  <link href="/css/pages/blog.css" rel="stylesheet" type="text/css"/>
-  <link href="/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
-  <link href="/css/pages/profile.css" rel="stylesheet" type="text/css" />
-  <link href="/css/custom.css" rel="stylesheet" type="text/css"/>
-  
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <script src="http://documentcloud.github.com/underscore/underscore-min.js" type="text/javascript"></script>
+		<!-- Basic Styles -->
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/font-awesome.min.css">
 
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
+		<!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-production.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.css">
 
-  <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-  <!-- BEGIN CORE PLUGINS -->   
-  <!--[if lt IE 9]>
-  <script src="plugins/respond.min.js"></script>
-  <script src="plugins/excanvas.min.js"></script> 
-  <![endif]-->   
-  <script src="/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
-  <script src="/plugins/jquery_ujs.js" type="text/javascript"></script>
-  <script src="/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>   
-  <!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
-  <script src="/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-  <script src="/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-  <script src="/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript" ></script>
-  <script src="/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-  <script src="/plugins/jquery.blockui.min.js" type="text/javascript"></script>  
-  <script src="/plugins/jquery.cookie.min.js" type="text/javascript"></script>
-  <script src="/plugins/uniform/jquery.uniform.min.js" type="text/javascript" ></script>
-  <!-- END CORE PLUGINS -->
+		<!-- SmartAdmin RTL Support is under construction
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-rtl.css"> -->
 
-  <!-- BEGIN PAGE LEVEL PLUGINS -->
-  <script src="/plugins/flot/jquery.flot.js" type="text/javascript"></script>
-  <script src="/plugins/flot/jquery.flot.resize.js" type="text/javascript"></script>
-  <script src="/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
-  <script type="text/javascript" src="/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
-  <script src="/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
-  <script src="/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>     
+		<!-- We recommend you use "your_style.css" to override SmartAdmin
+		     specific styles this will also ensure you retrain your customization with each SmartAdmin update.
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/your_style.css"> -->
 
-  <!-- IMPORTANT! fullcalendar depends on jquery-ui-1.10.3.custom.min.js for drag & drop support -->
-  <script src="/plugins/fullcalendar/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
-  <script src="/plugins/jquery-easy-pie-chart/jquery.easy-pie-chart.js" type="text/javascript"></script>
-  <script src="/plugins/jquery.sparkline.min.js" type="text/javascript"></script> 
-  <script src="/plugins/humanized_time_span.js" type="text/javascript"></script>
-  <script type="text/javascript" src="/plugins/fuelux/js/spinner.min.js"></script>
-  <script type="text/javascript" src="/plugins/ckeditor/ckeditor.js"></script>  
-  <script type="text/javascript" src="/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
-  <script type="text/javascript" src="/plugins/select2/select2.min.js"></script>
-  <script type="text/javascript" src="/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script> 
-  <script type="text/javascript" src="/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
-  <script type="text/javascript" src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-  <script type="text/javascript" src="/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
-  <script type="text/javascript" src="/plugins/clockface/js/clockface.js"></script>
-  <script type="text/javascript" src="/plugins/bootstrap-daterangepicker/moment.min.js"></script>
-  <script type="text/javascript" src="/plugins/bootstrap-daterangepicker/daterangepicker.js"></script> 
-  <script type="text/javascript" src="/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>  
-  <script type="text/javascript" src="/plugins/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-  <script type="text/javascript" src="/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>   
-  <script type="text/javascript" src="/plugins/jquery.input-ip-address-control-1.0.min.js"></script>
-  <script type="text/javascript" src="/plugins/jquery-multi-select/js/jquery.multi-select.js"></script>
-  <script type="text/javascript" src="/plugins/jquery-multi-select/js/jquery.quicksearch.js"></script>   
-  <script src="/plugins/jquery.pwstrength.bootstrap/src/pwstrength.js" type="text/javascript" ></script>
-  <script src="/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js" type="text/javascript" ></script>
-  <script src="/plugins/jquery-tags-input/jquery.tagsinput.min.js" type="text/javascript" ></script>
-  <script src="/plugins/bootstrap-markdown/js/bootstrap-markdown.js" type="text/javascript" ></script>
-  <script src="/plugins/bootstrap-editable/bootstrap3-editable/js/bootstrap-editable.min.js" type="text/javascript" ></script>
-  <script src="/plugins/jquery.lwtCountdown-1.0.js"></script>
-  <script src="/plugins/misc.js"></script>
-  <script src="/plugins/bootbox.js"></script>
-  <!-- <script src="/plugins/bootstrap-editable/inputs-ext/address/address.js"></script> -->
-  <script src="/plugins/bootstrap-maxlength.min.js" type="text/javascript"></script>
-  <script src="/plugins/jquery-textntags.js" type="text/javascript"></script>
-  <script src="/plugins/jquery.highlighttextarea.js" type="text/javascript"></script>
-  <script src="/plugins/parsley.js" type="text/javascript"></script>
-  <script src="/plugins/jquery.textcomplete.js" type="text/javascript"></script>
+		<!-- FAVICONS -->
+		<link rel="shortcut icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
 
-  <!-- END PAGE LEVEL PLUGINS -->
-  <script src="/plugins/livestamp.min.js"></script>  
-  <script src="/plugins/jquery.price_format.2.0.min.js"></script>
-  <script src="/plugins/validetta-0.9.0/validetta-min.js"></script>
+		<!-- GOOGLE FONT -->
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
-  <!-- BEGIN PAGE LEVEL SCRIPTS -->
-  <script src="/scripts/ui-toastr.js"></script>  
-  <script src="/scripts/app.js" type="text/javascript"></script>
-  <script src="/scripts/form-components.js"></script>      
-  <script src="/scripts/index.js" type="text/javascript"></script>
-  <script src="/scripts/tasks.js" type="text/javascript"></script>
-  <script src="/scripts/data-confirm.js" type="text/javascript"></script>
+	</head>
+	<body class="fixed-header">
+		<!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
 
-  <!-- <script src="/plugins/verify.notify.js"></script> -->
+		<!-- HEADER -->
+		<header id="header">
+			<div id="logo-group">
 
-<!-- END PAGE LEVEL SCRIPTS -->
-  <script>
-    jQuery(document).ready(function() {    
-       App.init(); // initlayout and core plugins
-       UIToastr.init();
-       FormComponents.init();
-    });
-  </script>
-  <!-- END JAVASCRIPTS -->
+				<!-- PLACE YOUR LOGO HERE -->
+				<span id="logo"> <img src="/smartadmin/img/logo.png" alt="Pollios"> </span>
+				<!-- END LOGO PLACEHOLDER -->
 
-</head>
-<%= render 'sherd/header_navbar' %>
-<%= render 'sherd/sidebar' %>
+				<!-- Note: The activity badge color changes when clicked and resets the number to 0
+				Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->
+				<span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i> <b class="badge"> 21 </b> </span>
 
-<!-- BEGIN PAGE -->
-<div class="page-content">
-    <!-- CONTENT BODY GOES HERE >>>> -->
-    <div class="row">
-      <div class="col-md-12">
-        <%= breadcrumbs style: :bootstrap, separator: " &rsaquo; ", class: "page-breadcrumb breadcrumb" %>
-        <% flash.each do |name, msg| %>
-          <%= content_tag :div, msg, :class => "alert alert-#{name}" %>
-        <% end %>
-      </div>
-    </div>
-    <%= yield %>
-</div>      
-<!-- END PAGE -->
+				<!-- AJAX-DROPDOWN : control this dropdown height, look and feel from the LESS variable file -->
+				<div class="ajax-dropdown">
 
-<%= render 'sherd/footer' %>
+					<!-- the ID links are fetched via AJAX to the ajax container "ajax-notifications" -->
+					<div class="btn-group btn-group-justified" data-toggle="buttons">
+						<label class="btn btn-default">
+							<input type="radio" name="activity" id="/smartadmin/ajax/notify/mail.html">
+							Msgs (14) </label>
+						<label class="btn btn-default">
+							<input type="radio" name="activity" id="/smartadmin/ajax/notify/notifications.html">
+							notify (3) </label>
+						<label class="btn btn-default">
+							<input type="radio" name="activity" id="/smartadmin/ajax/notify/tasks.html">
+							Tasks (4) </label>
+					</div>
 
-<script type="text/javascript" src='/plugins/jquery.overlay.js'></script>
-<script type="text/javascript">
+					<!-- notification content -->
+					<div class="ajax-notifications custom-scroll">
 
-var searchFunc = function (term, callback) {
-  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
-    .done(function (resp) {
-      callback(resp); // `resp` must be an Array
-    })
-    .fail(function () {
-      callback([]); // Callback must be invoked even if something went wrong.
-    });
-};
-// /\B#([a-zA-Z0-9ก-๙_]+)/
-$('#textarea3').textcomplete([
-     { // mention strategy
-      match: /(^|\s)#([a-zA-Z0-9ก-๙_]*)$/,
-      search: function (term, callback) {
-        $.getJSON('/search_autocmp_tags.json', { q: term })
-          .done(function (resp) { callback(resp); })
-          .fail(function ()     { callback([]);   });
-      },
-      replace: function (value) {
-        return ' #' + value + " ";
-      }
-    }
-]).overlay([
-    {
-      match: /#([a-zA-Z0-9ก-๙_]+)/g,
-      css: {
-          'background-color': '#d8dfea'
-      }
-    }
-]);
-</script>
+						<div class="alert alert-transparent">
+							<h4>Click a button to show messages here</h4>
+							This blank page message helps protect your privacy, or you can show the first message here automatically.
+						</div>
+
+						<i class="fa fa-lock fa-4x fa-border"></i>
+
+					</div>
+					<!-- end notification content -->
+
+					<!-- footer: refresh area -->
+					<span> Last updated on: 12/12/2013 9:43AM
+						<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
+							<i class="fa fa-refresh"></i>
+						</button> </span>
+					<!-- end footer -->
+
+				</div>
+				<!-- END AJAX-DROPDOWN -->
+			</div>
+
+			<!-- projects dropdown -->
+			<div id="project-context">
+
+				<span class="label">Polls:</span>
+				<span id="project-selector" class="popover-trigger-element dropdown-toggle" data-toggle="dropdown">Recent polls <i class="fa fa-angle-down"></i></span>
+
+				<!-- Suggestion: populate this list with fetch and push technique -->
+				<ul class="dropdown-menu">
+					<li>
+						<a href="javascript:void(0);">Online e-merchant management system - attaching integration with the iOS</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Notes on pipeline upgradee</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">Assesment Report for merchant account</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="javascript:void(0);"><i class="fa fa-power-off"></i> Clear</a>
+					</li>
+				</ul>
+				<!-- end dropdown-menu-->
+
+			</div>
+			<!-- end projects dropdown -->
+
+			<!-- pulled right: nav area -->
+			<div class="pull-right">
+
+				<!-- collapse menu button -->
+				<div id="hide-menu" class="btn-header pull-right">
+					<span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
+				</div>
+				<!-- end collapse menu -->
+
+				<!-- logout button -->
+				<div id="logout" class="btn-header transparent pull-right">
+					<span> <a href="/users_signin" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
+				</div>
+				<!-- end logout button -->
+
+				<!-- search mobile button (this is hidden till mobile view port) -->
+				<div id="search-mobile" class="btn-header transparent pull-right">
+					<span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
+				</div>
+				<!-- end search mobile button -->
+
+				<!-- input: search field -->
+				<form action="#search.html" class="header-search pull-right">
+					<input type="text" placeholder="Find polls and more" id="search-fld">
+					<button type="submit">
+						<i class="fa fa-search"></i>
+					</button>
+					<a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+				</form>
+				<!-- end input: search field -->
+
+				<!-- multiple lang dropdown : find all flags in the image folder -->
+				<!--
+				<ul class="header-dropdown-list hidden-xs">
+					<li>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img alt="" src="/smartadmin/img/flags/us.png"> <span> US </span> <i class="fa fa-angle-down"></i> </a>
+						<ul class="dropdown-menu pull-right">
+							<li class="active">
+								<a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/us.png"> US</a>
+							</li>
+							<li>
+								<a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/es.png"> Spanish</a>
+							</li>
+							<li>
+								<a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/de.png"> German</a>
+							</li>
+						</ul>
+					</li>
+				</ul> -->
+				<!-- end multiple lang -->
+
+			</div>
+			<!-- end pulled right: nav area -->
+
+		</header>
+		<!-- END HEADER -->
+
+		<!-- Left panel : Navigation area -->
+		<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+		<aside id="left-panel">
+
+			<!-- User info -->
+			<div class="login-info">
+				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 
+					
+					<a href="javascript:void(0);" id="show-shortcut">
+						<img src="/smartadmin/img/avatars/sunny.png" alt="me" class="online" /> 
+						<span>
+							john.doe 
+						</span>
+						<i class="fa fa-angle-down"></i>
+					</a> 
+					
+				</span>
+			</div>
+			<!-- end user info -->
+
+			<!-- NAVIGATION : This navigation is also responsive
+
+			To make this navigation dynamic please make sure to link the node
+			(the reference to the nav > ul) after page load. Or the navigation
+			will not initialize.
+			-->
+			<nav>
+				<!-- NOTE: Notice the gaps after each icon usage <i></i>..
+				Please note that these links work a bit different than
+				traditional hre="" links. See documentation for details.
+				-->
+
+				<ul>
+					<li class="<%= is_active?('home') %>">
+						<a href="/dashboard" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+					</li>
+
+          <li>
+            <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Polls</span></a>
+              <ul>
+                <li>
+                  <a href="#"><i class="fa fa-fw fa-folder-open"></i> Create</a>
+                  <ul>
+                    <li>
+                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Binary</a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Rating</a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Freeform</a>
+                    </li>
+                  </ul>
+                </li>
+
+              <li>
+                <a href="#"> List Polls</a>
+              </li>
+
+            </ul>
+          </li>
+
+					<li>
+            <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Questionnaire</span></a>
+              <ul>
+                <li>
+                  <a href="#"><i class="fa fa-fw fa-folder-open"></i> Create</a>
+                  <ul>
+                    <li>
+                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Normal</a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Same Choice</a>
+                    </li>
+                  </ul>
+                </li>
+
+              <li>
+                <a href="#"><i class="fa fa-fw fa-folder-open"></i> List Questionnaire</a>
+              </li>
+
+            </ul>
+          </li>
+
+					<li>
+						<a href="/campaigns"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Campaign</span></a>
+					</li>
+					<li>
+						<a href="/recurrings"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Recurring</span></a>
+					</li>
+					<li>
+						<a href="#"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">Setting</span></a>
+					</li>
+				</ul>
+			</nav>
+			<span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+
+		</aside>
+		<!-- END NAVIGATION -->
+
+		<!-- MAIN PANEL -->
+		<div id="main" role="main">
+
+			<!-- RIBBON -->
+			<div id="ribbon">
+
+				<span class="ribbon-button-alignment"> <span id="refresh" class="btn btn-ribbon" data-title="refresh"  rel="tooltip" data-placement="bottom" data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings." data-html="true"><i class="fa fa-refresh"></i></span> </span>
+
+				<!-- breadcrumb -->
+				<ol class="breadcrumb">
+					<li>Home</li><li>Dashboard</li>
+				</ol>
+				<!-- end breadcrumb -->
+
+				<!-- You can also add more buttons to the
+				ribbon for further usability
+
+				Example below:
+
+				<span class="ribbon-button-alignment pull-right">
+				<span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa-grid"></i> Change Grid</span>
+				<span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa-plus"></i> Add</span>
+				<span id="search" class="btn btn-ribbon" data-title="search"><i class="fa-search"></i> <span class="hidden-mobile">Search</span></span>
+				</span> -->
+
+			</div>
+			<!-- END RIBBON -->
+
+			<!-- MAIN CONTENT -->
+			<div id="content">
+				<%= yield %>
+			</div>
+			<!-- END MAIN CONTENT -->
+
+		</div>
+		<!-- END MAIN PANEL -->
+
+		<!-- SHORTCUT AREA : With large tiles (activated via clicking user name tag)
+		Note: These tiles are completely responsive,
+		you can add as many as you like
+		-->
+		<div id="shortcut">
+			<ul>
+				<li>
+					<a href="#inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span> </a>
+				</li>
+				<li>
+					<a href="#calendar.html" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendar</span> </span> </a>
+				</li>
+				<li>
+					<a href="#gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
+				</li>
+				<li>
+					<a href="#invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span> </a>
+				</li>
+				<li>
+					<a href="#gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
+				</li>
+				<li>
+					<a href="javascript:void(0);" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
+				</li>
+			</ul>
+		</div>
+		<!-- END SHORTCUT AREA -->
+
+		<!--================================================== -->
+
+		<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+		<!-- <script data-pace-options='{ "restartOnRequestAfter": true }' src="/smartadmin/js/plugin/pace/pace.min.js"></script> -->
+
+		<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script>
+			if (!window.jQuery) {
+				document.write('<script src="/smartadmin/js/libs/jquery-2.0.2.min.js"><\/script>');
+			}
+		</script>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script>
+			if (!window.jQuery.ui) {
+				document.write('<script src="/smartadmin/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+			}
+		</script>
+
+		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events
+		<script src="/smartadmin/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> -->
+
+		<!-- BOOTSTRAP JS -->
+		<script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script>
+
+		<!-- CUSTOM NOTIFICATION -->
+		<script src="/smartadmin/js/notification/SmartNotification.min.js"></script>
+
+		<!-- JARVIS WIDGETS -->
+		<script src="/smartadmin/js/smartwidgets/jarvis.widget.min.js"></script>
+
+		<!-- EASY PIE CHARTS -->
+		<script src="/smartadmin/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+
+		<!-- SPARKLINES -->
+		<script src="/smartadmin/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+
+		<!-- JQUERY VALIDATE -->
+		<script src="/smartadmin/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+
+		<!-- JQUERY MASKED INPUT -->
+		<script src="/smartadmin/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+
+		<!-- JQUERY SELECT2 INPUT -->
+		<script src="/smartadmin/js/plugin/select2/select2.min.js"></script>
+
+		<!-- JQUERY UI + Bootstrap Slider -->
+		<script src="/smartadmin/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+
+		<!-- browser msie issue fix -->
+		<script src="/smartadmin/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+
+		<!-- FastClick: For mobile devices -->
+		<script src="/smartadmin/js/plugin/fastclick/fastclick.js"></script>
+
+		<!--[if IE 7]>
+
+		<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+
+		<![endif]-->
+
+		<!-- MAIN APP JS FILE -->
+		<script src="/smartadmin/js/app.js"></script>
+		
+		<!-- PAGE RELATED PLUGIN(S) -->
+		
+		<!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
+		<!-- <script src="/smartadmin/js/plugin/flot/jquery.flot.cust.js"></script>
+		<script src="/smartadmin/js/plugin/flot/jquery.flot.resize.js"></script>
+		<script src="/smartadmin/js/plugin/flot/jquery.flot.tooltip.js"></script> -->
+		
+		<!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
+		<!-- <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
+		<script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script> -->
+		
+		<!-- Full Calendar -->
+		<!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
+
+		<script>
+			$(document).ready(function() {
+
+				// DO NOT REMOVE : GLOBAL FUNCTIONS!
+				pageSetUp();
+
+				/*
+				 * PAGE RELATED SCRIPTS
+				 */
+
+				$(".js-status-update a").click(function() {
+					var selText = $(this).text();
+					var $this = $(this);
+					$this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
+					$this.parents('.dropdown-menu').find('li').removeClass('active');
+					$this.parent().addClass('active');
+				});
+
+				/*
+				* TODO: add a way to add more todo's to list
+				*/
+
+				// initialize sortable
+				$(function() {
+					$("#sortable1, #sortable2").sortable({
+						handle : '.handle',
+						connectWith : ".todo",
+						update : countTasks
+					}).disableSelection();
+				});
+
+				// check and uncheck
+				$('.todo .checkbox > input[type="checkbox"]').click(function() {
+					var $this = $(this).parent().parent().parent();
+
+					if ($(this).prop('checked')) {
+						$this.addClass("complete");
+
+						// remove this if you want to undo a check list once checked
+						//$(this).attr("disabled", true);
+						$(this).parent().hide();
+
+						// once clicked - add class, copy to memory then remove and add to sortable3
+						$this.slideUp(500, function() {
+							$this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
+							$this.remove();
+							countTasks();
+						});
+					} else {
+						// insert undo code here...
+					}
+
+				})
+				// count tasks
+				function countTasks() {
+
+					$('.todo-group-title').each(function() {
+						var $this = $(this);
+						$this.find(".num-of-tasks").text($this.next().find("li").size());
+					});
+
+				}
+			});
+
+		</script>
+
+		<!-- Your GOOGLE ANALYTICS CODE Below -->
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-50947005-1', 'codeapp-pollios.herokuapp.com');
+		  ga('send', 'pageview');
+
+		</script>
+
+	</body>
+
 </html>
