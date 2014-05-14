@@ -1,10 +1,31 @@
-<div class="panel">
-<%= f.input :title, wrapper: :horizontal, input_html: { class: "answer" }, label: "Question", input_html: { data: { 'validetta' => 'required' } } %>
-<%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
-<%= f.link_to_remove "Remove", class: "tiny button btn btn-default" %>
+<div class="panel panel-redLight">  
 
-<%= f.fields_for :choices do |builder| %>
-  <%= render 'choice_fields', :f => builder %>
-<% end %>
-<p><%= f.link_to_add "More Choice", :choices, class: 'btn btn-xs btn-default' %></p>
+  <div class="panel-heading">
+      <h4 class="panel-title">New Poll</h4>
+  </div>
+
+  <div class="panel-body">
+
+    <section>
+      <label class="label">Question</label>
+      <label class="textarea">
+        <%= f.input :title , label: false, as: :text %>
+        <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
+      </label>
+    </section>
+
+    <section class="collect_choices">
+      <%= f.fields_for :choices do |builder| %>
+        <%= render 'choice_fields', :f => builder %>
+      <% end %>
+      <%= f.link_to_add "More Choice", :choices, class: 'btn btn-sm btn-default' %>
+    </section>
+    <span class="remove_poll">
+      <%= f.link_to_remove "Remove Poll", class: "btn btn-default btn-xs" %>
+    </span>
+  </div>
+
+  <div class="panel-footer text-align-center">
+  </div>
+
 </div>

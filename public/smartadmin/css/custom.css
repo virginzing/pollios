@@ -13,3 +13,38 @@ a.removeclass {
   color: gray;
   display: initial;
 }
+
+div.fields {
+  padding-bottom: 10px;
+}
+
+div.panel-heading {
+  padding: 6px 15px;
+}
+
+div.panel {
+  margin-bottom: 30px;
+}
+
+a.btn.btn-primary.add_nested_fields {
+  padding: 0px 12px;
+  font: 200 13px/29px 'Open Sans',Helvetica,Arial,sans-serif;
+}
+
+.panel-body > section {
+  padding: 15px 25px;
+}
+
+.panel-body > section.collect_choices {
+  margin-top: -30px;
+}
+
+span.remove_poll {
+  float: right;
+  margin: 10px;
+}
+
+.select2-container-multi .select2-choices {
+  margin-top: -1px;
+  margin-left: -1px;
+}
