@@ -22,12 +22,25 @@
           <fieldset>
             
             <section>
-              <label class="label">Question</label>
-              <label class="textarea">
-                <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,250]" style="display: block; width: 100%;"></textarea>
-              </label>
-              <div class="note">
-                <strong>Note: </strong> use tag by '#'
+              <div class="row">
+                <section class="col col-10">
+                  <label class="label">Question</label>
+                  <label class="textarea">
+                    <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,250]" style="display: block; width: 100%;"></textarea>
+                  </label>
+                  <div class="note">
+                    <strong>Note: </strong> use tag by '#'
+                  </div>
+                </section>
+
+                <section class="col col-2">
+                  <label class="label">Expire with in</label>
+                  <label class="select">
+                    <%= f.input :expire_date, collection: 1..20, label: false, include_blank: false %>
+                    <i></i>
+                  </label>
+                </section>
+
               </div>
             </section>
 
@@ -49,13 +62,6 @@
               <label class="label">Choice</label>
               <label class="input">
                 <%= f.input :choice_three, label: false, input_html: { value: "No vote", :disabled => true}  %>
-              </label>
-            </section>
-
-            <section>
-              <label class="label">Expire with in</label>
-              <label class="select">
-                <%= f.input :expire_date, collection: 1..20, label: false, include_blank: false %>
               </label>
             </section>
 

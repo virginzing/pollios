@@ -329,7 +329,7 @@ class PollsController < ApplicationController
   def destroy
     @poll.destroy
     flash[:notice] = "Destroy successfully."
-    redirect_to root_url
+    redirect_to polls_url
   end
 
   private

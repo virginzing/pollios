@@ -7,3 +7,9 @@ li.parsley-required {
   line-height: 15px;
   color: #D56161;
 }
+
+a.removeclass {
+  font-size: 11px;
+  color: gray;
+  display: initial;
+}

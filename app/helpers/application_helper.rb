@@ -15,6 +15,14 @@ module ApplicationHelper
     end
   end
 
+  def is_active_2nd_level(c_name, a_name)
+    if controller_name == c_name
+      if action_name == a_name
+        'active'
+      end
+    end
+  end
+
   def manage_flash(flash, title = "", message = "", color = "", icon = "")
     if flash.present?
       flash.each do |name, msg|
@@ -34,7 +42,7 @@ module ApplicationHelper
     [title, message, color, icon]
   end
 
-  def is_active_3_level(c_name, a_name)
+  def is_active_3rd_level(c_name, a_name)
     if controller_name == c_name
       if (action_name == 'binary') || (action_name == 'rating') || (action_name == 'freeform')
         'active'
