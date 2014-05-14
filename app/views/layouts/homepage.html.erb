@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->  
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
+
+<head>
+    <title> Pollios </title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>  
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/homepage/plugins/flexslider/flexslider.css">
+    <link rel="stylesheet" href="/homepage/plugins/animate-css/animate.min.css">
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="/css/homepage.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+    <script type="text/javascript">
+    function initialize() {
+      var myLatlng = new google.maps.LatLng(13.853190, 100.434029);
+      var customLatLng = new google.maps.LatLng(13.87, 100.434029);
+      var mapOptions = {
+        zoom: 11,
+        scrollwheel: false,
+        center: customLatLng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+      var map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
+
+      var marker = new google.maps.Marker({
+          position: myLatlng,
+          map: map,
+          animation: google.maps.Animation.DROP,
+          title: 'Hello World!'
+      });
+      
+      var contentString = '<div class="info-window-content"><h2>Code App</h2>'+
+                          '<p>Some more details for directions or company informations...</p></div>';
+                          
+      var infowindow = new google.maps.InfoWindow({
+          content: contentString
+      });
+      
+      infowindow.open(map,marker);
+      
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+
+    <!-- Your GOOGLE ANALYTICS CODE Below -->
+    <script>
+
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-50947005-1', 'codeapp-pollios.herokuapp.com');
+      ga('send', 'pageview');
+
+    </script>
+    <style type="text/css">
+        .map-canvas {
+          margin-top: -80px;
+          height: 300px;
+          margin-bottom: 50px;
+        }
+
+        .map-canvas .info-window-content {
+          min-width: 250px;
+        }
+        .map-canvas .info-window-content h2 {
+          color: #999;
+          font-size: 18px;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+        .map-canvas .info-window-content h3 {
+          font-size: 14px;
+          font-weight: 500;
+        }
+        .map-canvas .info-window-content p {
+          font-size: 12px;
+          color: #999;
+          text-shadow: none;
+        }
+    </style>
+</head> 
+
+<body data-spy="scroll">
+    <!-- ******HEADER****** --> 
+    <header id="top" class="header navbar-fixed-top">  
+        <div class="container">            
+            <h1 class="logo pull-left">
+                <a class="scrollto" href="#promo">
+                    <img id="logo-image" class="logo-image" src="/images/logo/logo.png" alt="Logo">
+                    <span class="logo-title">POLLIOS</span>
+                </a>
+            </h1><!--//logo-->              
+            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button><!--//nav-toggle-->
+                </div><!--//navbar-header-->            
+                <div class="navbar-collapse collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#how">How it works</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#faq">FAQ</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#story">Story</a></li>
+                        <li class="nav-item last"><a class="scrollto" href="#contact">Contact</a></li>
+                    </ul><!--//nav-->
+                </div><!--//navabr-collapse-->
+            </nav><!--//main-nav-->           
+        </div>
+    </header><!--//header-->
+    
+    <!-- ******PROMO****** --> 
+    <section id="promo" class="promo section offset-header has-pattern">
+        <div class="container">
+            <div class="row">
+                <div class="overview col-md-8 col-sm-12 col-xs-12">
+                    <h2 class="title">Pollios App</h2>
+                    <ul class="summary">
+                        <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+                        <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+                        <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+                        <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</li>
+                    </ul>
+                    <div class="download-area">
+                        <ul class="btn-group list-inline">
+                            <li class="ios-btn"><a href="#">Download from the App Store</a></li>
+                            <li class="android-btn"><a href="#">Get it from Google Play</a></li>
+                        </ul>
+                    </div>
+                </div><!--//overview-->
+                
+                <!--// iPhone starts -->
+                <div class="phone iphone iphone-white col-md-4 col-sm-12 col-xs-12">
+                    <div class="iphone-holder phone-holder">
+                        <div class="iphone-holder-inner">
+                            <div class="slider flexslider">
+                                <ul class="slides">
+                                    <li>
+                                        <img src="/images/iphone/test3.jpg"  alt="" />
+                                    </li>
+                                    <li>
+                                        <img src="/images/iphone/test2.jpg"  alt="" />
+                                    </li>
+                                    <li>
+                                        <img src="/images/iphone/test1.jpg"  alt="" />
+                                    </li>
+                                    <li>
+                                        <img src="/images/iphone/test4.jpg"  alt="" />
+                                    </li>
+                                </ul><!--//slides-->
+                            </div><!--//flexslider-->   
+                        </div><!--//iphone-holder-inner-->                    
+                    </div><!--//iphone-holder-->                   
+                </div><!--//iphone-->  
+                <!--// iPhone ends -->
+                                                       
+            </div><!--//row-->
+        </div><!--//container-->
+    </section><!--//promo-->
+    
+    <!-- ******FEATURES****** --> 
+    <section id="features" class="features section">
+        <div class="container">
+            <div class="row">
+                <h2 class="title text-center sr-only">Features</h2>
+                <div class="item col-md-3 col-sm-6 col-xs-12 text-center">
+                    <div class="icon">
+                        <i class="fa fa-cloud-upload"></i>                
+                    </div><!--//icon-->
+                    <div class="content">
+                        <h3 class="title">Feature One</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>  
+                    </div><!--//content-->               
+                </div><!--//item-->
+                <div class="item col-md-3 col-sm-6 col-xs-12 text-center">
+                    <div class="icon">
+                        <i class="fa fa-rocket"></i>                
+                    </div><!--//icon-->
+                    <div class="content">
+                        <h3 class="title">Feature Two</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>   
+                    </div><!--//content-->               
+                </div><!--//item-->
+                <div class="item col-md-3 col-sm-6 col-xs-12 text-center">
+                    <div class="icon">
+                        <i class="fa fa-user"></i>                
+                    </div><!--//icon-->
+                    <div class="content">
+                        <h3 class="title">Feature Three</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>   
+                    </div><!--//content-->               
+                </div><!--//item-->
+                <div class="item col-md-3 col-sm-6 col-xs-12 text-center">
+                    <div class="icon">
+                        <i class="fa fa-map-marker"></i>                
+                    </div><!--//icon-->
+                    <div class="content">
+                        <h3 class="title">Feature Four</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>   
+                    </div><!--//content-->               
+                </div><!--//item-->
+            </div><!--//row-->
+            
+        </div><!--//container-->
+    </section><!--//features-->
+    
+    <!-- ******HOW****** --> 
+    <section id="how" class="how section has-pattern">
+        <div class="container">
+            <div class="row">
+                <div class="content col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6 text-center">
+                    <h2 class="title">How it works</h2>
+                    <p class="intro">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here</p>
+                    <div class="qr-codes hidden-sm hidden-xs">
+                        <div class="note">
+                            <p>Scan the QR codes</p>
+                            <span class="left-arrow"></span>
+                            <span class="right-arrow"></span>
+                        </div><!--//note-->
+                        <div class="row">
+                            <div class="item col-md-6 col-sm-6">
+                                <img src="/images/qrcodes/qr-1.png" alt="" />
+                                <p>Download for iOS</p>
+                            </div><!--//item-->
+                            <div class="item col-md-6 col-sm-6">
+                                <img src="/images/qrcodes/qr-1.png" alt="" />
+                                <p>Download for Andriod</p>
+                            </div><!--//item-->
+                        </div>                    
+                    </div><!--//qr-codes-->
+                </div><!--//content-->
+                <div id="video-container" class="video-container col-md-6 col-sm-6 col-xs-12 col-md-pull-6 col-sm-pull-6">
+<!--                     <iframe src="http://player.vimeo.com/video/87044590" width="570" height="320" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> -->
+
+                <iframe class="youtube-player" type="text/html" width="570" height="320" src="http://www.youtube.com/embed/q7ErkbUdU_Y" frameborder="0"></iframe>
+                </div><!--//video-->
+            </div><!--//row-->
+        </div><!--//container-->
+    </section><!--//how-->
+    
+    <!-- ******FAQ****** --> 
+    <section id="faq" class="faq section">
+        <div class="container">
+            <div class="row">
+                <h2 class="title text-center">Frequently Asked Questions</h2>
+                <div class="faq-col col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <h3 class="question"><i class="fa fa-question-circle"></i>How can I  ipsum dolor sit amet?</h3>
+                        <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est, sit amet ultricies magna enim et turpis. Donec aliquam velit eu sollicitudin cursus.</p>
+                    </div><!--//item-->
+                    <div class="item">
+                        <h3 class="question"><i class="fa fa-question-circle"></i>What is the ipsum dolor sit amet quam tortor?</h3>
+                        <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare.</p>
+                    </div><!--//item-->
+                    <div class="item">
+                        <h3 class="question"><i class="fa fa-question-circle"></i>What's the differences between ipsum and dolor sit amet?</h3>
+                        <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. Aenean tempor, leo vel eleifend porttitor. Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est.</p>
+                    </div><!--//item-->
+                </div><!--//faq-col-->
+                <div class="faq-col col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <h3 class="question"><i class="fa fa-question-circle"></i>How does the morbi quam tortor work?</h3>
+                        <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare.Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est, sit amet ultricies magna enim et turpis. Donec aliquam velit eu sollicitudin cursus.</p>
+                    </div><!--//item-->
+                    <div class="item">
+                        <h3 class="question"><i class="fa fa-question-circle"></i>Can I ipsum dolor sit amet nascetur ridiculus?</h3>
+                        <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare.</p>
+                    </div><!--//item-->
+                    <div class="item">
+                        <h3 class="question"><i class="fa fa-question-circle"></i>How can I proin scelerisque magna?</h3>
+                        <p class="answer">Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est, sit amet ultricies magna enim et turpis. Donec aliquam velit eu sollicitudin cursus.Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. </p>
+                    </div><!--//item-->
+                </div><!--//faq-col-->
+            </div><!--//row-->
+            <div class="more text-center">
+                <h4 class="title">More questions?</h4>
+                <a class="btn btn-lg btn-theme scrollto" href="#contact">Get in touch<i class="fa fa-arrow-circle-o-down"></i></a>
+            </div>
+        </div><!--//container-->
+    </section><!--//faq-->
+    
+    <!-- ******STORY****** --> 
+    <section id="story" class="story section has-pattern">
+        <div class="container">
+            <div class="row">
+                <div class="content col-md-6 col-sm-6 col-xs-12 text-center">
+                    <h2 class="title">Lorem ipsum dolor sit amep</h2>
+                    <p>Aliquam euismod vehicula lacus, non congue ante pulvinar a. Nunc eu posuere risus, ut condimentum ante. Suspendisse at turpis sollicitudin odio congue lobortis vitae nec nisi. Nullam sodales at libero in lacinia. Nullam vel nibh pulvinar, interdum purus tristique, iaculis turpis. Integer imperdiet tincidunt erat vel gravida. Suspendisse tincidunt orci sed leo euismod, quis ultrices ipsum lobortis. Sed viverra dui et elit accumsan accumsan. Donec lorem turpis, iaculis ac fermentum nec, dignissim sed nisi. Nunc condimentum turpis arcu, eu aliquet lorem eleifend ut. Integer at lorem nec diam elementum convallis vel vel nulla.</p>
+                    <p>Nullam vel nibh pulvinar, interdum purus tristique, iaculis turpis. Integer imperdiet tincidunt erat vel gravida. eleifend ut. Integer at lorem nec diam elementum convallis vel vel nulla.</p>
+                </div><!--//content-->
+                <div class="team col-md-5 col-sm-5 col-md-offset-1 col-sm-offset-1 col-xs-12">
+                    <div class="row">
+                        <div class="member col-md-6 text-center">
+                            <img class="img-rounded" src="/images/team/test1.png" alt="" />
+                            <p class="name">Neko Neko</p>
+                            <p class="title">Developer</p>
+                            <ul class="connect list-inline">
+                                <li><a href="#" ><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#" ><i class="fa fa-linkedin"></i></a></li>
+                                <li class="row-end"><a href="#" ><i class="fa fa-github"></i></a></li>         
+                            </ul>
+                        </div><!--//member-->
+                        <div class="member col-md-6 text-center">
+                            <img class="img-rounded" src="/images/team/test1.png" alt="" />
+                            <p class="name">Peko Peko</p>
+                            <p class="title">Developer</p>
+                            <ul class="connect list-inline">
+                                <li><a href="#" ><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#" ><i class="fa fa-linkedin"></i></a></li>
+                                <li class="row-end"><a href="#" ><i class="fa fa-dribbble"></i></a></li>         
+                            </ul>
+                        </div><!--//member-->
+                    </div>
+                </div><!--//team-->
+            </div><!--//row-->
+        </div><!--//container-->
+    </section><!--//story-->
+    
+    <section id="testimonials" class="testimonials section">
+        <div class="container">
+            <div class="row">
+                <h2 class="title text-center">Brand</h2>
+                <div class="item col-md-4 col-sm-4">
+                    <div class="quote-box">
+                        <i class="fa fa-quote-left"></i>
+                        <blockquote class="quote">
+                            <a href="#">#BananaIt</a> BananaIt
+                        </blockquote><!--//quote-->
+                    </div><!--//quote-box-->
+                    <div class="people row">
+                        <img class="img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" src="/images/people/b1.png" alt="" />                     
+                    </div><!--//people-->
+                </div><!--//item-->
+                <div class="item col-md-4 col-sm-4">
+                    <div class="quote-box">
+                        <i class="fa fa-quote-left"></i>
+                        <blockquote class="quote">
+                            <a href="#">#Thaiairways</a> Thaiairways
+                        </blockquote><!--//quote-->
+                    </div><!--//quote-box-->
+                    <div class="people row">
+                        <img class="img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" src="/images/people/b2.png" alt="" />                    
+                    </div><!--//people-->
+                </div><!--//item-->
+                <div class="item col-md-4 col-sm-4">
+                    <div class="quote-box">
+                        <i class="fa fa-quote-left"></i>
+                        <blockquote class="quote">
+                            <a href="#">#Mcdonald</a> Mcdonald
+                        </blockquote><!--//quote-->
+                    </div><!--//quote-box-->
+                    <div class="people row">
+                        <img class="img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" src="/images/people/b3.png" alt="" />                    
+                    </div><!--//people-->
+                </div><!--//item-->
+            </div><!--//row-->
+            <div class="row">
+                <div class="item col-md-4 col-sm-4 col-md-offset-2 col-sm-offset-2">
+                    <div class="quote-box">
+                        <i class="fa fa-quote-left"></i>
+                        <blockquote class="quote">
+                            <a href="#">#KFC</a> KFC
+                        </blockquote><!--//quote-->
+                    </div><!--//quote-box-->
+                    <div class="people row">
+                        <img class="img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" src="/images/people/b4.png" alt="" />                    
+                    </div><!--//people-->
+                </div><!--//item-->
+                <div class="item col-md-4 col-sm-4">
+                    <div class="quote-box">
+                        <i class="fa fa-quote-left"></i>
+                        <blockquote class="quote">
+                            <a href="#">#CodeApp</a> CodeApp
+                        </blockquote><!--//quote-->
+                    </div><!--//quote-box-->
+                    <div class="people row">
+                        <img class="img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" src="/images/people/b5.png" alt="" />                      
+                    </div><!--//people-->
+                </div><!--//item-->
+            </div>
+
+        </div><!--//container-->
+    </section><!--//Testimonials-->
+    
+    <!-- ******CONTACT****** --> 
+    <section id="contact" class="contact section has-pattern">
+        <div id="mapCanvas" class="map-canvas"></div>
+        <div class="container">
+            <div class="row text-center">
+                <h2 class="title">Contact US</h2>
+                <div class="intro col-md-6 col-sm-12 col-xs-12 col-md-offset-3">
+                    <p>We’d love to hear from you. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ut erat magna. Aliquam porta sem a lacus imperdiet posuere. Integer semper eget ligula id eleifend.</p>
+                    <ul class="list-unstyled contact-details">
+                        <li><i class="fa fa-envelope"></i><a href="mailto:hello@website.com">hello@website.com</a></li>
+                        <li><i class="fa fa-phone-square"></i>0800 123 456</li>
+                    </ul>
+                </div>
+            </div><!--//row-->
+            <div class="row text-center">
+                <div class="contact-form col-md-6 col-sm-12 col-xs-12 col-md-offset-3">                            
+                    <form class="form">                
+                        <div class="form-group name">
+                            <label class="sr-only" for="name">Name</label>
+                            <input id="name" type="text" class="form-control" placeholder="Name:">
+                        </div><!--//form-group-->
+                        <div class="form-group email">
+                            <label class="sr-only" for="email">Email</label>
+                            <input id="email" type="email" class="form-control" placeholder="Email:">
+                        </div><!--//form-group-->
+                        <div class="form-group message">
+                            <label class="sr-only" for="message">Message</label>
+                            <textarea id="message" class="form-control" rows="6" placeholder="Message:"></textarea>
+                        </div><!--//form-group-->
+                        <button type="submit" class="btn btn-lg btn-theme">Send Message</button>
+                    </form><!--//form-->                 
+                </div><!--//contact-form-->
+            </div><!--//row-->
+            <div class="text-center">
+                 <ul class="social-icons list-inline">
+                    <li><a href="#" ><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#" ><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#" ><i class="fa fa-linkedin"></i></a></li>
+                    <li><a href="#" ><i class="fa fa-google-plus"></i></a></li>                  
+                </ul><!--//social-icons-->
+            </div><!--//row-->
+        </div><!--//container-->
+    </section><!--//contact-->    
+    <!-- ******FOOTER****** --> 
+    <footer class="footer">
+        <div class="container">
+            <small class="copyright pull-left">Copyright &copy; 2014 Pollis App</small>
+            <ul class="links list-inline">
+                <li><a href="#">Terms</a></li>
+                <li><a href="#">Privacy</a></li>
+            </ul>
+        </div>
+    </footer><!--//footer-->
+     
+    <!-- Javascript -->          
+    <script type="text/javascript" src="/homepage/plugins/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/homepage/plugins/jquery-migrate-1.2.1.min.js"></script>
+
+    <script type="text/javascript" src="/homepage/plugins/detectmobilebrowser.js"></script>      
+    <script type="text/javascript" src="/homepage/plugins/jquery.easing.1.3.js"></script>   
+    <script type="text/javascript" src="/homepage/plugins/bootstrap/js/bootstrap.min.js"></script>     
+    <script type="text/javascript" src="/homepage/plugins/jquery-inview/jquery.inview.min.js"></script>
+    <script type="text/javascript" src="/homepage/plugins/FitVids/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="/homepage/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script>    
+    <script type="text/javascript" src="/homepage/plugins/jquery-placeholder/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="/homepage/plugins/flexslider/jquery.flexslider-min.js"></script>
+    <script type="text/javascript" src="/homepage/js/main.js"></script>
+    <!--[if !IE]>--> 
+    <script type="text/javascript" src="/homepage/js/animations.js"></script> 
+    <!--<![endif]-->         
+</body>
+
+</html> 
+
