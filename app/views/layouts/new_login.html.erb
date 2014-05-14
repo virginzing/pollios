@@ -134,7 +134,7 @@
 									</section>
 								</fieldset>
 								<footer>
-									<button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading...">
+									<button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="">
 										Sign in
 									</button>
 								</footer>
@@ -210,6 +210,12 @@
 		<script src="/smartadmin/js/app.js"></script>
 
 		<script type="text/javascript">
+		
+			$( document ).ajaxStart(function() {
+			  NProgress.start();
+			}).ajaxSuccess(function() {
+			  NProgress.done();
+			});
 
 			$.required_login = <%= flash.present? %>;
 			var flash_list =  <%= raw manage_flash(flash) %>;

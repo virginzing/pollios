@@ -40,6 +40,7 @@ class AuthenSentaiController < ApplicationController
 				wants.json
         wants.js
 			else
+        sleep 3
         @login = false
 				flash[:warning] = "Invalid username or password."
 				wants.html { redirect_to(:back) }
