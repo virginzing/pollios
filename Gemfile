@@ -88,6 +88,7 @@ gem 'houston'
 gem 'unicorn'
 gem 'htmlentities'
 gem 'breadcrumbs_on_rails'
+gem 'nprogress-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

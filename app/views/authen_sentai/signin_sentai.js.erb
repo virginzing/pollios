@@ -1,0 +1,20 @@
+$.login = <%= raw @login %>;
+
+if ($.login) {
+  handleLoginSuccess();
+} else {
+  handleLoginError();
+}
+
+function handleLoginError() {
+  $.smallBox({
+    title : "Warning",
+    content: "Invalid username or password.",
+    color: "#C46A69",
+    icon: "fa fa-warning"
+  });
+}
+
+function handleLoginSuccess() {
+  window.location.href="/dashboard"
+}

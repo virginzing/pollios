@@ -10,7 +10,7 @@ input.parsley-error,
 select.parsley-error,
 textarea.parsley-error {
   color: #B94A48;
-  background-color: #F2DEDE;
+  background-color: #fff0f0;
   border: 1px solid #EED3D7;
 }
 
@@ -33,7 +33,11 @@ textarea.parsley-error {
 
 .parsley-errors-list.filled {
   opacity: 1;
-  margin-top: 5px;
-  padding-left: 5px;
-  border-left: 2px solid rgb(255, 160, 160);
+  display: block;
+  margin-top: 6px;
+  padding: 0 1px;
+  font-style: normal;
+  font-size: 11px;
+  line-height: 15px;
+  color: #D56161;
 }

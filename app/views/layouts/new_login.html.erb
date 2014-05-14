@@ -37,6 +37,19 @@
 		<!-- GOOGLE FONT -->
 		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
+		<%= stylesheet_link_tag "login" %>
+		<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="/plugins/jquery_ujs.js" type="text/javascript"></script>
+
+		<script> if (!window.jQuery) { document.write('<script src="/smartadmin/js/libs/jquery-2.0.2.min.js"><\/script>');} </script>
+
+	    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script> if (!window.jQuery.ui) { document.write('<script src="/smartadmin/js/libs/jquery-ui-1.10.3.min.js"><\/script>');} </script>
+
+		<%= javascript_include_tag 'login' %>
+
+
 	</head>
 	<body id="login" class="animated fadeInDown">
 		<!-- possible classes: minified, no-right-panel, fixed-ribbon, fixed-header, fixed-width-->
@@ -50,7 +63,6 @@
 			</div>
 
 			<span id="login-header-space"> <span class="hidden-mobile">Need an Brand account?</span> <a href="/users_signup" class="btn btn-danger">Creat account</a> </span>
-
 		</header>
 
 		<div id="main" role="main">
@@ -92,7 +104,7 @@
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
 						<div class="well no-padding">
-							<form action="/users_signin" method="post" id="login-form" class="smart-form client-form">
+							<form action="/users_signin" method="post" id="login-form" class="smart-form client-form" data-remote="true">
 								<header>
 									Sign In
 								</header>
@@ -122,7 +134,7 @@
 									</section>
 								</fieldset>
 								<footer>
-									<button type="submit" class="btn btn-primary">
+									<button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading...">
 										Sign in
 									</button>
 								</footer>
@@ -152,16 +164,9 @@
 
 		<!--================================================== -->	
 
-	    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
-	    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-		<script> if (!window.jQuery) { document.write('<script src="/smartadmin/js/libs/jquery-2.0.2.min.js"><\/script>');} </script>
-
-	    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		<script> if (!window.jQuery.ui) { document.write('<script src="/smartadmin/js/libs/jquery-ui-1.10.3.min.js"><\/script>');} </script>
-
 		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events 		
 		<script src="/smartadmin/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> -->
-
+		
 		<!-- BOOTSTRAP JS -->		
 		<script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script>
 
@@ -204,12 +209,11 @@
 		<!-- MAIN APP JS FILE -->
 		<script src="/smartadmin/js/app.js"></script>
 
-
-
 		<script type="text/javascript">
 
 			$.required_login = <%= flash.present? %>;
 			var flash_list =  <%= raw manage_flash(flash) %>;
+
 			$.title = flash_list[0];
 			$.msg = flash_list[1];
 			$.color = flash_list[2];
@@ -235,7 +239,7 @@
 				$("#login-form").validate({
 					// Rules for form validation
 					rules : {
-						email : {
+						authen : {
 							required : true,
 							email : true
 						},
@@ -248,7 +252,7 @@
 
 					// Messages for form validation
 					messages : {
-						email : {
+						authen : {
 							required : 'Please enter your email address',
 							email : 'Please enter a VALID email address'
 						},
@@ -264,6 +268,5 @@
 				});
 			});
 		</script>
-
 	</body>
 </html>

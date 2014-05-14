@@ -60,6 +60,7 @@
 		//FastClick.attach(document.body);
 	}
 
+	// alert($.device);
 /* ~ END: CHECK MOBILE DEVICE */
 
 /*
@@ -575,6 +576,8 @@ function launchFullscreen(element) {
 
 }
 
+
+
 /*
  * ~ END: FULL SCREEN FUNCTION
  */
@@ -583,6 +586,54 @@ function launchFullscreen(element) {
  * INITIALIZE FORMS
  * Description: Select2, Masking, Datepicker, Autocomplete
  */
+
+var handleSelect2 = function() {
+  if (jQuery().select2) {
+      $('.select2me').select2({
+          placeholder: "Select",
+          allowClear: true,
+          width: '100%'
+      });
+      $('.select2me_poll').select2({
+          placeholder: "Select",
+          allowClear: true,
+          width: '100%'
+      });
+      $('.select2me_campaign').select2({
+          placeholder: "Select",
+          width: '100%',
+          allowClear: true
+      });
+
+      $(".tag_token").select2({
+        width: "100%",
+        placeholder: "Search tag",
+        minimumInputLength: 2,
+        multiple: true,
+        tokenSeparators: [",", " "],
+        tags: true,
+        ajax: {
+            url: "/tags.json",
+            dataType: 'json',
+            data: function (term, page) {
+                return {
+                  q: term
+                };
+            },
+            results: function (data, page) {
+                return { results: data };
+            }
+        },
+        createSearchChoice:function(term, data) { 
+          if ($(data).filter(function() { 
+                  return this.text.localeCompare(term)===0 ; 
+              }).length===0 ) {
+              return { id: term, text:term };
+          } 
+        }
+      });
+  }
+}
 
 function runAllForms() {
 
@@ -984,7 +1035,7 @@ function runAllCharts() {
 function setup_widgets_desktop() {
 
 	if ($.fn.jarvisWidgets && $.enableJarvisWidgets) {
-
+		
 		$('#widget-grid').jarvisWidgets({
 
 			grid : 'article',
@@ -1330,7 +1381,7 @@ function pageSetUp() {
 		});
 	
 		// activate inline charts
-		runAllCharts();
+		// runAllCharts();
 	
 		// setup widgets
 		setup_widgets_desktop();
@@ -1340,6 +1391,10 @@ function pageSetUp() {
 	
 		// run form elements
 		runAllForms();
+
+		// run select2
+
+		handleSelect2();
 
 	} else {
 		
@@ -1354,7 +1409,7 @@ function pageSetUp() {
 		});
 	
 		// activate inline charts
-		runAllCharts();
+		// runAllCharts();
 	
 		// setup widgets
 		setup_widgets_mobile();

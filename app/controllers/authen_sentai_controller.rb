@@ -34,14 +34,17 @@ class AuthenSentaiController < ApplicationController
 			if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-
+        @login = true
 				session[:member_id] = member.id
 				wants.html { redirect_back_or polls_path }
 				wants.json
+        wants.js
 			else
+        @login = false
 				flash[:warning] = "Invalid username or password."
 				wants.html { redirect_to(:back) }
 				wants.json
+        wants.js
 			end
 		end
 
@@ -68,6 +71,10 @@ class AuthenSentaiController < ApplicationController
   			wants.json
   		end
   	end
+  end
+
+  def forgot
+    
   end
 
   def update_sentai

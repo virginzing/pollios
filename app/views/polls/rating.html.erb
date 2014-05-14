@@ -1,107 +1,124 @@
-<% breadcrumb :new_poll, @poll %>
-<% breadcrumb :rating_poll %>
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
 
-<div class="portlet box red">
-  <div class="portlet-title">
-    <div class="caption"><i class="icon-reorder"></i>Poll</div>
-    <div class="tools">
-      <a href="javascript:;" class="collapse"></a>
-      <a href="javascript:;" class="remove"></a>
+      <header>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2><strong>Form</strong></h2>       
+        
+      </header>
+      <!-- widget div-->
+      <div>
+    
+        <!-- widget content -->
+        <div class="widget-body">
+          <%= simple_form_for @poll, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= f.input :type_poll, as: :hidden, input_html: { value: "rating" } %>
+          <header>
+            Poll Detail 
+          </header>
+
+          <fieldset>
+            
+            <section>
+              <label class="label">Question</label>
+              <label class="textarea">
+                <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,250]" style="display: block; width: 100%;"></textarea>
+              </label>
+              <div class="note">
+                <strong>Note: </strong> use tag by '#'
+              </div>
+            </section>
+
+            <section>
+              <label class="label">Choice</label>
+              <label class="input">
+                <i class="fa fa-star fa-2x"></i>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Choices</label>
+              <label class="input">
+                <i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Choices</label>
+              <label class="input">
+                <i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Choices</label>
+              <label class="input">
+                <i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Choices</label>
+              <label class="input">
+                <i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i><i class="fa fa-star fa-2x"></i>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Expire with in</label>
+              <label class="select">
+                <%= f.input :expire_date, collection: 1..20, label: false, include_blank: false %>
+              </label>
+            </section>
+
+          </fieldset>
+
+          <header>
+            Config
+          </header>
+          
+          <fieldset>
+            <section>
+              <label class="label">Campaign</label>
+              <label class="select">
+                <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Recurring</label>
+              <label class="select">
+                <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
+              </label>
+            </section>
+          
+          </fieldset>
+        
+
+          <footer>
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+            <button type="button" class="btn btn-default" onclick="window.history.back();">
+              Back
+            </button>
+          </footer>
+            <% end %>
+
+        </div>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      </div>
     </div>
   </div>
-
-  <div class="portlet-body form">
-    <%= simple_form_for @poll, :html => { :multipart => true, class: "form-horizontal", id: 'form-input' } do |f| %>
-      <div class="form-body">
-        <h3 class="form-section">Rating Poll</h3>
-          <div class="row">
-            <div class="col-md-7">
-              <%= f.input :type_poll, as: :hidden, input_html: { value: "rating" } %>
-
-
-              <!-- <%= f.input :title, wrapper: :horizontal, label: "Question", input_html: { data: { 'validate' => 'required' } } %> -->
-              <div class="form-group">
-                <div class="label-hz col-md-2"><label class="string optional control-label">Question</label></div>
-                <div class="col-md-10">
-                  <textarea class="form-control maxlength_textarea" id="textarea3" rows="5" maxlength="250" name="poll[title_with_tag]" required data-parsley-range="[5,250]"></textarea>
-                  <span class="help-block"><span class="label label-sm label-danger">Note:</span> Use tag by #</span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
-                <div class="col-md-10 rating-poll">
-                  <i class="icon-star"></i>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
-                <div class="col-md-10 rating-poll">
-                  <i class="icon-star"></i><i class="icon-star"></i>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
-                <div class="col-md-10 rating-poll">
-                  <i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
-                <div class="col-md-10 rating-poll">
-                  <i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
-                <div class="col-md-10 rating-poll">
-                  <i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-5">
-              <!-- <%= f.input :tag_tokens,wrapper: :horizontal ,:label => "Tag", :input_html => {:class => "tag_token", :id => "tag_lists" } %> -->
-              <div class="form-group">
-                <label class="control-label col-md-2">Campaign</label>
-                <div class="col-md-10">
-                  <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-2">Recurring</label>
-                <div class="col-md-10">
-                  <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a recurring"} %>
-                </div>
-              </div>
-              <%= f.input :expire_date, collection: 1..20,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: 'input-xsmall'} %>
-            </div>
-
-          </div>
-      </div>
-
-      <div class="form-actions fluid">
-        <div class="row">
-           <div class="col-md-7">
-              <div class="col-md-offset-2 col-md-9">
-                 <button type="submit" class="btn blue submit"><i class="icon-ok"></i> Submit</button>
-                 <%= link_to 'Discard', polls_path, method: :get, class: 'btn default' %>                              
-              </div>
-           </div>
-           <div class="col-md-6">
-           </div>
-        </div>
-       </div>
-
-      <% end %>
-  </div>
-
-</div>
+</section>
 
 
 
 <script type="text/javascript">
-  $('.tag_token').select2('data', <%= raw @poll_tags.to_json %>);
   $("#form-input").parsley();
 </script>
