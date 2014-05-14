@@ -259,23 +259,23 @@
             </ul>
           </li>
 
-					<li>
+					<li class="<%= is_active?('poll_series') %>">
             <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Questionnaire</span></a>
               <ul>
-                <li>
+                <li class="<%= is_active_3rd_level('poll_series', action_name) %>">
                   <a href="#"><i class="fa fa-fw fa-folder-open"></i> Create</a>
                   <ul>
-                    <li>
-                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Normal</a>
+                    <li class="<%= is_active_2nd_level('poll_series', 'normal') %>">
+                      <a href="<%= normal_questionnaire_path %>"><i class="fa fa-fw fa-file-text"></i> Normal</a>
                     </li>
-                    <li>
-                      <a href="#"><i class="fa fa-fw fa-file-text"></i> Same Choice</a>
+                    <li class="<%= is_active_2nd_level('poll_series', 'same_choice') %>">
+                      <a href="<%= same_choice_questionnaire_path %>"><i class="fa fa-fw fa-file-text"></i> Same Choice</a>
                     </li>
                   </ul>
                 </li>
 
-              <li>
-                <a href="#"><i class="fa fa-fw fa-folder-open"></i> List Questionnaire</a>
+              <li class="<%= is_active_2nd_level('poll_series', 'index') %>">
+                <a href="<%= poll_series_index_path %>"> List Questionnaire</a>
               </li>
 
             </ul>
