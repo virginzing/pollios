@@ -266,8 +266,11 @@ ActiveRecord::Schema.define(version: 20140512104547) do
     t.integer  "choice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "poll_series_id"
+    t.integer  "poll_series_id", default: 0
   end
+
+  add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id"
+  add_index "history_votes", ["poll_id"], name: "index_history_votes_on_poll_id"
 
   create_table "members", force: true do |t|
     t.string   "sentai_name"
@@ -284,8 +287,8 @@ ActiveRecord::Schema.define(version: 20140512104547) do
     t.date     "birthday"
     t.integer  "province_id"
     t.string   "key_color"
-    t.datetime "poll_public_req_at",  default: '2014-05-12 07:36:17'
-    t.datetime "poll_overall_req_at", default: '2014-05-12 10:50:24'
+    t.datetime "poll_public_req_at",  default: '2014-05-14 10:12:59'
+    t.datetime "poll_overall_req_at", default: '2014-05-14 10:12:59'
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at"
@@ -327,7 +330,7 @@ ActiveRecord::Schema.define(version: 20140512104547) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2014-03-05 07:25:32'
+    t.datetime "start_date",     default: '2014-05-01 19:32:02'
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
@@ -358,7 +361,7 @@ ActiveRecord::Schema.define(version: 20140512104547) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",       default: 0
-    t.datetime "start_date",     default: '2014-03-05 07:25:31'
+    t.datetime "start_date",     default: '2014-05-01 19:32:01'
     t.boolean  "series",         default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
