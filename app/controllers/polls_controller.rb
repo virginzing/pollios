@@ -26,8 +26,8 @@ class PollsController < ApplicationController
     base64_qrcode = Base64.strict_encode64(qrurl)
     @qrcode = URI.encode(base64_qrcode)
 
-    puts "qrcode encode base64 => #{base64_qrcode}"
-    puts "qrcode => #{qrurl}"
+    # puts "qrcode encode base64 => #{base64_qrcode}"
+    # puts "qrcode => #{qrurl}"
 
     respond_to do |format|
       format.json

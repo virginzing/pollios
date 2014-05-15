@@ -48,3 +48,32 @@ span.remove_poll {
   margin-top: -1px;
   margin-left: -1px;
 }
+
+h1.logo {
+  margin-bottom: 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 20px;
+  max-height: 50px;
+}
+h1.logo {
+  color: #444444;
+}
+h1.logo img {
+  margin-right: 5px;
+  max-height: 40px;
+  margin-top: -6px;
+  margin-left: 7px;
+}
+h1.logo .logo-title {
+  vertical-align: middle;
+}
+
+a.logo {
+  color: #444444;
+}
+
+a.logo:hover {
+  color: #444444;
+  text-decoration: none;
+}

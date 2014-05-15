@@ -109,7 +109,31 @@
 
 <body data-spy="scroll">
     <!-- ******HEADER****** --> 
-    <header id="top" class="header navbar-fixed-top">  
+    <header id="top" class="header navbar-fixed-top"> 
+        <div class="front-topbar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                    </div>
+                    <div class="col-md-6 col-sm-6 topbar-social">
+                        <ul class="list-unstyle inline">
+                            <li><i class="icon-envelope-alt topbar-info-icon top-2"></i><span>
+                            <% if current_member %>
+                            <a href="/dashboard">
+                                Back Dashboard
+                            </a>
+                            <% else %>
+                            <a href="/users_signin">
+                                Are you brand ?
+                            </a>
+                            <% end %>
+                        </span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>        
+        </div>
+
         <div class="container">            
             <h1 class="logo pull-left">
                 <a class="scrollto" href="#promo">
