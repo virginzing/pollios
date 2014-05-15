@@ -169,9 +169,9 @@
 				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 
 					
 					<a href="javascript:void(0);" id="show-shortcut">
-						<img src="/smartadmin/img/avatars/sunny.png" alt="me" class="online" /> 
+						<%= image_tag(current_member.avatar.url(:thumbnail)) %>
 						<span>
-							john.doe 
+							<%= current_member.sentai_name %>
 						</span>
 						<i class="fa fa-angle-down"></i>
 					</a> 
@@ -319,7 +319,7 @@
 					<a href="#gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
 				</li>
 				<li>
-					<a href="javascript:void(0);" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
+					<a data-no-turbolink='true' href="/profile" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
 				</li>
 			</ul>
 		</div>
