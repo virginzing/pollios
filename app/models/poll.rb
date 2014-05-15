@@ -133,12 +133,11 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  # def cached_member user_obj
-  #   # puts "#{member}"
-  #   # # Rails.cache.fetch([member, self.member.updated_at.to_i]) do
-  #   #   MemberSerializer.new(member, serializer_options: { user: user_obj  } ).as_json
-  #   # # end
-  # end
+  def cached_member
+    Rails.cache.fetch(['member', self.member.updated_at.to_i]) do
+      member.as_json()
+    end
+  end
 
   def get_campaign
     campaign.present? ? true : false

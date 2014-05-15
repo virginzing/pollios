@@ -5,8 +5,9 @@ if @poll_series || @poll_nonseries
   json.partial! 'friends/profile_detail', member: @find_friend
 
     json.poll_series @poll_series do |poll|
-      json.creator poll.cached_member
+
       json.list_of_poll do
+        json.creator Member.get_member_detail(current_member, poll.poll_series.member)
         json.id poll.poll_series_id
         json.vote_count poll.poll_series.vote_all
         json.view_count poll.poll_series.view_all
@@ -33,8 +34,9 @@ if @poll_series || @poll_nonseries
     end
 
     json.poll_nonseries @poll_nonseries do |poll|
-      json.creator poll.cached_member
+
       json.poll do
+        json.creator Member.get_member_detail(current_member, poll.member)
         json.id poll.id
         json.title poll.title
         json.vote_count poll.vote_all

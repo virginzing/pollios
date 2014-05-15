@@ -1,6 +1,5 @@
 if @poll.present?
   json.response_status "OK"
-  json.creator @poll.cached_member
 
   if @poll.series
     json.partial! 'response/questionnaire', poll: @poll
