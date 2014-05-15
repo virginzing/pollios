@@ -4,7 +4,7 @@ if @find_tag.nil?
 else
   json.response_status "OK"
   json.poll_nonseries @poll do |poll|
-    json.creator poll.cached_member
+
     json.poll do
       json.partial! 'response/poll', poll: poll
     end
