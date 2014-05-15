@@ -388,6 +388,12 @@ class Member < ActiveRecord::Base
     Template.where(member_id: id).first
   end
 
+  def self.get_member_detail(user, member_of_poll)
+    Rails.cache.fetch(['user', user.id, 'relate', 'member', member_of_poll.id]) do
+      MemberSerializer.new(member_of_poll, serializer_options: { user: user  }).as_json
+    end
+  end
+
   def as_json options={}
    {
       member_id: id,
@@ -398,6 +404,31 @@ class Member < ActiveRecord::Base
       avatar: detect_image(avatar),
       key_color: key_color.present? ? key_color : ""
    }
+  end
+
+  def is_friend(user_obj)
+    puts "user_obj => #{user_obj}"
+    my_friend = user_obj.cached_get_friend_active.map(&:id)
+    your_request = user_obj.cached_get_your_request.map(&:id)
+    friend_request = user_obj.cached_get_friend_request.map(&:id)
+    my_following = user_obj.cached_get_following.map(&:id)
+    
+    if my_friend.include?(id)
+      hash = Hash["add_friend_already" => true, "status" => :friend]
+    elsif your_request.include?(id)
+      hash = Hash["add_friend_already" => true, "status" => :invite]
+    elsif friend_request.include?(id)
+      hash = Hash["add_friend_already" => true, "status" => :invitee]
+    else
+      hash = Hash["add_friend_already" => false, "status" => :nofriend]
+    end
+
+    if celebrity? || brand?
+      my_following.include?(id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+    else
+      hash.merge!({"following" => "" })
+    end
+    hash
   end
 
   def detect_image(avatar)

@@ -92,6 +92,7 @@ class Friend < ActiveRecord::Base
       end
       Rails.cache.delete([ friend_id , 'follower' ])
       Rails.cache.delete([ member_id, 'following' ])
+      flush_cached_friend(member_id, friend_id)
 
       find_friend
     rescue => e
@@ -108,6 +109,7 @@ class Friend < ActiveRecord::Base
     if find_following.present?
       Rails.cache.delete([ friend_id , 'follower' ])
       Rails.cache.delete([ member_id, 'following' ])
+      flush_cached_friend(member_id, friend_id)
 
       find_following.destroy
     else
@@ -193,42 +195,12 @@ class Friend < ActiveRecord::Base
       if member.celebrity? || member.brand?
         my_following.include?(member.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
       else
-        hash.merge!({"following" => nil })
+        hash.merge!({"following" => "" })
       end
       check_my_friend << hash
     end
 
     return check_my_friend
-    # puts "check_my_friend => #{check_my_friend}"
-    # my_friend = where("follower_id = ? AND followed_id IN (?) AND status = ?", member_id, search_member_ids, 1).includes(:followed)
-    # my_following = where("follower_id = ? AND status != ? AND following = ?", member_id, 1, true).pluck(:followed_id)
-
-    # puts "my_following => #{my_following}"
-
-    # my_friend_ids = my_friend.collect{|friend| [friend.followed_id, friend] }
-
-    # puts "my friend ids => #{my_friend_ids}"
-    # search_member_ids.each do |search_member_id|
-    #   # puts "#{search_member_id}"
-    #   my_friend_ids.each do |friend|
-
-    #     if my_following.include?(search_member_id)
-
-    #       if friend.first == search_member_id
-    #         friend_list = Hash["add_friend_already" => true, "status" => friend.last.status_text, "following" => true]
-    #       else
-    #         friend_list = Hash["add_friend_already" => false, "status" => friend.last.status_text, "following" => true]
-    #       end
-    #     else
-    #       if friend.first == search_member_id
-    #         friend_list = Hash["add_friend_already" => true, "status" => friend.last.status_text, "following" => false]
-    #       else
-    #         friend_list = Hash["add_friend_already" => false, "status" => friend.last.status_text, "following" => false]
-    #       end
-    #     end
-    #     check_my_friend << friend_list
-    #   end
-    # end
   end
 
   def self.flush_cached_friend(member_id, friend_id)
@@ -239,6 +211,9 @@ class Friend < ActiveRecord::Base
     Rails.cache.delete([ friend_id, 'friend_active'])
     Rails.cache.delete([ friend_id, 'your_request'])
     Rails.cache.delete([ friend_id, 'friend_request'])
+
+    Rails.cache.delete(['user', member_id, 'relate', 'member', friend_id])
+    Rails.cache.delete(['user', friend_id, 'relate', 'member', member_id])
   end
 
 end
