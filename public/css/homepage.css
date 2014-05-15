@@ -647,6 +647,7 @@ blockquote {
 .how .content .title {
   margin-top: 0;
   margin-bottom: 30px;
+  font-size: 28px;
 }
 .how .content .intro {
   margin-bottom: 30px;
@@ -693,6 +694,7 @@ blockquote {
 }
 .faq .title {
   margin-bottom: 60px;
+  font-size: 28px;
 }
 .faq .item {
   padding: 30px;
@@ -745,6 +747,7 @@ blockquote {
 .story .content .title {
   margin-bottom: 30px;
   margin-top: 0;
+  font-size: 28px;
 }
 .story .content p {
   font-size: 16px;
@@ -781,6 +784,7 @@ blockquote {
 }
 .testimonials .title {
   margin-bottom: 60px;
+  font-size: 28px;
 }
 .testimonials .item {
   margin-bottom: 30px;

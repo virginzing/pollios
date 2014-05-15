@@ -11,8 +11,13 @@ jQuery(document).ready(function($) {
         $('#promo .summary').css('opacity', 0).one('inview', function(isInView) {
             if (isInView) {$(this).addClass('animated fadeInUp delayp2');}
         });
+
         $('#promo .ios').css('opacity', 0).one('inview', function(isInView) {
             if (isInView) {$(this).addClass('animated fadeInLeft delayp3');}
+        });
+
+        $('#promo .download-area').css('opacity', 0).one('inview', function(isInView) {
+            if (isInView) {$(this).addClass('animated bounceIn delayp3');}
         });
         
         $('#promo .android').css('opacity', 0).one('inview', function(isInView) {
@@ -33,8 +38,8 @@ jQuery(document).ready(function($) {
         });
         
         /* Animate elements in #How */
-        $('#how .video-wrapper').css('opacity', 0).one('inview', function(event, isInView) {
-            if (isInView) {$(this).addClass('animated fadeInLeft delayp1');}
+        $('#how .video-container').css('opacity', 0).one('inview', function(event, isInView) {
+            if (isInView) {$(this).addClass('animated fadeInLeft delayp2');}
         });
         
         $('#how .content').css('opacity', 0).one('inview', function(event, isInView) {
@@ -82,6 +87,10 @@ jQuery(document).ready(function($) {
         });
         
         /* Animate elements in #contact */
+        $('#contact #mapCanvas').css('opacity', 0).one('inview', function(event, isInView) {
+            if (isInView) {$(this).addClass('animated fadeInUp delayp2');}
+        });
+
         $('#contact .title').css('opacity', 0).one('inview', function(event, isInView) {
             if (isInView) {$(this).addClass('animated fadeInUp delayp1');}
         });
