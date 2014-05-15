@@ -245,9 +245,9 @@
           </li>
 
 					<li class="<%= is_active?('campaigns') %>">
-						<a href="/campaigns"><i class="fa fa-lg fa-fw fa-calendar"><em>3</em></i> <span class="menu-item-parent">Campaign</span></a>
+						<a href="/campaigns"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Campaign</span></a>
 					</li>
-					<li>
+					<li class="<%= is_active?('recurrings') %>">
 						<a href="/recurrings"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Recurring</span></a>
 					</li>
 					<li>
@@ -270,7 +270,7 @@
 
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li>Home</li><li>Dashboard</li>
+
 				</ol>
 				<!-- end breadcrumb -->
 
@@ -392,9 +392,24 @@
 		<!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
 
 		<script>
+			$.bread_crumb = $('#ribbon ol.breadcrumb');
+
+			function drawBreadCrumb() {
+				var nav_elems = $('nav li.active > a'), count = nav_elems.length;
+				//console.log("breadcrumb")
+				$.bread_crumb.empty();
+				$.bread_crumb.append($("<li>Home</li>"));
+				nav_elems.each(function() {
+					$.bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text())));
+					// update title when breadcrumb is finished...
+					if (!--count) document.title = $.bread_crumb.find("li:last-child").text();
+				});
+			}
+
 			$(document).on('page:change', function() {
 				// DO NOT REMOVE : GLOBAL FUNCTIONS!
 				pageSetUp();
+				drawBreadCrumb();
 
 				var searchFunc = function (term, callback) {
 				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
