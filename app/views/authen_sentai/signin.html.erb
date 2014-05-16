@@ -1,3 +1,15 @@
+<header id="header">
+  <!--<span id="logo"></span>-->
+
+  <h1 class="logo pull-left">
+    <img id="logo-image" class="logo-image" src="/images/logo/logo.png" alt="Logo">
+    <span class="logo-title">POLLIOS</span>
+  </h1>
+
+  <span id="login-header-space"> <span class="hidden-mobile">Need an Brand account?</span> <a href="/users_signup" class="btn btn-danger">Creat account</a> </span>
+</header>
+    
+
 <div id="main" role="main">
   <!-- MAIN CONTENT -->
   <div id="content" class="container">
@@ -93,3 +105,62 @@
   </div>
 
 </div>
+
+<script>
+  $.required_login = <%= flash.present? %>;
+    var flash_list =  <%= raw manage_flash(flash) %>;
+
+    $.title = flash_list[0];
+    $.msg = flash_list[1];
+    $.color = flash_list[2];
+    $.icon = flash_list[3];
+
+    if($.required_login) {
+
+      $(window).bind("load", function() {
+        $.smallBox({
+          title : $.title,
+          content : $.msg,
+          color : $.color,
+          timeout: 6000,
+          icon : $.icon
+        });
+      });
+    }
+
+    runAllForms();
+
+    $(function() {
+      // Validation
+      $("#login-form").validate({
+        // Rules for form validation
+        rules : {
+          authen : {
+            required : true,
+            email : true
+          },
+          password : {
+            required : true,
+            minlength : 3,
+            maxlength : 20
+          }
+        },
+
+        // Messages for form validation
+        messages : {
+          authen : {
+            required : 'Please enter your email address',
+            email : 'Please enter a VALID email address'
+          },
+          password : {
+            required : 'Please enter your password'
+          }
+        },
+
+        // Do not change code below
+        errorPlacement : function(error, element) {
+          error.insertAfter(element.parent());
+        }
+      });
+    });
+</script>
