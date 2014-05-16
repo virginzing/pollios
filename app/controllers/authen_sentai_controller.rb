@@ -12,11 +12,11 @@ class AuthenSentaiController < ApplicationController
 
 
 	def signin
-    render layout: "new_login"
+    render layout: "authenticate"
 	end
 
 	def signup
-    render layout: "new_signup"
+    render layout: "authenticate"
 	end
 
 	def signout

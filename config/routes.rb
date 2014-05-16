@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 Pollios::Application.routes.draw do
 
+  get "password_resets/new"
   devise_for :admins, :controllers => { :registrations => "admin/registrations" }
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
@@ -14,6 +15,7 @@ Pollios::Application.routes.draw do
   end
   resources :members 
   resources :poll_series
+  resources :password_resets
 
   scope 'build_poll' do
     get 'binary',   to: 'polls#binary', as: :binary_poll

@@ -1,29 +1,95 @@
-<div class="container">
-<form action="/authen/signin_sentai" method="post">
-  <div class="row">
-		<div class="authen-form small-12 large-6 large-offset-3">
-		  <li class="title">Sign in</li>
-		  <li class="bullet-item">
-		  	<div class="row">
-	        <div class="small-2 columns">
-	          <label for="right-label" class="right inline">Username</label>
-	        </div>
-	        <div class="small-10 columns">
-	          <input type="text" id="right-label" class="left inline" placeholder="username" name="authen" autofocus>
-	        </div>
-	       	<div class="small-2 columns">
-	          <label for="right-label" class="right inline">Password</label>
-	        </div>
-	        <div class="small-10 columns">
-	          <input type="password" id="right-label" class="left inline" placeholder="username" name="password">
-	        </div>
-	        <div class="small-10 columns">
-	        	<div class="link_signup left inline" ><p>Do you have account? <%= link_to "(Sign up)", authen_signup_url %></p></div>
-	      	</div>
-	     </div>
-		  </li>
-		  <li class="cta-button"><input type="submit" class="button small" value="Signin"></li>
-		</div>
+<div id="main" role="main">
+  <!-- MAIN CONTENT -->
+  <div id="content" class="container">
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 hidden-xs hidden-sm">
+        <h1 class="txt-color-red login-header-big">Pollios</h1>
+        <div class="hero">
+
+          <div class="pull-left login-desc-box-l">
+            <h4 class="paragraph-header">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</h4>
+            <div class="login-app-icons">
+              <a href="javascript:void(0);" class="btn btn-danger btn-sm">Demo 1</a>
+              <a href="javascript:void(0);" class="btn btn-danger btn-sm">Demo 2</a>
+            </div>
+          </div>
+          
+          <img src="/smartadmin/img/demo/iphoneview.png" alt="" class="pull-right display-image" style="height:400px">
+          
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <h5 class="about-heading">Lorem ipsum dolor sit amet.</h5>
+            <p>
+              Duis ut scelerisque mi. Proin vulputate nibh turpis, ac vestibulum risus bibendum sed. Pellentesque bibendum sem dapibus nunc rutrum egestas. Ut condimentum rhoncus diam                </p>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <h5 class="about-heading">Lorem ipsum dolor sit amet.</h5>
+            <p>
+              Duis ut scelerisque mi. Proin vulputate nibh turpis, ac vestibulum risus bibendum sed. Pellentesque bibendum sem dapibus nunc rutrum egestas. Ut condimentum rhoncus diam
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+        <div class="well no-padding">
+          <form action="/users_signin" method="post" id="login-form" class="smart-form client-form" data-remote="true">
+            <header>
+              Sign In
+            </header>
+
+            <fieldset>
+              <section>
+                <label class="label">E-mail</label>
+                <label class="input"> <i class="icon-append fa fa-user"></i>
+                  <input type="email" name="authen">
+                  <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter email address</b></label>
+              </section>
+
+              <section>
+                <label class="label">Password</label>
+                <label class="input"> <i class="icon-append fa fa-lock"></i>
+                  <input type="password" name="password">
+                  <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b> </label>
+                <div class="note">
+                  <a href="forgotpassword.html">Forgot password?</a>
+                </div>
+              </section>
+
+              <section>
+                <label class="checkbox">
+                  <input type="checkbox" name="remember" checked="">
+                  <i></i>Stay signed in</label>
+              </section>
+            </fieldset>
+            <footer>
+              <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="">
+                Sign in
+              </button>
+            </footer>
+          </form>
+
+        </div>
+        
+        <h5 class="text-center"> - Or sign in using -</h5>
+                          
+                <ul class="list-inline text-center">
+                  <li>
+                    <a href="javascript:void(0);" class="btn btn-primary btn-circle"><i class="fa fa-facebook"></i></a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);" class="btn btn-info btn-circle"><i class="fa fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
+                  </li>
+                </ul>
+        
+      </div>
+    </div>
   </div>
-</form>
+
 </div>

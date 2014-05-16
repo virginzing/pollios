@@ -59,7 +59,7 @@ class MembersController < ApplicationController
 
 
   def update_profile_params
-    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name)
+    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description)
   end
 
   

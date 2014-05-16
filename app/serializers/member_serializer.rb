@@ -8,7 +8,7 @@ class MemberSerializer < ActiveModel::Serializer
 
   attr_accessor :options
 
-  attributes :member_id, :type, :name, :username, :email, :avatar, :key_color, :status
+  attributes :member_id, :type, :name, :username, :email, :avatar, :key_color, :status, :cover, :description
 
   def member_id
     object.id
@@ -23,7 +23,7 @@ class MemberSerializer < ActiveModel::Serializer
   end
 
   def username
-    object.email
+    object.username.present? ? object.username : ""
   end
 
   def email
@@ -41,4 +41,14 @@ class MemberSerializer < ActiveModel::Serializer
   def status
     object.is_friend(options[:user]) if options[:user]
   end
+
+  def cover
+    object.get_cover_image
+  end
+
+  def description
+    object.description.present? ? object.description : ""
+  end
+
+
 end

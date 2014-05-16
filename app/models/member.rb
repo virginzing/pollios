@@ -2,6 +2,7 @@ class Member < ActiveRecord::Base
   # has_paper_trail
 
   mount_uploader :avatar, AvatarUploader
+  mount_uploader :cover, AvatarUploader
 
   include MemberHelper
 
@@ -176,6 +177,10 @@ class Member < ActiveRecord::Base
         avatar.url(:thumbnail)
       end
     end
+  end
+
+  def get_cover_image
+    cover.present? ? cover.url : ""
   end
 
   def set_friend_limit
