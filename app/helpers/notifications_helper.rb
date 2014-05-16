@@ -10,4 +10,5 @@ module NotificationsHelper
   SPARKLINGHEART = HTMLEntities.new.decode "&#128150;"
   LOVELETTER = HTMLEntities.new.decode "&#128140;"
   DISAPPOINTED = HTMLEntities.new.decode "&#128542;"
+  PRAY = HTMLEntities.new.decode "&#128591;"
 end

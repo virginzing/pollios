@@ -52,7 +52,8 @@ class Friend < ActiveRecord::Base
         status = :invite
       end
       flush_cached_friend(member_id, friend_id)
-
+      # AddFriendWorker.perform_async(member_id, friend_id)
+      AddFriendWorker.new.perform(member_id, friend_id)
       [find_friend, status]
     rescue  => e
       puts "error => #{e}"
@@ -149,6 +150,7 @@ class Friend < ActiveRecord::Base
 
         search_member(member_id, friend_id).update_attributes!(active: active_status, status: :friend)
         search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
+        AddFriendWorker.new.perform(member_id, friend_id, { accept_friend: true } )
       else
         find_member.destroy
         find_friend.destroy

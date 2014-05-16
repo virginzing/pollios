@@ -50,5 +50,4 @@ class MemberSerializer < ActiveModel::Serializer
     object.description.present? ? object.description : ""
   end
 
-
 end
