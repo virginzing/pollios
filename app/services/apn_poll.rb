@@ -1,5 +1,6 @@
 class ApnPoll
   include ActionView::Helpers::TextHelper
+  include NotificationsHelper
 
   def initialize(member_id, poll)
     @member_id = member_id
@@ -20,7 +21,7 @@ class ApnPoll
   end
   
   def custom_message
-    member_name + " added a new poll: " + custom_poll_title
+    "#{FEAR} " + member_name + " added a new poll: " + custom_poll_title
   end
 
   private

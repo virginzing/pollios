@@ -374,6 +374,7 @@ class Poll < ActiveRecord::Base
           GroupNotificationWorker.new.perform(member_id, group_id, @poll)
         else
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date)
+          ApnPollWorker.new.perform(member_id, @poll)
         end
         Rails.cache.delete([member_id, 'poll_member'])
         Rails.cache.delete([member_id, 'poll_count'])

@@ -91,6 +91,8 @@ class PollsController < ApplicationController
       @poll.create_tag(@build_poll.title_with_tag)
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
+      ApnPollWorker.new.perform(current_member.id, @poll)
+      
       Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'poll_count'])
 

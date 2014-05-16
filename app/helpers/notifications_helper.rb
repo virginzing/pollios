@@ -11,4 +11,5 @@ module NotificationsHelper
   LOVELETTER = HTMLEntities.new.decode "&#128140;"
   DISAPPOINTED = HTMLEntities.new.decode "&#128542;"
   PRAY = HTMLEntities.new.decode "&#128591;"
+  FEAR = HTMLEntities.new.decode "&#128561;"
 end
