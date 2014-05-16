@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140516035301) do
+ActiveRecord::Schema.define(version: 20140516061257) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -288,6 +288,8 @@ ActiveRecord::Schema.define(version: 20140516035301) do
     t.datetime "poll_overall_req_at", default: '2014-05-12 10:50:24'
     t.string   "cover"
     t.text     "description"
+    t.boolean  "apn_add_friend",      default: true
+    t.boolean  "apn_invite_group",    default: true
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at"
