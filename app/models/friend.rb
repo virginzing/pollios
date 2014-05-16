@@ -132,6 +132,7 @@ class Friend < ActiveRecord::Base
       find_member.destroy
       flush_cached_friend(member_id, friend_id)
     end
+    [find_member, find_friend]
   end
 
   def self.accept_or_deny_freind(friend, accept)
