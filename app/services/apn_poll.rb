@@ -17,7 +17,7 @@ class ApnPoll
   end
 
   def custom_poll_title
-    truncate(@poll.title, escape: false, length: 150)
+    truncate(@poll.title, escape: false, length: 100)
   end
   
   def custom_message
