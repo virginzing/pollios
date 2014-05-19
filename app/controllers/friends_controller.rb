@@ -1,10 +1,10 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_friend, :list_request, :search_friend, :polls, :profile, :list_of_poll, :list_following, :list_follower]
+  before_action :compress_gzip, only: [:list_of_vote, :list_friend, :list_request, :search_friend, :polls, :profile, :list_of_poll, :list_following, :list_follower]
   before_action :set_current_member
-  before_action :set_friend, only: [:profile, :list_of_poll]
-  before_action :history_voted_viewed, only: [:list_of_poll]
+  before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote]
+  before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote]
 
 
   def add_friend
@@ -77,10 +77,20 @@ class FriendsController < ApplicationController
   end
 
   def list_of_poll
-    @poll_friend = PollFriendTimeline.new(@current_member, @find_friend, poll_friend_params)
-    @polls = @poll_friend.get_poll_friend.paginate(page: params[:next_cursor])
+    @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+    @polls = @init_poll.get_poll_friend.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def list_of_vote
+    @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+    @polls = @init_poll.get_vote_friend.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def poll_helper
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @poll_friend.group_by_name
+    @group_by_name ||= @init_poll.group_by_name
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
     @total_entries = @polls.total_entries
   end

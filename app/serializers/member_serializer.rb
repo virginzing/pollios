@@ -35,7 +35,7 @@ class MemberSerializer < ActiveModel::Serializer
   end
 
   def key_color
-    object.key_color.present? ? object.key_color : ""
+    object.get_key_color
   end
 
   def status
@@ -47,7 +47,7 @@ class MemberSerializer < ActiveModel::Serializer
   end
 
   def description
-    object.description.present? ? object.description : ""
+    object.get_description
   end
 
 end

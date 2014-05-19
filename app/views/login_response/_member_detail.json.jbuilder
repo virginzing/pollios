@@ -7,9 +7,9 @@ json.gender member.check_gender
 json.province member.get_province
 json.avatar member.get_avatar
 json.type member.member_type_text
-json.key_color member.key_color.present? ? member.key_color : ""
+json.key_color member.get_key_color
 json.cover member.get_cover_image
-json.description member.description
+json.description member.get_description
 
 json.count do
   json.poll member.cached_poll_member_count

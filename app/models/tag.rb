@@ -5,12 +5,13 @@ class Tag < ActiveRecord::Base
   has_many :poll_series_tags
   has_many :poll_series, through: :poll_series_tags, source: :poll_series
 
-  scope :top5, 
+  scope :top5, -> {
     select("tags.*, count(taggings.tag_id) as count").
     joins(:taggings).
     group("taggings.tag_id").
     order("count desc").
     limit(5)
+  }
 
   scope :search_autocmp_tags, -> (query) {
     where("name LIKE ?", "%#{query}%"). 

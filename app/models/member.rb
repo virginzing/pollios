@@ -180,7 +180,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_cover_image
-    cover.present? ? cover.url : ""
+    cover.present? ? cover.url(:cover) : ""
   end
 
   def set_friend_limit
@@ -258,10 +258,6 @@ class Member < ActiveRecord::Base
     Rails.cache.fetch([self.id, 'group_active']) do
       get_group_active.to_a
     end
-  end
-
-  def get_avatar
-    avatar.present? ? detect_image(avatar) : "No Image"
   end
 
   def set_share_poll(poll_id)
@@ -446,6 +442,18 @@ class Member < ActiveRecord::Base
       hash.merge!({"following" => "" })
     end
     hash
+  end
+
+  def get_key_color
+    key_color.present? ? key_color : ""  
+  end
+
+  def get_description
+    description.present? ? description : ""
+  end
+
+  def get_avatar
+    avatar.present? ? detect_image(avatar) : "No Image"
   end
 
   def detect_image(avatar)

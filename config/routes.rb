@@ -61,6 +61,7 @@ Pollios::Application.routes.draw do
     post 'unfollow',        to: 'friends#unfollow'
     get 'profile',          to: 'friends#profile'
     get 'polls',            to: 'friends#list_of_poll'
+    get 'votes',            to: 'friends#list_of_vote'
     get 'list_friend',      to: 'friends#list_of_friend'
   end
 
