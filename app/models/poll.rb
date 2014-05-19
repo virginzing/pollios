@@ -462,7 +462,7 @@ class Poll < ActiveRecord::Base
       else
         HistoryView.create!(member_id: member_id, poll_id: poll_id)
         # find(poll_id).increment!(:view_all)
-        find_poll.update_columns!(view_all: find_poll.view_all + 1)
+        find_poll.update_columns(view_all: find_poll.view_all + 1)
         # find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
         find_poll.poll_series.update_columns!(view_all: find_poll.view_all + 1) if find_poll.series
       end
