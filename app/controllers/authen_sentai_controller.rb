@@ -1,7 +1,7 @@
 class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
 	# before_action :current_login?, only: [:signin]
-  # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
+  before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
 
   expose(:current_member_id) { session[:member_id] }
@@ -40,7 +40,6 @@ class AuthenSentaiController < ApplicationController
 				wants.json
         wants.js
 			else
-        sleep 3
         @login = false
 				flash[:warning] = "Invalid username or password."
 				wants.html { redirect_to(:back) }

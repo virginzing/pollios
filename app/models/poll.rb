@@ -348,12 +348,18 @@ class Poll < ActiveRecord::Base
     friend_id = poll[:friend_id]
     buy_poll = poll[:buy_poll]
     type_poll = poll[:type_poll]
+    is_public = poll[:is_public]
+
     choice_count = get_choice_count(poll[:choices])
     in_group_ids = group_id.present? ? group_id : "0"
 
     convert_expire_date = Time.now + expire_date.to_i.day
+
     if (buy_poll.present? || member.celebrity? || member.brand?) && !group_id.present?
-      set_public = true 
+      set_public = true
+      if !is_public.present?
+        set_public = is_public
+      end 
     else
       set_public = false
     end
