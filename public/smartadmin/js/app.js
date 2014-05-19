@@ -651,18 +651,25 @@ function runAllForms() {
 	 * Usage:
 	 * Dependency: js/plugin/select2/
 	 */
+	// if ($.fn.select2) {
+	// 	$('select.select2').each(function() {
+	// 		var $this = $(this);
+	// 		var width = $this.attr('data-select-width') || '100%';
+	// 		//, _showSearchInput = $this.attr('data-select-search') === 'true';
+	// 		$this.select2({
+	// 			//showSearchInput : _showSearchInput,
+	// 			allowClear : true,
+	// 			width : width
+	// 		})
+	// 	})
+	// }
+
 	if ($.fn.select2) {
-		$('.select2').each(function() {
-			var $this = $(this);
-			var width = $this.attr('data-select-width') || '100%';
-			//, _showSearchInput = $this.attr('data-select-search') === 'true';
-			$this.select2({
-				//showSearchInput : _showSearchInput,
-				allowClear : true,
-				width : width
-			})
-		})
-	}
+		$('select.select2').select2({
+			allowClear: true,
+			width: '100%'
+		});
+	};
 
 	/*
 	 * MASKING

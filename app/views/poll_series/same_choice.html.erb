@@ -52,7 +52,7 @@
               <div class="form-group">
                 <label class="control-label col-md-2">Campaign</label>
                 <div class="col-md-10">
-                  <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
+                  <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
                 </div>
               </div>
 
