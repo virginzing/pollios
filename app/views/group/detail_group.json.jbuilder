@@ -4,8 +4,8 @@ if @group.present?
     json.partial! 'response_helper/group/full_info', group: @group
   end
   json.member_group do
-    json.active @group.get_member_active, 'response_helper/member/short_info', as: :member
-    json.pending @group.get_member_inactive, 'response_helper/member/short_info', as: :member
+    json.active @group.get_member_active, partial: 'response_helper/member/short_info', as: :member
+    json.pending @group.get_member_inactive, partial: 'response_helper/member/short_info', as: :member
   end
 else
   json.response_status "ERROR"
