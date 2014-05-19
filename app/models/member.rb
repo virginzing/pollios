@@ -254,6 +254,12 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def cached_get_group_active
+    Rails.cache.fetch([self.id, 'group_active']) do
+      get_group_active.to_a
+    end
+  end
+
   def get_avatar
     avatar.present? ? detect_image(avatar) : "No Image"
   end
@@ -350,6 +356,7 @@ class Member < ActiveRecord::Base
       find_group_member.group.decrement!(:member_count) if type == "L" 
       find_group_member.destroy
     end
+    cached_flush_active_group
     find_group_member.group
   end
 
@@ -358,6 +365,11 @@ class Member < ActiveRecord::Base
     if find_group_member
       find_group_member.group.destroy if find_group_member.is_master
     end
+    cached_flush_active_group
+  end
+
+  def cached_flush_active_group
+    Rails.cache.delete([id, 'group_active'])  
   end
 
   def check_share_poll?(poll_id)

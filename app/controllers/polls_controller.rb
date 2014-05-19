@@ -126,49 +126,12 @@ class PollsController < ApplicationController
 
   def public_poll
     puts "version => #{derived_version}"
-    if derived_version == 1
-      @poll = Poll.get_public_poll(@current_member, { next_poll: params[:next_poll], type: params[:type]})
-    elsif derived_version == 2
-      friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
-      if params[:type] == "active"
-        query_poll = Poll.active_poll.includes(:choices)
-      elsif params[:type] == "inactive"
-        query_poll = Poll.inactive_poll.includes(:choices)
-      else
-        query_poll = Poll.includes(:choices)
-      end
-
-      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-                    .where("poll_members.member_id = ? OR poll_members.member_id IN (?) OR public = ?", @current_member.id, friend_list, true)
-
-    elsif derived_version == 3
-      friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
-      if params[:type] == "active"
-        query_poll = Poll.active_poll
-      elsif params[:type] == "inactive"
-        query_poll = Poll.inactive_poll
-      else
-        query_poll = Poll.all
-      end
-
-      if params[:next_cursor]
-        @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-                          .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
-                          .order("poll_members.created_at desc")
-      else
-        @poll = query_poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
-                          .order("poll_members.created_at desc")
-      end
-
-      @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-      puts "series => #{@poll_series.map(&:id)}"
-      puts "nonseries => #{@poll_nonseries.map(&:id)}"
-    elsif derived_version == 4
+    if derived_version == 4
       @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
     elsif derived_version == 5
-      @public_poll = PublicTimelinable.new(public_poll_params, @current_member)
+      @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
 
-      @poll_paginate = @public_poll.poll_public.paginate(page: params[:next_cursor])
+      @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
 
       @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
  
@@ -197,33 +160,34 @@ class PollsController < ApplicationController
   end
 
   def group_timeline
-    @group_poll = GroupTimelinable.new(public_poll_params, @current_member)
-    @polls = @group_poll.group_poll.paginate(page: params[:next_cursor])
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @group_poll.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
+    @init_poll = GroupTimelinable.new(@current_member, public_poll_params)
+    @polls = @init_poll.group_poll.paginate(page: params[:next_cursor])
+    poll_helper
   end
 
   def reward_poll_timeline
-    @reward = PollRewardTimeline.new(public_poll_params)
-    @polls = @reward.reward_poll.paginate(page: params[:next_cursor])
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
+    @init_poll = PollRewardTimeline.new(@current_member, public_poll_params)
+    @polls = @init_poll.reward_poll.paginate(page: params[:next_cursor])
+    poll_helper
   end
 
   def my_poll
-    @poll_nonseries, @next_cursor = Poll.get_my_vote_my_poll(@current_member, ENV["MY_POLL"], options_params)
-    your_group = @current_member.get_group_active
-    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    @init_poll = MyPollInProfile.new(@current_member, options_params)
+    @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
+    poll_helper
   end
 
   def my_vote
-    @poll_nonseries = Poll.joins(:history_votes).includes(:member).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", @current_member.id).order("history_votes.created_at DESC").paginate(page: params[:next_cursor])
-    @next_cursor = @poll_nonseries.next_page.nil? ? 0 : @poll_nonseries.next_page
-    your_group = @current_member.get_group_active
-    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    @init_poll = MyPollInProfile.new(@current_member, options_params)
+    @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def poll_helper
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    @group_by_name ||= @init_poll.group_by_name
+    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
   end
 
 

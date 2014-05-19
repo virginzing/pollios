@@ -1,15 +1,14 @@
 class OverallTimeline
-
+  include GroupApi
   LIMIT_TIMELINE = 3000
   LIMIT_POLL = 10
 
   attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared, :next_cursor
 
-  def initialize(member_obj, options)
-    @member = member_obj
+  def initialize(member, options)
+    @member = member
     @options = options
-    @hidden_poll = HiddenPoll.my_hidden_poll(member_obj.id)
-    @your_group = member_obj.get_group_active
+    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
     @pull_request = options["pull_request"] || "no"
     @poll_series = []
     @poll_nonseries = []
@@ -25,18 +24,10 @@ class OverallTimeline
     @options["since_id"] || 0
   end
 
-
   def your_friend_ids
     @friend_ids ||= @member.whitish_friend.map(&:followed_id)
   end
 
-  def your_group_ids
-    @group_poll_ids ||= @your_group.pluck(:id)  
-  end
-
-  def group_by_name
-    Hash[@your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
-  end
 
   def poll_overall
     @overall_timeline ||= split_poll_and_filter

@@ -42,6 +42,7 @@ class Group < ActiveRecord::Base
     if find_group_member
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
+      Rails.cache.delete([member_id, 'group_active'])
     end
     find_group_member.group
   end
@@ -59,6 +60,7 @@ class Group < ActiveRecord::Base
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
+      Rails.cache.delete([member_id, 'group_active'])
       add_friend_to_group(@group.id, member_id, friend_id) if friend_id
     end
     @group

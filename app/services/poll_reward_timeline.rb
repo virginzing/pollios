@@ -1,7 +1,9 @@
 class PollRewardTimeline
+  include GroupApi
   attr_reader :params
   
-  def initialize(params)
+  def initialize(member, params)
+    @member = member
     @params = params
     @type = params["type"] || "all"
   end
