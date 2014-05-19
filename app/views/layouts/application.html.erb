@@ -167,7 +167,7 @@
 			<!-- User info -->
 			<div class="login-info">
 				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 
-					
+					<% if current_member %>
 					<a href="javascript:void(0);" id="show-shortcut">
 						<%= image_tag(current_member.avatar.url(:thumbnail)) %>
 						<span>
@@ -175,7 +175,7 @@
 						</span>
 						<i class="fa fa-angle-down"></i>
 					</a> 
-					
+					<% end %>
 				</span>
 			</div>
 			<!-- end user info -->
