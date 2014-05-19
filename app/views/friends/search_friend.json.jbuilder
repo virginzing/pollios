@@ -2,7 +2,7 @@ if @search.present?
   count = 0
 	json.response_status "OK"
   json.search @search do |member|
-      json.partial! 'members/detail', member: member
+      json.partial! 'response_helper/member/short_info', member: member
       json.status @is_friend[count]
       count += 1
   end

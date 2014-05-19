@@ -71,7 +71,13 @@ class GroupController < ApplicationController
   private
 
   def set_group
-    @group = Group.find(params[:id])
+    begin
+      @group = Group.find(params[:id])
+    rescue => e
+      respond_to do |wants|
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
+      end
+    end
   end
 
   def poll_group_params

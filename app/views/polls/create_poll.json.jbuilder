@@ -1,7 +1,7 @@
 if @poll.valid?
   json.response_status "OK"
   json.creator do
-    json.partial! 'polls/member_detail', poll: @poll
+    json.partial! 'response_helper/member/short_info', member: @poll.member
   end
   
  json.poll do

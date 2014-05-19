@@ -4,7 +4,7 @@ if @poll_nonseries
       json.vote @current_member.cached_voted_count
     end
 
-  json.poll_nonseries @poll_nonseries, partial: 'response/poll', as: :poll
+  json.poll_nonseries @poll_nonseries, partial: 'response_helper/poll/normal', as: :poll
 
   json.next_cursor @next_cursor
 end

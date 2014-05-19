@@ -4,7 +4,7 @@ if @poll_series || @poll_nonseries
   json.poll_series @poll_series do |poll|
 
     json.list_of_poll do
-      json.partial! 'response/questionnaire', poll: poll
+      json.partial! 'response_helper/poll/questionnaire', poll: poll
     end
 
   end
@@ -12,7 +12,7 @@ if @poll_series || @poll_nonseries
   json.poll_nonseries @poll_nonseries do |poll|
 
     json.poll do
-      json.partial! 'response/poll', poll: poll
+      json.partial! 'response_helper/poll/normal', poll: poll
     end
 
   end

@@ -415,7 +415,9 @@ class Member < ActiveRecord::Base
       username: username,
       email: email,
       avatar: detect_image(avatar),
-      key_color: key_color.present? ? key_color : ""
+      key_color: get_key_color,
+      cover: get_cover_image,
+      description: get_description
    }
   end
 

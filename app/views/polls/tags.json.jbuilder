@@ -6,7 +6,7 @@ else
   json.poll_nonseries @poll do |poll|
 
     json.poll do
-      json.partial! 'response/poll', poll: poll
+      json.partial! 'response_helper/poll/normal', poll: poll
     end
   end
 

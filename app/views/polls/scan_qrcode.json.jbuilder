@@ -4,13 +4,13 @@ if @poll.present?
   if @poll.series
 
     json.list_of_poll do
-      json.partial! 'response/questionnaire', poll: @poll
+      json.partial! 'response_helper/poll/questionnaire', poll: @poll
     end
 
   else
     
     json.poll do
-      json.partial! 'response/poll', poll: @poll
+      json.partial! 'response_helper/poll/normal', poll: @poll
     end
   end
 

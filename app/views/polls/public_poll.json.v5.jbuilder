@@ -1,1 +1,1 @@
-json.partial! 'polls/timeline_poll'
+json.partial! 'response_helper/poll/timeline'

@@ -1,7 +1,7 @@
 if @group
   json.response_status "OK"
   json.group do
-    json.partial! 'group/detail', group: @group
+    json.partial! 'response_helper/group/full_info', group: @group
   end
 else
   json.response_status "ERROR"

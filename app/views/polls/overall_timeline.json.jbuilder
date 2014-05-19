@@ -7,7 +7,7 @@ if @poll_series || @poll_nonseries
   json.poll_series @poll_series do |poll|
 
     json.list_of_poll do
-      json.partial! 'response/questionnaire', poll: poll
+      json.partial! 'response_helper/poll/questionnaire', poll: poll
       json.my_shared check_my_shared(share_poll_ids, poll.id)
       json.other_shared @series_shared[count_series]
       count_series += 1
@@ -18,7 +18,7 @@ if @poll_series || @poll_nonseries
   json.poll_nonseries @poll_nonseries do |poll|
 
     json.poll do
-      json.partial! 'response/poll', poll: poll
+      json.partial! 'response_helper/poll/normal', poll: poll
       json.poll_within poll.get_within(@group_by_name)
     end
     
