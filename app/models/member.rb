@@ -152,6 +152,7 @@ class Member < ActiveRecord::Base
       field :province
       field :avatar, :carrierwave
       field :key_color
+      field :cover, :carrierwave
     end
 
     show do
