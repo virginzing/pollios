@@ -81,5 +81,4 @@ Pollios::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
   config.cache_store = :dalli_store
 
-  config.action_mailer.default_url_options = { host: 'codeapp-herokuapp.com' }
 end
