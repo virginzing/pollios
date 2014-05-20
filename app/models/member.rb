@@ -162,7 +162,7 @@ class Member < ActiveRecord::Base
   end
 
   def new_avatar
-    avatar.url
+    avatar.url(:thumbnail)
   end
 
   def Member.check_image_avatar(avatar)
@@ -404,9 +404,34 @@ class Member < ActiveRecord::Base
     Template.where(member_id: id).first
   end
 
-  def self.get_member_detail(user, member_of_poll)
+  def self.cached_member_of_poll(user, member_of_poll)
     Rails.cache.fetch(['user', user.id, 'relate', 'member', member_of_poll.id]) do
       MemberSerializer.new(member_of_poll, serializer_options: { user: user  }).as_json
+    end
+  end
+
+  def self.cached_friend_entity(user, friend)
+    Rails.cache.fetch(['user', user.id, 'friend_entity_with', friend.id]) do
+      FriendSerializer.new(friend, serializer_options: { user: user} ).as_json
+    end
+  end
+
+  def check_friend_entity(user)
+    find_friend = Friend.where("(follower_id = ? AND followed_id = ? AND status = ?) " \
+                        "OR (follower_id = ? AND followed_id = ? AND status = ?)", 
+                        user.id, id, 1,
+                        user.id, id, -1).first
+
+    if find_friend.present?
+      {
+        close_friend: find_friend.close_friend,
+        block_friend: find_friend.block
+      }
+    else
+      {
+        close_friend: "",
+        block_friend: ""
+      }
     end
   end
 

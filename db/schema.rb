@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140520055414) do
+ActiveRecord::Schema.define(version: 20140520081418) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(version: 20140520055414) do
     t.boolean  "visible_poll", default: true
     t.integer  "status"
     t.boolean  "following",    default: false
+    t.boolean  "close_friend", default: false
   end
 
   add_index "friends", ["followed_id"], name: "index_friends_on_followed_id"

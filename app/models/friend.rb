@@ -60,6 +60,19 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  def self.add_or_un_close_friend(friend, status)
+    friend_id = friend[:friend_id]
+    member_id = friend[:member_id]
+
+    begin
+      search_member(member_id, friend_id).update_attributes!(close_friend: status)
+      flush_cached_friend_entity(member_id, friend_id) 
+    rescue => e
+      nil
+    end
+  end
+
+
   def self.check_been_friend(is_friend, member_id, friend_id)
     find_no_friend = where(follower_id: member_id, followed_id: friend_id).having_status(:nofriend).first
     if find_no_friend.present? && is_friend
@@ -171,6 +184,7 @@ class Friend < ActiveRecord::Base
       search_member(member_id, friend_id).update_attributes!(block: type_block)
       search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
       flush_cached_friend(member_id, friend_id)
+      flush_cached_friend_entity(member_id, friend_id)
     rescue => e
       puts "error => #{e}"
       nil
@@ -217,6 +231,10 @@ class Friend < ActiveRecord::Base
 
     Rails.cache.delete(['user', member_id, 'relate', 'member', friend_id])
     Rails.cache.delete(['user', friend_id, 'relate', 'member', member_id])
+  end
+
+  def self.flush_cached_friend_entity(member_id, friend_id)
+    Rails.cache.delete(['user', member_id, 'friend_entity_with', friend_id])
   end
 
 end

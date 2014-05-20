@@ -1,4 +1,4 @@
-json.creator Member.get_member_detail(@current_member, poll.poll_series.member)
+json.creator Member.cached_member_of_poll(@current_member, poll.poll_series.member)
 json.id poll.poll_series_id
 json.vote_count poll.poll_series.vote_all
 json.view_count poll.poll_series.view_all

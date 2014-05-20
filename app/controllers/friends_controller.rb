@@ -12,6 +12,14 @@ class FriendsController < ApplicationController
     @detail_friend, @status = @friend
   end
 
+  def add_close_friend
+    @friend = Friend.add_or_un_close_friend(friend_params, true)
+  end
+
+  def unclose_friend
+    @friend = Friend.add_or_un_close_friend(friend_params, false)
+  end
+
   def following
     @friend = Friend.add_following(friend_params)
   end
