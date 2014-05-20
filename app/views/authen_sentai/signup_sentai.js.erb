@@ -14,9 +14,6 @@ function handleSignupError() {
     $("[name=" + k + "]").parent().removeClass("state-success").addClass("state-error").append("<em class='error'>" + $.msg_signup[k].join(",") + "</em>");
   }
 
-  console.log(keys);
-  console.log(values);
-
   $.smallBox({
     title : "Warning",
     content: "<b>Sign up Error.</b>",

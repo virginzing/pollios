@@ -120,7 +120,7 @@
           <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
             <div class="well no-padding">
 
-              <form action="/authen/signup_sentai" method="post" enctype="multipart/form-data" id="smart-form-register" class="smart-form client-form" data-remote="true">
+              <form action="/authen/signup_sentai" method="post" id="smart-form-register" class="smart-form client-form" data-remote="true" enctype="multipart/form-data">
                 <header>
                   Registration
                 </header>
@@ -517,6 +517,9 @@ Contractology supply a wide variety of commercial legal documents, such as <a hr
             fullname : {
               required : true
             },
+            username : {
+              required : true
+            },
             email : {
               required : true,
               email : true
@@ -550,6 +553,9 @@ Contractology supply a wide variety of commercial legal documents, such as <a hr
           messages : {
             fullname : {
               required : 'Please enter your fullname'
+            },
+            username : {
+              required : 'Please enter your username'
             },
             email : {
               required : 'Please enter your email address',
