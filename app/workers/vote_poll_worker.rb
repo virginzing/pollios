@@ -6,7 +6,11 @@ class VotePollWorker
 
     recipient_id = @apn_poll.recipient_id
 
-    device_ids = Member.where(id: recipient_id).collect {|u| u.apn_devices.collect(&:id)}.flatten
+    find_recipient ||= Member.where(id: recipient_id)
+
+    device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
+
+    @custom_properties = { poll_id: poll.id, vote: true }
 
     device_ids.each do |device_id|
       @notf = Apn::Notification.new
@@ -14,12 +18,15 @@ class VotePollWorker
       @notf.badge = 1
       @notf.alert = @apn_poll.custom_message
       @notf.sound = true
-      @notf.custom_properties = { poll_id: poll.id }
+      @notf.custom_properties = @custom_properties
       @notf.save!
+    end
+
+    find_recipient.each do |member|
+      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @custom_properties)
     end
 
     Apn::App.first.send_notifications
   end
-  
-  
+
 end

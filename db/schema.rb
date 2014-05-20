@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140516075031) do
+ActiveRecord::Schema.define(version: 20140520055414) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -297,6 +297,18 @@ ActiveRecord::Schema.define(version: 20140516075031) do
   add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at"
   add_index "members", ["province_id"], name: "index_members_on_province_id"
   add_index "members", ["username"], name: "index_members_on_username"
+
+  create_table "notify_logs", force: true do |t|
+    t.integer  "sender_id"
+    t.integer  "recipient_id"
+    t.string   "message"
+    t.text     "custom_properties"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notify_logs", ["recipient_id"], name: "index_notify_logs_on_recipient_id"
+  add_index "notify_logs", ["sender_id"], name: "index_notify_logs_on_sender_id"
 
   create_table "poll_groups", force: true do |t|
     t.integer  "poll_id"

@@ -21,7 +21,7 @@ class ApnPoll
   end
   
   def custom_message
-    "#{FEAR} " + member_name + " added a new poll: " + custom_poll_title
+    member_name + " added a new poll: " + custom_poll_title
   end
 
   private

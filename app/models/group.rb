@@ -77,8 +77,8 @@ class Group < ActiveRecord::Base
         Member.where(id: check_valid_friend).each do |friend|
           @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         end
-        @group_member.group
         InviteFriendWorker.new.perform(member_id, list_friend, @group_member.group)
+        @group_member.group
       end
     end
   end

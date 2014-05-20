@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  member_id: 
+  message: MyString
+  custom_properties: MyText
+
+two:
+  member_id: 
+  message: MyString
+  custom_properties: MyText

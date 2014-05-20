@@ -6,7 +6,10 @@ class Member < ActiveRecord::Base
 
   include MemberHelper
 
-  has_many :apn_devices,  :class_name => 'Apn::Device', :dependent => :destroy
+  has_many :apn_devices, class_name: 'Apn::Device', dependent: :destroy
+
+  has_many :sent_notifies, class_name: 'NotifyLog', foreign_key: 'sender_id', dependent: :destroy
+  has_many :received_notifies, -> { includes :sender }, class_name: 'NotifyLog',  foreign_key: 'recipient_id', dependent: :destroy
 
   belongs_to :province, inverse_of: :members
 

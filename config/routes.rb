@@ -85,6 +85,7 @@ Pollios::Application.routes.draw do
     post 'update_profile',    to: 'members#update_profile'
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
+    get 'notify',         to: 'members#notify'
   end
 
   scope 'poll' do

@@ -27,7 +27,7 @@ class AddFriend
     if @options[:accept_friend]
       member_name + " is now friends with you"
     else
-      member_name + " request friend with you #{PRAY}" 
+      member_name + " request friend with you" 
     end
   end
 

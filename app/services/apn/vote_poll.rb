@@ -15,6 +15,7 @@ class Apn::VotePoll
     truncate(@poll.title, escape: false, length: 100)
   end
 
+  # allow 170 byte for custom message
   def custom_message
     "Someone votes a poll: \"#{custom_poll_title}\""
   end
@@ -26,4 +27,3 @@ class Apn::VotePoll
   end
   
 end
-
