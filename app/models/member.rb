@@ -495,10 +495,10 @@ class Member < ActiveRecord::Base
       elsif avatar.identifier.start_with?('https://') #facebook
         avatar.identifier
       else
-        "No Image"
+        avatar.url(:thumbnail)
       end
     else
-      "No Image"
+      ""
     end
   end
 
