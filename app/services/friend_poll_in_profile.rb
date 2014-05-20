@@ -25,7 +25,7 @@ class FriendPollInProfile
   end
 
   def list_my_friend_ids
-    @member.cached_get_friend_active.map(&:id)
+    @member.cached_get_friend_active.map(&:id) << @member.id
   end
 
   def is_friend
