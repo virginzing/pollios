@@ -17,3 +17,13 @@ h1.logo img {
 h1.logo .logo-title {
   vertical-align: middle;
 }
+
+em.error {
+  display: block;
+  margin-top: 6px;
+  padding: 0 1px;
+  font-style: normal;
+  font-size: 11px;
+  line-height: 15px;
+  color: #D56161;
+}

@@ -32,5 +32,15 @@ module Authenticate
 	    return response, member
 		end
 
+		def self.forgot_password(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/forgot_password.json", params)
+			response = JSON.parse(res_form_sentai.body)
+		end
+
+		def self.reset_password(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/reset_password.json", params)
+			response = JSON.parse(res_form_sentai.body)
+		end
+
 	end
 end

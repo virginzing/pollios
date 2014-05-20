@@ -19,6 +19,14 @@ class AuthenSentaiController < ApplicationController
     render layout: "new_signup"
 	end
 
+  def forgot_pwd
+    render layout: "forgot_password"
+  end
+
+  def reset_pwd
+    render layout: "reset_password"
+  end
+
 	def signout
 		session[:member_id] = nil
 		session[:return_to] = nil
@@ -61,20 +69,53 @@ class AuthenSentaiController < ApplicationController
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
   			session[:member_id] = member.id
   			flash[:success] = "Sign up sucessfully."
-  			wants.html { redirect_to root_url }
+        @signup = true
+  			wants.html { redirect_to dashboard_path }
   			wants.json
+        wants.js
   		else
+        @signup = false
   			flash[:error] = @response["response_message"]
-        puts "#{flash[:error]}"
+        puts "#{flash[:error].class}"
         @flash_error = flash[:error]
+
   			wants.html { redirect_to(:back) }
   			wants.json
+        wants.js
   		end
   	end
   end
 
-  def forgot
-    
+  def forgot_password
+    respond_to do |wants|
+      @response = Authenticate::Sentai.forgot_password(forgotpassword_params)
+      puts "response : #{@response}"
+      if @response["response_status"] == "OK"
+        @forgot_password = true
+        @password_reset_token = @response["password_reset_token"]
+
+        MemberMailer.password_reset(Member.find_by_email(forgotpassword_params["email"]), @password_reset_token).deliver
+        wants.js
+      else
+        @forgot_password = false
+        wants.js
+      end
+    end
+  end
+
+  def reset_password
+    respond_to do |wants|
+      @response = Authenticate::Sentai.reset_password(resetpassword_params)
+      puts "response : #{@response}"
+      if @response["response_status"] == "OK"
+        @reset_password = true
+        flash[:success] = "Password has been reset."
+        wants.js
+      else
+        @reset_password = false
+        wants.js
+      end
+    end
   end
 
   def update_sentai
@@ -87,8 +128,16 @@ class AuthenSentaiController < ApplicationController
 	  	params.permit(:authen, :password, :device_token)
 	  end
 
+    def forgotpassword_params
+      params.permit(:email)
+    end
+
+    def resetpassword_params
+      params.permit(:new_password, :password_reset_token)
+    end
+
 	  def signup_params
-	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :province_id, :member_type)
+	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :province_id, :member_type, :key_color)
 	  end
 
 	  def update_profile_params

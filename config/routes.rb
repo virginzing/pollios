@@ -153,9 +153,13 @@ Pollios::Application.routes.draw do
   get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
   get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
   get 'users_signout',     to: 'authen_sentai#signout', as: :users_signout
+  get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
+  get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
   
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'
+  post 'users_forgotpassword',  to: 'authen_sentai#forgot_password'
+  post 'users_resetpassword',  to: 'authen_sentai#reset_password'
 
   match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
 

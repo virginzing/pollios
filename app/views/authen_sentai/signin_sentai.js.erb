@@ -7,6 +7,10 @@ if ($.login) {
 }
 
 function handleLoginError() {
+  
+  $("[name=authen]").parent().removeClass("state-success").addClass("state-error");
+  $("[name=password]").parent().removeClass("state-success").addClass("state-error");
+
   $.smallBox({
     title : "Warning",
     content: "Invalid username or password.",
