@@ -406,22 +406,8 @@
 				});
 			}
 
-			$(document).on('page:change', function() {
-				// DO NOT REMOVE : GLOBAL FUNCTIONS!
-				pageSetUp();
-				drawBreadCrumb();
-
-				var searchFunc = function (term, callback) {
-				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
-				    .done(function (resp) {
-				      callback(resp); // `resp` must be an Array
-				    })
-				    .fail(function () {
-				      callback([]); // Callback must be invoked even if something went wrong.
-				    });
-				};
-				// /\B#([a-zA-Z0-9ก-๙_]+)/
-				$('#textarea3').textcomplete([
+			// /\B#([a-zA-Z0-9ก-๙_]+)/
+			$('#textarea3').textcomplete([
 				     { // mention strategy
 				      match: /(^|\s)#([a-zA-Z0-9ก-๙_]*)$/,
 				      search: function (term, callback) {
@@ -440,8 +426,23 @@
 				          'background-color': '#d8dfea'
 				      }
 				    }
-				]);
+			]);
 
+			$(document).on('page:change', function() {
+				// DO NOT REMOVE : GLOBAL FUNCTIONS!
+				pageSetUp();
+				drawBreadCrumb();
+
+				var searchFunc = function (term, callback) {
+				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
+				    .done(function (resp) {
+				      callback(resp); // `resp` must be an Array
+				    })
+				    .fail(function () {
+				      callback([]); // Callback must be invoked even if something went wrong.
+				    });
+				};
+			
 				/*
 				 * PAGE RELATED SCRIPTS
 				 */
