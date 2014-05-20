@@ -138,6 +138,7 @@ class Member < ActiveRecord::Base
       field :birthday
       field :province
       field :avatar, :carrierwave
+      field :cover, :carrierwave
       field :key_color
 
     end
@@ -151,8 +152,8 @@ class Member < ActiveRecord::Base
       field :birthday
       field :province
       field :avatar, :carrierwave
-      field :key_color
       field :cover, :carrierwave
+      field :key_color
     end
 
     show do
