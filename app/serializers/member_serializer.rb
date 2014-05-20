@@ -8,7 +8,7 @@ class MemberSerializer < ActiveModel::Serializer
 
   attr_accessor :options
 
-  attributes :member_id, :type, :name, :username, :email, :avatar, :key_color, :status, :cover, :description, :close_friend
+  attributes :member_id, :type, :name, :username, :email, :avatar, :key_color, :status, :cover, :description
 
   def member_id
     object.id
