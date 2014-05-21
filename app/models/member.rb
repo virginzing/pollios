@@ -1,8 +1,8 @@
 class Member < ActiveRecord::Base
   # has_paper_trail
-
-  mount_uploader :avatar, AvatarUploader
-  mount_uploader :cover, AvatarUploader
+  
+  mount_uploader :avatar, MemberUploader
+  mount_uploader :cover, MemberUploader
 
   include MemberHelper
 

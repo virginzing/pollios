@@ -26,5 +26,6 @@ Pollios::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
-  config.cache_store = :dalli_store
+  
+  config.cache_store = :dalli_store, nil, { :namespace => 'pollios', :expires_in => 1.day, :compress => true }
 end
