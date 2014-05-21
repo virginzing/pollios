@@ -412,6 +412,14 @@ class Member < ActiveRecord::Base
     end
   end
 
+  #new version 6
+
+  def cached_member
+    Rails.cache.fetch(['member', self]) do
+      V6::MemberSerializer.new(self).as_json
+    end
+  end
+
   def self.cached_friend_entity(user, friend)
     Rails.cache.fetch(['user', user.id, 'friend_entity_with', friend.id]) do
       FriendSerializer.new(friend, serializer_options: { user: user} ).as_json

@@ -138,6 +138,16 @@ class PollsController < ApplicationController
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)
       @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
       @total_entries = @polls.total_entries
+    else
+      @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
+      
+      @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
+
+      @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
+ 
+      @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+      @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+      @total_entries = @polls.total_entries
     end
   end
 

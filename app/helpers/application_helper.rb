@@ -198,8 +198,8 @@ end
 # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "choice_id": 798
-# }' -X POST http://localhost:3000/poll/288/vote.json -i
+#     "choice_id": 870
+# }' -X POST http://localhost:3001/poll/311/vote.json -i
 
 
 # Tag.find_by_name("codeapp").polls.

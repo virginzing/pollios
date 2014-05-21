@@ -1,4 +1,4 @@
-class MemberSerializer < ActiveModel::Serializer
+class V6::MemberSerializer < ActiveModel::Serializer
   self.root false
 
   def initialize(object, options={})
@@ -8,7 +8,7 @@ class MemberSerializer < ActiveModel::Serializer
 
   attr_accessor :options
 
-  attributes :member_id, :type, :name, :username, :email, :avatar, :key_color, :cover, :description, :status
+  attributes :member_id, :type, :name, :username, :email, :avatar, :key_color, :cover, :description
 
   def member_id
     object.id
@@ -36,10 +36,6 @@ class MemberSerializer < ActiveModel::Serializer
 
   def key_color
     object.get_key_color
-  end
-
-  def status
-    object.is_friend(options[:user]) if options[:user]
   end
 
   def cover
