@@ -485,21 +485,21 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    avatar.present? ? detect_image(avatar) : "No Image"
+    avatar.present? ? detect_image(avatar)
   end
 
   def detect_image(avatar)
+    new_avatar = ""
     if avatar.present?
       if avatar.identifier.start_with?('http://')
-        avatar.identifier
+        new_avatar = avatar.identifier
       elsif avatar.identifier.start_with?('https://') #facebook
-        avatar.identifier
+        new_avatar = avatar.identifier
       else
-        avatar.url(:thumbnail)
+        new_avatar = avatar.url(:thumbnail)
       end
-    else
-      ""
     end
+    new_avatar
   end
 
 end
