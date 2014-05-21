@@ -485,7 +485,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    avatar.present? ? detect_image(avatar)
+    detect_image(avatar)
   end
 
   def detect_image(avatar)
