@@ -452,7 +452,6 @@ class Member < ActiveRecord::Base
   end
 
   def is_friend(user_obj)
-    puts "user_obj => #{user_obj}"
     my_friend = user_obj.cached_get_friend_active.map(&:id)
     your_request = user_obj.cached_get_your_request.map(&:id)
     friend_request = user_obj.cached_get_friend_request.map(&:id)

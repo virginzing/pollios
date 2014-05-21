@@ -144,7 +144,7 @@ class OverallTimeline
         end
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-        shared = Hash["shared" => true, "shared_by" => Member.get_member_detail(@member, poll_member.member)]
+        shared = Hash["shared" => true, "shared_by" => Member.cached_member_of_poll(@member, poll_member.member)]
         if find_poll.present?
           if find_poll.series
             poll_series << find_poll
