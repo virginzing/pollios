@@ -109,13 +109,13 @@ class Poll < ActiveRecord::Base
   def get_within(options = {}, action_timeline = {})
     if public
       if action_timeline["friend_following_poll"]
-        Hash["in" => "Friend & Following"]
+        Hash["in" => "Friends & Following"]
       else
         Hash["in" => "Public"]
       end
     else
       if in_group_ids == "0"
-        Hash["in" => "Friend & Following"]
+        Hash["in" => "Friends & Following"]
       else
         Hash["in" => "Group", "group_detail" => get_in_groups(options)]
       end
