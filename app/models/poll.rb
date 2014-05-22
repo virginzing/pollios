@@ -355,16 +355,27 @@ class Poll < ActiveRecord::Base
 
     convert_expire_date = Time.now + expire_date.to_i.day
 
-    if (buy_poll.present? || member.celebrity? || member.brand?) && !group_id.present?
-      set_public = true
-      if !is_public.present?
-        set_public = is_public
-      end 
+    # if (buy_poll.present? || member.celebrity? || member.brand?) && !group_id.present?
+    #   set_public = true
+    #   if !is_public.present?
+    #     set_public = is_public
+    #   end 
+    # else
+    #   set_public = false
+    # end
+
+    if group_id.present?
+      @set_public = false
     else
-      set_public = false
+      if (buy_poll.present? || member.celebrity? || member.brand?)
+        @set_public = true
+        @set_public = is_public if (is_public == false || is_public == true)
+      else
+        @set_public = false
+      end
     end
 
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")
@@ -375,11 +386,11 @@ class Poll < ActiveRecord::Base
       if @choices.present?
         if group_id
           Group.add_poll(@poll.id, group_id)
-          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date, in_group: true)
+          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
           # GroupNotificationWorker.perform_async(member_id, group_id, @poll.title)
           GroupNotificationWorker.new.perform(member_id, group_id, @poll)
         else
-          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: set_public, series: false, expire_date: convert_expire_date)
+          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
           ApnPollWorker.new.perform(member_id, @poll)
         end
         Rails.cache.delete([member_id, 'poll_member'])
