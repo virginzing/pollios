@@ -88,10 +88,10 @@ class Authentication
   end
 
   def update_member(member)
-    if username.present?
-      member.update(sentai_name: member.sentai_name || name, avatar: member.avatar || avatar, birthday: member.birthday || birthday)
+    unless username.present?
+      member.update(sentai_name: name, avatar: avatar, birthday: birthday)
     else
-      member.update(sentai_name: member.sentai_name || name, username: check_username, avatar: member.avatar || avatar, birthday: member.birthday || birthday)
+      member.update(sentai_name: name, username: check_username, avatar: avatar, birthday: birthday)
     end
   end
 
