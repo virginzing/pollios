@@ -4,12 +4,26 @@ require 'rails/all'
 require 'rqrcode'
 require 'houston'
 require 'htmlentities'
+require 'multi_json'
+
+MultiJson.use :yajl
+
+# MultiJson.engine = :yajl
+# Benchmark.bmbm(5) do |x|
+#   x.report 'activesupport' do
+#     1000.times {ActiveSupport::JSON.encode(sample)}
+#   end
+#   x.report 'yajl' do
+#     1000.times {MultiJson.encode(sample)}
+#   end
+# end
 
 # require 'mongo'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
+
 ENV['RAILS_ADMIN_THEME'] = 'flatly_theme'
 
 module Pollios

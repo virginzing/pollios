@@ -37,24 +37,38 @@ class FriendFollowingTimeline
   private
 
   def find_poll_me_and_friend_following
-    query = PollMember.where("(member_id = ? AND in_group = ? AND share_poll_of_id = 0) " \
-        "OR (member_id IN (?) AND in_group = ? AND share_poll_of_id = 0) " \
-        "OR (member_id IN (?) AND in_group = ? AND share_poll_of_id = 0) " ,
-        member_id, false, 
-        your_friend_ids, false,
-        your_following_ids, false
-        ).active.limit(LIMIT_TIMELINE)
+    query_poll_me = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    query_poll_friend_and_following = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    
+    query = PollMember.joins(:poll).where("( (#{query_poll_me} AND #{poll_unexpire}) OR (#{query_poll_me} AND #{poll_expire_have_vote}) )" \
+        "OR ((#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote}) ) " \
+        "OR ((#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote}) ) " ,
+        member_id, member_id,
+        your_friend_ids, your_friend_ids,
+        your_following_ids, your_following_ids).active.limit(LIMIT_TIMELINE)
 
       poll_member = check_hidden_poll(query)
       ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
   end
 
   def find_poll_share
-    query = PollMember.where("(member_id IN (?) AND share_poll_of_id != 0 AND in_group = ?) OR (member_id IN (?) AND share_poll_of_id != 0 AND in_group = ?)", 
-      your_friend_ids, false, your_following_ids, false).limit(LIMIT_TIMELINE)
+    query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id != 0 AND poll_members.in_group = 't'"
+
+    query = PollMember.joins(:poll).where("( (#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote}) )" \
+      "OR ((#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote}) )", 
+      your_friend_ids, your_friend_ids,
+      your_following_ids, your_following_ids).limit(LIMIT_TIMELINE)
 
     poll_member = check_hidden_poll(query)
     poll_member.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
+  end
+
+  def poll_expire_have_vote
+    "polls.expire_date < '#{Time.now}' AND polls.vote_all != 0"
+  end
+
+  def poll_unexpire
+    "polls.expire_date > '#{Time.now}'"
   end
   
   def check_hidden_poll(query)

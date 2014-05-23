@@ -302,6 +302,7 @@ GEM
     will_paginate (3.0.5)
     will_paginate-foundation (5.3.3)
       will_paginate (>= 3.0.3)
+    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
@@ -360,3 +361,4 @@ DEPENDENCIES
   unicorn
   versioncake!
   will_paginate-foundation
+  yajl-ruby
