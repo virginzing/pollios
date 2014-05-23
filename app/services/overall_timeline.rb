@@ -41,14 +41,24 @@ class OverallTimeline
 
   def find_poll_me_and_friend_and_group_and_public
     # puts "your friend ids #{your_friend_ids}"
-    query = PollMember.where("(poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
-        "OR (poll_members.member_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
-        "OR (poll_members.poll_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
-        "OR (poll_members.public = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", 
-        member_id, false, 
-        your_friend_ids, false, 
-        find_poll_in_my_group, true, 
-        true, false).active.limit(LIMIT_TIMELINE)
+    poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+
+    poll_friend_query  = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+
+    poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
+
+    poll_public_query = "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+
+    poll_expire_have_vote = "polls.expire_date < '#{Time.now}' AND polls.vote_all != 0"
+
+    query = PollMember.joins(:poll).where("( (#{poll_member_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_member_query} AND #{poll_expire_have_vote}) ) " \
+        "OR ( ( #{poll_friend_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_friend_query} AND #{poll_expire_have_vote}) ) " \
+        "OR ( ( #{poll_group_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_group_query} AND #{poll_expire_have_vote} ) )" \
+        "OR ( ( #{poll_public_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_public_query} AND #{poll_expire_have_vote}) )", 
+        member_id, member_id,
+        your_friend_ids, your_friend_ids,
+        find_poll_in_my_group, find_poll_in_my_group
+        ).active.limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
 
