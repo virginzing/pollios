@@ -25,29 +25,31 @@ class PublicTimelinable
   end
 
   def poll_public
-    @hidden_poll_ids = my_hidden
 
     query_poll_public = "poll_members.public = 't' AND share_poll_of_id = 0 AND poll_members.in_group = 'f'"
 
-    query_poll_public_with_hidden = "poll_members.public = 't' AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND poll_members.in_group = 'f'" 
+    query_poll_public_with_hidden = "poll_members.public = 't' AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (#{my_hidden}) AND poll_members.in_group = 'f'" 
 
-    poll_expire_have_vote = "polls.expire_date < '#{Time.now}' AND polls.vote_all != 0"
-
-    if @hidden_poll_ids.empty?
-
+    if my_hidden.empty?
       query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                   where("( #{query_poll_public} AND polls.expire_date > '#{Time.now}') OR ( #{query_poll_public} AND #{poll_expire_have_vote})")
+                   where("(#{query_poll_public} AND #{poll_unexpire}) OR (#{query_poll_public} AND #{poll_expire_have_vote})")
     else
       query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                  where(" ( #{query_poll_public_with_hidden} AND poll_members.expire_date > '#{Time.now}') OR  (#{query_poll_public_with_hidden} AND #{poll_expire_have_vote} )",
-                  @hidden_poll_ids, @hidden_poll_ids)
+                  where("(#{query_poll_public_with_hidden} AND #{poll_unexpire}) OR  (#{query_poll_public_with_hidden} AND #{poll_expire_have_vote})")
     end
 
     if to_bool(@pull_request)
       query = query.where("polls.id > ? AND polls.updated_at > ?", since_id, @member.poll_public_req_at)
     end 
-    # filter_type(query, type)
     query
+  end
+
+  def poll_expire_have_vote
+    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
+  end
+
+  def poll_unexpire
+    "polls.expire_date > '#{Time.now}'"
   end
 
   private
