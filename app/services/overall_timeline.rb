@@ -51,14 +51,14 @@ class OverallTimeline
 
     poll_expire_have_vote = "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
 
-    query = PollMember.joins(:poll).where("( (#{poll_member_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_member_query} AND #{poll_expire_have_vote}) ) " \
-        "OR ( ( #{poll_friend_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_friend_query} AND #{poll_expire_have_vote}) ) " \
-        "OR ( ( #{poll_group_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_group_query} AND #{poll_expire_have_vote} ) )" \
-        "OR ( ( #{poll_public_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_public_query} AND #{poll_expire_have_vote}) )", 
+    query = PollMember.joins(:poll).where("(#{poll_member_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_member_query} AND #{poll_expire_have_vote})" \
+        "OR (#{poll_friend_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_friend_query} AND #{poll_expire_have_vote})" \
+        "OR (#{poll_group_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_group_query} AND #{poll_expire_have_vote} )" \
+        "OR (#{poll_public_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_public_query} AND #{poll_expire_have_vote})", 
         member_id, member_id,
         your_friend_ids, your_friend_ids,
         find_poll_in_my_group, find_poll_in_my_group
-        ).active.limit(LIMIT_TIMELINE)
+        ).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
 
