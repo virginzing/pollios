@@ -40,7 +40,7 @@ class OverallTimeline
   private
 
   def find_poll_me_and_friend_and_group_and_public
-    # puts "your friend ids #{your_friend_ids}"
+
     poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
     poll_friend_query  = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
@@ -49,7 +49,7 @@ class OverallTimeline
 
     poll_public_query = "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
-    poll_expire_have_vote = "polls.expire_date < '#{Time.now}' AND polls.vote_all != 0"
+    poll_expire_have_vote = "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
 
     query = PollMember.joins(:poll).where("( (#{poll_member_query} AND polls.expire_date > '#{Time.now}') OR (#{poll_member_query} AND #{poll_expire_have_vote}) ) " \
         "OR ( ( #{poll_friend_query} AND polls.expire_date > '#{Time.now}') OR ( #{poll_friend_query} AND #{poll_expire_have_vote}) ) " \
