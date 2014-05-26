@@ -28,6 +28,9 @@ class OverallTimeline
     @friend_ids ||= @member.whitish_friend.map(&:followed_id)
   end
 
+  def your_following_ids
+    @following_ids ||= @member.get_following.map(&:id)
+  end
 
   def poll_overall
     @overall_timeline ||= split_poll_and_filter
@@ -77,11 +80,18 @@ class OverallTimeline
   end
 
   def find_poll_share
-    query = PollMember.where("poll_members.member_id IN (?) AND poll_members.share_poll_of_id != ?", your_friend_ids, 0).limit(LIMIT_TIMELINE)
+    query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0 AND poll_members.in_group = 'f'"
+
+    query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote})" \
+      "OR (#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote})", 
+      your_friend_ids, your_friend_ids,
+      your_following_ids, your_following_ids).limit(LIMIT_TIMELINE)
+
     query = check_new_pull_request(query)
     poll_member = check_hidden_poll(query)
     poll_member.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
+
 
   def check_new_pull_request(query)
     if to_bool(@pull_request)

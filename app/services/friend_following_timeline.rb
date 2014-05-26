@@ -40,9 +40,9 @@ class FriendFollowingTimeline
     query_poll_me = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     query_poll_friend_and_following = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     
-    query = PollMember.joins(:poll).where("( (#{query_poll_me} AND #{poll_unexpire}) OR (#{query_poll_me} AND #{poll_expire_have_vote}) )" \
-        "OR ((#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote}) ) " \
-        "OR ((#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote}) ) " ,
+    query = PollMember.joins(:poll).where("(#{query_poll_me} AND #{poll_unexpire}) OR (#{query_poll_me} AND #{poll_expire_have_vote})" \
+        "OR (#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote})" \
+        "OR (#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote})" ,
         member_id, member_id,
         your_friend_ids, your_friend_ids,
         your_following_ids, your_following_ids).active.limit(LIMIT_TIMELINE)
@@ -52,10 +52,10 @@ class FriendFollowingTimeline
   end
 
   def find_poll_share
-    query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id != 0 AND poll_members.in_group = 't'"
+    query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0 AND poll_members.in_group = 'f'"
 
-    query = PollMember.joins(:poll).where("( (#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote}) )" \
-      "OR ((#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote}) )", 
+    query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote})" \
+      "OR (#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote})", 
       your_friend_ids, your_friend_ids,
       your_following_ids, your_following_ids).limit(LIMIT_TIMELINE)
 
@@ -64,7 +64,7 @@ class FriendFollowingTimeline
   end
 
   def poll_expire_have_vote
-    "polls.expire_date < '#{Time.now}' AND polls.vote_all != 0"
+    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
   end
 
   def poll_unexpire

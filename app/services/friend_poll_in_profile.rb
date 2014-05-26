@@ -57,7 +57,6 @@ class FriendPollInProfile
   end
 
   def poll_voted
-    puts "group_ids = #{my_and_friend_group}"
     query = Poll.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(history_votes.member_id = ? AND polls.member_id IN (?) AND polls.in_group_ids = ?) " \
                 "OR (history_votes.member_id = ? AND polls.public = ?) " \
@@ -65,6 +64,14 @@ class FriendPollInProfile
                 friend_id, list_my_friend_ids, "0",
                 friend_id, true,
                 friend_id, my_and_friend_group).references(:poll_groups)
+  end
+
+  def poll_expire_have_vote
+    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
+  end
+
+  def poll_unexpire
+    "polls.expire_date > '#{Time.now}'"
   end
 
   

@@ -26,11 +26,16 @@ class GroupController < ApplicationController
   end
 
   def poll_group
-    query = @group.polls.includes(:member).paginate(page: poll_group_params[:next_cursor]).order("created_at desc")
-    @polls = Poll.filter_type(query, poll_group_params[:type])
-    your_group = @current_member.get_group_active
-    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    @init_poll = PollOfGroup.new(@current_member, options_params)
+    @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def poll_helper
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    @group_by_name ||= @init_poll.group_by_name
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
   end
 
   def delete_poll
@@ -78,6 +83,10 @@ class GroupController < ApplicationController
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
       end
     end
+  end
+
+  def options_params
+    params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request)
   end
 
   def poll_group_params
