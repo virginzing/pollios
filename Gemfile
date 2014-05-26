@@ -23,7 +23,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder', github: 'rails/jbuilder'
 
 # gem 'foundation-rails', github: 'zurb/foundation-rails'
 # gem 'foundation_rails_helper'

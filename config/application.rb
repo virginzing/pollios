@@ -4,9 +4,8 @@ require 'rails/all'
 require 'rqrcode'
 require 'houston'
 require 'htmlentities'
-require 'multi_json'
+require 'yajl'
 
-MultiJson.use :yajl
 
 # MultiJson.engine = :yajl
 # Benchmark.bmbm(5) do |x|
