@@ -440,20 +440,20 @@ class Poll < ActiveRecord::Base
           # find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
           history_voted = HistoryVoteGuest.create(guest_id: guest_id, poll_id: poll_id, choice_id: choice_id)
         else
-          @voted = find_poll.increment(:vote_all)
+          @voted = find_poll.increment!(:vote_all)
           if @voted.present?
-            find_choice.increment(:vote)
+            find_choice.increment!(:vote)
             # find_poll.poll_series.increment!(:vote_all) if find_poll.series
             history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
             find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
             # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
             VotePollWorker.new.perform(member_id, find_poll) unless member_id.to_i == find_poll.member.id
+            # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
+            Rails.cache.delete([member_id, 'vote_count'])
+            Rails.cache.delete([find_poll.class.name, find_poll.id])
+            [find_poll, history_voted]
           end
         end
-        # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
-        Rails.cache.delete([member_id, 'vote_count'])
-        Rails.cache.delete([find_poll.class.name, find_poll.id])
-        [find_poll, history_voted]
       end
     rescue => e
       puts "error => #{e}"
