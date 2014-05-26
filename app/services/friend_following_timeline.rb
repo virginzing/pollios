@@ -45,7 +45,7 @@ class FriendFollowingTimeline
         "OR (#{query_poll_friend_and_following} AND #{poll_unexpire}) OR (#{query_poll_friend_and_following} AND #{poll_expire_have_vote})" ,
         member_id, member_id,
         your_friend_ids, your_friend_ids,
-        your_following_ids, your_following_ids).active.limit(LIMIT_TIMELINE)
+        your_following_ids, your_following_ids).limit(LIMIT_TIMELINE)
 
       poll_member = check_hidden_poll(query)
       ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
