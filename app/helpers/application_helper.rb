@@ -150,12 +150,13 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 26, 
-#     "title": "in group",
-#     "expire_within": "5",
-#     "choices": "1,2,3",
-#     "type_poll": "binary"
-# }' -X POST http://localhost:3001/poll/create.json -i
+#     "member_id": 1, 
+#     "title": "in group by nutty",
+#     "expire_within": "2",
+#     "choices": "1,2",
+#     "type_poll": "binary",
+#     "group_id": "14"
+# }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1, 
@@ -216,13 +217,13 @@ end
 # http://localhost:3000/new_public_timeline.json?member_id=3
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 6,
-#     "choice_id": "861"
-# }' -X POST http://localhost:3000/poll/308/vote.json -i
+#     "member_id": 1,
+#     "choice_id": "886"
+# }' -X POST http://localhost:3000/poll/316/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 7
-# }' -X POST http://localhost:3000/poll/share/172.json -i
+# }' -X POST http://localhost:3000/poll/share/325.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 7
