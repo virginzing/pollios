@@ -40,6 +40,14 @@ class OverallTimeline
     cached_poll_ids_of_poll_member
   end
 
+  def get_poll_shared
+    find_poll_share
+  end
+
+  def get_overall_poll
+    overall_timeline
+  end
+
   private
 
   def find_poll_me_and_friend_and_group_and_public
@@ -79,7 +87,7 @@ class OverallTimeline
   end
 
   def find_poll_share
-    query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0 AND poll_members.in_group = 'f'"
+    query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0"
 
     query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
       "OR (#{query_poll_shared} AND #{poll_unexpire})", 
