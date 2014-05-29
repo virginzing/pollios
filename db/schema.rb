@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140520081418) do
+ActiveRecord::Schema.define(version: 20140529130313) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -316,10 +316,12 @@ ActiveRecord::Schema.define(version: 20140520081418) do
     t.integer  "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "share_poll_of_id", default: 0
   end
 
   add_index "poll_groups", ["group_id"], name: "index_poll_groups_on_group_id"
   add_index "poll_groups", ["poll_id"], name: "index_poll_groups_on_poll_id"
+  add_index "poll_groups", ["share_poll_of_id"], name: "index_poll_groups_on_share_poll_of_id"
 
   create_table "poll_members", force: true do |t|
     t.integer  "member_id"
@@ -330,11 +332,13 @@ ActiveRecord::Schema.define(version: 20140520081418) do
     t.boolean  "public"
     t.boolean  "series"
     t.datetime "expire_date"
-    t.boolean  "in_group",         default: false
+    t.boolean  "in_group",           default: false
+    t.integer  "shared_at_group_id", default: 0
   end
 
   add_index "poll_members", ["member_id"], name: "index_poll_members_on_member_id"
   add_index "poll_members", ["poll_id"], name: "index_poll_members_on_poll_id"
+  add_index "poll_members", ["shared_at_group_id"], name: "index_poll_members_on_shared_at_group_id"
 
   create_table "poll_series", force: true do |t|
     t.integer  "member_id"

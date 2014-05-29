@@ -75,7 +75,7 @@ class OverallTimeline
   end
 
   def find_poll_in_my_group
-    query = PollGroup.where("group_id IN (?)", your_group_ids).limit(LIMIT_TIMELINE).map(&:poll_id)
+    query = PollGroup.where("group_id IN (?)", your_group_ids).limit(LIMIT_TIMELINE).map(&:poll_id).uniq
   end
 
   def find_poll_share
@@ -186,11 +186,25 @@ class OverallTimeline
 
   def poll_shared_at(poll_member, poll)
     if poll_member.in_group
-      Hash["in" => "Group", "group_detail" => ""]
+      Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(Group.find(poll_member.shared_at_group_id)) ]
     else
       Hash["in" => "Friends & Following"]
     end
   end
+
+  def serailize_group_detail_as_json(group)
+    if group.present?
+    {
+      id: group.id,
+      name: group.name,
+      member_count: group.member_count,
+      poll_count: group.poll_count
+    }
+    else
+      nil
+    end
+  end
+
 
   def to_bool(request)
     return true   if request == "true"

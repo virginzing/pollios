@@ -270,8 +270,13 @@ class PollsController < ApplicationController
   end
 
   def share
-    new_record = false
+    Rails.cache.delete(['Poll', @poll.id])
+    group_id = params[:group_id]
+    poll_id = params[:id]
 
+    @hash_group = check_shared_at(poll_id, group_id)
+
+    new_record = false
     @share = @poll.poll_members.where("member_id = ?", @current_member.id).first_or_create do |pm|
       pm.member_id = @current_member.id
       pm.poll_id = @poll.id
@@ -279,6 +284,8 @@ class PollsController < ApplicationController
       pm.public = @poll.public
       pm.series = @poll.series
       pm.expire_date = @poll.expire_date
+      pm.shared_at_group_id = @hash_group[:shared_at]
+      pm.in_group = @hash_group[:in_group]
       pm.save
       new_record = true
       @shared = true
@@ -288,10 +295,26 @@ class PollsController < ApplicationController
       @poll.increment!(:share_count)
       @current_member.set_share_poll(@poll.id)
     end
-    Rails.cache.delete(['Poll', @poll.id])
+  end
+
+  def check_shared_at(poll_id, group_id)
+    default_shared_at = 0
+    default_in_group = false
+
+    if group_id.present?
+      default_shared_at = group_id.to_i
+      default_in_group = true
+      PollGroup.create!(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id)
+    end
+
+    hash_group = { 
+      shared_at: default_shared_at,
+      in_group: default_in_group
+    }
   end
 
   def unshare
+    Rails.cache.delete(['Poll', @poll.id])
     puts "#{@poll.share_count}"
     find_poll = @poll.poll_members.find_by_member_id(@current_member.id)
     if find_poll.present?
@@ -302,7 +325,6 @@ class PollsController < ApplicationController
       end
     end
     @poll
-    Rails.cache.delete(['Poll', @poll.id])
   end
 
   def hide
