@@ -169,7 +169,7 @@ class OverallTimeline
         end
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-        shared = Hash["shared" => true, "shared_by" => Member.cached_member_of_poll(@member, poll_member.member)]
+        shared = Hash["shared" => true, "shared_by" => Member.cached_member_of_poll(@member, poll_member.member), "shared_at" => poll_shared_at(poll_member, find_poll) ]
         if find_poll.present?
           if find_poll.series
             poll_series << find_poll
@@ -182,6 +182,14 @@ class OverallTimeline
       end
     end
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
+  end
+
+  def poll_shared_at(poll_member, poll)
+    if poll_member.in_group
+      Hash["in" => "Group", "group_detail" => ""]
+    else
+      Hash["in" => "Friends & Following"]
+    end
   end
 
   def to_bool(request)
