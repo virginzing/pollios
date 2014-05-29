@@ -32,10 +32,10 @@ class PublicTimelinable
 
     if my_hidden.empty?
       query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                   where("(#{query_poll_public} AND #{poll_unexpire}) OR (#{query_poll_public} AND #{poll_expire_have_vote})")
+                   where("(#{query_poll_public} AND #{poll_unexpire})")
     else
       query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                  where("(#{query_poll_public_with_hidden} AND #{poll_unexpire}) OR (#{query_poll_public_with_hidden} AND #{poll_expire_have_vote})", my_hidden, my_hidden)
+                  where("(#{query_poll_public_with_hidden} AND #{poll_unexpire})", my_hidden)
     end
 
     if to_bool(@pull_request)

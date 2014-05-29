@@ -52,10 +52,10 @@ class OverallTimeline
 
     poll_public_query = "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
-    query = PollMember.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire}) OR (#{poll_member_query} AND #{poll_expire_have_vote})" \
-        "OR (#{poll_friend_query} AND #{poll_unexpire}) OR (#{poll_friend_query} AND #{poll_expire_have_vote})" \
-        "OR (#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote} )" \
-        "OR (#{poll_public_query} AND #{poll_unexpire}) OR (#{poll_public_query} AND #{poll_expire_have_vote})", 
+    query = PollMember.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
+        "OR (#{poll_friend_query} AND #{poll_unexpire})" \
+        "OR (#{poll_group_query} AND #{poll_unexpire})" \
+        "OR (#{poll_public_query} AND #{poll_unexpire})", 
         member_id, member_id,
         your_friend_ids, your_friend_ids,
         find_poll_in_my_group, find_poll_in_my_group
@@ -82,8 +82,8 @@ class OverallTimeline
   def find_poll_share
     query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0 AND poll_members.in_group = 'f'"
 
-    query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote})" \
-      "OR (#{query_poll_shared} AND #{poll_unexpire}) OR (#{query_poll_shared} AND #{poll_expire_have_vote})", 
+    query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
+      "OR (#{query_poll_shared} AND #{poll_unexpire})", 
       your_friend_ids, your_friend_ids,
       your_following_ids, your_following_ids).limit(LIMIT_TIMELINE)
 

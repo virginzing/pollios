@@ -21,7 +21,7 @@ class GroupTimelinable
 
     query =  Poll.joins(:poll_groups).uniq.
                   includes(:member, :poll_series, :campaign).
-                  where("(#{query_group_poll} AND #{poll_expire_have_vote}) OR (#{query_group_poll} AND #{poll_unexpire})", your_group_ids, your_group_ids)
+                  where("(#{query_group_poll} AND #{poll_expire_have_vote})", your_group_ids)
     # filter_type(query, type)
   end
 
