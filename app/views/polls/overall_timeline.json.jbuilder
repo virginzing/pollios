@@ -20,11 +20,11 @@ if @poll_series || @poll_nonseries
     json.poll do
       json.partial! 'response_helper/poll/normal', poll: poll
       json.poll_within poll.get_within(@group_by_name)
+      json.my_shared check_my_shared(share_poll_ids, poll.id)
+      json.other_shared @nonseries_shared[count_nonseries]
+      count_nonseries += 1
     end
-    
-    json.my_shared check_my_shared(share_poll_ids, poll.id)
-    json.other_shared @nonseries_shared[count_nonseries]
-    count_nonseries += 1
+
   end
 
   json.total_entries @total_entries
