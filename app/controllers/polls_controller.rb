@@ -91,7 +91,7 @@ class PollsController < ApplicationController
       @poll.create_tag(@build_poll.title_with_tag)
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
-      ApnPollWorker.new.perform(current_member.id, @poll)
+      ApnPollWorker.new.perform(current_member.id, @poll) if Rails.env.production?
       
       Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'poll_count'])
@@ -271,6 +271,7 @@ class PollsController < ApplicationController
 
   def share
     new_record = false
+
     @share = @poll.poll_members.where("member_id = ?", @current_member.id).first_or_create do |pm|
       pm.member_id = @current_member.id
       pm.poll_id = @poll.id
@@ -280,22 +281,28 @@ class PollsController < ApplicationController
       pm.expire_date = @poll.expire_date
       pm.save
       new_record = true
+      @shared = true
     end
 
     if new_record
       @poll.increment!(:share_count)
       @current_member.set_share_poll(@poll.id)
     end
+    Rails.cache.delete(['Poll', @poll.id])
   end
 
   def unshare
+    puts "#{@poll.share_count}"
     find_poll = @poll.poll_members.find_by_member_id(@current_member.id)
     if find_poll.present?
       find_poll.destroy
       @current_member.share_polls.find_by_poll_id(@poll.id).destroy
-      @poll.decrement!(:share_count)
+      if @poll.share_count > 0
+        @poll.update!(share_count: (@poll.share_count - 1))
+      end
     end
     @poll
+    Rails.cache.delete(['Poll', @poll.id])
   end
 
   def hide
