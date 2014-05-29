@@ -56,10 +56,9 @@ class OverallTimeline
         "OR (#{poll_friend_query} AND #{poll_unexpire})" \
         "OR (#{poll_group_query} AND #{poll_unexpire})" \
         "OR (#{poll_public_query} AND #{poll_unexpire})", 
-        member_id, member_id,
-        your_friend_ids, your_friend_ids,
-        find_poll_in_my_group, find_poll_in_my_group
-        ).limit(LIMIT_TIMELINE)
+        member_id,
+        your_friend_ids,
+        find_poll_in_my_group).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
 
@@ -84,8 +83,8 @@ class OverallTimeline
 
     query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
       "OR (#{query_poll_shared} AND #{poll_unexpire})", 
-      your_friend_ids, your_friend_ids,
-      your_following_ids, your_following_ids).limit(LIMIT_TIMELINE)
+      your_friend_ids,
+      your_following_ids).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
     poll_member = check_hidden_poll(query)
