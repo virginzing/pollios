@@ -10,7 +10,8 @@ RailsAdmin.config do |config|
   config.current_user_method(&:current_admin)
 
   config.included_models = ['Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
-    'HistoryView', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template']
+    'HistoryView', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
+    'SharePoll']
 
 
   config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }
