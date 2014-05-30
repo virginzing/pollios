@@ -1,12 +1,12 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_vote, :unshare]
+  before_action :set_current_member, only: [:watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_vote, :unshare]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
   before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
-  before_action :set_poll, only: [:show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   before_action :compress_gzip, only: [:detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
   before_action :get_your_group, only: [:detail]
@@ -88,8 +88,13 @@ class PollsController < ApplicationController
 
     if @poll.save
       puts "choices => #{@build_poll.list_of_choice}"
-      Choice.create_choices(@poll.id, @build_poll.list_of_choice)
+      
+      @choice = Choice.create_choices(@poll.id, @build_poll.list_of_choice)
+
       @poll.create_tag(@build_poll.title_with_tag)
+
+      @poll.create_watched(current_member, @poll.id)
+      
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
       ApnPollWorker.new.perform(current_member.id, @poll) if Rails.env.production?
@@ -325,6 +330,16 @@ class PollsController < ApplicationController
       end
     end
     @poll
+  end
+
+  def watch
+    @init_watch = WatchPoll.new(@current_member, params[:id])
+    @watch = @init_watch.watching
+  end
+
+  def unwatch
+    @init_watch = WatchPoll.new(@current_member, params[:id])
+    @watch = @init_watch.unwatch
   end
 
   def hide

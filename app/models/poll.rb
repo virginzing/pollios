@@ -357,15 +357,6 @@ class Poll < ActiveRecord::Base
 
     convert_expire_date = Time.now + expire_date.to_i.day
 
-    # if (buy_poll.present? || member.celebrity? || member.brand?) && !group_id.present?
-    #   set_public = true
-    #   if !is_public.present?
-    #     set_public = is_public
-    #   end 
-    # else
-    #   set_public = false
-    # end
-
     if group_id.present?
       @set_public = false
     else
@@ -383,9 +374,12 @@ class Poll < ActiveRecord::Base
       list_choice = choices.split(",")
       @choices = Choice.create_choices(@poll.id ,list_choice)
 
-      @poll.create_tag(title)
-
       if @choices.present?
+
+        @poll.create_tag(title)
+
+        @poll.create_watched(member, @poll.id)
+
         if group_id
           Group.add_poll(@poll.id, group_id)
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
@@ -397,9 +391,15 @@ class Poll < ActiveRecord::Base
         end
         Rails.cache.delete([member_id, 'poll_member'])
         Rails.cache.delete([member_id, 'poll_count'])
+      else
+        @poll.destroy
       end
     end
     @poll
+  end
+
+  def create_watched(member, poll_id)
+    WatchPoll.new(member, poll_id).watching
   end
 
   def self.get_choice_count(choices)

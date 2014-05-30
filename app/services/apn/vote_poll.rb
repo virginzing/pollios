@@ -7,8 +7,9 @@ class Apn::VotePoll
     @poll = poll
   end
 
-  def recipient_id
-    @poll.member.id
+  def recipient_ids
+    # @poll.member.id
+    watched_poll
   end
   
   def custom_poll_title
@@ -21,6 +22,10 @@ class Apn::VotePoll
   end
 
   private
+
+  def watched_poll
+    Watched.where(poll_id: @poll.id).pluck(:member_id)
+  end
 
   def member
     Member.find(@member_id)

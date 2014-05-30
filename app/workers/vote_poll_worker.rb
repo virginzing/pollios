@@ -4,9 +4,9 @@ class VotePollWorker
   def perform(member_id, poll, custom_data = {})
     @apn_poll = Apn::VotePoll.new(member_id, poll)
 
-    recipient_id = @apn_poll.recipient_id
+    recipient_ids = @apn_poll.recipient_ids
 
-    find_recipient ||= Member.where(id: recipient_id)
+    find_recipient ||= Member.where(id: recipient_ids)
 
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
