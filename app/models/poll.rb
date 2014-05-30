@@ -1,7 +1,7 @@
 class Poll < ActiveRecord::Base
 
   mount_uploader :photo_poll, PhotoPollUploader
-  
+
   include PollsHelper
   
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
@@ -26,12 +26,10 @@ class Poll < ActiveRecord::Base
   belongs_to :campaign
   belongs_to :recurring
 
-  # after_commit :flush_cached
-
   before_save :set_default_value
   before_create :generate_qrcode_key
   after_create :set_new_title_with_tag
-
+  after_commit :flush_cache
 
   validates :title, presence: true
   validates :member_id, :title , presence: true
@@ -63,6 +61,10 @@ class Poll < ActiveRecord::Base
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) { find(id) }
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
   end
 
   def cached_choices
@@ -518,6 +520,22 @@ class Poll < ActiveRecord::Base
       recurring.description
     else
       "-"
+    end
+  end
+
+  def check_my_shared(my_shared_ids, poll_id)
+    if my_shared_ids.include?(poll_id)
+      Hash["shared" => true]
+    else
+      Hash["shared" => false]
+    end
+  end
+
+  def check_watched(watched_poll_ids, poll_id)
+    if watched_poll_ids.include?(poll_id)
+      true
+    else
+      false
     end
   end
 

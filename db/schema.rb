@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140529130313) do
+ActiveRecord::Schema.define(version: 20140530030100) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -465,5 +465,16 @@ ActiveRecord::Schema.define(version: 20140529130313) do
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+
+  create_table "watcheds", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "watcheds", ["member_id", "poll_id"], name: "index_watcheds_on_member_id_and_poll_id", unique: true
+  add_index "watcheds", ["member_id"], name: "index_watcheds_on_member_id"
+  add_index "watcheds", ["poll_id"], name: "index_watcheds_on_poll_id"
 
 end

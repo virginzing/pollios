@@ -14,7 +14,8 @@ class PollsController < ApplicationController
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
   expose(:list_recurring) { current_member.get_recurring_available }
-  expose(:share_poll_ids) { @current_member.share_polls.pluck(:poll_id) }
+  expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
+  expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
 
   respond_to :json
 
@@ -270,7 +271,6 @@ class PollsController < ApplicationController
   end
 
   def share
-    Rails.cache.delete(['Poll', @poll.id])
     group_id = params[:group_id]
     poll_id = params[:id]
 
@@ -314,7 +314,7 @@ class PollsController < ApplicationController
   end
 
   def unshare
-    Rails.cache.delete(['Poll', @poll.id])
+    # Rails.cache.delete(['Poll', @poll.id])
     puts "#{@poll.share_count}"
     find_poll = @poll.poll_members.find_by_member_id(@current_member.id)
     if find_poll.present?

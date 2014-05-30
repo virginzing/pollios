@@ -6,6 +6,8 @@ class Member < ActiveRecord::Base
 
   include MemberHelper
 
+  has_many :watcheds, dependent: :destroy
+
   has_many :apn_devices, class_name: 'Apn::Device', dependent: :destroy
 
   has_many :sent_notifies, class_name: 'NotifyLog', foreign_key: 'sender_id', dependent: :destroy
@@ -209,6 +211,16 @@ class Member < ActiveRecord::Base
       "direct_msg" => 0,
       "status" => 0
     }
+  end
+
+  def cached_watched
+    Rails.cache.fetch([ self, "watcheds" ]) do
+      watcheds.to_a
+    end
+  end
+
+  def cached_shared_poll
+    Rails.cache.fetch([ self, "shared"]) { share_polls.to_a }
   end
 
   def cached_poll_count
