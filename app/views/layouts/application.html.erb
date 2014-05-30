@@ -409,7 +409,7 @@
 			// /\B#([a-zA-Z0-9ก-๙_]+)/
 			$('#textarea3').textcomplete([
 				     { // mention strategy
-				      match: /(^|\s)#([a-zA-Z0-9ก-๙_]*)$/,
+				      match: /(^|\s)#([a-zA-Z0-9ก-๙_]{1,})$/,
 				      search: function (term, callback) {
 				        $.getJSON('/search_autocmp_tags.json', { q: term })
 				          .done(function (resp) { callback(resp); })
@@ -421,7 +421,7 @@
 				    }
 				]).overlay([
 				    {
-				      match: /#([a-zA-Z0-9ก-๙_]+)/g,
+				      match: /(^|\s)#([a-zA-Z0-9ก-๙_]+)/g,
 				      css: {
 				          'background-color': '#d8dfea'
 				      }

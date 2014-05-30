@@ -8,6 +8,7 @@ class TagsController < ApplicationController
 
   def search_autocmp_tags
     @tags = Tag.search_autocmp_tags(params["q"].rstrip)
+    
     if @tags.present?
       @tags = @tags
     else
