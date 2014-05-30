@@ -5,7 +5,8 @@ class FriendsController < ApplicationController
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote]
   before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote]
-
+  
+  expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
 
   def add_friend
     @friend = Friend.add_friend(friend_params)
