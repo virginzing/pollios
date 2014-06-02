@@ -50,7 +50,7 @@ end
 gem 'versioncake', github: 'bwillis/versioncake'
 gem 'rest-client'
 gem 'mongoid', github: 'mongoid/mongoid'
-gem 'bson', '2.0.0.rc3'
+gem 'bson', '~> 2.2'
 gem 'bson_ext'
 gem 'mongoid_auto_increment_id', '0.6.3'
 gem 'dalli', github: 'mperham/dalli'
