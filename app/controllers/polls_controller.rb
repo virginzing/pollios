@@ -280,19 +280,9 @@ class PollsController < ApplicationController
     @shared = @init_share.share
   end
 
-
   def unshare
-    # Rails.cache.delete(['Poll', @poll.id])
-    puts "#{@poll.share_count}"
-    find_poll = @poll.poll_members.find_by_member_id(@current_member.id)
-    if find_poll.present?
-      find_poll.destroy
-      @current_member.share_polls.find_by_poll_id(@poll.id).destroy
-      if @poll.share_count > 0
-        @poll.update!(share_count: (@poll.share_count - 1))
-      end
-    end
-    @poll
+    @init_share = SharedPoll.new(@current_member, @poll, options_params)
+    @unshare = @init_share.unshare
   end
 
   def watch

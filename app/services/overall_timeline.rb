@@ -142,7 +142,6 @@ class OverallTimeline
       @poll_ids   = cache_polls[0..(LIMIT_POLL - 1)]
     end
 
-    # puts "poll_ids => #{@poll_ids}"
     if cache_polls.count > LIMIT_POLL
       if @poll_ids.count == LIMIT_POLL
         if cache_polls[-1] == @poll_ids.last
@@ -194,24 +193,24 @@ class OverallTimeline
 
   def poll_shared_at(poll_member, poll)
     if poll_member.in_group
-      Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(Group.find(poll_member.shared_at_group_id)) ]
+      Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(poll_member.share_poll_of_id) ]
     else
       Hash["in" => "Friends & Following"]
     end
   end
 
-  def serailize_group_detail_as_json(group)
+  def serailize_group_detail_as_json(poll_id)
+    group = PollGroup.where(poll_id: poll_id).pluck(:group_id)
+    group_list = group & your_group_ids
+    
     if group.present?
-    {
-      id: group.id,
-      name: group.name,
-      member_count: group.member_count,
-      poll_count: group.poll_count
-    }
+      ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json
     else
       nil
     end
   end
+
+
 
 
   def to_bool(request)

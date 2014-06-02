@@ -4,7 +4,6 @@ class SharedPoll
     @member = member
     @poll = poll
     @options = options
-    @default_in_group = false
   end
 
   def member_id
@@ -26,11 +25,20 @@ class SharedPoll
   end
 
   def share
+    @default_in_group = false
     if list_group_id.present?
       @default_in_group = true
       share_in_group
     else
       share_in_friend
+    end
+  end
+
+  def unshare
+    if list_group_id.present?
+      unshare_in_group
+    else
+      unshare_in_friend
     end
   end
 
@@ -74,6 +82,28 @@ class SharedPoll
     list_group_id.each do |group_id|
       SharePoll.where(member_id: member_id, poll_id: poll_id, shared_group_id: group_id).first_or_create!
       PollGroup.where(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id).first_or_create!
+    end
+  end
+
+  def unshare_in_friend
+    find_shared_poll = SharePoll.find_by(member_id: member_id, poll_id: poll_id, shared_group_id: 0)
+    find_shared_in_poll_member = PollMember.find_by(member_id: member_id, poll_id: poll_id, share_poll_of_id: poll_id, in_group: false)
+
+    if find_shared_poll.present?
+      find_shared_poll.destroy
+      find_shared_in_poll_member.destroy if find_shared_in_poll_member.present?
+    end
+  end
+
+  def unshare_in_group
+    list_group_id.each do |group_id|
+      find_shared_poll = SharePoll.find_by(member_id: member_id, poll_id: poll_id, shared_group_id: group_id)
+      find_shared_poll.destroy if find_shared_poll.present?
+    end
+
+    if @poll.share_polls.where(member_id: member_id).empty?
+      find_shared_in_poll_member = PollMember.find_by(member_id: member_id, poll_id: poll_id, share_poll_of_id: poll_id, in_group: true)
+      find_shared_in_poll_member.destroy if find_shared_in_poll_member.present?
     end
   end
 
