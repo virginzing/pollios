@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140530030100) do
+ActiveRecord::Schema.define(version: 20140602062259) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -332,13 +332,11 @@ ActiveRecord::Schema.define(version: 20140530030100) do
     t.boolean  "public"
     t.boolean  "series"
     t.datetime "expire_date"
-    t.boolean  "in_group",           default: false
-    t.integer  "shared_at_group_id", default: 0
+    t.boolean  "in_group",         default: false
   end
 
   add_index "poll_members", ["member_id"], name: "index_poll_members_on_member_id"
   add_index "poll_members", ["poll_id"], name: "index_poll_members_on_poll_id"
-  add_index "poll_members", ["shared_at_group_id"], name: "index_poll_members_on_shared_at_group_id"
 
   create_table "poll_series", force: true do |t|
     t.integer  "member_id"
@@ -434,10 +432,13 @@ ActiveRecord::Schema.define(version: 20140530030100) do
     t.integer  "poll_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "shared_group_id", default: 0
   end
 
+  add_index "share_polls", ["member_id", "poll_id", "shared_group_id"], name: "index_share_polls_on_member_id_and_poll_id_and_shared_group_id", unique: true
   add_index "share_polls", ["member_id"], name: "index_share_polls_on_member_id"
   add_index "share_polls", ["poll_id"], name: "index_share_polls_on_poll_id"
+  add_index "share_polls", ["shared_group_id"], name: "index_share_polls_on_shared_group_id"
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

@@ -277,10 +277,6 @@ class Member < ActiveRecord::Base
     end
   end
 
-  def set_share_poll(poll_id)
-    share_polls.create!(poll_id: poll_id)
-  end
-
   def campaigns_available
     campaign = campaigns.includes(:poll).order("name desc")
     campaign.delete_if{|x| x.poll.present? }

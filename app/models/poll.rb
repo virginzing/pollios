@@ -10,6 +10,9 @@ class Poll < ActiveRecord::Base
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings, source: :tag
 
+  has_many :watcheds, dependent: :destroy
+  has_many :watched_by_member, through: :watcheds, source: :member
+
   has_many :poll_groups, dependent: :destroy
   has_many :groups, through: :poll_groups, source: :group
 
