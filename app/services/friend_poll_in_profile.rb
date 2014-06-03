@@ -65,7 +65,7 @@ class FriendPollInProfile
   def poll_created
     query_poll_member = "poll_members.member_id = #{friend_id} AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     query_group_together = "poll_members.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
-    query_public = "poll_members.public = 't' AND poll_members.member_id = #{friend_id}"
+    query_public = "poll_members.public = 't' AND poll_members.member_id = #{friend_id} AND poll_members.share_poll_of_id = 0"
 
     query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
                 where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \

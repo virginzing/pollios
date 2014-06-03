@@ -1,4 +1,4 @@
-class V6::MemberSerializer < ActiveModel::Serializer
+class V5::MemberSerializer < ActiveModel::Serializer
   self.root false
 
   def initialize(object, options={})

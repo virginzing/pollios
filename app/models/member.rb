@@ -433,17 +433,21 @@ class Member < ActiveRecord::Base
     Template.where(member_id: id).first
   end
 
-  def self.cached_member_of_poll(user, member_of_poll)
-    Rails.cache.fetch(['user', user.id, 'relate', 'member', member_of_poll.id]) do
-      MemberSerializer.new(member_of_poll, serializer_options: { user: user  }).as_json
-    end
+  # def self.cached_member_of_poll(current_member, member_of_poll)
+  #   MemberSerializer.new(member_of_poll, serializer_options: { current_member: current_member }).as_json
+  # end
+
+  def self.serializer_member_detail(current_member, member_of_poll)
+    (member_of_poll.cached_member).merge({ "status" => entity_info(current_member, member_of_poll)})
   end
 
-  #new version 6
+  def self.entity_info(current_member, member_of_poll)
+    member_of_poll.is_friend(current_member)
+  end
 
   def cached_member
     Rails.cache.fetch(['member', self]) do
-      V6::MemberSerializer.new(self).as_json
+      V5::MemberSerializer.new(self).as_json
     end
   end
 
