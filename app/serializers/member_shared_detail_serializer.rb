@@ -8,7 +8,7 @@ class MemberSharedDetailSerializer < ActiveModel::Serializer
 
   attr_accessor :options
 
-  attributes :info, :entity_info
+  attributes :info
 
   # def member_id
   #   object.id
@@ -39,7 +39,7 @@ class MemberSharedDetailSerializer < ActiveModel::Serializer
   # end
 
   def info
-    object.cached_member
+    (object.cached_member).merge({ "status" => entity_info })
   end
 
   def entity_info
