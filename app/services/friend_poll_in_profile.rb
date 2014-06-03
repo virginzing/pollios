@@ -84,7 +84,7 @@ class FriendPollInProfile
   end
 
   def mutual_or_public_group
-    Group.where("id = ? OR public = 't'", my_and_friend_group)
+    Group.where("id IN (?) OR public = 't'", my_and_friend_group)
   end
 
   def poll_expire_have_vote
