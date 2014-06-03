@@ -29,7 +29,7 @@ class FriendPollInProfile
   end
 
   def is_friend
-    list_my_friend_ids.include?(friend_id) ? friend_id : nil
+    list_my_friend_ids.include?(friend_id) ? friend_id : @member.id
   end
 
   def group_by_name
@@ -55,9 +55,9 @@ class FriendPollInProfile
   private
 
   def poll_created
-    query_poll_member = "poll_members.member_id = #{is_friend} AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
-    query_group_together = "poll_members.member_id = #{is_friend} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
-    query_public = "poll_members.public = 't' AND poll_members.member_id = #{is_friend}"
+    query_poll_member = "poll_members.member_id = #{friend_id} AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    query_group_together = "poll_members.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
+    query_public = "poll_members.public = 't' AND poll_members.member_id = #{friend_id}"
 
     query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
                 where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
@@ -68,12 +68,11 @@ class FriendPollInProfile
 
   def poll_voted
     query = Poll.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
-                .where("(history_votes.member_id = ? AND polls.member_id IN (?) AND polls.in_group_ids = ?) " \
-                "OR (history_votes.member_id = ? AND polls.public = ?) " \
-                "OR (history_votes.member_id = ? AND poll_groups.group_id IN (?))", 
-                friend_id, list_my_friend_ids, "0",
-                friend_id, true,
-                friend_id, my_and_friend_group).references(:poll_groups)
+                .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
+                "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
+                "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
+                list_my_friend_ids,
+                my_and_friend_group).references(:poll_groups)
   end
 
   def poll_expire_have_vote
