@@ -1,7 +1,7 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
+  before_action :compress_gzip, only: [:follower_of_friend, :following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote]
   before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote]
@@ -71,6 +71,11 @@ class FriendsController < ApplicationController
 
   def following_of_friend
     @friend = Friend.following_of_friend(friend_params)
+    is_friend(@current_member, @friend) if @friend.present?
+  end
+
+  def follower_of_friend
+    @friend = Friend.follower_of_friend(friend_params)
     is_friend(@current_member, @friend) if @friend.present?
   end
 

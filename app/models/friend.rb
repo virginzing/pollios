@@ -42,6 +42,17 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  def self.follower_of_friend(friend)
+    friend_id = friend[:friend_id]
+
+    begin
+      find_friend = Member.find(friend_id)
+      following_from_cached = find_friend.cached_get_follower
+    rescue => e
+      []
+    end
+  end
+
 
   def self.add_friend(friend)
     friend_id = friend[:friend_id]
