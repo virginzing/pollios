@@ -21,6 +21,18 @@ class Friend < ActiveRecord::Base
     # Rails.cache.delete([ self.follower.id, 'friend_request'])
   end
 
+  def self.friend_of_friend(friend)
+    friend_id = friend[:friend_id]
+
+    begin
+      find_friend = Member.find(friend_id)
+      friend_from_cached = find_friend.cached_get_friend_active
+    rescue => e
+      []
+    end
+  end
+
+
   def self.add_friend(friend)
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]

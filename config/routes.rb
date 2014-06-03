@@ -65,6 +65,7 @@ Pollios::Application.routes.draw do
     get 'polls',            to: 'friends#list_of_poll'
     get 'votes',            to: 'friends#list_of_vote'
     get 'list_friend',      to: 'friends#list_of_friend'
+    get 'friend_of_friend', to: 'friends#list_friend_of_friend'
 
   end
 

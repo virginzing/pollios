@@ -64,6 +64,12 @@ class FriendsController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, @search) if @search.present?
   end
 
+  def list_friend_of_friend
+    @friend = Friend.friend_of_friend(friend_params)
+    puts "#{@friend}"
+    @is_friend = Friend.add_friend?(@current_member, @friend) if @friend.present?
+  end
+
   def list_friend
     @friend_active = @current_member.cached_get_friend_active
     @your_request = @current_member.cached_get_your_request

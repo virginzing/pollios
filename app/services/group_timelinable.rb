@@ -16,13 +16,10 @@ class GroupTimelinable
     end
   end
 
-  def group_poll
-    query_group_poll = "poll_groups.group_id IN (?)"
 
-    query =  Poll.joins(:poll_groups).uniq.
-                  includes(:member, :poll_series, :campaign).
-                  where("(#{query_group_poll} AND #{poll_unexpire})", your_group_ids)
-    # filter_type(query, type)
+
+  def group_poll
+    @group_poll ||= group_of_poll
   end
 
   def poll_expire_have_vote
@@ -34,6 +31,14 @@ class GroupTimelinable
   end
 
   private
+
+  def group_of_poll
+    query_group_poll = "poll_groups.group_id IN (?)"
+
+    query =  Poll.joins(:poll_groups).uniq.
+                  includes(:member, :poll_series, :campaign).
+                  where("(#{query_group_poll} AND #{poll_unexpire})", your_group_ids)
+  end
 
   def member_id
     params.fetch("member_id")
