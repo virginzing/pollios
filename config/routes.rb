@@ -56,8 +56,8 @@ Pollios::Application.routes.draw do
     post 'unclose_friend',  to: 'friends#unclose_friend'
     get 'all',              to: 'friends#list_friend'
     get 'request',          to: 'friends#list_request'
-    get 'list_following',   to: 'friends#list_following'
-    get 'list_follower',    to: 'friends#list_follower'
+    get 'list_following',   to: 'friends#my_following'
+    get 'list_follower',    to: 'friends#my_follower'
     get 'search',           to: 'friends#search_friend'
     post 'following',       to: 'friends#following'
     post 'unfollow',        to: 'friends#unfollow'
@@ -65,8 +65,8 @@ Pollios::Application.routes.draw do
     get 'polls',            to: 'friends#list_of_poll'
     get 'votes',            to: 'friends#list_of_vote'
     get 'list_friend',      to: 'friends#list_of_friend'
-    get 'friend_of_friend', to: 'friends#list_friend_of_friend'
-
+    get 'friend_of_friend', to: 'friends#friend_of_friend'
+    get 'following_of_friend', to: 'friends#following_of_friend'
   end
 
   scope 'group' do

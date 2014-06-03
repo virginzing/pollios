@@ -1,7 +1,7 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_of_vote, :list_friend, :list_request, :search_friend, :polls, :profile, :list_of_poll, :list_following, :list_follower]
+  before_action :compress_gzip, only: [:following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote]
   before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote]
@@ -61,34 +61,17 @@ class FriendsController < ApplicationController
 
   def search_friend
     @search = Member.search_member(friend_params)
-    @is_friend = Friend.add_friend?(@current_member, @search) if @search.present?
+    is_friend(@current_member, @search) if @search.present?
   end
 
-  def list_friend_of_friend
+  def friend_of_friend
     @friend = Friend.friend_of_friend(friend_params)
-    puts "#{@friend}"
-    @is_friend = Friend.add_friend?(@current_member, @friend) if @friend.present?
+    is_friend(@current_member, @friend) if @friend.present?
   end
 
-  def list_friend
-    @friend_active = @current_member.cached_get_friend_active
-    @your_request = @current_member.cached_get_your_request
-    @friend_request = @current_member.cached_get_friend_request
-    # @friend_inactive = @current_member.get_friend_inactive
-  end
-
-  def list_following
-    @list_following = @current_member.cached_get_following
-    @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
-  end
-
-  def list_follower
-    @list_follower = @current_member.cached_get_follower
-    @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
-  end
-
-  def profile
-    @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
+  def following_of_friend
+    @friend = Friend.following_of_friend(friend_params)
+    is_friend(@current_member, @friend) if @friend.present?
   end
 
   def list_of_poll
@@ -103,11 +86,41 @@ class FriendsController < ApplicationController
     poll_helper
   end
 
+  ## below is my profile ##
+
+  def list_friend
+    @friend_active = @current_member.cached_get_friend_active
+    @your_request = @current_member.cached_get_your_request
+    @friend_request = @current_member.cached_get_friend_request
+    # @friend_inactive = @current_member.get_friend_inactive
+  end
+
+  def my_following
+    @list_following = @current_member.cached_get_following
+    @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
+  end
+
+  def my_follower
+    @list_follower = @current_member.cached_get_follower
+    @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
+  end
+
+  def profile
+    @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
+  end
+
+  ###
+
+
   def poll_helper
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @group_by_name ||= @init_poll.group_by_name
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
     @total_entries = @polls.total_entries
+  end
+
+  def is_friend(member_obj, list_compare)
+    @is_friend = Friend.add_friend?(member_obj, list_compare)
   end
 
   # def list_request
