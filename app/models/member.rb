@@ -225,6 +225,12 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def cached_groups_friend_count(member)
+    Rails.cache.fetch([ self.id, 'group_count']) do
+      FriendPollInProfile.new(member, self, {}).group_friend_count
+    end
+  end
+
   def cached_watched
     Rails.cache.fetch([ self, "watcheds" ]) do
       watcheds.to_a
@@ -390,7 +396,8 @@ class Member < ActiveRecord::Base
   end
 
   def cached_flush_active_group
-    Rails.cache.delete([id, 'group_active'])  
+    Rails.cache.delete([id, 'group_active'])
+    Rails.cache.delete([id, 'group_count'])  
   end
 
   def check_share_poll?(poll_id)

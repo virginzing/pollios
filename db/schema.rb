@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140602062259) do
+ActiveRecord::Schema.define(version: 20140603082829) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(version: 20140602062259) do
 
   create_table "groups", force: true do |t|
     t.string   "name"
-    t.boolean  "publish",          default: false
+    t.boolean  "public",           default: false
     t.string   "photo_group"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -28,6 +28,10 @@ class FriendPollInProfile
     @member.cached_get_friend_active.map(&:id) << @member.id
   end
 
+  def groups
+    @groups ||= mutual_or_public_group
+  end
+
   def is_friend
     list_my_friend_ids.include?(friend_id) ? friend_id : @member.id
   end
@@ -52,6 +56,10 @@ class FriendPollInProfile
     get_vote_friend.count
   end
 
+  def group_friend_count
+    groups.count
+  end
+
   private
 
   def poll_created
@@ -73,6 +81,10 @@ class FriendPollInProfile
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
                 list_my_friend_ids,
                 my_and_friend_group).references(:poll_groups)
+  end
+
+  def mutual_or_public_group
+    Group.where("id = ? OR public = 't'", my_and_friend_group)
   end
 
   def poll_expire_have_vote

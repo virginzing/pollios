@@ -31,7 +31,7 @@ class Group < ActiveRecord::Base
   end
 
   def get_photo_group
-    photo_group.present? ? photo_group.url(:thumbnail) : nil
+    photo_group.present? ? photo_group.url(:thumbnail) : ""
   end
 
   def set_notification(member_id)
@@ -47,6 +47,7 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
       Rails.cache.delete([member_id, 'group_active'])
+      Rails.cache.delete([member_id, 'group_count'])
     end
     find_group_member.group
   end
@@ -100,5 +101,13 @@ class Group < ActiveRecord::Base
       end
     end
   end
+
+  def get_description
+    description.present? ? description : ""
+  end
+
+  # def get_
+    
+  # end
 
 end
