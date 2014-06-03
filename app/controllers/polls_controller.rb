@@ -165,20 +165,26 @@ class PollsController < ApplicationController
   def friend_following_poll
     friend_following_timeline = FriendFollowingTimeline.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = friend_following_timeline.poll_friend_following
-    @total_entries = friend_following_timeline.total_entries.count
+    @total_entries = friend_following_timeline.total_entries
   end
 
   def overall_timeline
     overall_timeline = OverallTimeline.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
     @group_by_name = overall_timeline.group_by_name
-    @total_entries = overall_timeline.total_entries.count
+    @total_entries = overall_timeline.total_entries
   end
 
+  # def group_timeline
+  #   @init_poll = GroupTimelinable.new(@current_member, public_poll_params)
+  #   @polls = @init_poll.group_poll.paginate(page: params[:next_cursor])
+  #   poll_helper
+  # end
   def group_timeline
-    @init_poll = GroupTimelinable.new(@current_member, public_poll_params)
-    @polls = @init_poll.group_poll.paginate(page: params[:next_cursor])
-    poll_helper
+    group_timeline = GroupTimelinable.new(@current_member, options_params)
+    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = group_timeline.group_polls
+    @group_by_name = group_timeline.group_by_name
+    @total_entries = group_timeline.total_entries
   end
 
   def reward_poll_timeline

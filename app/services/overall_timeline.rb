@@ -37,7 +37,7 @@ class OverallTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member
+    cached_poll_ids_of_poll_member.count
   end
 
   def get_poll_shared
@@ -176,7 +176,8 @@ class OverallTimeline
         end
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-        shared = Hash["shared" => true, "shared_by" => Member.cached_member_of_poll(@member, poll_member.member), "shared_at" => poll_shared_at(poll_member, find_poll) ]
+        find_member_share = Member.joins(:share_polls).where("share_polls.poll_id = #{poll_member.poll_id}")
+        shared = Hash["shared" => true, "shared_by" => serailize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
         if find_poll.present?
           if find_poll.series
             poll_series << find_poll
@@ -191,7 +192,7 @@ class OverallTimeline
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
   end
 
-  def poll_shared_at(poll_member, poll)
+  def poll_shared_at(poll_member)
     if poll_member.in_group
       Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(poll_member.share_poll_of_id) ]
     else
@@ -210,12 +211,13 @@ class OverallTimeline
     end
   end
 
-
-
-
   def to_bool(request)
     return true   if request == "true"
     return false  if request == "false"
+  end
+
+  def serailize_member_detail_as_json(member_of_share)
+    ActiveModel::ArraySerializer.new(member_of_share, serializer_options: { current_member: @member }, each_serializer: MemberSharedDetailSerializer).as_json
   end
 
 

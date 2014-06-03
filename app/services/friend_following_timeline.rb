@@ -31,7 +31,7 @@ class FriendFollowingTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member
+    cached_poll_ids_of_poll_member.count
   end
   
   private
