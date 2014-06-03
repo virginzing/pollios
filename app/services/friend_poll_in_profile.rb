@@ -44,6 +44,14 @@ class FriendPollInProfile
     @poll_voted ||= poll_voted
   end
 
+  def poll_friend_count
+    get_poll_friend.count
+  end
+
+  def vote_friend_count
+    get_vote_friend.count
+  end
+
   private
 
   def poll_created
