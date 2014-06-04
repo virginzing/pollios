@@ -1,15 +1,15 @@
 json.partial! 'response_helper/member/short_info', member: friend
 
 json.count do
-  
+
   if friend.id == member.id
     json.poll member.cached_poll_member_count
     json.vote member.cached_voted_count
     json.group member.cached_get_group_active.count
   else
+    json.poll friend.cached_poll_friend_count(member)
     json.vote friend.cached_voted_friend_count(member)
     json.group friend.cached_groups_friend_count(member)
-    json.activity friend.get_activity_count
   end
 
   json.activity friend.get_activity_count
