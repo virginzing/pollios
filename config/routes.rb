@@ -93,6 +93,7 @@ Pollios::Application.routes.draw do
     get 'list_reward',        to: 'campaigns#list_reward'
     get 'notify',         to: 'members#notify'
     get ':member_id/activity',       to: 'members#activity'
+    get 'profile',            to: 'members#my_profile'
   end
 
   scope 'poll' do

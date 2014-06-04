@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:activity, :detail_friend, :stats, :update_profile, :notify]
+  before_action :set_current_member, only: [:my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -43,6 +43,9 @@ class MembersController < ApplicationController
   end
 
   def profile
+  end
+
+  def my_profile
   end
 
   def check_valid_email
