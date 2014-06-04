@@ -1,7 +1,7 @@
 if @auth.present?
   json.response_status "OK"
   json.member_detail do
-    json.partial! 'login_response/member_detail', member: member
+    json.partial! 'response_helper/authenticate/info', member: member
     json.token member.get_token("sentai")
   end
 
