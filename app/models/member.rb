@@ -216,6 +216,10 @@ class Member < ActiveRecord::Base
     {
       "my_poll" => Poll.unscoped.where("member_id = ? AND series = ?", id, false).count,
       "my_vote" => history_votes.where(poll_series_id: 0).count,
+      "friend" => cached_get_friend_active.count,
+      "group" => cached_get_group_active.count,
+      "activity" => get_activity_count,
+      "following" => cached_get_following.count,
       "direct_msg" => 0,
       "status" => 0
     }
