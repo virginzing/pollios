@@ -1,8 +1,8 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:detail_friend, :stats, :update_profile, :notify]
+  before_action :set_current_member, only: [:activity, :detail_friend, :stats, :update_profile, :notify]
   before_action :history_voted_viewed, only: [:detail_friend]
-  before_action :compress_gzip, only: [:detail_friend, :notify]
+  before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
 
 
@@ -23,6 +23,10 @@ class MembersController < ApplicationController
     else
       @error_message = @current_member.errors.messages
     end
+  end
+
+  def activity
+    @activity = Activity.find_by(member_id: @current_member.id)  
   end
 
   def notify

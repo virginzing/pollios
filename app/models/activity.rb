@@ -38,7 +38,7 @@ class Activity
 
     if find_activity.present?
       old_activity = find_activity.items
-      new_activity = old_activity << hash_activity
+      new_activity = old_activity.insert(0, hash_activity)
       find_activity.update!(items: new_activity)
     else
       create!(member_id: @member.id, items: [hash_activity])
@@ -56,7 +56,7 @@ class Activity
 
     if find_activity.present?
       old_activity = find_activity.items
-      new_activity = old_activity << hash_activity
+      new_activity = old_activity.insert(0, hash_activity)
       find_activity.update!(items: new_activity)
     else
       create!(member_id: @member.id, items: [hash_activity])
@@ -79,7 +79,8 @@ class Activity
         },
         authority: check_authority_poll,
         action: ACTION[:vote],
-        type: TYPE[:poll]
+        type: TYPE[:poll],
+        activity_at: Time.zone.now.to_i
       }
     elsif @action == ACTION[:create]
       {
@@ -91,7 +92,8 @@ class Activity
         },
         authority: check_authority_poll,
         action: ACTION[:create],
-        type: TYPE[:poll]
+        type: TYPE[:poll],
+        activity_at: Time.zone.now.to_i
       }
     else
       {
@@ -103,7 +105,8 @@ class Activity
         },
         authority: check_authority_poll,
         action: ACTION[:share],
-        type: TYPE[:poll]
+        type: TYPE[:poll],
+        activity_at: Time.zone.now.to_i
       }
     end
   end
@@ -117,7 +120,8 @@ class Activity
         },
         authority: AUTHORITY[:public],
         action: ACTION[:become_friend],
-        type: TYPE[:friend]
+        type: TYPE[:friend],
+        activity_at: Time.zone.now.to_i
       }
     else
       {
@@ -127,7 +131,8 @@ class Activity
         },
         authority: AUTHORITY[:public],
         action: ACTION[:follow],
-        type: TYPE[:friend]
+        type: TYPE[:friend],
+        activity_at: Time.zone.now.to_i
       }
     end
   end

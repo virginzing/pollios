@@ -92,6 +92,7 @@ Pollios::Application.routes.draw do
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
     get 'notify',         to: 'members#notify'
+    get ':member_id/activity',       to: 'members#activity'
   end
 
   scope 'poll' do

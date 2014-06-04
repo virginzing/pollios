@@ -171,6 +171,12 @@ class Member < ActiveRecord::Base
     avatar.url(:thumbnail)
   end
 
+  def get_activity_count
+    find_activify = Activity.find_by(member_id: id)
+
+    find_activify.present? ? find_activify.items.count : 0
+  end
+
   def Member.check_image_avatar(avatar)
     for_campare_url_image = /\.(gif|jpg|png)\z/i
     if for_campare_url_image.match(avatar.model[:avatar]).present?
