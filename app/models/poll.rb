@@ -424,7 +424,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.vote_poll(poll)
+  def self.vote_poll(poll, member)
     member_id = poll[:member_id]
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
@@ -458,7 +458,7 @@ class Poll < ActiveRecord::Base
             VotePollWorker.new.perform(member_id, find_poll) unless member_id.to_i == find_poll.member.id
             # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 
-            Activity.create_activity_poll(find_poll.member, find_poll, 'Vote')
+            Activity.create_activity_poll(member, find_poll, 'Vote')
 
             Rails.cache.delete([member_id, 'vote_count'])
             Rails.cache.delete([find_poll.class.name, find_poll.id])

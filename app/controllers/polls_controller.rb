@@ -1,7 +1,7 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_vote, :unshare]
+  before_action :set_current_member, only: [:watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
   before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
@@ -269,7 +269,7 @@ class PollsController < ApplicationController
   end
 
   def vote
-    @poll, @history_voted = Poll.vote_poll(view_and_vote_params)
+    @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member)
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
   end
 

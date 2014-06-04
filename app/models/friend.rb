@@ -59,6 +59,7 @@ class Friend < ActiveRecord::Base
     member_id = friend[:member_id]
 
     begin
+      find_member = Member.find(member_id)
       find_friend = Member.find(friend_id)
       find_invitee = where(follower_id: member_id, followed_id: friend_id).having_status(:invitee).first
       find_used_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
@@ -67,6 +68,7 @@ class Friend < ActiveRecord::Base
         find_invitee.update_attributes!(status: :friend)
         search_friend(friend_id, member_id).update_attributes!(status: :friend)
         status = :friend
+        Activity.create_activity_friend( find_member, find_friend ,'BecomeFriend')
       elsif find_used_friend
         # is_friend = false
 
@@ -191,6 +193,7 @@ class Friend < ActiveRecord::Base
     find_member = search_member(member_id, friend_id)
     find_friend = search_friend(friend_id, member_id)
 
+    member = Member.find(member_id)
     friend = Member.find(friend_id)
 
     begin
@@ -200,6 +203,8 @@ class Friend < ActiveRecord::Base
 
         search_member(member_id, friend_id).update_attributes!(active: active_status, status: :friend)
         search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
+
+        Activity.create_activity_friend( member, friend ,'BecomeFriend')
         AddFriendWorker.new.perform(member_id, friend_id, { accept_friend: true } )
       else
         find_member.destroy
