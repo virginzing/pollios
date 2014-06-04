@@ -22,7 +22,7 @@ class FriendsController < ApplicationController
   end
 
   def following
-    @friend = Friend.add_following(friend_params)
+    @friend = Friend.add_following(@current_member, friend_params)
   end
 
   def unfollow

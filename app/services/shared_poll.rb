@@ -42,6 +42,10 @@ class SharedPoll
     end
   end
 
+  def save_activity
+    Activity.create_activity_poll(@poll.member, @poll, 'Share')
+  end
+
   private
 
   def share_in_friend

@@ -75,6 +75,8 @@ class Member < ActiveRecord::Base
   
   has_many :providers, dependent: :destroy
 
+  # after_create :set_follow_pollios
+
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }

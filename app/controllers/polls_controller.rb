@@ -284,6 +284,7 @@ class PollsController < ApplicationController
   def share
     @init_share = SharedPoll.new(@current_member, @poll, options_params)
     @shared = @init_share.share
+    @init_share.save_activity
   end
 
   def unshare

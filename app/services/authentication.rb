@@ -4,6 +4,7 @@ class Authentication
     @params = params
     @new_member = false
     @new_member_provider = false
+    @default_member_type = :citizen
   end
 
   def member
@@ -51,13 +52,14 @@ class Authentication
   end
 
   def member_type
-    @params["member_type"]
+    @params["member_type"] || @default_member_type
   end
+
   
   private
 
   def member_from_authen
-    @member = Member.where(email: email).first_or_initialize do |member|
+    @member = Member.where(email: email).first_or_create do |member|
       member.sentai_name = name
       member.username = check_username
       member.email = email
@@ -69,6 +71,7 @@ class Authentication
       @new_member = true
     end
 
+
     if @member
       @member.update_column(:avatar, avatar) if avatar.present?
       
@@ -79,12 +82,24 @@ class Authentication
         provider.save
         @new_member_provider = true
       end
+
+    if @new_member
+      follow_pollios
+    end
+
     end
 
     update_member(@member) unless @new_member
     update_member_provider(@member_provider) unless @new_member_provider
 
     @member
+  end
+
+  def follow_pollios
+    find_pollios = Member.find_by_email("pollios@pollios.com")
+    if find_pollios.present?
+      Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id
+    end
   end
 
   def update_member(member)

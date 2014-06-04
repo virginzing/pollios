@@ -124,7 +124,7 @@ class Friend < ActiveRecord::Base
     status
   end
 
-  def self.add_following(friend)
+  def self.add_following(member, friend)
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
@@ -137,6 +137,9 @@ class Friend < ActiveRecord::Base
       else
         create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
       end
+
+      Activity.create_activity_friend( member, find_friend ,'Follow')
+
       Rails.cache.delete([ friend_id , 'follower' ])
       Rails.cache.delete([ member_id, 'following' ])
       flush_cached_friend(member_id, friend_id)
