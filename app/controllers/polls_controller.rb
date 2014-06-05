@@ -99,8 +99,8 @@ class PollsController < ApplicationController
 
       ApnPollWorker.new.perform(current_member.id, @poll) if Rails.env.production?
       
-      Rails.cache.delete([current_member.id, 'poll_member'])
-      Rails.cache.delete([current_member.id, 'poll_count'])
+      # Rails.cache.delete([current_member.id, 'poll_member'])
+      Rails.cache.delete([current_member.id, 'my_poll'])
 
       flash[:success] = "Create poll successfully."
       redirect_to polls_path
@@ -173,6 +173,7 @@ class PollsController < ApplicationController
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
     @group_by_name = overall_timeline.group_by_name
     @total_entries = overall_timeline.total_entries
+    @unvote_count = overall_timeline.unvote_count
   end
 
   # def group_timeline

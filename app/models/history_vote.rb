@@ -1,5 +1,5 @@
 class HistoryVote < ActiveRecord::Base
-  belongs_to :member
+  belongs_to :member, touch: true
   belongs_to :poll
   belongs_to :choice
   

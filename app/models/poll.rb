@@ -395,8 +395,8 @@ class Poll < ActiveRecord::Base
 
         Activity.create_activity_poll(member, @poll, 'Create')
 
-        Rails.cache.delete([member_id, 'poll_member'])
-        Rails.cache.delete([member_id, 'poll_count'])
+        # Rails.cache.delete([member_id, 'poll_member'])
+        Rails.cache.delete([member_id, 'my_poll'])
       else
         @poll.destroy
       end
@@ -460,7 +460,7 @@ class Poll < ActiveRecord::Base
 
             Activity.create_activity_poll(member, find_poll, 'Vote')
 
-            Rails.cache.delete([member_id, 'vote_count'])
+            Rails.cache.delete([member_id, 'my_voted'])
             Rails.cache.delete([find_poll.class.name, find_poll.id])
             [find_poll, history_voted]
           end

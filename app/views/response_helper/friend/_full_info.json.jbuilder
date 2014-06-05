@@ -3,8 +3,8 @@ json.partial! 'response_helper/member/short_info', member: friend
 json.count do
 
   if friend.id == member.id
-    json.poll member.cached_poll_member_count
-    json.vote member.cached_voted_count
+    json.poll member.cached_my_poll.count
+    json.vote member.cached_my_voted.count
     json.group member.cached_get_group_active.count
   else
     json.poll friend.cached_poll_friend_count(member)

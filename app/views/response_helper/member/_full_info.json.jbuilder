@@ -1,8 +1,8 @@
 json.partial! 'response_helper/member/short_info', member: member
 
 json.count do
-  json.poll member.cached_poll_member_count
-  json.vote member.cached_voted_count
+  json.poll member.cached_my_poll.count
+  json.vote member.cached_my_voted.count
   json.group member.cached_get_group_active.count
   json.activity member.get_activity_count
   json.message 0

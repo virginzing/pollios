@@ -214,8 +214,8 @@ class Member < ActiveRecord::Base
 
   def get_stats_all
     {
-      "my_poll" => Poll.unscoped.where("member_id = ? AND series = ?", id, false).count,
-      "my_vote" => history_votes.where(poll_series_id: 0).count,
+      "my_poll" => cached_my_poll.count,
+      "my_vote" => cached_my_voted.count,
       "friend" => cached_get_friend_active.count,
       "group" => cached_get_group_active.count,
       "activity" => get_activity_count,
@@ -253,21 +253,34 @@ class Member < ActiveRecord::Base
     Rails.cache.fetch([ self, "shared"]) { share_polls.to_a }
   end
 
-  def cached_poll_count
-    Rails.cache.fetch([self.id, 'poll_count']) do
-      polls.count
+  # def cached_poll_count
+  #   Rails.cache.fetch([self.id, 'poll_count']) do
+  #     polls.count
+  #   end
+  # end
+
+  # def cached_poll_member_count
+  #   Rails.cache.fetch([self.id, 'poll_member']) do
+  #     Poll.where(member_id: id).count
+  #   end
+  # end
+
+  # def cached_voted_count
+  #   Rails.cache.fetch([self.id, 'vote_count']) do
+  #     history_votes.where(poll_series_id: 0).count
+  #   end
+  # end
+
+
+  def cached_my_poll
+    Rails.cache.fetch([self.id, 'my_poll']) do
+      Poll.where(member_id: id).to_a
     end
   end
 
-  def cached_poll_member_count
-    Rails.cache.fetch([self.id, 'poll_member']) do
-      Poll.where(member_id: id).count
-    end
-  end
-
-  def cached_voted_count
-    Rails.cache.fetch([self.id, 'vote_count']) do
-      history_votes.where(poll_series_id: 0).count
+  def cached_my_voted
+    Rails.cache.fetch([self, 'my_voted']) do
+      HistoryVote.where("member_id = #{id} AND poll_series_id = 0").to_a
     end
   end
 

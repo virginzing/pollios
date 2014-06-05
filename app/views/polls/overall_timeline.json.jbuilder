@@ -29,4 +29,5 @@ if @poll_series || @poll_nonseries
 
   json.total_entries @total_entries
   json.next_cursor @next_cursor
+  json.unvote_count @unvote_count
 end

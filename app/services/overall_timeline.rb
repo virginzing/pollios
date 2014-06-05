@@ -48,6 +48,10 @@ class OverallTimeline
     overall_timeline
   end
 
+  def unvote_count
+    cached_poll_ids_of_poll_member
+  end
+
   private
 
   def find_poll_me_and_friend_and_group_and_public
