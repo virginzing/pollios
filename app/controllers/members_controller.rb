@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
+  before_action :set_current_member, only: [:all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -23,6 +23,13 @@ class MembersController < ApplicationController
     else
       @error_message = @current_member.errors.messages
     end
+  end
+
+  def all_request
+    @your_request = @current_member.cached_get_your_request
+    @friend_request = @current_member.cached_get_friend_request
+    @group_inactive = Group.joins(:group_members).where("group_members.member_id = ? AND group_members.active = 'f'", @current_member.id).
+                      select("groups.*, group_members.invite_id as invite_id")
   end
 
   def activity
