@@ -13,7 +13,7 @@ class Apn::VotePoll
   end
   
   def custom_poll_title
-    truncate(@poll.title, escape: false, length: 100)
+    truncate(@poll.title, escape: false, length: 50)
   end
 
   # allow 170 byte for custom message

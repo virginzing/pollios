@@ -20,7 +20,7 @@ class GroupNotification
   end
 
   def custom_poll_title
-    truncate(@poll.title, escape: false, length: 100)
+    truncate(@poll.title, escape: false, length: 50)
     # @poll_title
   end
 
