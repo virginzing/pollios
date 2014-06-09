@@ -553,6 +553,22 @@ class Member < ActiveRecord::Base
     detect_image(avatar)
   end
 
+  def self.update_avatar(current_member, file_avatar)
+    member = current_member
+    current_avatar = member.avatar.identifier
+    if current_avatar.present?
+      begin
+        if current_avatar.start_with?('https://') || current_avatar.start_with?('http://')
+          member.remove_avatar!
+          member.save!
+        end
+      end
+    end
+    @member = Member.find(current_member.id)
+    @member.update(avatar: file_avatar)
+  end
+
+
   def detect_image(avatar)
     new_avatar = ""
     if avatar.present?

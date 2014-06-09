@@ -18,8 +18,11 @@ class MembersController < ApplicationController
   end
 
   def update_profile
-    if @current_member.update!(update_profile_params.except("member_id"))
-      @current_member
+    if @current_member.update_attributes!(update_profile_params.except(:member_id, :avatar))
+      if update_profile_params[:avatar]
+        Member.update_avatar(@current_member, update_profile_params[:avatar])
+      end
+      @member = Member.find(@current_member.id)
     else
       @error_message = @current_member.errors.messages
     end

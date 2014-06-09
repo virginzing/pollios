@@ -92,7 +92,7 @@ class Authentication
 
     end
 
-    update_member(@member) unless @new_member
+    # update_member(@member) unless @new_member
     update_member_provider(@member_provider) unless @new_member_provider
 
     @member
