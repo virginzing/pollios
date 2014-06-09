@@ -6,6 +6,8 @@ class Member < ActiveRecord::Base
 
   include MemberHelper
 
+  has_one :member_invite_code, dependent: :destroy
+
   has_many :watcheds, dependent: :destroy
 
   has_many :apn_devices, class_name: 'Apn::Device', dependent: :destroy

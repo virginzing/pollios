@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
+  before_action :set_current_member, only: [:activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -69,6 +69,15 @@ class MembersController < ApplicationController
     end
   end
 
+  def activate
+    @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
+    if @invite_code[:status]
+      @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
+      @activate.save
+      @invite_code[:object].update!(used: true)
+    end
+  end
+
   def clear
     current_member.history_votes.delete_all
     flash[:success] = "Clear successfully."
@@ -80,6 +89,10 @@ class MembersController < ApplicationController
 
   def update_profile_params
     params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description)
+  end
+
+  def activate_params
+    params.permit(:code)
   end
 
   

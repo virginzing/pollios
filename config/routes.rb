@@ -95,6 +95,7 @@ Pollios::Application.routes.draw do
     get ':member_id/activity',       to: 'members#activity'
     get ':member_id/all_request',   to: 'members#all_request'
     get 'profile',            to: 'members#my_profile'
+    post 'activate',          to: 'members#activate'
   end
 
   scope 'poll' do

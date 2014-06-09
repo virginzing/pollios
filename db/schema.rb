@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140603082829) do
+ActiveRecord::Schema.define(version: 20140609041002) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -269,6 +269,23 @@ ActiveRecord::Schema.define(version: 20140603082829) do
     t.datetime "updated_at"
     t.integer  "poll_series_id"
   end
+
+  create_table "invite_codes", force: true do |t|
+    t.string   "code"
+    t.boolean  "used",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "member_invite_codes", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "invite_code_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_invite_codes", ["invite_code_id"], name: "index_member_invite_codes_on_invite_code_id"
+  add_index "member_invite_codes", ["member_id"], name: "index_member_invite_codes_on_member_id"
 
   create_table "members", force: true do |t|
     t.string   "sentai_name"
