@@ -18,7 +18,7 @@ class MembersController < ApplicationController
   end
 
   def update_profile
-    if @current_member.update(update_profile_params.except("member_id"))
+    if @current_member.update!(update_profile_params.except("member_id"))
       @current_member
     else
       @error_message = @current_member.errors.messages
@@ -69,12 +69,28 @@ class MembersController < ApplicationController
     end
   end
 
+  def activate_account
+    if session[:activate_id] && session[:activate_email]
+      render layout: "activate"
+    else
+      redirect_to users_signin_url
+    end
+  end
+
   def activate
     @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
-    if @invite_code[:status]
-      @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
-      @activate.save
-      @invite_code[:object].update!(used: true)
+    respond_to do |format|
+      if @invite_code[:status]
+        @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
+        @activate.save
+        @invite_code[:object].update!(used: true)
+        session[:member_id] = @current_member.id
+        format.js
+        format.html { redirect_to dashboard_path }
+      else
+        flash[:warning] = @invite_code[:message]
+        format.html { redirect_to users_activate_path }
+      end
     end
   end
 
@@ -92,7 +108,7 @@ class MembersController < ApplicationController
   end
 
   def activate_params
-    params.permit(:code)
+    params.permit(:code, :member_id)
   end
 
   

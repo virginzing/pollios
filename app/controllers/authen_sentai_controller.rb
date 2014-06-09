@@ -12,6 +12,8 @@ class AuthenSentaiController < ApplicationController
 
 
 	def signin
+    session[:activate_email] = nil
+    session[:activate_id] = nil
     render layout: "new_login"
 	end
 
@@ -41,12 +43,23 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
 			if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
-        @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-        @login = true
-				session[:member_id] = member.id
-				wants.html { redirect_back_or polls_path }
-				wants.json
-        wants.js
+        if @auth.activate_account?
+          @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
+          @login = true
+          session[:member_id] = member.id
+          wants.html { redirect_back_or polls_path }
+          wants.json
+          wants.js
+        else
+          @login = false
+          @waiting = true
+          session[:activate_email] = member.email
+          session[:activate_id] = member.id
+          flash[:warning] = "This account is not activate yet."
+          wants.html
+          wants.json
+          wants.js
+        end
 			else
         @login = false
 				flash[:warning] = "Invalid username or password."

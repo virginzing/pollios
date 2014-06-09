@@ -139,7 +139,7 @@ class Authentication
   end
 
   def check_activate_account
-    @member.member_invite_code.present?
+    member.member_invite_code.present?
   end
 end
 
