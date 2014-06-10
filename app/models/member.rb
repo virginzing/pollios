@@ -463,17 +463,21 @@ class Member < ActiveRecord::Base
   # end
 
   def self.serializer_member_detail(current_member, member_of_poll)
-    (member_of_poll.cached_member).merge({ "status" => entity_info(current_member, member_of_poll)})
+    member_as_json = serializer_member_hash( cached_member(member_of_poll))
+    member_hash = member_as_json.merge({ "status" => entity_info(current_member, member_of_poll)})
+    member_hash
   end
 
   def self.entity_info(current_member, member_of_poll)
     member_of_poll.is_friend(current_member)
   end
 
-  def cached_member
-    Rails.cache.fetch(['member', self]) do
-      V5::MemberSerializer.new(self).as_json
-    end
+  def self.cached_member(member)
+    Rails.cache.fetch(member) { member }
+  end
+
+  def self.serializer_member_hash(member)
+    V5::MemberSerializer.new(member).as_json()
   end
 
   def self.cached_friend_entity(user, friend)

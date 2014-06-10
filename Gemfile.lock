@@ -27,10 +27,10 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: fdd963e15bfd8c155ad6757cc88efe1d4a3d0ead
+  revision: 1261bc8a0989eeff0a977d12351a8e82ed1bf9a3
   specs:
     mongoid (4.0.0.rc1)
-      activemodel (~> 4.0.0)
+      activemodel (~> 4.0)
       moped (~> 2.0.0.rc1)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
@@ -43,9 +43,9 @@ GIT
 
 GIT
   remote: git://github.com/rails/jbuilder.git
-  revision: 0602206be1a42f76853e34803045165fc7ebb4ae
+  revision: 52389e6a89e5434ca372e4cbcecb537ecb47e19b
   specs:
-    jbuilder (2.0.7)
+    jbuilder (2.1.0)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
 
@@ -121,7 +121,7 @@ GEM
       activesupport (>= 3.2)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    execjs (2.1.0)
+    execjs (2.2.0)
     faker (1.3.0)
       i18n (~> 0.5)
     figaro (0.7.0)
@@ -148,7 +148,7 @@ GEM
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.1)
-    kaminari (0.15.1)
+    kaminari (0.16.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.9.2)
@@ -310,7 +310,7 @@ GEM
     will_paginate (3.0.5)
     will_paginate-foundation (5.3.3)
       will_paginate (>= 3.0.3)
-    yajl-ruby (1.2.0)
+    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
