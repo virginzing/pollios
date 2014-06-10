@@ -36,12 +36,6 @@ GIT
       tzinfo (>= 0.3.37)
 
 GIT
-  remote: git://github.com/mperham/dalli.git
-  revision: 6c983014ab96db864677ce1cf9f047f19a3b7486
-  specs:
-    dalli (2.7.2)
-
-GIT
   remote: git://github.com/rails/jbuilder.git
   revision: 52389e6a89e5434ca372e4cbcecb537ecb47e19b
   specs:
@@ -110,6 +104,7 @@ GEM
     configatron (3.2.0)
     connection_pool (2.0.0)
     daemons (1.1.9)
+    dalli (2.7.2)
     decent_exposure (2.3.2)
     devise (3.2.4)
       bcrypt (~> 3.0)
@@ -325,7 +320,7 @@ DEPENDENCIES
   carrierwave
   cloudinary
   coffee-rails (~> 4.0.0)
-  dalli!
+  dalli
   decent_exposure
   devise
   enumerize
