@@ -150,7 +150,7 @@
       
       <!-- widget content -->
       <div class="widget-body">
-        <%= line_chart(@poll_per_hour, {library: {hAxis: {title: "Hour" }, vAxis: {title: "Poll", minValue: 0, gridlines: { count: 10 } } } } ) %>
+        <%= line_chart(@poll_per_hour) %>
       </div>
       <!-- end widget content -->
       
@@ -182,7 +182,7 @@
     <div>
       
       <!-- widget content -->
-      <div class="widget-body no-padding">
+      <div class="widget-body no-padding" style="min-height: 0px;">
         <div class="table-responsive">
             
           <table class="table" style="margin-bottom: 0px;">
