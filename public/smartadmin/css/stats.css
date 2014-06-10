@@ -1,0 +1,14 @@
+.stats-title {
+  font-weight: 500;
+}
+
+span.count {
+  font-size: 44px;
+  font-weight: 600;
+}
+
+.panel-title.stats {
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 1px;
+}

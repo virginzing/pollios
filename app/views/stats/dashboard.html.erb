@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+    <i class="fa-fw fa fa-file-o"></i> Stats Dashboard <span>&gt;
+      Today </span></h1>
+  </div>
+
+  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+    <ul id="sparks" class="" style="margin: 25px 0 0;">
+      <li class="sparks-info">
+        <h5>Today</h5>
+      </li>
+      <li class="sparks-info">
+        <h5>Yesterday</h5>
+      </li>
+      <li class="sparks-info">
+        <h5>This week</h5>
+      </li>
+      <li class="sparks-info">
+        <h5>This month</h5>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">Poll</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(poll_stats.amount_poll) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(poll_stats.public_count) %> <strong> in Public</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(poll_stats.friend_following_count) %> <strong> in Friend & Following</strong></li>
+                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(poll_stats.group_count) %> <strong> in Group</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
+    </div>
+    
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">Vote</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(vote_stats.amount_vote) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(vote_stats.public_count) %> <strong> in Public</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(vote_stats.friend_following_count) %> <strong> in Friend & Following</strong></li>
+                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(vote_stats.group_count) %> <strong> in Group</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">User</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(user_stats.amount_user) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats.via_facebook) %> <strong> via Facebook</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats.via_sentai) %> <strong> via Sentai</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
+    </div>
+
+
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">Group</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(group_stats.amount_group) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><%= number_with_delimiter(group_stats.amount_group) %> <strong> created</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+

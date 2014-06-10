@@ -393,6 +393,8 @@ class Poll < ActiveRecord::Base
           ApnPollWorker.new.perform(member_id, @poll) if Rails.env.production?
         end
 
+        PollStats.create_poll_stats(@poll)
+
         Activity.create_activity_poll(member, @poll, 'Create')
 
         # Rails.cache.delete([member_id, 'poll_member'])
@@ -458,6 +460,8 @@ class Poll < ActiveRecord::Base
             VotePollWorker.new.perform(member_id, find_poll) unless member_id.to_i == find_poll.member.id
             # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 
+            VoteStats.create_vote_stats(find_poll)
+            
             Activity.create_activity_poll(member, find_poll, 'Vote')
 
             Rails.cache.delete([member_id, 'my_voted'])

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  stats_created_at: 2014-06-10
+  amount_vote: 1
+  public_count: 1
+  friend_following_count: 1
+  group_count: 1
+
+two:
+  stats_created_at: 2014-06-10
+  amount_vote: 1
+  public_count: 1
+  friend_following_count: 1
+  group_count: 1

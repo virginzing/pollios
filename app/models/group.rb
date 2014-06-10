@@ -65,7 +65,11 @@ class Group < ActiveRecord::Base
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
+
+      GroupStats.create_group_stats(@group)
+
       Rails.cache.delete([member_id, 'group_active'])
+      
       add_friend_to_group(@group.id, member_id, friend_id) if friend_id
     end
     @group

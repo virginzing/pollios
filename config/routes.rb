@@ -140,6 +140,14 @@ Pollios::Application.routes.draw do
     post 'facebook',        to: 'facebook#login'
   end
 
+  scope 'stats' do
+    get 'dashboard',      to: 'stats#dashboard',  as: :stats_dashboard
+    get 'polls',          to: 'stats#polls',  as: :stats_polls
+    get 'votes',          to: 'stats#votes',   as: :stats_votes
+    get 'users',          to: 'stats#users',  as: :stats_users
+    get 'groups',         to: 'stats#groups', as: :stats_groups
+  end
+
   get '/hashtag',  to: 'polls#hashtag'
   get '/hashtag_popular', to: 'polls#hashtag_popular'
 

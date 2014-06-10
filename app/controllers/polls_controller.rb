@@ -97,6 +97,8 @@ class PollsController < ApplicationController
       
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
+      PollStats.create_poll_stats(@poll)
+      
       ApnPollWorker.new.perform(current_member.id, @poll) if Rails.env.production?
       
       # Rails.cache.delete([current_member.id, 'poll_member'])

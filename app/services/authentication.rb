@@ -85,6 +85,7 @@ class Authentication
 
     if @new_member
       follow_pollios
+      UserStats.create_user_stats(@new_member, @params["provider"])
     end
 
     end
