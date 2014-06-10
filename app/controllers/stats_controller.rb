@@ -10,6 +10,10 @@ class StatsController < ApplicationController
     @vote_stats = VoteStats.find_stats_vote_today
     @user_stats = UserStats.find_stats_user_today
     @group_stats = GroupStats.find_stats_group_today
+
+
+    @poll_per_hour = PollStats.poll_per_hour
+    @poll_popular = PollStats.poll_popular
   end
 
   def polls

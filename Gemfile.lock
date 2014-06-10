@@ -88,6 +88,7 @@ GEM
       mime-types (>= 1.16)
     celluloid (0.15.2)
       timers (~> 1.1.0)
+    chartkick (1.2.4)
     cloudinary (1.0.72)
       aws_cf_signer
       rest-client
@@ -318,6 +319,7 @@ DEPENDENCIES
   bson (~> 2.2)
   bson_ext
   carrierwave
+  chartkick
   cloudinary
   coffee-rails (~> 4.0.0)
   dalli

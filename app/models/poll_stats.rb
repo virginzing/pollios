@@ -31,6 +31,7 @@ class PollStats
 
   end
 
+
   def self.update_stats_public
     current_public_count = @stats_poll.public_count
     new_public_count = current_public_count + 1
@@ -57,6 +58,18 @@ class PollStats
 
   def self.find_stats_poll_today
     PollStats.where(stats_created_at: Date.today).first_or_create!
+  end
+
+  def self.poll_per_hour
+    new_hash = {}
+    @hash_poll = Poll.where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
+      new_hash.merge!({ k => v.size })
+    end
+    new_hash
+  end
+
+  def self.poll_popular
+    Poll.where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).order("vote_all desc").limit(5)
   end
 
 end
