@@ -39,7 +39,8 @@ class MemberSharedDetailSerializer < ActiveModel::Serializer
   # end
 
   def info
-    (object.cached_member).merge({ "status" => entity_info })
+    member_as_json = Member.serializer_member_hash( Member.cached_member(object) )
+    member_as_json.merge({ "status" => entity_info })
   end
 
   def entity_info
