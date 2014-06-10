@@ -554,7 +554,7 @@ class Poll < ActiveRecord::Base
   end
 
   def hour
-    self.created_at.utc.strftime('%Y-%m-%d %H')
+    self.created_at.utc.strftime('%Y-%m-%d %H:00:00')
   end
 
   def as_json options={}
