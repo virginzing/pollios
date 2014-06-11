@@ -110,7 +110,8 @@ end
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
 # http://localhost:3000/friend/search.json?member_id=1&q=N
 
-# curl -F "member_id=1" -F "name=Nutty" -F "friend_id=2" http://localhost:3000/group/build.json -i
+# curl -F "member_id=1" -F "name=Code App Group" -F "friend_id=2" http://localhost:3001/group/build.json -i
+
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 2, "group_id": 17 }' -X POST http://localhost:3000/group/leave_group.json -i
@@ -200,8 +201,8 @@ end
 # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "choice_id": 798
-# }' -X POST http://localhost:3000/poll/288/vote.json -i
+#     "choice_id": 994
+# }' -X POST http://localhost:3001/poll/367/vote.json -i
 
 
 # Tag.find_by_name("codeapp").polls.
@@ -258,6 +259,11 @@ end
 #     "member_id": "1"
 # }' -X POST http://localhost:3000/poll/163/hide.json -i
 
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 26,
+#     "code": "CA55640c"
+# }' -X POST http://localhost:3000/member/activate.json -i
+
 # http://localhost:3000/member/profile.json?member_id=1
 # Choice.find(39).update_attributes(vote: 76842)
 # Poll.find(3).update(vote_all: 542388)
@@ -269,6 +275,7 @@ end
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
 
+# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -282,7 +289,7 @@ end
 
 # http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
-# curl -F "member_id=1" -F "sentai_name=Nuttapon" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=8" -F "avatar=@naka2.png" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "633882377",
@@ -295,13 +302,13 @@ end
 # curl "http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5" -H 'Authorization: Token token="c55d4b810641c62156c4f419127e0bc4"' -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "id": "123456",
-#     "email": "testtest@gmail.com",
-#     "username": "nuttapon50999",
-#     "name": "nuttapon kub",
+#     "id": "1212121",
+#     "email": "new_user@gmail.com",
+#     "username": "new_users",
+#     "name": "new_user",
 #     "gender": 1,
-#     "user_photo": "http://avatar1.jpg"
-# }' -X POST http://localhost:3000/authen/facebook.json -i
+#     "user_photo": "http://avatar1121212.jpg"
+# }' -X POST http://localhost:3001/authen/facebook.json -i
 
 
 # Member.all.each do |p|

@@ -24,4 +24,13 @@ namespace :admin do
     end
   end
 
+  desc "Update synce facebook"
+  task :sync_facebook => :environment do
+    Member.all.each do |member|
+      if member.providers.where(name: 'facebook').present?
+        member.update(sync_facebook: true)
+      end
+    end
+  end
+
 end
