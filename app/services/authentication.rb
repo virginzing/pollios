@@ -73,8 +73,6 @@ class Authentication
 
 
     if @member
-      @member.update_column(:avatar, avatar) if avatar.present?
-      
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
         provider.pid = pid
@@ -85,6 +83,7 @@ class Authentication
 
     if @new_member
       follow_pollios
+      @member.update_column(:avatar, avatar) if avatar.present?
       UserStats.create_user_stats(@new_member, @params["provider"])
     end
 
@@ -105,9 +104,9 @@ class Authentication
 
   def update_member(member)
     unless username.present?
-      member.update(sentai_name: name, avatar: avatar, birthday: birthday)
+      member.update(sentai_name: name, birthday: birthday)
     else
-      member.update(sentai_name: name, username: check_username, avatar: avatar, birthday: birthday)
+      member.update(sentai_name: name, username: check_username, birthday: birthday)
     end
   end
 
