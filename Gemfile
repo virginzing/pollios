@@ -94,6 +94,8 @@ gem 'jbuilder_cache_multi', '~> 0.0.2'
 
 gem "chartkick"
 
+gem 'configatron',  '3.2.0'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

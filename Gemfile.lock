@@ -102,7 +102,7 @@ GEM
     commander (4.2.0)
       highline (~> 1.6.11)
     commonjs (0.2.7)
-    configatron (4.0.1)
+    configatron (3.2.0)
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.2)
@@ -322,6 +322,7 @@ DEPENDENCIES
   chartkick
   cloudinary
   coffee-rails (~> 4.0.0)
+  configatron (= 3.2.0)
   dalli
   decent_exposure
   devise
