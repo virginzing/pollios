@@ -1,7 +1,8 @@
 class FriendFollowingTimeline
   LIMIT_TIMELINE = 3000
   LIMIT_POLL = 10
-
+  include GroupApi
+  
   attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared, :next_cursor
 
   def initialize(member_obj, options)

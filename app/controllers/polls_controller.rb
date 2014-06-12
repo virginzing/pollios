@@ -9,7 +9,7 @@ class PollsController < ApplicationController
   before_action :set_poll, only: [:watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   before_action :compress_gzip, only: [:detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
-  before_action :get_your_group, only: [:detail]
+  before_action :get_your_group, only: [:detail, :friend_following_timeline]
 
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
@@ -167,6 +167,7 @@ class PollsController < ApplicationController
   def friend_following_poll
     friend_following_timeline = FriendFollowingTimeline.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = friend_following_timeline.poll_friend_following
+    @group_by_name = friend_following_timeline.group_by_name
     @total_entries = friend_following_timeline.total_entries
   end
 
