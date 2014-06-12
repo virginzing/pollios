@@ -13,7 +13,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # This is a sensible default for uploaders that are meant to be mounted:
 
   version :thumbnail do
-    process :resize_to_fill => [100, 100]
+    process :resize_to_fill => [180, 180]
   end
 
   version :cover do
