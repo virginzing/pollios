@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
+  before_action :set_current_member, only: [:activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -18,8 +18,11 @@ class MembersController < ApplicationController
   end
 
   def update_profile
-    if @current_member.update(update_profile_params.except("member_id"))
-      @current_member
+    if @current_member.update_attributes!(update_profile_params.except(:member_id, :avatar))
+      if update_profile_params[:avatar]
+        Member.update_avatar(@current_member, update_profile_params[:avatar])
+      end
+      @member = Member.find(@current_member.id)
     else
       @error_message = @current_member.errors.messages
     end
@@ -69,6 +72,31 @@ class MembersController < ApplicationController
     end
   end
 
+  def activate_account
+    if session[:activate_id] && session[:activate_email]
+      render layout: "activate"
+    else
+      redirect_to users_signin_url
+    end
+  end
+
+  def activate
+    @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
+    respond_to do |format|
+      if @invite_code[:status]
+        @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
+        @activate.save
+        @invite_code[:object].update!(used: true)
+        session[:member_id] = @current_member.id
+        format.js
+        format.html { redirect_to dashboard_path }
+      else
+        flash[:warning] = @invite_code[:message]
+        format.html { redirect_to users_activate_path }
+      end
+    end
+  end
+
   def clear
     current_member.history_votes.delete_all
     flash[:success] = "Clear successfully."
@@ -80,6 +108,10 @@ class MembersController < ApplicationController
 
   def update_profile_params
     params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description, :sync_facebook)
+  end
+
+  def activate_params
+    params.permit(:code, :member_id)
   end
 
   

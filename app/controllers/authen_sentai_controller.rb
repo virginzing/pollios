@@ -1,7 +1,7 @@
 class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
 	# before_action :current_login?, only: [:signin]
-  before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
+  # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
 
   expose(:current_member_id) { session[:member_id] }
@@ -12,6 +12,8 @@ class AuthenSentaiController < ApplicationController
 
 
 	def signin
+    session[:activate_email] = nil
+    session[:activate_id] = nil
     render layout: "new_login"
 	end
 
@@ -41,12 +43,23 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
 			if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
-        @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-        @login = true
-				session[:member_id] = member.id
-				wants.html { redirect_back_or polls_path }
-				wants.json
-        wants.js
+        if @auth.activate_account?
+          @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
+          @login = true
+          session[:member_id] = member.id
+          wants.html { redirect_back_or polls_path }
+          wants.json
+          wants.js
+        else
+          @login = false
+          @waiting = true
+          session[:activate_email] = member.email
+          session[:activate_id] = member.id
+          flash[:warning] = "This account is not activate yet."
+          wants.html
+          wants.json
+          wants.js
+        end
 			else
         @login = false
 				flash[:warning] = "Invalid username or password."

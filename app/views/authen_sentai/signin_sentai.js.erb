@@ -1,9 +1,14 @@
-$.login = <%= raw @login %>;
+$.login = <%= raw @login || false %>;
+$.waiting = <%= raw @waiting || false %>;
 
 if ($.login) {
   handleLoginSuccess();
 } else {
-  handleLoginError();
+  if ($.waiting) {
+    handleActivate();
+  } else {
+    handleLoginError();
+  }
 }
 
 function handleLoginError() {
@@ -21,5 +26,9 @@ function handleLoginError() {
 }
 
 function handleLoginSuccess() {
-  window.location.href="/dashboard"
+  window.location.href='/dashboard';
+}
+
+function handleActivate() {
+  window.location.href='/users_activate';
 }

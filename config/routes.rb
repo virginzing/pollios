@@ -95,6 +95,7 @@ Pollios::Application.routes.draw do
     get ':member_id/activity',       to: 'members#activity'
     get ':member_id/all_request',   to: 'members#all_request'
     get 'profile',            to: 'members#my_profile'
+    post 'activate',          to: 'members#activate'
   end
 
   scope 'poll' do
@@ -166,6 +167,7 @@ Pollios::Application.routes.draw do
   post 'templates',       to: 'templates#new_or_update'
   get  'templates',        to: 'templates#poll_template'
 
+  get 'users_activate',     to: 'members#activate_account', as: :users_activate
   get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
   get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
   get 'users_signout',     to: 'authen_sentai#signout', as: :users_signout

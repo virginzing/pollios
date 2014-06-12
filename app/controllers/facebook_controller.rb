@@ -1,6 +1,6 @@
 class FacebookController < ApplicationController
   protect_from_forgery :except => [:login]
-  # before_action :compress_gzip, only: [:login]
+  before_action :compress_gzip, only: [:login]
 
   expose(:member) { @auth.member }
   expose(:get_stats_all) { member.get_stats_all }
@@ -8,7 +8,9 @@ class FacebookController < ApplicationController
   def login
     @auth = Authentication.new(fb_params.merge(Hash["provider" => "facebook"]))
     if @auth.authenticated?
-      @apn_device = ApnDevice.check_device?(member, fb_params[:device_token])
+      if @auth.activate_account?
+        @apn_device = ApnDevice.check_device?(member, fb_params[:device_token])
+      end
     end
   end
 

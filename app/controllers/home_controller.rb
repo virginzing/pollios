@@ -2,7 +2,6 @@ class HomeController < ApplicationController
   before_action :signed_user, only: [:dashboard]
   
   def dashboard
-
   end
   
   def index

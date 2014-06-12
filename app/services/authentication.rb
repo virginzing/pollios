@@ -13,6 +13,10 @@ class Authentication
 
   def authenticated?
     member.present?    
+  end
+
+  def activate_account?
+    check_activate_account
   end  
 
   def name
@@ -81,11 +85,11 @@ class Authentication
         @new_member_provider = true
       end
 
-    if @new_member
-      follow_pollios
-      @member.update_column(:avatar, avatar) if avatar.present?
-      UserStats.create_user_stats(@new_member, @params["provider"])
-    end
+      if @new_member
+        follow_pollios
+        @member.update_column(:avatar, avatar) if avatar.present?
+        UserStats.create_user_stats(@new_member, @params["provider"])
+      end
 
     end
 
@@ -115,9 +119,13 @@ class Authentication
   end
 
   def check_username
-    find_username = Member.where(username: username)
+    find_username = Member.where(username: username).first
     if find_username.present?
-      @username = nil
+      if find_username.id == @member.id
+        @username = username
+      else
+        @username = nil
+      end
     else
       @username = username
     end
@@ -129,6 +137,10 @@ class Authentication
       token = SecureRandom.hex
     end while Provider.exists?(token: token)
     return token
+  end
+
+  def check_activate_account
+    member.member_invite_code.present?
   end
 end
 

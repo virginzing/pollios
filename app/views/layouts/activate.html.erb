@@ -115,30 +115,34 @@
           </div>
           <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
             <div class="well no-padding">
-              <form action="/users_forgotpassword" id="forgot-password-form" class="smart-form client-form" method="post" data-remote="true">
+              <form action="/member/activate" method="post" class="smart-form client-form" id="activate-form">
                 <header>
-                  Forgot Password
+                  Activate Account by Invite Code.
                 </header>
 
                 <fieldset>
-                  
                   <section>
-                    <label class="label">Enter your email address</label>
-                    <label class="input"> <i class="icon-append fa fa-envelope"></i>
-                      <input type="email" name="email" autofocus>
-                      <b class="tooltip tooltip-top-right"><i class="fa fa-envelope txt-color-teal"></i> Please enter email address for password reset</b></label>
+                    <label class="label">E-mail</label>
+                    <label class="input"> <i class="icon-append fa fa-user"></i>
+                      <input type="email" name="email" value="<%= session[:activate_email] %>" disabled="disabled">
+                  </section>
+                      <input type="email" name="member_id" value="<%= session[:activate_id] %>" class="hidden">
+                  <section>
+                    <label class="label">Invite Code</label>
+                    <label class="input"> <i class="icon-append fa fa-lock"></i>
+                      <input type="text" name="code" autofocus>
                   </section>
 
                 </fieldset>
                 <footer>
-                  <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
-                    <i class="fa fa-refresh"></i> Reset Password
+                  <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="">
+                    Activate
                   </button>
                 </footer>
               </form>
 
             </div>
-                        
+        
           </div>
         </div>
       </div>
@@ -200,24 +204,43 @@
         NProgress.done();
       });
 
+      $.required_login = <%= flash.present? %>;
+      var flash_list =  <%= raw manage_flash(flash) %>;
+
+      $.title = flash_list[0];
+      $.msg = flash_list[1];
+      $.color = flash_list[2];
+      $.icon = flash_list[3];
+
+      if($.required_login) {
+
+        $(window).bind("load", function() {
+          $.smallBox({
+            title : $.title,
+            content : $.msg,
+            color : $.color,
+            timeout: 6000,
+            icon : $.icon
+          });
+        });
+      }
+
       runAllForms();
 
-            $(function() {
+      $(function() {
         // Validation
-      $("#forgot-password-form").validate({
+        $("#activate-form").validate({
           // Rules for form validation
           rules : {
-            email : {
-              required : true,
-              email : true
+            code : {
+              required : true
             }
           },
 
           // Messages for form validation
           messages : {
-            email : {
-              required : 'Please enter your email address',
-              email : 'Please enter a VALID email address'
+            code : {
+              required : 'Please enter your invite code'
             }
           },
 
@@ -227,7 +250,6 @@
           }
         });
       });
-
     </script>
   </body>
 </html>
