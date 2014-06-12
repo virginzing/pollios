@@ -27,7 +27,7 @@ GIT
 
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: 1261bc8a0989eeff0a977d12351a8e82ed1bf9a3
+  revision: 027929d23993e33cd50c92b4928548e412ea87ee
   specs:
     mongoid (4.0.0.rc1)
       activemodel (~> 4.0)
@@ -102,7 +102,7 @@ GEM
     commander (4.2.0)
       highline (~> 1.6.11)
     commonjs (0.2.7)
-    configatron (3.2.0)
+    configatron (4.0.1)
     connection_pool (2.0.0)
     daemons (1.1.9)
     dalli (2.7.2)
@@ -144,7 +144,7 @@ GEM
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.1)
-    kaminari (0.16.0)
+    kaminari (0.16.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.9.2)
