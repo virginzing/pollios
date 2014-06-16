@@ -3,7 +3,7 @@ class PollStats
   include Mongoid::Attributes::Dynamic
   include Mongoid::Timestamps
 
-  field :stats_created_at, type: Date, default: Date.today
+  field :stats_created_at, type: Date, default: Date.current
   field :amount_poll, type: Integer, default: 0
   field :public_count, type: Integer, default: 0
   field :friend_following_count, type: Integer, default: 0
@@ -57,19 +57,19 @@ class PollStats
   end
 
   def self.find_stats_poll_today
-    PollStats.where(stats_created_at: Date.today).first_or_create!
+    PollStats.where(stats_created_at: Date.current).first_or_create!
   end
 
   def self.poll_per_hour
     new_hash = {}
-    @hash_poll = Poll.where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
+    @hash_poll = Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
       new_hash.merge!({ k => v.size })
     end
     new_hash
   end
 
   def self.poll_popular
-    Poll.where(created_at: Date.today.beginning_of_day..Date.today.end_of_day).order("vote_all desc").limit(5)
+    Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order("vote_all desc").limit(5)
   end
 
 end
