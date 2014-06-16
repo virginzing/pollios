@@ -7,6 +7,16 @@ module ApplicationHelper
       end
   end
 
+  def get_icon_from_value(key)
+    if key == :success
+      content_tag :i, :class => 'fa-fw fa fa-check' do
+      end
+    elsif key == :error
+      content_tag :i, :class => 'fa-fw fa fa-times' do
+      end
+    end
+  end
+
   def is_active_new_poll(c_name, a_name)
     if controller_name == c_name 
       if action_name == a_name
@@ -19,6 +29,18 @@ module ApplicationHelper
     if controller_name == c_name
       if action_name == a_name
         'active'
+      end
+    end
+  end
+
+  def invite_code_helper(used)
+    if used
+      content_tag 'div', class: 'label label-success' do
+        "Activated"
+      end
+    else
+      content_tag 'div', class: 'label label-default' do
+        "Not Active"
       end
     end
   end
@@ -260,8 +282,8 @@ end
 # }' -X POST http://localhost:3000/poll/163/hide.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 26,
-#     "code": "CA55640c"
+#     "member_id": 1,
+#     "code": "ca8ef1"
 # }' -X POST http://localhost:3000/member/activate.json -i
 
 # http://localhost:3000/member/profile.json?member_id=1

@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-edit fa-fw "></i> 
+        Invite Code 
+    </h1>
+  </div>
+</div>
+
+<div class="well">
+  <div class="row">
+  <div class="col-md-10 col-md-offset-1">
+      <%= simple_form_for @company, url: invites_path, method: :post do |f| %>
+        <div class="col col-md-12">
+          <%= f.input :name, label: 'Company name' %>
+        </div>
+        <div class="col col-md-2">
+          <%= f.input :amount_code, as: :integer %>
+        </div>
+        <div class="col col-md-12">
+          <%= f.submit "Create Invite", class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

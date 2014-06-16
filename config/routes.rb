@@ -16,6 +16,10 @@ Pollios::Application.routes.draw do
   resources :members 
   resources :poll_series
   resources :password_resets
+  resources :invites
+  resources :companies
+
+  get 'invites/new',    to: 'invites#new',  as: :new_invitation
 
   scope 'build_poll' do
     get 'binary',   to: 'polls#binary', as: :binary_poll

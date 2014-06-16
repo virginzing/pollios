@@ -21,8 +21,8 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/font-awesome.min.css" data-turbolinks-track="true">
 
 		<!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
-		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-production.css" data-turbolinks-track="true">
-		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.css" data-turbolinks-track="true">
+    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-production.min.css" data-turbolinks-track="true">
+    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.min.css" data-turbolinks-track="true">
 
 		<!-- SmartAdmin RTL Support is under construction
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-rtl.css" data-turbolinks-track="true"> -->
@@ -57,6 +57,12 @@
     <!-- BOOTSTRAP JS -->
 		<script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script> 
 		<script src="/plugins/jquery.textcomplete.js" type="text/javascript"></script> 
+
+		<script src="/smartadmin/js/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script src="/smartadmin/js/plugin/datatables/dataTables.colVis.min.js"></script>
+    <script src="/smartadmin/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+    <script src="/smartadmin/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+
 		<%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %> 
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
 	</head>
@@ -77,33 +83,6 @@
 				</div>
 				<!-- END AJAX-DROPDOWN -->
 			</div>
-
-			<!-- projects dropdown -->
-			<div id="project-context">
-
-				<span class="label">Polls:</span>
-				<span id="project-selector" class="popover-trigger-element dropdown-toggle" data-toggle="dropdown">Recent polls <i class="fa fa-angle-down"></i></span>
-
-				<!-- Suggestion: populate this list with fetch and push technique -->
-				<ul class="dropdown-menu">
-					<li>
-						<a href="javascript:void(0);">Online e-merchant management system - attaching integration with the iOS</a>
-					</li>
-					<li>
-						<a href="javascript:void(0);">Notes on pipeline upgradee</a>
-					</li>
-					<li>
-						<a href="javascript:void(0);">Assesment Report for merchant account</a>
-					</li>
-					<li class="divider"></li>
-					<li>
-						<a href="javascript:void(0);"><i class="fa fa-power-off"></i> Clear</a>
-					</li>
-				</ul>
-				<!-- end dropdown-menu-->
-
-			</div>
-			<!-- end projects dropdown -->
 
 			<!-- pulled right: nav area -->
 			<div class="pull-right">
@@ -292,12 +271,72 @@
 
 			<!-- MAIN CONTENT -->
 			<div id="content">
-				<%= yield %>
+			  <% flash.each do |key, value| %>
+          <div data-alert class="<%= flash_class(key) %> fade in">
+              <%= get_icon_from_value(key) %>
+              <%= value %>
+            <button class="close" data-dismiss="alert">×</button>
+          </div>
+        <% end %>
+        <%= yield %>
 			</div>
 			<!-- END MAIN CONTENT -->
 
 		</div>
 		<!-- END MAIN PANEL -->
+
+		<div class="page-footer">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <span class="txt-color-white">Pollios © 2014</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 text-right hidden-xs">
+          <div class="txt-color-white inline-block">
+
+            <div class="btn-group dropup">
+              <button class="btn btn-xs dropdown-toggle bg-color-blue txt-color-white" data-toggle="dropdown">
+                <i class="fa fa-link"></i> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu pull-right text-left">
+                <li>
+                  <div class="padding-5">
+                    <p class="txt-color-darken font-sm no-margin">Download Progress</p>
+                    <div class="progress progress-micro no-margin">
+                      <div class="progress-bar progress-bar-success" style="width: 50%;"></div>
+                    </div>
+                  </div>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <div class="padding-5">
+                    <p class="txt-color-darken font-sm no-margin">Server Load</p>
+                    <div class="progress progress-micro no-margin">
+                      <div class="progress-bar progress-bar-success" style="width: 20%;"></div>
+                    </div>
+                  </div>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <div class="padding-5">
+                    <p class="txt-color-darken font-sm no-margin">Memory Load <span class="text-danger">*critical*</span></p>
+                    <div class="progress progress-micro no-margin">
+                      <div class="progress-bar progress-bar-danger" style="width: 70%;"></div>
+                    </div>
+                  </div>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <div class="padding-5">
+                    <button class="btn btn-block btn-default">refresh</button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 		<!-- SHORTCUT AREA : With large tiles (activated via clicking user name tag)
 		Note: These tiles are completely responsive,
@@ -434,6 +473,7 @@
 				// DO NOT REMOVE : GLOBAL FUNCTIONS!
 				pageSetUp();
 				drawBreadCrumb();
+				dataTable();
 
 				var searchFunc = function (term, callback) {
 				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })

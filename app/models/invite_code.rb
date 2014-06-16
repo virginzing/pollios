@@ -1,5 +1,6 @@
 class InviteCode < ActiveRecord::Base
   has_one :member_invite_code
+  belongs_to :company
 
   def self.generate_invite_code
     begin
@@ -8,13 +9,17 @@ class InviteCode < ActiveRecord::Base
     return code
   end
 
-  def self.create_invite_code(name = nil, number = nil)
+  def self.create_invite_code(name = nil, number = nil, company_id = nil)
     @code_prefix = name || 'ca'
 
     total_code = number || 10
 
+    company_id = company_id || 0
+
+    puts "total_code = #{total_code}"
+
     total_code.times do 
-      InviteCode.create!(code: generate_invite_code)
+      InviteCode.create!(code: generate_invite_code, company_id: company_id)
     end
 
   end

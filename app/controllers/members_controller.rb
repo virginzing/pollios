@@ -89,9 +89,11 @@ class MembersController < ApplicationController
         @invite_code[:object].update!(used: true)
         session[:member_id] = @current_member.id
         format.js
+        format.json
         format.html { redirect_to dashboard_path }
       else
         flash[:warning] = @invite_code[:message]
+        format.json
         format.html { redirect_to users_activate_path }
       end
     end

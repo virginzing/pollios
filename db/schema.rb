@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140611071235) do
+ActiveRecord::Schema.define(version: 20140616055716) do
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -160,6 +160,12 @@ ActiveRecord::Schema.define(version: 20140611071235) do
 
   add_index "choices", ["poll_id"], name: "index_choices_on_poll_id"
 
+  create_table "companies", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "devices", force: true do |t|
     t.integer  "member_id"
     t.text     "token",      null: false
@@ -275,7 +281,10 @@ ActiveRecord::Schema.define(version: 20140611071235) do
     t.boolean  "used",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "company_id"
   end
+
+  add_index "invite_codes", ["company_id"], name: "index_invite_codes_on_company_id"
 
   create_table "member_invite_codes", force: true do |t|
     t.integer  "member_id"
