@@ -9,7 +9,7 @@ class PollsController < ApplicationController
   before_action :set_poll, only: [:watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   before_action :compress_gzip, only: [:detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
-  before_action :get_your_group, only: [:detail, :friend_following_timeline]
+  before_action :get_your_group, only: [:detail, :friend_following_timeline, :create_poll]
 
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 

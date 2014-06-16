@@ -20,6 +20,9 @@ if @poll.valid?
     json.share_count @poll.share_count
     json.is_public @poll.public
     json.type_poll @poll.type_poll
+    json.vote_max @poll.get_vote_max
+    json.poll_within @poll.get_within(@group_by_name, params[:action])
+    json.watched @poll.check_watched(watched_poll_ids, @poll.id)
   end
 
   json.list_choices @poll.choices do |choice|
