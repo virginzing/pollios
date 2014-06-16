@@ -3,7 +3,7 @@ class UserStats
   include Mongoid::Attributes::Dynamic
   include Mongoid::Timestamps
 
-  field :stats_created_at, type: Date, default: Date.today
+  field :stats_created_at, type: Date, default: Date.current
   field :amount_user, type: Integer, default: 0
   field :via_facebook, type: Integer, default: 0
   field :via_sentai,   type: Integer, default: 0
@@ -41,7 +41,7 @@ class UserStats
   end
 
   def self.find_stats_user_today
-    UserStats.where(stats_created_at: Date.today).first_or_create!
+    UserStats.where(stats_created_at: Date.current).first_or_create!
   end
 
 end

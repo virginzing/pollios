@@ -3,7 +3,7 @@ class GroupStats
   include Mongoid::Attributes::Dynamic
   include Mongoid::Timestamps
 
-  field :stats_created_at, type: Date, default: Date.today
+  field :stats_created_at, type: Date, default: Date.current
   field :amount_group, type: Integer, default: 0
 
   index( { stats_created_at: 1 }, { unique: true } )
@@ -23,7 +23,7 @@ class GroupStats
   end
 
   def self.find_stats_group_today
-    GroupStats.where(stats_created_at: Date.today).first_or_create!
+    GroupStats.where(stats_created_at: Date.current).first_or_create!
   end
 
 end

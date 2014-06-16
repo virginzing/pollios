@@ -3,7 +3,7 @@ class VoteStats
   include Mongoid::Attributes::Dynamic
   include Mongoid::Timestamps
 
-  field :stats_created_at, type: Date, default: Date.today
+  field :stats_created_at, type: Date, default: Date.current
 
   field :amount_vote, type: Integer, default: 0
   field :public_count, type: Integer, default: 0
@@ -56,7 +56,7 @@ class VoteStats
   end
 
   def self.find_stats_vote_today
-    VoteStats.where(stats_created_at: Date.today).first_or_create!
+    VoteStats.where(stats_created_at: Date.current).first_or_create!
   end
 
 end
