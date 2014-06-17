@@ -545,8 +545,8 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def check_watched(watched_poll_ids, poll_id)
-    if watched_poll_ids.include?(poll_id)
+  def check_watched(watched_poll_ids)
+    if watched_poll_ids.include?(id)
       true
     else
       false
