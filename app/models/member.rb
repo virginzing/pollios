@@ -289,7 +289,7 @@ class Member < ActiveRecord::Base
 
   def cached_watched
     Rails.cache.fetch([ self, "watcheds" ]) do
-      Poll.joins(:watcheds).where(member_id: id).to_a
+      watcheds.to_a
     end
   end
 

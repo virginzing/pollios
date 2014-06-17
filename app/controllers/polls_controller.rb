@@ -15,7 +15,7 @@ class PollsController < ApplicationController
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
-  expose(:watched_poll_ids) { @current_member.cached_watched.map(&:id) }
+  expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
 
   respond_to :json
 
