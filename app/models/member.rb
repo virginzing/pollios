@@ -252,12 +252,6 @@ class Member < ActiveRecord::Base
     end
   end
 
-  def cached_watched
-    Rails.cache.fetch([ self, "watcheds" ]) do
-      watcheds.to_a
-    end
-  end
-
   def cached_shared_poll
     Rails.cache.fetch([ self, "shared"]) { share_polls.to_a }
   end
@@ -290,6 +284,12 @@ class Member < ActiveRecord::Base
   def cached_my_voted
     Rails.cache.fetch([self, 'my_voted']) do
       HistoryVote.where("member_id = #{id} AND poll_series_id = 0").to_a
+    end
+  end
+
+  def cached_watched
+    Rails.cache.fetch([ self, "watcheds" ]) do
+      Poll.joins(:watcheds).where(member_id: id).to_a
     end
   end
 
