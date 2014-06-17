@@ -218,6 +218,7 @@ class Member < ActiveRecord::Base
     {
       "my_poll" => cached_my_poll.count,
       "my_vote" => cached_my_voted.count,
+      "my_watched" => cached_watched.count,
       "friend" => cached_get_friend_active.count,
       "group" => cached_get_group_active.count,
       "activity" => get_activity_count,
@@ -242,6 +243,12 @@ class Member < ActiveRecord::Base
   def cached_groups_friend_count(member)
     Rails.cache.fetch([ self.id, 'group_count']) do
       FriendPollInProfile.new(member, self, {}).group_friend_count
+    end
+  end
+
+  def cached_watched_friend_count(member)
+    Rails.cache.fetch([ self.id, 'friend_count']) do
+      FriendPollInProfile.new(member, self, {}).watched_friend_count
     end
   end
 

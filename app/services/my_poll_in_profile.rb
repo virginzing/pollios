@@ -18,6 +18,10 @@ class MyPollInProfile
     @my_vote ||= poll_voted
   end
 
+  def my_watched
+    @my_watched ||= poll_watched
+  end
+
   private
 
   def poll_created
@@ -28,6 +32,10 @@ class MyPollInProfile
   def poll_voted
     Poll.joins(:history_votes).includes(:member, :campaign).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_id)
         .order("history_votes.created_at DESC")
+  end
+
+  def poll_watched
+    Poll.joins(:watcheds).includes(:member, :campaign).where("watcheds.member_id = #{member_id}").order("watcheds.created_at DESC")
   end
   
 end

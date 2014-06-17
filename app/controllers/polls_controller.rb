@@ -1,13 +1,13 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :set_current_member, only: [:watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_vote, :unshare, :vote]
+  before_action :set_current_member, only: [:watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
-  before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline]
+  before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   before_action :set_poll, only: [:watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
-  before_action :compress_gzip, only: [:detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
+  before_action :compress_gzip, only: [:detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
   before_action :get_your_group, only: [:detail, :friend_following_timeline, :create_poll]
 
@@ -206,6 +206,12 @@ class PollsController < ApplicationController
   def my_vote
     @init_poll = MyPollInProfile.new(@current_member, options_params)
     @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def my_watched
+    @init_poll = MyPollInProfile.new(@current_member, options_params)
+    @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
     poll_helper
   end
 

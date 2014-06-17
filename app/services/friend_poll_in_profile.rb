@@ -48,12 +48,20 @@ class FriendPollInProfile
     @poll_voted ||= poll_voted
   end
 
+  def get_watched_friend
+    @poll_watched ||= poll_watched
+  end
+
   def poll_friend_count
     get_poll_friend.count
   end
 
   def vote_friend_count
     get_vote_friend.count
+  end
+
+  def watched_friend_count
+    get_watched_friend.count
   end
 
   def group_friend_count
@@ -81,6 +89,13 @@ class FriendPollInProfile
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
                 list_my_friend_ids,
                 my_and_friend_group).references(:poll_groups)
+  end
+
+  def poll_watched
+    query = Poll.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+                .where("(watcheds.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0')" \
+                "OR (watcheds.member_id = #{friend_id} AND polls.public = 't') " \
+                "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", list_my_friend_ids, my_and_friend_group).references(:poll_groups)
   end
 
   def mutual_or_public_group

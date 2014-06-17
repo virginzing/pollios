@@ -4,6 +4,7 @@ json.count do
   json.poll member.cached_my_poll.count
   json.vote member.cached_my_voted.count
   json.group member.cached_get_group_active.count
+  json.watched member.cached_watched.count
   json.activity member.get_activity_count
   json.message 0
   json.status 0
