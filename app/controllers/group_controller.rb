@@ -6,7 +6,7 @@ class GroupController < ApplicationController
   before_action :history_voted_viewed, only: [:poll_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
   
-  expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
+  expose(:watched_poll_ids) { @current_member.cached_watched.map(&:id) }
 
   def my_group
     @group_active = @current_member.get_group_active
