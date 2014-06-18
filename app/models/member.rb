@@ -84,7 +84,7 @@ class Member < ActiveRecord::Base
   scope :celebrity, -> { where(member_type: 1) }
 
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
-  validates :username , :uniqueness => { :case_sensitive => true }
+  # validates :username , :uniqueness => { :case_sensitive => true }
 
   LIMIT_POLL = 10
   self.per_page = 20
