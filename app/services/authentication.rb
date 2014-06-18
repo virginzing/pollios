@@ -61,11 +61,11 @@ class Authentication
 
   
   private
+        # member.username = check_username
 
   def member_from_authen
     @member = Member.where(email: email).first_or_create do |member|
       member.sentai_name = name
-      # member.username = check_username
       member.email = email
       member.birthday = birthday
       member.gender = gender.to_i
@@ -76,7 +76,7 @@ class Authentication
     end
 
     puts "new member #{@member}, #{@new_member}"
-    
+
     if @member
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
@@ -112,30 +112,26 @@ class Authentication
   end
 
   def update_member(member)
-    unless username.present?
       member.update(sentai_name: name, birthday: birthday)
-    else
-      member.update(sentai_name: name, username: check_username, birthday: birthday)
-    end
   end
 
   def update_member_provider(member_provider)
     member_provider.update_attributes!(token: generate_token)
   end
 
-  def check_username
-    find_username = Member.where(username: username).first
-    if find_username.present?
-      if find_username.id == @member.id
-        @username = username
-      else
-        @username = nil
-      end
-    else
-      @username = username
-    end
-    @username
-  end
+  # def check_username
+  #   find_username = Member.where(username: username).first
+  #   if find_username.present?
+  #     if find_username.id == @member.id
+  #       @username = username
+  #     else
+  #       @username = nil
+  #     end
+  #   else
+  #     @username = username
+  #   end
+  #   @username
+  # end
 
   def self.generate_api_token
     begin
