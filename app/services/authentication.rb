@@ -63,16 +63,18 @@ class Authentication
   private
 
   def member_from_authen
-    @member = Member.where(email: email).first_or_create do |member|
-      member.sentai_name = name
-      member.username = check_username
-      member.email = email
-      member.birthday = birthday
-      member.gender = gender.to_i
-      member.province_id = province
-      member.member_type = member_type
-      member.save
-      @new_member = true
+    begin
+      @member = Member.where(email: email).first_or_initialize do |member|
+        member.sentai_name = name
+        member.username = check_username
+        member.email = email
+        member.birthday = birthday
+        member.gender = gender.to_i
+        member.province_id = province
+        member.member_type = member_type
+        member.save
+        @new_member = true
+      end
     end
 
 
@@ -100,6 +102,8 @@ class Authentication
   end
 
   def follow_pollios
+    puts "#{add following auto}"
+    puts "member => #{@member}"
     find_pollios = Member.find_by_email("pollios@pollios.com")
     if find_pollios.present?
       Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id
