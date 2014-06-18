@@ -64,11 +64,12 @@ class Group < ActiveRecord::Base
     member_id = group[:member_id]
     photo_group = group[:photo_group]
     description = group[:description]
+    set_privacy = group[:public] || false
 
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description)
+    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
