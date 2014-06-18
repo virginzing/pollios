@@ -38,22 +38,29 @@ class Group < ActiveRecord::Base
     group_member = group_members.where("member_id = ?", member_id)
   end
 
-  def self.accept_group(group)
+  def self.accept_group(member, group)
     group_id = group[:id]
     member_id = group[:member_id]
 
     find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
     if find_group_member
+      @group = find_group_member.group
+
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
+
       Rails.cache.delete([member_id, 'group_active'])
       Rails.cache.delete([member_id, 'group_count'])
+
+      if @group.public
+        Activity.create_activity_group(member, @group, 'Join')
+      end
     end
-    find_group_member.group
+    @group
   end
 
 
-  def self.build_group(group)
+  def self.build_group(member, group)
     member_id = group[:member_id]
     photo_group = group[:photo_group]
     description = group[:description]
@@ -68,6 +75,10 @@ class Group < ActiveRecord::Base
 
       GroupStats.create_group_stats(@group)
 
+      if @group.public
+        Activity.create_activity_group(member, @group, 'Join')
+      end
+      
       Rails.cache.delete([member_id, 'group_active'])
       
       add_friend_to_group(@group.id, member_id, friend_id) if friend_id
@@ -109,9 +120,5 @@ class Group < ActiveRecord::Base
   def get_description
     description.present? ? description : ""
   end
-
-  # def get_
-    
-  # end
 
 end

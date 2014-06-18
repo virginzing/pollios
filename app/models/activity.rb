@@ -1,5 +1,8 @@
 class Activity
   include Mongoid::Document
+  include Mongoid::Attributes::Dynamic
+  include Mongoid::Timestamps
+
   field :member_id, type: Integer
   field :items, type: Array
 
@@ -34,15 +37,12 @@ class Activity
 
     hash_activity = manange_action_with_poll
 
-    find_activity = find_by(member_id: @member.id)
+    find_activity = member_find_by_activity
 
-    if find_activity.present?
-      old_activity = find_activity.items
-      new_activity = old_activity.insert(0, hash_activity)
-      find_activity.update!(items: new_activity)
-    else
-      create!(member_id: @member.id, items: [hash_activity])
-    end
+    old_activity = find_activity.items
+    new_activity = old_activity.insert(0, hash_activity)
+    find_activity.update!(items: new_activity)
+
     find_activity
   end
 
@@ -52,16 +52,38 @@ class Activity
     @action = action
 
     hash_activity = manange_action_with_friend
-    find_activity = find_by(member_id: @member.id)
 
-    if find_activity.present?
-      old_activity = find_activity.items
-      new_activity = old_activity.insert(0, hash_activity)
-      find_activity.update!(items: new_activity)
-    else
-      create!(member_id: @member.id, items: [hash_activity])
-    end
+    find_activity = member_find_by_activity
+
+    old_activity = find_activity.items
+    new_activity = old_activity.insert(0, hash_activity)
+    find_activity.update!(items: new_activity)
+
     find_activity
+  end
+
+  def self.create_activity_group(member, group, action)
+    @member = member
+    @group = group
+    @action = action
+
+    hash_activity = manage_action_with_group
+
+    find_activity = member_find_by_activity
+
+    old_activity = find_activity.items
+    new_activity = old_activity.insert(0, hash_activity)
+    find_activity.update!(items: new_activity)
+
+    find_activity
+  end
+
+  def self.member_find_by_activity
+    member_activity = find_by(member_id: @member.id)
+    unless member_activity.present?
+      member_activity = create!(member_id: @member.id, items: [])
+    end
+    member_activity
   end
 
   def self.manange_action_with_poll
@@ -132,6 +154,20 @@ class Activity
         authority: AUTHORITY[:public],
         action: ACTION[:follow],
         type: TYPE[:friend],
+        activity_at: Time.zone.now.to_i
+      }
+    end
+  end
+
+  def self.manage_action_with_group
+    if @action == ACTION[:join]
+      {
+        group: {
+          id: @group.id,
+          name: @group.name
+        },
+        action: ACTION[:join],
+        type: TYPE[:group],
         activity_at: Time.zone.now.to_i
       }
     end

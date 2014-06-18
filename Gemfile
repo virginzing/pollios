@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 
+ruby "2.1.2"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 gem 'less-rails'
-gem 'therubyracer'
+# gem 'therubyracer'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
@@ -45,6 +46,8 @@ end
 group :production do
   gem 'pg', '0.17.0'
   gem 'rails_12factor'
+  gem 'libv8', '~> 3.11.8.3'
+  gem 'therubyracer', :platform => :ruby
 end
 
 gem 'versioncake', github: 'bwillis/versioncake'
