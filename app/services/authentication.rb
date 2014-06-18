@@ -63,21 +63,20 @@ class Authentication
   private
 
   def member_from_authen
-    begin
-      @member = Member.where(email: email).first_or_initialize do |member|
-        member.sentai_name = name
-        # member.username = check_username
-        member.email = email
-        member.birthday = birthday
-        member.gender = gender.to_i
-        member.province_id = province
-        member.member_type = member_type
-        member.save
-        @new_member = true
-      end
+    @member = Member.where(email: email).first_or_create do |member|
+      member.sentai_name = name
+      # member.username = check_username
+      member.email = email
+      member.birthday = birthday
+      member.gender = gender.to_i
+      member.province_id = province
+      member.member_type = member_type
+      member.save!
+      @new_member = true
     end
 
-
+    puts "new member #{@member}, #{@new_member}"
+    
     if @member
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
@@ -100,6 +99,7 @@ class Authentication
 
     @member
   end
+
 
   def follow_pollios
     puts "add follow auto"
