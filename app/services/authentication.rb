@@ -66,7 +66,7 @@ class Authentication
     begin
       @member = Member.where(email: email).first_or_initialize do |member|
         member.sentai_name = name
-        member.username = check_username
+        # member.username = check_username
         member.email = email
         member.birthday = birthday
         member.gender = gender.to_i
@@ -103,9 +103,10 @@ class Authentication
 
   def follow_pollios
     puts "add follow auto"
-    puts "member => #{@member}"
+    puts "member1 => #{@member.id}"
     find_pollios = Member.find_by_email("pollios@pollios.com")
     if find_pollios.present?
+      puts "member2 => #{@member.id}"
       Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id
     end
   end
