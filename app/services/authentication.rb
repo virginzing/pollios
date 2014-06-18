@@ -102,7 +102,7 @@ class Authentication
   end
 
   def follow_pollios
-    puts "#{add following auto}"
+    puts "add follow auto"
     puts "member => #{@member}"
     find_pollios = Member.find_by_email("pollios@pollios.com")
     if find_pollios.present?
