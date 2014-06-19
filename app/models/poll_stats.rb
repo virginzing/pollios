@@ -19,7 +19,7 @@ class PollStats
 
     @amount_poll = update_amount_poll
 
-    if @poll.in_group_ids != '0'
+    if @poll.in_group_ids != "0"
       update_stats_group
     else
       if @poll.public
