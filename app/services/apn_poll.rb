@@ -8,7 +8,11 @@ class ApnPoll
   end
 
   def recipient_ids
-    apn_friend_ids
+    if member.celebrity? || member.brand?
+      apn_friend_ids | following_ids
+    else
+      apn_friend_ids
+    end
   end
 
 
@@ -28,6 +32,10 @@ class ApnPoll
 
   def member
     Member.find(@member_id)
+  end
+
+  def following_ids
+    member.cached_get_follower.collect{|m| m.id if m.apn_poll_friend }
   end
 
   def apn_friend_ids
