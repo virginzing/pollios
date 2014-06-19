@@ -192,6 +192,7 @@
           <table class="table" style="margin-bottom: 0px;">
             <thead>
               <tr>
+                <th>Avatar</th>
                 <th>Name</th>
                 <th>Vote count</th>
               </tr>
@@ -199,6 +200,7 @@
             <tbody>
               <% @top_voter.each do |member| %>
               <tr>
+                <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
                 <td><%= member.sentai_name %></td>
                 <td><%= member.member_vote_count %></td>
               </tr>
