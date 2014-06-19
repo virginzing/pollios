@@ -1,9 +1,6 @@
 <h1>QRcode</h1>
-
-
 <!-- <img src="https://api.qrserver.com/v1/create-qr-code/?data=<%= @qrcode %>&amp;size=200x200" alt="" title="" />
  -->
 <div id="qrcode">
-  <img src="<%= qr_code(200, @qrcode) %>" alt="qrcode" style="position: absolute; top:200px;"/>
-  <img style="position: absolute; top: 288px; left: 101px; height: 30px; width: 30px;" src="/img/appicon72x72.png" />
+  <img src="<%= qr_code(200, @qrcode) %>" alt="qrcode" style="position: absolute;"/>
 </div>

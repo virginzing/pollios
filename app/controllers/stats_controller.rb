@@ -4,6 +4,7 @@ class StatsController < ApplicationController
   expose(:vote_stats) { @vote_stats }
   expose(:user_stats) { @user_stats }
   expose(:group_stats) { @group_stats }
+  expose(:total_all_stats) { }
 
   def dashboard
     @poll_stats = PollStats.find_stats_poll_today

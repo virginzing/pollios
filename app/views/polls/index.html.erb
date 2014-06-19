@@ -28,49 +28,73 @@
 </div>
 
 
-<table>
-  <thead>
-    <tr>
-      <th width="50">#</th>
-      <th width="350">Title</th>
-      <th>Recurring</th>
-      <th>Vote All</th>
-      <th>View All</th>
-      <th width="200">Expire At</th>
-      <th width="200">Created At</th>
-      <th>Qrcode</th>
-      <th>Re Generate</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @polls.each do |poll| %>
-      <tr>
-        <td><%= link_to poll.id, poll_path(poll) %></td>
-        <td><%= poll.title %></td>
-        <td><%= poll.check_recurring %></td>
-        <td><%= poll.vote_all %></td>
-        <td><%= poll.view_all %></td>
-        <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
-        <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
-        <td><a href="/poll/<%= poll.id %>/qrcode">QRCODE</a></td>
-        <td>
-          <%= form_tag '/poll/new_generate_qrcode' do %>
-            <%= hidden_field_tag 'id', poll.id %>
-            <%= submit_tag 'Re new' %>
-          <% end %>
-        </td>
-        <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-list-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>List of Poll</strong></h2>          
+    </header>
 
-<div class="row">
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_polls" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th width="350">Title</th>
+                <th>Vote All</th>
+                <th>View All</th>
+                <th width="200">Expire At</th>
+                <th width="200">Created At</th>
+                <th>Recurring</th>
+                <th>Qrcode</th>
+                <th>Re Generate</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @polls.each do |poll| %>
+                <tr>
+                  <td><%= link_to poll.id, poll_path(poll) %></td>
+                  <td><%= poll.title %></td>
+                  <td><%= poll.vote_all %></td>
+                  <td><%= poll.view_all %></td>
+                  <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
+                  <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
+                  <td><%= poll.check_recurring %></td>
+                  <td><a href="/poll/<%= poll.id %>/qrcode"><i class="fa fa-eye"></i></a></td>
+                  <td>
+                    <%= form_tag '/poll/new_generate_qrcode' do %>
+                      <%= hidden_field_tag 'id', poll.id %>
+                      <%= submit_tag 'Re new', class: 'btn btn-primary' %>
+                    <% end %>
+                  </td>
+                  <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
+<!-- <div class="row">
   <div class="pagination-centered">
     <%= will_paginate @polls, renderer: FoundationPagination::Rails %>
   </div>
-</div>
+</div> -->
+
+
 
 
 

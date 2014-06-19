@@ -1366,6 +1366,13 @@ function drawBreadCrumb() {
 
 function dataTable() {
 	$('#invite_codes').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 25
+	});
+	$('#list_polls').dataTable({
+		retrieve: true,
+		paging: false,
 		iDisplayLength: 25
 	});
 }
