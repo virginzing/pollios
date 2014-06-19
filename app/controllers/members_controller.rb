@@ -33,6 +33,13 @@ class MembersController < ApplicationController
     @friend_request = @current_member.cached_get_friend_request
     @group_inactive = Group.joins(:group_members).where("group_members.member_id = ? AND group_members.active = 'f'", @current_member.id).
                       select("groups.*, group_members.invite_id as invite_id")
+
+    @is_your_request = is_friend(@current_member, @your_request) if @your_request.present?
+    @is_friend_request = is_friend(@current_member, @friend_request) if @friend_request.present?
+  end
+
+  def is_friend(member_obj, list_compare)
+    Friend.add_friend?(member_obj, list_compare)
   end
 
   def activity
