@@ -72,4 +72,12 @@ class PollStats
     Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order("vote_all desc").limit(5)
   end
 
+  def self.top_voter
+    Member.joins(:history_votes).select("members.*, count(history_votes.member_id) as member_vote_count")
+          .where("history_votes.created_at BETWEEN ? AND ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+          .group("history_votes.member_id")
+          .order("member_vote_count desc")
+          .limit(10) 
+  end
+
 end

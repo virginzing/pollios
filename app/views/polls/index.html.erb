@@ -1,4 +1,31 @@
-<% breadcrumb :polls, @polls %>
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-edit fa-fw "></i> 
+        Polls
+    </h1>
+  </div>
+</div>
+
+<div class="well">
+  <h4 class="alert-heading">Please Note!</h4>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Pollios</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+  </p>
+  <br>
+  <a href="<%= binary_poll_path %>" class="icon-btn">
+      <i class="fa fa-edit"></i>
+      <div>Binary</div>
+  </a>
+    <a href="<%= rating_poll_path %>" class="icon-btn">
+      <i class="fa fa-star"></i>
+      <div>Rating</div>
+  </a>
+  <a href="<%= freeform_poll_path %>" class="icon-btn">
+      <i class="fa fa-edit"></i>
+      <div>Freeform</div>
+  </a>
+</div>
 
 
 <table>
@@ -45,9 +72,13 @@
   </div>
 </div>
 
-<h4>Tag Cloud</h4>
+
+
+
+<!-- <h4>Tag Cloud</h4>
 <div class="tag_cloud">
   <% tag_clound Poll.tag_counts, %w{s m l} do |tag, css_class| %>
     <%= link_to tag.name, '#', class: css_class %>
   <% end %>
 </div>
+ -->

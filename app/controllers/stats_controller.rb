@@ -14,6 +14,8 @@ class StatsController < ApplicationController
 
     @poll_per_hour = PollStats.poll_per_hour
     @poll_popular = PollStats.poll_popular
+
+    @top_voter = PollStats.top_voter
   end
 
   def polls
