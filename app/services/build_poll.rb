@@ -54,7 +54,6 @@ class BuildPoll
       "campaign_id" => @params["campaign_id"],
       "recurring_id" => @params["recurring_id"],
       "type_poll" => @params["type_poll"],
-      # "tag_tokens" => @params["tag_tokens"],
       "in_group_ids" => 0
     }
   end

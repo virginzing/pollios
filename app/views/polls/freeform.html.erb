@@ -14,7 +14,7 @@
         <!-- widget content -->
         <div class="widget-body">
           <%= simple_form_for @poll, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
-          <%= f.input :type_poll, as: :hidden, input_html: { value: "binary" } %>
+          <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
           <header>
             Poll Detail 
           </header>
@@ -55,7 +55,7 @@
                 <section>
                   <label class="label">Choice</label>
                   <label class="input">
-                    <input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" value="" required>
+                    <input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" required>
                     <a href="#" class="removeclass"></a>
                   </label>
                 </section>
