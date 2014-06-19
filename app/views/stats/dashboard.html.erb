@@ -1,3 +1,34 @@
+<section id="widget-grid" class="">
+
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+    <i class="fa-fw fa fa-file-o"></i> Graph <span>&gt;
+      <b>Poll created when 30 days ago</b></span></h1>
+  </div>
+</div>
+
+<div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days-ago" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+  <header>
+    <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+    <h2><strong>Poll created when 30 days ago</strong></h2>          
+  </header>
+
+  <!-- widget div-->
+  <div>
+    
+    <!-- widget content -->
+    <div class="widget-body" style="min-height: 0px;">
+      <!-- <div id="poll_created_30_days_ago" style="height: 250px;"></div> -->
+      <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago } %>
+    </div>
+    <!-- end widget content -->
+    
+  </div>
+  <!-- end widget div -->
+
+</div>
+
 <%= render partial: 'stats_total', locals: { total_all_stats: total_all_stats } %>
 
 <div class="row">
@@ -100,9 +131,6 @@
   </div>
 
 </div>
-
-<section id="widget-grid" class="">
-
     <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-popular" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <!-- widget options:
       usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
@@ -202,5 +230,20 @@
 
 </section>
 
-
+<script>
+  new Morris.Line({
+    // ID of the element in which to draw the chart.
+    element: 'poll_created_30_days_ago_chart',
+    // Chart data records -- each entry in this array corresponds to a point on
+    // the chart.
+    data: $('#poll_created_30_days_ago_chart').data('polls'),
+    // The name of the data record attribute that contains x-values.
+    xkey: 'created_at',
+    // A list of names of data record attributes that contain y-values.
+    ykeys: ['count'],
+    // Labels for the ykeys -- will be displayed when you hover over the
+    // chart.
+    labels: ['Count']
+  });
+</script>
 

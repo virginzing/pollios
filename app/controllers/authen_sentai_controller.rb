@@ -116,6 +116,10 @@ class AuthenSentaiController < ApplicationController
     end
   end
 
+  def change_password
+    
+  end
+
   def reset_password
     respond_to do |wants|
       @response = Authenticate::Sentai.reset_password(resetpassword_params)

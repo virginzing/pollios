@@ -112,7 +112,7 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 61, "friend_id": 2 }' -X POST http://localhost:3000/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 26 }' -X POST http://localhost:3001/friend/add_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
@@ -173,12 +173,11 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1, 
-#     "title": "in group by nutty",
+#     "member_id": 2, 
+#     "title": "public",
 #     "expire_within": "2",
 #     "choices": "1,2",
-#     "type_poll": "binary",
-#     "group_id": "14"
+#     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -240,9 +239,9 @@ end
 # http://localhost:3000/new_public_timeline.json?member_id=3
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1,
-#     "choice_id": "886"
-# }' -X POST http://localhost:3000/poll/316/vote.json -i
+#     "member_id": 2,
+#     "choice_id": "1047"
+# }' -X POST http://localhost:3000/poll/387/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 7
@@ -292,7 +291,7 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"codeapp@code-app.com","password":"1234567", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
