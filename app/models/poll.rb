@@ -564,6 +564,17 @@ class Poll < ActiveRecord::Base
    }
   end
 
+  def self.total_grouped_by_date(start)
+    polls = where(created_at: start.beginning_of_day..Time.zone.now)
+    polls = polls.group("date(created_at)")
+    polls = polls.select("date(created_at) as created_at, count(*) as total_poll")
+
+    polls.each_with_object({}) do |poll, hsh|
+      hsh[poll.created_at.to_date] = poll.total_poll
+    end
+  end
+
+
 
 end
 

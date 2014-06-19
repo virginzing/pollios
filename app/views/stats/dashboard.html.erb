@@ -20,7 +20,7 @@
     <!-- widget content -->
     <div class="widget-body" style="min-height: 0px;">
       <!-- <div id="poll_created_30_days_ago" style="height: 250px;"></div> -->
-      <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago } %>
+      <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago_chart } %>
     </div>
     <!-- end widget content -->
     
@@ -240,10 +240,10 @@
     // The name of the data record attribute that contains x-values.
     xkey: 'created_at',
     // A list of names of data record attributes that contain y-values.
-    ykeys: ['count'],
+    ykeys: ['count', 'poll_of_friend', 'poll_of_public', 'poll_of_group'],
     // Labels for the ykeys -- will be displayed when you hover over the
     // chart.
-    labels: ['Count']
+    labels: ['Count', 'Poll in Friend', 'Poll in Public', 'Poll in Group']
   });
 </script>
 
