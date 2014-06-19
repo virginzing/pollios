@@ -1,4 +1,4 @@
-if @friend.present?
+if @friend
   count = 0
   json.response_status "OK"
   json.friend @friend do |member|

@@ -34,7 +34,7 @@
                       <ul class="list-unstyled profile-nav">
                          <li><%= image_tag(current_member.avatar.url, class: "img-responsive") %></li>
                          <li><a href="#">Friend</a></li>
-                         <li><a href="#">Following <span>3</span></a></li>
+                         <li><a href="#">Following</a></li>
                          <li><a href="#">Follower</a></li>
                       </ul>
                    </div>
@@ -161,83 +161,160 @@
                             <span class="after"></span>                                    
                          </li>
                          <li class=""><a data-toggle="tab" href="#tab_2-2"><i class="fa fa-picture-o"></i> Change Avatar</a></li>
+                         <li class=""><a data-toggle="tab" href="#tab_4-4"><i class="fa fa-picture-o"></i> Change Cover</a></li>
                          <li class=""><a data-toggle="tab" href="#tab_3-3"><i class="fa fa-lock"></i> Change Password</a></li>
                       </ul>
                    </div>
                    <div class="col-md-9">
                       <div class="tab-content">
                          <div id="tab_1-1" class="tab-pane active">
-                            <form role="form" action="#">
-                               <div class="form-group">
-                                  <label class="control-label">First Name</label>
-                                  <input type="text" placeholder="John" class="form-control">
-                               </div>
-                               <div class="form-group">
-                                  <label class="control-label">Last Name</label>
-                                  <input type="text" placeholder="Doe" class="form-control">
-                               </div>
-                               <div class="form-group">
-                                  <label class="control-label">Mobile Number</label>
-                                  <input type="text" placeholder="+1 646 580 DEMO (6284)" class="form-control">
-                               </div>
-                               <div class="form-group">
-                                  <label class="control-label">Interests</label>
-                                  <input type="text" placeholder="Design, Web etc." class="form-control">
-                               </div>
-                               <div class="form-group">
-                                  <label class="control-label">Occupation</label>
-                                  <input type="text" placeholder="Web Developer" class="form-control">
-                               </div>
-                               <div class="form-group">
-                                  <label class="control-label">About</label>
-                                  <textarea class="form-control" rows="3" placeholder="We are KeenThemes!!!"></textarea>
-                               </div>
-                               <div class="form-group">
-                                  <label class="control-label">Website Url</label>
-                                  <input type="text" placeholder="http://www.mywebsite.com" class="form-control">
-                               </div>
-                               <div class="margiv-top-10">
-                                  <a href="#" class="btn green">Save Changes</a>
-                                  <a href="#" class="btn default">Cancel</a>
-                               </div>
+                            <form role="form" action="<%= update_profile_path %>" class="smart-form" method="post">
+
+                              <fieldset>
+
+                                <section>
+                                  <label class="label">Email</label>
+                                  <label class="input state-disabled">
+                                    <input type="text" name="email" value="<%= current_member.email %>" disabled="disabled">
+                                  </label>
+                                </section>
+
+                                <section>
+                                  <input type="hidden" value="<%= current_member.id %>" name="member_id">
+
+                                  <label class="label">Name</label>
+                                  <label class="input">
+                                    <input type="text" name="sentai_name" value="<%= current_member.sentai_name %>">
+                                  </label>
+                                  <div class="note">
+                                    <strong>Note</strong> name is show in app Pollios.
+                                  </div>
+                                </section>
+
+                                <section>
+                                  <label class="label">Description</label>
+                                  <label class="textarea">                    
+                                    <textarea rows="3" class="custom-scroll" name="description"><%= current_member.description %></textarea> 
+                                  </label>
+                                  <div class="note">
+                                    <strong>Note</strong> description is show in app Pollios.
+                                  </div>
+                                </section>
+
+                              </fieldset>
+
+                              <footer>
+                                <button type="submit" class="btn btn-primary">
+                                  Submit
+                                </button>
+                                <button type="button" class="btn btn-default" onclick="window.history.back();">
+                                  Back
+                                </button>
+                              </footer>
+
                             </form>
+
+
+
                          </div>
+
                          <div id="tab_2-2" class="tab-pane">
-                            <p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.</p>
-                            <form action="#" role="form">
-                               <div class="form-group">
-                                  <div class="thumbnail" style="width: 310px;">
-                                     <img src="http://www.placehold.it/310x170/EFEFEF/AAAAAA&amp;text=no+image" alt="">
+
+                           <div class="alert alert-info alert-block">
+                              <a class="close" data-dismiss="alert" href="#">×</a>
+                              <h4 class="alert-heading">Avatar Upload</h4>
+                              Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+                           </div>
+
+                            <form role="form" action="<%= update_profile_path %>" method="post" enctype="multipart/form-data">
+
+                             <div class="form-group">
+                                   <div class="fileupload fileupload-new" data-provides="fileupload">
+                                      <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                      <% if current_member.avatar.url.present? %>
+                                        <%= image_tag(current_member.avatar.url(:thumbnail)) %>
+                                      <% else %>
+                                       <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                      <% end %>
+                                      </div>
+                                      <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;">
+                                        
+                                      </div>
+                                      <div>
+                                         <span class="btn btn-default btn-file">
+                                         <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
+                                         <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                         <input type="hidden" value="<%= current_member.id %>" name="member_id">
+                                         <input type="file" class="default" name="avatar"/>
+                                         </span>
+                                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
+                                      </div>
                                   </div>
-                                  <div class="margin-top-10 fileupload fileupload-new" data-provides="fileupload">
-                                     <div class="input-group input-group-fixed">
-                                        <span class="input-group-btn">
-                                        <span class="uneditable-input">
-                                        <i class="icon-file fileupload-exists"></i> 
-                                        <span class="fileupload-preview"></span>
-                                        </span>
-                                        </span>
-                                        <span class="btn default btn-file">
-                                        <span class="fileupload-new"><i class="icon-paper-clip"></i> Select file</span>
-                                        <span class="fileupload-exists"><i class="icon-undo"></i> Change</span>
-                                        <input type="file" class="default">
-                                        </span>
-                                        <a href="#" class="btn red fileupload-exists" data-dismiss="fileupload"><i class="icon-trash"></i> Remove</a>
-                                     </div>
+                              </div>
+                              <div class="form-actions">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <button class="btn btn-default" type="submit">
+                                        Cancel
+                                      </button>
+                                      <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-save"></i>
+                                        Submit
+                                      </button>
+                                    </div>
                                   </div>
-                                  <span class="label label-danger">NOTE!</span>
-                                  <span>
-                                  Attached image thumbnail is
-                                  supported in Latest Firefox, Chrome, Opera, 
-                                  Safari and Internet Explorer 10 only
-                                  </span>
-                               </div>
-                               <div class="margin-top-10">
-                                  <a href="#" class="btn green">Submit</a>
-                                  <a href="#" class="btn default">Cancel</a>
-                               </div>
+                                </div>
+                            </form>
+
+                         </div>
+                         <div id="tab_4-4" class="tab-pane">
+                           <div class="alert alert-info alert-block">
+                              <a class="close" data-dismiss="alert" href="#">×</a>
+                              <h4 class="alert-heading">Cover Upload</h4>
+                              Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+                           </div>
+
+                            <form role="form" action="<%= update_profile_path %>" method="post" enctype="multipart/form-data">
+
+                             <div class="form-group">
+                                   <div class="fileupload fileupload-new" data-provides="fileupload">
+                                      <div class="fileupload-new thumbnail" style="width: 640px; height: 300px;">
+                                      <% if current_member.cover.url.present? %>
+                                        <%= image_tag(current_member.cover.url(:cover)) %>
+                                      <% else %>
+                                       <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                      <% end %>
+                                      </div>
+                                      <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 640px; max-height: 300px; line-height: 20px;">
+                                        
+                                      </div>
+                                      <div>
+                                         <span class="btn btn-default btn-file">
+                                         <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
+                                         <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                         <input type="hidden" value="<%= current_member.id %>" name="member_id">
+                                         <input type="file" class="default" name="cover"/>
+                                         </span>
+                                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="form-actions">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <button class="btn btn-default" type="submit">
+                                        Cancel
+                                      </button>
+                                      <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-save"></i>
+                                        Submit
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
                             </form>
                          </div>
+
                          <div id="tab_3-3" class="tab-pane">
                             <form action="#">
                                <div class="form-group">

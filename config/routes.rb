@@ -93,7 +93,7 @@ Pollios::Application.routes.draw do
   scope 'member' do
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
-    post 'update_profile',    to: 'members#update_profile'
+    post 'update_profile',    to: 'members#update_profile', as: :update_profile
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
     get 'notify',         to: 'members#notify'
@@ -160,7 +160,7 @@ Pollios::Application.routes.draw do
 
   get '/tags',  to: 'tags#index'
   get 'search_autocmp_tags',  to: 'tags#search_autocmp_tags'
-  get '/profile', to: 'members#profile'
+  get '/profile', to: 'members#profile',  as: :my_profile
   get '/qrcode',  to: 'polls#generate_qrcode'
   get '/dashboard',  to: 'home#dashboard', as: :dashboard
   

@@ -32,12 +32,23 @@ class ApplicationController < ActionController::Base
     @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
+  def only_brand_account
+    unless @current_member.brand?
+      session[:member_id] = nil
+      respond_to do |format|
+        flash[:warning] = 'Only brand account.'
+        format.html { redirect_to authen_signin_path }
+      end
+    end
+  end
+
 
   def set_current_member
     @current_member = Member.find_by(id: params[:member_id])
     unless @current_member.present?
       respond_to do |format|
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
+        format.html
       end
     end
     @current_member

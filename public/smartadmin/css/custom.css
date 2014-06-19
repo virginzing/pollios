@@ -292,6 +292,17 @@ Profile Page
 }
 
 /*profile information*/
+
+.profile-info {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.profile-account {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 .profile-info h1 {
   color:#383839;
   font-size:24px;

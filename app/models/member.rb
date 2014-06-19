@@ -4,6 +4,8 @@ class Member < ActiveRecord::Base
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
 
+  attr_accessor :fullname
+
   include MemberHelper
 
   has_one :member_invite_code, dependent: :destroy

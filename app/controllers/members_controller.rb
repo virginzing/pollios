@@ -17,14 +17,26 @@ class MembersController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
   end
 
+  def profile
+  end
+
   def update_profile
-    if @current_member.update_attributes!(update_profile_params.except(:member_id, :avatar))
-      if update_profile_params[:avatar]
-        Member.update_avatar(@current_member, update_profile_params[:avatar])
+    respond_to do |format|
+      if @current_member.update_attributes!(update_profile_params.except(:member_id, :avatar))
+        if update_profile_params[:avatar]
+          Member.update_avatar(@current_member, update_profile_params[:avatar])
+        end
+        @member = Member.find(@current_member.id)
+
+        flash[:success] = "Update profile successfully."
+        format.html { redirect_to my_profile_path }
+        format.json
+      else
+        @error_message = @current_member.errors.messages
+
+        format.json
+        format.html { render 'profile' ,errors: @error_message }
       end
-      @member = Member.find(@current_member.id)
-    else
-      @error_message = @current_member.errors.messages
     end
   end
 
@@ -58,9 +70,6 @@ class MembersController < ApplicationController
   end
 
   def index
-  end
-
-  def profile
   end
 
   def my_profile

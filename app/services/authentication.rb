@@ -75,8 +75,6 @@ class Authentication
       @new_member = true
     end
 
-    puts "new member #{@member}, #{@new_member}"
-
     if @member
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
@@ -112,7 +110,9 @@ class Authentication
   end
 
   def update_member(member)
-      member.update(sentai_name: name, birthday: birthday)
+    puts "name is => #{name}"
+    puts "member is #{member.sentai_name}"
+      member.update!(sentai_name: member.sentai_name.presence || name, birthday: member.birthday.presence || birthday)
   end
 
   def update_member_provider(member_provider)
