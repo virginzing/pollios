@@ -30,11 +30,24 @@
 
 
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/custom.css" data-turbolinks-track="true">
-		
+		<link rel="stylesheet" type="text/css" href="/plugins/animate-css/animate.min.css" />
 		<!-- FAVICONS -->
 		<link rel="shortcut icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
-
+    <style type="text/css">
+    #ajaxLoader { 
+      z-index: 100;
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      background-color: #333;
+      background-color: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      -webkit-border-radius: 15px;
+      -moz-border-radius: 15px;
+      padding: 50px;
+    }
+    </style>
 		<!-- GOOGLE FONT -->
 		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700" data-turbolinks-track="true">
 
@@ -280,6 +293,7 @@
             <button class="close" data-dismiss="alert">×</button>
           </div>
         <% end %>
+        <div id="ajaxLoader" class="animated" style="display: none;"></div>
         <%= yield %>
 			</div>
 			<!-- END MAIN CONTENT -->
@@ -477,6 +491,7 @@
 				pageSetUp();
 				drawBreadCrumb();
 				dataTable();
+        validateMemberProfile();
 
 				var searchFunc = function (term, callback) {
 				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
@@ -558,32 +573,7 @@
 		  ga('create', 'UA-50947005-1', 'codeapp-pollios.herokuapp.com');
 		  ga('send', 'pageview');
 
-		</script>
-
-    <script>
-  new Morris.Line({
-    // ID of the element in which to draw the chart.
-    element: 'myfirstchart',
-    // Chart data records -- each entry in this array corresponds to a point on
-    // the chart.
-    data: [
-      { year: '2008', value: 20 },
-      { year: '2009', value: 10 },
-      { year: '2010', value: 5 },
-      { year: '2011', value: 5 },
-      { year: '2012', value: 20 }
-    ],
-    // The name of the data record attribute that contains x-values.
-    xkey: 'year',
-    // A list of names of data record attributes that contain y-values.
-    ykeys: ['value'],
-    // Labels for the ykeys -- will be displayed when you hover over the
-    // chart.
-    labels: ['Value']
-  });
-</script>
-		
-
+		</script>		
 	</body>
 
 </html>

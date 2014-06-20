@@ -7,8 +7,6 @@
 <% end %>
 </ol>
  -->
-
-
 <div class="well well-sm">
   <div class="row">
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
@@ -96,7 +94,7 @@
                    <div class="col-md-9">
                       <div class="tab-content">
                          <div id="tab_1-1" class="tab-pane active">
-                            <form role="form" action="<%= update_profile_path %>" class="smart-form" method="post">
+                            <form role="form" action="<%= update_profile_path %>" class="smart-form" method="post" id="member_profile">
 
                               <fieldset>
 
@@ -244,10 +242,49 @@
                          </div>
 
                          <div id="tab_3-3" class="tab-pane">
-                            <div class="well">
-                            <h1>In Development</h1>
-                            </div>
+                            <form action="/authen/change_password" method="POST" id="change_password" class="smart-form client-form" data-remote="true">
+                              <fieldset>
+                                <section>
+                                  <input type="hidden" name="sentai_id" value="<%= current_member.get_sentai_id %>">
+                                  <label class="label">Current Password</label>
+                                  <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" name="old_password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter current password</b></label>
+                                </section>
+
+                                <section>
+                                  <label class="label">New Password</label>
+                                  <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" name="new_password" id="new_password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter enter new password</b> </label>
+                                </section>
+
+                                <section>
+                                  <label class="label">Re-New Password</label>
+                                  <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" name="re_new_password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter enter Re-new password</b> </label>
+                                </section>
+
+                              </fieldset>
+                              <footer>
+                                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+                                  Submit
+                                </button>
+                              </footer>
+                            </form>
                          </div>
+
+                         <script type="text/javascript">
+                         $('[data-remote]').on('ajax:send', function(xhr) {
+                            $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+                         }).on('ajax:success', function (data, status, xhr) {
+                            console.log(data.name);
+                            console.log('success');
+                            $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+                         });
+                         </script>
+
                       </div>
                    </div>
                    <!--end col-md-9-->                                   
@@ -275,6 +312,7 @@
                  </div>
                  <div class="col-md-9">
                     <div class="tab-content">
+
                        <div id="tab_1" class="tab-pane active">
                           <div id="accordion1" class="panel-group">
                              <div class="panel panel-default">

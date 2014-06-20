@@ -1,5 +1,5 @@
 class AuthenSentaiController < ApplicationController
-	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai]
+	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai, :change_password]
 	# before_action :current_login?, only: [:signin]
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
@@ -117,6 +117,19 @@ class AuthenSentaiController < ApplicationController
   end
 
   def change_password
+    respond_to do |format|
+      @response = Authenticate::Sentai.change_password(changepassword_params)
+      puts "response : #{@response}"
+      if @response["response_status"] == "OK"
+        @change_password = true
+        @response_message = @response["response_message"]
+        format.js
+      else
+        @change_password = false
+        @response_message = @response["response_message"]
+        format.js
+      end
+    end
     
   end
 
@@ -147,6 +160,10 @@ class AuthenSentaiController < ApplicationController
 
     def forgotpassword_params
       params.permit(:email)
+    end
+
+    def changepassword_params
+      params.permit(:sentai_id, :old_password, :new_password)
     end
 
     def resetpassword_params

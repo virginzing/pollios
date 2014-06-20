@@ -400,6 +400,78 @@ function check_if_mobile_width() {
 	}
 }
 
+
+function validateMemberProfile () {
+	$(function() {
+	  // Validation
+	  $("#change_password").validate({
+
+	    // Rules for form validation
+	    rules : {
+	      old_password : {
+	        required : true
+	      },
+	      new_password : {
+	        required : true
+	      },
+	      re_new_password : {
+	        required : true,
+	        equalTo : '#new_password'
+	      }
+	    },
+
+	    // Messages for form validation
+	    messages : {
+	      old_password : {
+	        required : 'Please enter current password.'
+	      },
+	      new_password : {
+	        required : 'Please enter new password.'
+	      },
+	      re_new_password : {
+	        required : 'Please enter your password one more time.',
+	        equalTo : 'Please enter the same password as above.'
+	      }
+	    },
+
+	    // Do not change code below
+	    errorPlacement : function(error, element) {
+	      error.insertAfter(element.parent());
+	    }
+	  });
+
+	  $("#member_profile").validate({
+
+	    // Rules for form validation
+	    rules : {
+	      sentai_name : {
+	        required : true
+	      },
+	      description : {
+	        required : true
+	      }
+	    },
+
+	    // Messages for form validation
+	    messages : {
+	      sentai_name : {
+	        required : 'Please enter name.'
+	      },
+	      description : {
+	        required : 'Please enter description.'
+	      }
+	    },
+
+	    // Do not change code below
+	    errorPlacement : function(error, element) {
+	      error.insertAfter(element.parent());
+	    }
+	  });
+
+
+	});
+}
+
 /* ~ END: NAV OR #LEFT-BAR RESIZE DETECT */
 
 /*

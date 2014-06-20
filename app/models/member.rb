@@ -198,6 +198,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def get_sentai_id
+    providers.where(name: 'sentai').first.pid    
+  end
+
   def get_cover_image
     cover.present? ? cover.url(:cover) : ""
   end

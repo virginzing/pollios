@@ -91,7 +91,7 @@ class Activity
       {
         poll: {
           id: @poll.id,
-          question: @poll.title,
+          title: @poll.title,
           created_at: @poll.created_at.to_i,
           public: @poll.public
         },
@@ -108,7 +108,7 @@ class Activity
       {
         poll: {
           id: @poll.id,
-          question: @poll.title,
+          title: @poll.title,
           created_at: @poll.created_at.to_i,
           public: @poll.public
         },
@@ -121,7 +121,7 @@ class Activity
       {
         poll: {
           id: @poll.id,
-          question: @poll.title,
+          title: @poll.title,
           created_at: @poll.created_at.to_i,
           public: @poll.public
         },
