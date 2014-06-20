@@ -1,4 +1,4 @@
-if @activity
+if @activity_items
   json.response_status "OK"
   json.activity @activity_items
 else
