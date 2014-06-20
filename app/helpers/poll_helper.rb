@@ -30,7 +30,7 @@ module PollHelper
     (start.to_date..Date.current).map do |date|
       @query = Poll.unscoped.where("date(created_at) = ?", date).to_a
       {
-        created_at: date.strftime("%d %B %Y"),
+        created_at: date,
         count: @query.count,
         poll_of_friend: @query.select{ |e| e.public == false && e.in_group_ids == '0' }.compact.count,
         poll_of_public: @query.select{ |e| e.public == true }.compact.count,
