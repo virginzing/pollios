@@ -56,7 +56,7 @@ class MembersController < ApplicationController
 
   def activity
     @activity = Activity.find_by(member_id: @current_member.id)
-    @activity_items = @activity.present? ? @activity.items.collect{|e| e if e["activity_at"] > 7.days.ago.to_i }.compact : "" 
+    @activity_items = @activity.present? ? @activity.items.collect{|e| e if e["activity_at"] > 7.days.ago.to_i }.compact : []
   end
 
   def notify
