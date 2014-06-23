@@ -122,4 +122,14 @@ class Group < ActiveRecord::Base
     description.present? ? description : ""
   end
 
+  def as_json options={}
+   {
+      id: id,
+      name: name,
+      photo: get_photo_group,
+      public: public,
+      description: get_description
+   }
+  end
+
 end

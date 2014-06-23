@@ -6,7 +6,6 @@ class AddFriend
     @member_id = member_id
     @friend_id = friend_id
     @options = options
-    puts "#{@options}"
   end
 
   def recipient_id

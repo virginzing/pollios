@@ -1,34 +1,14 @@
 class Activity
+  include SymbolHash
   include Mongoid::Document
   include Mongoid::Attributes::Dynamic
   include Mongoid::Timestamps
-
+  
   field :member_id, type: Integer
   field :items, type: Array
 
   index({ member_id: 1}, { unique: true, name: "member_id_index"})
 
-  TYPE = {
-    :poll => 'Poll',
-    :friend => 'Friend',
-    :group => 'Group'
-  }
-
-  ACTION = {
-    :vote => 'Vote',
-    :create => 'Create',
-    :share => 'Share',
-    :become_friend => 'BecomeFriend',
-    :follow => 'Follow',
-    :join => 'Join'
-  }
-
-  AUTHORITY = {
-    :public => 'Public',
-    :friend_following => 'Friends & Following',
-    :group => 'Group',
-    :private => 'Private'
-  }
 
   def self.create_activity_poll(member, poll, action)
     @member = member

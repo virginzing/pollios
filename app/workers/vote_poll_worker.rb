@@ -1,7 +1,9 @@
 class VotePollWorker
   include Sidekiq::Worker
+  include SymbolHash
 
   def perform(member_id, poll, custom_data = {})
+    
     @apn_poll = Apn::VotePoll.new(member_id, poll)
 
     recipient_ids = @apn_poll.recipient_ids
@@ -10,7 +12,11 @@ class VotePollWorker
 
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
-    @custom_properties = { poll_id: poll.id, vote: true }
+    @custom_properties = { 
+      poll_id: poll.id, 
+      type: TYPE[:poll],
+      action: ACTION[:vote]
+    }
 
     device_ids.each do |device_id|
       @notf = Apn::Notification.new

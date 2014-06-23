@@ -17,6 +17,7 @@ class MembersController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
   end
 
+
   def profile
   end
 
