@@ -4,7 +4,7 @@
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
     <h1 class="page-title txt-color-blueDark">
     <i class="fa-fw fa fa-file-o"></i> Stats Dashboard <span>&gt;
-      <b><%= params[:filter_by].titleize %></b></span></h1>
+      <b><%= params[:filter_by].presence || 'Today' %></b></span></h1>
   </div>
 </div>
 
@@ -39,13 +39,13 @@
         </div>
         <div class="panel-body no-padding text-align-center">
             <div class="the-price">
-              <span class="count"><%= number_with_delimiter(vote_stats.amount_vote) %></span>
+              <span class="count"><%= number_with_delimiter(vote_stats[:amount]) %></span>
             </div>
             <div class="price-features" style="background: #ffffff;min-height: 200px;">
               <ul class="list-unstyled text-left">
-                <li><i class="fa fa-globe"></i> <%= number_with_delimiter(vote_stats.public_count) %> <strong> in Public</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(vote_stats.friend_following_count) %> <strong> in Friend & Following</strong></li>
-                <li><i class="fa fa-group"></i> <%= number_with_delimiter(vote_stats.group_count) %> <strong> in Group</strong></li>
+                <li><i class="fa fa-globe"></i> <%= number_with_delimiter(vote_stats[:public]) %> <strong> in Public</strong></li>
+                <li><i class="fa fa-user"></i> <%= number_with_delimiter(vote_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
+                <li><i class="fa fa-group"></i> <%= number_with_delimiter(vote_stats[:group]) %> <strong> in Group</strong></li>
               </ul>
             </div>
         </div>
