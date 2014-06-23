@@ -76,7 +76,7 @@ class VoteStats
     if condition == 'total'
       split(Poll.all.to_a)
     else
-      
+      find_stats_vote_today
     end
   end
 

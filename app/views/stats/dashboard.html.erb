@@ -62,12 +62,12 @@
         </div>
         <div class="panel-body no-padding text-align-center">
             <div class="the-price">
-              <span class="count"><%= number_with_delimiter(user_stats.amount_user) %></span>
+              <span class="count"><%= number_with_delimiter(user_stats[:amount]) %></span>
             </div>
             <div class="price-features" style="background: #ffffff;min-height: 200px;">
               <ul class="list-unstyled text-left">
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats.via_facebook) %> <strong> via Facebook</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats.via_sentai) %> <strong> via Sentai</strong></li>
+                <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:facebook]) %> <strong> via Facebook</strong></li>
+                <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:sentai]) %> <strong> via Sentai</strong></li>
               </ul>
             </div>
         </div>
@@ -85,11 +85,11 @@
         </div>
         <div class="panel-body no-padding text-align-center">
             <div class="the-price">
-              <span class="count"><%= number_with_delimiter(group_stats.amount_group) %></span>
+              <span class="count"><%= number_with_delimiter(group_stats[:amount]) %></span>
             </div>
             <div class="price-features" style="background: #ffffff;min-height: 200px;">
               <ul class="list-unstyled text-left">
-                <li><%= number_with_delimiter(group_stats.amount_group) %> <strong> created</strong></li>
+                <li><%= number_with_delimiter(group_stats[:amount]) %> <strong> created</strong></li>
               </ul>
             </div>
         </div>

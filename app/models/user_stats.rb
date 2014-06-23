@@ -19,7 +19,7 @@ class UserStats
     @user = user
     @via_sentai = 0
     @via_facebook = 0
-    @stats_user = find_stats_user_today
+    @stats_user = first_or_create_user_today
 
     if via_type == TYPE[:facebook]
       @via_facebook = 1
@@ -40,8 +40,42 @@ class UserStats
     @stats_user.update!(amount_user: current_amount_user + 1, via_facebook: current_via_facebook + @via_facebook, via_sentai: current_via_sentai + @via_sentai)
   end
 
-  def self.find_stats_user_today
+  def self.filter_by(filtering)
+    if filtering == 'today' 
+      find_stats_user_today
+    else
+      find_stats_user_by(filtering)
+    end
+  end
+
+  def self.first_or_create_user_today
     UserStats.where(stats_created_at: Date.current).first_or_create!
+  end
+
+  def self.find_stats_user_today
+    @user_stats = UserStats.where(stats_created_at: Date.current).first_or_create!
+    convert_stats_user_today_to_hash
+  end
+
+  def self.find_stats_user_by(condition)
+    if condition == 'total'
+      split(Member.all.to_a)
+    else
+      find_stats_user_today
+    end
+  end
+
+  def self.convert_stats_user_today_to_hash
+    {
+      :amount => @user_stats.amount_user,
+      :facebook => @user_stats.via_facebook,
+      :sentai => @user_stats.via_sentai
+    }
+  end
+
+  def self.split(list_of_user)
+    new_hash = {}
+    new_hash
   end
 
 end

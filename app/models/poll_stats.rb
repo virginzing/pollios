@@ -15,7 +15,7 @@ class PollStats
   def self.create_poll_stats(poll)
     @poll = poll
 
-    @stats_poll = find_or_create_poll_today
+    @stats_poll = first_or_create_poll_today
 
     @amount_poll = update_amount_poll
 
@@ -78,12 +78,12 @@ class PollStats
   def self.filter_by(filtering)
     if filtering == 'today' 
       find_stats_poll_today
-    elsif filtering == 'total'
-      find_stats_poll_by('total')
+    else
+      find_stats_poll_by(filtering)
     end
   end
 
-  def self.find_or_create_poll_today
+  def self.first_or_create_poll_today
     PollStats.where(stats_created_at: Date.current).first_or_create!
   end
 
@@ -96,7 +96,7 @@ class PollStats
     if condition == 'total'
       split(Poll.all.to_a)
     else
-      
+      find_stats_poll_today
     end
   end
 
