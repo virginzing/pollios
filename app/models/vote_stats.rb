@@ -82,7 +82,7 @@ class VoteStats
 
   def self.convert_stats_vote_today_to_hash
     {
-      :amount => @vote_stats.amount_poll,
+      :amount => @vote_stats.amount_vote,
       :public => @vote_stats.public_count,
       :friend_following => @vote_stats.friend_following_count,
       :group => @vote_stats.group_count
