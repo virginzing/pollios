@@ -11,7 +11,12 @@ class GroupNotificationWorker
 
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
-    @custom_properties = { poll_id: poll.id, group: true }
+    @custom_properties = { 
+      poll_id: poll.id,
+      group_id: group_id, 
+      type: TYPE[:poll],
+      action: ACTION[:create]
+    }
 
     device_ids.each do |device_id|
       @notf = Apn::Notification.new
