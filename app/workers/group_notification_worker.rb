@@ -1,6 +1,7 @@
 class GroupNotificationWorker
   include Sidekiq::Worker
-
+    include SymbolHash
+    
   def perform(member_id, group_id, poll, custom_data = nil)
 
     @group_nofication = GroupNotification.new(member_id, group_id, poll)

@@ -109,7 +109,6 @@ class PollStats
     }
   end
 
-
   def self.split(list_of_poll)
     new_hash = {}
 
