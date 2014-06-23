@@ -12,10 +12,9 @@ class StatsController < ApplicationController
     @poll_stats = PollStats.filter_by(filtering)
     @vote_stats = VoteStats.filter_by(filtering)
 
-    puts "#{@poll_stats}"
-
-    @user_stats = UserStats.find_stats_user_today
-    @group_stats = GroupStats.find_stats_group_today
+    @user_stats = UserStats.filter_by(filtering)
+    @group_stats = GroupStats.filter_by(filtering)
+    
     @poll_per_hour = PollStats.poll_per_hour
     @poll_popular = PollStats.poll_popular
 

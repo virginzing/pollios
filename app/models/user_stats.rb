@@ -59,7 +59,7 @@ class UserStats
 
   def self.find_stats_user_by(condition)
     if condition == 'total'
-      split(Member.all.to_a)
+      split(Provider.select("member_id").distinct)
     else
       find_stats_user_today
     end
@@ -74,8 +74,11 @@ class UserStats
   end
 
   def self.split(list_of_user)
-    new_hash = {}
-    new_hash
+    user_count ||= Provider.select("member_id").distinct.group("name").count
+    {
+      :amount => list_of_user.count,
+      :facebook => user_count["facebook"],
+      :sentai => user_count["sentai"]
+    }
   end
-
 end

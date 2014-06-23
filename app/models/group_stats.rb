@@ -30,7 +30,7 @@ class GroupStats
     if filtering == 'today' 
       find_stats_group_today
     else
-      find_stats_user_by(filtering)
+      find_stats_group_by(filtering)
     end
   end
 
@@ -43,7 +43,7 @@ class GroupStats
     convert_stats_group_today_to_hash
   end
 
-  def self.find_stats_user_by(condition)
+  def self.find_stats_group_by(condition)
     if condition == 'total'
       split(Group.all.to_a)
     else
@@ -57,9 +57,10 @@ class GroupStats
     }
   end
 
-  def self.split(list_of_user)
-    new_hash = {}
-    new_hash
+  def self.split(list_of_group)
+    {
+      :amount => list_of_group.count
+    }
   end
 
 end

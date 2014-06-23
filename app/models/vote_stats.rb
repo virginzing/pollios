@@ -74,7 +74,7 @@ class VoteStats
 
   def self.find_stats_vote_by(condition)
     if condition == 'total'
-      split(Poll.all.to_a)
+      split(HistoryVote.joins(:poll))
     else
       find_stats_vote_today
     end
@@ -90,20 +90,18 @@ class VoteStats
   end
 
 
-  def self.split(list_of_poll)
+  def self.split(list_of_vote)
     new_hash = {}
 
-    group_by_in_public = list_of_poll.group_by(&:public)
-    group_by_public_is_false = group_by_in_public[false]
-
-    group_by_in_group = group_by_public_is_false - group_by_public_is_false.group_by(&:in_group_ids)["0"]
-    group_by_in_friend = group_by_public_is_false - group_by_in_group
+    vote_public = list_of_vote.where("polls.public = 't'")
+    vote_friend_following = list_of_vote.where("polls.public = 'f' AND polls.in_group_ids = '0'")
+    vote_in_group = list_of_vote.where("polls.public = 'f' AND polls.in_group_ids != '0'")
 
     new_hash.merge!({ 
-      :amount => list_of_poll.count,
-      :public => group_by_in_public[true].count, 
-      :friend_following => group_by_in_friend.count,
-      :group => group_by_in_group.count
+      :amount => list_of_vote.count,
+      :public => vote_public.count,
+      :friend_following => vote_friend_following.count,
+      :group => vote_in_group.count
     })
 
     new_hash
