@@ -15,7 +15,7 @@ class PollStats
   def self.create_poll_stats(poll)
     @poll = poll
 
-    @stats_poll = find_stats_poll_today
+    @stats_poll = find_or_create_poll_today
 
     @amount_poll = update_amount_poll
 
@@ -30,7 +30,6 @@ class PollStats
     end
 
   end
-
 
   def self.update_stats_public
     current_public_count = @stats_poll.public_count
@@ -56,10 +55,6 @@ class PollStats
     new_amount_poll
   end
 
-  def self.find_stats_poll_today
-    PollStats.where(stats_created_at: Date.current).first_or_create!
-  end
-
   def self.poll_per_hour
     new_hash = {}
     @hash_poll = Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
@@ -79,4 +74,58 @@ class PollStats
           .order("member_vote_count desc").limit(10) 
   end
 
+
+  def self.filter_by(filtering)
+    if filtering == 'today' 
+      find_stats_poll_today
+    elsif filtering == 'total'
+      find_stats_poll_by('total')
+    end
+  end
+
+  def self.find_or_create_poll_today
+    PollStats.where(stats_created_at: Date.current).first_or_create!
+  end
+
+  def self.find_stats_poll_today
+    @poll_stats = PollStats.where(stats_created_at: Date.current).first_or_create!
+    convert_stats_poll_today_to_hash
+  end
+
+  def self.find_stats_poll_by(condition)
+    if condition == 'total'
+      split(Poll.all.to_a)
+    else
+      
+    end
+  end
+
+  def self.convert_stats_poll_today_to_hash
+    {
+      :amount => @poll_stats.amount_poll,
+      :public => @poll_stats.public_count,
+      :friend_following => @poll_stats.friend_following_count,
+      :group => @poll_stats.group_count
+    }
+  end
+
+
+  def self.split(list_of_poll)
+    new_hash = {}
+
+    group_by_in_public = list_of_poll.group_by(&:public)
+    group_by_public_is_false = group_by_in_public[false]
+
+    group_by_in_group = group_by_public_is_false - group_by_public_is_false.group_by(&:in_group_ids)["0"]
+    group_by_in_friend = group_by_public_is_false - group_by_in_group
+
+    new_hash.merge!({ 
+      :amount => list_of_poll.count,
+      :public => group_by_in_public[true].count, 
+      :friend_following => group_by_in_friend.count,
+      :group => group_by_in_group.count
+    })
+
+    new_hash
+  end
 end

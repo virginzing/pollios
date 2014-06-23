@@ -94,11 +94,16 @@ class Poll < ActiveRecord::Base
     end while self.class.exists?(qrcode_key: qrcode_key)
   end
 
+  # def get_vote_max
+  #   # max = choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by {|k, v| k["vote"]}
+  #   @choice ||= cached_choices
+  #   # max = @choice.map(&:vote).max
+  #   @choice.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
+  # end
+
   def get_vote_max
-    # max = choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by {|k, v| k["vote"]}
     @choice ||= cached_choices
-    max = @choice.map(&:vote).max
-    @choice.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
+    @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
 
   def get_in_groups(groups_by_name)

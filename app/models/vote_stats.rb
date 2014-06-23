@@ -15,7 +15,7 @@ class VoteStats
   def self.create_vote_stats(poll)
     @poll = poll
 
-    @stats_vote = find_stats_vote_today
+    @stats_vote = first_or_create_vote_today
 
     @amount_vote = update_amount_vote
 
@@ -55,8 +55,58 @@ class VoteStats
     new_amount_vote
   end
 
-  def self.find_stats_vote_today
+  def self.filter_by(filtering)
+    if filtering == 'today' 
+      find_stats_vote_today
+    else
+      find_stats_vote_by(filtering)
+    end
+  end
+
+  def self.first_or_create_vote_today
     VoteStats.where(stats_created_at: Date.current).first_or_create!
+  end
+
+  def self.find_stats_vote_today
+    @vote_stats = VoteStats.where(stats_created_at: Date.current).first_or_create!
+    convert_stats_vote_today_to_hash
+  end
+
+  def self.find_stats_vote_by(condition)
+    if condition == 'total'
+      split(Poll.all.to_a)
+    else
+      
+    end
+  end
+
+  def self.convert_stats_vote_today_to_hash
+    {
+      :amount => @vote_stats.amount_poll,
+      :public => @vote_stats.public_count,
+      :friend_following => @vote_stats.friend_following_count,
+      :group => @vote_stats.group_count
+    }
+  end
+
+
+  def self.split(list_of_poll)
+    new_hash = {}
+
+    group_by_in_public = list_of_poll.group_by(&:public)
+    group_by_public_is_false = group_by_in_public[false]
+
+    group_by_in_group = group_by_public_is_false - group_by_public_is_false.group_by(&:in_group_ids)["0"]
+    group_by_in_friend = group_by_public_is_false - group_by_in_group
+
+    new_hash.merge!({ 
+      :amount => list_of_poll.count,
+      :public => group_by_in_public[true].count, 
+      :friend_following => group_by_in_friend.count,
+      :group => group_by_in_group.count
+    })
+
+    new_hash
   end
 
 end

@@ -7,12 +7,13 @@ class StatsController < ApplicationController
   expose(:total_all_stats) { }
 
   def dashboard
-    @poll_stats = PollStats.find_stats_poll_today
+    filtering = dashboard_params[:filter_by]
+
+    @poll_stats = PollStats.filter_by(filtering)
     @vote_stats = VoteStats.find_stats_vote_today
+
     @user_stats = UserStats.find_stats_user_today
     @group_stats = GroupStats.find_stats_group_today
-
-
     @poll_per_hour = PollStats.poll_per_hour
     @poll_popular = PollStats.poll_popular
 
@@ -33,5 +34,11 @@ class StatsController < ApplicationController
 
   def groups
     
+  end
+
+  private
+
+  def dashboard_params
+    params.permit(:filter_by)
   end
 end

@@ -1,45 +1,10 @@
-<%= form_tag('/posts') do %>
-  <%= button_tag 'codeapp', data: { :disable_with => 'Please wait...'}, name: 'name', value: 1 %>
-<% end %>
-
 <section id="widget-grid" class="">
 
 <div class="row">
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
     <h1 class="page-title txt-color-blueDark">
-    <i class="fa-fw fa fa-file-o"></i> Graph <span>&gt;
-      <b>Poll created on 30 days ago</b></span></h1>
-  </div>
-</div>
-
-<div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days-ago" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
-  <header>
-    <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-    <h2><strong>Poll created on 30 days ago</strong></h2>          
-  </header>
-
-  <!-- widget div-->
-  <div>
-    
-    <!-- widget content -->
-    <div class="widget-body" style="min-height: 0px;">
-      <!-- <div id="poll_created_30_days_ago" style="height: 250px;"></div> -->
-      <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago_chart } %>
-    </div>
-    <!-- end widget content -->
-    
-  </div>
-  <!-- end widget div -->
-
-</div>
-
-<%= render partial: 'stats_total', locals: { total_all_stats: total_all_stats } %>
-
-<div class="row">
-  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-    <h1 class="page-title txt-color-blueDark">
     <i class="fa-fw fa fa-file-o"></i> Stats Dashboard <span>&gt;
-      <b>Today</b></span></h1>
+      <b><%= params[:filter_by].titleize %></b></span></h1>
   </div>
 </div>
 
@@ -51,13 +16,13 @@
         </div>
         <div class="panel-body no-padding text-align-center">
             <div class="the-price">
-              <span class="count"><%= number_with_delimiter(poll_stats.amount_poll) %></span>
+              <span class="count"><%= number_with_delimiter(poll_stats[:amount]) %></span>
             </div>
             <div class="price-features" style="background: #ffffff;min-height: 200px;">
               <ul class="list-unstyled text-left">
-                <li><i class="fa fa-globe"></i> <%= number_with_delimiter(poll_stats.public_count) %> <strong> in Public</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(poll_stats.friend_following_count) %> <strong> in Friend & Following</strong></li>
-                <li><i class="fa fa-group"></i> <%= number_with_delimiter(poll_stats.group_count) %> <strong> in Group</strong></li>
+                <li><i class="fa fa-globe"></i> <%= number_with_delimiter(poll_stats[:public]) %> <strong> in Public</strong></li>
+                <li><i class="fa fa-user"></i> <%= number_with_delimiter(poll_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
+                <li><i class="fa fa-group"></i> <%= number_with_delimiter(poll_stats[:group]) %> <strong> in Group</strong></li>
               </ul>
             </div>
         </div>
@@ -234,7 +199,7 @@
 
 </section>
 
-<script>
+<!-- <script>
   new Morris.Bar({
     // ID of the element in which to draw the chart.
     element: 'poll_created_30_days_ago_chart',
@@ -249,5 +214,5 @@
     // chart.
     labels: ['Count', 'Poll in Friend', 'Poll in Public', 'Poll in Group']
   });
-</script>
+</script> -->
 

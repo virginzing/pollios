@@ -7,6 +7,14 @@ module ApplicationHelper
       end
   end
 
+  def filter_helper(filter_by, options = nil)
+    if filter_by == params[:filter_by]
+      'active'
+    elsif params[:filter_by].nil? && options.present?
+      'active'
+    end
+  end
+
   def get_icon_from_value(key)
     if key == :success
       content_tag :i, :class => 'fa-fw fa fa-check' do
@@ -114,7 +122,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 61, "friend_id": 2 }' -X POST http://localhost:3000/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 26 }' -X POST http://localhost:3001/friend/add_friend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 61, "friend_id": 2 }' -X POST http://localhost:3000/friend/add_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/block.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/add_close_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/unclose_friend.json -i
@@ -124,8 +132,8 @@ end
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2 }' -X POST http://localhost:3000/friend/unfriend.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 26, "friend_id": 2 }' -X POST http://localhost:3001/friend/accept.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 22, "friend_id": 2 }' -X POST http://localhost:3000/friend/deny.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 61, "friend_id": 2 }' -X POST http://localhost:3000/friend/accept.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 61 }' -X POST http://localhost:3000/friend/deny.json -i
 
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
@@ -148,7 +156,7 @@ end
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
 #     "friend_id": "2"
-# }' -X POST http://localhost:3000/group/13/invite.json -i
+# }' -X POST http://localhost:3000/group/18/invite.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 21,
@@ -173,8 +181,8 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 2, 
-#     "title": "public",
+#     "member_id": 26, 
+#     "title": "from member 26",
 #     "expire_within": "2",
 #     "choices": "1,2",
 #     "type_poll": "binary"

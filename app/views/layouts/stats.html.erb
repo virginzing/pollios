@@ -84,8 +84,7 @@
 
       <!-- pulled right: nav area -->
       <div class="pull-right">
-
-
+        
         <!-- logout button -->
         <div id="logout" class="btn-header transparent pull-right">
           <span> <a href="/users_signin" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
@@ -122,6 +121,19 @@
     <div id="main" role="main" style="margin-left:0px">
     
       <div class="container">
+
+        <section>
+          <div class="filter">
+            <div class="btn-group btn-group-justified">
+              <a href="<%= stats_dashboard_path(filter_by: 'today') %>" class="btn btn-default <%= filter_helper('today', 'default') %>">Today</a>
+              <a href="<%= stats_dashboard_path(filter_by: 'yesterday') %>" class="btn btn-default <%= filter_helper('yesterday') %>">Yesterday</a>
+              <a href="<%= stats_dashboard_path(filter_by: 'week') %>" class="btn btn-default <%= filter_helper('week') %>">Week</a>
+              <a href="<%= stats_dashboard_path(filter_by: 'month') %>" class="btn btn-default <%= filter_helper('month') %>">Month</a>
+              <a href="<%= stats_dashboard_path(filter_by: 'total') %>" class="btn btn-default <%= filter_helper('total') %>">Total</a>
+            </div>
+          </div>          
+        </section>
+
         <%= yield %>
       </div>
       <!-- END MAIN CONTENT -->
