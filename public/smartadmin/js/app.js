@@ -401,25 +401,6 @@ function check_if_mobile_width() {
 }
 
 
-function graphStatsDashboard() {
-  new Morris.Bar({
-    // ID of the element in which to draw the chart.
-    element: 'poll_created_30_days_ago_chart',
-    // Chart data records -- each entry in this array corresponds to a point on
-    // the chart.
-    data: $('#poll_created_30_days_ago_chart').data('polls'),
-    // The name of the data record attribute that contains x-values.
-    xkey: 'created_at',
-    // A list of names of data record attributes that contain y-values.
-    ykeys: ['count', 'poll_of_friend', 'poll_of_public', 'poll_of_group'],
-    // Labels for the ykeys -- will be displayed when you hover over the
-    // chart.
-    labels: ['Count', 'Poll in Friend', 'Poll in Public', 'Poll in Group']
-  });
-
-}
-
-
 function validateMemberProfile () {
 	$(function() {
 	  // Validation
@@ -1466,6 +1447,46 @@ function dataTable() {
 		paging: false,
 		iDisplayLength: 25
 	});
+}
+
+function graphStatsDashboard() {
+	$.poll_created_30_days_ago_chart = $("#poll_created_30_days_ago_chart").length;
+	$.poll_created_today_chart = $("#number_of_polls_created_today_chart").length;
+
+	if ($.poll_created_30_days_ago_chart) {
+	  new Morris.Bar({
+	    // ID of the element in which to draw the chart.
+	    element: 'poll_created_30_days_ago_chart',
+	    // Chart data records -- each entry in this array corresponds to a point on
+	    // the chart.
+	    data: $('#poll_created_30_days_ago_chart').data('polls'),
+	    // The name of the data record attribute that contains x-values.
+	    xkey: 'created_at',
+	    // A list of names of data record attributes that contain y-values.
+	    ykeys: ['count', 'poll_of_friend', 'poll_of_public', 'poll_of_group'],
+	    // Labels for the ykeys -- will be displayed when you hover over the
+	    // chart.
+	    labels: ['Count', 'Poll in Friend', 'Poll in Public', 'Poll in Group']
+	  });
+	}
+
+	if ($.poll_created_today_chart) {
+	  new Morris.Bar({
+	    // ID of the element in which to draw the chart.
+	    element: 'number_of_polls_created_today_chart',
+	    // Chart data records -- each entry in this array corresponds to a point on
+	    // the chart.
+	    data: $('#number_of_polls_created_today_chart').data('polls'),
+	    // The name of the data record attribute that contains x-values.
+	    xkey: 'year',
+	    // A list of names of data record attributes that contain y-values.
+	    ykeys: ['value'],
+	    // Labels for the ykeys -- will be displayed when you hover over the
+	    // chart.
+	    labels: ['Count']
+	  });
+	}
+
 }
 
 /* ~ END: APP AJAX REQUEST SETUP */

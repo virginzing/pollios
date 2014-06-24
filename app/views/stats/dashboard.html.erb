@@ -10,6 +10,24 @@
 
 <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days-ago" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
 
+  <% if params[:filter_by] == "today" || params[:filter_by].empty? %>
+
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>Number of polls created per hour</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      <div class="widget-body" style="min-height: 0px;">
+        <% if Rails.env.production? %>
+          <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart } %>
+        <% end %>
+      </div>
+    </div>
+    <!-- end widget div -->
+
+  <% else %>
 
     <header>
       <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
@@ -23,7 +41,7 @@
       </div>
     </div>
     <!-- end widget div -->
-
+  <% end %>
 
 </div>
 
