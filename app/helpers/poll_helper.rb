@@ -37,7 +37,17 @@ module PollHelper
         poll_of_group: @query.select{ |e| e.public == false && e.in_group_ids != '0' }.compact.count
       }
     end
-    
+  end
+
+  def number_of_polls_created_today_chart
+    query = Poll.where("date(created_at) = ?", Date.current).group("date_part('hour', created_at)", "polls.created_at").count
+    new_hash = {}
+
+    query.map do |k,v|
+      hash_poll = { hours: k[0], count: v }
+      new_hash.merge(hash_poll)
+    end
+    new_hash
   end
 
   

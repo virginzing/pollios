@@ -9,23 +9,37 @@
 </div>
 
 <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days-ago" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
-  <header>
-    <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-    <h2><strong>Poll created on 30 days ago</strong></h2>          
-  </header>
 
-  <!-- widget div-->
-  <div>
-    
-    <!-- widget content -->
-    <div class="widget-body" style="min-height: 0px;">
-      <!-- <div id="poll_created_30_days_ago" style="height: 250px;"></div> -->
-      <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago_chart } %>
+  <% if params[:filter_by] == 'today' || params[:filter_by].empty? %>
+
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>Number of polls created per hour</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      <div class="widget-body" style="min-height: 0px;">
+        <%= content_tag :div, "", id: 'number_of_polls_created_today', data: { polls: number_of_polls_created_today_chart } %>
+      </div>
     </div>
-    <!-- end widget content -->
-    
-  </div>
-  <!-- end widget div -->
+    <!-- end widget div -->
+
+  <% else %>
+
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>Poll created on 30 days ago</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      <div class="widget-body" style="min-height: 0px;">
+        <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago_chart } %>
+      </div>
+    </div>
+    <!-- end widget div -->
+  <% end %>
 
 </div>
 
@@ -228,21 +242,3 @@
   </div>
 
 </section>
-
-<script>
-  new Morris.Bar({
-    // ID of the element in which to draw the chart.
-    element: 'poll_created_30_days_ago_chart',
-    // Chart data records -- each entry in this array corresponds to a point on
-    // the chart.
-    data: $('#poll_created_30_days_ago_chart').data('polls'),
-    // The name of the data record attribute that contains x-values.
-    xkey: 'created_at',
-    // A list of names of data record attributes that contain y-values.
-    ykeys: ['count', 'poll_of_friend', 'poll_of_public', 'poll_of_group'],
-    // Labels for the ykeys -- will be displayed when you hover over the
-    // chart.
-    labels: ['Count', 'Poll in Friend', 'Poll in Public', 'Poll in Group']
-  });
-</script>
-

@@ -60,7 +60,6 @@
     <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %> 
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
 
-    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.4.3.min.css">
     <script src="/smartadmin/js/plugin/morris/raphael.min.js"></script>
     <script src="/smartadmin/js/plugin/morris/morris.min.js"></script>
 
@@ -272,11 +271,12 @@
             }
       ]);
 
+      graphStatsDashboard();
+      
       $(document).on('page:change', function() {
         // DO NOT REMOVE : GLOBAL FUNCTIONS!
         pageSetUp();
         drawBreadCrumb();
-
         var searchFunc = function (term, callback) {
           $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
             .done(function (resp) {
