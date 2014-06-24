@@ -47,8 +47,6 @@ module PollHelper
       query_hash = { hours: (k[0] + 7).to_i, count: v }
       new_hash.merge(query_hash)
     end
-    
-    new_hash
   end
 
   

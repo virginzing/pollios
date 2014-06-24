@@ -1478,9 +1478,9 @@ function graphStatsDashboard() {
 	    // the chart.
 	    data: $('#number_of_polls_created_today_chart').data('polls'),
 	    // The name of the data record attribute that contains x-values.
-	    xkey: 'year',
+	    xkey: 'hours',
 	    // A list of names of data record attributes that contain y-values.
-	    ykeys: ['value'],
+	    ykeys: ['count'],
 	    // Labels for the ykeys -- will be displayed when you hover over the
 	    // chart.
 	    labels: ['Count']
