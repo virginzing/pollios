@@ -140,7 +140,7 @@ end
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
 # http://localhost:3000/friend/search.json?member_id=1&q=N
 
-# curl -F "member_id=1" -F "name=Code App Group" -F "friend_id=2" http://localhost:3001/group/build.json -i
+# curl -F "member_id=1" -F "name=testing group" -F "friend_id=2" http://localhost:3000/group/build.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
@@ -181,10 +181,10 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 26, 
+#     "member_id": 1, 
 #     "title": "from member 26",
 #     "expire_within": "2",
-#     "choices": "1,2",
+#     "choices": "1,2,3,4",
 #     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
@@ -230,8 +230,8 @@ end
 # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
-#     "choice_id": 994
-# }' -X POST http://localhost:3001/poll/367/vote.json -i
+#     "choice_id": 1083
+# }' -X POST http://localhost:3000/poll/401/vote.json -i
 
 
 # Tag.find_by_name("codeapp").polls.
@@ -269,6 +269,7 @@ end
 
 # http://localhost:3000/poll/tags.json?member_id=4
 # http://localhost:3000/poll/guest_poll.json?guest_id=1
+
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "1"
 # }' -X POST http://localhost:3000/poll/group.json -i
@@ -321,12 +322,11 @@ end
 # curl -F "member_id=8" -F "avatar=@naka2.png" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "id": "633882377",
-#     "email": "gooddymail@hotmail.com",
-#     "username": "katchapon.poolpipat",
-#     "name": "Katchapon Poolpipat",
+#     "id": "07510509",
+#     "email": "nuttapon@code-app.com",
+#     "name": "Nuttapon",
 #     "gender": 1
-# }' -X POST http://codeapp-pollios.herokuapp.com/authen/facebook.json -i
+# }' -X POST http://localhost:3000/authen/facebook.json -i
 
 # curl "http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5" -H 'Authorization: Token token="c55d4b810641c62156c4f419127e0bc4"' -i
 

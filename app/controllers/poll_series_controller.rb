@@ -94,7 +94,7 @@ class PollSeriesController < ApplicationController
         render action: 'same_choice'
       end
     end
-    
+
     puts "error: #{@poll_series.errors.full_messages}"
 
   end

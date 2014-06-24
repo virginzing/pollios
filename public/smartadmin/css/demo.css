@@ -27,3 +27,8 @@ em.error {
   line-height: 15px;
   color: #D56161;
 }
+
+.fileupload-new.thumbnail {
+  border: 4px solid rgb(235, 235, 235);
+  margin-bottom: 15px;
+}
