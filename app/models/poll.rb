@@ -45,10 +45,10 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  LIMIT_POLL = 10
+  LIMIT_POLL = 50
   LIMIT_TIMELINE = 3000
 
-  self.per_page = 10
+  self.per_page = 50
 
   amoeba do
     enable
@@ -151,6 +151,10 @@ class Poll < ActiveRecord::Base
 
   def get_campaign
     campaign.present? ? true : false
+  end
+
+  def get_photo
+    photo_poll.url(:medium).presence || ""
   end
 
   def tag_tokens=(tokens)
@@ -359,6 +363,7 @@ class Poll < ActiveRecord::Base
     buy_poll = poll[:buy_poll]
     type_poll = poll[:type_poll]
     is_public = poll[:is_public]
+    photo_poll = poll[:photo_poll]
 
     choice_count = get_choice_count(poll[:choices])
     in_group_ids = group_id.present? ? group_id : "0"
@@ -376,7 +381,7 @@ class Poll < ActiveRecord::Base
       end
     end
 
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")

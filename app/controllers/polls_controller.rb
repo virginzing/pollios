@@ -367,10 +367,10 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public)
+    params.permit(:title, :expire_date, :member_id, :friend_id, :choices, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll)
   end
 
   def polls_params
-    params.require(:poll).permit(:campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
   end
 end

@@ -37,7 +37,8 @@ group :doc do
 end
 
 group :development do
-  gem 'sqlite3'
+  # gem 'sqlite3'
+  gem 'pg', '0.17.0'
   gem 'thin'
   gem 'quiet_assets'
   gem 'faker'

@@ -628,3 +628,12 @@ Custom tabs
 .tabbable-custom .nav-tabs > li > a { 
    margin-right: 0; 
 }
+
+.fileupload-new.thumbnail {
+  border: 7px solid rgb(236, 236, 236);
+  margin-bottom: 15px;
+}
+
+.fileupload-new {
+  padding: 10px;
+}
