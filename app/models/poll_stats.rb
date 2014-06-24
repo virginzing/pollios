@@ -112,17 +112,15 @@ class PollStats
   def self.split(list_of_poll)
     new_hash = {}
 
-    group_by_in_public = list_of_poll.group_by(&:public)
-    group_by_public_is_false = group_by_in_public[false]
-
-    group_by_in_group = group_by_public_is_false - group_by_public_is_false.group_by(&:in_group_ids)["0"]
-    group_by_in_friend = group_by_public_is_false - group_by_in_group
+    poll_of_public_count = list_of_poll.collect{|p| p if p.public == true }.compact.count
+    poll_of_friend_count = list_of_poll.collect {|p| p if p.public == false && p.in_group_ids == '0' }.compact.count
+    poll_of_group_count = list_of_poll.collect {|p| p if p.public == false && p.in_group_ids != '0' }.compact.count
 
     new_hash.merge!({ 
       :amount => list_of_poll.count,
-      :public => group_by_in_public[true].count, 
-      :friend_following => group_by_in_friend.count,
-      :group => group_by_in_group.count
+      :public => poll_of_public_count, 
+      :friend_following => poll_of_friend_count,
+      :group => poll_of_group_count
     })
 
     new_hash

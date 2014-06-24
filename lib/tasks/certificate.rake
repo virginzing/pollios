@@ -3,7 +3,7 @@ namespace :certificate do
   task setup: :environment do
      app = Apn::App.new   
      app.apn_dev_cert   = Rails.root.join('config', 'certificates','ApPinkCertificateDevelopment.pem').read
-     app.apn_prod_cert  = Rails.root.join('config', 'certificates','ApPinkCertificateProduction.pem').read
+     app.apn_prod_cert  = Rails.root.join('config', 'certificates','ApPinkCertificateDevelopment.pem').read
      app.save!
      puts "Setup Success."
   end

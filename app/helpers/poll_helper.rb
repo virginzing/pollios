@@ -40,13 +40,20 @@ module PollHelper
   end
 
   def number_of_polls_created_today_chart
-    query = Poll.unscoped.where("date(created_at) = ?", Date.current).group("date_part('hour', created_at)", "polls.id").count
+    query = Poll.unscoped.where("date(created_at) = ?", Date.current).group("date_part('hour', created_at)").count
     new_hash = {}
 
-    query.map do |k,v| 
-      query_hash = { hours: (k[0] + 7).to_i, count: v }
-      new_hash.merge(query_hash)
+    list = (0..23).to_a.map do |e|
+      query.map do |k,v| 
+        query_hash = { hours: e, count: v }
+        if (k + 7).to_i == e
+          new_hash.merge(query_hash)
+        else
+          new_hash.merge({ hours: e, count: 0 })
+        end
+      end
     end
+    list.flatten
   end
 
   
