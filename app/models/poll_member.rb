@@ -6,7 +6,7 @@ class PollMember < ActiveRecord::Base
   scope :inactive, -> { where("expire_date < ?", Time.now) }
   scope :hidden, -> (hidden_poll) { where("poll_id NOT IN (?)", hidden_poll) }
 
-  scope :available, -> (hide_poll) { where("poll_members.poll_id NOT IN (?)", hide_poll) }
+  # scope :available, -> { where("poll_members.poll_id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id)) }
 
   LIMIT_TIMELINE = 3000
 

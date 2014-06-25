@@ -17,7 +17,7 @@ class PollRewardTimeline
   end
 
   def reward_poll
-    query =  Poll.available.joins(:poll_members).where("campaign_id != 0 AND poll_members.expire_date > ?", Time.now).includes(:choices, :member, :poll_series, :campaign)
+    query =  Poll.joins(:poll_members).where("campaign_id != 0 AND poll_members.expire_date > ?", Time.now).includes(:choices, :member, :poll_series, :campaign)
     filter_type(query, type)
   end
 
