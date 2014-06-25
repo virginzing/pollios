@@ -1,9 +1,14 @@
 class PollOfGroup
   include GroupApi
 
-  def initialize(member, params = {})
+  def initialize(member, group, params = {})
     @member = member
+    @group = group
     @params = params
+  end
+
+  def group_id
+    @params["id"]
   end
 
   def get_poll_of_group
@@ -13,8 +18,8 @@ class PollOfGroup
   private
 
   def poll_of_group
-    poll_group_query = "poll_groups.group_id IN (?)"
-    query = Poll.available.joins(:poll_groups).where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids)
+    poll_group_query = "poll_groups.group_id = #{@group.id}"
+    query = Poll.available.joins(:poll_groups).where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})")
     query
   end
 

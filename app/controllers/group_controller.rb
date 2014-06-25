@@ -28,7 +28,7 @@ class GroupController < ApplicationController
   end
 
   def poll_group
-    @init_poll = PollOfGroup.new(@current_member, options_params)
+    @init_poll = PollOfGroup.new(@current_member, @group, options_params)
     @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
     poll_helper
   end
