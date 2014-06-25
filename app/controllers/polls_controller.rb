@@ -318,7 +318,7 @@ class PollsController < ApplicationController
   end
 
   def report
-    @init_report = ReportPoll.new(@current_member, params[:id])
+    @init_report = ReportPoll.new(@current_member, @poll)
     @report = @init_report.reporting
   end
 

@@ -1,12 +1,13 @@
 class ReportPoll
-  def initialize(member, poll_id)
+  def initialize(member, poll)
     @member = member
-    @poll_id = poll_id
+    @poll = poll
   end
 
   def reporting
     unless find_report
-      reporting = @member.member_report_polls.create!(poll_id: @poll_id)
+      reporting = @member.member_report_polls.create!(poll_id: @poll.id)
+      @poll.increment!(:report_count)
     end
     reporting
   end
@@ -14,7 +15,7 @@ class ReportPoll
   private
 
   def find_report
-    @member.member_report_polls.find_by(poll_id: @poll_id)
+    @member.member_report_polls.find_by(poll_id: @poll.id)
   end
   
 end
