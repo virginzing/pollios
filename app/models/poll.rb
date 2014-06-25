@@ -47,7 +47,13 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  # scope :available, -> { having_status_poll(:gray, :white).where("polls.id not in (?)", Member.current_member.cached_report_poll.map(&:id)) }
+  scope :available, -> { 
+    if Member.current_member.cached_report_poll.map(&:id).present?
+      having_status_poll(:gray, :white).where("poll_members.poll_id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id))
+    else
+      having_status_poll(:gray, :white)
+    end 
+  }
 
   LIMIT_POLL = 50
   LIMIT_TIMELINE = 3000

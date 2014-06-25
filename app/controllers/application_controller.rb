@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   include AuthenSentaiHelper
   include PollHelper
+  include PollsHelper
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
