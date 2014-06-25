@@ -82,7 +82,7 @@ class Member < ActiveRecord::Base
   has_many :providers, dependent: :destroy
 
   has_many :member_report_polls, dependent: :destroy
-  has_many :poll_reports, through: :member_report_polls, source: :poll, unscoped: true
+  has_many :poll_reports, through: :member_report_polls, source: :poll
 
   # after_create :set_follow_pollios
 

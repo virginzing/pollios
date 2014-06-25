@@ -30,6 +30,7 @@ gem 'jbuilder', github: 'rails/jbuilder'
 # gem 'foundation_rails_helper'
 
 gem 'enumerize'
+gem 'pg', '0.17.0'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -38,14 +39,12 @@ end
 
 group :development do
   # gem 'sqlite3'
-  gem 'pg', '0.17.0'
   gem 'thin'
   gem 'quiet_assets'
   gem 'faker'
 end
 
 group :production do
-  gem 'pg', '0.17.0'
   gem 'rails_12factor'
   gem 'libv8', '~> 3.11.8.3'
   gem 'therubyracer', :platform => :ruby
@@ -99,7 +98,6 @@ gem 'jbuilder_cache_multi', '~> 0.0.2'
 gem "chartkick"
 
 gem 'configatron',  '3.2.0'
-gem 'unscoped_associations'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
