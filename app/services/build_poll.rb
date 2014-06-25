@@ -55,7 +55,8 @@ class BuildPoll
       "recurring_id" => @params["recurring_id"],
       "type_poll" => @params["type_poll"],
       "in_group_ids" => "0",
-      "photo_poll" => @params["photo_poll"]
+      "photo_poll" => @params["photo_poll"],
+      "status_poll" => 0
     }
   end
 

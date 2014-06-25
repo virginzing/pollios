@@ -38,12 +38,13 @@ class Poll < ActiveRecord::Base
   validates :member_id, :title , presence: true
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
-  default_scope { order("#{table_name}.created_at desc") }
+  default_scope { available.order("#{table_name}.created_at desc") }
   
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
+  scope :available, -> { self.having_status_poll(:gray, :white) }
 
   LIMIT_POLL = 50
   LIMIT_TIMELINE = 3000
@@ -381,7 +382,7 @@ class Poll < ActiveRecord::Base
       end
     end
 
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll)
+    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0)
 
     if @poll.valid? && choices
       list_choice = choices.split(",")

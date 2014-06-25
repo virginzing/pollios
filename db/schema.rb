@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616055716) do
+ActiveRecord::Schema.define(version: 20140625064258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,6 +302,16 @@ ActiveRecord::Schema.define(version: 20140616055716) do
   add_index "member_invite_codes", ["invite_code_id"], name: "index_member_invite_codes_on_invite_code_id", using: :btree
   add_index "member_invite_codes", ["member_id"], name: "index_member_invite_codes_on_member_id", using: :btree
 
+  create_table "member_report_polls", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_report_polls", ["member_id"], name: "index_member_report_polls_on_member_id", using: :btree
+  add_index "member_report_polls", ["poll_id"], name: "index_member_report_polls_on_poll_id", using: :btree
+
   create_table "members", force: true do |t|
     t.string   "sentai_name"
     t.string   "username"
@@ -325,6 +335,7 @@ ActiveRecord::Schema.define(version: 20140616055716) do
     t.boolean  "apn_invite_group",    default: true
     t.boolean  "apn_poll_friend",     default: true
     t.boolean  "sync_facebook",       default: false
+    t.integer  "report_power",        default: 1
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
@@ -424,6 +435,8 @@ ActiveRecord::Schema.define(version: 20140616055716) do
     t.string   "in_group_ids"
     t.string   "qrcode_key"
     t.integer  "type_poll"
+    t.integer  "report_count",   default: 0
+    t.integer  "status_poll",    default: 0
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
