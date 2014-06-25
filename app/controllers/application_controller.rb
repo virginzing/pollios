@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
         format.html
       end
     end
+    Member.current_member = @current_member
     @current_member
   end
 

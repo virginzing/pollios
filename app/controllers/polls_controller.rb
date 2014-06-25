@@ -319,7 +319,7 @@ class PollsController < ApplicationController
 
   def report
     @init_report = ReportPoll.new(@current_member, params[:id])
-    @report = @init_report.report
+    @report = @init_report.reporting
   end
 
   def destroy

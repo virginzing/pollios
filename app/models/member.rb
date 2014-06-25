@@ -5,6 +5,8 @@ class Member < ActiveRecord::Base
   mount_uploader :cover, MemberUploader
 
   attr_accessor :fullname
+  
+  cattr_accessor :current_member
 
   include MemberHelper
 
@@ -80,7 +82,7 @@ class Member < ActiveRecord::Base
   has_many :providers, dependent: :destroy
 
   has_many :member_report_polls, dependent: :destroy
-  has_many :poll_reports, through: :member_report_polls, source: :poll
+  has_many :poll_reports, through: :member_report_polls, source: :poll, unscoped: true
 
   # after_create :set_follow_pollios
 
@@ -263,6 +265,10 @@ class Member < ActiveRecord::Base
 
   def cached_shared_poll
     Rails.cache.fetch([ self, "shared"]) { share_polls.to_a }
+  end
+
+  def cached_report_poll
+    Rails.cache.fetch([ self, 'report']) { poll_reports.to_a }
   end
 
   # def cached_poll_count

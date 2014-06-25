@@ -14,7 +14,7 @@ class PollOfGroup
 
   def poll_of_group
     poll_group_query = "poll_groups.group_id IN (?)"
-    query = Poll.joins(:poll_groups).where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids)
+    query = Poll.available.joins(:poll_groups).where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids)
     query
   end
 

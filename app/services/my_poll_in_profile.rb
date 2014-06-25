@@ -26,16 +26,16 @@ class MyPollInProfile
 
   def poll_created
     # @member.polls.includes(:member, :campaign, :choices)
-    Poll.joins(:poll_members).includes(:member, :campaign, :choices).where("poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0")
+    Poll.available.joins(:poll_members).includes(:member, :campaign, :choices).where("poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0")
   end
 
   def poll_voted
-    Poll.joins(:history_votes).includes(:member, :campaign).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_id)
+    Poll.available.joins(:history_votes).includes(:member, :campaign).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_id)
         .order("history_votes.created_at DESC")
   end
 
   def poll_watched
-    Poll.joins(:watcheds).includes(:member, :campaign).where("watcheds.member_id = #{member_id}").order("watcheds.created_at DESC")
+    Poll.available.joins(:watcheds).includes(:member, :campaign).where("watcheds.member_id = #{member_id}").order("watcheds.created_at DESC")
   end
   
 end

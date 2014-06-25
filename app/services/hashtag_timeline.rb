@@ -3,6 +3,7 @@ class HashtagTimeline
     @member = member_obj
     @options = options
     @hidden_poll = HiddenPoll.my_hidden_poll(member_obj.id)
+    @report_poll = Member.current_member.cached_report_poll
   end
 
   def member_id
@@ -43,6 +44,7 @@ class HashtagTimeline
   def tag_popular
     Tag.joins(:taggings => [:poll => :poll_members]).
       where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0)", true, your_friend_ids).
+      where("polls.id NOT IN (?)", @report_poll.map(&:id)).
       select("tags.*, count(taggings.tag_id) as count").
       group("taggings.tag_id, tags.id").
       order("count desc").limit(5)
@@ -53,6 +55,7 @@ class HashtagTimeline
     joins(:poll_members).
     includes(:poll_groups, :campaign, :choices, :member).
     order('polls.created_at desc, polls.vote_all desc, polls.public desc, polls.expire_date desc').
+    where("polls.id NOT IN (?)", @report_poll.map(&:id)).
     where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
           "OR (poll_groups.group_id IN (?))", true, your_friend_ids, false, your_group_ids).references(:poll_groups)
   end

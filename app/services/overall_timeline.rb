@@ -8,6 +8,7 @@ class OverallTimeline
     @member = member
     @options = options
     @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
+    @report_poll = member.cached_report_poll
     @pull_request = options["pull_request"] || "no"
     @poll_series = []
     @poll_nonseries = []
@@ -48,7 +49,7 @@ class OverallTimeline
   end
 
   def unvote_count
-    poll_id_from_poll_member = PollMember.where("id IN (?)", cached_poll_ids_of_poll_member).map(&:poll_id)
+    poll_id_from_poll_member = PollMember.available.where("id IN (?)", cached_poll_ids_of_poll_member).map(&:poll_id)
     (poll_id_from_poll_member - @member.cached_my_voted.map(&:poll_id)).count
   end
 
@@ -64,7 +65,7 @@ class OverallTimeline
 
     poll_public_query = "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
-    query = PollMember.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
+    query = PollMember.available.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
         "OR (#{poll_friend_query} AND #{poll_unexpire})" \
         "OR (#{poll_group_query} AND #{poll_unexpire})" \
         "OR (#{poll_public_query} AND #{poll_unexpire})", 
@@ -74,8 +75,8 @@ class OverallTimeline
 
     query = check_new_pull_request(query)
 
-    poll_member = check_hidden_poll(query)
-    ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
+    # poll_member = check_hidden_poll(query)
+    ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
   def poll_expire_have_vote
@@ -93,14 +94,14 @@ class OverallTimeline
   def find_poll_share
     query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0"
 
-    query = PollMember.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
+    query = PollMember.available.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
       "OR (#{query_poll_shared} AND #{poll_unexpire})", 
       your_friend_ids,
       your_following_ids).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
-    poll_member = check_hidden_poll(query)
-    poll_member.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
+    # poll_member = check_hidden_poll(query)
+    query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 
 
@@ -111,9 +112,9 @@ class OverallTimeline
     query
   end
   
-  def check_hidden_poll(query)
-    @hidden_poll.empty? ? query : query.hidden(@hidden_poll)
-  end
+  # def check_hidden_poll(query)
+  #   @hidden_poll.empty? ? query : query.hidden(@hidden_poll)
+  # end
   
   def overall_timeline
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
@@ -167,10 +168,10 @@ class OverallTimeline
 
   def filter_overall_timeline(next_cursor)
     poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
-
     poll_member.each do |poll_member|
       if poll_member.share_poll_of_id == 0
         not_shared = Hash["shared" => false]
+        puts "#{poll_member.poll} check!!"
         if poll_member.poll.series
           poll_series << poll_member.poll
           series_shared << not_shared
@@ -192,6 +193,7 @@ class OverallTimeline
           end
         end
       end
+
     end
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
   end

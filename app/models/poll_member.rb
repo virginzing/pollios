@@ -1,10 +1,12 @@
 class PollMember < ActiveRecord::Base
   belongs_to :member
-  belongs_to :poll, -> { self.having_status_poll(:gray, :white) }, touch: true
+  belongs_to :poll, -> { having_status_poll(:gray, :white) }, touch: true
 
   scope :active, -> { where("poll_members.expire_date > ?", Time.now) }
   scope :inactive, -> { where("expire_date < ?", Time.now) }
   scope :hidden, -> (hidden_poll) { where("poll_id NOT IN (?)", hidden_poll) }
+
+  scope :available, -> { where("#{table_name}.poll_id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id)) }
 
   LIMIT_TIMELINE = 3000
 

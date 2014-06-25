@@ -18,6 +18,7 @@ class Poll < ActiveRecord::Base
 
   has_many :poll_members, dependent: :destroy
   has_many :members, through: :poll_members, source: :member
+
   has_many :campaign_members, dependent: :destroy
 
   has_many :history_votes, dependent: :destroy
@@ -38,13 +39,15 @@ class Poll < ActiveRecord::Base
   validates :member_id, :title , presence: true
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
-  default_scope { available.order("#{table_name}.created_at desc") }
+  default_scope { order("#{table_name}.created_at desc") }
+
   
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
-  scope :available, -> { self.having_status_poll(:gray, :white) }
+
+  scope :available, -> { self.having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id)) }
 
   LIMIT_POLL = 50
   LIMIT_TIMELINE = 3000

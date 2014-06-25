@@ -75,7 +75,7 @@ class FriendPollInProfile
     query_group_together = "poll_members.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
     query_public = "poll_members.public = 't' AND poll_members.member_id = #{friend_id} AND poll_members.share_poll_of_id = 0"
 
-    query = Poll.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
+    query = Poll.available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
                 where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                 "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
@@ -83,7 +83,7 @@ class FriendPollInProfile
   end
 
   def poll_voted
-    query = Poll.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
                 "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
@@ -92,7 +92,7 @@ class FriendPollInProfile
   end
 
   def poll_watched
-    query = Poll.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(watcheds.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0')" \
                 "OR (watcheds.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", list_my_friend_ids, my_and_friend_group).references(:poll_groups)
