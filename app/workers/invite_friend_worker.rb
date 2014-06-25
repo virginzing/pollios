@@ -13,7 +13,7 @@ class InviteFriendWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      group: group.as_json(),
+      group_id: group.id,
       type: TYPE[:group],
       action: ACTION[:invite]
     }
