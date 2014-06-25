@@ -8,7 +8,7 @@ class PollMember < ActiveRecord::Base
 
   scope :available, -> { 
     if Member.current_member.cached_report_poll.map(&:id).present?
-      where("poll_members.poll_id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id))
+      where("#{table_name}.poll_id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id))
     end 
   }
 
