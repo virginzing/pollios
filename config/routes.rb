@@ -120,6 +120,7 @@ Pollios::Application.routes.draw do
     post ':id/hide',        to: 'polls#hide'
     post ':id/watch',       to: 'polls#watch'
     post ':id/unwatch',     to: 'polls#unwatch'
+    post ':id/report',      to: 'polls#report'
     post 'share/:id',       to: 'polls#share'
     post 'unshare/:id',     to: 'polls#unshare'
     get 'public_timeline',            to: 'polls#public_poll'
