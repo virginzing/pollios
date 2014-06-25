@@ -103,7 +103,7 @@ class PollsController < ApplicationController
       
       # Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'my_poll'])
-      Activity.create_activity_poll(current_member.id, @poll, 'Create')
+      Activity.create_activity_poll(current_member, @poll, 'Create')
 
       flash[:success] = "Create poll successfully."
       redirect_to polls_path
