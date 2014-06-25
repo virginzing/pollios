@@ -379,7 +379,9 @@ class Poll < ActiveRecord::Base
     else
       if (buy_poll.present? || member.celebrity? || member.brand?)
         @set_public = true
-        @set_public = is_public if (is_public == false || is_public == true)
+        if is_public == false
+          @set_public = false
+        end
       else
         @set_public = false
       end
