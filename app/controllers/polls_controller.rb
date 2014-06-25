@@ -80,7 +80,7 @@ class PollsController < ApplicationController
     @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
   end
 
-  def create
+  def create ## for Web
     @build_poll = BuildPoll.new(current_member, polls_params, options_build_params)
     new_poll_binary_params = @build_poll.poll_binary_params
     puts "new_poll_binary_params => #{new_poll_binary_params}"
@@ -103,6 +103,7 @@ class PollsController < ApplicationController
       
       # Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'my_poll'])
+      Activity.create_activity_poll(current_member.id, @poll, 'Create')
 
       flash[:success] = "Create poll successfully."
       redirect_to polls_path

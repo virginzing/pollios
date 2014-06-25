@@ -156,6 +156,11 @@ Pollios::Application.routes.draw do
     get 'groups',         to: 'stats#groups', as: :stats_groups
   end
 
+  scope 'manage/dashboard' do
+    get '',               to: 'admin#dashboard',  as: :admin_management_dashboard
+    get 'invite',         to: 'admin#invite',     as: :admin_invite_dashboard
+  end
+
   get '/hashtag',  to: 'polls#hashtag'
   get '/hashtag_popular', to: 'polls#hashtag_popular'
 

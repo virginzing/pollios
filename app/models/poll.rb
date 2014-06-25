@@ -353,7 +353,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.create_poll(poll, member)
+  def self.create_poll(poll, member) ## create poll for API
     title = poll[:title]
     expire_date = poll[:expire_within]
     choices = poll[:choices]

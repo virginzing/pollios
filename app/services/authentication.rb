@@ -100,8 +100,6 @@ class Authentication
 
 
   def follow_pollios
-    puts "add follow auto"
-    puts "member1 => #{@member.id}"
     find_pollios = Member.find_by_email("pollios@pollios.com")
     if find_pollios.present?
       puts "member2 => #{@member.id}"
@@ -110,8 +108,6 @@ class Authentication
   end
 
   def update_member(member)
-    puts "name is => #{name}"
-    puts "member is #{member.sentai_name}"
       member.update!(sentai_name: member.sentai_name.presence || name, birthday: member.birthday.presence || birthday)
   end
 
@@ -141,7 +137,7 @@ class Authentication
   end
 
   def check_activate_account
-    true || member.member_invite_code.present?
+    member.member_invite_code.present? || member.brand?
   end
 end
 
