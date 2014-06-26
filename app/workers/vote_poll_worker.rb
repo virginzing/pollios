@@ -2,9 +2,11 @@ class VotePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member_id, poll, custom_data = {})
+  def perform(member, poll, custom_data = {})
+
+    member_id = member.id
     
-    @apn_poll = Apn::VotePoll.new(member_id, poll)
+    @apn_poll = Apn::VotePoll.new(member, poll)
 
     recipient_ids = @apn_poll.recipient_ids
 
@@ -18,6 +20,10 @@ class VotePollWorker
       action: ACTION[:vote]
     }
 
+    @notify_custom_properties = @custom_properties.merge!({
+      anonymous: member.anonymous
+    })
+
     device_ids.each do |device_id|
       @notf = Apn::Notification.new
       @notf.device_id = device_id
@@ -26,10 +32,11 @@ class VotePollWorker
       @notf.sound = true
       @notf.custom_properties = @custom_properties
       @notf.save!
+      puts "byte => #{@notf.as_json}"
     end
 
     find_recipient.each do |member|
-      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @custom_properties)
+      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @notify_custom_properties)
     end
 
     Apn::App.first.send_notifications

@@ -456,6 +456,7 @@ class Poll < ActiveRecord::Base
 
     begin
       ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
+      
       unless ever_vote.present?
         find_poll = Poll.cached_find(poll_id)
         find_choice = find_poll.choices.where(id: choice_id).first
@@ -479,7 +480,7 @@ class Poll < ActiveRecord::Base
             history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
             find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
             # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
-            VotePollWorker.new.perform(member_id, find_poll) unless member_id.to_i == find_poll.member.id
+            VotePollWorker.new.perform(member, find_poll) unless member_id.to_i == find_poll.member.id
             # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 
             VoteStats.create_vote_stats(find_poll)

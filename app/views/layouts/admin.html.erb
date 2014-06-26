@@ -196,6 +196,10 @@
             <a href="<%= admin_invite_dashboard_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Invite</span></a>
           </li>
 
+          <li class="<%= is_active_2nd_level('admin', 'report') %>">
+            <a href="<%= admin_report_dashboard_path %>" title="Report"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Report</span></a>
+          </li>
+
           <li class="<%= is_active_2nd_level('admin', 'invite') %>">
             <a href="/admin" title="Invite"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Admin Panel</span></a>
           </li>

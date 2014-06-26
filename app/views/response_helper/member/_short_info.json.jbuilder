@@ -8,3 +8,4 @@ json.key_color member.get_key_color
 json.avatar member.get_avatar
 json.cover member.get_cover_image
 json.sync_facebook member.sync_facebook
+json.anonymous member.anonymous

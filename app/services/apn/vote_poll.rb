@@ -2,13 +2,21 @@ class Apn::VotePoll
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
-  def initialize(member_id, poll)
-    @member_id = member_id
+  def initialize(member, poll)
+    @member = member
     @poll = poll
   end
 
+  def member_id
+    @member.id
+  end
+
+  def member_name
+    # @member.sentai_name.split(%r{\s}).first
+    @member.sentai_name
+  end
+
   def recipient_ids
-    # @poll.member.id
     watched_poll
   end
   
@@ -18,17 +26,17 @@ class Apn::VotePoll
 
   # allow 170 byte for custom message
   def custom_message
-    "Someone votes a poll: \"#{custom_poll_title}\""
+    if @member.anonymous  ## hide name
+      "Someone votes a poll: \"#{custom_poll_title}\""
+    else
+      "#{member_name} votes a poll: \"#{custom_poll_title}\""
+    end
   end
 
   private
 
   def watched_poll
     Watched.where(poll_id: @poll.id).pluck(:member_id)
-  end
-
-  def member
-    Member.find(@member_id)
   end
   
 end

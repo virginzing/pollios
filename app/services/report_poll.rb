@@ -13,7 +13,8 @@ class ReportPoll
   end
 
   def report_increment
-    
+    report_power = @member.report_power
+    @poll.increment!(:report_count, report_power)
   end
 
   private

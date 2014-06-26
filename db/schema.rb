@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140625064258) do
+ActiveRecord::Schema.define(version: 20140626064855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -336,6 +336,7 @@ ActiveRecord::Schema.define(version: 20140625064258) do
     t.boolean  "apn_poll_friend",     default: true
     t.boolean  "sync_facebook",       default: false
     t.integer  "report_power",        default: 1
+    t.boolean  "anonymous",           default: false
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree

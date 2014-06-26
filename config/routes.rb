@@ -161,6 +161,7 @@ Pollios::Application.routes.draw do
   scope 'manage/dashboard' do
     get '',               to: 'admin#dashboard',  as: :admin_management_dashboard
     get 'invite',         to: 'admin#invite',     as: :admin_invite_dashboard
+    get 'report',         to: 'admin#report',     as: :admin_report_dashboard
   end
 
   get '/hashtag',  to: 'polls#hashtag'
