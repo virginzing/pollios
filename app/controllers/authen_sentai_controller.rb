@@ -73,19 +73,28 @@ class AuthenSentaiController < ApplicationController
 
 
   def signup_sentai
-
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     puts "response : #{@response}"
   	respond_to do |wants|
   		if @response["response_status"] == "OK"
         @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
-        @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
-  			session[:member_id] = member.id
-  			flash[:success] = "Sign up sucessfully."
-        @signup = true
-  			wants.html { redirect_to dashboard_path }
-  			wants.json
-        wants.js
+        if @auth.activate_account?
+          @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
+          session[:member_id] = member.id
+          flash[:success] = "Sign up sucessfully."
+          @signup = true
+          wants.html { redirect_to dashboard_path }
+          wants.json
+          wants.js
+        else
+          @signup = false
+          session[:activate_email] = member.email
+          session[:activate_id] = member.id
+          flash[:warning] = "This account is not activate yet."
+          wants.html
+          wants.json
+          wants.js
+        end
   		else
         @signup = false
   			flash[:error] = @response["response_message"]
