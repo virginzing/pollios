@@ -13,7 +13,10 @@ class GroupNotificationWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      poll_id: poll.id,
+      poll_id: poll.id
+    }
+
+    hash_custom = {
       group_id: group_id, 
       type: TYPE[:poll],
       action: ACTION[:create]
@@ -30,7 +33,7 @@ class GroupNotificationWorker
     end
 
     find_recipient.each do |member|
-      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @group_nofication.custom_message, custom_properties: @custom_properties)
+      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications

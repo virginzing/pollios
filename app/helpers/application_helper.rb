@@ -264,6 +264,11 @@ end
 #     "guest_id": "1"
 # }' -X POST http://localhost:3000/poll/33/view.json -i
 
+
+# curl -H "Content-Type: application/json" -d '{
+#     "email": "nuttapo111n@code-app.com"
+# }' -X POST http://codeapp-pollios.herokuapp.com/member/verify_email.json -i
+
 # curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5
 # http://localhost:3000/poll/33/choices.json?guest_id=4&voted=no 
 

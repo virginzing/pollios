@@ -2,9 +2,11 @@ class ApnPollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member_id, poll, custom_data = {})
+  def perform(member, poll, custom_data = {})
 
-    @apn_poll = ApnPoll.new(member_id, poll)
+    member_id = member.id
+    
+    @apn_poll = ApnPoll.new(member, poll)
 
     recipient_ids = @apn_poll.recipient_ids
 
@@ -13,7 +15,10 @@ class ApnPollWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      poll_id: poll.id, 
+      poll_id: poll.id
+    }
+
+    hash_custom = {
       type: TYPE[:poll],
       action: ACTION[:create]
     }
@@ -29,7 +34,7 @@ class ApnPollWorker
     end
 
     find_recipient.each do |member|
-      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @custom_properties)
+      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications

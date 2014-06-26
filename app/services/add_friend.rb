@@ -15,19 +15,21 @@ class AddFriend
   end
 
   def member_name
-    member.sentai_name.split(%r{\s}).first
+    # member.sentai_name.split(%r{\s}).first
+    member.sentai_name
   end
 
   def friend_name
-    friend.sentai_name.split(%r{\s}).first
+    friend.sentai_name
   end
 
   def custom_message
     if @options[:accept_friend]
-      member_name + " is now friends with you"
+      message = member_name + " is now friends with you"
     else
-      member_name + " request friend with you" 
+      message = member_name + " request friend with you" 
     end
+    truncate_message(message)
   end
 
   private

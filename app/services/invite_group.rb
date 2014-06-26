@@ -1,5 +1,6 @@
 class InviteGroup
   include ActionView::Helpers::TextHelper
+  include NotificationsHelper
 
   def initialize(member_id, friend_ids, group)
     @member_id = member_id
@@ -18,11 +19,12 @@ class InviteGroup
   end
 
   def group_name
-    truncate(@group.name, length: 10)
+    @group.name
   end
 
   def custom_message
-    member_name + " invited you to the " + group_name
+    message = member_name + " invited you to the " + group_name
+    truncate_message(message)
   end
 
   private

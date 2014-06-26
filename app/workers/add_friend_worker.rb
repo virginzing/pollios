@@ -1,6 +1,7 @@
 class AddFriendWorker
   include Sidekiq::Worker
   include SymbolHash
+  
   def perform(member_id, friend_id, opitons = {})
 
     @add_friend = AddFriend.new(member_id, friend_id, opitons)

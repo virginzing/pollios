@@ -2,7 +2,9 @@ class InviteFriendWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member_id, friend_ids, group, custom_data = nil)
+  def perform(member, friend_ids, group, custom_data = nil)
+
+    member_id = member.id
 
     @invite_group = InviteGroup.new(member_id, friend_ids, group)
 
@@ -13,7 +15,10 @@ class InviteFriendWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      group_id: group.id,
+      group_id: group.id
+    }
+
+    hash_custom = {
       type: TYPE[:group],
       action: ACTION[:invite]
     }
@@ -29,7 +34,7 @@ class InviteFriendWorker
     end
 
     find_recipient.each do |member|
-      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties)
+      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications

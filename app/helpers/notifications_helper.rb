@@ -12,4 +12,14 @@ module NotificationsHelper
   DISAPPOINTED = HTMLEntities.new.decode "&#128542;"
   PRAY = HTMLEntities.new.decode "&#128591;"
   FEAR = HTMLEntities.new.decode "&#128561;"
+
+
+  def truncate_message(message, truncate_default = 100, truncate_decentment = 2)
+    begin
+      custom_message = message.truncate(truncate_default)
+      truncate_default = truncate_default - truncate_decentment
+    end while custom_message.bytesize > 170
+    custom_message
+  end
+
 end

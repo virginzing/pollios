@@ -1,5 +1,6 @@
 class GroupNotification
   include ActionView::Helpers::TextHelper
+  include NotificationsHelper
 
   def initialize(member_id, group_id, poll)
     @member_id = member_id
@@ -19,17 +20,13 @@ class GroupNotification
     member.sentai_name.split(%r{\s}).first
   end
 
-  def custom_poll_title
-    truncate(@poll.title, escape: false, length: 50)
-    # @poll_title
-  end
-
   def group_name
     truncate(group.name, length: 10)
   end
 
   def custom_message
-    member_name + " asked " + custom_poll_title + " in " + group_name
+    message = member_name + " asked " + @poll.title + " in " + group_name
+    truncate_message(message)
   end
 
   private
