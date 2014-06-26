@@ -76,7 +76,7 @@ class Activity
           public: @poll.public
         },
         creator: {
-          id: @poll.member.id,
+          member_id: @poll.member.id,
           name: @poll.member.sentai_name
         },
         authority: check_authority_poll,
@@ -117,7 +117,7 @@ class Activity
     if @action == ACTION[:become_friend]
       {
         friend: {
-          id: @friend.id,
+          member_id: @friend.id,
           name: @friend.sentai_name
         },
         authority: AUTHORITY[:public],
@@ -128,7 +128,7 @@ class Activity
     else
       {
         friend: {
-          id: @friend.id,
+          member_id: @friend.id,
           name: @friend.sentai_name
         },
         authority: AUTHORITY[:public],
