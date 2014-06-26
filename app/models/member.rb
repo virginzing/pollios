@@ -318,19 +318,19 @@ class Member < ActiveRecord::Base
   end
 
   def cached_get_following
-    Rails.cache.fetch([self.id, 'following']) do
+    Rails.cache.fetch([self.id, 'following'], :expires_in => 1.hours) do
       get_following.to_a
     end
   end
 
   def cached_get_follower
-    Rails.cache.fetch([self.id, 'follower']) do
+    Rails.cache.fetch([self.id, 'follower'], :expires_in => 1.hours) do
       get_follower.to_a
     end
   end
 
   def cached_get_friend_active
-    Rails.cache.fetch([self.id, 'friend_active']) do
+    Rails.cache.fetch([self.id, 'friend_active'], :expires_in => 1.hours) do
       get_friend_active.to_a
     end
   end
