@@ -18,17 +18,13 @@ class MembersController < ApplicationController
   end
 
   def verify_email
-    find_member_email = Member.find_by(email: verify_email_params[:email])
-
-    if find_member_email.present?
-      if find_member_email.providers.find_by(name: "sentai").present?
-        @verify_email = true
-      end
+    @response = Authenticate::Sentai.verify_email(verify_email_params)
+    if @response["response_status"] == "OK"
+      @verify_email = true
+    else
+      @verify_email = false
     end
-
-    @verify_email
   end
-
 
   def profile
   end

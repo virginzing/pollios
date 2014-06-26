@@ -47,5 +47,10 @@ module Authenticate
 			response = JSON.parse(res_form_sentai.body)
 		end
 
+		def self.verify_email(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/verify_email.json", params)
+			response = JSON.parse(res_form_sentai.body)
+		end
+
 	end
 end
