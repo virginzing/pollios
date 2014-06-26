@@ -1,6 +1,6 @@
 json.member_id member.id
-json.name member.sentai_name
-json.username member.username
+json.name member.get_name
+json.username member.get_username
 json.email member.email
 json.type member.member_type_text
 json.description member.get_description

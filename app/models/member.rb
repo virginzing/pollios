@@ -207,6 +207,14 @@ class Member < ActiveRecord::Base
     providers.where(name: 'sentai').first.pid    
   end
 
+  def get_name
+    sentai_name.presence || ""
+  end
+
+  def get_username
+    username.presence || ""
+  end
+
   def get_cover_image
     cover.present? ? cover.url(:cover) : ""
   end
