@@ -65,7 +65,7 @@ class FriendPollInProfile
   end
 
   def group_friend_count
-    mutual_or_public_group.count
+    groups.count
   end
 
   private

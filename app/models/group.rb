@@ -50,7 +50,7 @@ class Group < ActiveRecord::Base
       find_group_member.update_attributes!(active: true)
 
       Rails.cache.delete([member_id, 'group_active'])
-      Rails.cache.delete([member_id, 'group_count'])
+      # Rails.cache.delete([member_id, 'group_count'])
 
       if @group.public
         Activity.create_activity_group(member, @group, 'Join')

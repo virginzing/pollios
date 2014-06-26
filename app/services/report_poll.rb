@@ -7,9 +7,13 @@ class ReportPoll
   def reporting
     unless find_report
       reporting = @member.member_report_polls.create!(poll_id: @poll.id)
-      @poll.increment!(:report_count)
+      report_increment
     end
     reporting
+  end
+
+  def report_increment
+    
   end
 
   private
