@@ -9,4 +9,3 @@ else
   json.response_status "ERROR"
   json.response_message @response["response_message"]
 end
-
