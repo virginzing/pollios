@@ -19,6 +19,17 @@ module NotificationsHelper
       custom_message = message.truncate(truncate_default)
       truncate_default = truncate_default - truncate_decentment
     end while custom_message.bytesize > 170
+
+    add_double_quotation(custom_message)
+  end
+
+  def add_double_quotation(custom_message)
+    last_word = custom_message.last.match(/"/)
+
+    unless last_word.present?
+      custom_message = custom_message + "\""
+    end 
+    
     custom_message
   end
 
