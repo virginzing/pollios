@@ -77,8 +77,6 @@ class GroupTimelinable
   end
 
   def group_timeline
-
-    puts "find_poll_in_my_group => #{find_poll_in_my_group}"
     ids, poll_ids = find_poll_in_my_group
     shared = find_poll_share_in_group
     poll_group_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
