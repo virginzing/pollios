@@ -117,6 +117,10 @@ class MembersController < ApplicationController
     end
   end
 
+  def block
+    
+  end
+
   def clear
     current_member.history_votes.delete_all
     flash[:success] = "Clear successfully."

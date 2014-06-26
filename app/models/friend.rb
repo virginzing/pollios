@@ -69,6 +69,7 @@ class Friend < ActiveRecord::Base
         search_friend(friend_id, member_id).update_attributes!(status: :friend)
         status = :friend
         Activity.create_activity_friend( find_member, find_friend ,'BecomeFriend')
+        Activity.create_activity_friend( find_friend, find_member ,'BecomeFriend')
       elsif find_used_friend
         # is_friend = false
 
@@ -205,6 +206,8 @@ class Friend < ActiveRecord::Base
         search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
 
         Activity.create_activity_friend( member, friend ,'BecomeFriend')
+        Activity.create_activity_friend( friend, member ,'BecomeFriend')
+
         AddFriendWorker.new.perform(member_id, friend_id, { accept_friend: true } )
       else
         find_member.destroy
