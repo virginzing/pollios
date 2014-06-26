@@ -17,6 +17,18 @@ class MembersController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
   end
 
+  def verify_email
+    find_member_email = Member.find_by(email: verify_email_params[:email])
+
+    if find_member_email.present?
+      if find_member_email.providers.find_by(name: "sentai").present?
+        @verify_email = true
+      end
+    end
+
+    @verify_email
+  end
+
 
   def profile
   end
@@ -132,6 +144,10 @@ class MembersController < ApplicationController
 
   def update_profile_params
     params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description, :sync_facebook, :anonymous)
+  end
+
+  def verify_email_params
+    params.permit(:email)
   end
 
   def activate_params

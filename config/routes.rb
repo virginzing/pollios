@@ -102,6 +102,7 @@ Pollios::Application.routes.draw do
     get 'profile',            to: 'members#my_profile'
     post 'activate',          to: 'members#activate'
     post ':member_id/block',  to: 'members#block'
+    post 'verify_email',      to: 'members#verify_email'
   end
 
   scope 'poll' do
