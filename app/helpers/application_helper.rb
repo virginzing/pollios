@@ -4,6 +4,7 @@ module ApplicationHelper
         when :notice then "alert alert-warning"
         when :success then "alert alert-success"
         when :error then "alert alert-danger"
+        when '' then 'alert alert-info'
       end
   end
 
@@ -295,8 +296,8 @@ end
 # }' -X POST http://localhost:3000/poll/163/hide.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1,
-#     "code": "ca8ef1"
+#     "member_id": 6,
+#     "code": "NGFC15"
 # }' -X POST http://localhost:3000/member/activate.json -i
 
 # http://localhost:3000/member/profile.json?member_id=1
@@ -338,11 +339,9 @@ end
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "1212121",
 #     "email": "new_user@gmail.com",
-#     "username": "new_users",
 #     "name": "new_user",
-#     "gender": 1,
-#     "user_photo": "http://avatar1121212.jpg"
-# }' -X POST http://localhost:3001/authen/facebook.json -i
+#     "gender": 1
+# }' -X POST http://localhost:3000/authen/facebook.json -i
 
 
 # Member.all.each do |p|

@@ -14,7 +14,7 @@
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Viva Vivar</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
   </p>
   <br>
-  <a href="<%= new_invitation_path %>" class="btn btn-primary" data-disable-with="Loading..."><strong><i class="fa fa-plus"></i> Create Invite Code</strong></a>
+  <a href="/manage/dashboard/invites/new" class="btn btn-primary" data-disable-with="Loading..."><strong><i class="fa fa-plus"></i> Create Invite Code</strong></a>
 </div>
 
 <section id="widget-grid" class="">
@@ -47,7 +47,9 @@
                   <td><%= invite_code.company_name %></td>
                   <td><%= invite_code.code %></td>
                   <td><%= invite_code_helper(invite_code.used) %></td>
-                  <td><a href="<%= edit_invite_path(invite_code) %>" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-gear"></i></a></td>
+                  <td><a href="<%= edit_invite_path(invite_code) %>" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-gear"></i></a>
+                  <a data-confirm="Are you sure?" data-method="delete" href="<%= invite_path(invite_code) %>" rel="nofollow" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i></a>
+                  </td>
                 </tr>
               <% end %>
             </tbody>

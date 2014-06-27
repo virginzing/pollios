@@ -1440,7 +1440,8 @@ function dataTable() {
 	$('#invite_codes').dataTable({
 		retrieve: true,
 		paging: false,
-		iDisplayLength: 25
+		iDisplayLength: 25,
+		order: [[0, 'desc']]
 	});
 	$('#list_polls').dataTable({
 		retrieve: true,

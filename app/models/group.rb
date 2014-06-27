@@ -15,6 +15,8 @@ class Group < ActiveRecord::Base
   has_many :open_notification, -> { where(notification: true, active: true) }, class_name: "GroupMember"
   has_many :get_member_open_notification, through: :open_notification, source: :member
 
+  has_many :invite_codes, dependent: :destroy
+  
   validates :name, presence: true
 
   mount_uploader :photo_group, PhotoGroupUploader

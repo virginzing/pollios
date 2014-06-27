@@ -8,6 +8,11 @@ class AdminController < ApplicationController
   end
 
   def invite
-    
+    @invite_codes = InviteCode.joins(:company).select("invite_codes.*, companies.name as company_name")
+  end
+
+  def signout
+    sign_out current_admin
+    redirect_to root_url
   end
 end

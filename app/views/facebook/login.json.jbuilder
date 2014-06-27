@@ -6,6 +6,7 @@ if @auth.authenticated?
       json.token member.get_token("facebook")
     end
   else
+      json.member_id member.id
       json.response_status "WAITING"
       json.response_message "Waiting activate your account."
   end

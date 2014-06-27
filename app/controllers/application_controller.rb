@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
   # before_action :restrict_only_admin
+  layout :layout_by_resource
 
   include AuthenSentaiHelper
   include PollHelper
@@ -146,6 +147,16 @@ class ApplicationController < ActionController::Base
     unless current_admin
       flash[:notice] = "Only Admin"
       redirect_to root_path
+    end
+  end
+
+  protected
+
+  def layout_by_resource
+    if devise_controller?
+      "admin"
+    else
+      "application"
     end
   end
 

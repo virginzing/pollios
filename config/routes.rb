@@ -16,7 +16,7 @@ Pollios::Application.routes.draw do
   resources :members 
   resources :poll_series
   resources :password_resets
-  resources :invites
+  # resources :invites
   resources :companies
 
   get 'invites/new',    to: 'invites#new',  as: :new_invitation
@@ -161,8 +161,9 @@ Pollios::Application.routes.draw do
 
   scope 'manage/dashboard' do
     get '',               to: 'admin#dashboard',  as: :admin_management_dashboard
-    get 'invite',         to: 'admin#invite',     as: :admin_invite_dashboard
     get 'report',         to: 'admin#report',     as: :admin_report_dashboard
+    get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
+    resources :invites
   end
 
   get '/hashtag',  to: 'polls#hashtag'

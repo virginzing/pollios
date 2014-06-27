@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/custom.css" data-turbolinks-track="true">
     <link rel="stylesheet" type="text/css" href="/plugins/animate-css/animate.min.css" />
+    
     <!-- FAVICONS -->
     <link rel="shortcut icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
@@ -54,7 +55,7 @@
     <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-
+    
     <!-- <script src="/plugins/jquery_ujs.js" type="text/javascript"></script> -->
     <script>
       if (!window.jQuery) {
@@ -110,7 +111,7 @@
 
         <!-- logout button -->
         <div id="logout" class="btn-header transparent pull-right">
-          <span> <a href="/users_signin" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
+          <span> <a href="<%= admin_signout_path %>" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
         </div>
         <!-- end logout button -->
 
@@ -192,16 +193,22 @@
             <a href="<%= admin_management_dashboard_path %>" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
           </li>
 
-          <li class="<%= is_active_2nd_level('admin', 'invite') %>">
-            <a href="<%= admin_invite_dashboard_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Invite</span></a>
+          <li class="<%= is_active?('invites') %>">
+            <a href="/manage/dashboard/invites" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invite</span></a>
           </li>
 
           <li class="<%= is_active_2nd_level('admin', 'report') %>">
-            <a href="<%= admin_report_dashboard_path %>" title="Report"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Report</span></a>
+            <a href="<%= admin_report_dashboard_path %>" title="Report"><i class="fa fa-lg fa-fw fa-warning"></i> <span class="menu-item-parent">Report</span>
+            <span class="badge bg-color-redLight pull-right inbox-badge">99</span>
+            </a>
           </li>
 
-          <li class="<%= is_active_2nd_level('admin', 'invite') %>">
+          <li class="">
             <a href="/admin" title="Invite"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Admin Panel</span></a>
+          </li>
+
+          <li class="">
+            <a href="<%= stats_dashboard_path %>" title="Stats"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Stats Dashboard</span></a>
           </li>
 
         </ul>

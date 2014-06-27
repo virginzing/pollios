@@ -1,10 +1,11 @@
 class InvitesController < ApplicationController
-
+  layout 'admin'
+  before_filter :authenticate_admin!, :redirect_unless_admin
   before_action :current_admin
   before_action :set_invite_code, only: [:edit, :update, :destroy]
 
   def index
-    @invite_codes = InviteCode.joins(:company).select("invite_codes.*, companies.name as company_name")
+    @invite_codes = InviteCode.joins(:company).select("invite_codes.*, companies.name as company_name").order("invite_codes.id desc")
   end
 
   def new
@@ -12,14 +13,21 @@ class InvitesController < ApplicationController
   end
 
   def create
-    @company = Company.new(company_params)
-
     respond_to do |wants|
-      if @company.save
-        @company.generate_code_of_company(company_params[:amount_code])
+      if company_params[:company_id].present?
+        Company.find_by(id: company_params[:company_id].to_i).generate_code_of_company(company_params)
+        flash[:success] = "Add more invite successfully."
         wants.html { redirect_to invites_path }
       else
-        render 'new'
+        @company = Company.new(company_params)
+        @company.short_name = company_params[:prefix_name]
+        if @company.save
+          @company.generate_code_of_company(company_params)
+          flash[:success] = "Create successfully."
+          wants.html { redirect_to invites_path }
+        else
+          wants.html { render 'new' }
+        end
       end
     end
   end
@@ -37,9 +45,12 @@ class InvitesController < ApplicationController
   end
 
   def destroy
-    
+    respond_to do |format|
+      if @invite.destroy
+        format.html { redirect_to invites_path }
+      end
+    end
   end
-
 
 
   private
@@ -53,7 +64,7 @@ class InvitesController < ApplicationController
   end
 
   def company_params
-    params.require(:company).permit(:name, :amount_code)
+    params.require(:company).permit(:name, :amount_code, :prefix_name, :company_id)
   end
 
 end

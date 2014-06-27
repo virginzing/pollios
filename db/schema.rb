@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140626064855) do
+ActiveRecord::Schema.define(version: 20140627074530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(version: 20140626064855) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "short_name", default: "CA"
   end
 
   create_table "devices", force: true do |t|
@@ -288,9 +289,11 @@ ActiveRecord::Schema.define(version: 20140626064855) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "company_id"
+    t.integer  "group_id"
   end
 
   add_index "invite_codes", ["company_id"], name: "index_invite_codes_on_company_id", using: :btree
+  add_index "invite_codes", ["group_id"], name: "index_invite_codes_on_group_id", using: :btree
 
   create_table "member_invite_codes", force: true do |t|
     t.integer  "member_id"
@@ -355,6 +358,14 @@ ActiveRecord::Schema.define(version: 20140626064855) do
 
   add_index "notify_logs", ["recipient_id"], name: "index_notify_logs_on_recipient_id", using: :btree
   add_index "notify_logs", ["sender_id"], name: "index_notify_logs_on_sender_id", using: :btree
+
+  create_table "pg_search_documents", force: true do |t|
+    t.text     "content"
+    t.integer  "searchable_id"
+    t.string   "searchable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "poll_groups", force: true do |t|
     t.integer  "poll_id"

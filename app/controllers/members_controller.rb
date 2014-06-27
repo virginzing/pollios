@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify]
+  before_action :set_current_member, only: [:activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -113,6 +113,11 @@ class MembersController < ApplicationController
         @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
         @activate.save
         @invite_code[:object].update!(used: true)
+
+        @group_id = @invite_code[:object].group_id
+
+        add_to_group_at_invite
+
         session[:member_id] = @current_member.id
         format.js
         format.json
@@ -122,6 +127,12 @@ class MembersController < ApplicationController
         format.json
         format.html { redirect_to users_activate_path }
       end
+    end
+  end
+
+  def add_to_group_at_invite
+    if @group = Group.find_by(id: @group_id)
+      @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
     end
   end
 
