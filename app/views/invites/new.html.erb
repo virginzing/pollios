@@ -70,11 +70,11 @@
     if (this.value == "1") {
       $('.new_company_select').show();
       $('.exsit_company').hide();
-      validate_only_new_company();
+      // validate_only_new_company();
     } else {
       $('.exsit_company').show();
       $('.new_company_select').hide();
-      validate_only_more_invite();
+      // validate_only_more_invite();
     };
     // document.getElementsByClassName("new_company")[0].reset();
     $(".select2_invite").select2('val', '');
@@ -83,13 +83,13 @@
   $('.exsit_company').hide();
   // $('#new_company').parsley();
 
-  document.getElementsByClassName("select2_invite")[0].setAttribute("data-parsley-required", true);
+  // document.getElementsByClassName("select2_invite")[0].setAttribute("data-parsley-required", true);
 
-  function validate_only_more_invite () {
-    $('#company_name')[0].setAttribute('data-parsley-required', false);
-  }
+  // function validate_only_more_invite () {
+  //   $('#company_name')[0].setAttribute('data-parsley-required', false);
+  // }
 
-  function validate_only_new_company () {
-    $('#company_name')[0].setAttribute('data-parsley-required', true);
-  }
+  // function validate_only_new_company () {
+  //   $('#company_name')[0].setAttribute('data-parsley-required', true);
+  // }
 </script>

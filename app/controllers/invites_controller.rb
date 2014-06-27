@@ -19,16 +19,19 @@ class InvitesController < ApplicationController
         flash[:success] = "Add more invite successfully."
         wants.html { redirect_to invites_path }
       else
-        @company = Company.new(company_params)
+
+        @company = Company.new(company_params.except!(:company_id))
         @company.short_name = company_params[:prefix_name]
+
         if @company.save
           @company.generate_code_of_company(company_params)
           flash[:success] = "Create successfully."
           wants.html { redirect_to invites_path }
         else
-          wants.html { render 'new' }
+          render 'new'
         end
       end
+
     end
   end
 

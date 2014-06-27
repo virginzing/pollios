@@ -2,7 +2,7 @@ class Company < ActiveRecord::Base
 
   has_many :invite_codes, dependent: :destroy
 
-  validates :name, :amount_code, :prefix_name, :company_id, presence: true
+  validates :amount_code, presence: true
   validates_uniqueness_of :name, :on => :create, :message => "Name must be unique"
 
   attr_accessor :amount_code, :used, :prefix_name, :company_id
