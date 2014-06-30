@@ -4,17 +4,17 @@
 	 */
 	// Impacts the responce rate of some of the responsive elements (lower value affects CPU but improves speed)
 	$.throttle_delay = 350;
-	
+
 	// The rate at which the menu expands revealing child elements on click
 	$.menu_speed = 235;
-	
+
 	// Note: You will also need to change this variable in the "variable.less" file.
-	$.navbar_height = 49; 
+	$.navbar_height = 49;
 
 	/*
 	 * APP DOM REFERENCES
 	 * Description: Obj DOM reference, please try to avoid changing these
-	 */	
+	 */
 	$.root_ = $('body');
 	$.left_panel = $('#left-panel');
 	$.shortcut_dropdown = $('#shortcut');
@@ -26,13 +26,13 @@
 	/*
 	 * APP CONFIGURATION
 	 * Description: Enable / disable certain theme features here
-	 */		
+	 */
 	$.navAsAjax = false; // Your left nav in your app will no longer fire ajax calls
-	
+
 	// Please make sure you have included "jarvis.widget.js" for this below feature to work
 	$.enableJarvisWidgets = true;
-	
-	// Warning: Enabling mobile widgets could potentially crash your webApp if you have too many 
+
+	// Warning: Enabling mobile widgets could potentially crash your webApp if you have too many
 	// 			widgets running at once (must have $.enableJarvisWidgets = true)
 	$.enableMobileWidgets = false;
 
@@ -40,9 +40,9 @@
 	/*
 	 * DETECT MOBILE DEVICES
 	 * Description: Detects mobile device - if any of the listed device is detected
-	 * a class is inserted to $.root_ and the variable $.device is decleard. 
-	 */	
-	
+	 * a class is inserted to $.root_ and the variable $.device is decleard.
+	 */
+
 	/* so far this is covering most hand held devices */
 	var ismobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
 
@@ -54,9 +54,9 @@
 		// Mobile
 		$.root_.addClass("mobile-detected");
 		$.device = "mobile";
-		
+
 		// Removes the tap delay in idevices
-		// dependency: js/plugin/fastclick/fastclick.js 
+		// dependency: js/plugin/fastclick/fastclick.js
 		//FastClick.attach(document.body);
 	}
 
@@ -103,7 +103,7 @@ $(document).ready(function() {
 		$('body').toggleClass("hidden-menu");
 		e.preventDefault();
 	});
-	
+
 	$('#show-shortcut').click(function(e) {
 		if ($.shortcut_dropdown.is(":visible")) {
 			shortcut_buttons_hide();
@@ -369,7 +369,7 @@ $(document).ready(function() {
 function nav_page_height() {
 	var setHeight = $('#main').height();
 	//menuHeight = $.left_panel.height();
-	
+
 	var windowHeight = $(window).height() - $.navbar_height;
 	//set height
 
@@ -444,7 +444,7 @@ function validateMemberProfile () {
 
 	    // Rules for form validation
 	    rules : {
-	      sentai_name : {
+	      fullname : {
 	        required : true
 	      },
 	      description : {
@@ -454,8 +454,8 @@ function validateMemberProfile () {
 
 	    // Messages for form validation
 	    messages : {
-	      sentai_name : {
-	        required : 'Please enter name.'
+	      fullname : {
+	        required : 'Please enter fullname.'
 	      },
 	      description : {
 	        required : 'Please enter description.'
@@ -503,7 +503,7 @@ var ie = ( function() {
 
 		return v > 4 ? v : undef;
 
-	}()); // do we need this? 
+	}()); // do we need this?
 
 /* ~ END: DETECT IE VERSION */
 
@@ -633,9 +633,9 @@ function launchFullscreen(element) {
 		}
 
 	} else {
-		
+
 		$.root_.removeClass("full-screen");
-		
+
 		if (document.exitFullscreen) {
 			document.exitFullscreen();
 		} else if (document.mozCancelFullScreen) {
@@ -696,12 +696,12 @@ var handleSelect2 = function() {
                 return { results: data };
             }
         },
-        createSearchChoice:function(term, data) { 
-          if ($(data).filter(function() { 
-                  return this.text.localeCompare(term)===0 ; 
+        createSearchChoice:function(term, data) {
+          if ($(data).filter(function() {
+                  return this.text.localeCompare(term)===0 ;
               }).length===0 ) {
               return { id: term, text:term };
-          } 
+          }
         }
       });
   }
@@ -1114,7 +1114,7 @@ function runAllCharts() {
 function setup_widgets_desktop() {
 
 	if ($.fn.jarvisWidgets && $.enableJarvisWidgets) {
-		
+
 		$('#widget-grid').jarvisWidgets({
 
 			grid : 'article',
@@ -1182,10 +1182,10 @@ function setup_widgets_desktop() {
 			},
 			rtl : false, // best not to toggle this!
 			onChange : function() {
-				
+
 			},
 			onSave : function() {
-				
+
 			},
 			ajaxnav : $.navAsAjax // declears how the localstorage should be saved
 
@@ -1384,17 +1384,17 @@ function loadURL(url, container) {
 		beforeSend : function() {
 			// cog placed
 			container.html('<h1><i class="fa fa-cog fa-spin"></i> Loading...</h1>');
-		
+
 			// Only draw breadcrumb if it is main content material
 			// TODO: see the framerate for the animation in touch devices
-			
+
 			if (container[0] == $("#content")[0]) {
 				drawBreadCrumb();
 				// scroll up
 				$("html").animate({
 					scrollTop : 0
 				}, "fast");
-			} 
+			}
 		},
 		/*complete: function(){
 	    	// Handle the complete event
@@ -1403,13 +1403,13 @@ function loadURL(url, container) {
 		success : function(data) {
 			// cog replaced here...
 			// alert("success")
-			
+
 			container.css({
 				opacity : '0.0'
 			}).html(data).delay(50).animate({
 				opacity : '1.0'
 			}, 300);
-			
+
 
 		},
 		error : function(xhr, ajaxOptions, thrownError) {
@@ -1424,7 +1424,7 @@ function loadURL(url, container) {
 // UPDATE BREADCRUMB
 function drawBreadCrumb() {
 	var nav_elems = $('nav li.active > a'), count = nav_elems.length;
-	
+
 	//console.log("breadcrumb")
 	$.bread_crumb.empty();
 	$.bread_crumb.append($("<li>Home</li>"));
@@ -1501,27 +1501,27 @@ function pageSetUp() {
 
 	if ($.device === "desktop"){
 		// is desktop
-		
+
 		// activate tooltips
 		$("[rel=tooltip]").tooltip();
-	
+
 		// activate popovers
 		$("[rel=popover]").popover();
-	
+
 		// activate popovers with hover states
 		$("[rel=popover-hover]").popover({
 			trigger : "hover"
 		});
-	
+
 		// activate inline charts
 		// runAllCharts();
-	
+
 		// setup widgets
 		setup_widgets_desktop();
-	
+
 		//setup nav height (dynamic)
 		nav_page_height();
-	
+
 		// run form elements
 		runAllForms();
 
@@ -1530,29 +1530,29 @@ function pageSetUp() {
 		handleSelect2();
 
 	} else {
-		
+
 		// is mobile
-		
+
 		// activate popovers
 		$("[rel=popover]").popover();
-	
+
 		// activate popovers with hover states
 		$("[rel=popover-hover]").popover({
 			trigger : "hover"
 		});
-	
+
 		// activate inline charts
 		// runAllCharts();
-	
+
 		// setup widgets
 		setup_widgets_mobile();
-	
+
 		//setup nav height (dynamic)
 		nav_page_height();
-	
+
 		// run form elements
 		runAllForms();
-		
+
 	}
 
 }
@@ -1566,4 +1566,4 @@ $('body').on('click', function(e) {
 			$(this).popover('hide');
 		}
 	});
-}); 
+});
