@@ -109,7 +109,7 @@ class Member < ActiveRecord::Base
       filters [:gender, :member_type]
       field :id
       field :new_avatar
-      field :sentai_name
+      field :fullname
       field :email
       field :gender do
         filterable true
@@ -128,7 +128,7 @@ class Member < ActiveRecord::Base
 
     create do
       field :email
-      field :sentai_name
+      field :fullname
       field :username
       field :gender
       field :member_type
@@ -143,7 +143,7 @@ class Member < ActiveRecord::Base
       field :email do
        read_only true
       end
-      field :sentai_name
+      field :fullname
       field :username
       field :gender
       field :member_type
@@ -157,7 +157,7 @@ class Member < ActiveRecord::Base
     end
 
     edit do
-      field :sentai_name
+      field :fullname
       field :username
       field :gender
       field :member_type
@@ -208,7 +208,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_name
-    sentai_name.presence || ""
+    fullname.presence || ""
   end
 
   def get_username
@@ -394,7 +394,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.update_profile(response)
-    sentai_name = response["name"]
+    fullname = response["name"]
     sentai_fullname = response["fullname"]
     username = response["username"]
     email = response["email"]
@@ -405,7 +405,7 @@ class Member < ActiveRecord::Base
 
     find_member = where(email: email).first
     if find_member.present? 
-      find_member.update_attributes!(sentai_name: sentai_fullname, avatar: avatar, birthday: birthday, username: username, gender: gender, province_id: province_id)
+      find_member.update_attributes!(fullname: sentai_fullname, avatar: avatar, birthday: birthday, username: username, gender: gender, province_id: province_id)
       return find_member
     end
   end
@@ -415,7 +415,7 @@ class Member < ActiveRecord::Base
 
   def self.search_member(params)
     if params[:q].present?
-      where("id != ? AND (email LIKE ? OR sentai_name LIKE ? OR username LIKE ?)", params[:member_id].to_i ,"%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
+      where("id != ? AND (email LIKE ? OR fullname LIKE ? OR username LIKE ?)", params[:member_id].to_i ,"%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
     else
       nil
     end
@@ -541,7 +541,7 @@ class Member < ActiveRecord::Base
    {
       member_id: id,
       type: member_type_text,
-      name: sentai_name,
+      name: fullname,
       username: username,
       email: email,
       avatar: detect_image(avatar),

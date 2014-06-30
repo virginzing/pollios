@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140627074530) do
+ActiveRecord::Schema.define(version: 20140630080908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -316,30 +316,33 @@ ActiveRecord::Schema.define(version: 20140627074530) do
   add_index "member_report_polls", ["poll_id"], name: "index_member_report_polls_on_poll_id", using: :btree
 
   create_table "members", force: true do |t|
-    t.string   "sentai_name"
+    t.string   "fullname"
     t.string   "username"
     t.string   "avatar"
     t.string   "email"
-    t.integer  "gender",              default: 0
+    t.integer  "gender",                     default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "group_active",        default: false
+    t.boolean  "group_active",               default: false
     t.integer  "friend_limit"
-    t.integer  "friend_count",        default: 0
-    t.integer  "member_type",         default: 0
+    t.integer  "friend_count",               default: 0
+    t.integer  "member_type",                default: 0
     t.date     "birthday"
     t.integer  "province_id"
     t.string   "key_color"
-    t.datetime "poll_public_req_at",  default: '2014-06-24 06:28:21'
-    t.datetime "poll_overall_req_at", default: '2014-06-24 06:28:21'
+    t.datetime "poll_public_req_at",         default: '2014-06-24 06:28:21'
+    t.datetime "poll_overall_req_at",        default: '2014-06-24 06:28:21'
     t.string   "cover"
     t.text     "description"
-    t.boolean  "apn_add_friend",      default: true
-    t.boolean  "apn_invite_group",    default: true
-    t.boolean  "apn_poll_friend",     default: true
-    t.boolean  "sync_facebook",       default: false
-    t.integer  "report_power",        default: 1
-    t.boolean  "anonymous",           default: false
+    t.boolean  "apn_add_friend",             default: true
+    t.boolean  "apn_invite_group",           default: true
+    t.boolean  "apn_poll_friend",            default: true
+    t.boolean  "sync_facebook",              default: false
+    t.integer  "report_power",               default: 1
+    t.boolean  "anonymous",                  default: false
+    t.boolean  "anonymous_public",           default: false
+    t.boolean  "anonymous_friend_following", default: false
+    t.boolean  "anonymous_group",            default: false
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree

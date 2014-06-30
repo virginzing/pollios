@@ -11,7 +11,7 @@ if @rewards
     json.creator do
       json.member_id reward.campaign.member.id
       json.type reward.campaign.member.member_type_text
-      json.name reward.campaign.member.sentai_name
+      json.name reward.campaign.member.fullname
       json.username reward.campaign.member.username
       json.avatar reward.campaign.member.get_avatar
       json.email reward.campaign.member.email

@@ -21,7 +21,7 @@ class ApnPoll
   end
 
   def member_name
-    member.sentai_name
+    member.fullname
   end
   
   def custom_message

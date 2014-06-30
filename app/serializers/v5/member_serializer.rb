@@ -19,7 +19,7 @@ class V5::MemberSerializer < ActiveModel::Serializer
   end
 
   def name
-    object.sentai_name
+    object.fullname
   end
 
   def username

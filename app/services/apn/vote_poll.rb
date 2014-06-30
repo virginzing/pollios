@@ -12,7 +12,7 @@ class Apn::VotePoll
   end
 
   def member_name
-    @member.sentai_name
+    @member.fullname
   end
 
   def recipient_ids

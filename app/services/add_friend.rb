@@ -15,12 +15,12 @@ class AddFriend
   end
 
   def member_name
-    # member.sentai_name.split(%r{\s}).first
-    member.sentai_name
+    # member.fullname.split(%r{\s}).first
+    member.fullname
   end
 
   def friend_name
-    friend.sentai_name
+    friend.fullname
   end
 
   def custom_message

@@ -17,7 +17,7 @@ class GroupNotification
   end
 
   def member_name
-    member.sentai_name.split(%r{\s}).first
+    member.fullname.split(%r{\s}).first
   end
 
   def group_name

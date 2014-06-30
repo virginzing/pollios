@@ -65,7 +65,7 @@ class Authentication
 
   def member_from_authen
     @member = Member.where(email: email).first_or_create do |member|
-      member.sentai_name = name
+      member.fullname = name
       member.email = email
       member.birthday = birthday
       member.gender = gender.to_i
@@ -108,7 +108,7 @@ class Authentication
   end
 
   def update_member(member)
-      member.update!(sentai_name: member.sentai_name.presence || name, birthday: member.birthday.presence || birthday)
+      member.update!(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday)
   end
 
   def update_member_provider(member_provider)

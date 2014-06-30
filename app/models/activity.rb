@@ -77,7 +77,7 @@ class Activity
         },
         creator: {
           member_id: @poll.member.id,
-          name: @poll.member.sentai_name
+          name: @poll.member.fullname
         },
         authority: check_authority_poll,
         action: ACTION[:vote],
@@ -118,7 +118,7 @@ class Activity
       {
         friend: {
           member_id: @friend.id,
-          name: @friend.sentai_name
+          name: @friend.fullname
         },
         authority: AUTHORITY[:public],
         action: ACTION[:become_friend],
@@ -129,7 +129,7 @@ class Activity
       {
         friend: {
           member_id: @friend.id,
-          name: @friend.sentai_name
+          name: @friend.fullname
         },
         authority: AUTHORITY[:public],
         action: ACTION[:follow],

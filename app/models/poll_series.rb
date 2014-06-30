@@ -24,7 +24,7 @@ class PollSeries < ActiveRecord::Base
   end
 
   def creator 
-    member.as_json(only: [:id, :sentai_name, :avatar])
+    member.as_json(only: [:id, :fullname, :avatar])
   end
 
   def set_poll_series
