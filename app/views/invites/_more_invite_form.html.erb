@@ -1,0 +1,39 @@
+<div class="col-md-10 col-md-offset-1">
+    <%= simple_form_for @company, url: invites_path, method: :post do |f| %>
+      <div class="col col-md-12">
+
+        <legend></legend>
+
+        <div class="exsit_company">
+          <label class="integer optional control-label">Company</label>
+          <div class="current_company">
+            <section>
+              <label class="select" style="width:300px">
+                <%= f.select :company_id, Company.joins(:invite_codes).select("companies.*").uniq.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2 select2_invite', placeholder: "Select a Company"} %>
+              </label>
+            </section>
+          </div>
+        </div>
+        
+        <div class="col col-md-2">
+          <div class="row">
+            <%= f.input :amount_code, as: :integer, label: 'Amount' %>
+          </div>
+        </div>
+
+        <div class="col col-md-12">
+          <div class="row">
+            <%= f.submit "Create Invite", class: 'btn btn-primary' %>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  $('#new_company').parsley();
+  $('.select2_invite').select2({
+    width: '100%',
+    allowClear: true
+  }).addClass('required');
+</script>

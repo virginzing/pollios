@@ -1,7 +1,8 @@
 class InvitesController < ApplicationController
   layout 'admin'
+  skip_before_action :verify_authenticity_token
   before_filter :authenticate_admin!, :redirect_unless_admin
-  before_action :current_admin
+  # before_action :current_admin
   before_action :set_invite_code, only: [:edit, :update, :destroy]
 
   def index

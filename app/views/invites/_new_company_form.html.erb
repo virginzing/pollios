@@ -1,0 +1,33 @@
+<div class="col-md-10 col-md-offset-1">
+    <%= simple_form_for @company, url: invites_path, method: :post do |f| %>
+      <div class="col col-md-12">
+        
+        <legend></legend>
+        
+        <div class="row">
+          <div class="col col-md-8">
+            <%= f.input :name, label: 'Company or Team name', placeholder: 'CodeApp' %>
+          </div>
+          <div class="col col-md-4">
+            <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA' %>
+          </div>
+        </div>
+
+        <div class="col col-md-2">
+          <div class="row">
+            <%= f.input :amount_code, as: :integer, label: 'Amount' %>
+          </div>
+        </div>
+
+        <div class="col col-md-12">
+          <div class="row">
+            <%= f.submit "Create Invite", class: 'btn btn-primary' %>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+$('#new_company').parsley();
+</script>

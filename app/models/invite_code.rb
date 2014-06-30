@@ -3,6 +3,7 @@ class InviteCode < ActiveRecord::Base
   belongs_to :company
   belongs_to :group
 
+
   def self.generate_invite_code
     begin
       code = (@code_prefix + SecureRandom.hex(2)).upcase

@@ -9,87 +9,30 @@
 
 <div class="well">
   <div class="row">
-  <div class="col-md-10 col-md-offset-1">
-      <%= simple_form_for @company, url: invites_path, method: :post do |f| %>
-        <div class="col col-md-12">
-          <div class="row">
-            <div class="form-group">
-              <label class="col-md-2 control-label" for="select-1" style="margin-top: 9px;width: 120px;">Select Method</label>
-              <div class="col-md-10">
-                <select class="form-control" id="select_method">
-                  <option value="1">New Company or Team</option>
-                  <option value="2">Add more invite</option>
-                </select> 
+    <div class="form-group">
+      <label class="col-md-2 control-label" for="select-1" style="margin-top: 9px;width: 120px;">Select Method</label>
+      <div class="col-md-10">
+        <select class="form-control" id="select_method">
+          <option value="1">New Company or Team</option>
+          <option value="2">Add more invite</option>
+        </select> 
 
-              </div>
-            </div>
-          </div>
-          <legend></legend>
-  
-          <div class="new_company_select">
-            <div class="row">
-              <div class="col col-md-8">
-                <%= f.input :name, label: 'Company or Team name', placeholder: 'CodeApp', :required => false %>
-              </div>
-              <div class="col col-md-4">
-                <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA' %>
-              </div>
-            </div>
-          </div>
-
-          <div class="exsit_company">
-            <label class="integer optional control-label">Company</label>
-            <section>
-              <label class="select" style="width:300px">
-                <%= f.select :company_id, Company.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2 select2_invite', placeholder: "Select a Company"} %>
-              </label>
-            </section>
-          </div>
-          
-          <br>
-
-          <div class="col col-md-2">
-            <div class="row">
-              <%= f.input :amount_code, as: :integer, label: 'Amount' %>
-            </div>
-          </div>
-
-          <div class="col col-md-12">
-            <div class="row">
-              <%= f.submit "Create Invite", class: 'btn btn-primary' %>
-            </div>
-          </div>
-      <% end %>
+      </div>
     </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="render_form"></div>
+  </div>
 </div>
 
 <script>
   $('select#select_method').on('change', function() {
     if (this.value == "1") {
-      $('.new_company_select').show();
-      $('.exsit_company').hide();
-      // validate_only_new_company();
+      $('.render_form').html("<%= escape_javascript(render partial: 'new_company_form') %>");
     } else {
-      $('.exsit_company').show();
-      $('.new_company_select').hide();
-      // validate_only_more_invite();
+      $('.render_form').html("<%= escape_javascript(render partial: 'more_invite_form') %>");
     };
-    // document.getElementsByClassName("new_company")[0].reset();
-    $(".select2_invite").select2('val', '');
   });
-
-  $('.exsit_company').hide();
-  // $('#new_company').parsley();
-
-  // document.getElementsByClassName("select2_invite")[0].setAttribute("data-parsley-required", true);
-
-  // function validate_only_more_invite () {
-  //   $('#company_name')[0].setAttribute('data-parsley-required', false);
-  // }
-
-  // function validate_only_new_company () {
-  //   $('#company_name')[0].setAttribute('data-parsley-required', true);
-  // }
+  $('.render_form').html("<%= escape_javascript(render partial: 'new_company_form') %>");
 </script>
