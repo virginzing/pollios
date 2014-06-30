@@ -4,7 +4,7 @@ class Member < ActiveRecord::Base
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
 
-  attr_accessor :fullname
+  # attr_accessor :fullname
   
   cattr_accessor :current_member
 
