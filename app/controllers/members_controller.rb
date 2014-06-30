@@ -32,8 +32,7 @@ class MembersController < ApplicationController
   def update_profile
     respond_to do |format|
 
-      if @current_member.update_attributes!(update_profile_params.except(:member_id, :avatar))
-        @current_member.update_attributes!(sentai_name: update_profile_params[:fullname])
+      if @current_member.update(update_profile_params.except(:member_id, :avatar))
         if update_profile_params[:avatar]
           Member.update_avatar(@current_member, update_profile_params[:avatar])
         end
