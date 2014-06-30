@@ -5,6 +5,8 @@ class Apn::VotePoll
   def initialize(member, poll)
     @member = member
     @poll = poll
+    @is_public = false
+    @in_group = false
   end
 
   def member_id
@@ -21,12 +23,37 @@ class Apn::VotePoll
   
   # allow 170 byte for custom message
   def custom_message
-    if @member.anonymous  ## hide name
-      message = "Someone votes a poll: \"#{@poll.title}\""
-    else
-      message = "#{member_name} votes a poll: \"#{@poll.title}\""
-    end
+    which_poll
+
+    message = "#{fullname_of_voter} votes a poll: \"#{@poll.title}\""
+
     truncate_message(message)
+  end
+
+  def which_poll
+    if @poll.in_group_ids != "0"
+      @in_group = true
+    else
+      if @poll.public
+        @is_public = true
+      end
+    end
+  end
+
+  def fullname_of_voter
+    if @in_group
+      # puts "nowwwww here 1"
+      # puts "#{@member.anonymous_group}"
+      @member.anonymous_group ? 'Someone' : @member.fullname
+    elsif @is_public
+      # puts "nowwwww here 2"
+      # puts "#{@member.anonymous_public}"
+      @member.anonymous_public ? 'Someone' : @member.fullname
+    else
+      # puts "nowwwww here 3"
+      # puts "#{@member.anonymous_friend_following}"
+      @member.anonymous_friend_following ? 'Someone' : @member.fullname
+    end
   end
 
   private

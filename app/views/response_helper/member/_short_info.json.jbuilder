@@ -9,6 +9,7 @@ json.avatar member.get_avatar
 json.cover member.get_cover_image
 json.sync_facebook member.sync_facebook
 json.anonymous_all member.anonymous
+
 json.anonymous do
   json.public member.anonymous_public
   json.friend_following member.anonymous_friend_following
