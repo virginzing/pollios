@@ -28,7 +28,7 @@ module PollHelper
 
   def polls_30_days_ago_chart(start = 1.month.ago)
     (start.to_date..Date.current).map do |date|
-      @query = Poll.unscoped.where("date(created_at) = ?", date).to_a
+      @query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).to_a
       {
         created_at: date,
         count: @query.count,
@@ -40,7 +40,7 @@ module PollHelper
   end
 
   def number_of_polls_created_today_chart
-    query = Poll.unscoped.where("date(created_at) = ?", Date.current).group("date_part('hour', created_at)").count
+    query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", Date.current).group("date_part('hour', created_at)").count
     new_hash = {}
 
     list = (0..23).to_a.map do |e|
