@@ -99,7 +99,7 @@ class PollsController < ApplicationController
 
       PollStats.create_poll_stats(@poll)
       
-      ApnPollWorker.new.perform(current_member.id, @poll) if Rails.env.production?
+      ApnPollWorker.new.perform(current_member, @poll) if Rails.env.production?
       
       # Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'my_poll'])
