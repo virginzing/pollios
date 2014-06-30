@@ -13,7 +13,7 @@
 
     <header>
       <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-      <h2><strong>Number of polls created per hour</strong></h2>          
+      <h2><strong>Number of polls created per hour</strong></h2>
     </header>
 
     <!-- widget div-->
@@ -32,7 +32,7 @@
 
     <header>
       <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-      <h2><strong>Poll created on 30 days ago</strong></h2>          
+      <h2><strong>Poll created on 30 days ago</strong></h2>
     </header>
 
     <!-- widget div-->
@@ -82,7 +82,7 @@
         </div>
     </div>
   </div>
-  
+
   <div class="col-xs-12 col-sm-6 col-md-3">
     <div class="panel panel-darken">
         <div class="panel-heading">
@@ -154,29 +154,29 @@
     <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-popular" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <!-- widget options:
       usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-      
-      data-widget-colorbutton="false" 
+
+      data-widget-colorbutton="false"
       data-widget-editbutton="false"
       data-widget-togglebutton="false"
       data-widget-deletebutton="false"
       data-widget-fullscreenbutton="false"
       data-widget-custombutton="false"
-      data-widget-collapsed="true" 
+      data-widget-collapsed="true"
       data-widget-sortable="false"
-      
+
     -->
     <header>
       <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-      <h2><strong>Poll Popular</strong></h2>          
+      <h2><strong>Poll Popular</strong></h2>
     </header>
 
     <!-- widget div-->
     <div>
-      
+
       <!-- widget content -->
       <div class="widget-body no-padding" style="min-height: 0px;">
         <div class="table-responsive">
-            
+
           <table class="table" style="margin-bottom: 0px;">
             <thead>
               <tr>
@@ -190,7 +190,7 @@
               <tr>
                 <td><%= poll.title %></td>
                 <td><%= poll.vote_all %></td>
-                <td><%= poll.member.sentai_name %></td>
+                <td><%= poll.member.fullname %></td>
               </tr>
               <% end %>
             </tbody>
@@ -199,7 +199,7 @@
         </div>
       </div>
       <!-- end widget content -->
-      
+
     </div>
     <!-- end widget div -->
 
@@ -207,19 +207,19 @@
 
 
   <div class="jarviswidget jarviswidget-color-darken" id="wid-top-voter" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
-    
+
     <header>
       <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-      <h2><strong>Top 10 Voter</strong></h2>          
+      <h2><strong>Top 10 Voter</strong></h2>
     </header>
 
     <!-- widget div-->
     <div>
-      
+
       <!-- widget content -->
       <div class="widget-body no-padding" style="min-height: 0px;">
         <div class="table-responsive">
-            
+
           <table class="table" style="margin-bottom: 0px;">
             <thead>
               <tr>
@@ -232,17 +232,17 @@
               <% @top_voter.each do |member| %>
               <tr>
                 <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
-                <td><%= member.sentai_name %></td>
+                <td><%= member.fullname %></td>
                 <td><%= member.member_vote_count %></td>
               </tr>
               <% end %>
             </tbody>
           </table>
-          
+
         </div>
       </div>
       <!-- end widget content -->
-      
+
     </div>
     <!-- end widget div -->
 

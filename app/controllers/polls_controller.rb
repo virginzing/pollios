@@ -51,7 +51,7 @@ class PollsController < ApplicationController
     flash[:success] = "Re-Generate QRCode"
     respond_to do |wants|
        wants.html { redirect_to polls_path }
-     end 
+     end
   end
 
   def scan_qrcode
@@ -88,19 +88,19 @@ class PollsController < ApplicationController
 
     if @poll.save
       puts "choices => #{@build_poll.list_of_choice}"
-      
+
       @choice = Choice.create_choices(@poll.id, @build_poll.list_of_choice)
 
       @poll.create_tag(@build_poll.title_with_tag)
 
       @poll.create_watched(current_member, @poll.id)
-      
+
       current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
 
       PollStats.create_poll_stats(@poll)
-      
+
       ApnPollWorker.new.perform(current_member, @poll) if Rails.env.production?
-      
+
       # Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'my_poll'])
       Activity.create_activity_poll(current_member, @poll, 'Create')
@@ -143,17 +143,17 @@ class PollsController < ApplicationController
       @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
 
       @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
- 
+
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)
       @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
       @total_entries = @polls.total_entries
     else
       @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
-      
+
       @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
 
       @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
- 
+
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)
       @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
       @total_entries = @polls.total_entries
