@@ -42,16 +42,10 @@ class Apn::VotePoll
 
   def fullname_of_voter
     if @in_group
-      # puts "nowwwww here 1"
-      # puts "#{@member.anonymous_group}"
       @member.anonymous_group ? 'Someone' : @member.fullname
     elsif @is_public
-      # puts "nowwwww here 2"
-      # puts "#{@member.anonymous_public}"
       @member.anonymous_public ? 'Someone' : @member.fullname
     else
-      # puts "nowwwww here 3"
-      # puts "#{@member.anonymous_friend_following}"
       @member.anonymous_friend_following ? 'Someone' : @member.fullname
     end
   end

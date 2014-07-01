@@ -43,10 +43,10 @@ module PollHelper
     query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", Date.current).group("date_part('hour', created_at)").count
     new_hash = {}
 
-    list = (1..24).to_a.map do |e|
+    list = (0..23).to_a.map do |e|
       query.map do |k,v| 
         query_hash = { hours: e, count: v }
-        if (k + 7).to_i == e
+        if k.to_i == e
           new_hash.merge(query_hash)
         else
           new_hash.merge({ hours: e, count: 0 })
