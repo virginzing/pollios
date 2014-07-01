@@ -380,6 +380,8 @@ class Poll < ActiveRecord::Base
 
     convert_expire_date = Time.now + expire_date.to_i.day
 
+    puts "choice => #{choices}"
+
     if group_id.present?
       @set_public = false
     else
@@ -396,7 +398,7 @@ class Poll < ActiveRecord::Base
     @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0)
 
     if @poll.valid? && choices
-      list_choice = choices.split(",")
+      list_choice = choices
       @choices = Choice.create_choices(@poll.id ,list_choice)
 
       if @choices.present?
