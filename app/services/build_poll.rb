@@ -60,6 +60,10 @@ class BuildPoll
     }
   end
 
+  def collect_of_rating
+    
+  end
+
   def list_choices
     if type_poll == "binary"
       @choice_list << @params["choice_one"]

@@ -380,7 +380,7 @@ class Poll < ActiveRecord::Base
 
     convert_expire_date = Time.now + expire_date.to_i.day
 
-    # puts "choice => #{choices}"
+    puts "choice => #{choices}"
 
     if group_id.present?
       @set_public = false
@@ -434,7 +434,8 @@ class Poll < ActiveRecord::Base
   end
 
   def self.get_choice_count(choices)
-    choices.each_value.count
+    # choices.each_value.count
+    choices.split(",").count
   end
 
   def create_tag(title)

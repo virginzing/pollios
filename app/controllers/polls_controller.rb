@@ -89,7 +89,7 @@ class PollsController < ApplicationController
     if @poll.save
       puts "choices => #{@build_poll.list_of_choice}"
 
-      @choice = Choice.create_choices(@poll.id, @build_poll.list_of_choice)
+      @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
       @poll.create_tag(@build_poll.title_with_tag)
 
@@ -289,7 +289,7 @@ class PollsController < ApplicationController
   end
 
   def create_poll
-    @poll = Poll.create_poll(poll_params, @current_member)
+    @poll = Poll.create_poll(params, @current_member)
   end
 
   def share
@@ -375,7 +375,7 @@ class PollsController < ApplicationController
   def poll_params
     # puts "choices => #{params[:choices].try(:keys)}"
     params.permit(:title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, 
-      :type_poll, :is_public, :photo_poll, choices: params[:choices].try(:keys))
+      :type_poll, :is_public, :photo_poll, :choices)
   end
 
   def polls_params

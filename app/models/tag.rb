@@ -14,9 +14,9 @@ class Tag < ActiveRecord::Base
   }
 
   scope :search_autocmp_tags, -> (query) {
+    joins("left join taggings on taggings.tag_id = tags.id").
     where("name LIKE ?", "%#{query}%"). 
     select("tags.*, count(taggings.tag_id) as count").
-    joins(:taggings).
     group("taggings.tag_id, tags.id").
     order("count desc").
     limit(5)

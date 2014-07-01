@@ -1,6 +1,7 @@
+include GzipWithZlib
 class Choice < ActiveRecord::Base
   belongs_to :poll, inverse_of: :choices, touch: true
-
+  
   validates :answer, presence: true
 
   default_scope { order("id asc") }
@@ -12,7 +13,13 @@ class Choice < ActiveRecord::Base
 
 
   def self.create_choices(poll_id ,choices)
-    choices.each_value { |value| create!(poll_id: poll_id, answer: value) }
+    # choices = decompress_zlib(choices)
+    # choices.each_value { |value| create!(poll_id: poll_id, answer: value) }
+    choices.split(",").collect {|e| create!(poll_id: poll_id, answer: e)}
+  end
+
+  def self.create_choices_on_web(poll_id, list_of_choice)
+    list_of_choice.collect! {|e| create!(poll_id: poll_id, answer: e) }
   end
 
   def self.query_choices(choices, expired)
