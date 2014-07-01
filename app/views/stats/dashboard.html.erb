@@ -184,17 +184,17 @@
               <table class="table" style="margin-bottom: 0px;">
                 <thead>
                   <tr>
+                    <th>Creator</th>
                     <th>Title</th>
                     <th>Vote All</th>
-                    <th>Created by</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% @poll_popular.each do |poll| %>
                   <tr>
+                    <td><a href="#" rel="tooltip" data-original-title="<%= poll.member.fullname %>"><%= image_tag(poll.member.get_avatar, size: '50x50') %></a></td>
                     <td><%= poll.title %></td>
                     <td><%= poll.vote_all %></td>
-                    <td><%= poll.member.fullname %></td>
                   </tr>
                   <% end %>
                 </tbody>
@@ -320,3 +320,7 @@
   </div>
 
 </section>
+
+<script type="text/javascript">
+  $('[rel=tooltip]').tooltip();
+</script>
