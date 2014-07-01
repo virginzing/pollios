@@ -11,8 +11,8 @@ class Choice < ActiveRecord::Base
   end
 
 
-  def self.create_choices(poll_id ,list_choice)
-    list_choice.collect! { |answer| create(poll_id: poll_id, answer: answer) }
+  def self.create_choices(poll_id ,choices)
+    choices.each_value { |value| create!(poll_id: poll_id, answer: value) }
   end
 
   def self.query_choices(choices, expired)

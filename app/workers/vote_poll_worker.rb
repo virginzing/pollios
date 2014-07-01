@@ -3,6 +3,7 @@ class VotePollWorker
   include SymbolHash
 
   def perform(member, poll, custom_data = {})
+    anonymous = custom_data[:anonymous]
 
     member_id = member.id
     
@@ -19,7 +20,7 @@ class VotePollWorker
     }
 
     hash_custom = {
-      anonymous: member.anonymous,
+      anonymous: anonymous,
       type: TYPE[:poll],
       action: ACTION[:vote]
     }

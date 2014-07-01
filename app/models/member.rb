@@ -490,6 +490,18 @@ class Member < ActiveRecord::Base
     Template.where(member_id: id).first
   end
 
+  def get_anonymous_with_poll(poll)
+    if poll.in_group_ids != '0'
+      anonymous_group
+    else
+      if poll.public
+        anonymous_public
+      else
+        anonymous_friend_following
+      end
+    end
+  end
+
   # def self.cached_member_of_poll(current_member, member_of_poll)
   #   MemberSerializer.new(member_of_poll, serializer_options: { current_member: current_member }).as_json
   # end
