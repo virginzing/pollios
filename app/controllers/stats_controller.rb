@@ -19,6 +19,10 @@ class StatsController < ApplicationController
     @poll_popular = PollStats.poll_popular
 
     @top_voter = PollStats.top_voter
+
+    @user_create = UserStats.find_celebrity_or_brand
+
+    @top_voted_most = UserStats.top_voted_most
   end
 
   def polls

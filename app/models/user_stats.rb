@@ -52,6 +52,13 @@ class UserStats
     UserStats.where(stats_created_at: Date.current).first_or_create!
   end
 
+  def self.find_celebrity_or_brand(start_date = Date.current)
+    {
+      celebrity: Member.where("date(created_at + interval '7 hour') = ?", start_date).member_type(:celebrity).count,
+      brand: Member.where("date(created_at + interval '7 hour') = ?", start_date).member_type(:brand).count
+    }
+  end
+
   def self.find_stats_user_today
     @user_stats = UserStats.where(stats_created_at: Date.current).first_or_create!
     convert_stats_user_today_to_hash
@@ -80,5 +87,14 @@ class UserStats
       :facebook => user_count["facebook"],
       :sentai => user_count["sentai"]
     }
+  end
+
+  def self.top_voted_most
+    Member.joins(:polls)
+          .where("date(polls.created_at + interval '7 hours' ) = ?", Date.current)
+          .select("members.*, sum(polls.vote_all) as vote_all")
+          .group("members.id")
+          .order("vote_all desc")
+          .limit(10)
   end
 end
