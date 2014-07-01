@@ -91,7 +91,7 @@ class UserStats
 
   def self.top_voted_most
     Member.joins(:polls)
-          .where("date(polls.created_at + interval '7 hours' ) = ?", Date.current)
+          .where("date(polls.created_at + interval '7 hours' ) = ? AND polls.vote_all != 0", Date.current)
           .select("members.*, sum(polls.vote_all) as vote_all, count(polls.member_id) as poll_count")
           .group("members.id")
           .order("vote_all desc")
