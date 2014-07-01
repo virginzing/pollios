@@ -64,7 +64,7 @@ class PollStats
   end
 
   def self.poll_popular
-    Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order("vote_all desc").limit(5)
+    Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order("vote_all desc").limit(10)
   end
 
   def self.top_voter
