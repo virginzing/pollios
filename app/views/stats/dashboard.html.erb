@@ -289,6 +289,7 @@
                     <th>Avatar</th>
                     <th>Name</th>
                     <th>Vote count</th>
+                    <th>Poll count</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -297,6 +298,7 @@
                     <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
                     <td><%= member.fullname %></td>
                     <td><%= member.vote_all %></td>
+                    <td><%= member.poll_count %></td>
                   </tr>
                   <% end %>
                 </tbody>

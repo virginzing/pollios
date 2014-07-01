@@ -92,7 +92,7 @@ class UserStats
   def self.top_voted_most
     Member.joins(:polls)
           .where("date(polls.created_at + interval '7 hours' ) = ?", Date.current)
-          .select("members.*, sum(polls.vote_all) as vote_all")
+          .select("members.*, sum(polls.vote_all) as vote_all, count(polls.member_id) as poll_count")
           .group("members.id")
           .order("vote_all desc")
           .limit(10)
