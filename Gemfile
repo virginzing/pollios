@@ -39,7 +39,7 @@ end
 
 group :development do
   # gem 'sqlite3'
-  gem 'thin'
+  # gem 'thin'
   gem 'quiet_assets'
   gem 'faker'
 end

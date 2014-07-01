@@ -1,5 +1,6 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  protect_from_forgery :except => [:create_poll]
 
   before_action :set_current_member, only: [:report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
@@ -375,7 +376,7 @@ class PollsController < ApplicationController
   def poll_params
     # puts "choices => #{params[:choices].try(:keys)}"
     params.permit(:title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, 
-      :type_poll, :is_public, :photo_poll, :choices)
+      :type_poll, :is_public, :photo_poll, :choices => [])
   end
 
   def polls_params

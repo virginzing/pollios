@@ -15,7 +15,7 @@ class Choice < ActiveRecord::Base
   def self.create_choices(poll_id ,choices)
     # choices = decompress_zlib(choices)
     # choices.each_value { |value| create!(poll_id: poll_id, answer: value) }
-    choices.split(",").collect {|e| create!(poll_id: poll_id, answer: e)}
+    choices.collect {|e| create!(poll_id: poll_id, answer: e)}
   end
 
   def self.create_choices_on_web(poll_id, list_of_choice)

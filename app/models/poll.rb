@@ -375,7 +375,9 @@ class Poll < ActiveRecord::Base
     is_public = poll[:is_public]
     photo_poll = poll[:photo_poll]
 
-    choice_count = get_choice_count(poll[:choices])
+    choices = check_type_of_choice(choices)
+
+    choice_count = get_choice_count(choices)
     in_group_ids = group_id.present? ? group_id : "0"
 
     convert_expire_date = Time.now + expire_date.to_i.day
@@ -429,13 +431,20 @@ class Poll < ActiveRecord::Base
     @poll
   end
 
+  def self.check_type_of_choice(choices)
+    unless choices.class == Array
+      choices = choices.split(",")
+    end
+    choices
+  end
+
   def create_watched(member, poll_id)
     WatchPoll.new(member, poll_id).watching
   end
 
   def self.get_choice_count(choices)
     # choices.each_value.count
-    choices.split(",").count
+    choices.count
   end
 
   def create_tag(title)
