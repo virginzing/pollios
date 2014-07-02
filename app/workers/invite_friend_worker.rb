@@ -20,7 +20,8 @@ class InviteFriendWorker
 
     hash_custom = {
       type: TYPE[:group],
-      action: ACTION[:invite]
+      action: ACTION[:invite],
+      group: group.as_json()
     }
 
     device_ids.each do |device_id|

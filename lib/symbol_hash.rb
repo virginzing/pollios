@@ -3,7 +3,8 @@ module SymbolHash
   TYPE = {
     :poll => 'Poll',
     :friend => 'Friend',
-    :group => 'Group'
+    :group => 'Group',
+    :member => 'Member'
   }
 
   ACTION = {
@@ -14,7 +15,9 @@ module SymbolHash
     :follow => 'Follow',
     :join => 'Join',
     :invite => 'Invite',
-    :request => 'Request'
+    :request => 'Request',
+    :change_name => 'ChangeName',
+    :chnage_avatar => 'ChangeAvatar'
   }
 
   AUTHORITY = {

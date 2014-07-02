@@ -22,7 +22,11 @@ class VotePollWorker
     hash_custom = {
       anonymous: anonymous,
       type: TYPE[:poll],
-      action: ACTION[:vote]
+      action: ACTION[:vote],
+      poll: {
+        id: poll.id,
+        title: poll.title
+      }
     }
 
     device_ids.each do |device_id|

@@ -15,15 +15,13 @@ class Activity
     @poll = poll
     @action = action
 
-    hash_activity = manange_action_with_poll
+    @hash_activity = manange_action_with_poll
 
-    find_activity = member_find_by_activity
+    @find_activity = member_find_by_activity
 
-    old_activity = find_activity.items
-    new_activity = old_activity.insert(0, hash_activity)
-    find_activity.update!(items: new_activity)
+    update_activity
 
-    find_activity
+    @find_activity
   end
 
   def self.create_activity_friend(member, friend, action)
@@ -31,15 +29,13 @@ class Activity
     @friend = friend
     @action = action
 
-    hash_activity = manange_action_with_friend
+    @hash_activity = manange_action_with_friend
 
-    find_activity = member_find_by_activity
+    @find_activity = member_find_by_activity
 
-    old_activity = find_activity.items
-    new_activity = old_activity.insert(0, hash_activity)
-    find_activity.update!(items: new_activity)
+    update_activity
 
-    find_activity
+    @find_activity
   end
 
   def self.create_activity_group(member, group, action)
@@ -47,15 +43,26 @@ class Activity
     @group = group
     @action = action
 
-    hash_activity = manage_action_with_group
+    @hash_activity = manage_action_with_group
 
-    find_activity = member_find_by_activity
+    @find_activity = member_find_by_activity
 
-    old_activity = find_activity.items
-    new_activity = old_activity.insert(0, hash_activity)
-    find_activity.update!(items: new_activity)
+    update_activity
 
-    find_activity
+    @find_activity
+  end
+
+  def self.create_activity_my_self(member, action)
+    @member = member
+    @action = action
+
+    @hash_activity = manage_action_my_self
+
+    @find_activity = member_find_by_activity
+
+    update_activity
+
+    @find_activity
   end
 
   def self.member_find_by_activity
@@ -64,6 +71,12 @@ class Activity
       member_activity = create!(member_id: @member.id, items: [])
     end
     member_activity
+  end
+
+  def self.update_activity
+    old_activity = @find_activity.items
+    new_activity = old_activity.insert(0, @hash_activity)
+    @find_activity.update!(items: new_activity)
   end
 
   def self.manange_action_with_poll
@@ -148,6 +161,37 @@ class Activity
         },
         action: ACTION[:join],
         type: TYPE[:group],
+        activity_at: Time.zone.now.to_i
+      }
+    end
+  end
+
+  def self.manage_action_my_self
+    action_change_name = ACTION[:change_name]
+    action_change_avatar = ACTION[:chnage_avatar]
+    type_member = TYPE[:member]
+
+    if @action == action_change_name
+      {
+        member: {
+          id: @member.id,
+          name: @member.fullname
+        },
+        action: action_change_name,
+        type: type_member,
+        authority: AUTHORITY[:friend_following],
+        activity_at: Time.zone.now.to_i
+      }
+    else
+      {
+        member: {
+          id: @member.id,
+          name: @member.fullname,
+          avatar: @member.get_avatar
+        },
+        action: action_change_avatar,
+        type: type_member,
+        authority: AUTHORITY[:friend_following],
         activity_at: Time.zone.now.to_i
       }
     end

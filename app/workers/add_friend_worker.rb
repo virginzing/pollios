@@ -2,9 +2,10 @@ class AddFriendWorker
   include Sidekiq::Worker
   include SymbolHash
   
-  def perform(member_id, friend_id, opitons = {})
+  def perform(member_id, friend_id, options = {})
+    action = options[:action]
 
-    @add_friend = AddFriend.new(member_id, friend_id, opitons)
+    @add_friend = AddFriend.new(member_id, friend_id, options)
 
     recipient_id = @add_friend.recipient_id
 
@@ -14,6 +15,11 @@ class AddFriendWorker
 
     @custom_properties = { 
       type: TYPE[:friend]
+    }
+
+    hash_custom = {
+      type: TYPE[:friend],
+      action: action
     }
 
     device_ids.each do |device_id|
@@ -27,7 +33,7 @@ class AddFriendWorker
     end
 
     find_recipient.each do |member|
-      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @add_friend.custom_message, custom_properties: @custom_properties)
+      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @add_friend.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications
