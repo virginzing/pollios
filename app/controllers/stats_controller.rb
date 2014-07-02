@@ -22,7 +22,7 @@ class StatsController < ApplicationController
       @top_voter = PollStats.top_voter
       @poll_per_hour = PollStats.poll_per_hour
     elsif filtering == 'yesterday'
-      date = Date.current - 1
+      @poll_per_hour = PollStats.poll_per_hour(Date.current - 1.day)
       @user_create = UserStats.find_celebrity_or_brand_yesterday
       @top_voted_most = PollStats.top_voted_most_yerterday
       @poll_popular = PollStats.poll_popular_yesterday

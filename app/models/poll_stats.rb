@@ -55,9 +55,9 @@ class PollStats
     new_amount_poll
   end
 
-  def self.poll_per_hour
+  def self.poll_per_hour(date = Date.current)
     new_hash = {}
-    @hash_poll = Poll.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
+    @hash_poll = Poll.where(created_at: (date).beginning_of_day..(date).end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
       new_hash.merge!({ k => v.size })
     end
     new_hash
@@ -89,8 +89,10 @@ class PollStats
   def self.filter_by(filtering)
     if filtering == 'today' 
       find_stats_poll_today
+    elsif filtering == 'yesterday'
+      find_stats_poll_yesterday
     else
-      find_stats_poll_by(filtering)
+      find_stats_poll_total
     end
   end
 
@@ -100,18 +102,19 @@ class PollStats
 
   def self.find_stats_poll_today
     @poll_stats = PollStats.where(stats_created_at: Date.current).first_or_create!
-    convert_stats_poll_today_to_hash
+    convert_stats_poll_to_hash
   end
 
-  def self.find_stats_poll_by(condition)
-    if condition == 'total'
-      split(Poll.all.to_a)
-    else
-      find_stats_poll_today
-    end
+  def self.find_stats_poll_yesterday
+    @poll_stats = PollStats.where(stats_created_at: Date.current - 1.day).first_or_create!
+    convert_stats_poll_to_hash
   end
 
-  def self.convert_stats_poll_today_to_hash
+  def self.find_stats_poll_total
+    split(Poll.all.to_a)
+  end
+
+  def self.convert_stats_poll_to_hash
     {
       :amount => @poll_stats.amount_poll,
       :public => @poll_stats.public_count,

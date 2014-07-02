@@ -58,6 +58,8 @@ class VoteStats
   def self.filter_by(filtering)
     if filtering == 'today' 
       find_stats_vote_today
+    elsif filtering == 'yesterday'
+      find_stats_vote_yesterday
     else
       find_stats_vote_by(filtering)
     end
@@ -69,7 +71,12 @@ class VoteStats
 
   def self.find_stats_vote_today
     @vote_stats = VoteStats.where(stats_created_at: Date.current).first_or_create!
-    convert_stats_vote_today_to_hash
+    convert_stats_vote_to_hash
+  end
+
+  def self.find_stats_vote_yesterday
+    @vote_stats = VoteStats.where(stats_created_at: Date.current - 1.day).first_or_create!
+    convert_stats_vote_to_hash
   end
 
   def self.find_stats_vote_by(condition)
@@ -80,7 +87,7 @@ class VoteStats
     end
   end
 
-  def self.convert_stats_vote_today_to_hash
+  def self.convert_stats_vote_to_hash
     {
       :amount => @vote_stats.amount_vote,
       :public => @vote_stats.public_count,

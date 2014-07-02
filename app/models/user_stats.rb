@@ -46,7 +46,7 @@ class UserStats
     elsif filtering == 'yesterday'
       find_stats_user_yesterday
     else
-      find_stats_user_by(filtering)
+      find_stats_user_total
     end
   end
 
@@ -85,12 +85,8 @@ class UserStats
     convert_stats_user_to_hash
   end
 
-  def self.find_stats_user_by(condition)
-    if condition == 'total'
-      split(Provider.select("member_id").distinct)
-    else
-      find_stats_user_today
-    end
+  def self.find_stats_user_total
+    split(Provider.select("member_id").distinct)
   end
 
   def self.convert_stats_user_to_hash
