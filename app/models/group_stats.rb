@@ -27,12 +27,12 @@ class GroupStats
   end
 
   def self.filter_by(filtering)
-    if filtering == 'today' 
-      find_stats_group_today
+    if filtering == 'total' 
+      split(Group.all.to_a)
     elsif filtering == 'yesterday'
       find_stats_group_yesterday
     else
-      find_stats_group_by(filtering)
+      find_stats_group_today
     end
   end
 
@@ -48,14 +48,6 @@ class GroupStats
   def self.find_stats_group_yesterday
     @group_stats = GroupStats.where(stats_created_at: Date.current - 1.day).first_or_create!
     convert_stats_group_to_hash
-  end
-
-  def self.find_stats_group_by(condition)
-    if condition == 'today'
-      find_stats_group_today
-    else
-      split(Group.all.to_a)
-    end
   end
 
   def self.convert_stats_group_to_hash

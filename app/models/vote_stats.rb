@@ -56,12 +56,12 @@ class VoteStats
   end
 
   def self.filter_by(filtering)
-    if filtering == 'today' 
-      find_stats_vote_today
+    if filtering == 'total' 
+      split(HistoryVote.joins(:poll))
     elsif filtering == 'yesterday'
       find_stats_vote_yesterday
     else
-      find_stats_vote_by(filtering)
+      find_stats_vote_today
     end
   end
 
@@ -77,14 +77,6 @@ class VoteStats
   def self.find_stats_vote_yesterday
     @vote_stats = VoteStats.where(stats_created_at: Date.current - 1.day).first_or_create!
     convert_stats_vote_to_hash
-  end
-
-  def self.find_stats_vote_by(condition)
-    if condition == 'total'
-      split(HistoryVote.joins(:poll))
-    else
-      find_stats_vote_today
-    end
   end
 
   def self.convert_stats_vote_to_hash

@@ -41,12 +41,12 @@ class UserStats
   end
 
   def self.filter_by(filtering)
-    if filtering == 'today' 
-      find_stats_user_today
+    if filtering == 'total' 
+      find_stats_user_total
     elsif filtering == 'yesterday'
       find_stats_user_yesterday
     else
-      find_stats_user_total
+      find_stats_user_today
     end
   end
 

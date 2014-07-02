@@ -15,12 +15,11 @@ class StatsController < ApplicationController
     @user_stats = UserStats.filter_by(filtering)
     @group_stats = GroupStats.filter_by(filtering)
     
-    if filtering == 'today'
-      @user_create = UserStats.find_celebrity_or_brand
-      @top_voted_most = PollStats.top_voted_most
-      @poll_popular = PollStats.poll_popular
-      @top_voter = PollStats.top_voter
-      @poll_per_hour = PollStats.poll_per_hour
+    if filtering == 'total'
+      @user_create = UserStats.find_celebrity_or_brand_total
+      @top_voted_most = PollStats.top_voted_most_total
+      @poll_popular = PollStats.poll_popular_total
+      @top_voter = PollStats.top_voter_total
     elsif filtering == 'yesterday'
       @poll_per_hour = PollStats.poll_per_hour(Date.current - 1.day)
       @user_create = UserStats.find_celebrity_or_brand_yesterday
@@ -28,10 +27,11 @@ class StatsController < ApplicationController
       @poll_popular = PollStats.poll_popular_yesterday
       @top_voter = PollStats.top_voter_yesterday
     else
-      @user_create = UserStats.find_celebrity_or_brand_total
-      @top_voted_most = PollStats.top_voted_most_total
-      @poll_popular = PollStats.poll_popular_total
-      @top_voter = PollStats.top_voter_total
+      @user_create = UserStats.find_celebrity_or_brand
+      @top_voted_most = PollStats.top_voted_most
+      @poll_popular = PollStats.poll_popular
+      @top_voter = PollStats.top_voter
+      @poll_per_hour = PollStats.poll_per_hour
     end
 
   end

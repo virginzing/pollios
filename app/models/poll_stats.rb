@@ -87,12 +87,12 @@ class PollStats
 
 
   def self.filter_by(filtering)
-    if filtering == 'today' 
-      find_stats_poll_today
+    if filtering == 'total' 
+      find_stats_poll_total
     elsif filtering == 'yesterday'
       find_stats_poll_yesterday
     else
-      find_stats_poll_total
+      find_stats_poll_today
     end
   end
 
