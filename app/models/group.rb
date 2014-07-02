@@ -84,12 +84,14 @@ class Group < ActiveRecord::Base
       
       Rails.cache.delete([member_id, 'group_active'])
       
-      add_friend_to_group(@group.id, member_id, friend_id) if friend_id
+      add_friend_to_group(@group.id, member, friend_id) if friend_id
     end
     @group
   end
 
-  def self.add_friend_to_group(group_id, member_id, friend)
+  def self.add_friend_to_group(group_id, member, friend)
+    member_id = member.id
+    
     list_friend = friend.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group_id)
     find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
@@ -100,7 +102,7 @@ class Group < ActiveRecord::Base
         Member.where(id: check_valid_friend).each do |friend|
           @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         end
-        InviteFriendWorker.new.perform(member_id, list_friend, @group_member.group)
+        InviteFriendWorker.new.perform(member, list_friend, @group_member.group)
         @group_member.group
       end
     end

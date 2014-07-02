@@ -1,7 +1,7 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification]
+  before_action :set_current_member, only: [:my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
   before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
   before_action :history_voted_viewed, only: [:poll_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
@@ -19,7 +19,7 @@ class GroupController < ApplicationController
   end
 
   def add_friend_to_group
-    @group = Group.add_friend_to_group(group_params[:id], group_params[:member_id], group_params[:friend_id])
+    @group = Group.add_friend_to_group(group_params[:id], @current_member, group_params[:friend_id])
   end
 
   def accept_group
