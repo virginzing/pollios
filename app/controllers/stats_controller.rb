@@ -15,14 +15,25 @@ class StatsController < ApplicationController
     @user_stats = UserStats.filter_by(filtering)
     @group_stats = GroupStats.filter_by(filtering)
     
-    @poll_per_hour = PollStats.poll_per_hour
-    @poll_popular = PollStats.poll_popular
+    if filtering == 'today'
+      @user_create = UserStats.find_celebrity_or_brand
+      @top_voted_most = PollStats.top_voted_most
+      @poll_popular = PollStats.poll_popular
+      @top_voter = PollStats.top_voter
+      @poll_per_hour = PollStats.poll_per_hour
+    elsif filtering == 'yesterday'
+      date = Date.current - 1
+      @user_create = UserStats.find_celebrity_or_brand_yesterday
+      @top_voted_most = PollStats.top_voted_most_yerterday
+      @poll_popular = PollStats.poll_popular_yesterday
+      @top_voter = PollStats.top_voter_yesterday
+    else
+      @user_create = UserStats.find_celebrity_or_brand_total
+      @top_voted_most = PollStats.top_voted_most_total
+      @poll_popular = PollStats.poll_popular_total
+      @top_voter = PollStats.top_voter_total
+    end
 
-    @top_voter = PollStats.top_voter
-
-    @user_create = UserStats.find_celebrity_or_brand
-
-    @top_voted_most = UserStats.top_voted_most
   end
 
   def polls

@@ -1,0 +1,152 @@
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-popular" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+          <h2><strong>Poll Popular</strong></h2>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+          <!-- widget content -->
+          <div class="widget-body no-padding" style="min-height: 0px;">
+            <div class="table-responsive">
+
+              <table class="table" style="margin-bottom: 0px;">
+                <thead>
+                  <tr>
+                    <th>Creator</th>
+                    <th>Title</th>
+                    <th>Vote All</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @poll_popular.each do |poll| %>
+                  <tr>
+                    <td><a href="#" rel="tooltip" data-original-title="<%= poll.member.fullname %>"><%= image_tag(poll.member.get_avatar, size: '50x50') %></a></td>
+                    <td><%= poll.title %></td>
+                    <td><%= poll.vote_all %></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+          <!-- end widget content -->
+
+        </div>
+        <!-- end widget div -->
+
+      </div>
+    </div>
+
+    <div class="col col-md-6">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-top-voter" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+
+        <header>
+          <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+          <h2><strong>Top 10 Voter</strong></h2>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+          <!-- widget content -->
+          <div class="widget-body no-padding" style="min-height: 0px;">
+            <div class="table-responsive">
+
+              <table class="table" style="margin-bottom: 0px;">
+                <thead>
+                  <tr>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Vote count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @top_voter.each do |member| %>
+                  <tr>
+                    <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
+                    <td><%= member.fullname %></td>
+                    <td><%= member.member_vote_count %></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+          <!-- end widget content -->
+
+        </div>
+        <!-- end widget div -->
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-creator-voted-most" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+        <!-- widget options:
+          usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+          data-widget-colorbutton="false"
+          data-widget-editbutton="false"
+          data-widget-togglebutton="false"
+          data-widget-deletebutton="false"
+          data-widget-fullscreenbutton="false"
+          data-widget-custombutton="false"
+          data-widget-collapsed="true"
+          data-widget-sortable="false"
+
+        -->
+        <header>
+          <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+          <h2><strong>Creator voted most</strong></h2>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+          <!-- widget content -->
+          <div class="widget-body no-padding" style="min-height: 0px;">
+            <div class="table-responsive">
+
+              <table class="table" style="margin-bottom: 0px;">
+                <thead>
+                  <tr>
+                    <th>Avatar</th>
+                    <th>Name</th>
+                    <th>Vote count</th>
+                    <th>Poll count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @top_voted_most.each do |member| %>
+                  <tr>
+                    <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
+                    <td><%= member.fullname %></td>
+                    <td><%= member.vote_all %></td>
+                    <td><%= member.poll_count %></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+          <!-- end widget content -->
+
+        </div>
+        <!-- end widget div -->
+
+      </div>
+    </div>
+
+    <div class="col col-md-6">
+
+    </div>
+  </div>

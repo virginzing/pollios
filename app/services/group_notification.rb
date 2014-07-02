@@ -9,7 +9,7 @@ class GroupNotification
   end
 
   def group_member_ids
-    group.get_member_open_notification.collect(&:id).flatten
+    group.get_member_open_notification.collect(&:id).flatten - [member_id]
   end
 
   def recipient_ids

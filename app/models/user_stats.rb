@@ -43,6 +43,8 @@ class UserStats
   def self.filter_by(filtering)
     if filtering == 'today' 
       find_stats_user_today
+    elsif filtering == 'yesterday'
+      find_stats_user_yesterday
     else
       find_stats_user_by(filtering)
     end
@@ -59,9 +61,28 @@ class UserStats
     }
   end
 
+  def self.find_celebrity_or_brand_total
+    {
+      celebrity: Member.member_type(:celebrity).count,
+      brand: Member.member_type(:brand).count
+    }  
+  end
+
+  def self.find_celebrity_or_brand_yesterday
+    {
+      celebrity: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:celebrity).count,
+      brand: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:brand).count 
+    }
+  end
+
+  def self.find_stats_user_yesterday
+    @user_stats = UserStats.where(stats_created_at: Date.current - 1.day).first_or_create!
+    convert_stats_user_to_hash
+  end
+
   def self.find_stats_user_today
     @user_stats = UserStats.where(stats_created_at: Date.current).first_or_create!
-    convert_stats_user_today_to_hash
+    convert_stats_user_to_hash
   end
 
   def self.find_stats_user_by(condition)
@@ -72,7 +93,7 @@ class UserStats
     end
   end
 
-  def self.convert_stats_user_today_to_hash
+  def self.convert_stats_user_to_hash
     {
       :amount => @user_stats.amount_user,
       :facebook => @user_stats.via_facebook,
@@ -87,14 +108,5 @@ class UserStats
       :facebook => user_count["facebook"],
       :sentai => user_count["sentai"]
     }
-  end
-
-  def self.top_voted_most
-    Member.joins(:polls)
-          .where("date(polls.created_at + interval '7 hours' ) = ? AND polls.vote_all != 0", Date.current)
-          .select("members.*, sum(polls.vote_all) as vote_all, count(polls.member_id) as poll_count")
-          .group("members.id")
-          .order("vote_all desc")
-          .limit(10)
   end
 end
