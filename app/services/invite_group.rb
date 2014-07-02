@@ -15,7 +15,7 @@ class InviteGroup
   end
 
   def member_name
-    member.fullname.split(%r{\s}).first
+    member.fullname
   end
 
   def group_name
@@ -23,7 +23,7 @@ class InviteGroup
   end
 
   def custom_message
-    message = member_name + " invited you to the " + group_name
+    message = "#{member_name} invited you in: \"#{group_name}\""
     truncate_message(message)
   end
 

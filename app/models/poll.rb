@@ -412,7 +412,7 @@ class Poll < ActiveRecord::Base
           Group.add_poll(@poll.id, group_id)
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
           # GroupNotificationWorker.perform_async(member_id, group_id, @poll.title)
-          GroupNotificationWorker.new.perform(member_id, group_id, @poll) if Rails.env.production?
+          GroupNotificationWorker.new.perform(member_id, group_id, @poll)
         else
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
           ApnPollWorker.new.perform(member, @poll)

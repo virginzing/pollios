@@ -25,7 +25,7 @@ class ApnPoll
   end
   
   def custom_message
-    message = member_name + " added a new poll: " + @poll.title
+    message = "#{member_name} added a new poll: \"#{@poll.title}\""
     truncate_message(message)
   end
 

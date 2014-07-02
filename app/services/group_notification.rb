@@ -17,15 +17,16 @@ class GroupNotification
   end
 
   def member_name
-    member.fullname.split(%r{\s}).first
+    member.fullname
   end
 
   def group_name
-    truncate(group.name, length: 10)
+    # truncate(group.name, length: 10)
+    group.name
   end
 
   def custom_message
-    message = member_name + " asked " + @poll.title + " in " + group_name
+    message = "#{member_name} asked in #{group_name}: \"#{@poll.title}\""
     truncate_message(message)
   end
 
