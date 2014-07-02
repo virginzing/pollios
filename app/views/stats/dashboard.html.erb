@@ -173,8 +173,8 @@
               </div>
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:facebook]) %> <strong> via Facebook</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:sentai]) %> <strong> via Sentai</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:facebook] || 0) %> <strong> via Facebook</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:sentai] || 0) %> <strong> via Sentai</strong></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:citizen]) %> <strong> via Citizen</strong></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:celebrity]) %> <strong> Celebrity</strong></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:brand]) %> <strong> Brand</strong></li>

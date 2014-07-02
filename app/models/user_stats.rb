@@ -44,7 +44,7 @@ class UserStats
     if filtering == 'total' 
       find_stats_user_total
     elsif filtering == 'yesterday'
-      find_stats_user_yesterday
+      find_stats_user(Date.current - 1.day, Date.current - 1.day)
     elsif filtering == 'week'
       find_stats_user(7.days.ago.to_date)
     elsif filtering == 'month'
@@ -76,6 +76,7 @@ class UserStats
 
   def self.find_celebrity_or_brand_yesterday
     {
+      citizen: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:citizen).count,
       celebrity: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:celebrity).count,
       brand: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:brand).count 
     }
@@ -96,7 +97,7 @@ class UserStats
   end
 
   def self.find_stats_user(end_date, start_date = Date.current)
-    query = Provider.joins(:member).select("providers.member_id").where("date(members.created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date)
+    query = Provider.includes(:member).select("member_id").uniq.where("date(members.created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date).references(:member)
     split(query)
   end
 
@@ -109,7 +110,7 @@ class UserStats
   end
 
   def self.split(list_of_user)
-    user_count ||= Provider.select("member_id").distinct.group("name").count
+    user_count ||= list_of_user.group("name").count
     {
       :amount => list_of_user.count,
       :facebook => user_count["facebook"],

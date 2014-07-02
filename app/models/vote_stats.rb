@@ -59,7 +59,7 @@ class VoteStats
     if filtering == 'total' 
       split(HistoryVote.joins(:poll))
     elsif filtering == 'yesterday'
-      find_stats_vote_yesterday
+      find_stats_vote(Date.current - 1.day, Date.current - 1.day)
     elsif filtering == 'week'
       find_stats_vote(7.days.ago.to_date)
     elsif filtering == 'month'
