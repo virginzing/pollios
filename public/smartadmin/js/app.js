@@ -1451,16 +1451,16 @@ function dataTable() {
 }
 
 function graphStatsDashboard() {
-	$.poll_created_30_days_ago_chart = $("#poll_created_30_days_ago_chart").length;
+	$.polls_ago_chart = $("#polls_ago_chart").length;
 	$.poll_created_today_chart = $("#number_of_polls_created_today_chart").length;
 
-	if ($.poll_created_30_days_ago_chart) {
+	if ($.polls_ago_chart) {
 	  new Morris.Bar({
 	    // ID of the element in which to draw the chart.
-	    element: 'poll_created_30_days_ago_chart',
+	    element: 'polls_ago_chart',
 	    // Chart data records -- each entry in this array corresponds to a point on
 	    // the chart.
-	    data: $('#poll_created_30_days_ago_chart').data('polls'),
+	    data: $('#polls_ago_chart').data('polls'),
 	    // The name of the data record attribute that contains x-values.
 	    xkey: 'created_at',
 	    // A list of names of data record attributes that contain y-values.

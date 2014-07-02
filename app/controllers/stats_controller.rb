@@ -26,12 +26,22 @@ class StatsController < ApplicationController
       @top_voted_most = PollStats.top_voted_most_yerterday
       @poll_popular = PollStats.poll_popular_yesterday
       @top_voter = PollStats.top_voter_yesterday
+    elsif filtering == 'week'
+      @user_create = UserStats.find_celebrity_or_brand(7.days.ago.to_date)
+      @top_voted_most = PollStats.top_voted_most(7.days.ago.to_date)
+      @poll_popular = PollStats.poll_popular(7.days.ago.to_date)
+      @top_voter = PollStats.top_voter(7.days.ago.to_date)
+    elsif filtering == 'month'
+      @user_create = UserStats.find_celebrity_or_brand(30.days.ago.to_date)
+      @top_voted_most = PollStats.top_voted_most(30.days.ago.to_date)
+      @poll_popular = PollStats.poll_popular(30.days.ago.to_date)
+      @top_voter = PollStats.top_voter(30.days.ago.to_date)
     else
-      @user_create = UserStats.find_celebrity_or_brand
-      @top_voted_most = PollStats.top_voted_most
-      @poll_popular = PollStats.poll_popular
-      @top_voter = PollStats.top_voter
+      @user_create = UserStats.find_celebrity_or_brand(Date.current)
       @poll_per_hour = PollStats.poll_per_hour
+      @top_voted_most = PollStats.top_voted_most(Date.current)
+      @poll_popular = PollStats.poll_popular(Date.current)
+      @top_voter = PollStats.top_voter(Date.current)
     end
 
   end

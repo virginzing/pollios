@@ -7,152 +7,187 @@
   </div>
 </div>
 
-<div class="jarviswidget jarviswidget-color-darken" id="wid-poll-graph" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
 
   <% if params[:filter_by] == "today" || params[:filter_by].nil? || params[:filter_by] == "yesterday" %>
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-per-hour" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+      <header>
+        <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+        <h2><strong>Number of polls created per hour</strong></h2>
+      </header>
 
-    <header>
-      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-      <h2><strong>Number of polls created per hour</strong></h2>
-    </header>
-
-    <!-- widget div-->
-    <div>
-      <div class="widget-body" style="min-height: 0px;">
-        <% if number_of_polls_created_today_chart(params[:filter_by]).present? %>
-          <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart(params[:filter_by]) } %>
+      <!-- widget div-->
+      <div>
+        <div class="widget-body" style="min-height: 0px;">
+          <% if number_of_polls_created_today_chart(params[:filter_by]).present? %>
+            <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart(params[:filter_by]) } %>
+          <% else %>
+            <h3>No have information of poll created per hour.</h3>
+          <% end %>
+        </div>
+      </div>
+      <!-- end widget div -->
+    </div>
+  <% elsif params[:filter_by] == "month" %>
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+      <header>
+        <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+        <h2><strong>Poll created on 30 days ago</strong></h2>
+      </header>
+      
+      <!-- widget div-->
+      <div>
+        <div class="widget-body" style="min-height: 0px;">
+        <% if polls_ago_chart(1.month.ago).present? %>
+          <%= content_tag :div, "", id: 'polls_ago_chart', data: { polls: polls_ago_chart(1.month.ago) } %>
         <% else %>
-          <h3>No have information of poll created per hour.</h3>
+          <h3>No have information of poll created 30 days ago.</h3>
         <% end %>
+        </div>
       </div>
+      <!-- end widget div -->
     </div>
-    <!-- end widget div -->
-
-  <% elsif params[:filter_by] == "total" %>
-
-    <header>
-      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
-      <h2><strong>Poll created on 30 days ago</strong></h2>
-    </header>
-
-    <!-- widget div-->
-    <div>
-      <div class="widget-body" style="min-height: 0px;">
-      <% if polls_30_days_ago_chart.present? %>
-        <%= content_tag :div, "", id: 'poll_created_30_days_ago_chart', data: { polls: polls_30_days_ago_chart } %>
-      <% else %>
-        <h3>No have information of poll created 30 days ago.</h3>
-      <% end %>
+  <% elsif params[:filter_by] == 'week' %>
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+      <header>
+        <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+        <h2><strong>Poll created on 7 days ago</strong></h2>
+      </header>
+      
+      <!-- widget div-->
+      <div>
+        <div class="widget-body" style="min-height: 0px;">
+        <% if polls_ago_chart(7.days.ago).present? %>
+          <%= content_tag :div, "", id: 'polls_ago_chart', data: { polls: polls_ago_chart(7.days.ago) } %>
+        <% else %>
+          <h3>No have information of poll created 7 days ago.</h3>
+        <% end %>
+        </div>
       </div>
+      <!-- end widget div -->
     </div>
-    <!-- end widget div -->
+  <% elsif params[:filter_by] == 'total' %>
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-total" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+      <header>
+        <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+        <h2><strong>Total Poll</strong></h2>
+      </header>
+      
+      <!-- widget div-->
+      <div>
+        <div class="widget-body" style="min-height: 0px;">
+          <h3>No imprement yet.</h3>
+        </div>
+      </div>
+      <!-- end widget div -->
+    </div>
   <% end %>
 
-</div>
 
 
-<div class="row">
-  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-    <h1 class="page-title txt-color-blueDark">
-    <i class="fa-fw fa fa-file-o"></i> Stats Dashboard <span>&gt;
-      <b><%= params[:filter_by].presence || 'today' %></b></span></h1>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col-xs-12 col-sm-6 col-md-3">
-    <div class="panel panel-darken">
-        <div class="panel-heading">
-            <h3 class="panel-title stats">Poll</h3>
-        </div>
-        <div class="panel-body no-padding text-align-center">
-            <div class="the-price">
-              <span class="count"><%= number_with_delimiter(poll_stats[:amount]) %></span>
-            </div>
-            <div class="price-features" style="background: #ffffff;min-height: 200px;">
-              <ul class="list-unstyled text-left">
-                <li><i class="fa fa-globe"></i> <%= number_with_delimiter(poll_stats[:public]) %> <strong> in Public</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(poll_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
-                <li><i class="fa fa-group"></i> <%= number_with_delimiter(poll_stats[:group]) %> <strong> in Group</strong></li>
-              </ul>
-            </div>
-        </div>
-        <div class="panel-footer text-align-center">
-          <a href="<%= stats_polls_url %>" class="btn btn-default btn-xs" role="button">More</a>
-        </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+      <h1 class="page-title txt-color-blueDark">
+      <i class="fa-fw fa fa-file-o"></i> Stats Dashboard <span>&gt;
+        <b><%= params[:filter_by].presence || 'today' %></b></span></h1>
     </div>
   </div>
 
-  <div class="col-xs-12 col-sm-6 col-md-3">
-    <div class="panel panel-darken">
-        <div class="panel-heading">
-            <h3 class="panel-title stats">Vote</h3>
-        </div>
-        <div class="panel-body no-padding text-align-center">
-            <div class="the-price">
-              <span class="count"><%= number_with_delimiter(vote_stats[:amount]) %></span>
-            </div>
-            <div class="price-features" style="background: #ffffff;min-height: 200px;">
-              <ul class="list-unstyled text-left">
-                <li><i class="fa fa-globe"></i> <%= number_with_delimiter(vote_stats[:public]) %> <strong> in Public</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(vote_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
-                <li><i class="fa fa-group"></i> <%= number_with_delimiter(vote_stats[:group]) %> <strong> in Group</strong></li>
-              </ul>
-            </div>
-        </div>
-        <div class="panel-footer text-align-center">
-          <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
-        </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">Poll</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(poll_stats[:amount]) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(poll_stats[:public]) %> <strong> in Public</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(poll_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
+                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(poll_stats[:group]) %> <strong> in Group</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="<%= stats_polls_url %>" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
     </div>
-  </div>
 
-  <div class="col-xs-12 col-sm-6 col-md-3">
-    <div class="panel panel-darken">
-        <div class="panel-heading">
-            <h3 class="panel-title stats">User</h3>
-        </div>
-        <div class="panel-body no-padding text-align-center">
-            <div class="the-price">
-              <span class="count"><%= number_with_delimiter(user_stats[:amount]) %></span>
-            </div>
-            <div class="price-features" style="background: #ffffff;min-height: 200px;">
-              <ul class="list-unstyled text-left">
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:facebook]) %> <strong> via Facebook</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:sentai]) %> <strong> via Sentai</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:celebrity]) %> <strong> Celebrity</strong></li>
-                <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:brand]) %> <strong> Brand</strong></li>
-              </ul>
-            </div>
-        </div>
-        <div class="panel-footer text-align-center">
-          <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
-        </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">Vote</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(vote_stats[:amount]) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(vote_stats[:public]) %> <strong> in Public</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(vote_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
+                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(vote_stats[:group]) %> <strong> in Group</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
     </div>
-  </div>
 
-
-  <div class="col-xs-12 col-sm-6 col-md-3">
-    <div class="panel panel-darken">
-        <div class="panel-heading">
-            <h3 class="panel-title stats">Group</h3>
-        </div>
-        <div class="panel-body no-padding text-align-center">
-            <div class="the-price">
-              <span class="count"><%= number_with_delimiter(group_stats[:amount]) %></span>
-            </div>
-            <div class="price-features" style="background: #ffffff;min-height: 200px;">
-              <ul class="list-unstyled text-left">
-                <li><%= number_with_delimiter(group_stats[:amount]) %> <strong> created</strong></li>
-              </ul>
-            </div>
-        </div>
-        <div class="panel-footer text-align-center">
-          <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
-        </div>
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">User</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(user_stats[:amount]) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:facebook]) %> <strong> via Facebook</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:sentai]) %> <strong> via Sentai</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:citizen]) %> <strong> via Citizen</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:celebrity]) %> <strong> Celebrity</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:brand]) %> <strong> Brand</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
     </div>
-  </div>
 
-</div>
+
+    <div class="col-xs-12 col-sm-6 col-md-3">
+      <div class="panel panel-darken">
+          <div class="panel-heading">
+              <h3 class="panel-title stats">Group</h3>
+          </div>
+          <div class="panel-body no-padding text-align-center">
+              <div class="the-price">
+                <span class="count"><%= number_with_delimiter(group_stats[:amount]) %></span>
+              </div>
+              <div class="price-features" style="background: #ffffff;min-height: 200px;">
+                <ul class="list-unstyled text-left">
+                  <li><%= number_with_delimiter(group_stats[:amount]) %> <strong> created</strong></li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-footer text-align-center">
+            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+          </div>
+      </div>
+    </div>
+
+  </div>
   
 <%= render partial: 'stats_table' %>
 

@@ -26,8 +26,8 @@ module PollHelper
 
   # end
 
-  def polls_30_days_ago_chart(start = 1.month.ago)
-    (start.to_date..Date.current).map do |date|
+  def polls_ago_chart(end_date)
+    (end_date.to_date..Date.current).map do |date|
       @query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).to_a
       {
         created_at: date,

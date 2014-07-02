@@ -45,6 +45,10 @@ class UserStats
       find_stats_user_total
     elsif filtering == 'yesterday'
       find_stats_user_yesterday
+    elsif filtering == 'week'
+      find_stats_user(7.days.ago.to_date)
+    elsif filtering == 'month'
+      find_stats_user(30.days.ago.to_date)
     else
       find_stats_user_today
     end
@@ -54,15 +58,17 @@ class UserStats
     UserStats.where(stats_created_at: Date.current).first_or_create!
   end
 
-  def self.find_celebrity_or_brand(start_date = Date.current)
+  def self.find_celebrity_or_brand(end_date, start_date = Date.current)
     {
-      celebrity: Member.where("date(created_at + interval '7 hour') = ?", start_date).member_type(:celebrity).count,
-      brand: Member.where("date(created_at + interval '7 hour') = ?", start_date).member_type(:brand).count
+      citizen: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).member_type(:citizen).count,
+      celebrity: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).member_type(:celebrity).count,
+      brand: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).member_type(:brand).count
     }
   end
 
   def self.find_celebrity_or_brand_total
     {
+      citizen: Member.member_type(:citizen).count,
       celebrity: Member.member_type(:celebrity).count,
       brand: Member.member_type(:brand).count
     }  
@@ -87,6 +93,11 @@ class UserStats
 
   def self.find_stats_user_total
     split(Provider.select("member_id").distinct)
+  end
+
+  def self.find_stats_user(end_date, start_date = Date.current)
+    query = Provider.joins(:member).select("providers.member_id").where("date(members.created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date)
+    split(query)
   end
 
   def self.convert_stats_user_to_hash

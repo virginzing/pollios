@@ -60,6 +60,10 @@ class VoteStats
       split(HistoryVote.joins(:poll))
     elsif filtering == 'yesterday'
       find_stats_vote_yesterday
+    elsif filtering == 'week'
+      find_stats_vote(7.days.ago.to_date)
+    elsif filtering == 'month'
+      find_stats_vote(30.days.ago.to_date)
     else
       find_stats_vote_today
     end
@@ -77,6 +81,11 @@ class VoteStats
   def self.find_stats_vote_yesterday
     @vote_stats = VoteStats.where(stats_created_at: Date.current - 1.day).first_or_create!
     convert_stats_vote_to_hash
+  end
+
+  def self.find_stats_vote(end_date, start_date = Date.current)
+    query = HistoryVote.joins(:poll).where("date(polls.created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date)
+    split(query)
   end
 
   def self.convert_stats_vote_to_hash
