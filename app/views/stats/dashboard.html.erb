@@ -18,6 +18,10 @@
       <!-- widget div-->
       <div>
         <div class="widget-body" style="min-height: 0px;">
+          <div class="widget-body-toolbar text-right">
+            <div class="label bg-color-blueDark">All</div>
+          </div>
+
           <% if number_of_polls_created_today_chart(params[:filter_by]).present? %>
             <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart(params[:filter_by]) } %>
           <% else %>
@@ -37,6 +41,14 @@
       <!-- widget div-->
       <div>
         <div class="widget-body" style="min-height: 0px;">
+
+        <div class="widget-body-toolbar text-right">
+          <div class="label bg-color-blueDark">All</div>
+          <div class="label bg-color-red">Friend</div>
+          <div class="label bg-color-green">Public</div>
+          <div class="label bg-color-yellow">Group</div>
+        </div>
+
         <% if polls_ago_chart(1.month.ago).present? %>
           <%= content_tag :div, "", id: 'polls_ago_chart', data: { polls: polls_ago_chart(1.month.ago) } %>
         <% else %>
@@ -47,15 +59,25 @@
       <!-- end widget div -->
     </div>
   <% elsif params[:filter_by] == 'week' %>
-    <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-30-days" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-poll-created-7-days" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
       <header>
         <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
         <h2><strong>Poll created on 7 days ago</strong></h2>
       </header>
-      
+<!--       <div class="row">
+        <span class="label bg-color-blueDark pull-right">All</span>
+      </div> -->
       <!-- widget div-->
       <div>
         <div class="widget-body" style="min-height: 0px;">
+
+        <div class="widget-body-toolbar text-right">
+          <div class="label bg-color-blueDark">All</div>
+          <div class="label bg-color-red">Friend</div>
+          <div class="label bg-color-green">Public</div>
+          <div class="label bg-color-yellow">Group</div>
+        </div>
+
         <% if polls_ago_chart(7.days.ago).present? %>
           <%= content_tag :div, "", id: 'polls_ago_chart', data: { polls: polls_ago_chart(7.days.ago) } %>
         <% else %>

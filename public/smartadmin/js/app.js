@@ -1466,6 +1466,7 @@ function graphStatsDashboard() {
 	    // A list of names of data record attributes that contain y-values.
 	    ykeys: ['count', 'poll_of_friend', 'poll_of_public', 'poll_of_group'],
 	    // Labels for the ykeys -- will be displayed when you hover over the
+	    barColors: ['#4c4f53', '#a90329', '#356e35', '#b09b5b'],
 	    // chart.
 	    labels: ['Count', 'Poll in Friend', 'Poll in Public', 'Poll in Group']
 	  });
@@ -1482,6 +1483,8 @@ function graphStatsDashboard() {
 	    xkey: 'hours',
 	    // A list of names of data record attributes that contain y-values.
 	    ykeys: ['count'],
+
+	    barColors: ['#4c4f53'],
 	    // Labels for the ykeys -- will be displayed when you hover over the
 	    // chart.
 	    labels: ['Count']
