@@ -19,8 +19,8 @@
     <!-- widget div-->
     <div>
       <div class="widget-body" style="min-height: 0px;">
-        <% if number_of_polls_created_today_chart.present? %>
-          <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart } %>
+        <% if number_of_polls_created_today_chart(params[:filter_by]).present? %>
+          <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart(params[:filter_by]) } %>
         <% else %>
           <h3>No have information of poll created per hour.</h3>
         <% end %>
