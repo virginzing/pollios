@@ -126,7 +126,7 @@ class Poll < ActiveRecord::Base
     group
   end
 
-  def which_poll(options = {}, action_timeline = {})
+  def get_within(options = {}, action_timeline = {})
     if public
       if action_timeline["friend_following_poll"]
         Hash["in" => "Friends & Following"]
@@ -138,18 +138,6 @@ class Poll < ActiveRecord::Base
         Hash["in" => "Friends & Following"]
       else
         Hash["in" => "Group", "group_detail" => get_in_groups(options)]
-      end
-    end
-  end
-
-  def poll_is_where
-    if public
-        Hash["in" => "Public"]
-    else
-      if in_group_ids == "0"
-        Hash["in" => "Friends & Following"]
-      else
-        Hash["in" => "Group"]
       end
     end
   end
@@ -603,10 +591,6 @@ class Poll < ActiveRecord::Base
 
   def hour
     self.created_at.utc.strftime('%Y-%m-%d %H:00:00 UTC')
-  end
-
-  def method_name
-    
   end
 
   def as_json options={}

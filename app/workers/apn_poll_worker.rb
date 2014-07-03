@@ -21,7 +21,10 @@ class ApnPollWorker
     hash_custom = {
       type: TYPE[:poll],
       action: ACTION[:create],
-      poll: PollSerializer.new(poll).as_json()
+      poll: {
+        id: poll.id,
+        title: poll.title
+      }
     }
 
     device_ids.each do |device_id|
