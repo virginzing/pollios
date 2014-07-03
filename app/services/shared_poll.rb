@@ -102,13 +102,18 @@ class SharedPoll
   def unshare_in_group
     list_group_id.each do |group_id|
       find_shared_poll = SharePoll.find_by(member_id: member_id, poll_id: poll_id, shared_group_id: group_id)
+      find_shared_poll_group = PollGroup.find_by(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id)
+
       find_shared_poll.destroy if find_shared_poll.present?
+      find_shared_poll_group.destroy if find_shared_poll_group.present?
     end
 
     if @poll.share_polls.where(member_id: member_id).empty?
       find_shared_in_poll_member = PollMember.find_by(member_id: member_id, poll_id: poll_id, share_poll_of_id: poll_id, in_group: true)
       find_shared_in_poll_member.destroy if find_shared_in_poll_member.present?
     end
+
+
   end
 
 
