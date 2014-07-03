@@ -75,7 +75,7 @@ class BuildPoll
       @choice_list << @params["choice_two"]
       @choice_list + choice_freeform
     else
-      array_of_star = ["\U2b50", "\U2b50\U2b50", "\U2b50\U2b50\U2b50", "\U2b50\U2b50\U2b50\U2b50", "\U2b50\U2b50\U2b50\U2b50\U2b50"]
+      array_of_star = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
       array_of_star.each do |choice|
         @choice_list << choice        
       end
