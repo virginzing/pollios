@@ -23,10 +23,7 @@ class VotePollWorker
       anonymous: anonymous,
       type: TYPE[:poll],
       action: ACTION[:vote],
-      poll: {
-        id: poll.id,
-        title: poll.title
-      }
+      poll: PollSerializer.new(poll).as_json()
     }
 
     device_ids.each do |device_id|
