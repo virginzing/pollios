@@ -52,8 +52,14 @@ class Member < ActiveRecord::Base
   has_many :your_request, -> { where(status: 0, active: true) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_your_request, through: :your_request, source: :followed
 
-  has_many :friend_active, -> { where(status: 1, active: true) }, foreign_key: "follower_id", class_name: "Friend"
+  has_many :friend_active, -> { where(status: 1, active: true, block: false) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_active, through: :friend_active ,source: :followed
+
+  has_many :friend_blocked, -> { where(status: 1, active: true, block: true) }, foreign_key: "follower_id", class_name: "Friend"
+  has_many :get_friend_blocked, through: :friend_blocked ,source: :followed
+
+  has_many :muted_by_friend, -> { where(mute: true) }, foreign_key: "followed_id", class_name: "Friend"
+  has_many :get_muted_by_friend, through: :muted_by_friend, source: :follower
 
   has_many :friend_inactive, -> { where(status: 1, active: false) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_inactive, through: :friend_inactive, source: :followed
@@ -302,6 +308,12 @@ class Member < ActiveRecord::Base
   #   end
   # end
 
+  def cached_block_friend
+    Rails.cache.fetch([self.id, 'block_friend']) do
+      get_friend_blocked.to_a
+    end
+  end
+
 
   def cached_my_poll
     Rails.cache.fetch([self.id, 'my_poll']) do
@@ -352,7 +364,7 @@ class Member < ActiveRecord::Base
   end
 
   def cached_get_group_active
-    Rails.cache.fetch([self.id, 'group_active']) do
+    Rails.cache.fetch([self.id, 'group_active'], :expires_in => 6.hours) do
       get_group_active.to_a
     end
   end
@@ -568,23 +580,23 @@ class Member < ActiveRecord::Base
   end
 
   def is_friend(user_obj)
-    my_friend = user_obj.cached_get_friend_active.map(&:id)
-    your_request = user_obj.cached_get_your_request.map(&:id)
-    friend_request = user_obj.cached_get_friend_request.map(&:id)
-    my_following = user_obj.cached_get_following.map(&:id)
+    @my_friend ||= user_obj.cached_get_friend_active.map(&:id)
+    @your_request ||= user_obj.cached_get_your_request.map(&:id)
+    @friend_request ||= user_obj.cached_get_friend_request.map(&:id)
+    @my_following ||= user_obj.cached_get_following.map(&:id)
     
-    if my_friend.include?(id)
+    if @my_friend.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
-    elsif your_request.include?(id)
+    elsif @your_request.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :invite]
-    elsif friend_request.include?(id)
+    elsif @friend_request.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :invitee]
     else
       hash = Hash["add_friend_already" => false, "status" => :nofriend]
     end
 
     if celebrity? || brand?
-      my_following.include?(id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+      @my_following.include?(id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
     else
       hash.merge!({"following" => "" })
     end

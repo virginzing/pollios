@@ -102,7 +102,7 @@ class Friend < ActiveRecord::Base
 
     begin
       search_member(member_id, friend_id).update_attributes!(close_friend: status)
-      flush_cached_friend_entity(member_id, friend_id) 
+      # flush_cached_friend_entity(member_id, friend_id) 
     rescue => e
       nil
     end
@@ -228,7 +228,9 @@ class Friend < ActiveRecord::Base
       search_member(member_id, friend_id).update_attributes!(block: type_block)
       search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
       flush_cached_friend(member_id, friend_id)
-      flush_cached_friend_entity(member_id, friend_id)
+      Rails.cache.delete([ member_id, 'block_friend'])
+      true
+      # flush_cached_friend_entity(member_id, friend_id)
     rescue => e
       puts "error => #{e}"
       nil

@@ -51,9 +51,16 @@ class Poll < ActiveRecord::Base
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
-  scope :available, -> { 
-    if Member.current_member.cached_report_poll.map(&:id).present?
-      having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id))
+  scope :available, -> {
+    member_report_poll = Member.current_member.cached_report_poll.map(&:id)  ## poll ids
+    member_block = Member.current_member.cached_block_friend.map(&:id)  ## member ids
+
+    if member_report_poll.present? && member_block.present?
+      having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block)
+    elsif member_report_poll.present?
+      having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?)", member_report_poll)
+    elsif member_block.present?
+      having_status_poll(:gray, :white).where("#{table_name}.member_id NOT IN (?)", member_block)
     else
       having_status_poll(:gray, :white)
     end 

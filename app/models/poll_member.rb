@@ -12,6 +12,19 @@ class PollMember < ActiveRecord::Base
     end 
   }
 
+  scope :available, -> {
+    member_report_poll = Member.current_member.cached_report_poll.map(&:id)  ## poll ids
+    member_block = Member.current_member.cached_block_friend.map(&:id)  ## member ids
+
+    if member_report_poll.present? && member_block.present?
+      where("#{table_name}.poll_id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block)
+    elsif member_report_poll.present?
+      where("#{table_name}.poll_id NOT IN (?)", member_report_poll)
+    elsif member_block.present?
+      where("#{table_name}.member_id NOT IN (?)", member_block)
+    end 
+  }
+
   LIMIT_TIMELINE = 3000
 
 
