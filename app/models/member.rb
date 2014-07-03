@@ -306,8 +306,8 @@ class Member < ActiveRecord::Base
   end
 
   def cached_my_voted
-    Rails.cache.fetch([self, 'my_voted']) do
-      HistoryVote.where("member_id = #{id} AND poll_series_id = 0").to_a
+    Rails.cache.fetch([self.id, 'my_voted']) do
+      HistoryVote.select("poll_id, choice_id, poll_series_id").where("member_id = #{id} AND poll_series_id = 0").to_a
     end
   end
 

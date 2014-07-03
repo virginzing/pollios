@@ -380,68 +380,67 @@ class Poll < ActiveRecord::Base
   end
 
   def self.create_poll(poll, member) ## create poll for API
-    title = poll[:title]
-    expire_date = poll[:expire_within]
-    choices = poll[:choices]
-    group_id = poll[:group_id]
-    member_id = poll[:member_id]
-    friend_id = poll[:friend_id]
-    buy_poll = poll[:buy_poll]
-    type_poll = poll[:type_poll]
-    is_public = poll[:is_public]
-    photo_poll = poll[:photo_poll]
+    Poll.transaction do
+      title = poll[:title]
+      expire_date = poll[:expire_within]
+      choices = poll[:choices]
+      group_id = poll[:group_id]
+      member_id = poll[:member_id]
+      friend_id = poll[:friend_id]
+      buy_poll = poll[:buy_poll]
+      type_poll = poll[:type_poll]
+      is_public = poll[:is_public]
+      photo_poll = poll[:photo_poll]
 
-    choices = check_type_of_choice(choices)
+      choices = check_type_of_choice(choices)
 
-    choice_count = get_choice_count(choices)
-    in_group_ids = group_id.present? ? group_id : "0"
+      choice_count = get_choice_count(choices)
+      in_group_ids = group_id.present? ? group_id : "0"
 
-    convert_expire_date = Time.now + expire_date.to_i.day
+      convert_expire_date = Time.now + expire_date.to_i.day
 
-    puts "choice => #{choices}"
 
-    if group_id.present?
-      @set_public = false
-    else
-      if (buy_poll.present? || member.celebrity? || member.brand?)
-        @set_public = true
-        if is_public == false
+      if group_id.present?
+        @set_public = false
+      else
+        if (buy_poll.present? || member.celebrity? || member.brand?)
+          @set_public = true
+          if is_public == false
+            @set_public = false
+          end
+        else
           @set_public = false
         end
-      else
-        @set_public = false
       end
-    end
 
-    @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0)
+      @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0)
 
-    if @poll.valid? && choices
-      @choices = Choice.create_choices(@poll.id, choices)
+      if @poll.valid? && choices
+        @choices = Choice.create_choices(@poll.id, choices)
 
-      if @choices.present?
+        if @choices.present?
 
-        @poll.create_tag(title)
+          @poll.create_tag(title)
 
-        @poll.create_watched(member, @poll.id)
+          @poll.create_watched(member, @poll.id)
 
-        if group_id
-          Group.add_poll(@poll.id, group_id)
-          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
-          # GroupNotificationWorker.perform_async(member_id, group_id, @poll.title)
-          GroupNotificationWorker.new.perform(member_id, group_id, @poll) if Rails.env.production?
-        else
-          @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-          ApnPollWorker.new.perform(member, @poll) if Rails.env.production?
+          if group_id
+            Group.add_poll(@poll.id, group_id)
+            @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
+            # GroupNotificationWorker.perform_async(member_id, group_id, @poll.title)
+            GroupNotificationWorker.new.perform(member_id, group_id, @poll) if Rails.env.production?
+          else
+            @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
+            ApnPollWorker.new.perform(member, @poll) if Rails.env.production?
+          end
+
+          PollStats.create_poll_stats(@poll)
+
+          Activity.create_activity_poll(member, @poll, 'Create')
+
+          # Rails.cache.delete([member_id, 'poll_member'])
+          Rails.cache.delete([member_id, 'my_poll'])
         end
-
-        PollStats.create_poll_stats(@poll)
-
-        Activity.create_activity_poll(member, @poll, 'Create')
-
-        # Rails.cache.delete([member_id, 'poll_member'])
-        Rails.cache.delete([member_id, 'my_poll'])
-      else
-        @poll.destroy
       end
     end
     @poll
@@ -481,53 +480,55 @@ class Poll < ActiveRecord::Base
     choice_id = poll[:choice_id]
     guest_id = poll[:guest_id]
 
-    begin
-      ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
-      
-      unless ever_vote.present?
-        find_poll = Poll.cached_find(poll_id)
-        find_choice = find_poll.choices.where(id: choice_id).first
+    Poll.transaction do
+      begin
+        ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
+        
+        unless ever_vote.present?
+          find_poll = Poll.cached_find(poll_id)
+          find_choice = find_poll.choices.where(id: choice_id).first
 
-        if find_poll.series
-          poll_series_id = find_poll.poll_series_id
-        else
-          poll_series_id = 0
-        end
-
-        if guest_id.present?
-          find_poll.increment!(:vote_all_guest)
-          find_choice.increment!(:vote_guest)
-          # find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
-          history_voted = HistoryVoteGuest.create(guest_id: guest_id, poll_id: poll_id, choice_id: choice_id)
-        else
-          @voted = find_poll.increment!(:vote_all)
-          if @voted.present?
-            find_choice.increment!(:vote)
-            # find_poll.poll_series.increment!(:vote_all) if find_poll.series
-            history_voted = HistoryVote.create(member_id: member_id, poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
-            find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
-            # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
-            get_anonymous = member.get_anonymous_with_poll(find_poll)
-
-            VotePollWorker.new.perform(member, find_poll, { anonymous: get_anonymous }) unless member_id.to_i == find_poll.member.id
-            # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
-
-            VoteStats.create_vote_stats(find_poll)
-            
-            Activity.create_activity_poll(member, find_poll, 'Vote')
-
-            Rails.cache.delete([member_id, 'my_voted'])
-            Rails.cache.delete([find_poll.class.name, find_poll.id])
-            [find_poll, history_voted]
+          if find_poll.series
+            poll_series_id = find_poll.poll_series_id
+          else
+            poll_series_id = 0
           end
+
+          if guest_id.present?
+            find_poll.increment!(:vote_all_guest)
+            find_choice.increment!(:vote_guest)
+            # find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
+            history_voted = HistoryVoteGuest.create(guest_id: guest_id, poll_id: poll_id, choice_id: choice_id)
+          else
+            @voted = find_poll.increment!(:vote_all)
+            if @voted.present?
+              find_choice.increment!(:vote)
+              # find_poll.poll_series.increment!(:vote_all) if find_poll.series
+              history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
+
+              find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
+              # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
+              get_anonymous = member.get_anonymous_with_poll(find_poll)
+
+              VotePollWorker.new.perform(member, find_poll, { anonymous: get_anonymous }) unless member_id.to_i == find_poll.member.id
+              # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
+
+              VoteStats.create_vote_stats(find_poll)
+              
+              Activity.create_activity_poll(member, find_poll, 'Vote')
+
+              Rails.cache.delete([member_id, 'my_voted'])
+              Rails.cache.delete([find_poll.class.name, find_poll.id])
+              [find_poll, history_voted]
+            end
+          end
+
         end
-
+      rescue => e
+        puts "error => #{e}"
+        nil
       end
-    rescue => e
-      puts "error => #{e}"
-      nil
     end  
-
   end
 
   def find_campaign_for_predict?(member_id, poll_id)

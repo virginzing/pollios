@@ -2,7 +2,7 @@ class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
   protect_from_forgery :except => [:create_poll, :delete_poll]
 
-  before_action :set_current_member, only: [:delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
+  before_action :set_current_member, only: [:choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
   before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline]
@@ -84,11 +84,11 @@ class PollsController < ApplicationController
   def create ## for Web
     @build_poll = BuildPoll.new(current_member, polls_params, options_build_params)
     new_poll_binary_params = @build_poll.poll_binary_params
-    puts "new_poll_binary_params => #{new_poll_binary_params}"
+    # puts "new_poll_binary_params => #{new_poll_binary_params}"
     @poll = Poll.new(new_poll_binary_params)
 
     if @poll.save
-      puts "choices => #{@build_poll.list_of_choice}"
+      # puts "choices => #{@build_poll.list_of_choice}"
 
       @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
@@ -109,7 +109,7 @@ class PollsController < ApplicationController
       flash[:success] = "Create poll successfully."
       redirect_to polls_path
     else
-      puts "#{@poll.errors.full_messages}"
+      # puts "#{@poll.errors.full_messages}"
       render @build_poll.type_poll
     end
   end
@@ -147,7 +147,7 @@ class PollsController < ApplicationController
     # puts "expired => #{@expired}"
     # @choices = Choice.query_choices(choices_params, @expired)
     @choices = @poll.cached_choices
-    @voted = HistoryVote.voted?(choices_params[:member_id], @poll.id)
+    @voted = HistoryVote.voted?(@current_member, @poll.id)
   end
 
   def public_poll
