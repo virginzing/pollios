@@ -17,7 +17,8 @@ module SymbolHash
     :invite => 'Invite',
     :request => 'Request',
     :change_name => 'ChangeName',
-    :chnage_avatar => 'ChangeAvatar'
+    :change_avatar => 'ChangeAvatar',
+    :change_cover => 'ChangeCover'
   }
 
   AUTHORITY = {

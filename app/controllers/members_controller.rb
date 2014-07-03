@@ -1,4 +1,6 @@
 class MembersController < ApplicationController
+  include SymbolHash
+
   skip_before_action :verify_authenticity_token
   before_action :set_current_member, only: [:activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :history_voted_viewed, only: [:detail_friend]
@@ -34,12 +36,16 @@ class MembersController < ApplicationController
 
       if @current_member.update(update_profile_params.except(:member_id, :avatar))
         if update_profile_params[:fullname]
-          Activity.create_activity_my_self(@current_member, 'ChangeName')
+          Activity.create_activity_my_self(@current_member, ACTION[:change_name])
+        end
+
+        if update_profile_params[:cover]
+          Activity.create_activity_my_self(@current_member, ACTION[:change_cover])
         end
 
         if update_profile_params[:avatar]
           Member.update_avatar(@current_member, update_profile_params[:avatar])
-          Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), 'ChangeAvatar')
+          Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
         end
         @member = Member.find(@current_member.id)
 
