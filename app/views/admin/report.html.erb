@@ -1,1 +1,144 @@
-<h1>Report</h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-edit fa-fw "></i> 
+        Report Poll & Member
+    </h1>
+  </div>
+</div>
+
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-reports-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>List report of poll.</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="report_polls" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Report count</th>
+                <th>Created_at</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @report_polls.each do |poll| %>
+                <tr>
+                  <td><%= poll.id %></td>
+                  <td><%= poll.title %></td>
+                  <td><%= poll.report_count %></td>
+                  <td><span data-livestamp="<%= poll.created_at.to_i %>"></span></td>
+                  <td><a href="/admin/poll/<%= poll.id %>" class="btn btn-default btn-xs" rel="tooltip" data-original-title="Check at Admin Page"><i class="fa fa-gear"></i></a>
+                  <a href="javascript:void(0)" class="btn btn-default btn-xs" rel="tooltip" data-original-title="View Reason" onclick="load_reason_poll(<%= poll.id %>)"><i class="fa fa-eye"></i></a>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-reports-member" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>List report of member.</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="report_members" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>Avatar</th>
+                <th>Fullname</th>
+                <th>Report count</th>
+                <th>Created_at</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @report_members.each do |member| %>
+                <tr>
+                  <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
+                  <td><%= member.fullname %></td>
+                  <td><%= member.report_count %></td>
+                  <td><span data-livestamp="<%= member.created_at.to_i %>"></span></td>
+                  <td><a href="/admin/member/<%= member.id %>" class="btn btn-default btn-xs" rel="tooltip" data-original-title="Check at Admin Page"><i class="fa fa-gear"></i></a>
+                  <a href="javascript:void(0)" class="btn btn-default btn-xs" rel="tooltip" data-original-title="View Reason" onclick="load_reason_member(<%= member.id %>)"><i class="fa fa-eye"></i></a>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
+
+
+<script type="text/javascript">
+  $('[rel=tooltip]').tooltip();
+  function load_reason_poll(poll_id) {
+
+    BootstrapDialog.show({
+          title: 'List Reason',
+          message: function(dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+        
+                return $message;
+            },
+            data: {
+                'pageToLoad': '/manage/dashboard/report/load_reason_poll?poll_id=' + poll_id 
+            }
+    });
+  }
+
+  function load_reason_member(friend_id) {
+
+    BootstrapDialog.show({
+          title: 'List Reason',
+          message: function(dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+        
+                return $message;
+            },
+            data: {
+                'pageToLoad': '/manage/dashboard/report/load_reason_member?friend_id=' + friend_id 
+            }
+    });
+  }
+</script>
+
+

@@ -19,6 +19,9 @@ class Member < ActiveRecord::Base
   has_many :sent_notifies, class_name: 'NotifyLog', foreign_key: 'sender_id', dependent: :destroy
   has_many :received_notifies, -> { includes :sender }, class_name: 'NotifyLog',  foreign_key: 'recipient_id', dependent: :destroy
 
+  has_many :sent_reports, class_name: 'MemberReportMember', foreign_key: 'reporter_id', dependent: :destroy
+  has_many :get_reportee, -> { includes :reporter }, class_name: 'MemberReportMember', foreign_key: 'reportee_id', dependent: :destroy
+
   belongs_to :province, inverse_of: :members
 
   has_many :follower , -> { where("following = 't' AND status != 1") }, foreign_key: "followed_id", class_name: "Friend"

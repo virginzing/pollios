@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703084232) do
+ActiveRecord::Schema.define(version: 20140703135359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -304,6 +304,17 @@ ActiveRecord::Schema.define(version: 20140703084232) do
 
   add_index "member_invite_codes", ["invite_code_id"], name: "index_member_invite_codes_on_invite_code_id", using: :btree
   add_index "member_invite_codes", ["member_id"], name: "index_member_invite_codes_on_member_id", using: :btree
+
+  create_table "member_report_members", force: true do |t|
+    t.integer  "reporter_id"
+    t.integer  "reportee_id"
+    t.text     "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_report_members", ["reportee_id"], name: "index_member_report_members_on_reportee_id", using: :btree
+  add_index "member_report_members", ["reporter_id"], name: "index_member_report_members_on_reporter_id", using: :btree
 
   create_table "member_report_polls", force: true do |t|
     t.integer  "member_id"

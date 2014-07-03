@@ -399,7 +399,8 @@ class Poll < ActiveRecord::Base
 
       convert_expire_date = Time.now + expire_date.to_i.day
 
-
+      # YES
+      
       if group_id.present?
         @set_public = false
       else

@@ -1,0 +1,9 @@
+<ul>
+  <% if @load_reason.empty?  %>
+    <div class="text-center">No reason.</div>
+  <% else %>
+    <% @load_reason.each do |reason| %>
+      <li><%= reason.message %></li> 
+    <% end %>
+  <% end %>
+</ul>

@@ -2,6 +2,8 @@
 //= require nested_form
 //= require bootbox
 //= require data-confirm
+//= require moment.min
+//= require livestamp.min
 //= require parsley
 //= require nprogress
 //= require nprogress-turbolinks

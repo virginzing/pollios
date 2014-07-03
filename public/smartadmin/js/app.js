@@ -1448,6 +1448,16 @@ function dataTable() {
 		paging: false,
 		iDisplayLength: 25
 	});
+	$('#report_polls').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 25
+	});
+	$('#report_members').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 25
+	});
 }
 
 function graphStatsDashboard() {

@@ -103,7 +103,7 @@ Pollios::Application.routes.draw do
     post 'activate',          to: 'members#activate'
     post ':member_id/block',  to: 'members#block'
     post 'verify_email',      to: 'members#verify_email'
-    post 'member_id/report',  to: 'members#report'
+    post ':member_id/report',  to: 'members#report'
   end
 
   scope 'poll' do
@@ -164,6 +164,9 @@ Pollios::Application.routes.draw do
   scope 'manage/dashboard' do
     get '',               to: 'admin#dashboard',  as: :admin_management_dashboard
     get 'report',         to: 'admin#report',     as: :admin_report_dashboard
+    get 'report/load_reason_poll',  to: 'admin#load_reason_poll'
+    get 'report/load_reason_member',  to: 'admin#load_reason_member' 
+    
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
     resources :invites
   end

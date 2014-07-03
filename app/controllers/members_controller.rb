@@ -2,7 +2,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -91,7 +91,13 @@ class MembersController < ApplicationController
   end
 
   def report
-    
+    begin
+      @find_friend = Member.find_by(id: report_params[:friend_id])
+      @current_member.sent_reports.create!(reportee_id: @find_friend.id, message: report_params[:message])
+      @find_friend.increment!(:report_count)
+    rescue => e
+      @error_message = e.message
+    end
   end
 
   def index
@@ -163,6 +169,10 @@ class MembersController < ApplicationController
   end
 
   private
+
+  def report_params
+    params.permit(:member_id, :friend_id, :message)
+  end
 
 
   def update_profile_params
