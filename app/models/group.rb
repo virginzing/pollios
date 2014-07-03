@@ -119,13 +119,12 @@ class Group < ActiveRecord::Base
       where(id: list_group).each do |group|
         if group.poll_groups.create!(poll_id: poll.id)
           group.increment!(:poll_count)
-          GroupNotificationWorker.new.perform(member, group, poll) if Rails.env.production?
+          GroupNotificationWorker.new.perform(member, group, poll)
         end
       end
     end
   end
 
-Group.add_poll(member_id, @poll, group_id)
   def get_description
     description.present? ? description : ""
   end

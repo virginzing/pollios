@@ -34,7 +34,7 @@ class GroupNotificationWorker
     end
 
     find_recipient.each do |member_receive|
-      NotifyLog.create(sender_id: member_id, recipient_id: member_receive.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+      NotifyLog.create(sender_id: member.id, recipient_id: member_receive.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications
