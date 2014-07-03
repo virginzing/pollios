@@ -2,9 +2,9 @@ class GroupNotificationWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member_id, group, poll, custom_data = nil)
+  def perform(member, group, poll, custom_data = nil)
 
-    @group_nofication = GroupNotification.new(member_id, group, poll)
+    @group_nofication = GroupNotification.new(member, group, poll)
 
     recipient_ids = @group_nofication.recipient_ids
 
@@ -33,8 +33,8 @@ class GroupNotificationWorker
       @notf.save!
     end
 
-    find_recipient.each do |member|
-      NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+    find_recipient.each do |member_receive|
+      NotifyLog.create(sender_id: member_id, recipient_id: member_receive.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications

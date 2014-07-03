@@ -113,18 +113,19 @@ class Group < ActiveRecord::Base
   end
 
 
-  def self.add_poll(member_id, poll_id, group_id)
+  def self.add_poll(member, poll, group_id)
     list_group = group_id.split(",")
     Group.transaction do
       where(id: list_group).each do |group|
-        if group.poll_groups.create!(poll_id: poll_id)
+        if group.poll_groups.create!(poll_id: poll.id)
           group.increment!(:poll_count)
-          GroupNotificationWorker.new.perform(member_id, group, @poll) if Rails.env.production?
+          GroupNotificationWorker.new.perform(member, group, poll) if Rails.env.production?
         end
       end
     end
   end
 
+Group.add_poll(member_id, @poll, group_id)
   def get_description
     description.present? ? description : ""
   end

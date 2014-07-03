@@ -425,7 +425,7 @@ class Poll < ActiveRecord::Base
           @poll.create_watched(member, @poll.id)
 
           if group_id
-            Group.add_poll(member_id, @poll.id, group_id)
+            Group.add_poll(member, @poll, group_id)
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
           else
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
