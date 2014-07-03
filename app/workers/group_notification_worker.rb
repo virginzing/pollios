@@ -17,9 +17,10 @@ class GroupNotificationWorker
     }
 
     hash_custom = {
-      group_id: group_id, 
+      group: group.as_json(), 
       type: TYPE[:poll],
-      action: ACTION[:create]
+      action: ACTION[:create],
+      poll: PollSerializer.new(poll).as_json()
     }
 
     device_ids.each do |device_id|

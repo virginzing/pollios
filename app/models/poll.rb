@@ -142,6 +142,18 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def poll_is_where
+    if public
+      Hash["in" => "Public"]
+    else
+      if in_group_ids == "0"
+        Hash["in" => "Friends & Following"]
+      else
+        Hash["in" => "Group"]
+      end
+    end
+  end
+
   def set_default_value
     self.recurring_id = 0 unless self.recurring_id.present?
     self.campaign_id = 0 unless self.campaign_id.present?
