@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703063837) do
+ActiveRecord::Schema.define(version: 20140703084232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,6 +344,8 @@ ActiveRecord::Schema.define(version: 20140703063837) do
     t.boolean  "anonymous_public",           default: false
     t.boolean  "anonymous_friend_following", default: false
     t.boolean  "anonymous_group",            default: false
+    t.integer  "report_count",               default: 0
+    t.integer  "status_account",             default: 1
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree

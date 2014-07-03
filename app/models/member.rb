@@ -153,7 +153,7 @@ class Member < ActiveRecord::Base
       field :avatar, :carrierwave
       field :cover, :carrierwave
       field :key_color
-
+      field :status_account
     end
 
     edit do
@@ -167,6 +167,7 @@ class Member < ActiveRecord::Base
       field :avatar, :carrierwave
       field :cover, :carrierwave
       field :key_color
+      field :status_account
     end
 
     show do

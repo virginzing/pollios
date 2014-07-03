@@ -90,6 +90,10 @@ class MembersController < ApplicationController
     @stats_all = @current_member.get_stats_all
   end
 
+  def report
+    
+  end
+
   def index
   end
 

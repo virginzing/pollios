@@ -115,9 +115,12 @@ class Group < ActiveRecord::Base
 
   def self.add_poll(poll_id, group_id)
     list_group = group_id.split(",")
-    where(id: list_group).each do |group|
-      if group.poll_groups.create!(poll_id: poll_id)
-        group.increment!(:poll_count)
+    Group.transaction do
+      where(id: list_group).each do |group|
+        if group.poll_groups.create!(poll_id: poll_id)
+          group.increment!(:poll_count)
+          GroupNotificationWorker.new.perform(member_id, group, @poll) if Rails.env.production?
+        end
       end
     end
   end

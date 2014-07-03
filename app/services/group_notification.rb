@@ -2,14 +2,15 @@ class GroupNotification
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
-  def initialize(member_id, group_id, poll)
+  def initialize(member_id, group, poll)
     @member_id = member_id
-    @group_id = group_id
+    @group = group
+    @group_id = group.id
     @poll = poll
   end
 
   def group_member_ids
-    group.get_member_open_notification.collect(&:id).flatten - [@member_id]
+    @group.get_member_open_notification.collect(&:id).flatten - [@member_id]
   end
 
   def recipient_ids
@@ -22,7 +23,7 @@ class GroupNotification
 
   def group_name
     # truncate(group.name, length: 10)
-    group.name
+    @group.name
   end
 
   def custom_message
@@ -34,10 +35,6 @@ class GroupNotification
 
   def member
     Member.find(@member_id)
-  end
-
-  def group
-    Group.find_by(id: @group_id)
   end
   
   
