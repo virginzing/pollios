@@ -1,6 +1,6 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  protect_from_forgery :except => [:create_poll, :delete_poll]
+  protect_from_forgery :except => [:create_poll, :delete_poll, :vote]
 
   before_action :set_current_member, only: [:choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
@@ -144,8 +144,6 @@ class PollsController < ApplicationController
 
   def choices
     @expired = @poll.expire_date < Time.now
-    # puts "expired => #{@expired}"
-    # @choices = Choice.query_choices(choices_params, @expired)
     @choices = @poll.cached_choices
     @voted = HistoryVote.voted?(@current_member, @poll.id)
   end
