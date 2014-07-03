@@ -14,7 +14,7 @@ class GroupNotification
   end
 
   def recipient_ids
-    group.present? ? group_member_ids : []
+    @group.present? ? group_member_ids : []
   end
 
   def member_name
