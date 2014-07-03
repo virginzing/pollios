@@ -8,6 +8,7 @@ class Poll < ActiveRecord::Base
   
   has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy
+
   has_many :tags, through: :taggings, source: :tag
 
   has_many :watcheds, dependent: :destroy
@@ -25,6 +26,9 @@ class Poll < ActiveRecord::Base
   has_many :history_views, dependent: :destroy
   has_many :share_polls, dependent: :destroy
   has_many :hidden_polls, dependent: :destroy
+
+  has_many :member_report_polls, dependent: :destroy
+  
   belongs_to :member, touch: true
   belongs_to :poll_series
   belongs_to :campaign
@@ -424,10 +428,10 @@ class Poll < ActiveRecord::Base
           Group.add_poll(@poll.id, group_id)
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
           # GroupNotificationWorker.perform_async(member_id, group_id, @poll.title)
-          GroupNotificationWorker.new.perform(member_id, group_id, @poll)
+          GroupNotificationWorker.new.perform(member_id, group_id, @poll) if Rails.env.production?
         else
           @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-          ApnPollWorker.new.perform(member, @poll)
+          ApnPollWorker.new.perform(member, @poll) if Rails.env.production?
         end
 
         PollStats.create_poll_stats(@poll)

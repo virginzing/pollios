@@ -1,6 +1,6 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  protect_from_forgery :except => [:create_poll]
+  protect_from_forgery :except => [:create_poll, :delete_poll]
 
   before_action :set_current_member, only: [:delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
@@ -115,7 +115,19 @@ class PollsController < ApplicationController
   end
 
   def delete_poll
-    
+    Poll.transaction do
+      begin
+        if @poll.member_id == @current_member.id
+          @poll.destroy
+          if @poll.in_group_ids != 0
+            Group.where("id IN (?)", @poll.in_group_ids.split(",")).collect {|group| group.decrement!(:poll_count)}
+          end
+          Rails.cache.delete([current_member.id, 'my_poll'])
+        end
+      rescue => e
+        @error_message = e.message
+      end
+    end
   end
 
   # def series
@@ -323,7 +335,7 @@ class PollsController < ApplicationController
   end
 
   def report
-    @init_report = ReportPoll.new(@current_member, @poll)
+    @init_report = ReportPoll.new(@current_member, @poll, { message: params[:message]} )
     @report = @init_report.reporting
   end
 
