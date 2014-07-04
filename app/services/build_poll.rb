@@ -18,10 +18,7 @@ class BuildPoll
   end
 
   def choice_freeform
-    puts "options choice => #{@options[:choices]}"
-    if @options[:choices]
-      @choices_of_freeform = @options[:choices].collect{|value| value unless value.empty? }.compact
-    end
+    @choices_of_freeform = @options[:choices].collect{|value| value unless value.empty? }.compact
   end
 
   def type_poll
@@ -70,9 +67,11 @@ class BuildPoll
 
     elsif type_poll == "freeform"
       @choice_list << @params["choice_one"]
-      @choices_of_freeform.each do |choice_freeform|
+
+      choice_freeform.each do |choice_freeform|
         @choice_list << choice_freeform
       end
+      
       @choice_list
       puts "choice list => #{@choice_list}"
     else
