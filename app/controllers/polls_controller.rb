@@ -82,7 +82,7 @@ class PollsController < ApplicationController
   end
 
   def create ## for Web
-    @build_poll = BuildPoll.new(current_member, polls_params, options_build_params)
+    @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
     new_poll_binary_params = @build_poll.poll_binary_params
     # puts "new_poll_binary_params => #{new_poll_binary_params}"
     @poll = Poll.new(new_poll_binary_params)

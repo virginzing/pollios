@@ -6,6 +6,7 @@ class BuildPoll
     @choice_list = []
     @series = false
     @poll_series_id = 0
+    puts "@options = #{@options[:choices]}"
   end
 
   def expire_date
@@ -17,9 +18,9 @@ class BuildPoll
   end
 
   def choice_freeform
-    puts "options choice => #{@options["choices"]}"
-    if @options["choices"]
-      choices = @options["choices"].collect{|value| value unless value.empty? }.compact
+    puts "options choice => #{@options[:choices]}"
+    if @options[:choices]
+      choices = @options[:choices].collect{|value| value unless value.empty? }.compact
     end
     choices
     puts "choice_freeform => #{choices}"
