@@ -399,6 +399,7 @@ class Poll < ActiveRecord::Base
       type_poll = poll[:type_poll]
       is_public = poll[:is_public]
       photo_poll = poll[:photo_poll]
+      allow_comment = poll[:allow_comment]
 
       choices = check_type_of_choice(choices)
 
@@ -422,7 +423,7 @@ class Poll < ActiveRecord::Base
         end
       end
 
-      @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0)
+      @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment)
 
       if @poll.valid? && choices
         @choices = Choice.create_choices(@poll.id, choices)
@@ -649,9 +650,17 @@ class Poll < ActiveRecord::Base
   end
 
   def serailize_group_detail_as_json
-    GroupSerializer.new(Group.find_by(id: group_id)).as_json
-  end
+    group = PollGroup.where(poll_id: @poll_id).pluck(:group_id)
+    your_group_ids = Member.current_member.cached_get_group_active.map(&:id)
 
+    group_list = group & your_group_ids
+    
+    if group.present?
+      ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json()
+    else
+      nil
+    end
+  end
 
 end
 

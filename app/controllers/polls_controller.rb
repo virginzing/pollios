@@ -304,7 +304,7 @@ class PollsController < ApplicationController
   end
 
   def create_poll
-    @poll = Poll.create_poll(params, @current_member)
+    @poll = Poll.create_poll(poll_params, @current_member)
   end
 
   def share
@@ -388,9 +388,7 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    # puts "choices => #{params[:choices].try(:keys)}"
-    params.permit(:title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, 
-      :type_poll, :is_public, :photo_poll, :choices => [])
+    params.permit(:title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :choices => [])
   end
 
   def polls_params

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703135359) do
+ActiveRecord::Schema.define(version: 20140704075708) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -390,9 +390,11 @@ ActiveRecord::Schema.define(version: 20140703135359) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "share_poll_of_id", default: 0
+    t.integer  "member_id"
   end
 
   add_index "poll_groups", ["group_id"], name: "index_poll_groups_on_group_id", using: :btree
+  add_index "poll_groups", ["member_id"], name: "index_poll_groups_on_member_id", using: :btree
   add_index "poll_groups", ["poll_id"], name: "index_poll_groups_on_poll_id", using: :btree
   add_index "poll_groups", ["share_poll_of_id"], name: "index_poll_groups_on_share_poll_of_id", using: :btree
 
@@ -466,6 +468,7 @@ ActiveRecord::Schema.define(version: 20140703135359) do
     t.integer  "type_poll"
     t.integer  "report_count",   default: 0
     t.integer  "status_poll",    default: 0
+    t.boolean  "allow_comment",  default: true
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
