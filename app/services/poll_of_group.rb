@@ -1,10 +1,16 @@
 class PollOfGroup
   include GroupApi
 
+  attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared
+
   def initialize(member, group, params = {})
     @member = member
     @group = group
     @params = params
+    @poll_series = []
+    @poll_nonseries = []
+    @series_shared = []
+    @nonseries_shared = []
   end
 
   def group_id
@@ -14,13 +20,14 @@ class PollOfGroup
   def get_poll_of_group
     @poll_of_group ||= poll_of_group
   end
-  
+
   private
 
   def poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    query = Poll.available.joins(:poll_groups).where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})")
-    query
+    @query = Poll.available.joins(:poll_groups).select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
+                .where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})")
+    @query
   end
 
   def poll_expire_have_vote

@@ -373,6 +373,7 @@ class Poll < ActiveRecord::Base
     [poll_series, poll_nonseries]
   end
 
+
   def find_poll_series(member_id, series_id)
     Poll.where(member_id: member_id, poll_series_id: series_id).order("id asc")
   end
@@ -634,6 +635,22 @@ class Poll < ActiveRecord::Base
     
   end
 
+  ## for group api ##
+
+  def get_member_shared_this_poll(group_id)
+    member = Member.joins(:share_polls).where("share_polls.poll_id = ? AND share_polls.shared_group_id = ?", id, group_id)
+    ActiveModel::ArraySerializer.new(member, serializer_options: { current_member: Member.current_member }, each_serializer: MemberSharedDetailSerializer).as_json()
+  end
+
+  def get_group_shared(group_id)
+    @group_id = group_id
+    @poll_id = id
+    Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json ]
+  end
+
+  def serailize_group_detail_as_json
+    GroupSerializer.new(Group.find_by(id: group_id)).as_json
+  end
 
 
 end

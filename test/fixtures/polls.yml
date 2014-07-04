@@ -8,6 +8,6 @@ one:
 
 two:
   member_id: 
-  title: MyString
+  title: 
   public: false
   vote_all: 1

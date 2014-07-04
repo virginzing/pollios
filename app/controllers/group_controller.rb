@@ -7,6 +7,7 @@ class GroupController < ApplicationController
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
   
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
+  expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
 
   def my_group
     @group_active = @current_member.get_group_active

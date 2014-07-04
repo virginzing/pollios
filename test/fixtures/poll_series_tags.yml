@@ -1,9 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-one:
-  poll_series_id: 
-  tag_id: 
-
-two:
-  poll_series_id: 
-  tag_id: 
