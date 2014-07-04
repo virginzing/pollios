@@ -38,7 +38,7 @@ module Pollios
 
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
 
-    config.assets.precompile += %w( .svg .eot .woff .ttf .js .css)
+    config.assets.precompile += %w(.svg .eot .woff .ttf .js .css)
 
     config.versioncake.default_version = 5
     config.versioncake.supported_version_numbers = (1...7)
