@@ -17,9 +17,12 @@ class BuildPoll
   end
 
   def choice_freeform
+    puts "options choice => #{@options["choices"]}"
     if @options["choices"]
-      @options["choices"].collect {|value| value unless value.blank? }.compact
+      choices = @options["choices"].collect{|value| value unless value.empty? }.compact
     end
+    choices
+    puts "choice_freeform => #{choices}"
   end
 
   def type_poll
@@ -39,7 +42,7 @@ class BuildPoll
   end
 
   def choice_count
-    list_of_choice.count
+    @list_of_choice.count
   end
   
   def poll_binary_params
@@ -68,7 +71,6 @@ class BuildPoll
 
     elsif type_poll == "freeform"
       @choice_list << @params["choice_one"]
-      @choice_list << @params["choice_two"]
       @choice_list + choice_freeform
       @choice_list
       puts "choice list => #{@choice_list}"
