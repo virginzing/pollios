@@ -18,7 +18,7 @@ class BuildPoll
 
   def choice_freeform
     if @options["choices"]
-      @options["choices"].collect! {|value| value unless value.blank? }.compact
+      @options["choices"].collect {|value| value unless value.blank? }.compact
     end
   end
 
@@ -60,10 +60,6 @@ class BuildPoll
     }
   end
 
-  def collect_of_rating
-    
-  end
-
   def list_choices
     if type_poll == "binary"
       @choice_list << @params["choice_one"]
@@ -74,6 +70,8 @@ class BuildPoll
       @choice_list << @params["choice_one"]
       @choice_list << @params["choice_two"]
       @choice_list + choice_freeform
+      @choice_list
+      puts "choice list => #{@choice_list}"
     else
       array_of_star = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
       array_of_star.each do |choice|

@@ -19,7 +19,8 @@ class Choice < ActiveRecord::Base
   end
 
   def self.create_choices_on_web(poll_id, list_of_choice)
-    list_of_choice.collect! {|e| create!(poll_id: poll_id, answer: e) }
+    puts "list choice => #{list_of_choice}"
+    list_of_choice.collect {|e| create!(poll_id: poll_id, answer: e) }
   end
 
   def self.query_choices(choices, expired)
