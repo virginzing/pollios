@@ -42,7 +42,7 @@ class BuildPoll
   end
 
   def choice_count
-    @list_of_choice.count
+    list_choices.count
   end
   
   def poll_binary_params
