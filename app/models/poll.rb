@@ -653,7 +653,10 @@ class Poll < ActiveRecord::Base
     group = PollGroup.where(poll_id: @poll_id).pluck(:group_id)
     your_group_ids = Member.current_member.cached_get_group_active.map(&:id)
 
+    puts "group => #{group}"
     group_list = group & your_group_ids
+
+    puts "group list => #{group_list}"
     
     if group.present?
       ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json()

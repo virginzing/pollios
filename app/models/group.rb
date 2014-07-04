@@ -119,7 +119,7 @@ class Group < ActiveRecord::Base
       where(id: list_group).each do |group|
         if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
           group.increment!(:poll_count)
-          GroupNotificationWorker.new.perform(member, group, poll)
+          GroupNotificationWorker.new.perform(member, group, poll) if Rails.env.production?
         end
       end
     end

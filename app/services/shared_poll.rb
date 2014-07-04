@@ -79,12 +79,16 @@ class SharedPoll
   end
 
   def record_shared_in_friend
-    SharePoll.where(member_id: member_id, poll_id: poll_id, shared_group_id: 0).first_or_create!
+    SharePoll.where(member_id: member_id, poll_id: poll_id, shared_group_id: 0).first_or_create do
+      @poll.increment!(:share_count)
+    end
   end
 
   def record_shared_in_group
     list_group_id.each do |group_id|
-      SharePoll.where(member_id: member_id, poll_id: poll_id, shared_group_id: group_id).first_or_create!
+      SharePoll.where(member_id: member_id, poll_id: poll_id, shared_group_id: group_id).first_or_create do
+        @poll.increment!(:share_count)
+      end
       PollGroup.where(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id, member_id: member_id).first_or_create!
     end
   end
@@ -94,6 +98,7 @@ class SharedPoll
     find_shared_in_poll_member = PollMember.find_by(member_id: member_id, poll_id: poll_id, share_poll_of_id: poll_id, in_group: false)
 
     if find_shared_poll.present?
+      @poll.decrement!(:share_count) if @poll.share_count > 0
       find_shared_poll.destroy
       find_shared_in_poll_member.destroy if find_shared_in_poll_member.present?
     end
@@ -101,6 +106,7 @@ class SharedPoll
 
   def unshare_in_group
     list_group_id.each do |group_id|
+      @poll.decrement!(:share_count) if @poll.share_count > 0
       find_shared_poll = SharePoll.find_by(member_id: member_id, poll_id: poll_id, shared_group_id: group_id)
       find_shared_poll_group = PollGroup.find_by(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id, member_id: member_id)
 
