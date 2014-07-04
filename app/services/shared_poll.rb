@@ -85,7 +85,7 @@ class SharedPoll
   def record_shared_in_group
     list_group_id.each do |group_id|
       SharePoll.where(member_id: member_id, poll_id: poll_id, shared_group_id: group_id).first_or_create!
-      PollGroup.where(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id).first_or_create!
+      PollGroup.where(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id, member_id: member_id).first_or_create!
     end
   end
 
@@ -102,7 +102,7 @@ class SharedPoll
   def unshare_in_group
     list_group_id.each do |group_id|
       find_shared_poll = SharePoll.find_by(member_id: member_id, poll_id: poll_id, shared_group_id: group_id)
-      find_shared_poll_group = PollGroup.find_by(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id)
+      find_shared_poll_group = PollGroup.find_by(poll_id: poll_id, group_id: group_id, share_poll_of_id: poll_id, member_id: member_id)
 
       find_shared_poll.destroy if find_shared_poll.present?
       find_shared_poll_group.destroy if find_shared_poll_group.present?

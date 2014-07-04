@@ -117,7 +117,7 @@ class Group < ActiveRecord::Base
     list_group = group_id.split(",")
     Group.transaction do
       where(id: list_group).each do |group|
-        if group.poll_groups.create!(poll_id: poll.id)
+        if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
           group.increment!(:poll_count)
           GroupNotificationWorker.new.perform(member, group, poll)
         end
