@@ -36,16 +36,16 @@ class Poll < ActiveRecord::Base
 
   before_save :set_default_value
   before_create :generate_qrcode_key
+  
   after_create :set_new_title_with_tag
   after_commit :flush_cache
 
-  validates :title, presence: true
-  validates :member_id, :title , presence: true
+  validates :title, :member_id, presence: true
+
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
   default_scope { order("#{table_name}.created_at desc") }
 
-  
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
@@ -402,7 +402,7 @@ class Poll < ActiveRecord::Base
       choices = check_type_of_choice(choices)
 
       choice_count = get_choice_count(choices)
-      in_group_ids = group_id.present? ? group_id : "0"
+      in_group_ids = group_id.presence || "0"
 
       convert_expire_date = Time.now + expire_date.to_i.day
 

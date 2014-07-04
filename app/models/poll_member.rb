@@ -6,12 +6,6 @@ class PollMember < ActiveRecord::Base
   scope :inactive, -> { where("expire_date < ?", Time.now) }
   scope :hidden, -> (hidden_poll) { where("poll_id NOT IN (?)", hidden_poll) }
 
-  scope :available, -> { 
-    if Member.current_member.cached_report_poll.map(&:id).present?
-      where("#{table_name}.poll_id NOT IN (?)", Member.current_member.cached_report_poll.map(&:id))
-    end 
-  }
-
   scope :available, -> {
     member_report_poll = Member.current_member.cached_report_poll.map(&:id)  ## poll ids
     member_block = Member.current_member.cached_block_friend.map(&:id)  ## member ids
@@ -26,7 +20,6 @@ class PollMember < ActiveRecord::Base
   }
 
   LIMIT_TIMELINE = 3000
-
 
   def self.find_poll_celebrity_or_public(type)
     celebrtiy = Member.having_member_type(:celebrity).pluck(:id)

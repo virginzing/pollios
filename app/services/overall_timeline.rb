@@ -24,11 +24,11 @@ class OverallTimeline
   end
 
   def your_friend_ids
-    @friend_ids ||= @member.whitish_friend.map(&:followed_id)
+    @friend_ids ||= @member.cached_get_friend_active.map(&:id)
   end
 
   def your_following_ids
-    @following_ids ||= @member.get_following.map(&:id)
+    @following_ids ||= @member.cached_get_following.map(&:id)
   end
 
   def poll_overall

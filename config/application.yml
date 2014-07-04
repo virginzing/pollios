@@ -1,0 +1,25 @@
+# Add application configuration variables here, as shown below.
+#
+# PUSHER_APP_ID: "2954"
+# PUSHER_KEY: 7381a978f7dd7f9a1117
+# PUSHER_SECRET: abdc3b896a0ffb85d373
+# STRIPE_API_KEY: EdAvEPVEC3LuaTg5Q3z6WbDVqZlcBQ8Z
+# STRIPE_PUBLIC_KEY: pk_BRgD57O8fHja9HxduJUszhef6jCyS
+
+GMAIL_USERNAME: "nuttapon@code-app.com"
+GMAIL_PASSWORD: "Nutty509"
+GROUP_TIMELINE: "group_timeline"
+
+development:
+  PUBLIC_POLL: "public_poll"
+  MY_POLL: "my_poll"
+  MY_VOTE: "my_vote"
+  FRIEND_FOLLOWING_POLL: "friend_following_poll"
+  OVERALL_TIMELINE: "overall_timeline"
+production:
+  PUBLIC_POLL: "public_poll"
+  MY_POLL: "my_poll"
+  MY_VOTE: "my_vote"
+  FRIEND_FOLLOWING_POLL: "friend_following_poll"
+  OVERALL_TIMELINE: "overall_timeline"
+  MONGOHQ_URL: "mongodb://heroku:4yQKjnuIGIE0aVKblyGzCJdvfsvkz6xJIyH7sCkaFmVyXi986iZXgdHIp_UNbU1_PStUaNntUo10rOfEdbg0Fw@oceanic.mongohq.com:10082/app21881982"

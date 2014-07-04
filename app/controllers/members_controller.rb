@@ -2,7 +2,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -95,6 +95,11 @@ class MembersController < ApplicationController
       @find_friend = Member.find_by(id: report_params[:friend_id])
       @current_member.sent_reports.create!(reportee_id: @find_friend.id, message: report_params[:message])
       @find_friend.increment!(:report_count)
+
+      if report_params[:block]
+        Friend.block_or_unblock_friend({ member_id: report_params[:member_id], friend_id: report_params[:friend_id]}, true)
+      end
+      
     rescue => e
       @error_message = e.message
     end
@@ -158,8 +163,8 @@ class MembersController < ApplicationController
     end
   end
 
-  def block
-    
+  def list_block
+    @list_block = @current_member.cached_block_friend
   end
 
   def clear
@@ -171,7 +176,7 @@ class MembersController < ApplicationController
   private
 
   def report_params
-    params.permit(:member_id, :friend_id, :message)
+    params.permit(:member_id, :friend_id, :message, :block)
   end
 
 

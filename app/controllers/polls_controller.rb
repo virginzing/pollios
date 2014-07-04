@@ -260,7 +260,7 @@ class PollsController < ApplicationController
 
   def tags
     @find_tag = Tag.find_by(name: params[:name])
-    friend_list = @current_member.whitish_friend.map(&:followed_id) << @current_member.id
+    friend_list = @current_member.get_friend_active.map(&:id) << @current_member.id
 
     if params[:type] == "series"
       query_poll = @find_tag.poll_series
