@@ -64,16 +64,12 @@ class BuildPoll
       @choice_list << @params["choice_one"]
       @choice_list << @params["choice_two"]
       @choice_list << "No vote"
-
     elsif type_poll == "freeform"
       @choice_list << @params["choice_one"]
-
       choice_freeform.each do |choice_freeform|
         @choice_list << choice_freeform
       end
-      
       @choice_list
-      puts "choice list => #{@choice_list}"
     else
       array_of_star = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
       array_of_star.each do |choice|
@@ -82,5 +78,4 @@ class BuildPoll
       @choice_list
     end
   end
-
 end
