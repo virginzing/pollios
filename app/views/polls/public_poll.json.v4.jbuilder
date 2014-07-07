@@ -25,7 +25,7 @@ if @poll_series || @poll_nonseries
         json.vote_count poll.vote_all
         json.view_count poll.view_all
         json.choice_count poll.choice_count
-        json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
+        json.voted_detail @current_member.list_voted?(poll.id)
         json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       end
       json.my_shared check_my_shared(share_poll_ids, poll.id)
@@ -45,7 +45,7 @@ if @poll_series || @poll_nonseries
       json.view_count poll.view_all
       json.expire_date poll.expire_date.to_i
       json.created_at poll.created_at.to_i
-      json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
+      json.voted_detail @current_member.list_voted?(poll.id)
       json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
       json.choice_count poll.choice_count
       json.series poll.series

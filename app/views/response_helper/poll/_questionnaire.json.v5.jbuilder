@@ -18,6 +18,6 @@ json.poll poll.find_poll_series(poll.member_id, poll.poll_series_id) do |poll|
   json.vote_count poll.vote_all
   json.view_count poll.view_all
   json.choice_count poll.choice_count
-  json.voted_detail @current_member.list_voted?(@history_voted, poll.id)
+  json.voted_detail @current_member.list_voted?(poll.id)
   json.viewed @current_member.list_viewed?(@history_viewed, poll.id)
 end

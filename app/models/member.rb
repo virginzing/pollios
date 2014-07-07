@@ -6,7 +6,8 @@ class Member < ActiveRecord::Base
 
   # attr_accessor :fullname
   
-  cattr_accessor :current_member
+  cattr_accessor :current_member, :reported_polls, :shared_polls, :viewed_polls, :voted_polls, :list_friend_block, :list_friend_active,
+                  :list_your_request, :list_friend_request, :list_friend_following, :list_group_active
 
   include MemberHelper
 
@@ -374,7 +375,9 @@ class Member < ActiveRecord::Base
     campaign.delete_if{|x| x.poll.present? }
   end
 
-  def list_voted?(history_voted, poll_id)
+  def list_voted?(poll_id)
+    history_voted = Member.voted_polls
+
     history_voted.each do |poll_choice|
       if poll_choice.first == poll_id
         return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => poll_choice[4]]
@@ -643,6 +646,17 @@ class Member < ActiveRecord::Base
       end
     end
     new_avatar
+  end
+
+  def get_history_viewed
+    @history_viewed = history_views.collect { |viewed| viewed.poll_id }
+  end
+
+  def get_history_voted
+    @history_voted = HistoryVote.joins(:member, :choice, :poll)
+                                .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
+                                .where("history_votes.member_id = #{id}")
+                                .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }
   end
 
 end

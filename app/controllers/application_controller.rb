@@ -55,6 +55,12 @@ class ApplicationController < ActionController::Base
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
         format.html
       end
+    else
+      if @current_member.blacklist?
+        respond_to do |format|
+          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "This account is blacklist."]}
+        end
+      end
     end
     Member.current_member = @current_member
     @current_member
@@ -131,6 +137,24 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def load_resource_poll_feed
+    if params[:member_id] && request.format.json?
+      p "=== Load Resource Poll Feed ==="
+      Member.list_friend_block      = Member.current_member.cached_block_friend
+      Member.list_friend_active     = Member.current_member.cached_get_friend_active
+      Member.list_friend_request    = Member.current_member.cached_get_friend_request
+      Member.list_friend_following  = Member.current_member.cached_get_following
+      Member.list_your_request      = Member.current_member.cached_get_your_request
+      Member.list_group_active      = Member.current_member.cached_get_group_active
+
+      Member.reported_polls   = Member.current_member.cached_report_poll
+      Member.shared_polls     = Member.current_member.cached_shared_poll
+      Member.viewed_polls     = Member.current_member.get_history_viewed
+      Member.voted_polls      = Member.current_member.get_history_voted
+      p "=== End ==="
+    end
+  end
+  
   def compress_gzip
     request.env['HTTP_ACCEPT_ENCODING'] = 'gzip'
   end
