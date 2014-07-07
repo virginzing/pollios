@@ -303,6 +303,9 @@ GEM
     will_paginate (3.0.5)
     will_paginate-foundation (5.3.3)
       will_paginate (>= 3.0.3)
+    will_paginate_mongoid (2.0.1)
+      mongoid
+      will_paginate (~> 3.0)
     yajl-ruby (1.2.1)
 
 PLATFORMS
@@ -365,4 +368,5 @@ DEPENDENCIES
   unicorn
   versioncake!
   will_paginate-foundation
+  will_paginate_mongoid
   yajl-ruby

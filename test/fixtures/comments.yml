@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  poll_id: 1
+  fullname: MyString
+  avatar: MyString
+  message: MyText
+  deleted: false
+
+two:
+  poll_id: 1
+  fullname: MyString
+  avatar: MyString
+  message: MyText
+  deleted: false

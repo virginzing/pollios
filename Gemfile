@@ -101,6 +101,8 @@ gem 'configatron',  '3.2.0'
 
 gem 'pg_search'
 
+gem 'will_paginate_mongoid'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

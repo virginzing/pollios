@@ -1,14 +1,14 @@
 class PollsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  protect_from_forgery :except => [:create_poll, :delete_poll, :vote]
+  protect_from_forgery :except => [:create_poll, :delete_poll, :vote, :delete_comment]
 
-  before_action :set_current_member, only: [:choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
+  before_action :set_current_member, only: [:delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
   before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
-  before_action :set_poll, only: [:delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
-  before_action :compress_gzip, only: [:detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
+  before_action :set_poll, only: [:delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
   # before_action :restrict_access, only: [:public_poll]
   before_action :get_your_group, only: [:detail, :friend_following_timeline, :create_poll]
 
@@ -343,6 +343,43 @@ class PollsController < ApplicationController
     redirect_to polls_url
   end
 
+  # Comment
+
+  def comment
+    Poll.transaction do
+      begin
+        @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, fullname: @current_member.fullname, avatar: @current_member.avatar, message: comment_params[:message])
+        @poll.increment!(:comment_count)
+      rescue => e
+        @error_message = e.message
+      end
+    end
+  end
+
+  def load_comment
+    @comments = Comment.where(delete_status: false).desc(:created_at).paginate(page: comment_params[:next_cursor])
+    @comments_as_json = ActiveModel::ArraySerializer.new(@comments, each_serializer: CommentSerializer).as_json()
+    @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
+    @total_entries = @comments.total_entries
+  end
+
+  def delete_comment
+    Poll.transaction do
+      begin
+        @comment = Comment.find_by(id: comment_params[:comment_id]) || 0
+        if @comment.member_id == @current_member.id
+          @comment.update(delete_status: true)
+          @poll.decrement!(:comment_count) if @poll.comment_count > 0
+        else
+          @comment = nil
+          @error_message = "Only creator's comment"
+        end
+      rescue => e
+        @error_message = e.message
+      end
+    end
+  end
+
   private
 
   def set_poll
@@ -353,6 +390,10 @@ class PollsController < ApplicationController
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
       end
     end
+  end
+
+  def comment_params
+    params.permit(:id, :message, :next_cursor, :comment_id)
   end
 
   def hashtag_params

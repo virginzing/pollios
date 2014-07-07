@@ -6,7 +6,7 @@ class BuildPoll
     @choice_list = []
     @series = false
     @poll_series_id = 0
-    puts "@options = #{@options[:choices]}"
+    # puts "@options = #{@options[:choices]}"
   end
 
   def expire_date
