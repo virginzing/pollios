@@ -3,7 +3,7 @@
     <div class="text-center">No reason.</div>
   <% else %>
     <% @load_reason.each do |reason| %>
-      <li><%= reason.message %></li> 
+      <li><%= reason.message %> (<%= reason.member.fullname %>, <%= reason.member.report_power %> RP)</li> 
     <% end %>
   <% end %>
 </ul>
