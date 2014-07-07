@@ -395,7 +395,8 @@ class Member < ActiveRecord::Base
     Hash["voted" => false]
   end
 
-  def list_viewed?(history_viewed, poll_id)
+  def list_viewed?(poll_id)
+    history_viewed = Member.viewed_polls
     history_viewed.include?(poll_id)
   end
 
