@@ -52,8 +52,8 @@ class Poll < ActiveRecord::Base
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
   scope :available, -> {
-    member_report_poll = Member.current_member.cached_report_poll.map(&:id)  ## poll ids
-    member_block = Member.current_member.cached_block_friend.map(&:id)  ## member ids
+    member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
+    member_block = Member.list_friend_block.map(&:id)  ## member ids
 
     if member_report_poll.present? && member_block.present?
       having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block)
@@ -606,7 +606,9 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def check_watched(watched_poll_ids)
+  def check_watched
+    watched_poll_ids = Member.watched_polls.map(&:id)
+
     if watched_poll_ids.include?(id)
       true
     else

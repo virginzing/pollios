@@ -147,14 +147,16 @@ class ApplicationController < ActionController::Base
       Member.list_your_request      = Member.current_member.cached_get_your_request
       Member.list_group_active      = Member.current_member.cached_get_group_active
 
-      Member.reported_polls   = Member.current_member.cached_report_poll
-      Member.shared_polls     = Member.current_member.cached_shared_poll
-      Member.viewed_polls     = Member.current_member.get_history_viewed
-      Member.voted_polls      = Member.current_member.get_history_voted
+      Member.reported_polls = Member.current_member.cached_report_poll
+      Member.shared_polls   = Member.current_member.cached_shared_poll
+      Member.viewed_polls   = Member.current_member.get_history_viewed
+      Member.voted_polls    = Member.current_member.get_history_voted
+
+      Member.watched_polls  = Member.current_member.cached_watched
       p "=== End ==="
     end
   end
-  
+
   def compress_gzip
     request.env['HTTP_ACCEPT_ENCODING'] = 'gzip'
   end
