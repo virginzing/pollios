@@ -367,8 +367,9 @@ class PollsController < ApplicationController
   end
 
   def load_comment
-    @comments = Comment.where(poll_id: comment_params[:id], delete_status: false).asc(:created_at).paginate(page: comment_params[:next_cursor])
-    @comments_as_json = ActiveModel::ArraySerializer.new(@comments, each_serializer: CommentSerializer).as_json()
+    @comments = Comment.where(poll_id: comment_params[:id], delete_status: false).desc(:created_at).paginate(page: comment_params[:next_cursor])
+    @new_comment_sort ||= @comments.sort! { |x,y| x.created_at <=> y.created_at }
+    @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
     @total_entries = @comments.total_entries
   end
