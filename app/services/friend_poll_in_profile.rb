@@ -5,7 +5,7 @@ class FriendPollInProfile
     @friend = friend
     @options = options
     @friend_group = @friend.cached_get_group_active
-    @my_group = @member.cached_get_group_active
+    @my_group = Member.list_group_active
   end
   
   def friend_id
@@ -25,7 +25,7 @@ class FriendPollInProfile
   end
 
   def list_my_friend_ids
-    @member.cached_get_friend_active.map(&:id) << @member.id
+    Member.list_friend_active.map(&:id) << @member.id
   end
 
   def groups

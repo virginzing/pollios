@@ -10,41 +10,36 @@ class MemberSharedDetailSerializer < ActiveModel::Serializer
 
   attributes :info
 
-  # def member_id
-  #   object.id
-  # end
-
-  # def type
-  #   object.member_type_text
-  # end
-
-  # def name
-  #   object.fullname
-  # end
-
-  # def username
-  #   object.username.present? ? object.username : ""
-  # end
-
-  # def email
-  #   object.email
-  # end
-
-  # def avatar
-  #   object.detect_image(object.avatar)
-  # end
-
-  # def key_color
-  #   object.get_key_color
-  # end
-
   def info
-    member_as_json = Member.serializer_member_hash( Member.cached_member(object) )
-    member_as_json.merge({ "status" => entity_info })
+    @creator = object
+    @find_member_cached = Member.cached_member(@creator)
+    member_as_json = Member.serializer_member_hash(@find_member_cached)
+    member_hash = member_as_json.merge( { "status" => entity_info } )
+    member_hash
   end
 
   def entity_info
-    object.is_friend(options[:current_member]) if options[:current_member]
+    @my_friend = Member.list_friend_active.map(&:id)
+    @your_request = Member.list_your_request.map(&:id)
+    @friend_request = Member.list_friend_request.map(&:id)
+    @my_following = Member.list_friend_following.map(&:id)
+    
+    if @my_friend.include?(@creator.id)
+      hash = Hash["add_friend_already" => true, "status" => :friend]
+    elsif @your_request.include?(@creator.id)
+      hash = Hash["add_friend_already" => true, "status" => :invite]
+    elsif @friend_request.include?(@creator.id)
+      hash = Hash["add_friend_already" => true, "status" => :invitee]
+    else
+      hash = Hash["add_friend_already" => false, "status" => :nofriend]
+    end
+
+    if @creator.celebrity? || @creator.brand?
+      @my_following.include?(@creator.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+    else
+      hash.merge!({"following" => "" })
+    end
+    hash
   end
 
 end

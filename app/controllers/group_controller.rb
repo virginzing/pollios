@@ -3,9 +3,10 @@ class GroupController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_current_member, only: [:my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
   before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
-  before_action :history_voted_viewed, only: [:poll_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
   
+  before_action :load_resource_poll_feed, only: [:poll_group]
+
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
 

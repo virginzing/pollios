@@ -4,21 +4,26 @@ class PollsController < ApplicationController
 
   protect_from_forgery :except => [:create_poll, :delete_poll, :vote, :delete_comment]
 
-  before_action :set_current_member, only: [:delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_poll, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
+  before_action :set_current_member, only: [:delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
+                :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
+  
   before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
   
-  before_action :history_voted_viewed, only: [:detail, :hashtag, :reward_poll_timeline, :scan_qrcode, :public_poll, :group_poll, :tags, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline]
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
   before_action :set_poll, only: [:delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
-  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
-  before_action :get_your_group, only: [:detail, :friend_following_timeline, :create_poll]
+  
+  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, 
+                :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
+
+  before_action :get_your_group, only: [:detail, :create_poll]
   
   # before_action :restrict_access, only: [:overall_timeline]
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
-  before_action :load_resource_poll_feed, only: [:overall_timeline]
+  before_action :load_resource_poll_feed, only: [:overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
+                :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -155,7 +160,6 @@ class PollsController < ApplicationController
   end
 
   def public_poll
-    puts "version => #{derived_version}"
     if derived_version == 4
       @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
     elsif derived_version == 5
@@ -183,7 +187,7 @@ class PollsController < ApplicationController
 
   def detail
     @expired = @poll.expire_date < Time.now
-    @voted = HistoryVote.voted?(@current_member, @poll.id)
+    @voted = @current_member.list_voted?(@poll.id)
   end
 
   def friend_following_poll

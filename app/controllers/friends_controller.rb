@@ -4,8 +4,10 @@ class FriendsController < ApplicationController
   before_action :compress_gzip, only: [:list_of_group, :follower_of_friend, :following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_of_watched,  :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]
-  before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote, :list_of_watched]
+  # before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote, :list_of_watched]
   
+  before_action :load_resource_poll_feed, only: [:list_of_poll, :list_of_vote, :list_of_watched, :list_friend]
+
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
 
   def add_friend
@@ -104,10 +106,9 @@ class FriendsController < ApplicationController
   ## below is my profile ##
 
   def list_friend
-    @friend_active = @current_member.cached_get_friend_active
-    @your_request = @current_member.cached_get_your_request
-    @friend_request = @current_member.cached_get_friend_request
-    # @friend_inactive = @current_member.get_friend_inactive
+    @friend_active = Member.list_friend_active
+    @your_request = Member.list_your_request
+    @friend_request = Member.list_friend_request
   end
 
   def my_following

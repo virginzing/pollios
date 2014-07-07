@@ -653,13 +653,9 @@ class Poll < ActiveRecord::Base
 
   def serailize_group_detail_as_json
     group = PollGroup.where(poll_id: @poll_id).pluck(:group_id)
-    your_group_ids = Member.current_member.cached_get_group_active.map(&:id)
-
-    puts "group => #{group}"
+    your_group_ids = Member.list_group_active.map(&:id)
     group_list = group & your_group_ids
-
-    puts "group list => #{group_list}"
-    
+     
     if group.present?
       ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json()
     else
@@ -681,18 +677,18 @@ class Poll < ActiveRecord::Base
     @friend_request = Member.list_friend_request.map(&:id)
     @my_following = Member.list_friend_following.map(&:id)
     
-    if @my_friend.include?(id)
+    if @my_friend.include?(@creator.id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
-    elsif @your_request.include?(id)
+    elsif @your_request.include?(@creator.id)
       hash = Hash["add_friend_already" => true, "status" => :invite]
-    elsif @friend_request.include?(id)
+    elsif @friend_request.include?(@creator.id)
       hash = Hash["add_friend_already" => true, "status" => :invitee]
     else
       hash = Hash["add_friend_already" => false, "status" => :nofriend]
     end
 
-    if Member.current_member.celebrity? || Member.current_member.brand?
-      @my_following.include?(id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+    if @creator.celebrity? || @creator.brand?
+      @my_following.include?(@creator.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
     else
       hash.merge!({"following" => "" })
     end
