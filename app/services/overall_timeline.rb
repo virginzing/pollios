@@ -51,7 +51,7 @@ class OverallTimeline
 
   def unvote_count
     poll_id_from_poll_member = PollMember.available.where("id IN (?)", cached_poll_ids_of_poll_member).map(&:poll_id)
-    (poll_id_from_poll_member - @member.cached_my_voted.map(&:poll_id)).count
+    (poll_id_from_poll_member - Member.voted_polls.collect{|e| e.first }).count
   end
 
   private

@@ -1,4 +1,5 @@
-json.creator Member.serializer_member_detail(@current_member, poll.member)
+# json.creator Member.serializer_member_detail(@current_member, poll.member)
+json.creator poll.serializer_member_detail
 json.id poll.id
 json.title poll.title
 json.vote_count poll.vote_all

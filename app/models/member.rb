@@ -291,24 +291,6 @@ class Member < ActiveRecord::Base
     Rails.cache.fetch([ self, 'report']) { poll_reports.to_a }
   end
 
-  # def cached_poll_count
-  #   Rails.cache.fetch([self.id, 'poll_count']) do
-  #     polls.count
-  #   end
-  # end
-
-  # def cached_poll_member_count
-  #   Rails.cache.fetch([self.id, 'poll_member']) do
-  #     Poll.where(member_id: id).count
-  #   end
-  # end
-
-  # def cached_voted_count
-  #   Rails.cache.fetch([self.id, 'vote_count']) do
-  #     history_votes.where(poll_series_id: 0).count
-  #   end
-  # end
-
   def cached_block_friend
     Rails.cache.fetch([self.id, 'block_friend']) do
       get_friend_blocked.to_a
@@ -324,7 +306,11 @@ class Member < ActiveRecord::Base
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
-      HistoryVote.select("poll_id, choice_id, poll_series_id").where("member_id = #{id} AND poll_series_id = 0").to_a
+      # HistoryVote.select("poll_id, choice_id, poll_series_id").where("member_id = #{id} AND poll_series_id = 0").to_a
+      HistoryVote.joins(:member, :choice, :poll)
+                  .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
+                  .where("history_votes.member_id = #{id}")
+                  .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }.to_a
     end
   end
 
@@ -653,11 +639,11 @@ class Member < ActiveRecord::Base
     @history_viewed = history_views.collect { |viewed| viewed.poll_id }
   end
 
-  def get_history_voted
-    @history_voted = HistoryVote.joins(:member, :choice, :poll)
-                                .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
-                                .where("history_votes.member_id = #{id}")
-                                .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }
-  end
+  # def get_history_voted
+  #   @history_voted = HistoryVote.joins(:member, :choice, :poll)
+  #                               .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
+  #                               .where("history_votes.member_id = #{id}")
+  #                               .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }
+  # end
 
 end
