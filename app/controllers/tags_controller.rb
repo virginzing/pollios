@@ -20,5 +20,13 @@ class TagsController < ApplicationController
       wants.json { render json: @tags.map(&:name), root: false }
     end
   end
+
+  def list_tag_all
+    @tags = Tag.all.map(&:name)
+  end
+
+  def search_tag
+    
+  end
   
 end

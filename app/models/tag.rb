@@ -1,4 +1,12 @@
 class Tag < ActiveRecord::Base
+  include PgSearch
+
+  pg_search_scope :searchable_name, :against => [:name],
+                  :using => { 
+                    :tsearch => { :prefix => true, :dictionary => "english" },
+                    :trigram => { }
+                  }
+
   has_many :taggings
   has_many :polls, through: :taggings, source: :poll
 

@@ -39,7 +39,6 @@ class HashtagTimeline
     @hashtag_popular ||= tag_popular.map(&:name)
   end
 
-
   private
 
   def tag_popular
@@ -59,13 +58,6 @@ class HashtagTimeline
     where("polls.id NOT IN (?)", @report_poll.map(&:id)).
     where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
           "OR (poll_groups.group_id IN (?))", true, your_friend_ids, false, your_group_ids).references(:poll_groups)
-  end
-
-  def method_name
-    
-  end
-
-
-  
+  end  
   
 end

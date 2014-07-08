@@ -53,7 +53,6 @@ class Member < ActiveRecord::Base
   has_many :group_inactive, -> { where("group_members.active = ?", false) } , dependent: :destroy, class_name: "GroupMember"
   has_many :get_group_inactive , through: :group_inactive, source: :group
 
-
   has_many :group_members, dependent: :destroy
   has_many :groups, through: :group_members, source: :group, dependent: :destroy
 
@@ -288,6 +287,12 @@ class Member < ActiveRecord::Base
   def cached_watched_friend_count(member)
     Rails.cache.fetch([ self.id, 'friend_count']) do
       FriendPollInProfile.new(member, self, {}).watched_friend_count
+    end
+  end
+
+  def cached_block_friend_count(member)
+    Rails.cache.fetch([ self.id, 'block_count']) do
+      FriendPollInProfile.new(member, self, {}).block_friend_count
     end
   end
 

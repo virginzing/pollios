@@ -68,6 +68,10 @@ class FriendPollInProfile
     groups.count
   end
 
+  def block_friend_count
+    block_friend.count
+  end
+
   private
 
   def poll_created
@@ -96,6 +100,10 @@ class FriendPollInProfile
                 .where("(watcheds.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0')" \
                 "OR (watcheds.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", list_my_friend_ids, my_and_friend_group).references(:poll_groups)
+  end
+
+  def block_friend
+    query = @friend.get_friend_blocked
   end
 
   def mutual_or_public_group

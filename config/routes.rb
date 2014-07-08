@@ -181,6 +181,12 @@ Pollios::Application.routes.draw do
 
   get '/tags',  to: 'tags#index'
   get 'search_autocmp_tags',  to: 'tags#search_autocmp_tags'
+
+  scope 'tags' do
+    get 'all',      to: 'tags#list_tag_all'
+    get 'search',   to: 'tags#search_tag'
+  end
+
   get '/profile', to: 'members#profile',  as: :my_profile
   get '/qrcode',  to: 'polls#generate_qrcode'
   get '/dashboard',  to: 'home#dashboard', as: :dashboard
