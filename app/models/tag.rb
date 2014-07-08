@@ -63,5 +63,11 @@ class Tag < ActiveRecord::Base
    }
   end
 
+  def self.cached_tag_all
+    Rails.cache.fetch('tags_all', expire_within: 30.minutes) do
+      Tag.joins(:taggings).select("tags.*, count(taggings.tag_id) as count").order("count desc, name asc").group("tags.id").map(&:name).uniq.to_a
+    end
+  end
+
 
 end

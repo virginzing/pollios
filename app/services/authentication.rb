@@ -108,7 +108,7 @@ class Authentication
   end
 
   def update_member(member)
-      member.update!(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday)
+      member.update(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday)
   end
 
   def update_member_provider(member_provider)
