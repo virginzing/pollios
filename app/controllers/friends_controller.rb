@@ -113,16 +113,16 @@ class FriendsController < ApplicationController
 
   def my_following
     @list_following = @current_member.cached_get_following
-    @is_friend = Friend.add_friend?(@list_following) if @list_following.present?
+    @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
   end
 
   def my_follower
     @list_follower = @current_member.cached_get_follower
-    @is_friend = Friend.add_friend?(@list_follower) if @list_follower.present?
+    @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
   end
 
   def profile
-    @is_friend = Friend.add_friend?([@find_friend]) if @find_friend.present?
+    @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
   end
 
   ###
@@ -135,7 +135,7 @@ class FriendsController < ApplicationController
   end
 
   def is_friend(list_compare)
-    @is_friend = Friend.add_friend?(list_compare)
+    @is_friend = Friend.add_friend?(@current_member, list_compare)
   end
 
   # def list_request
