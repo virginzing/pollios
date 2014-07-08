@@ -62,7 +62,7 @@ class FriendsController < ApplicationController
   end
 
   def search_friend
-    @search = Member.search_member(friend_params)
+    @search = Member.add_friendadd_friend(friend_params)
     is_friend(@search) if @search.present?
   end
 
@@ -135,7 +135,7 @@ class FriendsController < ApplicationController
   end
 
   def is_friend(list_compare)
-    @is_friend = Friend.add_friend?(@current_member, list_compare)
+    @is_friend = Friend.add_friend?(list_compare)
   end
 
   # def list_request
