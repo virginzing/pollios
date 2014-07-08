@@ -58,7 +58,7 @@ module Pollios
       config.page_method_name = :per_page_kaminari
     end
 
-    config.active_record.schema_format = :sql
+    # config.active_record.schema_format = :sql
 
   end
 end
