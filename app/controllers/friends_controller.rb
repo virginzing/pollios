@@ -63,22 +63,22 @@ class FriendsController < ApplicationController
 
   def search_friend
     @search = Member.search_member(friend_params)
-    is_friend(@current_member, @search) if @search.present?
+    is_friend(@search) if @search.present?
   end
 
   def friend_of_friend
     @friend = Friend.friend_of_friend(friend_params)
-    is_friend(@current_member, @friend) if @friend.present?
+    is_friend(@friend) if @friend.present?
   end
 
   def following_of_friend
     @friend = Friend.following_of_friend(friend_params)
-    is_friend(@current_member, @friend) if @friend.present?
+    is_friend(@friend) if @friend.present?
   end
 
   def follower_of_friend
     @friend = Friend.follower_of_friend(friend_params)
-    is_friend(@current_member, @friend) if @friend.present?
+    is_friend(@friend) if @friend.present?
   end
 
   def list_of_poll
@@ -113,20 +113,19 @@ class FriendsController < ApplicationController
 
   def my_following
     @list_following = @current_member.cached_get_following
-    @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
+    @is_friend = Friend.add_friend?(@list_following) if @list_following.present?
   end
 
   def my_follower
     @list_follower = @current_member.cached_get_follower
-    @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
+    @is_friend = Friend.add_friend?(@list_follower) if @list_follower.present?
   end
 
   def profile
-    @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
+    @is_friend = Friend.add_friend?([@find_friend]) if @find_friend.present?
   end
 
   ###
-
 
   def poll_helper
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
@@ -135,8 +134,8 @@ class FriendsController < ApplicationController
     @total_entries = @polls.total_entries
   end
 
-  def is_friend(member_obj, list_compare)
-    @is_friend = Friend.add_friend?(member_obj, list_compare)
+  def is_friend(list_compare)
+    @is_friend = Friend.add_friend?(@current_member, list_compare)
   end
 
   # def list_request

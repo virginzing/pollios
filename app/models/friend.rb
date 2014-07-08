@@ -239,6 +239,7 @@ class Friend < ActiveRecord::Base
 
   def self.add_friend?(member_obj, search_member)
     check_my_friend = []
+    
     my_friend = member_obj.cached_get_friend_active.map(&:id)
     your_request = member_obj.cached_get_your_request.map(&:id)
     friend_request = member_obj.cached_get_friend_request.map(&:id)

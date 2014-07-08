@@ -1,6 +1,9 @@
 class Member < ActiveRecord::Base
   # has_paper_trail
-  
+  include PgSearch
+  multisearchable :against => [:fullname, :username, :email]
+  pg_search_scope :search_full_name, :against => [:fullname, :username, :email]
+
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
 
@@ -10,6 +13,7 @@ class Member < ActiveRecord::Base
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
 
   include MemberHelper
+
 
   has_one :member_invite_code, dependent: :destroy
 
