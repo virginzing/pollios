@@ -185,6 +185,7 @@ class Member < ActiveRecord::Base
       field :cover, :carrierwave
       field :key_color
       field :status_account
+      field :report_count
     end
 
     show do

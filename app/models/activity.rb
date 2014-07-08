@@ -169,6 +169,7 @@ class Activity
   def self.manage_action_my_self
     action_change_name = ACTION[:change_name]
     action_change_avatar = ACTION[:chnage_avatar]
+    action_change_cover = ACTION[:change_cover]
     type_member = TYPE[:member]
 
     if @action == action_change_name
@@ -178,6 +179,17 @@ class Activity
           name: @member.fullname
         },
         action: action_change_name,
+        type: type_member,
+        authority: AUTHORITY[:friend_following],
+        activity_at: Time.zone.now.to_i
+      }
+    elsif @action == action_change_cover
+      {
+        member: {
+          id: @member.id,
+          name: @member.fullname
+        },
+        action: action_change_cover,
         type: type_member,
         authority: AUTHORITY[:friend_following],
         activity_at: Time.zone.now.to_i
