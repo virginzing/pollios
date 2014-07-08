@@ -22,7 +22,7 @@ class TagsController < ApplicationController
   end
 
   def list_tag_all
-    @tags = Tag.joins(:taggings).map(&:name)
+    @tags = Tag.joins(:taggings).select("tags.*, count(taggings.tag_id) as count").order("count desc, name asc").group("tags.id").map(&:name).uniq
   end
 
   def search_tag

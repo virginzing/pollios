@@ -126,6 +126,7 @@ class Member < ActiveRecord::Base
       field :id
       field :new_avatar
       field :fullname
+      field :username
       field :email
       field :gender do
         filterable true
