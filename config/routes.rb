@@ -97,14 +97,15 @@ Pollios::Application.routes.draw do
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
     get 'notify',         to: 'members#notify'
-    get ':member_id/activity',      to: 'members#activity'
-    get ':member_id/all_request',   to: 'members#all_request'
-    get ':member_id/list_block',    to: 'members#list_block'
-    get 'profile',            to: 'members#my_profile'
-    post 'activate',          to: 'members#activate'
-    post ':member_id/block',  to: 'members#block'
-    post 'verify_email',      to: 'members#verify_email'
-    post ':member_id/report',  to: 'members#report'
+    get ':member_id/activity',    to: 'members#activity'
+    get ':member_id/all_request', to: 'members#all_request'
+    get ':member_id/list_block',  to: 'members#list_block'
+    get 'profile',                to: 'members#my_profile'
+    post 'activate',              to: 'members#activate'
+    post ':member_id/block',      to: 'members#block'
+    post 'verify_email',          to: 'members#verify_email'
+    post ':member_id/report',     to: 'members#report'
+    post ':member_id/public_id',  to: 'members#public_id'
   end
 
   scope 'poll' do

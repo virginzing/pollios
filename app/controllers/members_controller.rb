@@ -2,7 +2,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -30,6 +30,15 @@ class MembersController < ApplicationController
   end
 
   def profile
+  end
+
+  def public_id
+    begin
+      @current_member = @current_member.update!(username: params[:username])
+    rescue ActiveRecord::RecordInvalid => invalid
+      @current_member = nil
+      @error_message = invalid.record.errors.full_messages
+    end
   end
 
   def update_profile
