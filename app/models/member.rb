@@ -1,8 +1,11 @@
 class Member < ActiveRecord::Base
   # has_paper_trail
   include PgSearch
-  multisearchable :against => [:fullname, :username, :email]
-  pg_search_scope :search_full_name, :against => [:fullname, :username, :email]
+  # multisearchable :against => [:fullname, :username, :email]
+  pg_search_scope :searchable_member, :against => [:fullname, :username, :email],
+                  :using => { 
+                    :tsearch => { :prefix => true, :dictionary => "english" }
+                  }
 
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
@@ -425,9 +428,7 @@ class Member < ActiveRecord::Base
 
   def self.search_member(params)
     if params[:q].present?
-      where("id != ? AND (email LIKE ? OR fullname LIKE ? OR username LIKE ?)", params[:member_id].to_i ,"%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
-    else
-      nil
+      where("id != #{params[:member_id]}").searchable_member(params[:q])
     end
   end
 
