@@ -24,6 +24,7 @@ if @poll.valid?
     json.poll_within @poll.get_within(@group_by_name, params[:action])
     json.watched true
     json.photo @poll.get_photo
+    json.allow_comment @poll.allow_comment
   end
 
   json.list_choices @poll.choices do |choice|

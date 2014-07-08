@@ -389,6 +389,8 @@ class Poll < ActiveRecord::Base
 
   def self.create_poll(poll, member) ## create poll for API
     Poll.transaction do
+
+      puts "test log allow commnet => #{poll[:allow_comment]}"
       title = poll[:title]
       expire_date = poll[:expire_within]
       choices = poll[:choices]
@@ -399,7 +401,7 @@ class Poll < ActiveRecord::Base
       type_poll = poll[:type_poll]
       is_public = poll[:is_public]
       photo_poll = poll[:photo_poll]
-      allow_comment = poll[:allow_comment]
+      allow_comment = poll[:allow_comment] || false
 
       choices = check_type_of_choice(choices)
 
