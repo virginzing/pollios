@@ -22,11 +22,11 @@ class TagsController < ApplicationController
   end
 
   def list_tag_all
-    @tags = Tag.all.map(&:name)
+    @tags = Tag.joins(:taggings).map(&:name)
   end
 
   def search_tag
-    
+    @tags = Tag.joins(:taggings)
   end
   
 end

@@ -4,7 +4,7 @@ class Tag < ActiveRecord::Base
   pg_search_scope :searchable_name, :against => [:name],
                   :using => { 
                     :tsearch => { :prefix => true, :dictionary => "english" },
-                    :trigram => { }
+                    :trigram => { :threshold => 0.1 }
                   }
 
   has_many :taggings

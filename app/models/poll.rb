@@ -1,10 +1,14 @@
 class Poll < ActiveRecord::Base
 
   mount_uploader :photo_poll, PhotoPollUploader
-
+  include PgSearch
   include PollsHelper
   
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
+
+  pg_search_scope :search_with_tag, against: [:title],
+                  using: { tsearch: {dictionary: "english", prefix: true} },
+                  associated_against: {tags: [:name]}
   
   has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy

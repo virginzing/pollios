@@ -1,4 +1,6 @@
 class HashtagTimeline
+  include LimitPoll
+
   def initialize(member_obj, options)
     @member = member_obj
     @options = options
@@ -32,7 +34,7 @@ class HashtagTimeline
   end
 
   def get_hashtag
-    @hashtag ||= tag_friend_group_public
+    @hashtag ||= poll_with_tag
   end
 
   def get_hashtag_popular
@@ -54,10 +56,34 @@ class HashtagTimeline
     Tag.find_by_name(query_tag).polls.
     joins(:poll_members).
     includes(:poll_groups, :campaign, :choices, :member).
-    order('polls.created_at desc, polls.vote_all desc, polls.public desc, polls.expire_date desc').
     where("polls.id NOT IN (?)", @report_poll.map(&:id)).
     where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0) " \
           "OR (poll_groups.group_id IN (?))", true, your_friend_ids, false, your_group_ids).references(:poll_groups)
-  end  
-  
+  end
+
+  def poll_with_tag
+    poll_without_group = "poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    poll_with_group = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
+
+    query = Poll.available.joins([:poll_members,:taggings => :tag]).
+
+    where("((#{poll_without_group} AND #{poll_unexpire}) OR (#{poll_without_group} AND #{poll_expire_have_vote}))" \
+      "OR ((#{poll_with_group} AND #{poll_unexpire}) OR (#{poll_with_group} AND #{poll_expire_have_vote}))",
+      find_poll_in_my_group, find_poll_in_my_group).
+    search_with_tag(query_tag).
+    order("vote_all desc")
+  end
+
+  def poll_expire_have_vote
+    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
+  end
+
+  def poll_unexpire
+    "polls.expire_date > '#{Time.now}'"
+  end
+
+  def find_poll_in_my_group
+    query = PollGroup.where("group_id IN (?)", your_group_ids).limit(LIMIT_TIMELINE).map(&:poll_id).uniq
+  end
+
 end
