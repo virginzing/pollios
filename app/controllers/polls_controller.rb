@@ -360,6 +360,8 @@ class PollsController < ApplicationController
       begin
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, fullname: @current_member.fullname, avatar: @current_member.avatar, message: comment_params[:message])
         @poll.increment!(:comment_count)
+        puts "#{@current_member.id == @poll.member_id}"
+        CommentPollWorker.new.perform(@current_member, @poll, { comment_message: @comment.message }) unless @current_member.id == @poll.member_id
       rescue => e
         @error_message = e.message
       end

@@ -4,7 +4,8 @@ module SymbolHash
     :poll => 'Poll',
     :friend => 'Friend',
     :group => 'Group',
-    :member => 'Member'
+    :member => 'Member',
+    :comment => 'Comment'
   }
 
   ACTION = {
@@ -18,7 +19,8 @@ module SymbolHash
     :request => 'Request',
     :change_name => 'ChangeName',
     :change_avatar => 'ChangeAvatar',
-    :change_cover => 'ChangeCover'
+    :change_cover => 'ChangeCover',
+    :comment => 'Comment'
   }
 
   AUTHORITY = {

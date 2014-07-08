@@ -53,7 +53,7 @@ class Apn::VotePoll
   private
 
   def watched_poll
-    Watched.where(poll_id: @poll.id).pluck(:member_id)
+    Watched.where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
   end
   
 end
