@@ -65,13 +65,13 @@ class HashtagTimeline
     poll_without_group = "poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     poll_with_group = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
-    query = Poll.available.joins([:poll_members,:taggings => :tag]).
+    query = Poll.available.joins([:poll_members,:taggings => :tag]).uniq.
 
     where("((#{poll_without_group} AND #{poll_unexpire}) OR (#{poll_without_group} AND #{poll_expire_have_vote}))" \
       "OR ((#{poll_with_group} AND #{poll_unexpire}) OR (#{poll_with_group} AND #{poll_expire_have_vote}))",
       find_poll_in_my_group, find_poll_in_my_group).
     search_with_tag(query_tag).
-    order("vote_all desc")
+    order("created_at desc, vote_all desc")
   end
 
   def poll_expire_have_vote
