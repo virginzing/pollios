@@ -31,7 +31,7 @@ gem 'jbuilder', github: 'rails/jbuilder'
 
 gem 'enumerize'
 gem 'pg', '0.17.0'
-gem "squeel"
+# gem "squeel"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

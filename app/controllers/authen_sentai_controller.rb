@@ -74,10 +74,10 @@ class AuthenSentaiController < ApplicationController
 
   def signup_sentai
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
-    puts "response : #{@response}"
+    # puts "response : #{@response}"
   	respond_to do |wants|
-  		if @response["response_status"] == "OK"
-        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
+  		if @response["response_status"] == "OK" && @auth.authenticated?
         if @auth.activate_account?
           @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
           session[:member_id] = member.id
