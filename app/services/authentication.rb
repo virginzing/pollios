@@ -19,6 +19,10 @@ class Authentication
     check_activate_account
   end  
 
+  def check_valid_member?
+    !member.blacklist?
+  end
+
   def name
     @params["fullname"] || @params[:name]
   end

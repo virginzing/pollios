@@ -9,6 +9,10 @@ Rollbar.configure do |config|
   if Rails.env.test?
     config.enabled = false
   end
+
+  if Rails.env.development?
+    config.enabled = false
+  end
   
 
   # By default, Rollbar will try to call the `current_user` controller method

@@ -39,10 +39,10 @@ class AuthenSentaiController < ApplicationController
 	def signin_sentai
 
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
-    # puts "signin => #{@response}"
+    puts "response => #{@response}"
 		respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
-			if @response["response_status"] == "OK" && @auth.authenticated?
+			if @response["response_status"] == "OK"
         if @auth.activate_account?
           @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
           @login = true
@@ -77,7 +77,7 @@ class AuthenSentaiController < ApplicationController
     # puts "response : #{@response}"
   	respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
-  		if @response["response_status"] == "OK" && @auth.authenticated?
+  		if @response["response_status"] == "OK"
         if @auth.activate_account?
           @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
           session[:member_id] = member.id
@@ -88,6 +88,7 @@ class AuthenSentaiController < ApplicationController
           wants.js
         else
           @signup = false
+          @waiting = true
           session[:activate_email] = member.email
           session[:activate_id] = member.id
           flash[:warning] = "This account is not activate yet."
