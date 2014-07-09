@@ -31,6 +31,7 @@ gem 'jbuilder', github: 'rails/jbuilder'
 
 gem 'enumerize'
 gem 'pg', '0.17.0'
+gem "squeel"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -42,6 +43,7 @@ group :development do
   # gem 'thin'
   gem 'quiet_assets'
   gem 'faker'
+  gem 'proxylocal'
 end
 
 group :production do
@@ -73,15 +75,12 @@ gem "mini_magick"
 gem 'randumb'
 gem 'figaro'
 gem 'amoeba'
-# gem 'nprogress-rails'
-# gem "squeel" 
 
 gem 'rails_admin'
 gem 'devise'
 gem 'paper_trail', '~> 3.0.0'
 gem "sass", "~> 3.2.5"
 gem 'active_model_serializers'
-# gem "squeel"
 gem "gretel"
 
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
@@ -103,14 +102,4 @@ gem 'pg_search'
 
 gem 'will_paginate_mongoid'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
-
-# Use debugger
-# gem 'debugger', group: [:development, :test]
+gem 'rollbar'  # for Notifier

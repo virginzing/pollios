@@ -12,7 +12,7 @@ class Authentication
   end
 
   def authenticated?
-    member.present?    
+    member.present? && member.normal?
   end
 
   def activate_account?
@@ -59,9 +59,19 @@ class Authentication
     @params["member_type"] || @default_member_type
   end
 
-  
+  def first_signup
+    @new_member
+  end
+
+  def error_message
+    if member.blacklist?
+      "This account is banned"
+    else
+      "Invalid email or password."
+    end
+  end
+
   private
-        # member.username = check_username
 
   def member_from_authen
     @member = Member.where(email: email).first_or_create do |member|
@@ -97,7 +107,6 @@ class Authentication
 
     @member
   end
-
 
   def follow_pollios
     find_pollios = Member.find_by_email("pollios@pollios.com")

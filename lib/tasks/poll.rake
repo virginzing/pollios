@@ -43,15 +43,13 @@ namespace :poll do
 
   desc "clear all data"
   task :clear => :environment do
-    # Member.all.each do |member|
-    #   member.destroy
-    # end
+    Member.delete_all
+    Poll.delete_all
     Tag.delete_all
     Tagging.delete_all
-    Poll.all.each do |poll|
-      poll.destroy
-    end
+
     PollMember.delete_all
+    PollGroup.delete_all
     PollSeries.delete_all
     Choice.delete_all
     PollSeriesTag.delete_all
@@ -65,11 +63,29 @@ namespace :poll do
     SharePoll.delete_all
     Provider.delete_all
     GroupMember.delete_all
-    PollGroup.delete_all
     HiddenPoll.delete_all
     HistoryVote.delete_all
     HistoryView.delete_all
     Friend.delete_all
+
+    InviteCode.delete_all
+    MemberInviteCode.delete_all
+    MemberReportMember.delete_all
+    MemberReportPoll.delete_all
+    NotifyLog.delete_all
+    Watched.delete_all
+    Apn::Device.delete_all
+    Apn::Notification.delete_all
+
+    Activity.delete_all
+    Commment.delete_all
+    Company.delete_all
+
+    UserStats.delete_all
+    VoteStats.delete_all
+    GroupStats.delete_all
+    Template.delete_all
+
   end
 
   desc "clear some data"

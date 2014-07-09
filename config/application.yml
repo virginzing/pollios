@@ -9,6 +9,7 @@
 GMAIL_USERNAME: "nuttapon@code-app.com"
 GMAIL_PASSWORD: "Nutty509"
 GROUP_TIMELINE: "group_timeline"
+ROLLBAR_ACCESS_TOKEN: "69e0cc1269b646aa95b9a97b9ebed414"
 
 development:
   PUBLIC_POLL: "public_poll"

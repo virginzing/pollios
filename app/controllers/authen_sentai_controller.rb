@@ -39,10 +39,10 @@ class AuthenSentaiController < ApplicationController
 	def signin_sentai
 
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
-    puts "signin => #{@response}"
+    # puts "signin => #{@response}"
 		respond_to do |wants|
-			if @response["response_status"] == "OK"
-        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
+			if @response["response_status"] == "OK" && @auth.authenticated?
         if @auth.activate_account?
           @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
           @login = true
@@ -62,7 +62,7 @@ class AuthenSentaiController < ApplicationController
         end
 			else
         @login = false
-				flash[:warning] = "Invalid username or password."
+				flash[:warning] = "Invalid email or password."
 				wants.html { redirect_to(:back) }
 				wants.json
         wants.js
@@ -98,7 +98,7 @@ class AuthenSentaiController < ApplicationController
   		else
         @signup = false
   			flash[:error] = @response["response_message"]
-        puts "#{flash[:error].class}"
+        # puts "#{flash[:error].class}"
         @flash_error = flash[:error]
 
   			wants.html { redirect_to(:back) }

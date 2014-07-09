@@ -1,4 +1,5 @@
 class Member < ActiveRecord::Base
+  after_validation :report_validation_errors_to_rollbar
   # has_paper_trail
   include PgSearch
   # multisearchable :against => [:fullname, :username, :email]
@@ -99,6 +100,8 @@ class Member < ActiveRecord::Base
 
   has_many :member_report_polls, dependent: :destroy
   has_many :poll_reports, through: :member_report_polls, source: :poll
+
+  has_many :request_codes, dependent: :destroy
 
   # after_create :set_follow_pollios
 
@@ -500,8 +503,13 @@ class Member < ActiveRecord::Base
   end
 
   def get_token(provider_name)
-    find_provider = providers.find_by(name: provider_name)
-    find_provider.present? ? find_provider.token : ""
+    if provider_name.present?
+      find_provider = providers.find_by(name: provider_name)
+      find_provider.present? ? find_provider.token : ""
+    else
+      find_provider = providers.first
+      find_provider.present? ? find_provider.token : ""
+    end
   end
 
   def get_template
@@ -649,6 +657,10 @@ class Member < ActiveRecord::Base
 
   def get_history_viewed
     @history_viewed = history_views.collect { |viewed| viewed.poll_id }
+  end
+
+  def get_request_code
+    request_codes.first.present?
   end
 
   # def get_history_voted

@@ -2,7 +2,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify]
   before_action :signed_user, only: [:index, :profile]
@@ -12,7 +12,9 @@ class MembersController < ApplicationController
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
   expose(:members) { |default| default.paginate(page: params[:page]) }
- 
+  expose(:member) { @current_member }
+
+
   def detail_friend
     @find_friend = Member.find(params[:friend_id])
     poll = @find_friend.polls.includes(:member, :campaign)
@@ -167,6 +169,20 @@ class MembersController < ApplicationController
     end
   end
 
+  def send_request_code
+    @new_request = false
+    begin
+      @request = @current_member.request_codes.first_or_create do |request|
+        request.member_id = @current_member.id
+        request.custom_properties = {}
+        request.save
+        @new_request = true
+      end
+    rescue => e
+      
+    end
+  end
+
   def add_to_group_at_invite
     if @group = Group.find_by(id: @group_id)
       @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
@@ -191,7 +207,7 @@ class MembersController < ApplicationController
 
 
   def update_profile_params
-    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group)
+    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup)
   end
 
   def verify_email_params

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140708155056) do
+ActiveRecord::Schema.define(version: 20140709081009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -359,6 +359,7 @@ ActiveRecord::Schema.define(version: 20140708155056) do
     t.boolean  "anonymous_group",            default: false
     t.integer  "report_count",               default: 0
     t.integer  "status_account",             default: 1
+    t.boolean  "first_signup",               default: true
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
@@ -507,6 +508,15 @@ ActiveRecord::Schema.define(version: 20140708155056) do
   end
 
   add_index "recurrings", ["member_id"], name: "index_recurrings_on_member_id", using: :btree
+
+  create_table "request_codes", force: true do |t|
+    t.integer  "member_id"
+    t.text     "custom_properties"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "request_codes", ["member_id"], name: "index_request_codes_on_member_id", using: :btree
 
   create_table "share_polls", force: true do |t|
     t.integer  "member_id"

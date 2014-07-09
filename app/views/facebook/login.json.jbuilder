@@ -7,10 +7,12 @@ if @auth.authenticated?
     end
   else
       json.member_id member.id
+      json.request_code member.get_request_code
       json.response_status "WAITING"
       json.response_message "Waiting activate your account."
   end
+  json.first_signup member.first_signup
 else
   json.response_status "ERROR"
-  json.response_message "Unable..."
+  json.response_message @auth.error_message || "ERROR"
 end

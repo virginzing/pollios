@@ -106,6 +106,7 @@ Pollios::Application.routes.draw do
     post 'verify_email',          to: 'members#verify_email'
     post ':member_id/report',     to: 'members#report'
     post ':member_id/public_id',  to: 'members#public_id'
+    post ':member_id/request_code', to: 'members#send_request_code'
   end
 
   scope 'poll' do

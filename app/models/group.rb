@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include GroupHelper
+  after_validation :report_validation_errors_to_rollbar
   has_many :group_members, dependent: :destroy
   has_many :members, through: :group_members, source: :member
   

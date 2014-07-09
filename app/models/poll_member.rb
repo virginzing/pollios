@@ -1,4 +1,5 @@
 class PollMember < ActiveRecord::Base
+  after_validation :report_validation_errors_to_rollbar
   belongs_to :member
   belongs_to :poll, -> { having_status_poll(:gray, :white) }, touch: true
 
