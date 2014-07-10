@@ -1,5 +1,4 @@
 if @response["response_status"] == "OK"
-  puts "#{@auth.activate_account?}"
   if @auth.activate_account?
     if @auth.check_valid_member?
       json.response_status "OK"
