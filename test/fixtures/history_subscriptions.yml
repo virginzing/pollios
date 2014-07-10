@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  member_id: 
+  product_id: MyString
+  transaction_id: MyString
+  purchase_date: 2014-07-10 17:29:41
+
+two:
+  member_id: 
+  product_id: MyString
+  transaction_id: MyString
+  purchase_date: 2014-07-10 17:29:41

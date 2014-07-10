@@ -5,7 +5,7 @@ require 'rqrcode'
 require 'houston'
 require 'htmlentities'
 require 'yajl'
-
+require 'itunes/receipt'
 
 # MultiJson.engine = :yajl
 # Benchmark.bmbm(5) do |x|

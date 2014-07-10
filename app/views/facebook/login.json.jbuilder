@@ -4,7 +4,6 @@ if @auth.authenticated?
       json.member_detail do
       json.partial! 'response_helper/authenticate/info', member: member
       json.token member.get_token("facebook")
-      json.first_signup member.first_signup
     end
   else
       json.member_id member.id

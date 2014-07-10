@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709081009) do
+ActiveRecord::Schema.define(version: 20140710102941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,6 +242,30 @@ ActiveRecord::Schema.define(version: 20140709081009) do
   add_index "hidden_polls", ["member_id"], name: "index_hidden_polls_on_member_id", using: :btree
   add_index "hidden_polls", ["poll_id"], name: "index_hidden_polls_on_poll_id", using: :btree
 
+  create_table "history_purchases", force: true do |t|
+    t.integer  "member_id"
+    t.string   "product_id"
+    t.string   "transaction_id"
+    t.datetime "purchase_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_purchases", ["member_id"], name: "index_history_purchases_on_member_id", using: :btree
+  add_index "history_purchases", ["transaction_id"], name: "index_history_purchases_on_transaction_id", unique: true, using: :btree
+
+  create_table "history_subscriptions", force: true do |t|
+    t.integer  "member_id"
+    t.string   "product_id"
+    t.string   "transaction_id"
+    t.datetime "purchase_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_subscriptions", ["member_id"], name: "index_history_subscriptions_on_member_id", using: :btree
+  add_index "history_subscriptions", ["transaction_id"], name: "index_history_subscriptions_on_transaction_id", unique: true, using: :btree
+
   create_table "history_view_guests", force: true do |t|
     t.integer  "guest_id"
     t.integer  "poll_id"
@@ -360,6 +384,10 @@ ActiveRecord::Schema.define(version: 20140709081009) do
     t.integer  "report_count",               default: 0
     t.integer  "status_account",             default: 1
     t.boolean  "first_signup",               default: true
+    t.integer  "point",                      default: 0
+    t.boolean  "subscription",               default: false
+    t.datetime "subscribe_last"
+    t.datetime "subscribe_expire"
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree

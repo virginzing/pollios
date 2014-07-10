@@ -21,6 +21,9 @@ class Member < ActiveRecord::Base
 
   has_one :member_invite_code, dependent: :destroy
 
+  has_many :history_purchases, dependent: :destroy
+  has_many :history_subscriptions, dependent: :destroy
+
   has_many :watcheds, dependent: :destroy
 
   has_many :apn_devices, class_name: 'Apn::Device', dependent: :destroy

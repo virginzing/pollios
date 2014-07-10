@@ -36,6 +36,16 @@ GIT
       tzinfo (>= 0.3.37)
 
 GIT
+  remote: git://github.com/nov/itunes-receipt.git
+  revision: a480f35b1cfc6adf8bc806288d0fb079f49c3f5e
+  specs:
+    itunes-receipt (1.0.0)
+      activesupport (>= 2.3)
+      i18n
+      json (>= 1.4.3)
+      restclient_with_cert
+
+GIT
   remote: git://github.com/rails/jbuilder.git
   revision: ca1a95b90d33961de037f0c4d48b4f7b9ae8cc8f
   specs:
@@ -247,6 +257,8 @@ GEM
     remotipart (1.2.1)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    restclient_with_cert (0.0.8)
+      rest-client (>= 1.6)
     rollbar (0.13.2)
       multi_json (~> 1.3)
     rqrcode (0.4.2)
@@ -339,6 +351,7 @@ DEPENDENCIES
   gretel
   houston
   htmlentities
+  itunes-receipt!
   jbuilder!
   jbuilder_cache_multi (~> 0.0.2)
   jquery-rails
