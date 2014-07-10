@@ -18,7 +18,7 @@ class HashtagTimeline
   end
 
   def your_friend_ids
-    @friend_ids ||= @member.whitish_friend.map(&:followed_id) << member_id
+    @friend_ids ||= @member.cached_get_friend_active.map(&:id) << member_id
   end
 
   def your_group

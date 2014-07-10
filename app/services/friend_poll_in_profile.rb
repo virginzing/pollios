@@ -107,9 +107,11 @@ class FriendPollInProfile
   end
 
   def mutual_or_public_group
-    Group.where("groups.id IN (?) OR public = 't'", my_and_friend_group).
-          joins(:group_members).
-          select("groups.*, count(group_members.group_id) as member_in_group").group("groups.id")
+    Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group).
+          joins(:group_members).includes(:polls).
+          select("groups.*, count(group_members.group_id) as member_in_group").
+          group("groups.id").
+          order("groups.name asc")
   end
 
   def poll_expire_have_vote

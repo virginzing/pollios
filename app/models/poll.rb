@@ -394,8 +394,7 @@ class Poll < ActiveRecord::Base
 
   def self.create_poll(poll, member) ## create poll for API
     Poll.transaction do
-
-      puts "test log allow commnet => #{poll[:allow_comment]}"
+      # puts "test log allow commnet => #{poll[:allow_comment]}"
       title = poll[:title]
       expire_date = poll[:expire_within]
       choices = poll[:choices]
@@ -414,8 +413,6 @@ class Poll < ActiveRecord::Base
       in_group_ids = group_id.presence || "0"
 
       convert_expire_date = Time.now + expire_date.to_i.day
-
-      # YES
       
       if group_id.present?
         @set_public = false
