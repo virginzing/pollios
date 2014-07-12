@@ -8,12 +8,13 @@ if @poll.present?
     json.choices @poll.cached_choices do |choice|
       json.choice_id choice.id
       json.answer choice.answer
-      if @expired
-        json.vote choice.vote
-      elsif @voted["voted"]
-        json.vote choice.vote
-      else
-      end
+      # if @expired
+      #   json.vote choice.vote
+      # elsif @voted["voted"]
+      #   json.vote choice.vote
+      # else
+      json.vote choice.vote
+      # end
     end
   end
 else

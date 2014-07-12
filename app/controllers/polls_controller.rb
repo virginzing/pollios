@@ -186,8 +186,8 @@ class PollsController < ApplicationController
   end
 
   def detail
-    @expired = @poll.expire_date < Time.now
-    @voted = @current_member.list_voted?(@poll.id)
+    # @expired = @poll.expire_date < Time.now
+    # @voted = @current_member.list_voted?(@poll.id)
   end
 
   def friend_following_poll
