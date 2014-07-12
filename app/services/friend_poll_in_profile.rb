@@ -65,7 +65,7 @@ class FriendPollInProfile
   end
 
   def group_friend_count
-    groups.count
+    groups.count.count
   end
 
   def block_friend_count
