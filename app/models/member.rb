@@ -325,13 +325,13 @@ class Member < ActiveRecord::Base
   end
 
   def cached_my_voted
-    Rails.cache.fetch([self.id, 'my_voted']) do
+    # Rails.cache.fetch([self.id, 'my_voted']) do
       # HistoryVote.select("poll_id, choice_id, poll_series_id").where("member_id = #{id} AND poll_series_id = 0").to_a
       HistoryVote.joins(:member, :choice, :poll)
                   .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
                   .where("history_votes.member_id = #{id}")
                   .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }.to_a
-    end
+    # end
   end
 
   def cached_watched
