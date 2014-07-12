@@ -386,8 +386,7 @@ class Member < ActiveRecord::Base
 
     history_voted.each do |poll_choice|
       if poll_choice.first == poll_id
-        choice_vote = Poll.choice_list.select {|e| e.id == poll_choice[1] }.first.vote
-        return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => choice_vote]
+        return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => poll_choice[4]]
       end
     end
     Hash["voted" => false]
