@@ -6,6 +6,7 @@ class Poll < ActiveRecord::Base
   include PollsHelper
   
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
+  cattr_accessor :choice_list
 
   pg_search_scope :search_with_tag, against: [:title],
                   using: { tsearch: {dictionary: "english", prefix: true} },
@@ -98,7 +99,7 @@ class Poll < ActiveRecord::Base
 
   def cached_choices
     Rails.cache.fetch([self, 'choices']) do
-      choices
+      choices.to_a
     end
   end
 
@@ -128,7 +129,8 @@ class Poll < ActiveRecord::Base
   # end
 
   def get_vote_max
-    @choice ||= cached_choices
+    Poll.choice_list = cached_choices
+    @choice ||= Poll.choice_list
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
 
