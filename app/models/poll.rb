@@ -99,7 +99,7 @@ class Poll < ActiveRecord::Base
 
   def cached_choices
     Rails.cache.fetch([self, 'choices']) do
-      choices.to_a
+      choices
     end
   end
 
@@ -129,7 +129,7 @@ class Poll < ActiveRecord::Base
   # end
 
   def get_vote_max
-    Poll.choice_list = cached_choices
+    Poll.choice_list = cached_choices.to_a
     @choice ||= Poll.choice_list
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
