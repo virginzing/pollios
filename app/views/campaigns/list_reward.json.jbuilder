@@ -25,7 +25,7 @@ if @rewards
       json.view_count reward.poll.view_all
       json.expire_date reward.poll.expire_date.to_i
       json.created_at reward.poll.created_at.to_i
-      json.voted_detail @current_member.list_voted?(reward.poll.id)
+      json.voted_detail @current_member.list_voted?(reward.poll)
       json.viewed @current_member.list_viewed?(reward.poll.id)
       json.choice_count reward.poll.choice_count
       json.series reward.poll.series
