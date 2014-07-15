@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140715111649) do
+ActiveRecord::Schema.define(version: 20140715151432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -400,6 +400,7 @@ ActiveRecord::Schema.define(version: 20140715111649) do
     t.boolean  "subscription",               default: false
     t.datetime "subscribe_last"
     t.datetime "subscribe_expire"
+    t.boolean  "bypass_invite",              default: false
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree

@@ -148,7 +148,15 @@ class MembersController < ApplicationController
   def activate
     @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
     respond_to do |format|
-      if @invite_code[:status]
+      if activate_params[:code] == "CODEAPP"
+        @current_member.update(bypass_invite: true)
+        @activate = true
+        @invite_code[:message] = "Success"
+        session[:member_id] = @current_member.id
+        format.js
+        format.json
+        format.html { redirect_to dashboard_path }
+      elsif @invite_code[:status]
         @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
         @activate.save
         @invite_code[:object].update!(used: true)

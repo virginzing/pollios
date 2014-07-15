@@ -150,7 +150,7 @@ class Authentication
   end
 
   def check_activate_account
-    member.member_invite_code.present? || member.brand?
+    member.bypass_invite || member.member_invite_code.present? || member.brand?
   end
 end
 
