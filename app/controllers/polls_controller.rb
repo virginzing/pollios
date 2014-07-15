@@ -358,7 +358,7 @@ class PollsController < ApplicationController
   def comment
     Poll.transaction do
       begin
-        @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, fullname: @current_member.fullname, avatar: @current_member.get_avatar, message: comment_params[:message])
+        @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
         @poll.increment!(:comment_count)
         # puts "#{@current_member.id == @poll.member_id}"
         CommentPollWorker.new.perform(@current_member, @poll, { comment_message: @comment.message }) unless @current_member.id == @poll.member_id
@@ -369,7 +369,7 @@ class PollsController < ApplicationController
   end
 
   def load_comment
-    @comments = Comment.where(poll_id: comment_params[:id], delete_status: false).desc(:created_at).paginate(page: comment_params[:next_cursor])
+    @comments = Comment.joins(:member).select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar").where(poll_id: comment_params[:id], delete_status: false).order("created_at desc").paginate(page: comment_params[:next_cursor])
     @new_comment_sort ||= @comments.sort! { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page

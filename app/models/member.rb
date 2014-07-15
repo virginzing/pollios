@@ -21,6 +21,7 @@ class Member < ActiveRecord::Base
 
   has_one :member_invite_code, dependent: :destroy
 
+  has_many :comments, dependent: :destroy
   has_many :history_purchases, dependent: :destroy
   has_many :history_subscriptions, dependent: :destroy
 
