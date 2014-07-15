@@ -4,6 +4,7 @@ class Apn::CommentPoll
   include NotificationsHelper
 
   def initialize(member, poll, message)
+    @message = message
     @member = member
     @poll = poll
     @is_public = false
@@ -12,6 +13,10 @@ class Apn::CommentPoll
 
   def member_id
     @member.id
+  end
+
+  def poll_creator_id
+    @poll.member.id
   end
 
   def member_name
@@ -23,10 +28,14 @@ class Apn::CommentPoll
   end
   
   # allow 170 byte for custom message
-  def custom_message
-
-    message = "#{member_name} commented your poll: \"#{@poll.title}\""
-
+  def custom_message(receiver_id)
+    if receiver_id == poll_creator_id
+      message = "#{member_name} commented your poll: \"#{@poll.title}\""
+    elsif member_id == poll_creator_id
+      message = "#{member_name} also commented on his'poll: \"#{@message}\""
+    else
+      message = "#{member_name} also commented on #{@poll.member.fullname}'s poll: \"#{@message}\""
+    end
     truncate_message(message)
   end
 

@@ -8,9 +8,9 @@ class FacebookController < ApplicationController
   def login
     @auth = Authentication.new(fb_params.merge(Hash["provider" => "facebook"]))
     if @auth.authenticated?
-      if @auth.activate_account?
-        @apn_device = ApnDevice.check_device?(member, fb_params[:device_token])
-      end
+      @apn_device = ApnDevice.check_device?(member, fb_params[:device_token])
+      # if @auth.activate_account?
+      # end
     end
   end
 

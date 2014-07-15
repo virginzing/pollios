@@ -43,8 +43,8 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
 			if @response["response_status"] == "OK"
+        @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
         if @auth.activate_account?
-          @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
           @login = true
           session[:member_id] = member.id
           wants.html { redirect_back_or polls_path }
@@ -78,8 +78,8 @@ class AuthenSentaiController < ApplicationController
   	respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
   		if @response["response_status"] == "OK"
+        @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
-          @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
           session[:member_id] = member.id
           flash[:success] = "Sign up sucessfully."
           @signup = true

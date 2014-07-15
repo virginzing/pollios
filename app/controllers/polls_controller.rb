@@ -355,15 +355,24 @@ class PollsController < ApplicationController
 
   # Comment
 
-  def comment
+  def comment  #post comment
     Poll.transaction do
       begin
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
         @poll.increment!(:comment_count)
         # puts "#{@current_member.id == @poll.member_id}"
-        CommentPollWorker.new.perform(@current_member, @poll, { comment_message: @comment.message }) unless @current_member.id == @poll.member_id
+        find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
+
+        if find_watched.first.present?
+          find_watched.first.update(comment_notify: true) if find_watched.where(comment_notify: false)
+        else
+          Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
+        end
+
+        CommentPollWorker.new.perform(@current_member, @poll, { comment_message: @comment.message })
       rescue => e
         @error_message = e.message
+        puts "#{e.message}"
       end
     end
   end
@@ -406,7 +415,7 @@ class PollsController < ApplicationController
   end
 
   def comment_params
-    params.permit(:id, :message, :next_cursor, :comment_id)
+    params.permit(:id, :message, :next_cursor, :comment_id, :member_id)
   end
 
   def hashtag_params
