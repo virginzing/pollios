@@ -168,7 +168,7 @@ class Activity
 
   def self.manage_action_my_self
     action_change_name = ACTION[:change_name]
-    action_change_avatar = ACTION[:chnage_avatar]
+    action_change_avatar = ACTION[:change_avatar]
     action_change_cover = ACTION[:change_cover]
     type_member = TYPE[:member]
 
