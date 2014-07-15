@@ -1,3 +1,8 @@
+#result canvas {
+  width: 200px;
+  height: 200px;
+}
+
 li.parsley-required {
   display: block;
   margin-top: 6px;
