@@ -22,13 +22,6 @@ class CommentPollWorker
       poll_id: poll.id
     }
 
-    hash_custom = {
-      type: TYPE[:comment],
-      action: ACTION[:comment],
-      poll: PollSerializer.new(poll).as_json(),
-      comment: comment_message 
-    }
-
     # device_ids.each do |device_id|
     #   @notf = Apn::Notification.new
     #   @notf.device_id = device_id
@@ -52,6 +45,14 @@ class CommentPollWorker
     end
 
     find_recipient_notify.each do |member|
+
+      hash_custom = {
+        type: TYPE[:comment],
+        action: @apn_comment.custom_action(member.id),
+        poll: PollSerializer.new(poll).as_json(),
+        comment: comment_message 
+      }
+
       NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_comment.custom_message(member.id), custom_properties: @custom_properties.merge!(hash_custom))
     end
 

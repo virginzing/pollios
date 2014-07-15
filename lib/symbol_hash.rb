@@ -20,7 +20,8 @@ module SymbolHash
     :change_name => 'ChangeName',
     :change_avatar => 'ChangeAvatar',
     :change_cover => 'ChangeCover',
-    :comment => 'Comment'
+    :comment => 'Comment',
+    :also_comment => 'AlsoComment'
   }
 
   AUTHORITY = {

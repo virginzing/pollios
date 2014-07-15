@@ -1,5 +1,5 @@
 class Apn::CommentPoll
-
+  include SymbolHash
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
@@ -37,6 +37,14 @@ class Apn::CommentPoll
       message = "#{member_name} also commented on #{@poll.member.fullname}'s poll: \"#{@message}\""
     end
     truncate_message(message)
+  end
+
+  def custom_action(receiver_id)
+    if receiver_id == poll_creator_id
+      ACTION[:comment]
+    else
+      ACTION[:also_comment]
+    end
   end
 
   private
