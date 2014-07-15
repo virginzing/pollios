@@ -40,7 +40,7 @@ module PollHelper
   end
 
   def number_of_polls_created_today_chart(filtering)
-    if filtering == "today"
+    if filtering == "today" || filtering.nil?
       date = Date.current
     else
       date = Date.current - 1.day
