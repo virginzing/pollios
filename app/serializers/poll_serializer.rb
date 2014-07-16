@@ -1,18 +1,17 @@
 class PollSerializer < ActiveModel::Serializer
   self.root = false
 
-  attributes :id, :creator_id, :creator_name, :title, :poll_within
+  attributes :id, :creator, :title, :poll_within
 
   def id
     object.id
   end
 
-  def creator_id
-    object.member.id
-  end
-
-  def creator_name
-    object.member.fullname
+  def creator
+    {
+      member_id: object.member.id,
+      name: object.member.fullname
+    }
   end
 
   def title
