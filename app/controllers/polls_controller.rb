@@ -42,14 +42,16 @@ class PollsController < ApplicationController
     # puts "qrcode encode base64 => #{base64_qrcode}"
     # puts "qrcode => #{qrurl}"
 
-    respond_to do |format|
-      format.json
-      format.html
-      format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
-      format.png  { render :qrcode => base64_qrcode, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
-      format.gif  { render :qrcode => qrurl, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
-      format.jpeg { render :qrcode => qrurl }
-    end
+    # respond_to do |format|
+    #   format.json
+    #   format.html
+    #   format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
+    #   format.png  { render :qrcode => base64_qrcode, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
+    #   format.gif  { render :qrcode => qrurl, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
+    #   format.jpeg { render :qrcode => qrurl }
+    # end
+
+    render layout: false
   end
 
   def set_last_update_poll
@@ -97,7 +99,8 @@ class PollsController < ApplicationController
     new_poll_binary_params = @build_poll.poll_binary_params
     # puts "new_poll_binary_params => #{new_poll_binary_params}"
     @poll = Poll.new(new_poll_binary_params)
-
+    @poll.choice_count = @build_poll.list_of_choice.count
+    
     if @poll.save
       # puts "choices => #{@build_poll.list_of_choice}"
 
@@ -147,6 +150,7 @@ class PollsController < ApplicationController
 
   def show
     puts "poll => #{@poll}"
+    @choice_data_chart = []
   end
 
   def qrcode

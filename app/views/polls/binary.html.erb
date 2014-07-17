@@ -81,43 +81,47 @@
             Config
           </header>
           
-          <fieldset>
-          <section>
-            <div class="form-group">
-                 <div class="fileupload fileupload-new" data-provides="fileupload">
-                    <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-                     <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                    </div>
-                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 640px; max-height: 320px; line-height: 20px;">
-                      
-                    </div>
-                    <div>
-                       <span class="btn btn-default btn-file">
-                       <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
-                       <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                       <input type="file" class="default" name="poll[photo_poll]"/>
-                       </span>
-                       <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
+            <fieldset>
+              <div class="col-md-6">
+                <section>
+                <div class="form-group">
+                     <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                         <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                        </div>
+                        <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 640px; max-height: 320px; line-height: 20px;">
+                          
+                        </div>
+                        <div>
+                           <span class="btn btn-default btn-file">
+                           <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
+                           <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                           <input type="file" class="default" name="poll[photo_poll]"/>
+                           </span>
+                           <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </section>
+                </section>
+              </div>
 
-            <section>
-              <label class="label">Campaign</label>
-              <label class="select">
-                <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
-              </label>
-            </section>
+              <div class="col-md-6">
+                <section>
+                  <label class="label">Campaign</label>
+                  <label class="select">
+                    <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                  </label>
+                </section>
 
-            <section>
-              <label class="label">Recurring</label>
-              <label class="select">
-                <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
-              </label>
-            </section>
-          
-          </fieldset>
+                <section>
+                  <label class="label">Recurring</label>
+                  <label class="select">
+                    <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
+                  </label>
+                </section>
+              </div>
+            
+            </fieldset>
         
 
           <footer>

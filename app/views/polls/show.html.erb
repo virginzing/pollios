@@ -1,1 +1,89 @@
-<% breadcrumb :poll, @poll %>
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-info fa-fw "></i> 
+        Polls > <%= @poll.title %>
+    </h1>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="well well-sm well-light">
+      <h3 class="text-primary">Detail</h3>
+      <dl class="dl-horizontal">
+        <dt>Id: <dd><%= @poll.id %></dd></dt>
+        <dt>Title: </dt><dd><%= @poll.title %></dd>
+        <dt>Vote: </dt><dd><%= @poll.vote_all %></dd>
+        <dt>View: </dt><dd><%= @poll.view_all %></dd>
+        <dt>Share: </dt><dd><%= @poll.share_count %></dd>
+        <dt>Report: </dt><dd><%= @poll.report_count %></dd>
+        <dt>Status: </dt><dd><%= @poll.status_poll_text %></dd>
+        <dt>Public: </dt><dd><%= @poll.public %></dd>
+        <dt>Type: </dt><dd><%= @poll.type_poll_text %></dd>
+        <dt>Created At: </dt><dd><%= @poll.created_at %></dd>
+        <dt>Expired At: </dt><dd><%= @poll.expire_date %></dd>
+      </dl>
+    </div>
+
+  </div>
+
+  <div class="col-md-6">
+    <div class="well well-sm well-light">
+      <h3 class="text-primary">Choice</h3>
+      <dl class="dl-horizontal">
+        <% @poll.cached_choices.each do |choice| %>
+          <dt><%= choice.answer %>: </dt><dd><%= choice.vote %></dd>
+          <% @choice_data_chart << [choice.answer, choice.vote] %>
+        <% end %>
+      </dl>
+
+      <div id="chart_div"></div>
+      
+    </div>
+  </div>
+
+</div>
+
+<%= content_tag :div, "", id: 'choice_data_chart', data: { polls: @choice_data_chart } %>
+
+<script type="text/javascript">
+
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1.0', {'packages':['corechart']});
+
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.setOnLoadCallback(drawChart);
+
+  // Callback that creates and populates a data table,
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  function drawChart() {
+
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    var chart_data = $('#choice_data_chart').data('polls');
+    data.addColumn('string', 'Answer');
+    data.addColumn('number', 'Vote');
+
+    data.addRows(chart_data);
+
+    // Set chart options
+    var options = {
+      'title'  : '<%= @poll.title %>',
+      'width'  : 400,
+      'height' : 300
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+
+  $.ajax({
+    complete: function(){
+      drawChart();
+    }
+ });
+</script>

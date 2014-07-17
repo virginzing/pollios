@@ -18,8 +18,8 @@ namespace :certificate do
   desc "Update certificates"
   task :update => :environment do
     app = Apn::App.first
-    app.apn_dev_cert   = Rails.root.join('config', 'certificates','apple_push_notification_pollios_dev.pem').read
-    app.apn_prod_cert  = Rails.root.join('config', 'certificates','apple_push_notification_pollios_pro.pem').read
+    app.apn_dev_cert   = Rails.root.join('config', 'certificates','pollios_push_notification_development.pem').read
+    app.apn_prod_cert  = Rails.root.join('config', 'certificates','pollios_push_notification_development.pem').read
     app.save!
   end
 

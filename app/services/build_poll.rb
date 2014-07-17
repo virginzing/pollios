@@ -37,9 +37,9 @@ class BuildPoll
     @list_of_choice ||= list_choices
   end
 
-  def choice_count
-    list_choices.count
-  end
+  # def choice_count
+  #   puts "choice count => #{list_choices}"
+  # end
   
   def poll_binary_params
     {
@@ -49,7 +49,7 @@ class BuildPoll
       "series" => @series,
       "expire_date" => expire_date,
       "poll_series_id" => @poll_series_id,
-      "choice_count" => choice_count,
+      # "choice_count" => choice_count,
       "campaign_id" => @params["campaign_id"],
       "recurring_id" => @params["recurring_id"],
       "type_poll" => @params["type_poll"],

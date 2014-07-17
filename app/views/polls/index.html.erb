@@ -50,9 +50,9 @@
                 <th>View All</th>
                 <th width="200">Expire At</th>
                 <th width="200">Created At</th>
-                <th>Recurring</th>
+                <th>Public</th>
                 <th>Qrcode</th>
-                <th>Re Generate</th>
+                <th>Re-Generate</th>
                 <th></th>
               </tr>
             </thead>
@@ -65,8 +65,8 @@
                   <td><%= poll.view_all %></td>
                   <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
                   <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
-                  <td><%= poll.check_recurring %></td>
-                  <td><a href="/poll/<%= poll.id %>/qrcode"><i class="fa fa-eye"></i></a></td>
+                  <td><%= poll.public %></td>
+                  <td><a href="javascript:void(0)" rel="tooltip" data-original-title="Show Qrcode" onclick="load_qrcode(<%= poll.id %>)"><i class="fa fa-eye"></i></a></td>
                   <td>
                     <%= form_tag '/poll/new_generate_qrcode' do %>
                       <%= hidden_field_tag 'id', poll.id %>
@@ -106,3 +106,23 @@
   <% end %>
 </div>
  -->
+
+ <script type="text/javascript">
+  $('[rel=tooltip]').tooltip();
+  function load_qrcode(poll_id) {
+
+    BootstrapDialog.show({
+          title: 'Qrcode',
+          message: function(dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+        
+                return $message;
+            },
+            data: {
+                'pageToLoad': '/poll/' + poll_id + '/qrcode'
+            }
+    });
+  }
+</script>
