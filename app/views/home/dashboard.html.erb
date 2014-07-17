@@ -1,0 +1,227 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> Dashboard <span>&gt; My Dashboard</span></h1>
+  </div>
+  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+    <ul id="sparks" class="">
+      <li class="sparks-info">
+        <h5> My Poll <span class="txt-color-blue"><i class="fa fa-edit"></i> 99</span></h5>
+      </li>
+      <li class="sparks-info">
+        <h5> Follower <span class="txt-color-purple"><i class="fa fa-user"></i> 1,000</span></h5>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<section id="widget-grid" class="">
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-latest" 
+                data-widget-load="<%= poll_latest_url %>" 
+                data-widget-colorbutton="false" 
+                data-widget-colorbutton="false" 
+                data-widget-editbutton="false" 
+                data-widget-deletebutton="false" 
+                data-widget-fullscreenbutton="false" 
+                data-widget-custombutton="false">
+      <header>
+        <h2><strong>Poll</strong> <i>latest</i></h2> 
+          <div class="widget-toolbar">
+            <a href="/polls/<%= Poll.first.id %>" class="btn btn-default">More</a>
+          </div>
+      </header>
+
+
+      <!-- widget div-->
+      <div>
+        
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+          <!-- This area used as dropdown edit box -->
+          
+        </div>
+        <!-- end widget edit box -->
+        
+        <!-- widget content -->
+        <div class="widget-body">
+
+          <!-- widget body text-->
+          
+            <p>This content will be replaced via ajax loader...</p>
+          
+          <!-- end widget body text-->
+          
+        </div>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-populars" 
+                data-widget-load="<%= poll_popular_url %>" 
+                data-widget-colorbutton="false" 
+                data-widget-colorbutton="false" 
+                data-widget-editbutton="false" 
+                data-widget-deletebutton="false" 
+                data-widget-fullscreenbutton="false" 
+                data-widget-custombutton="false">
+      <header>
+        <h2><strong>Poll</strong> <i>popular random</i></h2> 
+
+      </header>
+
+      <!-- widget div-->
+      <div>
+        
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+          <!-- This area used as dropdown edit box -->
+          
+        </div>
+        <!-- end widget edit box -->
+        
+        <!-- widget content -->
+        <div class="widget-body">
+
+          <!-- widget body text-->
+          
+            <p>This content will be replaced via ajax loader...</p>
+          
+          <!-- end widget body text-->
+          
+        </div>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      
+    </div>
+  </div>
+
+</div>
+
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-latest-tables" 
+                data-widget-colorbutton="false" 
+                data-widget-colorbutton="false" 
+                data-widget-editbutton="false" 
+                data-widget-deletebutton="false" 
+                data-widget-fullscreenbutton="false" 
+                data-widget-custombutton="false">
+      <header>
+        <h2><strong>Poll</strong> <i>latest 1-5</i></h2> 
+          <div class="widget-toolbar">
+            <a href="/polls" class="btn btn-default">More</a>
+          </div>
+      </header>
+
+      <!-- widget div-->
+      <div>
+        
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+          <!-- This area used as dropdown edit box -->
+          
+        </div>
+        <!-- end widget edit box -->
+        
+        <!-- widget content -->
+          <div class="widget-body no-padding" style="min-height: 0px;">
+            <div class="table-responsive">
+
+              <table class="table" style="margin-bottom: 0px;">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Vote All</th>
+                    <th>Created at</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @poll_latest_list.each do |poll| %>
+                  <tr>
+                    <td><%= poll.title %></td>
+                    <td><%= poll.vote_all %></td>
+                    <td><span data-livestamp="<%= poll.created_at.to_i %>"></span></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-popular-tables" 
+                data-widget-colorbutton="false" 
+                data-widget-colorbutton="false" 
+                data-widget-editbutton="false" 
+                data-widget-deletebutton="false" 
+                data-widget-fullscreenbutton="false" 
+                data-widget-custombutton="false">
+      <header>
+        <h2><strong>Poll</strong> <i>popular 1-5</i></h2> 
+        <div class="widget-toolbar">
+          <a href="/polls" class="btn btn-default">More</a>
+        </div>
+      </header>
+
+      <!-- widget div-->
+      <div>
+        
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+          <!-- This area used as dropdown edit box -->
+          
+        </div>
+        <!-- end widget edit box -->
+        
+          <div class="widget-body no-padding" style="min-height: 0px;">
+            <div class="table-responsive">
+
+              <table class="table" style="margin-bottom: 0px;">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Vote All</th>
+                    <th>Created at</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @poll_popular_list.each do |poll| %>
+                  <tr>
+                    <td><%= poll.title %></td>
+                    <td><%= poll.vote_all %></td>
+                    <td><span data-livestamp="<%= poll.created_at.to_i %>"></span></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+        
+      </div>
+      <!-- end widget div -->
+      
+    </div>
+  </div>
+
+</div>
+
+</section>

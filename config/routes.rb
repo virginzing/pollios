@@ -200,6 +200,9 @@ Pollios::Application.routes.draw do
   post '/check_valid_email', to: 'members#check_valid_email'
   post '/check_valid_username', to: 'members#check_valid_username'
 
+  get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
+  get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+
   post 'templates',       to: 'templates#new_or_update'
   get  'templates',        to: 'templates#poll_template'
 

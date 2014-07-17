@@ -31,6 +31,18 @@ class PollsController < ApplicationController
 
   respond_to :json
 
+  def poll_latest
+    @poll_latest = Poll.first
+    @choice_poll_latest = []
+    render layout: false
+  end
+
+  def poll_popular
+    @poll_popular = Poll.order("vote_all desc").limit(5).sample(5).first
+    @choice_poll_popular = []
+    render layout: false
+  end
+
   def generate_qrcode
 
     qrurl = QrcodeSerializer.new(Poll.find(params[:id])).as_json.to_json

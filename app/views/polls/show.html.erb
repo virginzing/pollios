@@ -1,12 +1,11 @@
 <div class="row">
-  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
     <h1 class="page-title txt-color-blueDark">
       <i class="fa fa-info fa-fw "></i> 
         Polls > <%= @poll.title %>
     </h1>
   </div>
 </div>
-
 
 <div class="row">
   <div class="col-md-7">
@@ -43,6 +42,7 @@
       <section id="widget-grid">
         <div class="jarviswidget" id="wid-id-chart-choices" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
           <header>
+            <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
             <h2><strong>Result</strong></h2>  
             
             <ul id="widget-tab-1" class="nav nav-tabs pull-right">
@@ -72,16 +72,34 @@
             <!-- end widget edit box -->
             
             <!-- widget content -->
-            <div class="widget-body no-padding">
+            <div class="widget-body">
 
               <!-- widget body text-->
               
               <div class="tab-content padding-10">
                 <div class="tab-pane fade in active" id="hr1">
                   <div id="chart_div"></div>
+                  <% if @poll.vote_all < 1 %>
+                    <div class="alert alert-info fade in">
+                      <button class="close" data-dismiss="alert">
+                        ×
+                      </button>
+                      <i class="fa-fw fa fa-info"></i>
+                      Don't vote result yet.
+                    </div>
+                  <% end %>
                 </div>
                 <div class="tab-pane fade" id="hr2">
-                  <div id="bar_chart_div"></div>  
+                  <div id="bar_chart_div"></div>
+                    <% if @poll.vote_all < 1 %>
+                    <div class="alert alert-info fade in">
+                      <button class="close" data-dismiss="alert">
+                        ×
+                      </button>
+                      <i class="fa-fw fa fa-info"></i>
+                      Don't vote result yet.
+                    </div>  
+                    <% end %>
                 </div>
               </div>
               
