@@ -422,13 +422,13 @@ class Poll < ActiveRecord::Base
         if (buy_poll.present? || member.celebrity? || member.brand?)
           # puts "is_public = #{is_public}"
           @set_public = true
-          unless is_public
+          if is_public == "0"
             @set_public = false
           end
         else
           @set_public = false
         end
-      end
+      endnd
 
       # puts "set public => #{@set_public}"
 
