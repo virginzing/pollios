@@ -428,7 +428,7 @@ class Poll < ActiveRecord::Base
         else
           @set_public = false
         end
-      endnd
+      end
 
       # puts "set public => #{@set_public}"
 
