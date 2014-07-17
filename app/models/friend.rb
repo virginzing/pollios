@@ -183,6 +183,7 @@ class Friend < ActiveRecord::Base
       find_friend.destroy
       find_member.destroy
       flush_cached_friend(member_id, friend_id)
+      Rails.cache.delete([ member_id, 'block_friend'])
     end
     [find_member, find_friend]
   end
