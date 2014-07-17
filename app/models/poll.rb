@@ -420,14 +420,17 @@ class Poll < ActiveRecord::Base
         @set_public = false
       else
         if (buy_poll.present? || member.celebrity? || member.brand?)
+          # puts "is_public = #{is_public}"
           @set_public = true
-          if is_public == false
+          unless is_public
             @set_public = false
           end
         else
           @set_public = false
         end
       end
+
+      # puts "set public => #{@set_public}"
 
       @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment)
 
