@@ -8,7 +8,7 @@ class PollsController < ApplicationController
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
-  before_action :signed_user, only: [:binary, :freeform, :rating, :index, :series, :new]
+  before_action :signed_user, only: [:poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new]
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
@@ -32,13 +32,13 @@ class PollsController < ApplicationController
   respond_to :json
 
   def poll_latest
-    @poll_latest = Poll.first
+    @poll_latest = Poll.where(member_id: @current_member.id).first
     @choice_poll_latest = []
     render layout: false
   end
 
   def poll_popular
-    @poll_popular = Poll.order("vote_all desc").limit(5).sample(5).first
+    @poll_popular = Poll.where("member_id = #{@current_member.id} AND vote_all != 0").order("vote_all desc").limit(5).sample(5).first
     @choice_poll_popular = []
     render layout: false
   end
