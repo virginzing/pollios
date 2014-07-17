@@ -8,6 +8,9 @@
         <h5> My Poll <span class="txt-color-blue"><i class="fa fa-edit"></i> <%= @current_member.cached_my_poll.count %></span></h5>
       </li>
       <li class="sparks-info">
+        <h5> My Vote <span class="txt-color-red"><i class="fa fa-edit"></i> <%= @current_member.cached_my_voted.count %></span></h5>
+      </li>
+      <li class="sparks-info">
         <h5> Follower <span class="txt-color-purple"><i class="fa fa-user"></i> <%= @current_member.cached_get_follower.count %></span></h5>
       </li>
     </ul>
