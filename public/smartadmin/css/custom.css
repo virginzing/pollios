@@ -257,6 +257,8 @@ Profile Page
   border-left:solid 2px #c4d5df;
 }
 
+
+
 .profile ul.profile-nav li a:hover {
   color:#169ef4;
   background:#ecf5fb;
@@ -289,7 +291,7 @@ Profile Page
   font-size:16px; 
   padding:7px 13px;
   position:absolute;
-  background:#169ef4;
+  background: #57889c;
 }
 
 .profile ul.profile-nav a:hover span {
@@ -398,7 +400,7 @@ Profile Page
 .profile .table-bordered th, 
 .profile .table-bordered td,
 .profile .table-bordered {
-  border-color:#e5eff6;
+  border-color: #ddd;
 }
 
 .profile .table-striped tbody > tr:nth-child(2n+1) > td, 

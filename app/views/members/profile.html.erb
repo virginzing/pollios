@@ -33,9 +33,9 @@
                    <div class="col-md-3">
                       <ul class="list-unstyled profile-nav">
                          <li><%= image_tag(current_member.avatar.url, class: "img-responsive") %></li>
-                         <li><a href="#">Friend</a></li>
-                         <li><a href="#">Following</a></li>
-                         <li><a href="#">Follower</a></li>
+                         <li><a href="#">Friend <span><%= current_member.cached_get_friend_active.count %></span></a></li>
+                         <li><a href="#">Following <span><%= current_member.cached_get_following.count %></a></li>
+                         <li><a href="#">Follower <span><%= current_member.cached_get_follower.count %></a></li>
                       </ul>
                    </div>
                    <div class="col-md-9">
@@ -59,7 +59,28 @@
                          </ul>
                          <div class="tab-content">
                             <div class="tab-pane active" id="tab_1_11">
+                              <div class="table-responsive">
 
+                                <table class="table table-bordered table-hover" style="margin-bottom: 0px;">
+                                  <thead>
+                                    <tr>
+                                      <th>Title</th>
+                                      <th>Vote All</th>
+                                      <th>Created at</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% @poll_latest_list.each do |poll| %>
+                                    <tr>
+                                      <td><%= poll.title %></td>
+                                      <td><%= poll.vote_all %></td>
+                                      <td><span data-livestamp="<%= poll.created_at.to_i %>"></span></td>
+                                    </tr>
+                                    <% end %>
+                                  </tbody>
+                                </table>
+                                
+                              </div>
                             </div>
                             <!--tab-pane-->
                             <div class="tab-pane" id="tab_1_22">
