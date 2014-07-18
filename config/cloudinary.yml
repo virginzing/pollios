@@ -1,18 +1,19 @@
+---
 development:
-  cloud_name: dskrbthch
-  api_key: '951459966873843'
-  api_secret: BDRG0rXlHCH7Ndl8Pw68OxqSXMA
+  cloud_name: code-app
+  api_key: '543692587982572'
+  api_secret: lHBP7L-JOLt-sRXDLMWlI6doib8
   enhance_image_tag: true
   static_image_support: false
 production:
-  cloud_name: dskrbthch
-  api_key: '951459966873843'
-  api_secret: BDRG0rXlHCH7Ndl8Pw68OxqSXMA
+  cloud_name: code-app
+  api_key: '543692587982572'
+  api_secret: lHBP7L-JOLt-sRXDLMWlI6doib8
   enhance_image_tag: true
   static_image_support: true
 test:
-  cloud_name: dskrbthch
-  api_key: '951459966873843'
-  api_secret: BDRG0rXlHCH7Ndl8Pw68OxqSXMA
+  cloud_name: code-app
+  api_key: '543692587982572'
+  api_secret: lHBP7L-JOLt-sRXDLMWlI6doib8
   enhance_image_tag: true
   static_image_support: false
