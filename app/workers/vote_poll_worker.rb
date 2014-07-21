@@ -4,7 +4,7 @@ class VotePollWorker
 
   def perform(member, poll, custom_data = {})
     anonymous = custom_data[:anonymous]
-
+    @poll = poll
     member_id = member.id
     
     @apn_poll = Apn::VotePoll.new(member, poll)
@@ -70,7 +70,8 @@ class VotePollWorker
 
   def check_in_group(member)
     group_of_receiver = member.cached_get_group_active
-    poll_in_group = Group.joins(:poll_groups).where("poll_id = #{poll.id}").uniq
+    poll_in_group = Group.joins(:poll_groups).where("poll_id = #{@poll.id}").uniq
+    group = (group_of_receiver && poll_in_group).first
   end
 
 end
