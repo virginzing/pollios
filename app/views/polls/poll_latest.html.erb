@@ -1,5 +1,9 @@
-<% if @poll_latest.vote_all > 0 %>
-  <div id="chart_div"></div>
+<% if @poll_latest.present? %>
+  <% if @poll_latest.vote_all > 0 %>
+    <div id="chart_div"></div>
+  <% end %>
+<% else %>
+  <p>Don't have poll now.</p>
 <% end %>
 
 <div class="alert alert-info alert-block">

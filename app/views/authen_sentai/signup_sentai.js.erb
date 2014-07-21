@@ -1,9 +1,14 @@
 $.signup = <%= raw @signup %>;
+$.waiting = <%= raw @waiting || false %>;
 
 if ($.signup) {
   handleSignupSuccess();
 } else {
-  handleSignupError();
+  if ($.waiting) {
+    handleActivate();
+  } else {
+    handleSignupError();
+  }
 }
 
 function handleSignupError() {
@@ -25,4 +30,8 @@ function handleSignupError() {
 
 function handleSignupSuccess() {
   window.location.href="/dashboard"
+}
+
+function handleActivate() {
+  window.location.href='/users_activate';
 }

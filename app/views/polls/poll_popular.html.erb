@@ -1,6 +1,11 @@
-<% if @poll_popular.vote_all > 0 %>
-  <div id="chart_div_popular"></div>
+<% if @poll_popular.present? %>
+  <% if @poll_popular.vote_all > 0 %>
+    <div id="chart_div_popular"></div>
+  <% end %>
+<% else %>
+  <p>Don't have poll popular now.</p>
 <% end %>
+
 
 <div class="alert alert-info alert-block">
   <h4 class="alert-heading">Poll: <%= @poll_popular.title %></h4>
