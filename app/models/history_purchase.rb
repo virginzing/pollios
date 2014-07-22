@@ -24,8 +24,7 @@ class HistoryPurchase < ActiveRecord::Base
         Member.transaction do
           purchase_success = true
           value, type = option_point(product_id)
-
-          puts "#{value}, #{type}"
+          # puts "#{value}, #{type}"
           if type == 'P'
             new_point = member.point + value
             member.update!(point: new_point)
@@ -36,7 +35,7 @@ class HistoryPurchase < ActiveRecord::Base
             else
               new_subscribe_expire = member.subscribe_expire + value
             end
-            member.update!(subscription: true, subscribe_last: Time.zone.now, subscribe_expire: new_subscribe_expire)
+            member.update!(member_type: :celebrity, subscription: true, subscribe_last: Time.zone.now, subscribe_expire: new_subscribe_expire)
           end
 
         end
