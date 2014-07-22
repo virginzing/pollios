@@ -22,11 +22,54 @@ class MyPollInProfile
     @my_watched ||= poll_watched
   end
 
+  ## create ##
+
+  def create_public_poll
+    my_poll.select{|p| p.public == true }.count
+  end
+
+  def create_friend_following_poll
+    my_poll.select{|p| p.public == false && p.in_group_ids == "0" }.count
+  end
+
+  def create_group_poll
+    my_poll.select{|p| p.public == false && p.in_group_ids != "0" }.count
+  end
+
+  ## vote ##
+
+  def vote_public_poll
+    poll_voted.select{|p| p.public == true }.count
+  end
+
+  def vote_friend_following_poll
+    poll_voted.select{|p| p.public == false && p.in_group_ids == "0" }.count
+  end
+
+  def vote_group_poll
+    poll_voted.select{|p| p.public == false && p.in_group_ids != "0" }.count
+  end
+
+  ## watched ##
+
+  def watch_public_poll
+    poll_watched.select{|p| p.public == true }.count
+  end
+
+  def watch_friend_following_poll
+    poll_watched.select{|p| p.public == false && p.in_group_ids == "0" }.count
+  end
+
+  def watch_group_poll
+    poll_watched.select{|p| p.public == false && p.in_group_ids != "0" }.count
+  end
+
   private
 
   def poll_created
     # @member.polls.includes(:member, :campaign, :choices)
-    Poll.available.joins(:poll_members).includes(:member, :campaign, :choices).where("poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0")
+    Poll.available.joins(:poll_members).includes(:member, :campaign, :choices)
+        .where("poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0")
   end
 
   def poll_voted

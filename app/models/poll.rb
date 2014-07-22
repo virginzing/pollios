@@ -73,10 +73,10 @@ class Poll < ActiveRecord::Base
     end 
   }
 
-  LIMIT_POLL = 20
+  LIMIT_POLL = 10
   LIMIT_TIMELINE = 3000
 
-  self.per_page = 20
+  self.per_page = 10
 
   amoeba do
     enable
