@@ -82,20 +82,36 @@ class FriendsController < ApplicationController
   end
 
   def list_of_poll
-    @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-    @polls = @init_poll.get_poll_friend.paginate(page: params[:next_cursor])
+    if params[:member_id] == params[:friend_id]
+      @init_poll = MyPollInProfile.new(@current_member, options_params)
+      @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
+    else
+      @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+      @polls = @init_poll.get_poll_friend_with_visibility.paginate(page: params[:next_cursor])
+    end
     poll_helper
   end
 
+
   def list_of_vote
-    @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-    @polls = @init_poll.get_vote_friend.paginate(page: params[:next_cursor])
+    if params[:member_id] == params[:friend_id]
+      @init_poll = MyPollInProfile.new(@current_member, options_params)
+      @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
+    else
+      @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+      @polls = @init_poll.get_vote_friend_with_visibility.paginate(page: params[:next_cursor])
+    end
     poll_helper
   end
 
   def list_of_watched
-    @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-    @polls = @init_poll.get_watched_friend.paginate(page: params[:next_cursor])
+    if params[:member_id] == params[:friend_id]
+      @init_poll = MyPollInProfile.new(@current_member, options_params)
+      @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
+    else
+      @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+      @polls = @init_poll.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
+    end
     poll_helper
   end
 
@@ -161,5 +177,10 @@ class FriendsController < ApplicationController
   def friend_params
     params.permit(:friend_id, :q, :member_id)
   end
+
+  def options_params
+    params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request, :group_id)
+  end
+
 
 end

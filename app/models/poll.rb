@@ -403,9 +403,9 @@ class Poll < ActiveRecord::Base
       group_id = poll[:group_id]
       member_id = poll[:member_id]
       friend_id = poll[:friend_id]
-      buy_poll = poll[:buy_poll]
+      buy_poll = poll[:buy_poll] || false
       type_poll = poll[:type_poll]
-      is_public = poll[:is_public]
+      is_public = poll[:is_public] || "0"
       photo_poll = poll[:photo_poll]
       allow_comment = poll[:allow_comment] || false
 
