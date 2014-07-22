@@ -5,6 +5,12 @@ json.gender member.check_gender
 json.province member.get_province
 json.first_signup member.first_signup
 
+json.subscription do
+  json.is_subscribe member.subscription
+  json.subscribe_last member.subscribe_last.to_i
+  json.subscribe_expire member.subscribe_expire.to_i
+end
+
 json.count do
   json.point member.point
   json.poll member.cached_my_poll.count

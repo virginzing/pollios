@@ -3,9 +3,9 @@ class HistoryPurchase < ActiveRecord::Base
 
   def self.check_purchase(member, receipt)
 
-    transaction_id = receipt.transaction_id
-    product_id = receipt.product_id
-    purchase_date = receipt.purchase_date
+    transaction_id = receipt["transaction_id"]
+    product_id = receipt["product_id"]
+    purchase_date = receipt["purchase_date"]
 
     even_purchase = true
     purchase_success = false
@@ -22,9 +22,23 @@ class HistoryPurchase < ActiveRecord::Base
     unless even_purchase
       if member.present?
         Member.transaction do
-          new_point = member.point + option_point(product_id)
-          member.update!(point: new_point)
           purchase_success = true
+          value, type = option_point(product_id)
+
+          puts "#{value}, #{type}"
+          if type == 'P'
+            new_point = member.point + value
+            member.update!(point: new_point)
+            purchase_success = true
+          else
+            if member.subscribe_last.nil?
+              new_subscribe_expire = Time.zone.now + value
+            else
+              new_subscribe_expire = member.subscribe_expire + value
+            end
+            member.update!(subscription: true, subscribe_last: Time.zone.now, subscribe_expire: new_subscribe_expire)
+          end
+
         end
       end
     end
@@ -61,22 +75,24 @@ class HistoryPurchase < ActiveRecord::Base
 
   def self.option_point(product_id)
     case product_id
-      when "com.codeapp.pollios.onepublicpoll"
-        return 1
-      when "com.codeapp.pollios.fivepublicpoll"
-        return 5
-      when "com.codeapp.pollios.tenpublicpoll"
-        return 10
-      else
-        return 0
+      when "1publicpoll"
+        return [1, 'P']
+      when "5publicpoll"
+        return [5, 'P']
+      when "10publicpoll"
+        return [10, 'P']
+      when "1month"
+        return [30.days, 'S']
+      when "1year"
+        return [360.days, 'S']
     end
   end
 
   def self.generate_day(product_id)
     case product_id
-      when "com.codeapp.pollios.onemonth"
+      when "1month"
         return 30.days
-      when "com.codeapp.pollios.oneyear"
+      when "1year"
         return 360.days
       else
         return 0.days
