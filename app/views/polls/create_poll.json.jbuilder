@@ -1,4 +1,4 @@
-if @poll.valid?
+if @poll.present?
   json.response_status "OK"
   json.creator do
     json.partial! 'response_helper/member/short_info', member: @poll.member
@@ -34,5 +34,5 @@ if @poll.valid?
 
 else
   json.response_status "ERROR"
-  json.response_message @poll.errors.full_messages
+  json.response_message @error_message
 end

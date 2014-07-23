@@ -6,6 +6,7 @@ class Poll < ActiveRecord::Base
   include PollsHelper
   
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
+  cattr_accessor :custom_error_message
 
   pg_search_scope :search_with_tag, against: [:title],
                   using: { tsearch: {dictionary: "english", prefix: true} },
@@ -396,6 +397,7 @@ class Poll < ActiveRecord::Base
 
   def self.create_poll(poll, member) ## create poll for API
     Poll.transaction do
+      begin
       # puts "test log allow commnet => #{poll[:allow_comment]}"
       title = poll[:title]
       expire_date = poll[:expire_within]
@@ -403,7 +405,7 @@ class Poll < ActiveRecord::Base
       group_id = poll[:group_id]
       member_id = poll[:member_id]
       friend_id = poll[:friend_id]
-      buy_poll = poll[:buy_poll] || false
+      # buy_poll = poll[:buy_poll] || false
       type_poll = poll[:type_poll]
       is_public = poll[:is_public] || "0"
       photo_poll = poll[:photo_poll]
@@ -416,11 +418,12 @@ class Poll < ActiveRecord::Base
 
       convert_expire_date = Time.now + expire_date.to_i.day
       
+      raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0) 
+
       if group_id.present?
         @set_public = false
       else
-        if (buy_poll.present? || member.celebrity? || member.brand?)
-          # puts "is_public = #{is_public}"
+        if (is_public == "1" || member.celebrity? || member.brand?)
           @set_public = true
           if is_public == "0"
             @set_public = false
@@ -430,13 +433,10 @@ class Poll < ActiveRecord::Base
         end
       end
 
-      # puts "set public => #{@set_public}"
-
       @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment)
 
       if @poll.valid? && choices
         @choices = Choice.create_choices(@poll.id, choices)
-
         if @choices.present?
 
           @poll.create_tag(title)
@@ -451,16 +451,25 @@ class Poll < ActiveRecord::Base
             ApnPollWorker.new.perform(member, @poll) if Rails.env.production?
           end
 
+          member.decrement!(:point) if member.point > 0
+
           PollStats.create_poll_stats(@poll)
 
           Activity.create_activity_poll(member, @poll, 'Create')
-
           # Rails.cache.delete([member_id, 'poll_member'])
           Rails.cache.delete([member_id, 'my_poll'])
+
+          [@poll, nil]
         end
+      else
+        [nil, @poll.errors.full_messages]
       end
-    end
-    @poll
+
+      rescue ArgumentError => detail
+        [@poll = nil, detail.message]
+      end ## begin
+
+    end ## transaction
   end
 
   def self.check_type_of_choice(choices)

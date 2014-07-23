@@ -330,7 +330,7 @@ class PollsController < ApplicationController
   end
 
   def create_poll
-    @poll = Poll.create_poll(poll_params, @current_member)
+    @poll, @error_message = Poll.create_poll(poll_params, @current_member)
   end
 
   def share
