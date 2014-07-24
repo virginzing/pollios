@@ -26,7 +26,7 @@ class PollSeriesController < ApplicationController
 
   def vote
     puts "#{vote_params}"
-    @votes = @poll_series.vote_questionnaire(vote_params)
+    @votes = @poll_series.vote_questionnaire(vote_params, @current_member)
   end
 
   def index
@@ -46,7 +46,9 @@ class PollSeriesController < ApplicationController
     @poll_series = PollSeries.new
     1.times do
       poll = @poll_series.polls.build
-      2.times { poll.choices.build }
+      2.times do 
+        poll.choices.build
+      end
     end
   end
 
@@ -76,6 +78,7 @@ class PollSeriesController < ApplicationController
     puts params
     @poll_series = current_member.poll_series.new(poll_series_params)
     @poll_series.expire_date = Time.now + poll_series_params["expire_within"].to_i.days
+    @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
 
     type_series = poll_series_params["type_series"]
 
@@ -118,6 +121,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

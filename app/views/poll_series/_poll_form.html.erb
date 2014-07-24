@@ -6,23 +6,53 @@
 
   <div class="panel-body">
 
-    <section>
-      <label class="label">Question</label>
-      <label class="textarea">
-        <%= f.input :title , label: false, as: :text %>
-        <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
-      </label>
-    </section>
+    <div class="panel-body-row">
+      <div class="col-md-8 mgb-15">
+      <section>
+        <label class="label">Question</label>
+        <label class="textarea">
+          <%= f.input :title , label: false, as: :text %>
+          <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
+        </label>
+      </section>
 
-    <section class="collect_choices">
-      <%= f.fields_for :choices do |builder| %>
-        <%= render 'choice_fields', :f => builder %>
-      <% end %>
-      <%= f.link_to_add "More Choice", :choices, class: 'btn btn-sm btn-default' %>
-    </section>
-    <span class="remove_poll">
-      <%= f.link_to_remove "Remove Poll", class: "btn btn-default btn-xs" %>
-    </span>
+      <section class="collect_choices">
+        <%= f.fields_for :choices do |builder| %>
+          <%= render 'choice_fields', :f => builder %>
+        <% end %>
+        <%= f.link_to_add "More Choice", :choices, class: 'btn btn-sm btn-default add_new_choice' %>
+      </section>
+      </div>
+
+      <div class="col-md-4">
+        <section class="text-center">
+        <div class="form-group">
+             <div class="fileupload fileupload-new" data-provides="fileupload">
+                <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                 <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                </div>
+                <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 320px; max-height: 160px; line-height: 20px;">
+                  
+                </div>
+                <div>
+                   <span class="btn btn-default btn-file">
+                   <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
+                   <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                   <%= f.input :photo_poll , label: false, wrapper: false %>
+                   </span>
+                   <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
+                </div>
+            </div>
+        </div>
+        </section>
+
+        <span class="remove_poll">
+          <%= f.link_to_remove "Remove Poll", class: "btn btn-default btn-xs" %>
+        </span>
+      
+      </div>
+    </div>
+
   </div>
 
   <div class="panel-footer text-align-center">

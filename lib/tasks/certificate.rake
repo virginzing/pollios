@@ -24,3 +24,9 @@ namespace :certificate do
   end
 
 end
+
+
+    # app = Apn::App.first
+    # app.apn_dev_cert   = Rails.root.join('config', 'certificates','pollios_push_notification_development_latest.pem').read
+    # app.apn_prod_cert  = Rails.root.join('config', 'certificates','pollios_push_notification_development_latest.pem').read
+    # app.save!

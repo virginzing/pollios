@@ -394,9 +394,11 @@ class Member < ActiveRecord::Base
     Hash["voted" => false]
   end
 
-  def list_voted_questionnaire?(history_voted, poll_series_id)
+  def list_voted_questionnaire?(poll_series)
+    history_voted = Member.voted_polls
+
     history_voted.each do |poll|
-      if poll.last == poll_series_id
+      if poll[3] == poll_series.id
         return Hash["voted" => true]
       end
     end

@@ -51,10 +51,10 @@ class PollSeries < ActiveRecord::Base
     end
   end
 
-  def vote_questionnaire(params)
+  def vote_questionnaire(params, member)
     list_answer = params[:answer].collect!{ |poll| poll.merge({ :member_id => params[:member_id]}) }
     list_answer.each do |answer|
-      @votes = Poll.vote_poll(answer)
+      @votes = Poll.vote_poll(answer, member)
     end
 
     if @votes.present?

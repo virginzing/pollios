@@ -1,3 +1,13 @@
+/* Questionnaire From */
+
+.panel-body-row {
+  padding: 15px;
+}
+
+.mgb-15 {
+  margin-bottom: 15px;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;
