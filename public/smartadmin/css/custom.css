@@ -60,8 +60,8 @@ span.remove_poll {
 }
 
 .select2-container-multi .select2-choices {
-  margin-top: -1px;
-  margin-left: -1px;
+  /*margin-top: -1px;*/
+  /*border: none;*/
 }
 
 h1.logo {

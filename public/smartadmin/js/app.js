@@ -1448,6 +1448,16 @@ function dataTable() {
 		paging: false,
 		iDisplayLength: 25
 	});
+	$('#list_recurring').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 10
+	});
+	$('#list_campaigns').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 10
+	});
 	$('#report_polls').dataTable({
 		retrieve: true,
 		paging: false,

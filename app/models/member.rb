@@ -175,8 +175,11 @@ class Member < ActiveRecord::Base
       field :province
       field :avatar, :carrierwave
       field :cover, :carrierwave
-      field :key_color
+      field :description
       field :status_account
+      field :point
+      field :subscription
+      field :bypass_invite
     end
 
     edit do

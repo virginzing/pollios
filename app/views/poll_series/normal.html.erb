@@ -107,12 +107,10 @@
   $('.add_new_poll').click( function () {
     setTimeout(function () {
       for(var i=0; i < times; i++) {
-        $(".add_new_choice").last().trigger("click");
-        // $(".")
-      }
+        $(".add_new_choice").last().trigger("click");      }
       $('.remove_nested_fields').slice(-3,-2)[0].style.visibility='hidden';
       $('.remove_nested_fields').slice(-2,-1)[0].style.visibility='hidden';
-    }, 10);
+    }, 5);
   });
 </script>
 

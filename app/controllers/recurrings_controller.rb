@@ -1,4 +1,8 @@
 class RecurringsController < ApplicationController
+
+  protect_from_forgery
+  skip_before_action :verify_authenticity_token, if: :json_request?
+
   before_action :set_recurring, only: [:show, :edit, :update, :destroy]
   before_action :signed_user, only: [:new]
   # GET /recurrings
@@ -71,4 +75,11 @@ class RecurringsController < ApplicationController
     def recurring_params
       params.require(:recurring).permit(:period, :status, :member_id, :end_recur, :description)
     end
+    
+  protected
+
+  def json_request?
+    request.format.json?
+  end
+
 end

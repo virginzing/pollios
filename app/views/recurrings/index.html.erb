@@ -1,35 +1,74 @@
-<h1>Listing recurrings</h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-list-alt fa-fw "></i> 
+        Recurring
+    </h1>
+  </div>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Description</th>
-      <th>Period</th>
-      <th>Status</th>
-      <th>End recur</th>
-      <td>Use</td>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<div class="well">
+  <h4 class="alert-heading">Please Note!</h4>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Pollios</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+  </p>
+  <br>
+  <a href="<%= new_recurring_path %>" class="icon-btn">
+      <i class="fa fa-edit"></i>
+      <div>New</div>
+  </a>
+</div>
 
-  <tbody>
-    <% @recurrings.includes(:polls).each do |recurring| %>
-      <tr>
-        <td><%= recurring.description %></td>
-        <td><%= recurring.period %></td>
-        <td><span class="label"><%= recurring.status %></span></td>
-        <td><%= recurring.end_recur %></td>
-        <td><%= recurring.polls.present? ? label_use("Yes") : label_use("No") %></td>
-        <td><%= link_to 'Show', recurring %></td>
-        <td><%= link_to 'Edit', edit_recurring_path(recurring) %></td>
-        <td><%= link_to 'Destroy', recurring, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
 
-<br>
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-list-recurring" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>List of Recurring</strong></h2>          
+    </header>
 
-<%= link_to 'New Recurring', new_recurring_path, class: "button" %>
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+        <table id="list_recurring" class="table table-striped table-bordered table-hover" width="100%">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Period</th>
+              <th>Status</th>
+              <th>End recur</th>
+              <td>Use</td>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @recurrings.includes(:polls).each do |recurring| %>
+              <tr>
+                <td><%= recurring.description %></td>
+                <td><%= recurring.period %></td>
+                <td><span class="label"><%= recurring.status %></span></td>
+                <td><%= recurring.end_recur %></td>
+                <td><%= recurring.polls.present? ? label_use("Yes") : label_use("No") %></td>
+                <td><%= link_to 'Show', recurring %></td>
+                <td><%= link_to 'Edit', edit_recurring_path(recurring) %></td>
+                <td><%= link_to 'Destroy', recurring, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+

@@ -1,8 +1,7 @@
 class PollsController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
-
-  protect_from_forgery :except => [:create_poll, :delete_poll, :vote, :delete_comment]
+  protect_from_forgery
+  skip_before_action :verify_authenticity_token, if: :json_request?
 
   before_action :set_current_member, only: [:delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
@@ -473,4 +472,11 @@ class PollsController < ApplicationController
   def polls_params
     params.require(:poll).permit(:campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
   end
+
+  protected
+
+  def json_request?
+    request.format.json?
+  end
+
 end

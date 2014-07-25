@@ -1,41 +1,80 @@
-<h1>Listing campaigns</h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-gift fa-fw "></i> 
+        Campaign
+    </h1>
+  </div>
+</div>
 
-<table width="100%">
-  <thead>
-    <tr>
-      <th>id</th>
-      <th>Poll</th>
-      <th>Name</th>
-      <th>Photo campaign</th>
-      <th>Used</th>
-      <th>Chance</th>
-      <th>Limit</th>
-      <th>Expire</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<div class="well">
+  <h4 class="alert-heading">Please Note!</h4>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Pollios</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+  </p>
+  <br>
+  <a href="<%= new_campaign_path %>" class="icon-btn">
+      <i class="fa fa-edit"></i>
+      <div>New</div>
+  </a>
+</div>
 
-  <tbody>
-    <% @campaigns.each do |campaign| %>
-      <tr>
-        <td><%= campaign.id %></td>
-        <td><%= campaign.polls.present? ? campaign.polls.pluck(:title).join(', ') : "-" %></td>
-        <td><%= campaign.name %></td>
-        <td><%= image_tag(campaign.photo_campaign.url(:thumbnail)) %></td>
-        <td><%= campaign.used %></td>
-        <td><%= campaign.begin_sample %> in <%= campaign.end_sample %></td>
-        <td><%= campaign.limit %></td>
-        <td><%= campaign.expire %></td>
-        <td><%= link_to 'Show', campaign %></td>
-        <td><%= link_to 'Edit', edit_campaign_path(campaign) %></td>
-        <td><%= link_to 'Destroy', campaign, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
 
-<br>
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-list-campaign" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>List of Campaign</strong></h2>          
+    </header>
 
-<%= link_to 'New Campaign', new_campaign_path %>
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+        <table id="list_campaigns" class="table table-striped table-bordered table-hover" width="100%">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Poll</th>
+              <th>Name</th>
+              <th>Photo campaign</th>
+              <th>Used</th>
+              <th>Chance</th>
+              <th>Limit</th>
+              <th>Expire</th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @campaigns.each do |campaign| %>
+              <tr>
+                <td><%= campaign.id %></td>
+                <td><%= campaign.polls.present? ? campaign.polls.pluck(:title).join(', ') : "-" %></td>
+                <td><%= campaign.name %></td>
+                <td><%= image_tag(campaign.photo_campaign.url(:thumbnail)) %></td>
+                <td><%= campaign.used %></td>
+                <td><%= campaign.begin_sample %> in <%= campaign.end_sample %></td>
+                <td><%= campaign.limit %></td>
+                <td><%= campaign.expire %></td>
+                <td><%= link_to 'Show', campaign %></td>
+                <td><%= link_to 'Edit', edit_campaign_path(campaign) %></td>
+                <td><%= link_to 'Destroy', campaign, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
