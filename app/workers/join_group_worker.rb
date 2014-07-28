@@ -1,10 +1,10 @@
-class GroupNotificationWorker
+class JoinGroupWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member, group, poll, custom_data = nil)
+  def perform(member, group, custom_data = nil)
 
-    @group_nofication = AskJoinGroup.new(member, group, poll)
+    @group_nofication = AskJoinGroup.new(member, group, nil, "join")
 
     recipient_ids = @group_nofication.recipient_ids
 
@@ -13,14 +13,13 @@ class GroupNotificationWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      poll_id: poll.id
+      group_id: group.id
     }
 
     hash_custom = {
-      group: group.as_json(), 
-      type: TYPE[:poll],
-      action: ACTION[:create],
-      poll: PollSerializer.new(poll).as_json()
+      type: TYPE[:group],
+      action: ACTION[:join],
+      group: group.as_json()
     }
 
     device_ids.each do |device_id|
@@ -41,3 +40,4 @@ class GroupNotificationWorker
   end
 
 end
+

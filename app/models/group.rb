@@ -52,6 +52,8 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
 
+      JoinGroupWorker.new.perform(member, @group)
+
       Rails.cache.delete([member_id, 'group_active'])
       # Rails.cache.delete([member_id, 'group_count'])
 

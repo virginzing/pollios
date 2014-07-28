@@ -1,11 +1,12 @@
-class GroupNotification
+class AskJoinGroup
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
-  def initialize(member, group, poll)
+  def initialize(member, group, poll, action = "asked")
     @member = member
     @group = group
     @poll = poll
+    @action = action
   end
 
   def group_member_ids
@@ -26,7 +27,11 @@ class GroupNotification
   end
 
   def custom_message
-    message = "#{member_name} asked in #{group_name}: \"#{@poll.title}\""
+    if @action == "asked"
+      message = "#{member_name} asked in #{group_name}: \"#{@poll.title}\""
+    else
+      message = "#{member_name} joined in #{group_name}"
+    end
     truncate_message(message)
   end  
   
