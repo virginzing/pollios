@@ -79,6 +79,8 @@
       ga('send', 'pageview');
 
     </script>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+
     <style type="text/css">
         .map-canvas {
           margin-top: -80px;
@@ -507,7 +509,14 @@
     <script type="text/javascript" src="/homepage/js/main.js"></script>
     <!--[if !IE]>--> 
     <script type="text/javascript" src="/homepage/js/animations.js"></script> 
-    <!--<![endif]-->         
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/smartadmin/js/plugin/jquery.simplr.smoothscroll.js" type="text/javascript" charset="utf-8"></script>
+    <!--<![endif]-->
+    <script type="text/javascript">
+        $(function () {
+            $.srSmoothscroll();
+        });
+    </script>         
 </body>
 
 </html> 
