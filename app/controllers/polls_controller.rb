@@ -446,7 +446,7 @@ class PollsController < ApplicationController
   end
 
   def options_params
-    params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request, :group_id)
+    params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request, :group_id, :public, :friend_following, :group)
   end
 
   def options_build_params

@@ -23,6 +23,18 @@ class OverallTimeline
     @options["since_id"] || 0
   end
 
+  def filter_public
+    @options[:public].presence || "1"
+  end
+
+  def filter_friend_following
+    @options[:friend_following].presence || "1"
+  end
+
+  def filter_group
+    @options[:group].presence || "1"
+  end
+
   def your_friend_ids
     # @friend_ids ||= @member.cached_get_friend_active.map(&:id)
     @friend_ids ||= Member.current_member.list_friend_active.map(&:id)
@@ -60,19 +72,23 @@ class OverallTimeline
 
     poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
-    poll_friend_query  = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    poll_friend_query = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
     poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
-    poll_public_query = "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    poll_public_query = filter_public.eql?("1") ? "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0" : "NULL"
+
+    new_your_friend_ids = filter_friend_following.eql?("1") ? your_friend_ids : [0]
+
+    new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
     query = PollMember.available.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
         "OR (#{poll_friend_query} AND #{poll_unexpire})" \
         "OR (#{poll_group_query} AND #{poll_unexpire})" \
         "OR (#{poll_public_query} AND #{poll_unexpire})", 
         member_id,
-        your_friend_ids,
-        find_poll_in_my_group).limit(LIMIT_TIMELINE)
+        new_your_friend_ids,
+        new_find_poll_in_my_group).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
 
