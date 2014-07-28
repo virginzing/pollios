@@ -33,6 +33,8 @@ class AskJoinGroup
       message = "#{member_name} joined in #{group_name}"
     end
     truncate_message(message)
-  end  
+  end 
+
+  ## for commit 
   
 end
