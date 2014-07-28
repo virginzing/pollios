@@ -5,6 +5,7 @@
 //= require moment.min
 //= require livestamp.min
 //= require parsley
+//= require jquery.ezdz
 //= require nprogress
 //= require nprogress-turbolinks
 //= require chartkick

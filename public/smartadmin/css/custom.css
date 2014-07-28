@@ -8,6 +8,10 @@
   margin-bottom: 15px;
 }
 
+section.dropzone-picture {
+  margin: 20px;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;

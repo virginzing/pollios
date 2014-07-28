@@ -32,6 +32,7 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/custom.css" data-turbolinks-track="true">
 		<link rel="stylesheet" type="text/css" href="/plugins/animate-css/animate.min.css" />
     <link href="/plugins/bootstrap3-dialog/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/plugins/ezdz/dist/jquery.ezdz.min.css">
 		<!-- FAVICONS -->
 		<link rel="shortcut icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="/smartadmin/img/favicon/favicon.ico" type="image/x-icon">
@@ -444,8 +445,8 @@
 		<!-- MAIN APP JS FILE -->
 		<script src="/smartadmin/js/app.js"></script>
 
-		<script type="text/javascript" src='/plugins/jquery.overlay.js'></script>
-		
+		<script src='/plugins/jquery.overlay.js'></script>
+  	
 		<!-- PAGE RELATED PLUGIN(S) -->
 		
 		<!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
@@ -462,7 +463,8 @@
 
 		<script>
 			$.bread_crumb = $('#ribbon ol.breadcrumb');
-
+      dropZonePicture();
+      
 			function drawBreadCrumb() {
 				var nav_elems = $('nav li.active > a'), count = nav_elems.length;
 				//console.log("breadcrumb")
@@ -510,7 +512,7 @@
 				dataTable();
         validateMemberProfile();
         smoothScroll();
-
+        
 				var searchFunc = function (term, callback) {
 				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
 				    .done(function (resp) {
@@ -592,104 +594,6 @@
 		  ga('send', 'pageview');
 
 		</script>		
-
-    <script type="text/javascript">
-      $(function () {
-          'use strict';
-
-          var result = $('#result'),
-              exifNode = $('#exif'),
-              thumbNode = $('#thumbnail'),
-              actionsNode = $('#actions'),
-              currentFile,
-              replaceResults = function (img) {
-                  var content;
-                  if (!(img.src || img instanceof HTMLCanvasElement)) {
-                      content = $('<span>Loading image file failed</span>');
-                  } else {
-                      content = $('<a target="_blank">').append(img)
-                          .attr('download', currentFile.name)
-                          .attr('href', img.src || img.toDataURL());
-                  }
-                  result.children().replaceWith(content);
-                  if (img.getContext) {
-                      actionsNode.show();
-                  }
-              },
-              displayImage = function (file, options) {
-                  currentFile = file;
-                  if (!loadImage(
-                          file,
-                          replaceResults,
-                          options
-                      )) {
-                      result.children().replaceWith(
-                          $('<span>Your browser does not support the URL or FileReader API.</span>')
-                      );
-                  }
-              },
-              displayExifData = function (exif) {
-                  var thumbnail = exif.get('Thumbnail'),
-                      tags = exif.getAll(),
-                      table = exifNode.find('table').empty(),
-                      row = $('<tr></tr>'),
-                      cell = $('<td></td>'),
-                      prop;
-                  if (thumbnail) {
-                      thumbNode.empty();
-                      loadImage(thumbnail, function (img) {
-                          thumbNode.append(img).show();
-                      }, {orientation: exif.get('Orientation')});
-                  }
-                  for (prop in tags) {
-                      if (tags.hasOwnProperty(prop)) {
-                          table.append(
-                              row.clone()
-                                  .append(cell.clone().text(prop))
-                                  .append(cell.clone().text(tags[prop]))
-                          );
-                      }
-                  }
-                  exifNode.show();
-              },
-              dropChangeHandler = function (e) {
-                  e.preventDefault();
-                  e = e.originalEvent;
-                  var target = e.dataTransfer || e.target,
-                      file = target && target.files && target.files[0],
-                      options = {
-                          maxWidth: result.width(),
-                          canvas: true
-                      };
-                  if (!file) {
-                      return;
-                  }
-                  exifNode.hide();
-                  thumbNode.hide();
-                  loadImage.parseMetaData(file, function (data) {
-                      if (data.exif) {
-                          options.orientation = data.exif.get('Orientation');
-                          displayExifData(data.exif);
-                      }
-                      displayImage(file, options);
-                  });
-              },
-              coordinates;
-          // Hide URL/FileReader API requirement message in capable browsers:
-          if (window.createObjectURL || window.URL || window.webkitURL || window.FileReader) {
-              result.children().hide();
-          }
-          $(document)
-              .on('dragover', function (e) {
-                  e.preventDefault();
-                  e = e.originalEvent;
-                  e.dataTransfer.dropEffect = 'copy';
-              })
-              .on('drop', dropChangeHandler);
-          $('#file-input').on('change', dropChangeHandler);
-      });
-      
-    </script>
 
 	</body>
 

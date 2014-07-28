@@ -401,6 +401,44 @@ function check_if_mobile_width() {
 }
 
 
+function dropZonePicture () {
+	$('input[type="file"]').last().ezdz({
+	    text: 'Drop a picture',
+	    validators: {
+	        // maxWidth:  1200,
+	        // maxHeight: 600
+	        maxSize: 2000000
+	    },
+	    reject: function(file, errors) {
+	        if (errors.mimeType) {
+	        	handleDropZonePictureError(file.name, 'must be an image.');
+	        }
+
+	        if (errors.maxSize) {
+	        	handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
+	        }
+
+	        if (errors.maxWidth) {
+            handleDropZonePictureError(file.name, 'must be width:600px max.');
+	        }
+
+	        if (errors.maxHeight) {
+	        	handleDropZonePictureError(file.name, 'must be height:400px max.');
+	        }
+	    }
+	});
+}
+
+function handleDropZonePictureError(file_name, messages) {
+  $.smallBox({
+    title : "Warning",
+    content: file_name + " " + messages,
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}
+
 function validateMemberProfile () {
 	$(function() {
 	  // Validation

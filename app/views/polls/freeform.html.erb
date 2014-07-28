@@ -82,27 +82,11 @@
             <fieldset>
               <div class="col-md-6">
                 <section>
-                <div class="form-group">
-                     <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-                         <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                        </div>
-                        <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 640px; max-height: 320px; line-height: 20px;">
-                          
-                        </div>
-                        <div>
-                           <span class="btn btn-default btn-file">
-                           <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
-                           <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                           <input type="file" class="default" name="poll[photo_poll]"/>
-                           </span>
-                           <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
-                        </div>
-                    </div>
-                </div>
-                </section>
+                  <div class="form-group">
+                    <input type="file" class="default" name="poll[photo_poll]" accept="image/png, image/jpeg, image/gif"/>
+                  </div>
+                </section>              
               </div>
-
               <div class="col-md-6">
                 <section>
                   <label class="label">Campaign</label>
@@ -120,8 +104,6 @@
               </div>
             
             </fieldset>
-
-
 
           <footer>
             <button type="submit" class="btn btn-primary">
