@@ -35,6 +35,10 @@ class Authentication
     Authentication.generate_api_token
   end
 
+  def generate_auth_token
+    Authentication.generate_auth_token
+  end
+
   def province
     @params["province"]["id"] if @params["province"].present? || @params[:province_id]
   end
@@ -85,6 +89,7 @@ class Authentication
       member.gender = gender.to_i
       member.province_id = province
       member.member_type = member_type
+      member.auth_token = generate_auth_token
       member.save!
       @new_member = true
     end
@@ -121,7 +126,7 @@ class Authentication
   end
 
   def update_member(member)
-      member.update(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday)
+      member.update!(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday, auth_token: Authentication.generate_auth_token)
   end
 
   def update_member_provider(member_provider)
@@ -149,8 +154,14 @@ class Authentication
     return token
   end
 
+  def self.generate_auth_token
+    begin
+      auth_token = SecureRandom.urlsafe_base64
+    end while Member.exists?(auth_token: auth_token)
+    return auth_token
+  end
+
   def check_activate_account
     member.bypass_invite || member.member_invite_code.present? || member.brand?
   end
 end
-

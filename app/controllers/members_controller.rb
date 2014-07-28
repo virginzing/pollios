@@ -153,7 +153,8 @@ class MembersController < ApplicationController
         @current_member.update(bypass_invite: true)
         @activate = true
         @invite_code[:message] = "Success"
-        session[:member_id] = @current_member.id
+        # session[:member_id] = @current_member.id
+        # cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
         format.js
         format.json
         format.html { redirect_to dashboard_path }
@@ -166,7 +167,8 @@ class MembersController < ApplicationController
 
         add_to_group_at_invite
 
-        session[:member_id] = @current_member.id
+        # session[:member_id] = @current_member.id
+        # cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
         format.js
         format.json
         format.html { redirect_to dashboard_path }

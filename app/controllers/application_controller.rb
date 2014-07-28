@@ -99,12 +99,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # def current_member
+  #   begin
+  #     @current_member ||= Member.find(session[:member_id]) if session[:member_id]
+  #   rescue => e
+  #     session[:member_id] = nil
+  #   end
+  # end
+
   def current_member
-    begin
-      @current_member ||= Member.find(session[:member_id]) if session[:member_id]
-    rescue => e
-      session[:member_id] = nil
-    end
+    @current_member ||= Member.find_by(auth_token: cookies[:auth_token]) if cookies[:auth_token]
   end
 
   def signed_in?

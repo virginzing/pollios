@@ -32,6 +32,7 @@ class AuthenSentaiController < ApplicationController
 	def signout
 		session[:member_id] = nil
 		session[:return_to] = nil
+    cookies.delete(:auth_token)
 		flash[:success] = "Signout sucessfully."
 		redirect_to users_signin_url
 	end
@@ -46,7 +47,13 @@ class AuthenSentaiController < ApplicationController
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
         if @auth.activate_account?
           @login = true
-          session[:member_id] = member.id
+          # session[:member_id] = member.id
+          if sessions_params[:remember_me]
+            cookies.permanent[:auth_token] = member.auth_token
+          else
+            cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+          end
+
           wants.html { redirect_back_or polls_path }
           wants.json
           wants.js
@@ -80,7 +87,9 @@ class AuthenSentaiController < ApplicationController
   		if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
-          session[:member_id] = member.id
+
+          cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+          # session[:member_id] = member.id
           flash[:success] = "Sign up sucessfully."
           @signup = true
           wants.html { redirect_to dashboard_path }
@@ -165,7 +174,7 @@ class AuthenSentaiController < ApplicationController
   private
 
 	  def sessions_params
-	  	params.permit(:authen, :password, :device_token)
+	  	params.permit(:authen, :password, :device_token, :remember_me)
 	  end
 
     def forgotpassword_params
