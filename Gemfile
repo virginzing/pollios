@@ -5,7 +5,7 @@ ruby "2.1.2"
 gem 'rails', '4.0.0'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', '4.0.2'
 gem 'less-rails'
 gem 'compass-rails'
 
