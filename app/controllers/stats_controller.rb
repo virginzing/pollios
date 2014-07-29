@@ -1,5 +1,7 @@
 class StatsController < ApplicationController
 
+  before_filter :authenticate_admin!, :redirect_unless_admin
+
   expose(:poll_stats) { @poll_stats }
   expose(:vote_stats) { @vote_stats }
   expose(:user_stats) { @user_stats }
