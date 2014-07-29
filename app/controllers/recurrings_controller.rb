@@ -4,7 +4,7 @@ class RecurringsController < ApplicationController
   skip_before_action :verify_authenticity_token, if: :json_request?
 
   before_action :set_recurring, only: [:show, :edit, :update, :destroy]
-  before_action :signed_user, only: [:new]
+  before_action :signed_user
   # GET /recurrings
   # GET /recurrings.json
   def index

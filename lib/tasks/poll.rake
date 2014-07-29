@@ -97,6 +97,13 @@ namespace :poll do
     PollSeries.delete_all
   end
 
+  # desc "update member type to poll"
+
+  # Poll.includes(:member).each do |p|
+  #   p.update!(member_type: p.member.member_type_text)
+  # end
+
+  
   # desc "Update choice_text to history voted"
   # task :choice_text => :environment do
   #   HsitoryVote.all.each do |h|

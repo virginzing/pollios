@@ -73,7 +73,7 @@
                       <%= submit_tag 'Re new', class: 'btn btn-primary' %>
                     <% end %>
                   </td>
-                  <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                  <td><%= link_to 'Delete', poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %></td>
                 </tr>
               <% end %>
             </tbody>

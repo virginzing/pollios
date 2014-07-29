@@ -55,7 +55,8 @@ class BuildPoll
       "type_poll" => @params["type_poll"],
       "in_group_ids" => "0",
       "photo_poll" => @params["photo_poll"],
-      "status_poll" => 0
+      "status_poll" => 0,
+      "member_type" => @member.member_type_text
     }
   end
 

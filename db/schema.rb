@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140728042841) do
+ActiveRecord::Schema.define(version: 20140729102129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -503,6 +503,7 @@ ActiveRecord::Schema.define(version: 20140728042841) do
     t.integer  "status_poll",    default: 0
     t.boolean  "allow_comment",  default: true
     t.integer  "comment_count",  default: 0
+    t.string   "member_type"
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree

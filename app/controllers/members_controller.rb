@@ -5,7 +5,7 @@ class MembersController < ApplicationController
   before_action :set_current_member, only: [:send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request]
-  before_action :signed_user, only: [:index, :profile]
+  before_action :signed_user, only: [:index, :profile, :delete_avatar, :delete_cover]
 
   before_action :load_resource_poll_feed, only: [:detail_friend]
 
@@ -44,6 +44,40 @@ class MembersController < ApplicationController
     end
   end
 
+  def delete_avatar
+    Member.transaction do
+      begin
+        @current_member.remove_avatar!
+        @current_member.save
+        flash[:success] = "Delete avatar successfully."
+      rescue => e
+        flash[:error] = e.message
+      end
+      respond_to do |format|
+        format.html { redirect_to my_profile_path }
+      end
+    end
+  end
+
+  def delete_cover
+    Member.transaction do
+      begin
+        @current_member.remove_cover!
+        @current_member.save
+        flash[:success] = "Delete cover successfully."
+      rescue => e
+        flash[:error] = e.message
+      end
+      respond_to do |format|
+        format.html { redirect_to my_profile_path }
+      end
+    end
+  end
+
+  def delete_cover
+    
+  end
+
   def update_profile
     respond_to do |format|
 
@@ -66,6 +100,7 @@ class MembersController < ApplicationController
         format.html { redirect_to my_profile_path }
         format.json
       else
+        puts "have error"
         @error_message = @current_member.errors.messages
 
         format.json

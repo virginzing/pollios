@@ -174,36 +174,17 @@
                            </div>
 
                             <form role="form" action="<%= update_profile_path %>" method="post" enctype="multipart/form-data">
-
-                             <div class="form-group">
-                                   <div class="fileupload fileupload-new" data-provides="fileupload">
-                                      <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-                                      <% if current_member.avatar.url.present? %>
-                                        <%= image_tag(current_member.avatar.url(:thumbnail)) %>
-                                      <% else %>
-                                       <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                                      <% end %>
-                                      </div>
-                                      <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 300px; max-height: 300px; line-height: 20px;">
-                                        
-                                      </div>
-                                      <div>
-                                         <span class="btn btn-default btn-file">
-                                         <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
-                                         <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                                         <input type="hidden" value="<%= current_member.id %>" name="member_id">
-                                         <input type="file" class="default" name="avatar"/>
-                                         </span>
-                                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
-                                      </div>
-                                  </div>
+                              <div class="form-group">
+                                <input type="hidden" name="member_id" value="<%= @current_member.id %>">
+                                <input type="file" class="default" name="avatar" id="drop_avatar" accept="image/png, image/jpeg, image/gif"/>
                               </div>
+
                               <div class="form-actions">
                                   <div class="row">
                                     <div class="col-md-12">
-                                      <button class="btn btn-default" type="submit">
-                                        Cancel
-                                      </button>
+                                      <% if @current_member.avatar.present? %>
+                                      <%= link_to 'Delete', delete_avatar_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+                                      <% end %>
                                       <button class="btn btn-primary" type="submit">
                                         <i class="fa fa-save"></i>
                                         Submit
@@ -224,34 +205,15 @@
                             <form role="form" action="<%= update_profile_path %>" method="post" enctype="multipart/form-data">
 
                              <div class="form-group">
-                                   <div class="fileupload fileupload-new" data-provides="fileupload">
-                                      <div class="fileupload-new thumbnail" style="width: 640px; height: 300px;">
-                                      <% if current_member.cover.url.present? %>
-                                        <%= image_tag(current_member.cover.url(:cover)) %>
-                                      <% else %>
-                                       <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                                      <% end %>
-                                      </div>
-                                      <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 640px; max-height: 300px; line-height: 20px;">
-                                        
-                                      </div>
-                                      <div>
-                                         <span class="btn btn-default btn-file">
-                                         <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select image</span>
-                                         <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                                         <input type="hidden" value="<%= current_member.id %>" name="member_id">
-                                         <input type="file" class="default" name="cover"/>
-                                         </span>
-                                         <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i> Remove</a>
-                                      </div>
-                                  </div>
+                                <input type="hidden" name="member_id" value="<%= @current_member.id %>">
+                                <input type="file" name="cover" id="drop_cover" accept="image/png, image/jpeg, image/gif"/>  
                               </div>
                               <div class="form-actions">
                                   <div class="row">
                                     <div class="col-md-12">
-                                      <button class="btn btn-default" type="submit">
-                                        Cancel
-                                      </button>
+                                      <% if @current_member.cover.present? %>
+                                      <%= link_to 'Delete', delete_cover_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+                                      <% end %>
                                       <button class="btn btn-primary" type="submit">
                                         <i class="fa fa-save"></i>
                                         Submit
@@ -671,3 +633,11 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  // var member_avatar = "<%= @current_member.avatar.url(:thumbnail).presence || "" %>";
+  // console.log(member_avatar);
+
+  // $('#drop_avatar').ezdz('preview', "");
+</script>

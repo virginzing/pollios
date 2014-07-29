@@ -191,6 +191,8 @@ Pollios::Application.routes.draw do
   end
 
   get '/profile', to: 'members#profile',  as: :my_profile
+  delete '/delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
+  delete '/delete_cover',  to: 'members#delete_cover', as: :delete_cover
   get '/qrcode',  to: 'polls#generate_qrcode'
   get '/dashboard',  to: 'home#dashboard', as: :dashboard
   

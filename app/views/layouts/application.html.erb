@@ -466,7 +466,9 @@
 		<script>
 			$.bread_crumb = $('#ribbon ol.breadcrumb');
       dropZonePicture();
-      
+      dropZoneAvatar("<%= @current_member.avatar.url(:thumbnail).presence || "" %>");
+      dropZoneCover("<%= @current_member.cover.url(:cover).presence || "" %>");
+
 			function drawBreadCrumb() {
 				var nav_elems = $('nav li.active > a'), count = nav_elems.length;
 				//console.log("breadcrumb")

@@ -2,7 +2,7 @@ class CampaignsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
   before_action :set_current_member, only: [:predict, :list_reward]
-  before_action :signed_user, only: [:index, :new]
+  before_action :signed_user, only: [:index, :new, :show, :update, :destroy]
   before_action :history_voted_viewed, only: [:list_reward]
 
 
