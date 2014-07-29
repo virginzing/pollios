@@ -121,28 +121,28 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 61, "friend_id": 2 }' -X POST http://localhost:3000/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 21, "friend_id": 50 }' -X POST http://localhost:3000/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 47 , "friend_id": 24 }' -X POST http://codeapp-pollios.herokuapp.com/friend/add_friend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 93 , "friend_id": 85 }' -X POST http://localhost:3000/friend/add_friend.json -i
 
  # curl -H "Content-Type: application/json" -d '{"member_id": 21, "friend_id": 30}' -X POST http://localhost:3000/friend/block.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/add_close_friend.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/unclose_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 21, "friend_id": 30}' -X POST http://localhost:3000/friend/unblock.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 20, "friend_id": 21}' -X POST http://codeapp-pollios.herokuapp.com/friend/unblock.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/unmute_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2 }' -X POST http://localhost:3000/friend/unfriend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 85 }' -X POST http://localhost:3000/friend/unfriend.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 10, "friend_id": 1 }' -X POST http://localhost:3000/friend/accept.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 85, "friend_id": 93 }' -X POST http://localhost:3000/friend/accept.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 61 }' -X POST http://localhost:3000/friend/deny.json -i
 
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
-# http://localhost:3000/friend/search.json?member_id=1&q=N
+# http://localhost:3000/friend/search.json?member_id=21&q=Nuttapon
 
-# curl -F "member_id=4" -F "name=testing group" -F "friend_id=1" http://localhost:3000/group/build.json -i
+# curl -F "member_id=85" -F "name=Mang" http://localhost:3000/group/build.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
@@ -154,11 +154,173 @@ end
 #     "friend_id": "2"
 # }' -X POST http://localhost:3000/group/add_friend.json -i
 
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 86,
+#     "message": "Same Same"
+# }' -X POST http://localhost:3000/poll/755/comments.json -i
+
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1,
-#     "friend_id": "2"
-# }' -X POST http://localhost:3000/group/18/invite.json -i
+#     "member_id": 86,
+#     "message": "dftyuiklfghjkl"
+# }' -X POST http://localhost:3000/poll/752/comments.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 86
+# }' -X DELETE http://localhost:3000/poll/752/comments/17.json -i
+
+
+# Poll.update_all(comment_count: 0)
+
+
+# curl -H "Content-Type: application/json" -d '{
+#   "receipt": {
+#     "receipt_type": "ProductionSandbox",
+#     "original_purchase_date_ms": "1375340400000",
+#     "original_purchase_date_pst": "2013-08-01 00:00:00 America/Los_Angeles",
+#     "original_purchase_date": "2013-08-01 07:00:00 Etc/GMT",
+#     "download_id": 0,
+#     "request_date": "2014-07-22 14:31:34 Etc/GMT",
+#     "request_date_ms": "1406039494269",
+#     "in_app": [
+#         {
+#             "original_purchase_date_ms": "1406039483000",
+#             "original_transaction_id": "1000000117614747",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "purchase_date_ms": "1406039483000",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "is_trial_period": "false",
+#             "original_purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "5publicpoll",
+#             "transaction_id": "1000000117614747",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT"
+#         },
+#         {
+#             "original_purchase_date_ms": "1406030236000",
+#             "original_purchase_date_pst": "2014-07-22 04:57:16 America/Los_Angeles",
+#             "transaction_id": "1000000117594341",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 11:57:16 Etc/GMT",
+#             "original_transaction_id": "1000000117594341",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "1month",
+#             "purchase_date_ms": "1406039483000",
+#             "expires_date": "2014-07-22 12:02:15 Etc/GMT",
+#             "expires_date_ms": "1406030535000",
+#             "web_order_line_item_id": "1000000028425926",
+#             "is_trial_period": "false",
+#             "expires_date_pst": "2014-07-22 05:02:15 America/Los_Angeles"
+#         },
+#         {
+#             "original_purchase_date_ms": "1406030422000",
+#             "original_purchase_date_pst": "2014-07-22 05:00:22 America/Los_Angeles",
+#             "transaction_id": "1000000117594973",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 12:00:22 Etc/GMT",
+#             "original_transaction_id": "1000000117594341",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "1month",
+#             "purchase_date_ms": "1406039483000",
+#             "expires_date": "2014-07-22 12:07:15 Etc/GMT",
+#             "expires_date_ms": "1406030835000",
+#             "web_order_line_item_id": "1000000028425927",
+#             "is_trial_period": "false",
+#             "expires_date_pst": "2014-07-22 05:07:15 America/Los_Angeles"
+#         },
+#         {
+#             "original_purchase_date_ms": "1406030733000",
+#             "original_purchase_date_pst": "2014-07-22 05:05:33 America/Los_Angeles",
+#             "transaction_id": "1000000117596364",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 12:05:33 Etc/GMT",
+#             "original_transaction_id": "1000000117594341",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "1month",
+#             "purchase_date_ms": "1406039483000",
+#             "expires_date": "2014-07-22 12:12:15 Etc/GMT",
+#             "expires_date_ms": "1406031135000",
+#             "web_order_line_item_id": "1000000028425933",
+#             "is_trial_period": "false",
+#             "expires_date_pst": "2014-07-22 05:12:15 America/Los_Angeles"
+#         },
+#         {
+#             "original_purchase_date_ms": "1406031062000",
+#             "original_purchase_date_pst": "2014-07-22 05:11:02 America/Los_Angeles",
+#             "transaction_id": "1000000117597064",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 12:11:02 Etc/GMT",
+#             "original_transaction_id": "1000000117594341",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "1month",
+#             "purchase_date_ms": "1406039483000",
+#             "expires_date": "2014-07-22 12:17:15 Etc/GMT",
+#             "expires_date_ms": "1406031435000",
+#             "web_order_line_item_id": "1000000028425945",
+#             "is_trial_period": "false",
+#             "expires_date_pst": "2014-07-22 05:17:15 America/Los_Angeles"
+#         },
+#         {
+#             "original_purchase_date_ms": "1406031320000",
+#             "original_purchase_date_pst": "2014-07-22 05:15:20 America/Los_Angeles",
+#             "transaction_id": "1000000117597815",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 12:15:20 Etc/GMT",
+#             "original_transaction_id": "1000000117594341",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "1month",
+#             "purchase_date_ms": "1406039483000",
+#             "expires_date": "2014-07-22 12:22:15 Etc/GMT",
+#             "expires_date_ms": "1406031735000",
+#             "web_order_line_item_id": "1000000028425962",
+#             "is_trial_period": "false",
+#             "expires_date_pst": "2014-07-22 05:22:15 America/Los_Angeles"
+#         },
+#         {
+#             "original_purchase_date_ms": "1406031633000",
+#             "original_purchase_date_pst": "2014-07-22 05:20:33 America/Los_Angeles",
+#             "transaction_id": "1000000117598722",
+#             "quantity": "1",
+#             "original_purchase_date": "2014-07-22 12:20:33 Etc/GMT",
+#             "original_transaction_id": "1000000117594341",
+#             "purchase_date": "2014-07-22 14:31:23 Etc/GMT",
+#             "purchase_date_pst": "2014-07-22 07:31:23 America/Los_Angeles",
+#             "product_id": "1month",
+#             "purchase_date_ms": "1406039483000",
+#             "expires_date": "2014-07-22 12:27:15 Etc/GMT",
+#             "expires_date_ms": "1406032035000",
+#             "web_order_line_item_id": "1000000028425981",
+#             "is_trial_period": "false",
+#             "expires_date_pst": "2014-07-22 05:27:15 America/Los_Angeles"
+#         }
+#     ],
+#     "request_date_pst": "2014-07-22 07:31:34 America/Los_Angeles",
+#     "bundle_id": "com.code-app.Pollios-b2",
+#     "adam_id": 0,
+#     "application_version": "0.0.19-07-2014.1",
+#     "original_application_version": "1.0"
+# }
+# }' -X POST http://localhost:3000/member/85/purchase_point.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#   "receipt_data": "dftyuiklfghjkl"
+# }' -X POST http://localhost:3000/member/85/subscribe.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 85,
+#     "friend_id": "98"
+# }' -X POST http://localhost:3000/group/51/invite.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 96
+# }' -X POST http://localhost:3000/poll/785/watch.json -i
+
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 21,
@@ -172,14 +334,20 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 4
-# }' -X POST http://localhost:3000/group/2/accept.json -i
+#     "member_id": 
+# }' -X POST http://localhost:3000/group/51/accept.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "friend_id": 47,
 #     "message": "ภาพ cover เสื่อมมาก",
 #     "block": true
 # }' -X POST http://localhost:3000/member/21/report.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "username": "nuttapon509"
+# }' -X POST http://localhost:3000/member/21/public_id.json -i
+
+# curl -H "Content-Type: application/json" -d '{}' -X POST http://localhost:3000/member/63/request_code.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -190,11 +358,12 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 30,
-#     "title": "from ying",
+#     "member_id": 85,
+#     "title": "​ลงกรุ๊ป",
 #     "expire_within": "2",
-#     "choices": "1,2",
-#     "type_poll": "binary"
+#     "choices": ["yes", "no", "eiei"],
+#     "type_poll": "freeform",
+#     "group_id": "51"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -242,43 +411,38 @@ end
 # PollMember.find_by_sql("SELECT pl.poll_id FROM poll_members pl LEFT JOIN poll_members pr ON pr.member_id IN (2,3) AND pl.poll_id > pr.poll_id AND (pl.share_poll_of_id = pr.poll_id OR pl.share_poll_of_id AND pl.share_poll_of_id = pr.share_poll_of_id) WHERE pr.poll_id IS NULL AND (pl.member_id = 1 OR pl.member_id IN (2,3)) ORDER BY pl.poll_id DESC LIMIT 20")
 
 # PollMember.find_by_sql("SELECT pl.poll_id FROM poll_members pl LEFT JOIN poll_members pr ON pr.member_id IN (2,3) AND pl.poll_id > pr.poll_id")
-# Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
-# curl -H "Content-Type: application/json" -d '{
-#     "member_id": 21,
-#     "choice_id": 2439
-# }' -X POST http://localhost:3000/poll/703/vote.json -i
-
+# # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 21,
+#     "member_id": 86,
 #     "message": "This is spam"
-# }' -X POST http://localhost:3000/poll/709/report.json -i
+# }' -X POST http://localhost:3000/poll/758/report.json -i
 
 # Tag.find_by_name("codeapp").polls.
 # joins(:poll_members).
 # where("(polls.public = ?) OR (poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", true, 11, false)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1,
-#     "answer": [{"id": 134, "choice_id": 312}, {"id": 133, "choice_id": 310}]
-# }' -X POST http://localhost:3000/questionnaire/5/vote.json -i
+#     "member_id": 85,
+#     "answer": [{"id": 805, "choice_id": 2790}, {"id": 806, "choice_id": 2792}]
+# }' -X POST http://localhost:3000/questionnaire/19/vote.json -i
 
 
-# http://localhost:3000/new_public_timeline.json?member_id=3
+# # http://localhost:3000/new_public_timeline.json?member_id=3
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 93,
+#     "choice_id": "2733"
+# }' -X POST http://localhost:3000/poll/790/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 2,
-#     "choice_id": "1047"
-# }' -X POST http://localhost:3000/poll/387/vote.json -i
-
-# curl -H "Content-Type: application/json" -d '{
-#     "member_id": 21,
+#     "member_id": 30,
 #     "group_id": "10"
-# }' -X POST http://localhost:3000/poll/share/710.json -i
+# }' -X POST http://localhost:3000/poll/share/626.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 7
-# }' -X POST http://localhost:3000/poll/unshare/39.json -i
+#     "member_id": 30,
+#     "group_id": "10"
+# }' -X POST http://localhost:3000/poll/unshare/626.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -301,12 +465,9 @@ end
 # }' -X POST http://localhost:3000/poll/group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "email": "imouto@gmail.com",
+#     "email": "test_001@gmail.com",
 #     "password": "mefuwfhfu",
-#     "fullname": "imouto",
-#     "username": "imouto",
-#     "gender": 2,
-#     "device_token": "b0e16fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda775"
+#     "fullname": "test_001"
 # }' -X POST http://localhost:3000/authen/signup_sentai.json -i
 
 
@@ -316,8 +477,9 @@ end
 # }' -X POST http://localhost:3000/poll/163/hide.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 6,
-#     "code": "NGFC15"
+#     "member_id": 1,
+#     "code": "CODEAPP",
+#     "name": "facebook"
 # }' -X POST http://localhost:3000/member/activate.json -i
 
 # http://localhost:3000/member/profile.json?member_id=1
@@ -326,12 +488,12 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
-# curl -F "email=manchester@gmail.com" -F "password=mefuwfhfu" -F "username=manchester" -F "fullname=Manchester United" -X POST http://localhost:3000/authen/signup_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"test001@gmail.com","password":"mefuwfhfu", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -F "email=krikri@gmail.com" -F "password=mefuwfhfu" -F "fullname=Kri Kri" -F "device_token=78916fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
 
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -345,22 +507,21 @@ end
 
 # http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
-# curl -F "member_id=1" -F "avatar=@test.jpg" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=70" -F "first_signup=false" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "id": "1010101",
-#     "email": "ying@code-app.com",
-#     "name": "ying",
-#     "gender": 2
-# }' -X POST http://codeapp-pollios.herokuapp.com/authen/facebook.json -i
+#     "id": "123",
+#     "email": "nut123@code-app.com",
+#     "name": "Nuttapon Achachotipong",
+#     "gender": 1,
+#     "device_token": "12316fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda775"
+# }' -X POST http://localhost:3000/authen/facebook.json -i
 
-# curl "http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5" -H 'Authorization: Token token="c55d4b810641c62156c4f419127e0bc4"' -i
+# curl "http://localhost:3000/poll/19/overall_timeline.json" -H 'Authorization: Token token="c209eb68b90ce508b0eb3be8e7b9f7cd"' -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "id": "1212121",
-#     "email": "new_user@gmail.com",
-#     "name": "new_user",
-#     "gender": 1
+#     "name": "1234567890",
+#     "email": "1234567890@gmail.com"
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
 

@@ -100,6 +100,7 @@ GEM
     celluloid (0.15.2)
       timers (~> 1.1.0)
     chartkick (1.2.5)
+    chunky_png (1.3.1)
     cloudinary (1.0.72)
       aws_cf_signer
       rest-client
@@ -113,6 +114,12 @@ GEM
     commander (4.2.0)
       highline (~> 1.6.11)
     commonjs (0.2.7)
+    compass (0.12.7)
+      chunky_png (~> 1.2)
+      fssm (>= 0.2.7)
+      sass (~> 3.2.19)
+    compass-rails (2.0.0)
+      compass (>= 0.12.2)
     configatron (3.2.0)
     connection_pool (2.0.0)
     dalli (2.7.2)
@@ -135,6 +142,7 @@ GEM
       rails (>= 3, < 5)
     font-awesome-rails (4.1.0.0)
       railties (>= 3.2, < 5.0)
+    fssm (0.2.10)
     gretel (3.0.7)
       rails (>= 3.2.0)
     haml (4.0.5)
@@ -344,6 +352,7 @@ DEPENDENCIES
   chartkick
   cloudinary
   coffee-rails (~> 4.0.0)
+  compass-rails
   configatron (= 3.2.0)
   dalli
   decent_exposure

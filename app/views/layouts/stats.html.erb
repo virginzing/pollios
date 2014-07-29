@@ -63,6 +63,9 @@
     <script src="/smartadmin/js/plugin/morris/raphael.min.js"></script>
     <script src="/smartadmin/js/plugin/morris/morris.min.js"></script>
 
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/smartadmin/js/plugin/jquery.simplr.smoothscroll.js" type="text/javascript" charset="utf-8"></script>
+  
   </head>
   <body class="fixed-header">
     <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -271,12 +274,21 @@
             }
       ]);
 
+      function smoothScroll () {
+        $(function () {
+            $.srSmoothscroll();
+        });
+      }
+
+
       graphStatsDashboard();
 
       $(document).on('page:change', function() {
         // DO NOT REMOVE : GLOBAL FUNCTIONS!
         pageSetUp();
         drawBreadCrumb();
+        smoothScroll();
+
         var searchFunc = function (term, callback) {
           $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
             .done(function (resp) {

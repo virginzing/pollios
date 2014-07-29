@@ -69,24 +69,20 @@ class OverallTimeline
   private
 
   def find_poll_me_and_friend_and_group_and_public
-
-    poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
-
+    # poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     poll_friend_query = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
 
     poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
     poll_public_query = filter_public.eql?("1") ? "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0" : "NULL"
 
-    new_your_friend_ids = filter_friend_following.eql?("1") ? your_friend_ids : [0]
+    new_your_friend_ids = filter_friend_following.eql?("1") ? (your_friend_ids << member_id) : [0]
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
-    query = PollMember.available.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
-        "OR (#{poll_friend_query} AND #{poll_unexpire})" \
+    query = PollMember.available.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
         "OR (#{poll_group_query} AND #{poll_unexpire})" \
         "OR (#{poll_public_query} AND #{poll_unexpire})", 
-        member_id,
         new_your_friend_ids,
         new_find_poll_in_my_group).limit(LIMIT_TIMELINE)
 
