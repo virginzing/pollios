@@ -125,7 +125,7 @@ class OverallTimeline
 
     # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
     # query = query.where("poll_members.poll_id NOT IN (?)", my_vote_ids) unless filter_my_vote.eql?("1")
-    query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
+    # query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
     # query = query.where("poll")
 
     query = query.limit(LIMIT_TIMELINE)
