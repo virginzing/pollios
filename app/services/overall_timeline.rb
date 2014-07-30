@@ -24,11 +24,11 @@ class OverallTimeline
   end
 
   def filter_my_poll
-    @options[:my_poll].presence || "1"
+    @options[:my_poll].presence || "0"
   end
 
   def filter_my_vote
-    @options[:my_vote].presence || "1"
+    @options[:my_vote].presence || "0"
   end
 
 
@@ -45,7 +45,7 @@ class OverallTimeline
   end
 
   def filter_reward
-    @options[:reward].presence || "1"
+    @options[:reward].presence || "0"
   end
 
   def my_vote_ids
@@ -105,7 +105,7 @@ class OverallTimeline
     new_poll_my_vote = filter_my_vote.eql?("1") ? my_vote_ids : [0]
 
     new_member_id = member_id
-    
+
     unless filter_my_poll.eql?("1")
       new_member_id = nil
       not_my_poll = " AND polls.member_id != #{member_id}"
