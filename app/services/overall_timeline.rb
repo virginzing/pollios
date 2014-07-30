@@ -23,6 +23,15 @@ class OverallTimeline
     @options["since_id"] || 0
   end
 
+  def filter_my_poll
+    @options[:my_poll].presence || "1"
+  end
+
+  def filter_my_vote
+    @options[:my_vote].presence || "1"
+  end
+
+
   def filter_public
     @options[:public].presence || "1"
   end
@@ -33,6 +42,10 @@ class OverallTimeline
 
   def filter_group
     @options[:group].presence || "1"
+  end
+
+  def filter_reward
+    @options[:reward].presence || "1"
   end
 
   def your_friend_ids
@@ -69,26 +82,35 @@ class OverallTimeline
   private
 
   def find_poll_me_and_friend_and_group_and_public
-    # poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    poll_member_query = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+
     poll_friend_query = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0 AND polls.public = 'f'"
 
     poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
     poll_public_query = filter_public.eql?("1") ? "poll_members.public = 't' AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0" : "NULL"
 
+    poll_reward_query = filter_reward.eql?("1") ? "polls.campaign_id != 0" : "NULL"
+
+    # poll_my_vote = 
+    
+    new_member_id = filter_my_poll.eql?("1") ? member_id : nil
+
     new_your_friend_ids = filter_friend_following.eql?("1") ? (your_friend_ids << member_id) : [0]
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
-    query = PollMember.available.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
+    query = PollMember.available.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
+        "OR (#{poll_friend_query} AND #{poll_unexpire})" \
         "OR (#{poll_group_query} AND #{poll_unexpire})" \
-        "OR (#{poll_public_query} AND #{poll_unexpire})", 
+        "OR (#{poll_public_query} AND #{poll_unexpire})" \
+        "OR (#{poll_reward_query} AND #{poll_unexpire})",
+        member_id, 
         new_your_friend_ids,
         new_find_poll_in_my_group).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
 
-    # poll_member = check_hidden_poll(query)
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
