@@ -104,6 +104,8 @@ class OverallTimeline
 
     new_poll_my_vote = filter_my_vote.eql?("1") ? my_vote_ids : [0]
 
+    new_member_id = member_id
+    
     unless filter_my_poll.eql?("1")
       new_member_id = nil
       not_my_poll = " AND polls.member_id != #{member_id}"
