@@ -24,7 +24,7 @@ class OverallTimeline
   end
 
   def filter_my_poll
-    @options[:my_poll].presence || "0"
+    @options[:my_poll].presence || "1"
   end
 
   def filter_my_vote
@@ -45,7 +45,7 @@ class OverallTimeline
   end
 
   def filter_reward
-    @options[:reward].presence || "0"
+    @options[:reward].presence || "1"
   end
 
   def my_vote_ids
