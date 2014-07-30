@@ -92,41 +92,41 @@ class OverallTimeline
 
     poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
+    poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
+
     poll_public_query = filter_public.eql?("1") ? "poll_members.public = 't' AND #{poll_non_share_non_in_group}" : "NULL"
 
     poll_reward_query = filter_reward.eql?("1") ? "polls.campaign_id != 0 AND #{poll_non_share_non_in_group}" : "NULL"
-
-    poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
     new_your_friend_ids = filter_friend_following.eql?("1") ? (your_friend_ids << member_id) : [0]
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
-    new_poll_my_vote = filter_my_vote.eql?("1") ? my_vote_ids : [0]
+    # new_poll_my_vote = filter_my_vote.eql?("1") ? my_vote_ids : [0]
 
-    new_member_id = member_id
+    # new_my_poll = filter_my_poll.eql?("1") ? member_id : 0
+    # new_member_id = member_id
 
-    unless filter_my_poll.eql?("1")
-      new_member_id = nil
-      not_my_poll = " AND polls.member_id != #{member_id}"
-      poll_group_query  += not_my_poll
-      poll_public_query += not_my_poll
-      poll_reward_query += not_my_poll
-      poll_my_vote += not_my_poll
-    end
+    # unless filter_my_poll.eql?("1")
+    #   new_member_id = nil
+    #   not_my_poll = " AND polls.member_id != #{member_id}"
+    #   poll_group_query  += not_my_poll
+    #   poll_public_query += not_my_poll
+    #   poll_reward_query += not_my_poll
+    #   poll_my_vote += not_my_poll
+    # end
 
-    query = PollMember.available.joins(:poll).where("(#{poll_member_query} AND #{poll_unexpire})" \
-        "OR (#{poll_my_vote} AND #{poll_unexpire})" \
-        "OR (#{poll_friend_query} AND #{poll_unexpire})" \
+    query = PollMember.available.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
         "OR (#{poll_group_query} AND #{poll_unexpire})" \
         "OR (#{poll_public_query} AND #{poll_unexpire})" \
         "OR (#{poll_reward_query} AND #{poll_unexpire})",
-        new_member_id,
-        new_poll_my_vote, 
         new_your_friend_ids,
         new_find_poll_in_my_group)
 
-    query = query.where("poll_members.poll_id NOT IN (?)", my_vote_ids) unless filter_my_vote.eql?("1")
+    # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
+    # query = query.where("poll_members.poll_id NOT IN (?)", my_vote_ids) unless filter_my_vote.eql?("1")
+    query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
+    # query = query.where("poll")
 
     query = query.limit(LIMIT_TIMELINE)
 
