@@ -24,7 +24,7 @@ class OverallTimeline
   end
 
   def filter_my_poll
-    @options[:my_poll].presence || "1"
+    @options[:my_poll].presence || "0"
   end
 
   def filter_my_vote
@@ -98,7 +98,7 @@ class OverallTimeline
 
     poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
-    new_your_friend_ids = filter_friend_following.eql?("1") ? (your_friend_ids) : [0]
+    new_your_friend_ids = filter_friend_following.eql?("1") ? (your_friend_ids << member_id) : [0]
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
