@@ -21,6 +21,14 @@ class AuthenSentaiController < ApplicationController
     render layout: "new_signup"
 	end
 
+  def signup_brand
+    render layout: "new_signup"
+  end
+
+  def signup_company
+    render layout: "new_signup_company"
+  end
+
   def forgot_pwd
     render layout: "forgot_password"
   end

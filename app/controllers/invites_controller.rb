@@ -14,25 +14,23 @@ class InvitesController < ApplicationController
   end
 
   def create
-    respond_to do |wants|
+    respond_to do |format|
       if company_params[:company_id].present?
         Company.find_by(id: company_params[:company_id].to_i).generate_code_of_company(company_params)
         flash[:success] = "Add more invite successfully."
-        wants.html { redirect_to invites_path }
+        format.html { redirect_to invites_path }
       else
-
         @company = Company.new(company_params.except!(:company_id))
         @company.short_name = company_params[:prefix_name]
 
         if @company.save
           @company.generate_code_of_company(company_params)
           flash[:success] = "Create successfully."
-          wants.html { redirect_to invites_path }
+          format.html { redirect_to invites_path }
         else
-          render 'new'
+          format.html { render 'new' }
         end
       end
-
     end
   end
 
@@ -53,6 +51,19 @@ class InvitesController < ApplicationController
       if @invite.destroy
         format.html { redirect_to invites_path }
       end
+    end
+  end
+
+  def check_valid_company_team
+    respond_to do |format|
+      name_company = params[:company][:name]
+
+      if Company.where("lower(name) = ?", name_company.downcase).present?
+        format.json { render json: {"error" => "Name is already taken."}, status: 302 }
+      else
+        format.json { render json: true, status: 200 }
+      end
+
     end
   end
 

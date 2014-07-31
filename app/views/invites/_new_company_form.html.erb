@@ -6,7 +6,7 @@
         
         <div class="row">
           <div class="col col-md-8">
-            <%= f.input :name, label: 'Company or Team name', placeholder: 'CodeApp' %>
+            <%= f.input :name, label: 'Company or Team name', placeholder: 'CodeApp', input_html: { 'data-parsley-remote' => "/check_valid_company_team.json", 'data-parsley-remote-message' => 'Company or Team name is already taken.' } %>
           </div>
           <div class="col col-md-4">
             <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA' %>
@@ -29,5 +29,6 @@
 </div>
 
 <script>
-$('#new_company').parsley();
+  $('#new_company').parsley();
 </script>
+

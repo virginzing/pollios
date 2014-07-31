@@ -211,6 +211,10 @@ Pollios::Application.routes.draw do
   get 'users_activate',     to: 'members#activate_account', as: :users_activate
   get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
   get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
+
+  get 'users_signup/brand',   to: 'authen_sentai#signup_brand', as: :users_signup_brand
+  get 'users_signup/company', to: 'authen_sentai#signup_company', as: :users_signup_company
+
   get 'users_signout',     to: 'authen_sentai#signout', as: :users_signout
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
@@ -219,6 +223,8 @@ Pollios::Application.routes.draw do
   post 'users_signup',     to: 'authen_sentai#signup_sentai'
   post 'users_forgotpassword',  to: 'authen_sentai#forgot_password'
   post 'users_resetpassword',  to: 'authen_sentai#reset_password'
+
+  get '/check_valid_company_team',  to: 'invites#check_valid_company_team'
 
   match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
 

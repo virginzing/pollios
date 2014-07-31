@@ -4,6 +4,7 @@
 //= require data-confirm
 //= require moment.min
 //= require livestamp.min
+//= require parsley.remote
 //= require parsley
 //= require jquery.ezdz
 //= require nprogress
