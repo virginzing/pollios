@@ -190,11 +190,19 @@ Pollios::Application.routes.draw do
     get 'search',   to: 'tags#search_tag'
   end
 
+  scope 'company' do
+    get 'members',  to: 'companies#list_members',  as: :company_members
+    get 'invites',  to: 'companies#invites',    as: :company_invites
+  end
+
   get '/profile', to: 'members#profile',  as: :my_profile
   delete '/delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
   delete '/delete_cover',  to: 'members#delete_cover', as: :delete_cover
   get '/qrcode',  to: 'polls#generate_qrcode'
+
   get '/dashboard',  to: 'home#dashboard', as: :dashboard
+  get '/invites_new', to: 'companies#new',  as: :invites_new
+  post '/invites',    to: 'companies#create'
   
   get '/campaigns_polls',  to: 'campaigns#polls'
   get 'questionnaire',  to: 'poll_series#index'
@@ -211,6 +219,7 @@ Pollios::Application.routes.draw do
   get 'users_activate',     to: 'members#activate_account', as: :users_activate
   get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
   get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
+  get 'waiting_approve',  to: 'authen_sentai#waiting_approve',  as: :waiting_approve
 
   get 'users_signup/brand',   to: 'authen_sentai#signup_brand', as: :users_signup_brand
   get 'users_signup/company', to: 'authen_sentai#signup_company', as: :users_signup_company

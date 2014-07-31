@@ -38,11 +38,12 @@ class ApplicationController < ActionController::Base
     @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
-  def only_brand_account
-    unless @current_member.brand?
-      session[:member_id] = nil
+  def only_brand_or_company_account
+    unless @current_member.brand? || @current_member.company?
+      # session[:member_id] = nil
+      cookies.delete(:auth_token)
       respond_to do |format|
-        flash[:warning] = 'Only brand account.'
+        flash[:warning] = 'Only brand or companry account.'
         format.html { redirect_to authen_signin_path }
       end
     end

@@ -1,0 +1,18 @@
+<div class="well">
+  <div class="row">
+      <%= simple_form_for @invite, url: '/invites', method: :post do |f| %>
+          
+          <div class="col col-md-12">
+            <%= f.input :amount_code, as: :integer, label: 'Amount', input_html: { value: @find_company.max_invite_code } %>
+          </div>
+
+          <div class="col col-md-12">
+            <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA' %>
+          </div>
+
+          <div class="col col-md-12">
+            <%= f.submit "Create Invite", class: 'btn btn-primary' %>
+          </div>
+      <% end %>
+  </div>
+</div>

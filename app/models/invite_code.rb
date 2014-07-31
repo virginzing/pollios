@@ -3,6 +3,7 @@ class InviteCode < ActiveRecord::Base
   belongs_to :company
   belongs_to :group
 
+  attr_accessor :amount_code, :prefix_name
 
   def self.generate_invite_code
     begin

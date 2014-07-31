@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731074244) do
+ActiveRecord::Schema.define(version: 20140731131958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 20140731074244) do
     t.integer  "member_id"
     t.string   "address"
     t.string   "telephone_number"
+    t.integer  "max_invite_code",  default: 0
   end
 
   add_index "companies", ["member_id"], name: "index_companies_on_member_id", using: :btree
@@ -216,6 +217,16 @@ ActiveRecord::Schema.define(version: 20140731074244) do
   add_index "friends", ["followed_id"], name: "index_friends_on_followed_id", using: :btree
   add_index "friends", ["follower_id", "followed_id"], name: "index_friends_on_follower_id_and_followed_id", unique: true, using: :btree
   add_index "friends", ["follower_id"], name: "index_friends_on_follower_id", using: :btree
+
+  create_table "group_companies", force: true do |t|
+    t.integer  "group_id"
+    t.integer  "company_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "group_companies", ["company_id"], name: "index_group_companies_on_company_id", using: :btree
+  add_index "group_companies", ["group_id"], name: "index_group_companies_on_group_id", using: :btree
 
   create_table "group_members", force: true do |t|
     t.integer  "member_id"
@@ -395,6 +406,8 @@ ActiveRecord::Schema.define(version: 20140731074244) do
     t.datetime "subscribe_expire"
     t.boolean  "bypass_invite",              default: false
     t.string   "auth_token"
+    t.boolean  "approve_brand",              default: false
+    t.boolean  "approve_company",            default: false
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree

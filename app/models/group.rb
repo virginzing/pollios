@@ -17,6 +17,8 @@ class Group < ActiveRecord::Base
   has_many :get_member_open_notification, through: :open_notification, source: :member
 
   has_many :invite_codes, dependent: :destroy
+
+  has_one :group_company, dependent: :destroy
   
   validates :name, presence: true
 

@@ -53,7 +53,7 @@ class AuthenSentaiController < ApplicationController
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
 			if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-        if @auth.activate_account?
+        if @auth.activate_account? || @auth.approve_brand || @auth.approve_company
           @login = true
           # session[:member_id] = member.id
           if sessions_params[:remember_me]
@@ -70,7 +70,15 @@ class AuthenSentaiController < ApplicationController
           @waiting = true
           session[:activate_email] = member.email
           session[:activate_id] = member.id
-          flash[:warning] = "This account is not activate yet."
+
+          if @auth.get_member_type == "Company"
+            @waiting_approve = true
+            cookies[:waiting_approve] = { value: 'waiting_approve', expires: 5.seconds.from_now }
+            flash[:warning] = "Please waiting for approve."
+          else
+            flash[:warning] = "This account is not activate yet."
+          end
+
           wants.html
           wants.json
           wants.js
@@ -86,12 +94,11 @@ class AuthenSentaiController < ApplicationController
 
   end
 
-
   def signup_sentai
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{@response}"
   	respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"]]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "address" => signup_params["address"] ]))
   		if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
@@ -108,7 +115,15 @@ class AuthenSentaiController < ApplicationController
           @waiting = true
           session[:activate_email] = member.email
           session[:activate_id] = member.id
-          flash[:warning] = "This account is not activate yet."
+
+          if @auth.member_type == "3"
+            @signup_company = true
+            cookies[:waiting_approve] = { value: 'waiting_approve', expires: 5.seconds.from_now }
+            flash[:warning] = "Please waiting for approve."
+          else
+            flash[:warning] = "This account is not activate yet."
+          end
+
           wants.html
           wants.json
           wants.js
@@ -179,6 +194,14 @@ class AuthenSentaiController < ApplicationController
   	@response, @member = Authenticate::Sentai.update_profile(update_profile_params)
   end
 
+  def waiting_approve
+    if cookies[:waiting_approve]
+      render layout: "waiting_approve"
+    else
+      redirect_to root_path
+    end
+  end
+
   private
 
 	  def sessions_params
@@ -198,7 +221,7 @@ class AuthenSentaiController < ApplicationController
     end
 
 	  def signup_params
-	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :province_id, :member_type, :key_color)
+	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :province_id, :member_type, :key_color, :address)
 	  end
 
 	  def update_profile_params

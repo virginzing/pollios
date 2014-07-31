@@ -11,6 +11,18 @@ class Authentication
     @member ||= member_from_authen
   end
 
+  def approve_brand
+    @member.approve_brand
+  end
+
+  def approve_company
+    @member.approve_company
+  end
+
+  def get_member_type
+    member.member_type_text  
+  end
+
   def authenticated?
     member.present? && member.normal?
   end
@@ -67,6 +79,10 @@ class Authentication
     @params["member_type"] || @default_member_type
   end
 
+  def address
+    @params["address"]
+  end
+
   def first_signup
     @new_member
   end
@@ -105,6 +121,7 @@ class Authentication
 
       if @new_member
         follow_pollios
+        add_new_group_company if member_type == "3"
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@new_member, @params["provider"])
       end
@@ -123,6 +140,12 @@ class Authentication
       puts "member2 => #{@member.id}"
       Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id
     end
+  end
+
+  def add_new_group_company
+    company = Company.create!(name: name, address: address, member_id: member.id)
+    group = Group.create(name: name, authorize_invite: :master, public: false)
+    GroupCompany.create!(group_id: group.id, company_id: company.id)
   end
 
   def update_member(member)

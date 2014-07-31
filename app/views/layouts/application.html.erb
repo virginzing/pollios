@@ -247,18 +247,30 @@
 
             </ul>
           </li>
-
+          
 					<li class="<%= is_active?('campaigns') %>">
 						<a href="/campaigns"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaign</span></a>
 					</li>
 					<li class="<%= is_active?('recurrings') %>">
 						<a href="/recurrings"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span class="menu-item-parent">Recurring</span></a>
 					</li>
+
+          <% if current_member.company? %>
+            <li class="<%= is_active_2nd_level('companies', 'invites') %>">
+              <a href="<%= company_invites_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invites</span></a>
+            </li>
+
+            <li class="<%= is_active_2nd_level('companies', 'list_members') %>">
+              <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
+            </li>
+          <% end %>
+
 					<li class="<%= is_active?('members') %>">
 						<a href="/profile"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">Setting</span></a>
 					</li>
 				</ul>
 			</nav>
+
 			<span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 
 		</aside>

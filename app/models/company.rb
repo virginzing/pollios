@@ -2,12 +2,13 @@ class Company < ActiveRecord::Base
 
   has_many :invite_codes, dependent: :destroy
 
-  validates :amount_code, :prefix_name, presence: true
+  # validates :amount_code, :prefix_name, presence: true
   
   validates :name, presence: true, :uniqueness => { :case_sensitive => false, message: "Name must be unique" }, on: :create
+  
   attr_accessor :amount_code, :used, :prefix_name, :company_id
 
-  def generate_code_of_company(invite_params)
+  def generate_code_of_company(invite_params, find_group = nil)
     puts "generate code"
     company_id = invite_params[:company_id]
     amount_code = invite_params[:amount_code]
@@ -17,7 +18,11 @@ class Company < ActiveRecord::Base
     else
       prefix_name = invite_params[:prefix_name]
       @company_name = invite_params[:name]
-      group = create_group
+      if find_group.nil?
+        group = create_group
+      else
+        group = find_group
+      end
       InviteCode.create_invite_code(prefix_name, amount_code.to_i, self.id, group.id) 
     end 
   end

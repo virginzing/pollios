@@ -1,11 +1,16 @@
 $.login = <%= raw @login || false %>;
 $.waiting = <%= raw @waiting || false %>;
+$.waiting_approve = <%= raw @waiting_approve || false %>
 
 if ($.login) {
   handleLoginSuccess();
 } else {
   if ($.waiting) {
-    handleActivate();
+    if ($.waiting_approve) {
+      handleWaitingApprove();
+    } else {
+      handleActivate();
+    }
   } else {
     handleLoginError();
   }
@@ -31,4 +36,8 @@ function handleLoginSuccess() {
 
 function handleActivate() {
   window.location.href='/users_activate';
+}
+
+function handleWaitingApprove() {
+  window.location.href='/waiting_approve'
 }

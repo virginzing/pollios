@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-edit fa-fw "></i> 
+        Invite Code of <%= current_member.company.name %>
+    </h1>
+  </div>
+</div>
+
+
+<div class="well">
+  <h4 class="alert-heading">Please Note!</h4>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Viva Vivar</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+  </p>
+  <br>
+  <a href="<%= invites_new_url %>" class="btn btn-primary" data-disable-with="Loading..."><strong><i class="fa fa-plus"></i> Create Invite Code</strong></a>
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-company-invite-code" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>List of Invitation</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="invite_codes" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @invite_codes.each do |invite_code| %>
+                <tr>
+                  <td><%= invite_code.id %></td>
+                  <td><%= invite_code.code %></td>
+                  <td><%= invite_code_helper(invite_code.used) %></td>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
