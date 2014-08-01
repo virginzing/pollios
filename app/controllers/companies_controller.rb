@@ -24,6 +24,7 @@ class CompaniesController < ApplicationController
         format.html { render 'new' }
       end
     end
+    # add comment
   end
 
   def list_members
