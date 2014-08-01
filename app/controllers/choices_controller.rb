@@ -2,6 +2,7 @@ class ChoicesController < ApplicationController
 
   before_action :set_current_poll , only: [:index]
   before_action :set_current_choice, only: [:edit, :update]
+  
   def index
     @choices = @poll.choices
   end

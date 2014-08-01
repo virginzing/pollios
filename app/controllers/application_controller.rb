@@ -100,6 +100,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def only_company_account
+    if current_member
+      unless current_member.company?
+        cookies.delete(:auth_token)
+        flash[:notice] = "Only Company Account"
+        redirect_to users_signin_path
+      end
+    end
+  end
+
   # def current_member
   #   begin
   #     @current_member ||= Member.find(session[:member_id]) if session[:member_id]

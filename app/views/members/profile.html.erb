@@ -636,8 +636,8 @@
 
 
 <script>
-  // var member_avatar = "<%= @current_member.avatar.url(:thumbnail).presence || "" %>";
-  // console.log(member_avatar);
-
-  // $('#drop_avatar').ezdz('preview', "");
+  $(document).ready(function() {
+    dropZoneAvatar("<%= @current_member.avatar.url(:thumbnail).presence || "" %>");
+    dropZoneCover("<%= @current_member.cover.url(:cover).presence || "" %>");
+  });
 </script>

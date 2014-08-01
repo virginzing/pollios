@@ -26,7 +26,7 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
 
   version :medium do
     process :eager => true
-    process :resize_to_fill => [550, 312]
+    process :resize_to_fill => [588, 588]
   end    
 
   def extension_white_list
