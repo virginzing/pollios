@@ -1,5 +1,4 @@
 class Member < ActiveRecord::Base
-  after_validation :report_validation_errors_to_rollbar
   # has_paper_trail
   include PgSearch
   # multisearchable :against => [:fullname, :username, :email]

@@ -1,6 +1,5 @@
 include GzipWithZlib
 class Choice < ActiveRecord::Base
-  after_validation :report_validation_errors_to_rollbar
   
   belongs_to :poll, inverse_of: :choices, touch: true
   

@@ -1,5 +1,4 @@
 class Poll < ActiveRecord::Base
-  after_validation :report_validation_errors_to_rollbar
 
   mount_uploader :photo_poll, PhotoPollUploader
   include PgSearch

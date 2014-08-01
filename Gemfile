@@ -104,7 +104,7 @@ gem 'pg_search'
 
 gem 'will_paginate_mongoid'
 
-gem 'rollbar'  # for Notifier
+# gem 'rollbar'  # for Notifier
 
 gem 'itunes-receipt' , :git => 'git://github.com/nov/itunes-receipt.git'
 
