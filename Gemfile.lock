@@ -268,8 +268,6 @@ GEM
       mime-types (>= 1.16)
     restclient_with_cert (0.0.8)
       rest-client (>= 1.6)
-    rollbar (0.13.2)
-      multi_json (~> 1.3)
     rqrcode (0.4.2)
     rqrcode-rails3 (0.1.7)
       rqrcode (>= 0.4.2)
@@ -387,7 +385,6 @@ DEPENDENCIES
   rails_admin_flatly_theme!
   randumb
   rest-client
-  rollbar
   rqrcode
   rqrcode-rails3
   sass (~> 3.2.5)
