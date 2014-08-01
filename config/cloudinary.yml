@@ -17,12 +17,3 @@ test:
   api_secret: lHBP7L-JOLt-sRXDLMWlI6doib8
   enhance_image_tag: true
   static_image_support: false
-
-
-
-# development:
-#   cloud_name: test-local
-#   api_key: '951459966873843'
-#   api_secret: BDRG0rXlHCH7Ndl8Pw68OxqSXMA
-#   enhance_image_tag: true
-#   static_image_support: false
