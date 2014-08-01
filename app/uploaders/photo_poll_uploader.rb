@@ -25,7 +25,7 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
   end    
 
   version :medium do
-    process :eager => true
+    # process :eager => true
     process :resize_to_fill => [588, 588]
   end    
 
