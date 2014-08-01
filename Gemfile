@@ -52,6 +52,7 @@ group :production do
   gem 'rails_12factor'
   gem 'libv8', '~> 3.11.8.3'
   gem 'therubyracer', :platform => :ruby
+  gem 'unicorn'
 end
 
 gem 'versioncake', github: 'bwillis/versioncake'
@@ -89,7 +90,6 @@ gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_fl
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'houston'
-gem 'unicorn'
 gem 'htmlentities'
 gem 'breadcrumbs_on_rails'
 gem 'nprogress-rails'
