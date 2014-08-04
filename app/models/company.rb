@@ -1,7 +1,8 @@
 class Company < ActiveRecord::Base
 
   has_many :invite_codes, dependent: :destroy
-
+  has_one :group_company, dependent: :destroy
+  has_one :group, through: :group_company , source: :group
   # validates :amount_code, :prefix_name, presence: true
   
   validates :name, presence: true, :uniqueness => { :case_sensitive => false, message: "Name must be unique" }, on: :create

@@ -2,11 +2,11 @@
   <div class="row">
       <%= simple_form_for @invite, url: '/invites', method: :post do |f| %>
           
-          <div class="col col-md-12">
+          <div class="col col-md-2">
             <%= f.input :amount_code, as: :integer, label: 'Amount', input_html: { value: @find_company.max_invite_code } %>
           </div>
 
-          <div class="col col-md-12">
+          <div class="col col-md-2">
             <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA' %>
           </div>
 

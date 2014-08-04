@@ -11,20 +11,36 @@ class CompaniesController < ApplicationController
   end
 
   def invites
-    @invite_codes = InviteCode.joins(:company).select("invite_codes.*, companies.name as company_name").where("invite_codes.company_id = ?", @find_company.id).order("invite_codes.id desc")
+    @invite_codes = InviteCode.joins(:company).includes(:member_invite_code)
+                              .select("invite_codes.*, companies.name as company_name")
+                              .where("invite_codes.company_id = ?", @find_company.id)
+                              .order("invite_codes.id desc")
   end
 
   def create
     respond_to do |format|
       if @find_company.generate_code_of_company(company_params, find_group)
         flash[:success] = "Create invite code successfully."
-        format.html { redirect_to company_invite_path }
+        format.html { redirect_to company_invites_path }
       else
         flash[:error] = "Error"
         format.html { render 'new' }
       end
     end
     # add comment
+  end
+
+  def remove_member
+    @group = Member.find(params[:member_id]).cancel_or_leave_group(find_group.id, "L")
+    respond_to do |format|
+      if @group
+        flash[:success] = "Remove successfully."
+        format.html { redirect_to company_members_path }
+      else
+        flash[:error] = "Error"
+        format.html { render 'list_members' }
+      end
+    end
   end
 
   def list_members

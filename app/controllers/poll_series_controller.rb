@@ -66,7 +66,7 @@ class PollSeriesController < ApplicationController
 
   def update
     if @poll_series.update(poll_series_params)
-      flash[:notice] = "Successfully updated poll series."
+      flash[:success] = "Successfully updated poll series."
       redirect_to poll_series_index_path
     else
       render action: 'edit'
@@ -75,10 +75,19 @@ class PollSeriesController < ApplicationController
   end
 
   def create
-    puts params
+    is_public = true
+    in_group_ids = "0"
     @poll_series = current_member.poll_series.new(poll_series_params)
     @poll_series.expire_date = Time.now + poll_series_params["expire_within"].to_i.days
     @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
+
+    if current_member.company?
+      is_public = false
+      in_group_ids = current_member.company.group.id.to_s
+    end
+
+    @poll_series.public = is_public
+    @poll_series.in_group_ids = in_group_ids
 
     type_series = poll_series_params["type_series"]
 
@@ -87,7 +96,7 @@ class PollSeriesController < ApplicationController
     end
 
     if @poll_series.save
-      flash[:notice] = "Successfully created poll series."
+      flash[:success] = "Successfully created poll series."
       redirect_to poll_series_index_path
     else
       flash[:error] = @poll_series.errors.full_messages
@@ -105,7 +114,7 @@ class PollSeriesController < ApplicationController
   def destroy
     @poll_series = PollSeries.find(params[:id])
     @poll_series.destroy
-    flash[:notice] = "Successfully destroyed poll series."
+    flash[:success] = "Successfully destroyed poll series."
     redirect_to poll_series_index_path
   end
 

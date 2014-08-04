@@ -1,5 +1,6 @@
 class InviteCode < ActiveRecord::Base
   has_one :member_invite_code,  dependent: :destroy
+
   belongs_to :company
   belongs_to :group
 

@@ -38,6 +38,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Joined at</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -48,6 +49,7 @@
                   <td><%= member.get_name %></td>
                   <td><%= member.email %></td>
                   <td><span data-livestamp="<%= member.joined_at.to_i %>"></span></td>
+                  <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= remove_member_group_path(member_id: member.id) %>" rel="nofollow">Delete</a></td>
                 </tr>
               <% end %>
             </tbody>

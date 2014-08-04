@@ -33,6 +33,22 @@ class BuildPoll
     end
   end
 
+  def in_group_ids
+    if @member.company?
+      @member.company.group.id.to_s
+    else
+      "0"
+    end
+  end
+
+  def check_allow_comment
+    if @params["allow_comment"] == "on"
+      true
+    else
+      false
+    end
+  end
+
   def list_of_choice
     @list_of_choice ||= list_choices
   end
@@ -49,14 +65,14 @@ class BuildPoll
       "series" => @series,
       "expire_date" => expire_date,
       "poll_series_id" => @poll_series_id,
-      # "choice_count" => choice_count,
       "campaign_id" => @params["campaign_id"],
       "recurring_id" => @params["recurring_id"],
       "type_poll" => @params["type_poll"],
-      "in_group_ids" => "0",
+      "in_group_ids" => in_group_ids,
       "photo_poll" => @params["photo_poll"],
       "status_poll" => 0,
-      "member_type" => @member.member_type_text
+      "member_type" => @member.member_type_text,
+      "allow_comment" => check_allow_comment
     }
   end
 

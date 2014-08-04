@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731131958) do
+ActiveRecord::Schema.define(version: 20140804123037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -480,6 +480,8 @@ ActiveRecord::Schema.define(version: 20140731131958) do
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
     t.integer  "type_poll"
+    t.boolean  "public",         default: true
+    t.string   "in_group_ids",   default: "0"
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree

@@ -28,6 +28,7 @@ class PollSeries < ActiveRecord::Base
   end
 
   def set_poll_series
+    in_group = false
     self.number_of_poll = polls.count
     self.save
     list_choice = self.same_choices
@@ -39,10 +40,14 @@ class PollSeries < ActiveRecord::Base
       else
         choices_count = poll.choices.count
       end
-      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: true, in_group_ids: "0")
+      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, member_type: Member.find(self.member_id).member_type_text)
     end
 
-    PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: true, series: true, expire_date: expire_date)
+    if self.in_group_ids != "0"
+      in_group = true
+    end
+
+    PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: in_group)
   end
 
   def cached_tags

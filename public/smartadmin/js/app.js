@@ -892,6 +892,17 @@ function runAllForms() {
 		})
 	}
 
+	if ($.fn.datepicker) {
+		$(".expire_date_poll").datepicker({
+      minDate: 0,
+      maxDate: "+1M",
+      dateFormat: 'dd/mm/yy',
+      prevText : '<i class="fa fa-chevron-left"></i>',
+      nextText : '<i class="fa fa-chevron-right"></i>'
+    }).datepicker('setDate', new Date());
+
+	}
+
 	/*
 	 * AJAX BUTTON LOADING TEXT
 	 * Usage: <button type="button" data-loading-text="Loading..." class="btn btn-xs btn-default ajax-refresh"> .. </button>
@@ -1536,6 +1547,12 @@ function drawBreadCrumb() {
 
 function dataTable() {
 	$('#invite_codes').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 25,
+		order: [[0, 'desc']]
+	});
+	$('#company_invite_code').dataTable({
 		retrieve: true,
 		paging: false,
 		iDisplayLength: 25,

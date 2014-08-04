@@ -193,6 +193,8 @@ Pollios::Application.routes.draw do
   scope 'company' do
     get 'members',  to: 'companies#list_members',  as: :company_members
     get 'invites',  to: 'companies#invites',    as: :company_invites
+    get '/invites/new', to: 'companies#new',  as: :invites_new
+    delete '/remove_member',  to: 'companies#remove_member',  as: :remove_member_group
   end
 
   get '/profile', to: 'members#profile',  as: :my_profile
@@ -201,7 +203,6 @@ Pollios::Application.routes.draw do
   get '/qrcode',  to: 'polls#generate_qrcode'
 
   get '/dashboard',  to: 'home#dashboard', as: :dashboard
-  get '/invites_new', to: 'companies#new',  as: :invites_new
   post '/invites',    to: 'companies#create'
   
   get '/campaigns_polls',  to: 'campaigns#polls'

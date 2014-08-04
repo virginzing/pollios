@@ -106,6 +106,7 @@ class PollsController < ApplicationController
   end
 
   def create ## for Web
+    in_group = false
     @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
     new_poll_binary_params = @build_poll.poll_binary_params
     # puts "new_poll_binary_params => #{new_poll_binary_params}"
@@ -113,7 +114,6 @@ class PollsController < ApplicationController
     @poll.choice_count = @build_poll.list_of_choice.count
     
     if @poll.save
-      # puts "choices => #{@build_poll.list_of_choice}"
 
       @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
@@ -121,11 +121,17 @@ class PollsController < ApplicationController
 
       @poll.create_watched(current_member, @poll.id)
 
-      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date)
+      if @poll.in_group_ids != "0"
+        in_group = true
+        puts "#{ @poll.in_group_ids}"
+        Group.add_poll(current_member, @poll, @poll.in_group_ids)
+      end
+
+      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
 
       PollStats.create_poll_stats(@poll)
 
-      ApnPollWorker.new.perform(current_member, @poll)
+      ApnPollWorker.new.perform(current_member, @poll) if Rails.env.production?
 
       # Rails.cache.delete([current_member.id, 'poll_member'])
       Rails.cache.delete([current_member.id, 'my_poll'])
@@ -470,7 +476,7 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
   end
 
   protected
