@@ -180,6 +180,8 @@ class Member < ActiveRecord::Base
       field :point
       field :subscription
       field :bypass_invite
+      field :approve_brand
+      field :approve_company
     end
 
     edit do
