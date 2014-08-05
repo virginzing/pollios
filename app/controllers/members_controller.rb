@@ -110,7 +110,7 @@ class MembersController < ApplicationController
           Member.update_avatar(@current_member, update_profile_params[:avatar])
           Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
         end
-        
+
         @member = Member.find(@current_member.id)
 
         flash[:success] = "Update profile successfully."
@@ -277,6 +277,7 @@ class MembersController < ApplicationController
         @group.increment!(:member_count)
         puts "clear cached member #{@current_member}"
         @current_member.cached_flush_active_group
+        true
       else
         nil
       end
