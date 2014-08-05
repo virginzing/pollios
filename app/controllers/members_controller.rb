@@ -110,6 +110,7 @@ class MembersController < ApplicationController
           Member.update_avatar(@current_member, update_profile_params[:avatar])
           Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
         end
+        
         @member = Member.find(@current_member.id)
 
         flash[:success] = "Update profile successfully."
@@ -246,8 +247,6 @@ class MembersController < ApplicationController
             format.html { redirect_to users_activate_path }
           end
         end
-        puts "clear cached group"
-        Rails.cache.delete([ @current_member.id, 'group_active'])
       else
         flash[:warning] = @invite_code[:message]
         format.json
@@ -273,9 +272,11 @@ class MembersController < ApplicationController
   def add_to_group_at_invite
     if @group
       unless @current_member.cached_get_group_active.map(&:id).include?(@group.id)
-        puts "no have group"
         @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
+        puts "increment member count"
         @group.increment!(:member_count)
+        puts "clear cached member #{@current_member}"
+        @current_member.cached_flush_active_group
       else
         nil
       end

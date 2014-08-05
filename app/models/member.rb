@@ -487,9 +487,8 @@ class Member < ActiveRecord::Base
   end
 
   def cached_flush_active_group
-    puts "clear cached group"
-    Rails.cache.delete([ self.id, 'group_active'])
-    # Rails.cache.delete([id, 'group_count'])  
+    puts "#{Rails.cache.delete([id, 'group_active'])}"
+    Rails.cache.delete([id, 'group_active'])
   end
 
   def check_share_poll?(poll_id)
