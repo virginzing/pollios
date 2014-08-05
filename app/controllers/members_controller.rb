@@ -217,8 +217,7 @@ class MembersController < ApplicationController
 
   def activate
     @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
-    @group = Group.find_by(id: @invite_code[:object].group_id)
-
+  
     respond_to do |format|
       if activate_params[:code] == "CODEAPP"
         @current_member.update(bypass_invite: true)
@@ -230,6 +229,7 @@ class MembersController < ApplicationController
         format.json
         format.html { redirect_to dashboard_path }
       elsif @invite_code[:status]
+        @group = Group.find_by(id: @invite_code[:object].group_id)
         if add_to_group_at_invite
           @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
           @activate.save
