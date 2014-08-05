@@ -487,6 +487,35 @@ function dropZoneCover (cover_url) {
 	});
 }
 
+function dropZonePhotoGroup (cover_url) {
+	$('#drop_photo_group').ezdz();
+	$('#drop_photo_group').ezdz('preview', cover_url, {
+	    text: 'Drop a photo',
+	    validators: {
+	        // maxWidth:  1200,
+	        // maxHeight: 600
+	        maxSize: 2000000
+	    },
+	    reject: function(file, errors) {
+	        if (errors.mimeType) {
+	        	handleDropZonePictureError(file.name, 'must be an image.');
+	        }
+
+	        if (errors.maxSize) {
+	        	handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
+	        }
+
+	        if (errors.maxWidth) {
+            handleDropZonePictureError(file.name, 'must be width:600px max.');
+	        }
+
+	        if (errors.maxHeight) {
+	        	handleDropZonePictureError(file.name, 'must be height:400px max.');
+	        }
+	    }
+	});
+}
+
 
 function handleDropZonePictureError(file_name, messages) {
   $.smallBox({

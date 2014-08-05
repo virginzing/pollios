@@ -213,7 +213,7 @@ class AuthenSentaiController < ApplicationController
     end
 
     def changepassword_params
-      params.permit(:sentai_id, :old_password, :new_password)
+      params.permit(:sentai_id, :old_password, :new_password, :re_new_password)
     end
 
     def resetpassword_params

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804123037) do
+ActiveRecord::Schema.define(version: 20140805104001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -252,6 +252,7 @@ ActiveRecord::Schema.define(version: 20140804123037) do
     t.integer  "poll_count",       default: 0
     t.integer  "authorize_invite"
     t.text     "description"
+    t.boolean  "leave_group",      default: true
   end
 
   create_table "guests", force: true do |t|
@@ -384,8 +385,8 @@ ActiveRecord::Schema.define(version: 20140804123037) do
     t.date     "birthday"
     t.integer  "province_id"
     t.string   "key_color"
-    t.datetime "poll_public_req_at",         default: '2014-07-18 04:40:23'
-    t.datetime "poll_overall_req_at",        default: '2014-07-18 04:40:23'
+    t.datetime "poll_public_req_at",         default: '2014-05-12 07:38:10'
+    t.datetime "poll_overall_req_at",        default: '2014-05-12 11:39:19'
     t.string   "cover"
     t.text     "description"
     t.boolean  "apn_add_friend",             default: true
@@ -473,7 +474,7 @@ ActiveRecord::Schema.define(version: 20140804123037) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2014-07-18 04:40:20'
+    t.datetime "start_date",     default: '2014-02-03 15:36:16'
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
@@ -506,7 +507,7 @@ ActiveRecord::Schema.define(version: 20140804123037) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",       default: 0
-    t.datetime "start_date",     default: '2014-07-18 04:40:20'
+    t.datetime "start_date",     default: '2014-02-03 15:36:16'
     t.boolean  "series",         default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"

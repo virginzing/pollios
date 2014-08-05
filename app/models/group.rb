@@ -140,7 +140,8 @@ class Group < ActiveRecord::Base
       name: name,
       photo: get_photo_group,
       public: public,
-      description: get_description
+      description: get_description,
+      leave_group: leave_group
    }
   end
 

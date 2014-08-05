@@ -12,6 +12,14 @@ section.dropzone-picture {
   margin: 20px;
 }
 
+.form-group.dropzone-photo {
+  margin-bottom: 20px;
+}
+
+dl.dl-horizontal {
+  font-size: 14px;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;

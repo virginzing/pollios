@@ -11,7 +11,7 @@ class CompaniesController < ApplicationController
   end
 
   def invites
-    @invite_codes = InviteCode.joins(:company).includes(:member_invite_code)
+    @invite_codes = InviteCode.joins(:company).includes(:member_invite_code => :member)
                               .select("invite_codes.*, companies.name as company_name")
                               .where("invite_codes.company_id = ?", @find_company.id)
                               .order("invite_codes.id desc")

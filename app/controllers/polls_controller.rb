@@ -207,6 +207,7 @@ class PollsController < ApplicationController
   end
 
   def detail
+    Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
     @expired = @poll.expire_date < Time.now
     @voted = @current_member.list_voted?(@poll)
   end

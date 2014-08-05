@@ -5,9 +5,12 @@ class MembersController < ApplicationController
   before_action :set_current_member, only: [:send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request]
-  before_action :signed_user, only: [:index, :profile, :delete_avatar, :delete_cover]
+  before_action :signed_user, only: [:index, :profile, :delete_avatar, :delete_cover, :delete_photo_group]
 
   before_action :load_resource_poll_feed, only: [:detail_friend]
+
+  before_action :set_company, only: [:profile, :update_group, :delete_photo_group]
+  before_action :find_group, only: [:profile, :update_group, :delete_photo_group]
 
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
@@ -74,8 +77,21 @@ class MembersController < ApplicationController
     end
   end
 
-  def delete_cover
-    
+  def delete_photo_group
+    Group.transaction do
+      begin
+        set_company.remove_photo_group!
+        set_company.save
+        flash[:success] = "Delete photo group successfully."
+      rescue => e
+        flash[:error] = e.message
+      end
+
+      respond_to do |format|
+        format.html { redirect_to my_profile_path }
+      end
+
+    end
   end
 
   def update_profile
@@ -97,6 +113,24 @@ class MembersController < ApplicationController
         @member = Member.find(@current_member.id)
 
         flash[:success] = "Update profile successfully."
+        format.html { redirect_to my_profile_path }
+        format.json
+      else
+        puts "have error"
+        @error_message = @current_member.errors.messages
+
+        format.json
+        format.html { render 'profile' ,errors: @error_message }
+      end
+    end
+  end
+
+  def update_group
+    respond_to do |format|
+      group = set_company.group
+      if group.update(group_params)
+        group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+        flash[:success] = "Update group profile successfully."
         format.html { redirect_to my_profile_path }
         format.json
       else
@@ -183,6 +217,8 @@ class MembersController < ApplicationController
 
   def activate
     @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
+    @group = Group.find_by(id: @invite_code[:object].group_id)
+
     respond_to do |format|
       if activate_params[:code] == "CODEAPP"
         @current_member.update(bypass_invite: true)
@@ -194,19 +230,20 @@ class MembersController < ApplicationController
         format.json
         format.html { redirect_to dashboard_path }
       elsif @invite_code[:status]
-        @activate = @current_member.build_member_invite_code(invite_code_id: @invite_code[:object].id)
-        @activate.save
-        @invite_code[:object].update!(used: true)
+        if add_to_group_at_invite
+          @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
+          @activate.save
+          @invite_code[:object].update!(used: true)
+          @invite_code[:message] = "You joined #{@group.name} Group"
 
-        @group_id = @invite_code[:object].group_id
-
-        add_to_group_at_invite
-
-        # session[:member_id] = @current_member.id
-        # cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
-        format.js
-        format.json
-        format.html { redirect_to dashboard_path }
+          format.js
+          format.json
+          format.html { redirect_to dashboard_path }
+        else
+          @error_message = flash[:warning] = "You've already in #{@group.name} Group"
+          format.json
+          format.html { redirect_to users_activate_path }
+        end
       else
         flash[:warning] = @invite_code[:message]
         format.json
@@ -230,8 +267,15 @@ class MembersController < ApplicationController
   end
 
   def add_to_group_at_invite
-    if @group = Group.find_by(id: @group_id)
-      @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
+    if @group
+      unless @current_member.cached_get_group_active.map(&:id).include?(@group.id)
+        puts "no have group"
+        @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
+        @group.increment!(:member_count)
+        @current_member.cached_flush_active_group
+      else
+        nil
+      end
     end
   end
 
@@ -247,10 +291,17 @@ class MembersController < ApplicationController
 
   private
 
+  def find_group
+    @find_group = Group.joins(:group_company).where("group_companies.company_id = #{@find_company.id}").first
+  end
+
+  def set_company
+    @find_company = current_member.company
+  end
+
   def report_params
     params.permit(:member_id, :friend_id, :message, :block)
   end
-
 
   def update_profile_params
     params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup)
@@ -262,6 +313,10 @@ class MembersController < ApplicationController
 
   def activate_params
     params.permit(:code, :member_id)
+  end
+
+  def group_params
+    params.permit(:name, :description, :photo_group)
   end
 
   

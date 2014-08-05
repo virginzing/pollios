@@ -94,6 +94,7 @@ Pollios::Application.routes.draw do
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile', as: :update_profile
+    post 'update_group',      to: 'members#update_group', as: :update_group
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
     get 'notify',         to: 'members#notify'
@@ -198,8 +199,9 @@ Pollios::Application.routes.draw do
   end
 
   get '/profile', to: 'members#profile',  as: :my_profile
-  delete '/delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
-  delete '/delete_cover',  to: 'members#delete_cover', as: :delete_cover
+  delete 'delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
+  delete 'delete_cover',  to: 'members#delete_cover', as: :delete_cover
+  delete 'delete_photo_group',  to: 'members#delete_photo_group', as: :delete_photo_group
   get '/qrcode',  to: 'polls#generate_qrcode'
 
   get '/dashboard',  to: 'home#dashboard', as: :dashboard

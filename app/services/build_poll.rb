@@ -80,7 +80,7 @@ class BuildPoll
     if type_poll == "binary"
       @choice_list << @params["choice_one"]
       @choice_list << @params["choice_two"]
-      @choice_list << "No vote"
+      # @choice_list << "No vote"
     elsif type_poll == "freeform"
       @choice_list << @params["choice_one"]
       choice_freeform.each do |choice_freeform|

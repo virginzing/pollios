@@ -18,7 +18,7 @@ class Member < ActiveRecord::Base
   include MemberHelper
 
 
-  has_one :member_invite_code, dependent: :destroy
+  has_many :member_invite_codes, dependent: :destroy
   has_one :company, dependent: :destroy
 
   has_many :comments, dependent: :destroy
@@ -376,7 +376,7 @@ class Member < ActiveRecord::Base
   end
 
   def cached_get_group_active
-    Rails.cache.fetch([self.id, 'group_active'], :expires_in => 6.hours) do
+    Rails.cache.fetch([self.id, 'group_active']) do
       get_group_active.to_a
     end
   end
@@ -471,7 +471,7 @@ class Member < ActiveRecord::Base
   def cancel_or_leave_group(group_id, type)
     find_group_member = group_members.where(group_id: group_id).first
     if find_group_member
-      find_group_member.group.decrement!(:member_count) if type == "L" 
+      find_group_member.group.decrement!(:member_count) if type == "L" && find_group_member.group.member_count > 0 
       find_group_member.destroy
     end
     cached_flush_active_group

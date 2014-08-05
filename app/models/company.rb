@@ -5,8 +5,8 @@ class Company < ActiveRecord::Base
   has_one :group, through: :group_company , source: :group
   # validates :amount_code, :prefix_name, presence: true
   
-  validates :name, presence: true, :uniqueness => { :case_sensitive => false, message: "Name must be unique" }, on: :create
-  
+  # validates :name, presence: true, :uniqueness => { :case_sensitive => false, message: "Name must be unique" }, on: :create
+  validates :name, presence: true
   attr_accessor :amount_code, :used, :prefix_name, :company_id
 
   def generate_code_of_company(invite_params, find_group = nil)

@@ -143,7 +143,7 @@ class Authentication
   end
 
   def add_new_group_company
-    company = Company.create!(name: name, address: address, member_id: member.id)
+    company = Company.create!(name: name, address: address, member_id: member.id, leave_group: false)
     group = Group.create(name: name, authorize_invite: :master, public: false)
     GroupCompany.create!(group_id: group.id, company_id: company.id)
   end

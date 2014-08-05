@@ -7,115 +7,123 @@
   </div>
 </div>
 
+<section id="widget-grid">
+
 <div class="row">
   <div class="col-md-7">
-    <div class="well well-sm well-light">
-      <h3 class="text-primary">Poll Detail:</h3>
-      <dl class="dl-horizontal">
-        <dt>Id: <dd><%= @poll.id %></dd></dt>
-        <dt>Title: </dt><dd><%= @poll.title %></dd>
-        <dt>Vote: </dt><dd><%= @poll.vote_all %></dd>
-        <dt>View: </dt><dd><%= @poll.view_all %></dd>
-        <dt>Share: </dt><dd><%= @poll.share_count %></dd>
-        <dt>Report: </dt><dd><%= @poll.report_count %></dd>
-        <dt>Status: </dt><dd><%= @poll.status_poll_text %></dd>
-        <dt>Public: </dt><dd><%= @poll.public %></dd>
-        <dt>Type: </dt><dd><%= @poll.type_poll_text %></dd>
-        <dt>Created At: </dt><dd><%= @poll.created_at %></dd>
-        <dt>Expired At: </dt><dd><%= @poll.expire_date %></dd>
-      </dl>
+  <div class="jarviswidget" id="wid-id-poll-detail" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+    <header>
+      <span class="widget-icon"> <i class="glyphicon glyphicon-info-sign"></i> </span>
+      <h2><strong>Detail</strong></h2>        
+    </header>
 
-    <h3 class="text-primary">Choice Detail:</h3>
-      <dl class="dl-horizontal">
-        <% @poll.cached_choices.each do |choice| %>
-          <dt><%= choice.answer %>: </dt><dd><%= choice.vote %> vote</dd>
-          <% @choice_data_chart << [choice.answer, choice.vote] %>
-        <% end %>
-      </dl>
+    <!-- widget div-->
+    <div>
+      <!-- widget content -->
+      <div class="widget-body">
+        <!-- <div class="well well-sm well-light"> -->
+          <h3 class="text-primary">Poll Detail:</h3>
+          <dl class="dl-horizontal">
+            <dt>Id: <dd><%= @poll.id %></dd></dt>
+            <dt>Title: </dt><dd><%= @poll.title %></dd>
+            <dt>Vote: </dt><dd><%= @poll.vote_all %></dd>
+            <dt>View: </dt><dd><%= @poll.view_all %></dd>
+            <dt>Share: </dt><dd><%= @poll.share_count %></dd>
+            <dt>Report: </dt><dd><%= @poll.report_count %></dd>
+            <dt>Status: </dt><dd><%= @poll.status_poll_text %></dd>
+            <dt>Public: </dt><dd><%= @poll.public %></dd>
+            <dt>Type: </dt><dd><%= @poll.type_poll_text %></dd>
+            <dt>Created At: </dt><dd><%= @poll.created_at %></dd>
+            <dt>Expired At: </dt><dd><%= @poll.expire_date %></dd>
+          </dl>
+
+        <h3 class="text-primary">Choice Detail:</h3>
+          <dl class="dl-horizontal">
+            <% @poll.cached_choices.each do |choice| %>
+              <dt><%= choice.answer %>: </dt><dd><%= choice.vote %> vote</dd>
+              <% @choice_data_chart << [choice.answer, choice.vote] %>
+            <% end %>
+          </dl>
+
+<!--         </div> -->
+
+      </div>
 
     </div>
-
+    </div>
   </div>
 
   <div class="col-md-5">
+    <div class="jarviswidget" id="wid-id-chart-choices" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <header>
+        <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+        <h2><strong>Result</strong></h2>  
+        
+        <ul id="widget-tab-1" class="nav nav-tabs pull-right">
 
-      <section id="widget-grid">
-        <div class="jarviswidget" id="wid-id-chart-choices" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
-          <header>
-            <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-            <h2><strong>Result</strong></h2>  
-            
-            <ul id="widget-tab-1" class="nav nav-tabs pull-right">
+          <li class="active">
+          
+            <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
 
-              <li class="active">
-              
-                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
+          </li>
 
-              </li>
+          <li>
+            <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"> Bar Chart</span></a>
+          </li>
 
-              <li>
-                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"> Bar Chart</span></a>
-              </li>
+        </ul> 
+        
+      </header>
 
-            </ul> 
-            
-          </header>
+      <!-- widget div-->
+      <div>
+        <!-- widget content -->
+        <div class="widget-body">
 
-          <!-- widget div-->
-          <div>
-            
-            <!-- widget edit box -->
-            <div class="jarviswidget-editbox">
-              <!-- This area used as dropdown edit box -->
-              
-            </div>
-            <!-- end widget edit box -->
-            
-            <!-- widget content -->
-            <div class="widget-body">
-
-              <!-- widget body text-->
-              
-              <div class="tab-content padding-10">
-                <div class="tab-pane fade in active" id="hr1">
-                  <div id="chart_div"></div>
-                  <% if @poll.vote_all < 1 %>
-                    <div class="alert alert-info fade in">
-                      <button class="close" data-dismiss="alert">
-                        ×
-                      </button>
-                      <i class="fa-fw fa fa-info"></i>
-                      Don't vote result yet.
-                    </div>
-                  <% end %>
+          <!-- widget body text-->
+          
+          <div class="tab-content padding-10">
+            <div class="tab-pane fade in active" id="hr1">
+              <div id="chart_div"></div>
+              <% if @poll.vote_all < 1 %>
+                <div class="alert alert-info fade in">
+                  <button class="close" data-dismiss="alert">
+                    ×
+                  </button>
+                  <i class="fa-fw fa fa-info"></i>
+                  Don't vote result yet.
                 </div>
-                <div class="tab-pane fade" id="hr2">
-                  <div id="bar_chart_div"></div>
-                    <% if @poll.vote_all < 1 %>
-                    <div class="alert alert-info fade in">
-                      <button class="close" data-dismiss="alert">
-                        ×
-                      </button>
-                      <i class="fa-fw fa fa-info"></i>
-                      Don't vote result yet.
-                    </div>  
-                    <% end %>
-                </div>
-              </div>
-              
-              <!-- end widget body text-->
-              
+              <% end %>
             </div>
-            <!-- end widget content -->
-            
+            <div class="tab-pane fade" id="hr2">
+              <div id="bar_chart_div"></div>
+                <% if @poll.vote_all < 1 %>
+                <div class="alert alert-info fade in">
+                  <button class="close" data-dismiss="alert">
+                    ×
+                  </button>
+                  <i class="fa-fw fa fa-info"></i>
+                  Don't vote result yet.
+                </div>  
+                <% end %>
+            </div>
           </div>
-          <!-- end widget div -->
+          
+          <!-- end widget body text-->
           
         </div>
-      </section>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      
+    </div>
   </div>
-
 </div>
+
+
+
+</section>
 
 <%= content_tag :div, "", id: 'choice_data_chart', data: { polls: @choice_data_chart } %>
 <%= content_tag :div, "", id: 'choice_data_bar_chart', data: { polls: @choice_data_chart.insert(0, ['Answer', 'Vote']) } %>
