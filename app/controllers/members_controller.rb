@@ -244,6 +244,7 @@ class MembersController < ApplicationController
           format.json
           format.html { redirect_to users_activate_path }
         end
+        @current_member.cached_flush_active_group
       else
         flash[:warning] = @invite_code[:message]
         format.json
@@ -272,7 +273,6 @@ class MembersController < ApplicationController
         puts "no have group"
         @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
         @group.increment!(:member_count)
-        @current_member.cached_flush_active_group
       else
         nil
       end
