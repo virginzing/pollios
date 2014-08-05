@@ -1581,6 +1581,30 @@ function dataTable() {
 		iDisplayLength: 25,
 		order: [[0, 'desc']]
 	});
+	$('#list_member_vote_poll').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 10,
+		order: [[0, 'desc']]
+	});
+	$('#list_member_novote_poll').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 10,
+		order: [[0, 'desc']]
+	});
+	$('#list_member_view_poll').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 10,
+		order: [[0, 'desc']]
+	});
+	$('#list_member_noview_poll').dataTable({
+		retrieve: true,
+		paging: false,
+		iDisplayLength: 10,
+		order: [[0, 'desc']]
+	});
 	$('#company_invite_code').dataTable({
 		retrieve: true,
 		paging: false,

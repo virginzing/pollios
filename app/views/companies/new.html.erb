@@ -7,7 +7,7 @@
           </div>
 
           <div class="col col-md-2">
-            <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA' %>
+            <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA', input_html: { value: @find_company.short_name} %>
           </div>
 
           <div class="col col-md-12">

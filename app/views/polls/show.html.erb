@@ -121,7 +121,203 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-<%= @poll.id %>-vote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <header>
+        <span class="widget-icon"> <i class="glyphicon glyphicon-check"></i> </span>
+        <h2><strong>Vote</strong></h2>     
 
+        <div class="widget-toolbar"> 
+          
+            <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_vote %>" data-placement="bottom">
+              <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_vote %>"><%= @percent_vote %></div>
+            </div>
+          
+        </div>   
+      </header>
+
+      <!-- widget div-->
+      <div>
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_member_vote_poll" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Voted At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @member_voted_poll.each do |member| %>
+                <tr>
+                  <td><%= member.id %></td>
+                  <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
+                  <td><%= member.get_name %></td>
+                  <td><span data-livestamp="<%= member.voted_at.to_i %>"></span></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-<%= @poll.id %>-novote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <header>
+        <span class="widget-icon"> <i class="glyphicon glyphicon-ban-circle"></i> </span>
+        <h2><strong>No Vote</strong></h2>
+        
+        <div class="widget-toolbar">
+          <a href="javascript:void(0);" class="btn btn-danger" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification">
+          <i class="fa fa-bullhorn"></i>
+          Poke All</a>
+        </div>  
+
+        <div class="widget-toolbar"> 
+          <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_novote %>" data-placement="bottom">
+            <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_novote %>"><%= @percent_novote %></div>
+          </div>
+        </div>
+
+      </header>
+
+      <!-- widget div-->
+      <div>
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_member_novote_poll" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @member_novoted_poll.each do |member| %>
+                <tr>
+                  <td><%= member.id %></td>
+                  <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
+                  <td><%= member.get_name %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-<%= @poll.id %>-view" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <header>
+        <span class="widget-icon"> <i class="glyphicon glyphicon-check"></i> </span>
+        <h2><strong>View</strong></h2>     
+
+        <div class="widget-toolbar"> 
+          
+            <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_view %>" data-placement="bottom">
+              <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_view %>"><%= @percent_view %></div>
+            </div>
+          
+        </div>   
+      </header>
+
+      <!-- widget div-->
+      <div>
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_member_view_poll" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Viewed At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @member_viewed_poll.each do |member| %>
+                <tr>
+                  <td><%= member.id %></td>
+                  <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
+                  <td><%= member.get_name %></td>
+                  <td><span data-livestamp="<%= member.viewed_at.to_i %>"></span></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col col-md-6">
+    <div class="jarviswidget" id="wid-id-poll-<%= @poll.id %>-noview" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <header>
+        <span class="widget-icon"> <i class="glyphicon glyphicon-ban-circle"></i> </span>
+        <h2><strong>No View</strong></h2>
+        
+        <div class="widget-toolbar">
+          <a href="javascript:void(0);" class="btn btn-danger" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification">
+          <i class="fa fa-bullhorn"></i>
+          Poke All</a>
+        </div>  
+
+        <div class="widget-toolbar"> 
+          <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_noview %>" data-placement="bottom">
+            <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_noview %>"><%= @percent_noview %></div>
+          </div>
+        </div>
+
+      </header>
+
+      <!-- widget div-->
+      <div>
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_member_noview_poll" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @member_noviewed_poll.each do |member| %>
+                <tr>
+                  <td><%= member.id %></td>
+                  <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
+                  <td><%= member.get_name %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 </section>
 

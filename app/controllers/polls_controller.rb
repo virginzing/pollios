@@ -106,42 +106,43 @@ class PollsController < ApplicationController
   end
 
   def create ## for Web
-    in_group = false
-    @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
-    new_poll_binary_params = @build_poll.poll_binary_params
-    # puts "new_poll_binary_params => #{new_poll_binary_params}"
-    @poll = Poll.new(new_poll_binary_params)
-    @poll.choice_count = @build_poll.list_of_choice.count
-    
-    if @poll.save
+    Poll.transaction do
+      in_group = false
+      @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
+      new_poll_binary_params = @build_poll.poll_binary_params
+      # puts "new_poll_binary_params => #{new_poll_binary_params}"
+      @poll = Poll.new(new_poll_binary_params)
+      @poll.choice_count = @build_poll.list_of_choice.count
+      
+      if @poll.save
 
-      @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
+        @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
-      @poll.create_tag(@build_poll.title_with_tag)
+        @poll.create_tag(@build_poll.title_with_tag)
 
-      @poll.create_watched(current_member, @poll.id)
+        @poll.create_watched(current_member, @poll.id)
 
-      if @poll.in_group_ids != "0"
-        in_group = true
-        puts "#{ @poll.in_group_ids}"
-        Group.add_poll(current_member, @poll, @poll.in_group_ids)
+        if @poll.in_group_ids != "0"
+          in_group = true
+          puts "#{ @poll.in_group_ids}"
+          Group.add_poll(current_member, @poll, @poll.in_group_ids)
+        else
+          ApnPollWorker.new.perform(current_member, @poll) if Rails.env.production?
+        end
+
+        current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
+
+        PollStats.create_poll_stats(@poll)
+        # Rails.cache.delete([current_member.id, 'poll_member'])
+        Rails.cache.delete([current_member.id, 'my_poll'])
+        Activity.create_activity_poll(current_member, @poll, 'Create')
+
+        flash[:success] = "Create poll successfully."
+        redirect_to polls_path
+      else
+        # puts "#{@poll.errors.full_messages}"
+        render @build_poll.type_poll
       end
-
-      current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
-
-      PollStats.create_poll_stats(@poll)
-
-      ApnPollWorker.new.perform(current_member, @poll) if Rails.env.production?
-
-      # Rails.cache.delete([current_member.id, 'poll_member'])
-      Rails.cache.delete([current_member.id, 'my_poll'])
-      Activity.create_activity_poll(current_member, @poll, 'Create')
-
-      flash[:success] = "Create poll successfully."
-      redirect_to polls_path
-    else
-      # puts "#{@poll.errors.full_messages}"
-      render @build_poll.type_poll
     end
   end
 
@@ -166,8 +167,30 @@ class PollsController < ApplicationController
   # end
 
   def show
-    puts "poll => #{@poll}"
+    @group = current_member.company.group
+    member_group = @group.get_member_active
+
     @choice_data_chart = []
+
+    @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
+                  .select("members.*, history_votes.created_at as voted_at")
+                  .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+
+    @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
+    @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
+
+    @percent_vote = ((@member_voted_poll.count * 100)/member_group.count).to_s + "%"
+    @percent_novote = ((@member_novoted_poll.count * 100)/member_group.count).to_s + "%"
+
+    @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
+                  .select("members.*, history_views.created_at as viewed_at")
+                  .where("history_views.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+
+    @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
+    @member_noviewed_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_viewed_poll.map(&:id))
+
+    @percent_view = ((@member_viewed_poll.count * 100)/member_group.count).to_s + "%"
+    @percent_noview = ((@member_noviewed_poll.count * 100)/member_group.count).to_s + "%"
   end
 
   def qrcode
