@@ -475,6 +475,7 @@ class Member < ActiveRecord::Base
       find_group_member.destroy
     end
     cached_flush_active_group
+    true
   end
 
   def delete_group(group_id)

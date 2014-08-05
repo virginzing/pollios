@@ -31,7 +31,7 @@ class CompaniesController < ApplicationController
   end
 
   def remove_member
-    @group = Member.find(params[:member_id]).cancel_or_leave_group(find_group.id, "L")
+    @group = Member.find(params[:member_id]).cancel_or_leave_group(@find_group.id, "L")
     respond_to do |format|
       if @group
         flash[:success] = "Remove successfully."

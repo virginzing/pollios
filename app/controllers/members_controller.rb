@@ -230,21 +230,24 @@ class MembersController < ApplicationController
         format.html { redirect_to dashboard_path }
       elsif @invite_code[:status]
         @group = Group.find_by(id: @invite_code[:object].group_id)
-        if add_to_group_at_invite
-          @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
-          @activate.save
-          @invite_code[:object].update!(used: true)
-          @invite_code[:message] = "You joined #{@group.name} Group"
+        begin
+          if add_to_group_at_invite
+            @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
+            @activate.save
+            @invite_code[:object].update!(used: true)
+            @invite_code[:message] = "You joined #{@group.name} Group"
 
-          format.js
-          format.json
-          format.html { redirect_to dashboard_path }
-        else
-          @error_message = flash[:warning] = "You've already in #{@group.name} Group"
-          format.json
-          format.html { redirect_to users_activate_path }
+            format.js
+            format.json
+            format.html { redirect_to dashboard_path }
+          else
+            @error_message = flash[:warning] = "You've already in #{@group.name} Group"
+            format.json
+            format.html { redirect_to users_activate_path }
+          end
         end
-        @current_member.cached_flush_active_group
+        puts "clear cached group"
+        Rails.cache.delete([ @current_member.id, 'group_active'])
       else
         flash[:warning] = @invite_code[:message]
         format.json
