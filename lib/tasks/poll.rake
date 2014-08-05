@@ -78,14 +78,17 @@ namespace :poll do
     Apn::Notification.delete_all
 
     Activity.delete_all
-    Commment.delete_all
+    Commmnt.delete_all
     Company.delete_all
 
     UserStats.delete_all
     VoteStats.delete_all
     GroupStats.delete_all
     Template.delete_all
-
+    Company.delete_all
+    GroupCompany.delete_all
+    HistoryPurchase.delete_all
+    PollStats.delete_all
   end
 
   desc "clear some data"
