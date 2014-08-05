@@ -143,8 +143,8 @@ class Authentication
   end
 
   def add_new_group_company
-    company = Company.create!(name: name, address: address, member_id: member.id, leave_group: false)
-    group = Group.create(name: name, authorize_invite: :master, public: false)
+    company = Company.create!(name: name, address: address, member_id: member.id)
+    group = Group.create(name: name, authorize_invite: :master, public: false, leave_group: false)
     GroupCompany.create!(group_id: group.id, company_id: company.id)
   end
 
@@ -185,6 +185,6 @@ class Authentication
   end
 
   def check_activate_account
-    member.bypass_invite || member.member_invite_code.present? || member.brand?
+    member.bypass_invite || member.member_invite_codes.present? || member.brand?
   end
 end
