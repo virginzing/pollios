@@ -112,7 +112,8 @@ class MembersController < ApplicationController
         end
 
         @member = Member.find(@current_member.id)
-
+        @member.cached_flush_active_group
+        
         flash[:success] = "Update profile successfully."
         format.html { redirect_to my_profile_path }
         format.json
@@ -273,9 +274,7 @@ class MembersController < ApplicationController
     if @group
       unless @current_member.cached_get_group_active.map(&:id).include?(@group.id)
         @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
-        puts "increment member count"
         @group.increment!(:member_count)
-        puts "clear cached member #{@current_member}"
         @current_member.cached_flush_active_group
         true
       else
