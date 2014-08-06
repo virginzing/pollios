@@ -239,6 +239,8 @@ class MembersController < ApplicationController
             @invite_code[:object].update!(used: true)
             @invite_code[:message] = "You joined #{@group.name} Group"
 
+            @member = Member.find(params[:member_id])
+          
             format.js
             format.json
             format.html { redirect_to dashboard_path }
@@ -272,7 +274,8 @@ class MembersController < ApplicationController
 
   def add_to_group_at_invite
     if @group
-      unless @current_member.cached_get_group_active.map(&:id).include?(@group.id)
+      find_my_group = @current_member.get_group_active.map(&:id)
+      unless find_my_group.include?(@group.id)
         @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
         @group.increment!(:member_count)
         @current_member.cached_flush_active_group

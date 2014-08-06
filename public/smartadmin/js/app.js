@@ -1577,69 +1577,57 @@ function drawBreadCrumb() {
 function dataTable() {
 	$('#invite_codes').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 25,
 		order: [[0, 'desc']]
 	});
 	$('#list_member_vote_poll').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 10,
 		order: [[0, 'desc']]
 	});
 	$('#list_member_novote_poll').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 10,
 		order: [[0, 'desc']]
 	});
 	$('#list_member_view_poll').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 10,
 		order: [[0, 'desc']]
 	});
 	$('#list_member_noview_poll').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 10,
 		order: [[0, 'desc']]
 	});
 	$('#company_invite_code').dataTable({
 		retrieve: true,
-		paging: true,
-		iDisplayLength: 10,
+		iDisplayLength: 20,
 		order: [[0, 'desc']]
 	});
 	$('#company_members').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 25,
 		order: [[0, 'desc']]
 	});
 	$('#list_polls').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 25
 	});
 	$('#list_recurring').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 10
 	});
 	$('#list_campaigns').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 10
 	});
 	$('#report_polls').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 25
 	});
 	$('#report_members').dataTable({
 		retrieve: true,
-		paging: false,
 		iDisplayLength: 25
 	});
 }
