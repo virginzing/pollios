@@ -536,7 +536,7 @@ class Poll < ActiveRecord::Base
               # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
               get_anonymous = member.get_anonymous_with_poll(find_poll)
 
-              VotePollWorker.new.perform(member, find_poll, { anonymous: get_anonymous }) unless member_id.to_i == find_poll.member.id
+              VotePollWorker.new.perform(member, find_poll, { anonymous: get_anonymous }) unless (member_id.to_i == find_poll.member.id )
               # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 
               VoteStats.create_vote_stats(find_poll)

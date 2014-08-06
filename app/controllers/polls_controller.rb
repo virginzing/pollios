@@ -179,8 +179,6 @@ class PollsController < ApplicationController
     @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
     @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
 
-    @percent_vote = ((@member_voted_poll.count * 100)/member_group.count).to_s + "%"
-    @percent_novote = ((@member_novoted_poll.count * 100)/member_group.count).to_s + "%"
 
     @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
                   .select("members.*, history_views.created_at as viewed_at")
@@ -189,8 +187,20 @@ class PollsController < ApplicationController
     @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
     @member_noviewed_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_viewed_poll.map(&:id))
 
-    @percent_view = ((@member_viewed_poll.count * 100)/member_group.count).to_s + "%"
-    @percent_noview = ((@member_noviewed_poll.count * 100)/member_group.count).to_s + "%"
+    if member_group.count > 0
+      @percent_vote = ((@member_voted_poll.count * 100)/member_group.count).to_s
+      @percent_novote = ((@member_novoted_poll.count * 100)/member_group.count).to_s
+
+      @percent_view = ((@member_viewed_poll.count * 100)/member_group.count).to_s
+      @percent_noview = ((@member_noviewed_poll.count * 100)/member_group.count).to_s
+    else
+      zero_percent = "0"
+      @percent_vote = zero_percent
+      @percent_novote = zero_percent
+      @percent_view = zero_percent
+      @percent_noview = zero_percent
+    end
+
   end
 
   def qrcode

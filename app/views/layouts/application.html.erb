@@ -459,6 +459,8 @@
 		<!-- MAIN APP JS FILE -->
 		<script src="/smartadmin/js/app.js"></script>
 
+    <script src="/plugins/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+
 		<script src='/plugins/jquery.overlay.js'></script>
   	
 		<!-- PAGE RELATED PLUGIN(S) -->
@@ -518,6 +520,12 @@
             $.srSmoothscroll();
         });
       }
+
+      $(document).ready(function() {  
+        $('.progress .progress-bar').progressbar({
+          display_text: 'center'
+        });
+      });
 
 			$(document).on('page:change', function() {
 				// DO NOT REMOVE : GLOBAL FUNCTIONS!

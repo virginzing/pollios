@@ -22,6 +22,8 @@
       <!-- widget content -->
       <div class="widget-body">
         <!-- <div class="well well-sm well-light"> -->
+        <!-- <div class="custom-scroll table-responsive" style="height:350px; overflow-y: scroll;"> -->
+
           <h3 class="text-primary">Poll Detail:</h3>
           <dl class="dl-horizontal">
             <dt>Id: <dd><%= @poll.id %></dd></dt>
@@ -37,7 +39,7 @@
             <dt>Expired At: </dt><dd><%= @poll.expire_date %></dd>
           </dl>
 
-        <h3 class="text-primary">Choice Detail:</h3>
+          <h3 class="text-primary">Choice Detail:</h3>
           <dl class="dl-horizontal">
             <% @poll.cached_choices.each do |choice| %>
               <dt><%= choice.answer %>: </dt><dd><%= choice.vote %> vote</dd>
@@ -45,9 +47,9 @@
             <% end %>
           </dl>
 
-<!--         </div> -->
+        <!-- </div> -->
 
-      </div>
+      </div> <!-- widget-->
 
     </div>
     </div>
@@ -130,9 +132,9 @@
 
         <div class="widget-toolbar"> 
           
-            <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_vote %>" data-placement="bottom">
-              <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_vote %>"><%= @percent_vote %></div>
-            </div>
+        <div class="progress progress-striped active left" rel="tooltip" data-original-title="<%= @percent_vote %>%" data-placement="top">
+          <div class="progress-bar progress-bar-info" aria-valuetransitiongoal="<%= @percent_vote %>"></div>
+        </div>
           
         </div>   
       </header>
@@ -182,8 +184,8 @@
         </div>  
 
         <div class="widget-toolbar"> 
-          <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_novote %>" data-placement="bottom">
-            <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_novote %>"><%= @percent_novote %></div>
+          <div class="progress progress-striped active left" rel="tooltip" data-original-title="<%= @percent_novote %>%" data-placement="top">
+            <div class="progress-bar progress-bar-info" aria-valuetransitiongoal="<%= @percent_novote %>"></div>
           </div>
         </div>
 
@@ -229,9 +231,9 @@
 
         <div class="widget-toolbar"> 
           
-            <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_view %>" data-placement="bottom">
-              <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_view %>"><%= @percent_view %></div>
-            </div>
+        <div class="progress progress-striped active left" rel="tooltip" data-original-title="<%= @percent_view %>%" data-placement="top">
+          <div class="progress-bar progress-bar-info" aria-valuetransitiongoal="<%= @percent_view %>"></div>
+        </div>
           
         </div>   
       </header>
@@ -281,8 +283,8 @@
         </div>  
 
         <div class="widget-toolbar"> 
-          <div class="progress progress-striped active" rel="tooltip" data-original-title="<%= @percent_noview %>" data-placement="bottom">
-            <div class="progress-bar progress-bar-success" role="progressbar" style="width: <%= @percent_noview %>"><%= @percent_noview %></div>
+          <div class="progress progress-striped active left" rel="tooltip" data-original-title="<%= @percent_noview %>%" data-placement="top">
+            <div class="progress-bar progress-bar-info" aria-valuetransitiongoal="<%= @percent_noview %>"></div>
           </div>
         </div>
 

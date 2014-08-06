@@ -15,6 +15,7 @@ class CompaniesController < ApplicationController
                               .select("invite_codes.*, companies.name as company_name")
                               .where("invite_codes.company_id = ?", @find_company.id)
                               .order("invite_codes.id desc")
+    @invite = InviteCode.new
   end
 
   def create

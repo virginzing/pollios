@@ -1607,8 +1607,8 @@ function dataTable() {
 	});
 	$('#company_invite_code').dataTable({
 		retrieve: true,
-		paging: false,
-		iDisplayLength: 25,
+		paging: true,
+		iDisplayLength: 10,
 		order: [[0, 'desc']]
 	});
 	$('#company_members').dataTable({

@@ -11,14 +11,51 @@
 <div class="well">
   <h4 class="alert-heading">Please Note!</h4>
   <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Viva Vivar</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+    Generate invite code for someone want join our group.
   </p>
   <br>
-    <a href="<%= invites_new_url %>" class="icon-btn">
+    <a href="#" class="icon-btn" data-toggle="modal" data-target="#new_invite">
       <i class="fa fa-edit"></i>
       <div>New</div>
     </a>
 </div>
+
+<div id="new_invite" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">New Invite Code</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <%= simple_form_for @invite, url: '/invites', method: :post do |f| %>
+                
+                <div class="col col-md-2">
+                  <%= f.input :amount_code, as: :integer, label: 'Amount', input_html: { value: @find_company.max_invite_code, 'data-parsley-required' => true, "data-parsley-type" => "integer",
+                  "min" => "1", "max" => "30" } %>
+                </div>
+
+                <div class="col col-md-2">
+                  <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA', input_html: { value: @find_company.short_name, 'data-parsley-required' => true } %>
+                </div>
+
+<!--                 <div class="col col-md-12">
+                  <%= f.submit "Create Invite", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
+                </div> -->
+            <% end %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input class="btn btn-primary" data-disable-with="Loading..." name="commit" type="submit" value="Create" id="new_invite_submit">
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
 
 <section id="widget-grid" class="">
   <div class="jarviswidget" id="wid-company-invite-code" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
@@ -63,3 +100,10 @@
 
   </div>
 </section>
+
+<script type="text/javascript">
+  $("#new_invite_code").parsley();
+  $("#new_invite_submit").click(function () {
+    $("form#new_invite_code").submit();
+  });
+</script>
