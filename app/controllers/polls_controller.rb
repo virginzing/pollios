@@ -7,7 +7,7 @@ class PollsController < ApplicationController
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
-  before_action :signed_user, only: [:poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new]
+  before_action :signed_user, only: [:poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create]
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   

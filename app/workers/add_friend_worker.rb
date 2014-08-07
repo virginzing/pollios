@@ -14,7 +14,8 @@ class AddFriendWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      type: TYPE[:friend]
+      type: TYPE[:friend],
+      member_id: member_id
     }
 
     hash_custom = {
