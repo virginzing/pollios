@@ -49,7 +49,39 @@ class CompaniesController < ApplicationController
   end
 
   def add_member
-    @members = Member.searchable_member(params[:q])
+    @member_in_group ||= find_group.get_member_active
+    # puts "#{@member_in_group.map(&:id)}"
+    query = Member.searchable_member(params[:q]).without_member_type(:company)
+    @members = query
+    @members = query.where("members.id NOT IN (?)", @member_in_group) if @member_in_group.count > 0
+  end
+
+  def add_user_to_group
+
+    find_user = Member.find_by(id: params[:member_id])     
+    respond_to do |format| 
+      if find_user.present?
+        Group.transaction do
+          find_user_group = find_user.get_group_active.map(&:id)
+          this_group = set_company.group
+
+          unless find_user_group.include?(this_group.id)
+            this_group.group_members.create!(member_id: find_user.id, is_master: true, active: true)
+            this_group.increment!(:member_count)
+            find_user.cached_flush_active_group
+            format.json { render json: { error_message: nil }, status: 200 }
+          else
+            @error_message = "You already joined in this group."
+            format.json { render json: { error_message: @error_message }, status: 403 }
+          end
+
+        end
+      else
+        @error_message = "Not found this user."
+        format.json { render json: { error_message: @error_message }, status: 403 }
+      end
+
+    end
   end
 
   private

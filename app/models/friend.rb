@@ -209,7 +209,7 @@ class Friend < ActiveRecord::Base
         Activity.create_activity_friend( member, friend ,'BecomeFriend')
         Activity.create_activity_friend( friend, member ,'BecomeFriend')
 
-        AddFriendWorker.new.perform(member_id, friend_id, { accept_friend: true, action: 'BecomeFriend' } )
+        AddFriendWorker.new.perform(member, friend, { accept_friend: true, action: 'BecomeFriend' } )
       else
         find_member.destroy
         find_friend.destroy

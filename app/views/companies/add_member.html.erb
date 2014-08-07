@@ -57,7 +57,7 @@
                   <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
                   <td><%= member.get_name %></td>
                   <td><%= member.email %></td>
-                  <td></td>
+                  <td><a href="<%= add_user_to_group_path(member_id: member.id) %>" id="add_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Add</a></td>
                 </tr>
               <% end %>
             </tbody>
@@ -75,3 +75,34 @@
 
 
 </div> <!-- well -->
+
+<script type="text/javascript">
+$(document).ready(function () {
+  $.add_button_to_group = $('#add_user_to_group[data-remote]');
+  
+  $.add_button_to_group.on('ajax:send', function(xhr) {
+  $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+  }).on('ajax:success', function (data, status, xhr) {
+    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Added")
+
+  }).on('ajax:error', function (event, xhr, status) {
+    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    var json_response = JSON.parse(xhr.responseText);
+    handleErrorAddGroup(json_response.error_message);
+
+  });
+
+  function handleErrorAddGroup (error_message) {
+    $.smallBox({
+      title : "Warning",
+      content: error_message,
+      color: "#C46A69",
+      icon: "fa fa-warning",
+      timeout: 6000
+    });
+  }
+
+});
+
+</script>

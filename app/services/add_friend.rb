@@ -2,25 +2,25 @@ class AddFriend
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
-  def initialize(member_id, friend_id, options = {})
-    @member_id = member_id
-    @friend_id = friend_id
+  def initialize(member, friend, options = {})
+    @member = member
+    @friend = friend
     @options = options
   end
 
   def recipient_id
-    if friend
-      friend.apn_add_friend ? friend.id : nil
+    if @friend
+      @friend.apn_add_friend ? @friend.id : nil
     end
   end
 
   def member_name
     # member.fullname.split(%r{\s}).first
-    member.fullname
+    @member.fullname
   end
 
   def friend_name
-    friend.fullname
+    @friend.fullname
   end
 
   def custom_message
@@ -30,16 +30,6 @@ class AddFriend
       message = member_name + " request friend with you" 
     end
     truncate_message(message)
-  end
-
-  private
-
-  def member
-    Member.find(@member_id)
-  end
-
-  def friend
-    Member.find(@friend_id)
   end
   
 end
