@@ -48,6 +48,10 @@ class CompaniesController < ApplicationController
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at").where("group_members.group_id = #{@find_group.id} AND group_members.active = 't'") || []
   end
 
+  def add_member
+    @members = Member.searchable_member(params[:q])
+  end
+
   private
 
   def find_group

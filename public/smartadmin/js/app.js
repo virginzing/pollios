@@ -1580,6 +1580,11 @@ function dataTable() {
 		iDisplayLength: 25,
 		order: [[0, 'desc']]
 	});
+	$('#list_users').dataTable({
+		retrieve: true,
+		iDisplayLength: 25,
+		order: [[0, 'desc']]
+	});
 	$('#list_member_vote_poll').dataTable({
 		retrieve: true,
 		iDisplayLength: 10,

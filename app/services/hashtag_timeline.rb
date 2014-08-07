@@ -44,12 +44,14 @@ class HashtagTimeline
   private
 
   def tag_popular
-    Tag.joins(:taggings => [:poll => :poll_members]).
+    query = Tag.joins(:taggings => [:poll => :poll_members]).
       where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0)", true, your_friend_ids).
-      where("polls.id NOT IN (?)", @report_poll.map(&:id)).
       select("tags.*, count(taggings.tag_id) as count").
       group("taggings.tag_id, tags.id").
       order("count desc").limit(5)
+
+    query = query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.count > 0
+    return query
   end
 
   def tag_friend_group_public

@@ -193,6 +193,7 @@ Pollios::Application.routes.draw do
 
   scope 'company' do
     get 'members',  to: 'companies#list_members',  as: :company_members
+    get 'members/add',  to: 'companies#add_member',  as: :company_add_member
     get 'invites',  to: 'companies#invites',    as: :company_invites
     get '/invites/new', to: 'companies#new',  as: :invites_new
     delete '/remove_member',  to: 'companies#remove_member',  as: :remove_member_group
