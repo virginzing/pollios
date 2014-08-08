@@ -89,7 +89,7 @@ class Friend < ActiveRecord::Base
       end
       flush_cached_friend(member_id, friend_id)
       # AddFriendWorker.perform_async(member_id, friend_id)
-      AddFriendWorker.new.perform(member_id, friend_id, {action: 'Invite'} )
+      AddFriendWorker.new.perform(member_id, friend_id, {action: 'Invite'} ) if Rails.env.production?
       [find_friend, status]
     rescue  => e
       puts "error => #{e}"
