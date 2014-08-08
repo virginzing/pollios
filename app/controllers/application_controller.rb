@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
       @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-  helper_method :current_member, :signed_in?, :render_to_string
+  helper_method :current_member, :signed_in?, :render_to_string, :only_company
   
   def history_voted_viewed
     # @history_voted  = @current_member.history_votes.includes(:choice).collect!  { |voted| [voted.poll_id, voted.choice_id, voted.choice.answer, voted.poll_series_id, voted.choice.vote] }
@@ -148,6 +148,10 @@ class ApplicationController < ActionController::Base
       end
     end
     @find_member
+  end
+
+  def only_company
+    current_member.company?
   end
 
   private

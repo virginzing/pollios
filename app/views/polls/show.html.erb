@@ -178,7 +178,7 @@
         <h2><strong>No Vote</strong></h2>
         
         <div class="widget-toolbar">
-          <a href="javascript:void(0);" class="btn btn-danger" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification">
+          <a href="<%= poke_dont_vote_path(id: @poll.id) %>" class="btn btn-danger" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
           <i class="fa fa-bullhorn"></i>
           Poke All</a>
         </div>  

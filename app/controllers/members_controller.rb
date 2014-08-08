@@ -5,12 +5,12 @@ class MembersController < ApplicationController
   before_action :set_current_member, only: [:recommendations, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
-  before_action :signed_user, only: [:index, :profile, :delete_avatar, :delete_cover, :delete_photo_group]
+  before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
   before_action :load_resource_poll_feed, only: [:detail_friend]
 
-  before_action :set_company, only: [:profile, :update_group, :delete_photo_group]
-  before_action :find_group, only: [:profile, :update_group, :delete_photo_group]
+  before_action :set_company, only: [:profile, :update_group, :delete_photo_group], :if => :only_company
+  before_action :find_group, only: [:profile, :update_group, :delete_photo_group], :if => :only_company
 
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }

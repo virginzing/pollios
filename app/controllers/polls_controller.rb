@@ -203,6 +203,10 @@ class PollsController < ApplicationController
 
   end
 
+  def poke_dont_vote
+    
+  end
+
   def qrcode
     @poll = Poll.find_by(id: params[:poll_id])
   end

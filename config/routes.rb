@@ -148,7 +148,9 @@ Pollios::Application.routes.draw do
     get ':member_id/overall_timeline',           to: 'polls#overall_timeline'
     get ':member_id/group_timeline',             to: 'polls#group_timeline'
     get ':member_id/reward_timeline',            to: 'polls#reward_poll_timeline'
+
     get ':id/detail',       to: 'polls#detail'
+    post 'poke_dont_vote',  to: 'poke_dont_vote', as: :poke_dont_vote
   end
 
 
