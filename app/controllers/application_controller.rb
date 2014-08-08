@@ -151,7 +151,7 @@ class ApplicationController < ActionController::Base
   end
 
   def only_company
-    current_member.company?
+    @current_member.company? if @current_member
   end
 
   private
