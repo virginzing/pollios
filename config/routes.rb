@@ -91,6 +91,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'member' do
+    get 'recommendations',    to: 'members#recommendations'
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile', as: :update_profile
