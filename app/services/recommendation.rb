@@ -10,6 +10,7 @@ class Recommendation
   def mutual_friend_recommendations
     @mutual_friend ||= find_mutual_friend.to_a
     puts "mutual_friend_recommendations => #{@mutual_friend}"
+    return @mutual_friend
   end
 
   def get_list_member_recommendations
