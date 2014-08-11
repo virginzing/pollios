@@ -178,7 +178,7 @@
         <h2><strong>No Vote</strong></h2>
         
         <div class="widget-toolbar">
-          <a href="<%= poke_dont_vote_path(id: @poll.id) %>" class="btn btn-danger" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+          <a href="<%= poke_dont_vote_path(id: @poll.id) %>" class="btn btn-danger" id="poke_all" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
           <i class="fa fa-bullhorn"></i>
           Poke All</a>
         </div>  
@@ -405,4 +405,35 @@
       drawBarChart();
     }
  });
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  $.poke_all = $('#poke_all[data-remote]');
+
+  $.poke_all.on('ajax:send', function(xhr) {
+    $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+  }).on('ajax:success', function (data, status, xhr) {
+    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
+
+  }).on('ajax:error', function (event, xhr, status) {
+    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    // var json_response = JSON.parse(xhr.responseText);
+    handleErrorAddGroup("eiei");
+
+  });
+
+  function handleErrorAddGroup (error_message) {
+    $.smallBox({
+      title : "Warning",
+      content: error_message,
+      color: "#C46A69",
+      icon: "fa fa-warning",
+      timeout: 6000
+    });
+  }
+
+});
+
 </script>

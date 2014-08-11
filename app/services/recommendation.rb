@@ -9,6 +9,7 @@ class Recommendation
 
   def mutual_friend_recommendations
     @mutual_friend ||= find_mutual_friend.to_a
+    puts "mutual_friend_recommendations => #{@mutual_friend}"
   end
 
   def get_list_member_recommendations
@@ -22,6 +23,7 @@ class Recommendation
 
   def get_member_ids_from_mutual_and_group
     mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"] } | find_non_friend_in_group
+    puts "mutual_ids => #{mutual_ids}"
     Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
   end
 
@@ -29,7 +31,7 @@ class Recommendation
 
   def find_brand
     following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
-    query = Member.with_member_type(:brand).order("fullname asc")
+    query = Member.with_member_type(:brand, :celebrity).order("fullname asc")
     query = query.where("id NOT IN (?)", following) if following.length > 0
 
     return query
@@ -44,7 +46,9 @@ class Recommendation
   def find_non_friend_in_group
     find_friend_ids = @member.cached_get_friend_active.map(&:id) << @member.id
     find_group_and_return_member_ids = @member.cached_get_group_active.collect{|g| g.member_active.map(&:member_id) }.flatten.uniq
+    puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
     list_non_friend_ids = find_group_and_return_member_ids - find_friend_ids
+    puts "list_non_friend_ids => #{list_non_friend_ids}"
   end
   
   

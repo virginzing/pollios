@@ -7,11 +7,11 @@ class PollsController < ApplicationController
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
-  before_action :signed_user, only: [:poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create]
+  before_action :signed_user, only: [:show, :poke_dont_vote, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create]
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
-  before_action :set_poll, only: [:delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   
   before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, 
                 :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -204,7 +204,10 @@ class PollsController < ApplicationController
   end
 
   def poke_dont_vote
-    
+    respond_to do |format|
+
+      format.json { render json: [], status: 200 }
+    end
   end
 
   def qrcode
