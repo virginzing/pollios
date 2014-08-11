@@ -50,6 +50,7 @@ class Recommendation
     puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
     list_non_friend_ids = find_group_and_return_member_ids - find_friend_ids
     puts "list_non_friend_ids => #{list_non_friend_ids}"
+    return list_non_friend_ids
   end
   
   
