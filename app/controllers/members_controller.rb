@@ -21,7 +21,7 @@ class MembersController < ApplicationController
     @init_recommendation = Recommendation.new(@current_member)
     @recommendations = @init_recommendation.get_member_recommendations
 
-    @mutual_friends = @init_recommendation.get_list_member_recommendations
+    @mutual_friends = @init_recommendation.get_member_ids_from_mutual_and_group
     # puts "#{@mutual_friend.map(&:id)}"
   end
 

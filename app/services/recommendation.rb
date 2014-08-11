@@ -13,11 +13,16 @@ class Recommendation
 
   def get_list_member_recommendations
     mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"] }
-    Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids)
+    Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
   end
 
   def get_mutual_friend_recommendations_count(mutual_friend_id)
     mutual_friend_recommendations.select{|e| e if e["second_user"] == mutual_friend_id.to_s  }[0]["mutual_friend_count"]
+  end
+
+  def get_member_ids_from_mutual_and_group
+    mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"] } | find_non_friend_in_group
+    Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
   end
 
   private
@@ -30,6 +35,12 @@ class Recommendation
     connection = ActiveRecord::Base.connection
     query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COUNT(r1.followed_id) as mutual_friend_count FROM friends r1 INNER JOIN friends r2 ON r1.followed_id = r2.followed_id AND r1.follower_id != r2.follower_id WHERE r1.status = 1 AND r2.status = 1 AND r1.follower_id = #{@member.id} GROUP BY r1.follower_id, r2.follower_id"
     list_recomment = ActiveRecord::Base.connection.execute(query)
+  end
+
+  def find_non_friend_in_group
+    find_friend_ids = @member.cached_get_friend_active.map(&:id) << @member.id
+    find_group_and_return_member_ids = @member.cached_get_group_active.collect{|g| g.member_active.map(&:member_id) }.flatten.uniq
+    list_non_friend_ids = find_group_and_return_member_ids - find_friend_ids
   end
   
   
