@@ -3,11 +3,11 @@ class PollsController < ApplicationController
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
 
-  before_action :set_current_member, only: [:delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
+  before_action :set_current_member, only: [:poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
-  before_action :signed_user, only: [:show, :poke_dont_vote, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create]
+  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create]
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
@@ -205,8 +205,23 @@ class PollsController < ApplicationController
 
   def poke_dont_vote
     respond_to do |format|
+      @group = @current_member.company.group
+      member_group = @group.get_member_active
 
-      format.json { render json: [], status: 200 }
+      @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
+                    .select("members.*, history_votes.created_at as voted_at")
+                    .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+
+      @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
+      @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
+
+      if @member_novoted_poll.length > 0
+        ApnPokePollWorker.new.perform(@current_member, @member_novoted_poll, @poll)
+
+        format.json { render json: [], status: 200 }
+      else
+        format.json { render json: { error_message: "No" }, status: 403 }
+      end
     end
   end
 

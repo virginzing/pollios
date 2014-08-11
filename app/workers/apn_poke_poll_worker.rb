@@ -2,7 +2,7 @@ class ApnPokePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(sender_id, list_member, poll, custom_data = {})
+  def perform(sender, list_member, poll, custom_data = {})
     
     @apn_poke_poll = Apn::PokePoll.new(poll)
 
@@ -31,7 +31,7 @@ class ApnPokePollWorker
     end
 
     find_recipient.each do |member|
-      NotifyLog.create(sender_id: sender_id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+      NotifyLog.create(sender_id: sender.id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications

@@ -178,7 +178,7 @@
         <h2><strong>No Vote</strong></h2>
         
         <div class="widget-toolbar">
-          <a href="<%= poke_dont_vote_path(id: @poll.id) %>" class="btn btn-danger" id="poke_all" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+          <a href="<%= poke_dont_vote_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_all" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
           <i class="fa fa-bullhorn"></i>
           Poke All</a>
         </div>  
@@ -419,8 +419,8 @@ $(document).ready(function () {
 
   }).on('ajax:error', function (event, xhr, status) {
     $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    // var json_response = JSON.parse(xhr.responseText);
-    handleErrorAddGroup("eiei");
+    var json_response = JSON.parse(xhr.responseText);
+    handleErrorAddGroup(json_response.error_message);
 
   });
 
