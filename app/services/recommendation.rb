@@ -28,7 +28,11 @@ class Recommendation
   private
 
   def find_brand
-    Member.with_member_type(:brand).order("fullname asc")
+    following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
+    query = Member.with_member_type(:brand).order("fullname asc")
+    query = query.where("id NOT IN (?)", following) if following.length > 0
+
+    return query
   end
 
   def find_mutual_friend
