@@ -9,7 +9,7 @@ class Recommendation
 
   def mutual_friend_recommendations
     @mutual_friend = find_mutual_friend.to_a
-    # puts "mutual_friend_recommendations => #{@mutual_friend}"
+    @mutual_friend = @mutual_friend.select {|e| e unless find_list_friend_ids.include?(e["second_user"].to_i) }
     return @mutual_friend
   end
 
@@ -30,6 +30,10 @@ class Recommendation
 
   private
 
+  def find_list_friend_ids
+    @list_friend = @member.get_friend_active.map(&:id) << @member.id
+  end
+
   def find_brand
     following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
     query = Member.with_member_type(:brand, :celebrity).order("fullname asc")
@@ -41,13 +45,13 @@ class Recommendation
   def find_mutual_friend
     # connection = ActiveRecord::Base.connection
     query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COUNT(r1.followed_id) as mutual_friend_count FROM friends r1 INNER JOIN friends r2 ON r1.followed_id = r2.followed_id  "\
-    "AND r1.follower_id != r2.follower_id AND r1.follower_id = #{@member.id} WHERE r1.status = 1 AND r2.status = 1 AND r1.active = 't' AND r2.active = 't' GROUP BY r1.follower_id, r2.follower_id"
+    "AND r1.follower_id != r2.follower_id WHERE r1.status = 1 AND r2.status = 1 AND r1.follower_id = #{@member.id} GROUP BY r1.follower_id, r2.follower_id"
     # list_recomment = ActiveRecord::Base.connection.execute(query)
     return Friend.find_by_sql(query)
   end
 
   def find_non_friend_in_group
-    find_friend_ids = @member.get_friend_active.map(&:id) << @member.id
+    find_friend_ids = find_list_friend_ids
     puts "find_friend_ids => #{find_friend_ids}"
     find_group_and_return_member_ids = @member.cached_get_group_active.collect{|g| g.member_active.map(&:member_id) }.flatten.uniq
     puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
