@@ -40,17 +40,19 @@
                 <div class="col col-md-2">
                   <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA', input_html: { value: @find_company.short_name, 'data-parsley-required' => true } %>
                 </div>
+                
+                <br/>
 
-<!--                 <div class="col col-md-12">
-                  <%= f.submit "Create Invite", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
-                </div> -->
+                <div class="col col-md-12">
+                  <%= f.submit "Create", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
+                </div>
             <% end %>
         </div>
       </div>
-      <div class="modal-footer">
+<!--       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="new_invite_submit">Create</button>
-      </div>
+      </div> -->
 
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
