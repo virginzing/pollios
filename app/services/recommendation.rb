@@ -9,7 +9,7 @@ class Recommendation
 
   def mutual_friend_recommendations
     @mutual_friend = find_mutual_friend.to_a
-    puts "mutual_friend_recommendations => #{@mutual_friend}"
+    # puts "mutual_friend_recommendations => #{@mutual_friend}"
     return @mutual_friend
   end
 
@@ -39,10 +39,11 @@ class Recommendation
   end
 
   def find_mutual_friend
-    connection = ActiveRecord::Base.connection
+    # connection = ActiveRecord::Base.connection
     query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COUNT(r1.followed_id) as mutual_friend_count FROM friends r1 INNER JOIN friends r2 ON r1.followed_id = r2.followed_id  "\
     "AND r1.follower_id != r2.follower_id AND r1.follower_id = #{@member.id} WHERE r1.status = 1 AND r2.status = 1 AND r1.active = 't' AND r2.active = 't' GROUP BY r1.follower_id, r2.follower_id"
-    list_recomment = ActiveRecord::Base.connection.execute(query)
+    # list_recomment = ActiveRecord::Base.connection.execute(query)
+    return Friend.find_by_sql(query)
   end
 
   def find_non_friend_in_group
