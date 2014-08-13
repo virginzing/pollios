@@ -135,7 +135,7 @@ class Authentication
   end
 
   def follow_pollios
-    find_pollios = Member.find_by_email("pollios@pollios.com")
+    find_pollios = Member.find_by_email("pollios@gmail.com")
     if find_pollios.present?
       puts "member2 => #{@member.id}"
       Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id

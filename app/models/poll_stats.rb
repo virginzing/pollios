@@ -90,7 +90,7 @@ class PollStats
     if filtering == 'total' 
       find_stats_poll_total
     elsif filtering == 'yesterday'
-      find_stats_poll(Date.current - 1.day, Date.current - 1.day)
+      find_stats_poll(1.days.ago.to_date, 1.days.ago.to_date)
     elsif filtering == 'week'
       find_stats_poll(7.days.ago.to_date)
     elsif filtering == 'month'

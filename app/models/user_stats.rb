@@ -44,7 +44,7 @@ class UserStats
     if filtering == 'total' 
       find_stats_user_total
     elsif filtering == 'yesterday'
-      find_stats_user(Date.current - 1.day, Date.current - 1.day)
+      find_stats_user(1.days.ago.to_date, Date.current - 1.day)
     elsif filtering == 'week'
       find_stats_user(7.days.ago.to_date)
     elsif filtering == 'month'
