@@ -59,26 +59,27 @@ class UserStats
   end
 
   def self.find_celebrity_or_brand(end_date, start_date = Date.current)
+    puts "#{end_date}"
     {
-      citizen: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).member_type(:citizen).count,
-      celebrity: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).member_type(:celebrity).count,
-      brand: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).member_type(:brand).count
+      citizen: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).with_member_type(:citizen).count,
+      celebrity: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).with_member_type(:celebrity).count,
+      brand: Member.where("date(created_at + interval '7 hour') BETWEEN ? AND ?", end_date, start_date).with_member_type(:brand).count
     }
   end
 
   def self.find_celebrity_or_brand_total
     {
-      citizen: Member.member_type(:citizen).count,
-      celebrity: Member.member_type(:celebrity).count,
-      brand: Member.member_type(:brand).count
+      citizen: Member.with_member_type(:citizen).count,
+      celebrity: Member.with_member_type(:celebrity).count,
+      brand: Member.with_member_type(:brand).count
     }  
   end
 
   def self.find_celebrity_or_brand_yesterday
     {
-      citizen: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:citizen).count,
-      celebrity: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:celebrity).count,
-      brand: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).member_type(:brand).count 
+      citizen: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).with_member_type(:citizen).count,
+      celebrity: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).with_member_type(:celebrity).count,
+      brand: Member.where("date(created_at + interval '7 hour') = ?", Date.current - 1.day).with_member_type(:brand).count 
     }
   end
 
