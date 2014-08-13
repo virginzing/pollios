@@ -234,6 +234,7 @@ class MembersController < ApplicationController
         @invite_code[:message] = "Success"
         # session[:member_id] = @current_member.id
         # cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+        @member = Member.find(params[:member_id])
         format.js
         format.json
         format.html { redirect_to dashboard_path }
