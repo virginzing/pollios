@@ -12,7 +12,7 @@ module MemberHelper
   enumerize :member_type, :in => { citizen: 0, celebrity: 1, brand: 2, company: 3 }, predicates: true, default: :citizen, scope: true
   enumerize :status_account, :in => { normal: 1, blacklist: -1 }, default: :normal, predicates: true, scope: :having_status_account
 
-    enumerize :salary, :in => {
+  enumerize :salary, :in => {
     'No Income' => 0,
     'Lower than 18,000 THB' => 1,
     '18,001 - 30,000' => 2,

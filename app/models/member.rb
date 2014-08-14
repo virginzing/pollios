@@ -504,7 +504,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_birthday
-    birthday.present? ? birthday : ""
+    birthday.present? ? birthday.strftime("%b %d, %Y") : ""
   end
 
   def get_gender
