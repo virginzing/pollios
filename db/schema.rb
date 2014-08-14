@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140805104001) do
+ActiveRecord::Schema.define(version: 20140814073646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -375,15 +375,12 @@ ActiveRecord::Schema.define(version: 20140805104001) do
     t.string   "username"
     t.string   "avatar"
     t.string   "email"
-    t.integer  "gender",                     default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "group_active",               default: false
     t.integer  "friend_limit"
     t.integer  "friend_count",               default: 0
     t.integer  "member_type",                default: 0
-    t.date     "birthday"
-    t.integer  "province_id"
     t.string   "key_color"
     t.datetime "poll_public_req_at",         default: '2014-05-12 07:38:10'
     t.datetime "poll_overall_req_at",        default: '2014-05-12 11:39:19'
@@ -409,11 +406,15 @@ ActiveRecord::Schema.define(version: 20140805104001) do
     t.string   "auth_token"
     t.boolean  "approve_brand",              default: false
     t.boolean  "approve_company",            default: false
+    t.integer  "gender"
+    t.integer  "province"
+    t.date     "birthday"
+    t.text     "interests"
+    t.integer  "salary"
   end
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
   add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at", using: :btree
-  add_index "members", ["province_id"], name: "index_members_on_province_id", using: :btree
   add_index "members", ["username"], name: "index_members_on_username", using: :btree
 
   create_table "notify_logs", force: true do |t|
@@ -530,6 +531,19 @@ ActiveRecord::Schema.define(version: 20140805104001) do
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id", using: :btree
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
+
+  create_table "profiles", force: true do |t|
+    t.integer  "member_id"
+    t.date     "birthday"
+    t.integer  "gender"
+    t.text     "interests"
+    t.string   "salary"
+    t.integer  "province"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "profiles", ["member_id"], name: "index_profiles_on_member_id", using: :btree
 
   create_table "providers", force: true do |t|
     t.string   "name"

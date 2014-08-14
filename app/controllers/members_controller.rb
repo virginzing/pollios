@@ -319,7 +319,7 @@ class MembersController < ApplicationController
   end
 
   def update_profile_params
-    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :province_id, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup)
+    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup)
   end
 
   def verify_email_params

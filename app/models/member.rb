@@ -1,4 +1,5 @@
 class Member < ActiveRecord::Base
+  serialize :interests, Array
   # has_paper_trail
   include PgSearch
   # multisearchable :against => [:fullname, :username, :email]
@@ -18,7 +19,6 @@ class Member < ActiveRecord::Base
 
   include MemberHelper
 
-
   has_many :member_invite_codes, dependent: :destroy
   has_one :company, dependent: :destroy
 
@@ -35,7 +35,7 @@ class Member < ActiveRecord::Base
   has_many :sent_reports, class_name: 'MemberReportMember', foreign_key: 'reporter_id', dependent: :destroy
   has_many :get_reportee, -> { includes :reporter }, class_name: 'MemberReportMember', foreign_key: 'reportee_id', dependent: :destroy
 
-  belongs_to :province, inverse_of: :members
+  # belongs_to :province, inverse_of: :members
 
   has_many :follower , -> { where("following = 't' AND status != 1") }, foreign_key: "followed_id", class_name: "Friend"
   has_many :get_follower, through: :follower, source: :follower
@@ -437,11 +437,10 @@ class Member < ActiveRecord::Base
     avatar = response["avatar_thumbnail"]
     birthday = response["birthday"]
     gender = response["gender"]
-    province_id = response["province"]["id"]
 
     find_member = where(email: email).first
     if find_member.present? 
-      find_member.update_attributes!(fullname: sentai_fullname, avatar: avatar, birthday: birthday, username: username, gender: gender, province_id: province_id)
+      find_member.update_attributes!(fullname: sentai_fullname, avatar: avatar, birthday: birthday, username: username, gender: gender)
       return find_member
     end
   end
@@ -501,18 +500,23 @@ class Member < ActiveRecord::Base
   end
 
   def get_province
-    if province.present?
-      {
-        "id" => province.id,
-        "name" => province.name
-      }
-    else
-      ""
-    end
+    province.present? ? province.value : ""
   end
 
   def get_birthday
     birthday.present? ? birthday : ""
+  end
+
+  def get_gender
+    gender.present? ? gender.value : ""
+  end
+
+  def get_interests
+    interests.present? ? interests.collect{|e| e.value } : ""
+  end
+
+  def get_salary
+    salary.present? ? salary.value : ""
   end
 
   def get_token(provider_name)

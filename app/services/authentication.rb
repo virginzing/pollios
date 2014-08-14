@@ -52,7 +52,7 @@ class Authentication
   end
 
   def province
-    @params["province"]["id"] if @params["province"].present? || @params[:province_id]
+    @params["province"]["id"] if @params["province"].present?
   end
 
   def pid
@@ -103,7 +103,6 @@ class Authentication
       member.email = email
       member.birthday = birthday
       member.gender = gender.to_i
-      member.province_id = province
       member.member_type = member_type
       member.auth_token = generate_auth_token
       member.save!

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  member_id: 
+  birthday: 2014-08-14
+  gender: 1
+  interests: MyText
+  salary: MyString
+  province: 1
+
+two:
+  member_id: 
+  birthday: 2014-08-14
+  gender: 1
+  interests: MyText
+  salary: MyString
+  province: 1
