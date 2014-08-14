@@ -1,7 +1,7 @@
 <br>
 
 <div class="well">
-  <h1>Public Poll Summary</h1>
+  <div class="section-title">Public Poll Summary</div>
   <div class="table-responsive">
                     
   <table class="table table-bordered">
@@ -18,27 +18,27 @@
     <tbody>
       <tr>
         <td>Public All</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
+        <td><%= @poll_public_all[:today] %></td>
+        <td><%= @poll_public_all[:yesterday] %></td>
+        <td><%= @poll_public_all[:week_ago] %></td>
+        <td><%= @poll_public_all[:month_ago] %></td>
+        <td><%= @poll_public_all_total %></td>
       </tr>
       <tr>
         <td>Public Only Citizen</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
+        <td><%= @poll_public_citizen[:today] %></td>
+        <td><%= @poll_public_citizen[:yesterday] %></td>
+        <td><%= @poll_public_citizen[:week_ago] %></td>
+        <td><%= @poll_public_citizen[:month_ago] %></td>
+        <td><%= @poll_public_citizen_total %></td>
       </tr>
       <tr>
         <td>Public Only Brand or Celebrity</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
+        <td><%= @poll_public_brand_celebrity[:today] %></td>
+        <td><%= @poll_public_brand_celebrity[:yesterday] %></td>
+        <td><%= @poll_public_brand_celebrity[:week_ago] %></td>
+        <td><%= @poll_public_brand_celebrity[:month_ago] %></td>
+        <td><%= @poll_public_brand_celebrity_total %></td>
       </tr>
     </tbody>
   </table>

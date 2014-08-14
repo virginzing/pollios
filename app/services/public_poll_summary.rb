@@ -15,6 +15,10 @@ class PublicPollSummary
     }
   end
 
+  def get_poll_public_brand_celebrity_total
+    poll_public_all_total("member_type = 'Celebrity' OR member_type = 'Brand'").count
+  end
+
 
   ## public citizen
 
@@ -28,6 +32,9 @@ class PublicPollSummary
     }
   end
 
+  def get_poll_public_citizen_total
+    poll_public_all_total("member_type = 'Citizen'").count
+  end
 
   ## public all ##
   
@@ -51,8 +58,8 @@ class PublicPollSummary
     @query
   end
 
-  def poll_public_all_total
-    Poll.where("public = 't'")
+  def poll_public_all_total(query_options = nil)
+    Poll.where("public = 't'").where(query_options)
   end
 
   

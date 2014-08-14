@@ -16,3 +16,15 @@ span.count {
 .filter {
   margin: 20px 0px;
 }
+
+.section-title {
+  display: inline-block;
+  border-bottom: 1px solid #333;
+  margin: 0 0 15px 0;
+  padding: 0 0 5px 0;
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: capitalize;
+  position: relative;
+  overflow: hidden;
+}
