@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:load_form, :update_profile]
+  before_action :set_current_member, only: [:load_form, :update_personal_detail]
   before_action :compress_gzip, only: [:load_form]
 
   def load_form
@@ -54,10 +54,22 @@ class ProfilesController < ApplicationController
     }
   end
 
+  def update_personal_detail
+    respond_to do |format|
+      if @current_member.update(personal_detail_params)
+        format.json { render json: { "response_status" => "OK" }, status: 200 }
+      else
+        format.json { render json: { "response_status" => @current_member.errors.full_messages }, status: 403 }
+      end
+    end
+  end
 
 
-  def update_profile
-    
+
+  private
+
+  def personal_detail_params
+    params.permit(:birthday, :province, :gender, :salary, :interests => [])
   end
 
 end

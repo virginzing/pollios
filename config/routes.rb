@@ -111,7 +111,8 @@ Pollios::Application.routes.draw do
     post ':member_id/request_code', to: 'members#send_request_code'
     post ':member_id/purchase_point', to: 'purchase#add_point'
     post ':member_id/subscribe', to: 'purchase#subscribe'
-    get ':member_id/load_form',  to: 'profiles#load_form'          
+    get ':member_id/load_form',  to: 'profiles#load_form'
+    post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'          
   end
 
   scope 'poll' do
