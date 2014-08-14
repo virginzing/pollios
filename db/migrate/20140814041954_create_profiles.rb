@@ -10,8 +10,5 @@ class CreateProfiles < ActiveRecord::Migration
 
       t.timestamps
     end
-    remove_column :members, :gender
-    remove_column :members, :birthday
-    remove_column :members, :province_id
   end
 end
