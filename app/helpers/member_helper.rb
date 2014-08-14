@@ -12,14 +12,7 @@ module MemberHelper
   enumerize :member_type, :in => { citizen: 0, celebrity: 1, brand: 2, company: 3 }, predicates: true, default: :citizen, scope: true
   enumerize :status_account, :in => { normal: 1, blacklist: -1 }, default: :normal, predicates: true, scope: :having_status_account
 
-  enumerize :province, :in => {
-    'Amnat Charoen' => 1,
-    'Ang Thong' => 2,
-    'Bangkok' => 3,
-    'Beung Kan' => 4
-  }, scope: true
-
-  enumerize :salary, :in => {
+    enumerize :salary, :in => {
     'No Income' => 0,
     'Lower than 18,000 THB' => 1,
     '18,001 - 30,000' => 2,
@@ -28,85 +21,6 @@ module MemberHelper
     'More than 100,001' => 5
   }, scope: true
 
+  enumerize :province, :in => {"Bangkok"=>1, "Amnat Charoen"=>2, "Ang Thong"=>3, "Beung Kan"=>4, "Buriram"=>5, "Chachoengsao"=>6, "Chai Nat"=>7, "Chaiyaphum"=>8, "Chanthaburi"=>9, "Chiang Mai"=>10, "Chiang Rai"=>11, "Chon Buri"=>12, "Chumphon"=>13, "Kalasin"=>14, "Kamphaeng Phet"=>15, "Kanchanaburi"=>16, "Khon Kaen"=>17, "Krabi"=>18, "Lampang"=>19, "Lamphun"=>20, "Loei"=>21, "Lop Buri"=>22, "Mae Hong Son"=>23, "Maha Sarakham"=>24, "Mukdahan"=>25, "Nakhon Nayok"=>26, "Nakhon Pathom"=>27, "Nakhon Phanom"=>28, "Nakhon Ratchasima"=>29, "Nakhon Sawan"=>30, "Nakhon Si Thammarat"=>31, "Nan"=>32, "Narathiwat"=>33, "Nong Bua Lamphu"=>34, "Nong Khai"=>35, "Nonthaburi"=>36, "Pathum Thani"=>37, "Pattani"=>38, "Phangnga"=>39, "Phatthalung"=>40, "Phayao"=>41, "Phetchabun"=>42, "Phetchaburi"=>43, "Phichit"=>44, "Phitsanulok"=>45, "Phra Nakhon Si Ayutthaya"=>46, "Phrae"=>47, "Phuket"=>48, "Prachin Buri"=>49, "Prachuap Khiri Khan"=>50, "Ranong"=>51, "Ratchaburi"=>52, "Rayong"=>53, "Roi Et"=>54, "Sa Kaeo"=>55, "Sakon Nakhon"=>56, "Samut Prakan"=>57, "Samut Sakhon"=>58, "Samut Songkhram"=>59, "Sara Buri"=>60, "Satun"=>61, "Sing Buri"=>62, "Sisaket"=>63, "Songkhla"=>64, "Sukhothai"=>65, "Suphan Buri"=>66, "Surat Thani"=>67, "Surin"=>68, "Tak"=>69, "Trang"=>70, "Trat"=>71, "Ubon Ratchathani"=>72, "Udon Thani"=>73, "Uthai Thani"=>74, "Uttaradit"=>75, "Yala"=>76, "Yasothon"=>77}, scope: true
+
 end
-
-
-
-
-    # Province.create!(:name => 'Bangkok')
-    # Province.create!(:name => 'Amnat Charoen')
-    # Province.create!(:name => 'Ang Thong')
-    # Province.create!(:name => 'Beung Kan')
-    # Province.create!(:name => 'Buriram')
-    # Province.create!(:name => 'Chachoengsao')
-    # Province.create!(:name => 'Chai Nat')
-    # Province.create!(:name => 'Chaiyaphum')
-    # Province.create!(:name => 'Chanthaburi')
-    # Province.create!(:name => 'Chiang Mai')
-    # Province.create!(:name => 'Chiang Rai')
-    # Province.create!(:name => 'Chon Buri')
-    # Province.create!(:name => 'Chumphon')
-    # Province.create!(:name => 'Kalasin')
-    # Province.create!(:name => 'Kamphaeng Phet')
-    # Province.create!(:name => 'Kanchanaburi')
-    # Province.create!(:name => 'Khon Kaen')
-    # Province.create!(:name => 'Krabi')
-    # Province.create!(:name => 'Lampang')
-    # Province.create!(:name => 'Lamphun')
-    # Province.create!(:name => 'Loei')
-    # Province.create!(:name => 'Lop Buri')
-    # Province.create!(:name => 'Mae Hong Son')
-    # Province.create!(:name => 'Maha Sarakham')
-    # Province.create!(:name => 'Mukdahan')
-    # Province.create!(:name => 'Nakhon Nayok')
-    # Province.create!(:name => 'Nakhon Pathom')
-    # Province.create!(:name => 'Nakhon Phanom')
-    # Province.create!(:name => 'Nakhon Ratchasima')
-    # Province.create!(:name => 'Nakhon Sawan')
-    # Province.create!(:name => 'Nakhon Si Thammarat')
-    # Province.create!(:name => 'Nan')
-    # Province.create!(:name => 'Narathiwat')
-    # Province.create!(:name => 'Nong Bua Lamphu')
-    # Province.create!(:name => 'Nong Khai')
-    # Province.create!(:name => 'Nonthaburi')
-    # Province.create!(:name => 'Pathum Thani')
-    # Province.create!(:name => 'Pattani')
-    # Province.create!(:name => 'Phangnga')
-    # Province.create!(:name => 'Phatthalung')
-    # Province.create!(:name => 'Phayao')
-    # Province.create!(:name => 'Phetchabun')
-    # Province.create!(:name => 'Phetchaburi')
-    # Province.create!(:name => 'Phichit')
-    # Province.create!(:name => 'Phitsanulok')
-    # Province.create!(:name => 'Phra Nakhon Si Ayutthaya')
-    # Province.create!(:name => 'Phrae')
-    # Province.create!(:name => 'Phuket')
-    # Province.create!(:name => 'Prachin Buri')
-    # Province.create!(:name => 'Prachuap Khiri Khan')
-    # Province.create!(:name => 'Ranong')
-    # Province.create!(:name => 'Ratchaburi')
-    # Province.create!(:name => 'Rayong')
-    # Province.create!(:name => 'Roi Et')
-    # Province.create!(:name => 'Sa Kaeo')
-    # Province.create!(:name => 'Sakon Nakhon')
-    # Province.create!(:name => 'Samut Prakan')
-    # Province.create!(:name => 'Samut Sakhon')
-    # Province.create!(:name => 'Samut Songkhram')
-    # Province.create!(:name => 'Sara Buri')
-    # Province.create!(:name => 'Satun')
-    # Province.create!(:name => 'Sing Buri')
-    # Province.create!(:name => 'Sisaket')
-    # Province.create!(:name => 'Songkhla')
-    # Province.create!(:name => 'Sukhothai')
-    # Province.create!(:name => 'Suphan Buri')
-    # Province.create!(:name => 'Surat Thani')
-    # Province.create!(:name => 'Surin')
-    # Province.create!(:name => 'Tak')
-    # Province.create!(:name => 'Trang')
-    # Province.create!(:name => 'Trat')
-    # Province.create!(:name => 'Ubon Ratchathani')
-    # Province.create!(:name => 'Udon Thani')
-    # Province.create!(:name => 'Uthai Thani')
-    # Province.create!(:name => 'Uttaradit')
-    # Province.create!(:name => 'Yala')
-    # Province.create!(:name => 'Yasothon')
