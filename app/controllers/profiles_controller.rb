@@ -46,11 +46,11 @@ class ProfilesController < ApplicationController
     }]
 
     @member_profiles = {
-      "birthday" => current_member.get_birthday,
-      "gender" => current_member.get_gender,
-      "province" => current_member.get_province,
-      "interests" => current_member.get_interests,
-      "salary" => current_member.get_salary
+      "birthday" => @current_member.get_birthday,
+      "gender" => @current_member.get_gender,
+      "province" => @current_member.get_province,
+      "interests" => @current_member.get_interests,
+      "salary" => @current_member.get_salary
     }
   end
 
