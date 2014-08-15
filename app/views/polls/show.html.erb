@@ -42,7 +42,7 @@
           <h3 class="text-primary">Choice Detail:</h3>
           <dl class="dl-horizontal">
             <% @poll.cached_choices.each do |choice| %>
-              <dt><%= choice.answer %>: </dt><dd><%= choice.vote %> vote</dd>
+              <dt>(<%= choice.id %>) <%= choice.answer %>: </dt><dd><%= choice.vote %> vote</dd>
               <% @choice_data_chart << [choice.answer, choice.vote] %>
             <% end %>
           </dl>

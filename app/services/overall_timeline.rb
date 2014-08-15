@@ -237,6 +237,7 @@ class OverallTimeline
         else
           poll_nonseries << poll_member.poll
           nonseries_shared << not_shared
+          count_feeded_load(poll_member.poll)
         end
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
@@ -263,6 +264,10 @@ class OverallTimeline
     else
       Hash["in" => "Friends & Following"]
     end
+  end
+
+  def count_feeded_load(poll)
+    poll.update_columns(loadedfeed_count: poll.loadedfeed_count + 1) if (poll.member_type == "Company" || poll.member_type == "Brand")
   end
 
   def serailize_group_detail_as_json(poll_id)

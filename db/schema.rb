@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140814073646) do
+ActiveRecord::Schema.define(version: 20140815055359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -501,31 +501,32 @@ ActiveRecord::Schema.define(version: 20140814073646) do
   create_table "polls", force: true do |t|
     t.integer  "member_id"
     t.string   "title"
-    t.boolean  "public",         default: false
-    t.integer  "vote_all",       default: 0
+    t.boolean  "public",           default: false
+    t.integer  "vote_all",         default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "photo_poll"
     t.datetime "expire_date"
-    t.integer  "view_all",       default: 0
-    t.datetime "start_date",     default: '2014-02-03 15:36:16'
-    t.boolean  "series",         default: false
+    t.integer  "view_all",         default: 0
+    t.datetime "start_date",       default: '2014-02-03 15:36:16'
+    t.boolean  "series",           default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
     t.integer  "campaign_id"
-    t.integer  "vote_all_guest", default: 0
-    t.integer  "view_all_guest", default: 0
-    t.integer  "favorite_count", default: 0
-    t.integer  "share_count",    default: 0
-    t.integer  "recurring_id",   default: 0
+    t.integer  "vote_all_guest",   default: 0
+    t.integer  "view_all_guest",   default: 0
+    t.integer  "favorite_count",   default: 0
+    t.integer  "share_count",      default: 0
+    t.integer  "recurring_id",     default: 0
     t.string   "in_group_ids"
     t.string   "qrcode_key"
     t.integer  "type_poll"
-    t.integer  "report_count",   default: 0
-    t.integer  "status_poll",    default: 0
-    t.boolean  "allow_comment",  default: true
-    t.integer  "comment_count",  default: 0
+    t.integer  "report_count",     default: 0
+    t.integer  "status_poll",      default: 0
+    t.boolean  "allow_comment",    default: true
+    t.integer  "comment_count",    default: 0
     t.string   "member_type"
+    t.integer  "loadedfeed_count", default: 0
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
