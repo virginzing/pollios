@@ -101,8 +101,6 @@ class Authentication
     @member = Member.where(email: email).first_or_create do |member|
       member.fullname = name
       member.email = email
-      member.birthday = birthday
-      member.gender = gender.to_i
       member.member_type = member_type
       member.auth_token = generate_auth_token
       member.save!
