@@ -26,6 +26,16 @@
               <label class="textarea">
                 <%= f.input :description, label: false, input_html: { autofocus: "autofocus"}, required: false %>
               </label>
+              <div class="onoffswitch-container" style="margin-left: 0px;">
+                <span class="onoffswitch-title">Allow Suggest</span> 
+                <span class="onoffswitch">
+                  <input type="checkbox" class="onoffswitch-checkbox" name="poll_series[allow_comment]" id="autoopen" checked>
+                  <label class="onoffswitch-label" for="autoopen"> 
+                    <span class="onoffswitch-inner" data-swchon-text="ON" data-swchoff-text="OFF"></span> 
+                    <span class="onoffswitch-switch"></span>
+                  </label> 
+                </span> 
+              </div>
             </section>
 
             <section class="col col-2">

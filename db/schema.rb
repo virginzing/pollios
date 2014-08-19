@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819073713) do
+ActiveRecord::Schema.define(version: 20140819094253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -608,6 +608,17 @@ ActiveRecord::Schema.define(version: 20140819073713) do
   add_index "share_polls", ["member_id"], name: "index_share_polls_on_member_id", using: :btree
   add_index "share_polls", ["poll_id"], name: "index_share_polls_on_poll_id", using: :btree
   add_index "share_polls", ["shared_group_id"], name: "index_share_polls_on_shared_group_id", using: :btree
+
+  create_table "suggests", force: true do |t|
+    t.integer  "poll_series_id"
+    t.integer  "member_id"
+    t.text     "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "suggests", ["member_id"], name: "index_suggests_on_member_id", using: :btree
+  add_index "suggests", ["poll_series_id"], name: "index_suggests_on_poll_series_id", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

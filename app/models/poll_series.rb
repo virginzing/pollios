@@ -6,6 +6,7 @@ class PollSeries < ActiveRecord::Base
   belongs_to :campaign
   
   has_many :polls, dependent: :destroy
+  has_many :suggests, dependent: :destroy
 
   has_many :poll_series_tags, dependent: :destroy
   has_many :tags, through: :poll_series_tags, source: :tag
@@ -66,6 +67,7 @@ class PollSeries < ActiveRecord::Base
 
       if @votes.present?
         increment!(:vote_all)
+        poll_series.suggests.create!(member_id: member.id, message: params[:suggest])
         Activity.create_activity_poll_series(member, poll_series, 'Vote')
       end
       @votes

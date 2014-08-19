@@ -84,6 +84,7 @@ class PollSeriesController < ApplicationController
     @poll_series = current_member.poll_series.new(poll_series_params)
     @poll_series.expire_date = Time.now + poll_series_params["expire_within"].to_i.days
     @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
+    @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
 
     if current_member.company?
       is_public = false
@@ -112,7 +113,6 @@ class PollSeriesController < ApplicationController
     end
 
     puts "error: #{@poll_series.errors.full_messages}"
-
   end
 
   def destroy
@@ -130,10 +130,10 @@ class PollSeriesController < ApplicationController
   end
 
   def vote_params
-    params.permit(:id, :member_id, :answer => [:id, :choice_id])
+    params.permit(:id, :member_id, :suggest, :answer => [:id, :choice_id])
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end
