@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_your_group
-    your_group = @current_member.get_group_active
+    your_group = @current_member.cached_get_group_active
     @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 

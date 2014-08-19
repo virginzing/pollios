@@ -13,7 +13,7 @@ json.voted_detail @current_member.list_voted_questionnaire?(poll.poll_series)
 json.allow_comment poll.poll_series.allow_comment
 json.comment_count poll.poll_series.comment_count
 json.campaign poll.get_campaign # under development
-json.poll_within Hash["in" => "Public"]
+json.poll_within poll.get_within(@group_by_name, params[:action])
 
 # json.poll poll.find_poll_series(poll.member_id, poll.poll_series_id) do |poll|
 #   json.id poll.id

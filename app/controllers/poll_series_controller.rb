@@ -5,6 +5,8 @@ class PollSeriesController < ApplicationController
   before_action :set_current_member, only: [:vote, :detail]
   before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail]
   before_action :load_resource_poll_feed, only: [:detail]
+  before_action :get_your_group, only: [:detail]
+
   def generate_qrcode
     # qrurl = PollSeries.includes(:polls).find(params[:id]).as_json().to_json
     # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)

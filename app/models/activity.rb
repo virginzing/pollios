@@ -166,7 +166,7 @@ class Activity
         member_id: @poll_series.member.id,
         name: @poll_series.member.fullname
       },
-      authority: AUTHORITY[:public],
+      authority: check_authority_poll_series,
       action: ACTION[:vote],
       type: TYPE[:poll],
       activity_at: Time.zone.now.to_i
@@ -261,6 +261,18 @@ class Activity
   def self.check_authority_poll
     if @poll.in_group_ids == '0' ## not in group
       if @poll.public
+        AUTHORITY[:public]
+      else
+        AUTHORITY[:friend_following]
+      end
+    else
+      AUTHORITY[:group]
+    end
+  end
+
+  def self.check_authority_poll_series
+    if @poll_series.in_group_ids == '0' ## not in group
+      if @poll_series.public
         AUTHORITY[:public]
       else
         AUTHORITY[:friend_following]
