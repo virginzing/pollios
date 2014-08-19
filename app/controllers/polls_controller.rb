@@ -31,13 +31,13 @@ class PollsController < ApplicationController
   respond_to :json
 
   def poll_latest
-    @poll_latest = Poll.where(member_id: @current_member.id).first
+    @poll_latest = Poll.where(member_id: @current_member.id, series: false).first
     @choice_poll_latest = []
     render layout: false
   end
 
   def poll_popular
-    @poll_popular = Poll.where("member_id = #{@current_member.id} AND vote_all != 0").order("vote_all desc").limit(5).sample(5).first
+    @poll_popular = Poll.where("member_id = #{@current_member.id} AND vote_all != 0 AND series = 'f'").order("vote_all desc").limit(5).sample(5).first
     @choice_poll_popular = []
     render layout: false
   end

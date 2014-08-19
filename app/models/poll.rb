@@ -541,9 +541,9 @@ class Poll < ActiveRecord::Base
               end
               # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 
-              VoteStats.create_vote_stats(find_poll)
+              VoteStats.create_vote_stats(find_poll) unless find_poll.series
               
-              Activity.create_activity_poll(member, find_poll, 'Vote')
+              Activity.create_activity_poll(member, find_poll, 'Vote') unless find_poll.series
 
               Rails.cache.delete([member_id, 'my_voted'])
               Rails.cache.delete([find_poll.class.name, find_poll.id])

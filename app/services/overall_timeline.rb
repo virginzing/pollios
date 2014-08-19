@@ -48,8 +48,8 @@ class OverallTimeline
     @options[:reward].presence || "1"
   end
 
-  def my_vote_ids
-    @poll_ids_with_voted ||= Member.voted_polls.collect { |e| e.first }
+  def my_vote_questionnaire_ids
+    @poll_ids_with_voted ||= Member.voted_polls.select{|e| e[3] != 0 }.collect{|e| e[0] }
   end
 
   def your_friend_ids
@@ -102,7 +102,6 @@ class OverallTimeline
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
-    # new_poll_my_vote = filter_my_vote.eql?("1") ? my_vote_ids : [0]
 
     # new_my_poll = filter_my_poll.eql?("1") ? member_id : 0
     # new_member_id = member_id
@@ -124,10 +123,9 @@ class OverallTimeline
         new_find_poll_in_my_group)
 
     # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
-    # query = query.where("poll_members.poll_id NOT IN (?)", my_vote_ids) unless filter_my_vote.eql?("1")
     # query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
     # query = query.where("poll")
-
+    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
     query = query.limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)

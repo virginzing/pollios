@@ -26,13 +26,11 @@ class PollSeriesController < ApplicationController
 
   def detail
     # Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
-    # @expired = @poll.expire_date < Time.now
-    # @voted = @current_member.list_voted?(@poll)
   end
 
   def vote
     puts "#{vote_params}"
-    @votes = @poll_series.vote_questionnaire(vote_params, @current_member)
+    @votes = @poll_series.vote_questionnaire(vote_params, @current_member, @poll_series)
   end
 
   def index

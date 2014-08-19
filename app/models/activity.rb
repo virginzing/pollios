@@ -24,6 +24,21 @@ class Activity
     @find_activity
   end
 
+  def self.create_activity_poll_series(member, poll_series, action)
+    @member = member
+    @poll_series = poll_series
+    @action = action
+
+    @hash_activity = manange_action_with_poll_series
+
+    @find_activity = member_find_by_activity
+
+    update_activity
+
+    @find_activity
+
+  end
+
   def self.create_activity_friend(member, friend, action)
     @member = member
     @friend = friend
@@ -81,22 +96,7 @@ class Activity
 
   def self.manange_action_with_poll
     if @action == ACTION[:vote]
-      {
-        poll: {
-          id: @poll.id,
-          title: @poll.title,
-          created_at: @poll.created_at.to_i,
-          public: @poll.public
-        },
-        creator: {
-          member_id: @poll.member.id,
-          name: @poll.member.fullname
-        },
-        authority: check_authority_poll,
-        action: ACTION[:vote],
-        type: TYPE[:poll],
-        activity_at: Time.zone.now.to_i
-      }
+      poll_normal
     elsif @action == ACTION[:create]
       {
         poll: {
@@ -116,7 +116,8 @@ class Activity
           id: @poll.id,
           title: @poll.title,
           created_at: @poll.created_at.to_i,
-          public: @poll.public
+          public: @poll.public,
+          series: @poll.series
         },
         authority: check_authority_poll,
         action: ACTION[:share],
@@ -125,6 +126,53 @@ class Activity
       }
     end
   end
+
+  def self.manange_action_with_poll_series
+    if @action == ACTION[:vote]
+      poll_questionnnaire
+    end
+  end
+
+  def self.poll_normal
+    {
+      poll: {
+        id: @poll.id,
+        title: @poll.title,
+        created_at: @poll.created_at.to_i,
+        public: @poll.public,
+        series: @poll.series
+      },
+      creator: {
+        member_id: @poll.member.id,
+        name: @poll.member.fullname
+      },
+      authority: check_authority_poll,
+      action: ACTION[:vote],
+      type: TYPE[:poll],
+      activity_at: Time.zone.now.to_i
+    }
+  end
+
+  def self.poll_questionnnaire
+    {
+      poll: {
+        id: @poll_series.id,
+        title: @poll_series.description,
+        created_at: @poll_series.created_at.to_i,
+        public: @poll_series.public,
+        series: true
+      },
+      creator: {
+        member_id: @poll_series.member.id,
+        name: @poll_series.member.fullname
+      },
+      authority: AUTHORITY[:public],
+      action: ACTION[:vote],
+      type: TYPE[:poll],
+      activity_at: Time.zone.now.to_i
+    }
+  end
+
 
   def self.manange_action_with_friend
     if @action == ACTION[:become_friend]
