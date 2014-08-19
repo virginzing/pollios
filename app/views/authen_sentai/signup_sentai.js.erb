@@ -1,6 +1,7 @@
 $.signup = <%= raw @signup %>;
 $.waiting = <%= raw @waiting || false %>;
 $.signup_company = <%= raw @signup_company || false %>;
+$.brand = <%= raw @auth.approve_brand || false %>;
 
 if ($.signup) {
   handleSignupSuccess();
@@ -34,7 +35,11 @@ function handleSignupError() {
 }
 
 function handleSignupSuccess() {
-  window.location.href="/dashboard"
+  if ($.brand) {
+    window.location.href="<%= commercials_path %>"
+  } else {
+    window.location.href="/dashboard"
+  }
 }
 
 function handleActivate() {

@@ -98,7 +98,7 @@ class AuthenSentaiController < ApplicationController
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{@response}"
   	respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "address" => signup_params["address"] ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"] ]))
   		if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
@@ -107,6 +107,7 @@ class AuthenSentaiController < ApplicationController
           # session[:member_id] = member.id
           flash[:success] = "Sign up sucessfully."
           @signup = true
+          
           wants.html { redirect_to dashboard_path }
           wants.json
           wants.js
@@ -221,7 +222,7 @@ class AuthenSentaiController < ApplicationController
     end
 
 	  def signup_params
-	    params.permit(:email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address)
+	    params.permit(:approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address)
 	  end
 
 	  def update_profile_params

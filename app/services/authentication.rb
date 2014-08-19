@@ -79,6 +79,11 @@ class Authentication
     @params["member_type"] || @default_member_type
   end
 
+  def approved_brand
+    approve_brand = @params["approve_brand"]
+    approve_brand.present? ? true : false
+  end
+
   def address
     @params["address"]
   end
@@ -102,6 +107,7 @@ class Authentication
       member.fullname = name
       member.email = email
       member.member_type = member_type
+      member.approve_brand = approved_brand
       member.auth_token = generate_auth_token
       member.save!
       @new_member = true
@@ -182,6 +188,6 @@ class Authentication
   end
 
   def check_activate_account
-    member.bypass_invite || member.member_invite_codes.present? || member.brand?
+    member.bypass_invite || member.member_invite_codes.present? || member.brand? || member.company?
   end
 end

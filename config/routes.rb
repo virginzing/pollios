@@ -112,7 +112,8 @@ Pollios::Application.routes.draw do
     post ':member_id/purchase_point', to: 'purchase#add_point'
     post ':member_id/subscribe', to: 'purchase#subscribe'
     get ':member_id/load_form',  to: 'profiles#load_form'
-    post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'          
+    post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'
+    post ':member_id/unrecomment',  to: 'members#unrecomment'          
   end
 
   scope 'poll' do
@@ -183,6 +184,7 @@ Pollios::Application.routes.draw do
     
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
     resources :invites
+    resources :commercials
   end
 
   get '/hashtag',  to: 'polls#hashtag'

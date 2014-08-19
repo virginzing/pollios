@@ -1,0 +1,128 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-building"></i> Commercials <span>&gt; New</span></h1>
+  </div>
+  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+<!--     <ul id="sparks" class="">
+      <li class="sparks-info">
+        <h5> My Income <span class="txt-color-blue">$47,171</span></h5>
+        <div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm"><canvas width="89" height="26" style="display: inline-block; width: 89px; height: 26px; vertical-align: top;"></canvas></div>
+      </li>
+      <li class="sparks-info">
+        <h5> Site Traffic <span class="txt-color-purple"><i class="fa fa-arrow-circle-up"></i>&nbsp;45%</span></h5>
+        <div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm"><canvas width="82" height="26" style="display: inline-block; width: 82px; height: 26px; vertical-align: top;"></canvas></div>
+      </li>
+      <li class="sparks-info">
+        <h5> Site Orders <span class="txt-color-greenDark"><i class="fa fa-shopping-cart"></i>&nbsp;2447</span></h5>
+        <div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm"><canvas width="82" height="26" style="display: inline-block; width: 82px; height: 26px; vertical-align: top;"></canvas></div>
+      </li>
+    </ul> -->
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-offset-3 col-md-offset-3 col-xs-12 col-sm-12 col-md-5 col-lg-5">
+    <div class="well no-padding">
+      <form action="/authen/signup_sentai" method="post" id="smart-form-register" class="smart-form client-form" data-remote="true" enctype="multipart/form-data">
+        <header>
+          Registration
+        </header>
+          <input type="input" name="member_type" value="2" class="hidden">
+          <input type="input" name="approve_brand" value="true" class="hidden">
+        <fieldset>
+          <section>
+            <label class="input"> <i class="icon-append fa fa-user"></i>
+              <input type="text" name="fullname" placeholder="Fullname">
+              <b class="tooltip tooltip-bottom-right">Needed to show on app</b> </label>
+          </section>
+
+          <section>
+            <label class="input"> <i class="icon-append fa fa-envelope"></i>
+              <input type="email" name="email" placeholder="Email address">
+              <b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
+          </section>
+
+          <section>
+            <label class="input"> <i class="icon-append fa fa-lock"></i>
+              <input type="password" name="password" placeholder="Password" id="password">
+              <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
+          </section>
+
+          <section>
+            <label class="input"> <i class="icon-append fa fa-lock"></i>
+              <input type="password" name="passwordConfirm" placeholder="Confirm password">
+              <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
+          </section>
+        </fieldset>
+
+        <footer>
+          <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
+            Create
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $( document ).ajaxStart(function() {
+    $("em.error").remove();
+    NProgress.start();
+  }).ajaxSuccess(function() {
+    NProgress.done();
+  });
+
+  // Validation
+  $(function() {
+    // Validation
+    $("#smart-form-register").validate({
+
+      // Rules for form validation
+      rules : {
+        fullname : {
+          required : true
+        },
+        email : {
+          required : true,
+          email : true
+        },
+        password : {
+          required : true,
+          minlength : 3,
+          maxlength : 20
+        },
+        passwordConfirm : {
+          required : true,
+          minlength : 3,
+          maxlength : 20,
+          equalTo : '#password'
+        }
+      },
+
+      // Messages for form validation
+      messages : {
+        fullname : {
+          required : 'Please enter your fullname'
+        },
+        email : {
+          required : 'Please enter your email address',
+          email : 'Please enter a VALID email address'
+        },
+        password : {
+          required : 'Please enter your password'
+        },
+        passwordConfirm : {
+          required : 'Please enter your password one more time',
+          equalTo : 'Please enter the same password as above'
+        }
+      },
+
+      // Do not change code below
+      errorPlacement : function(error, element) {
+        error.insertAfter(element.parent());
+      }
+    });
+
+  });
+</script>

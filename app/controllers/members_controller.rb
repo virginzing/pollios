@@ -2,7 +2,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:recommendations, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:unrecomment, :recommendations, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
   before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
@@ -23,6 +23,23 @@ class MembersController < ApplicationController
 
     @mutual_friends = @init_recommendation.get_member_ids_from_mutual_and_group
     # puts "#{@mutual_friend.map(&:id)}"
+  end
+
+  def unrecomment
+    friend_id = params[:friend_id]
+    respond_to do |format|
+      if friend_id.present?
+        @current_member.member_un_recomments.where(unrecomment_id: friend_id).first_or_create! do |m|
+          m.member_id = @current_member.id
+          m.unrecomment_id = friend_id
+          m.save
+          Rails.cache.delete([ @current_member.id , 'unrecomment' ])
+        end
+        format.json { render json: Hash["response_status" => "OK", "response_message" => "Success"] }  
+      else
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Fail"] } 
+      end
+    end
   end
 
   def detail_friend

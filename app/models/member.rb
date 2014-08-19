@@ -20,6 +20,8 @@ class Member < ActiveRecord::Base
   include MemberHelper
 
   has_many :member_invite_codes, dependent: :destroy
+  has_many :member_un_recomments, dependent: :destroy
+
   has_one :company, dependent: :destroy
 
   has_many :comments, dependent: :destroy
@@ -343,6 +345,12 @@ class Member < ActiveRecord::Base
   def cached_watched
     Rails.cache.fetch([ self, "watcheds" ]) do
       watcheds.to_a
+    end
+  end
+
+  def cached_get_unrecomment
+    Rails.cache.fetch([self.id, 'unrecomment']) do
+      member_un_recomments.to_a
     end
   end
 
