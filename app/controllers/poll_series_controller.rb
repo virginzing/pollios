@@ -2,9 +2,9 @@ class PollSeriesController < ApplicationController
   include PollSeriesHelper
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new, :normal, :same_choice]
-  before_action :set_current_member, only: [:vote]
-  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode]
-
+  before_action :set_current_member, only: [:vote, :detail]
+  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail]
+  before_action :load_resource_poll_feed, only: [:detail]
   def generate_qrcode
     # qrurl = PollSeries.includes(:polls).find(params[:id]).as_json().to_json
     # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
@@ -22,6 +22,12 @@ class PollSeriesController < ApplicationController
       format.gif  { render :qrcode => qrurl }
       format.jpeg { render :qrcode => qrurl }
     end
+  end
+
+  def detail
+    # Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
+    # @expired = @poll.expire_date < Time.now
+    # @voted = @current_member.list_voted?(@poll)
   end
 
   def vote

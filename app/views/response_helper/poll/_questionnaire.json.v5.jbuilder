@@ -8,7 +8,7 @@ json.title poll.poll_series.description
 json.series poll.series
 json.tags poll.poll_series.cached_tags
 json.is_public poll.poll_series.public
-json.type_poll poll.type_poll
+json.type_poll poll.poll_series.type_poll
 json.voted_detail @current_member.list_voted_questionnaire?(poll)
 json.allow_comment poll.poll_series.allow_comment
 json.comment_count poll.poll_series.comment_count

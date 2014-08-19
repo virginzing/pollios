@@ -44,6 +44,7 @@ Pollios::Application.routes.draw do
   scope 'questionnaire' do
     post ':id/vote',        to: 'poll_series#vote'
     get ':id/qrcode',       to: 'poll_series#generate_qrcode'
+    get ':id/detail',       to: 'poll_series#detail'
   end
 
   scope 'friend' do
