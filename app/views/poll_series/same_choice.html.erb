@@ -1,101 +1,133 @@
-<% breadcrumb :questionnaire, @poll_series %>
-<% breadcrumb :same_choice_questionnaire %>
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jarviswidget" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
 
-<div class="portlet box red">
-  <div class="portlet-title">
-    <div class="caption"><i class="icon-reorder"></i>Same Choice</div>
-    <div class="tools">
-      <a href="javascript:;" class="collapse"></a>
-      <a href="javascript:;" class="remove"></a>
+      <header>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2><strong>Form</strong></h2>       
+        
+      </header>
+      <!-- widget div-->
+      <div>
+    
+        <!-- widget content -->
+        <div class="widget-body">
+          <%= simple_nested_form_for @poll_series, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 0 }, as: :hidden %>
+          <header>
+            Questionnaire Detail 
+          </header>
+
+          <fieldset>
+            
+            <section class="col col-10">
+              <label class="label">Description</label>
+              <label class="textarea">
+                <%= f.input :description, label: false, input_html: { autofocus: "autofocus"}, required: false %>
+              </label>
+            </section>
+
+            <section class="col col-2">
+              <label class="label">Expire with in</label>
+              <label class="select">
+                <%= f.input :expire_within, collection: 1..20, label: false, include_blank: false %>
+                <i></i>
+              </label>
+            </section>
+
+          </fieldset>
+
+          <fieldset>
+            <section class="col col-8">
+            <div class="panel panel-blue">
+              <div class="panel-heading">
+                <h4 class="panel-title">List of question</h4>
+              </div>
+
+              <div class="panel-body">
+
+                <div class="panel-body-row">
+                <%= f.fields_for :polls do |poll_form| %>
+                  <%= render 'poll_fields',  :f => poll_form %>     
+                <% end %>
+                <%= f.link_to_add "More Poll", :polls, class: 'btn btn-primary add_new_poll' %>
+                </div>
+              </div>
+            </div>
+            </section>
+
+            <section class="col col-4">
+              <div class="panel panel-blue">
+                <div class="panel-heading">
+                  <h4 class="panel-title">Choices</h4>
+                </div>
+
+                <div class="panel-body">
+                  <div class="panel-body-row">
+                  <fieldset>
+                    <% 5.times do |i| %>
+                      <section>
+                        <label class="input"> <i class="icon-append fa fa-pencil"></i>
+                          <input type="text" name="same_choices[]" placeholder="" value="<%= i+1 %>">
+                        </label>
+                      </section>
+                    <% end %>
+                  </fieldset>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </fieldset>
+
+          <header>
+            Config
+          </header>
+          
+          <fieldset>
+          
+            <section>
+              <label class="label">Tag</label>
+              <div class="form-group">
+              <%= f.input :tag_tokens, label: false, :input_html => { :class => "tag_token", :id => "tag_list_normal" } %>
+              </div>
+            </section>
+
+            <section>
+              <label class="label">Campaign</label>
+              <label class="select">
+                <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+              </label>
+            </section>
+          
+          </fieldset>
+        
+
+          <footer>
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+            <button type="button" class="btn btn-default" onclick="window.history.back();">
+              Back
+            </button>
+          </footer>
+            <% end %>
+
+        </div>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      </div>
     </div>
   </div>
-
-  <div class="portlet-body form">
-    <%= simple_nested_form_for @poll_series, :html => { :multipart => true, class: "form-horizontal" } do |f| %>
-      <div class="form-body">
-        <h3 class="form-section">Same Choice Poll</h3>
-          <div class="row">
-            <div class="col-md-7">
-              <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 1 }, as: :hidden %>
-              <%= f.input :description, wrapper: :horizontal, input_html: { autofocus: "autofocus"}, required: false, input_html: { data: { 'validetta' => 'required' } } %>
-
-              <h4 class="form-section">Poll</h4>
-              <%= f.fields_for :polls do |poll_form| %>
-                <%= render 'poll_fields',  :f => poll_form %>    
-              <% end %>
-              <p><%= f.link_to_add "More Poll", :polls, class: 'btn btn-primary' %></p>
-
-              <h4 class="form-section">Choice</h4>
-                <div class="multi-field-wrapper">
-                  <div class="multi-fields">
-                  <% 2.times do %>
-                    <div class="multi-field">
-                      <div class="form-group string optional">
-                        <div class="label-hz col-md-2"><label class="string optional control-label">Choice</label></div>
-                        <div class="col-md-10">
-                          <input type="text" name="same_choices[]" class="string optional form-control form-choice-list" data-validetta="required">
-                        </div>
-                      </div>           
-                      <button type="button" class="remove-field btn btn-default">Remove</button>
-                    </div>
-                  <% end %>
-                  </div>
-                <div class="col-md-10 col-md-offset-2">
-                <button type="button" class="add-field btn btn-xs btn-default">More choice</button>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="col-md-5">
-              <%= f.input :tag_tokens, wrapper: :horizontal, :label => "Tag", :input_html => {:class => "tag_token", :id => "tag_list_normal" } %>
-              <div class="form-group">
-                <label class="control-label col-md-2">Campaign</label>
-                <div class="col-md-10">
-                  <%= f.select :campaign_id, Campaign.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
-                </div>
-              </div>
-
-              <%= f.input :expire_within, collection: 1..10,  wrapper: :horizontal, label: "Expire", include_blank: false, input_html: { class: "input-xsmall"} %>
-            </div>
-            
-          </div>
-      </div>
-
-      <div class="form-actions fluid">
-        <div class="row">
-           <div class="col-md-7">
-              <div class="col-md-offset-2 col-md-9">
-                 <button type="submit" class="btn blue"><i class="icon-ok"></i> Submit</button>
-                 <%= link_to 'Discard', poll_series_index_path, method: :get, class: 'btn default' %>                              
-              </div>
-           </div>
-           <div class="col-md-6">
-           </div>
-        </div>
-       </div>
-
-      <% end %>
-  </div>
-
-</div>
+</section>
 
 
-<script>
-$('.multi-field-wrapper').each(function() {
-    var $wrapper = $('.multi-fields', this);
-    $(".add-field", $(this)).click(function(e) {
-        $('.multi-field:last-child', $wrapper).clone(true).appendTo($wrapper).find('input').val('').focus();
-          $('.remove-field:last-child').get(-1).style.visibility='visible';
-    });
-    $('.multi-field .remove-field', $wrapper).click(function() {
-        if ($('.multi-field', $wrapper).length > 2)
-          $(this).parent('.multi-field').remove();
-    });
-});
+<script type="text/javascript">
+
   $(".remove_nested_fields")[0].style.visibility='hidden';
   $(".remove_nested_fields")[1].style.visibility='hidden';
-  $('.remove-field')[0].style.visibility='hidden';
-  $('.remove-field')[1].style.visibility='hidden';
-</script>
 
+</script>
