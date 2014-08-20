@@ -27,7 +27,7 @@ class PollSeriesController < ApplicationController
   end
 
   def detail
-    # Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
+    PollSeries.view_poll(@current_member, @poll_series)
   end
 
   def vote

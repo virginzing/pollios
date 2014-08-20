@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819094253) do
+ActiveRecord::Schema.define(version: 20140819110242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -292,6 +292,16 @@ ActiveRecord::Schema.define(version: 20140819094253) do
 
   add_index "history_view_guests", ["guest_id"], name: "index_history_view_guests_on_guest_id", using: :btree
   add_index "history_view_guests", ["poll_id"], name: "index_history_view_guests_on_poll_id", using: :btree
+
+  create_table "history_view_questionnaires", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_series_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "history_view_questionnaires", ["member_id"], name: "index_history_view_questionnaires_on_member_id", using: :btree
+  add_index "history_view_questionnaires", ["poll_series_id"], name: "index_history_view_questionnaires_on_poll_series_id", using: :btree
 
   create_table "history_views", force: true do |t|
     t.integer  "member_id"

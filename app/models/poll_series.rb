@@ -8,6 +8,7 @@ class PollSeries < ActiveRecord::Base
   has_many :polls, dependent: :destroy
   has_many :suggests, dependent: :destroy
 
+  has_many :history_view_questionnaires, dependent: :destroy
   has_many :poll_series_tags, dependent: :destroy
   has_many :tags, through: :poll_series_tags, source: :tag
 
@@ -57,6 +58,17 @@ class PollSeries < ActiveRecord::Base
     end
   end
 
+  def self.view_poll(member, poll_series)
+    member_id = member.id
+    poll_series_id = poll_series.id
+
+    used_to_view_qn = HistoryViewQuestionnaire.where(member_id: member_id, poll_series_id: poll_series_id).first_or_create do |hqn|
+      hqn.member_id = member_id
+      hqn.poll_series_id = poll_series_id
+      hqn.save!
+      poll_series.update_columns(view_all: poll_series.view_all + 1)
+    end
+  end
 
   def vote_questionnaire(params, member, poll_series)
     PollSeries.transaction do
