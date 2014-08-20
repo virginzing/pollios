@@ -167,40 +167,40 @@ class PollsController < ApplicationController
   # end
 
   def show
-    @group = current_member.company.group
-    member_group = @group.get_member_active
-
     @choice_data_chart = []
+    if current_member.company?
+      @group = current_member.company.group
+      member_group = @group.get_member_active
 
-    @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
-                  .select("members.*, history_votes.created_at as voted_at")
-                  .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+      @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
+                    .select("members.*, history_votes.created_at as voted_at")
+                    .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
 
-    @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
-    @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
+      @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
+      @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
 
 
-    @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
-                  .select("members.*, history_views.created_at as viewed_at")
-                  .where("history_views.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+      @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
+                    .select("members.*, history_views.created_at as viewed_at")
+                    .where("history_views.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
 
-    @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
-    @member_noviewed_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_viewed_poll.map(&:id))
+      @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
+      @member_noviewed_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_viewed_poll.map(&:id))
 
-    if member_group.count > 0
-      @percent_vote = ((@member_voted_poll.count * 100)/member_group.count).to_s
-      @percent_novote = ((@member_novoted_poll.count * 100)/member_group.count).to_s
+      if member_group.count > 0
+        @percent_vote = ((@member_voted_poll.count * 100)/member_group.count).to_s
+        @percent_novote = ((@member_novoted_poll.count * 100)/member_group.count).to_s
 
-      @percent_view = ((@member_viewed_poll.count * 100)/member_group.count).to_s
-      @percent_noview = ((@member_noviewed_poll.count * 100)/member_group.count).to_s
-    else
-      zero_percent = "0"
-      @percent_vote = zero_percent
-      @percent_novote = zero_percent
-      @percent_view = zero_percent
-      @percent_noview = zero_percent
+        @percent_view = ((@member_viewed_poll.count * 100)/member_group.count).to_s
+        @percent_noview = ((@member_noviewed_poll.count * 100)/member_group.count).to_s
+      else
+        zero_percent = "0"
+        @percent_vote = zero_percent
+        @percent_novote = zero_percent
+        @percent_view = zero_percent
+        @percent_noview = zero_percent
+      end
     end
-
   end
 
   def poke_dont_vote
