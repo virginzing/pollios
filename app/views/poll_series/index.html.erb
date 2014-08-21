@@ -59,8 +59,8 @@
                   <td><%= series.view_all %></td>
                   <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
                   <td><%= series.created_at %></td>
-                  <td><button data-toggle="modal" data-target="#myModal" onclick="showIFrame('/questionnaire/<%= series.id %>/qrcode.png', '<%= series.description %>')"><i class="fa fa-eye"></i></button></td>
-                  <td><%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> | <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                  <td><button data-toggle="modal" class="btn btn-primary" data-target="#myModal" onclick="showIFrame('/questionnaire/<%= series.id %>/qrcode.png', '<%= series.description %>')">Show</button></td>
+                  <td><!-- <%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> |--> <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>
                 </tr>
               <% end %>
             </tbody>

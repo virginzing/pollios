@@ -43,26 +43,16 @@ class PollsController < ApplicationController
   end
 
   def generate_qrcode
-
-    qrurl = QrcodeSerializer.new(Poll.find(params[:id])).as_json.to_json
-
-    # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
-    base64_qrcode = Base64.strict_encode64(qrurl)
-    @qrcode = URI.encode(base64_qrcode)
-
-    # puts "qrcode encode base64 => #{base64_qrcode}"
-    # puts "qrcode => #{qrurl}"
-
-    # respond_to do |format|
-    #   format.json
-    #   format.html
-    #   format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
-    #   format.png  { render :qrcode => base64_qrcode, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
-    #   format.gif  { render :qrcode => qrurl, :level => :h, :unit => 4, :color => 'FF5A5A' , :offset => 10 }
-    #   format.jpeg { render :qrcode => qrurl }
-    # end
-
-    render layout: false
+    @qr = QrcodeSerializer.new(Poll.find(params[:id])).as_json.to_json
+    puts "#{@qr}"
+    respond_to do |format|
+      format.json
+      format.html
+      format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
+      format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
+      format.gif  { render :qrcode => @qr }
+      format.jpeg { render :qrcode => @qr }
+    end
   end
 
   def set_last_update_poll
