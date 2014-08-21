@@ -224,7 +224,7 @@
           <h2><strong>No Vote</strong></h2>
           
           <div class="widget-toolbar">
-            <a href="<%= poke_dont_vote_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_all" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+            <a href="<%= poke_dont_vote_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_no_vote" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
             <i class="fa fa-bullhorn"></i>
             Poke All</a>
           </div>  
@@ -324,8 +324,7 @@
           <h2><strong>No View</strong></h2>
           
           <div class="widget-toolbar">
-            <a href="javascript:void(0);" class="btn btn-danger" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification">
-            <i class="fa fa-bullhorn"></i>
+            <a href="<%= poke_dont_view_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_no_view" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
             Poke All</a>
           </div>  
 
@@ -457,35 +456,28 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
-  $.poke_all = $('#poke_all[data-remote]');
 
-  $.poke_all.on('ajax:send', function(xhr) {
-    $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
-  }).on('ajax:success', function (data, status, xhr) {
-    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
+  function poke_something(poke_something) { 
+    poke_something.on('ajax:send', function(xhr) {
+      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    }).on('ajax:success', function (data, status, xhr) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+      $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
 
-  }).on('ajax:error', function (event, xhr, status) {
-    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    var json_response = JSON.parse(xhr.responseText);
-    handleErrorAddGroup(json_response.error_message);
+    }).on('ajax:error', function (event, xhr, status) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+      var json_response = JSON.parse(xhr.responseText);
+      handleErrorAddGroup(json_response.error_message);
+    });
+  }
 
-  });
-
+  $.poke_no_vote = $('#poke_no_vote[data-remote]');
   $.poke_view_no_vote = $('#poke_view_no_vote[data-remote]');
+  $.poke_no_view = $('#poke_no_view[data-remote]');
 
-  $.poke_view_no_vote.on('ajax:send', function(xhr) {
-    $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
-  }).on('ajax:success', function (data, status, xhr) {
-    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
-
-  }).on('ajax:error', function (event, xhr, status) {
-    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    var json_response = JSON.parse(xhr.responseText);
-    handleErrorAddGroup(json_response.error_message);
-
-  });
+  poke_something($.poke_no_vote);
+  poke_something($.poke_view_no_vote);
+  poke_something($.poke_no_view);
 
   function handleErrorAddGroup (error_message) {
     $.smallBox({

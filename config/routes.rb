@@ -120,6 +120,7 @@ Pollios::Application.routes.draw do
   scope 'poll' do
     get ':id/qrcode',       to: 'polls#generate_qrcode'
     post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
+    post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
     post 'poke_view_no_vote',  to: 'polls#poke_view_no_vote', as: :poke_view_no_vote
     post 'new_generate_qrcode',    to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll

@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
 
-  before_action :set_current_member, only: [:poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
+  before_action :set_current_member, only: [:poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
@@ -11,7 +11,7 @@ class PollsController < ApplicationController
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
-  before_action :set_poll, only: [:poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   
   before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, 
                 :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -231,6 +231,21 @@ class PollsController < ApplicationController
     end
   end
 
+  def poke_dont_view
+    respond_to do |format|
+      load_resoure_group
+      list_history_view_poll
+
+      if @member_noviewed_poll.length > 0
+        ApnPokePollWorker.new.perform(@current_member, @member_noviewed_poll, @poll)
+
+        format.json { render json: [], status: 200 }
+      else
+        format.json { render json: { error_message: "No" }, status: 403 }
+      end
+    end
+  end
+
   def poke_view_no_vote
     respond_to do |format|
       load_resoure_group
@@ -241,6 +256,8 @@ class PollsController < ApplicationController
       @member_viewed_no_vote_poll = @member_viewed_poll.select {|e| e unless member_voted_poll_ids.include?(e.id) }
 
       if @member_viewed_no_vote_poll.length > 0
+        ApnPokePollWorker.new.perform(@current_member, @member_viewed_no_vote_poll, @poll)
+
         format.json { render json: [], status: 200 }
       else
         format.json { render json: { error_message: "No" }, status: 403 }
