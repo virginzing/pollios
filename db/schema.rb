@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819110242) do
+ActiveRecord::Schema.define(version: 20140821032332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -505,6 +505,9 @@ ActiveRecord::Schema.define(version: 20140819110242) do
     t.string   "in_group_ids",   default: "0"
     t.boolean  "allow_comment",  default: true
     t.integer  "comment_count",  default: 0
+    t.boolean  "qr_only"
+    t.string   "qrcode_key"
+    t.boolean  "require_info"
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree
@@ -548,6 +551,8 @@ ActiveRecord::Schema.define(version: 20140819110242) do
     t.integer  "comment_count",    default: 0
     t.string   "member_type"
     t.integer  "loadedfeed_count", default: 0
+    t.boolean  "qr_only"
+    t.boolean  "require_info"
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree

@@ -48,7 +48,6 @@ class PollSeries < ActiveRecord::Base
     if self.in_group_ids != "0"
       in_group = true
     end
-
     PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: in_group)
   end
 
