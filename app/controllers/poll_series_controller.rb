@@ -86,7 +86,10 @@ class PollSeriesController < ApplicationController
     @poll_series = current_member.poll_series.new(poll_series_params)
     @poll_series.expire_date = Time.now + poll_series_params["expire_within"].to_i.days
     @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
+
     @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
+    @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
+    @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
 
     if current_member.company?
       is_public = false
@@ -136,6 +139,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :qr_only, :require_info, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

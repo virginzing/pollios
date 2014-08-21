@@ -505,9 +505,9 @@ ActiveRecord::Schema.define(version: 20140821032332) do
     t.string   "in_group_ids",   default: "0"
     t.boolean  "allow_comment",  default: true
     t.integer  "comment_count",  default: 0
-    t.boolean  "qr_only"
+    t.boolean  "qr_only",        default: true
     t.string   "qrcode_key"
-    t.boolean  "require_info"
+    t.boolean  "require_info",   default: true
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree
@@ -551,8 +551,8 @@ ActiveRecord::Schema.define(version: 20140821032332) do
     t.integer  "comment_count",    default: 0
     t.string   "member_type"
     t.integer  "loadedfeed_count", default: 0
-    t.boolean  "qr_only"
-    t.boolean  "require_info"
+    t.boolean  "qr_only",          default: false
+    t.boolean  "require_info",     default: false
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree

@@ -8,6 +8,10 @@
   margin-bottom: 15px;
 }
 
+.smart-form .toggle {
+  font-size: 11px !important;
+}
+
 section.dropzone-picture {
   margin: 20px;
 }
