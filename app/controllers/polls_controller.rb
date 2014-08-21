@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
 
-  before_action :set_current_member, only: [:poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
+  before_action :set_current_member, only: [:poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
@@ -11,7 +11,7 @@ class PollsController < ApplicationController
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
-  before_action :set_poll, only: [:poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   
   before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, 
                 :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -166,33 +166,45 @@ class PollsController < ApplicationController
   #   @series = @current_member.poll_series.paginate(page: params[:page])
   # end
 
+  def list_history_vote_poll
+    @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
+                  .select("members.*, history_votes.created_at as voted_at")
+                  .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @member_group_ids)
+
+    @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
+    @member_novoted_poll = Member.where("id IN (?)", @member_group_ids - @member_voted_poll.map(&:id))
+  end
+
+  def list_history_view_poll
+    @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
+                  .select("members.*, history_views.created_at as viewed_at")
+                  .where("history_views.poll_id = ? AND members.id IN (?)", @poll.id, @member_group_ids)
+
+    @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
+    @member_noviewed_poll = Member.where("id IN (?)", @member_group_ids - @member_viewed_poll.map(&:id))
+  end
+
   def show
     @choice_data_chart = []
     if current_member.company?
-      @group = current_member.company.group
-      member_group = @group.get_member_active
+      load_resoure_group
 
-      @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
-                    .select("members.*, history_votes.created_at as voted_at")
-                    .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+      list_history_vote_poll
 
-      @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
-      @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
+      list_history_view_poll
 
+      @member_view_but_no_vote = @member_viewed_poll.map(&:id)
 
-      @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
-                    .select("members.*, history_views.created_at as viewed_at")
-                    .where("history_views.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
+      member_voted_poll_ids ||= @member_voted_poll.map(&:id)
 
-      @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
-      @member_noviewed_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_viewed_poll.map(&:id))
+      @member_viewed_no_vote_poll = @member_viewed_poll.select {|e| e unless member_voted_poll_ids.include?(e.id) }
 
-      if member_group.count > 0
-        @percent_vote = ((@member_voted_poll.count * 100)/member_group.count).to_s
-        @percent_novote = ((@member_novoted_poll.count * 100)/member_group.count).to_s
+      if @member_group.count > 0
+        @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
+        @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
 
-        @percent_view = ((@member_viewed_poll.count * 100)/member_group.count).to_s
-        @percent_noview = ((@member_noviewed_poll.count * 100)/member_group.count).to_s
+        @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
+        @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
       else
         zero_percent = "0"
         @percent_vote = zero_percent
@@ -201,23 +213,34 @@ class PollsController < ApplicationController
         @percent_noview = zero_percent
       end
     end
+
   end
 
   def poke_dont_vote
     respond_to do |format|
-      @group = @current_member.company.group
-      member_group = @group.get_member_active
-
-      @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
-                    .select("members.*, history_votes.created_at as voted_at")
-                    .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @group.get_member_active.map(&:id))
-
-      @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
-      @member_novoted_poll = Member.where("id IN (?)", member_group.map(&:id) - @member_voted_poll.map(&:id))
+      load_resoure_group
+      list_history_vote_poll
 
       if @member_novoted_poll.length > 0
         ApnPokePollWorker.new.perform(@current_member, @member_novoted_poll, @poll)
 
+        format.json { render json: [], status: 200 }
+      else
+        format.json { render json: { error_message: "No" }, status: 403 }
+      end
+    end
+  end
+
+  def poke_view_no_vote
+    respond_to do |format|
+      load_resoure_group
+      list_history_vote_poll
+      list_history_view_poll
+
+      member_voted_poll_ids ||= @member_voted_poll.map(&:id)
+      @member_viewed_no_vote_poll = @member_viewed_poll.select {|e| e unless member_voted_poll_ids.include?(e.id) }
+
+      if @member_viewed_no_vote_poll.length > 0
         format.json { render json: [], status: 200 }
       else
         format.json { render json: { error_message: "No" }, status: 403 }
@@ -539,6 +562,12 @@ class PollsController < ApplicationController
 
   def json_request?
     request.format.json?
+  end
+
+  def load_resoure_group
+    @group = current_member.present? ? current_member.company.group : @current_member.company.group 
+    @member_group = @group.get_member_active
+    @member_group_ids = @member_group.map(&:id)
   end
 
 end
