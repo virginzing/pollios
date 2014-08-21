@@ -74,6 +74,8 @@ gem 'apn_on_rails', github: 'Nuttapon/apn_on_rails', branch: 'change_module_name
 
 gem 'rqrcode'
 gem 'rqrcode-rails3'
+gem 'rqrcode_png'
+
 gem "mini_magick"
 gem 'randumb'
 gem 'figaro'

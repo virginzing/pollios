@@ -19,6 +19,14 @@ class PollSeries < ActiveRecord::Base
   self.per_page = 10
 
   after_create :set_poll_series
+  after_create :generate_qrcode_key
+
+  def generate_qrcode_key
+    begin
+      self.qrcode_key = SecureRandom.hex(4)
+    end while PollSeries.exists?(qrcode_key: qrcode_key)
+    self.update(qrcode_key: qrcode_key)
+  end
 
   def tag_tokens=(tokens)
     puts "tokens => #{tokens}"

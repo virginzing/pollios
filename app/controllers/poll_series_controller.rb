@@ -8,26 +8,38 @@ class PollSeriesController < ApplicationController
   before_action :get_your_group, only: [:detail]
 
   def generate_qrcode
-    # qrurl = PollSeries.includes(:polls).find(params[:id]).as_json().to_json
-    # @qr = RQRCode::QRCode.new( @qrurl , :unit => 11, :level => :m , size: 30)
-    qrurl = QrcodeSerializer.new(PollSeries.find(params[:id]).polls.last).as_json.to_json
-    base64_qrcode = Base64.strict_encode64(qrurl)
-    @qrcode = URI.encode(base64_qrcode)
 
-    puts "qrcode json => #{base64_qrcode}"
+    @qr = QrcodeSerializer.new(PollSeries.find(params[:id])).as_json.to_json
+    # deflate = Zlib::Deflate.deflate(qrurl)
+    # base64_qrcode = Base64.urlsafe_encode64(deflate)
+
+    # qrcode = URI.encode(qrurl)
+
+    # @qr = RQRCode::QRCode.new( qrcode , :level => :l , size: 4)
 
     respond_to do |format|
       format.json
       format.html
-      format.svg  { render :qrcode => qrurl, :level => :h, :size => 10 }
-      format.png  { render :qrcode => @qrcode, :level => :h, :unit => 4 }
-      format.gif  { render :qrcode => qrurl }
-      format.jpeg { render :qrcode => qrurl }
+      format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
+      format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
+      format.gif  { render :qrcode => @qr }
+      format.jpeg { render :qrcode => @qr }
     end
   end
 
+
   def detail
     PollSeries.view_poll(@current_member, @poll_series)
+    respond_to do |format|
+      key = params[:key]
+
+      if key.present?
+        unless @poll_series.qrcode_key == key
+          format.json { render json: { response_status: "ERROR", response_message: "Key is invalid" }, status: 403 }
+        end
+      end
+
+    end
   end
 
   def vote
@@ -67,7 +79,6 @@ class PollSeriesController < ApplicationController
 
   def edit
     @poll_tags = @poll_series.tags
-    puts "polltag = #{@poll_tags}"
   end
 
   def update
@@ -131,7 +142,13 @@ class PollSeriesController < ApplicationController
   private
 
   def set_poll_series
+    begin
     @poll_series = PollSeries.find(params[:id])
+    rescue => e
+      respond_to do |wants|
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
+      end
+    end
   end
 
   def vote_params

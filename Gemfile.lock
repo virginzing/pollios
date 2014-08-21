@@ -273,6 +273,9 @@ GEM
     rqrcode (0.4.2)
     rqrcode-rails3 (0.1.7)
       rqrcode (>= 0.4.2)
+    rqrcode_png (0.1.2)
+      chunky_png
+      rqrcode
     safe_yaml (1.0.3)
     sass (3.2.19)
     sass-rails (4.0.2)
@@ -390,6 +393,7 @@ DEPENDENCIES
   rest-client
   rqrcode
   rqrcode-rails3
+  rqrcode_png
   sass (~> 3.2.5)
   sass-rails (= 4.0.2)
   sdoc

@@ -59,7 +59,7 @@
                   <td><%= series.view_all %></td>
                   <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
                   <td><%= series.created_at %></td>
-                  <td><a href="/questionnaire/<%= series.id %>/qrcode">Qrcode</a></td>
+                  <td><button data-toggle="modal" data-target="#myModal" onclick="showIFrame('/questionnaire/<%= series.id %>/qrcode.png', '<%= series.description %>')"><i class="fa fa-eye"></i></button></td>
                   <td><%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> | <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' } %></td>
                 </tr>
               <% end %>
@@ -83,3 +83,33 @@
   <% end %>
 </div>
  -->
+
+ <script type="text/javascript">
+ function showIFrame(url, description) {
+    var iframebox = document.getElementById('iframebox');
+    iframebox.src = url;
+    var desc = document.getElementById('description');
+    desc.innerHTML = description;
+ }
+ </script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+      </div>
+      <div class="modal-body">
+        <div style="padding-left: 210px;">
+          <iframe src="" id="iframebox"></iframe>
+        </div>
+        <h2 id="description" class="text-center"></h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+

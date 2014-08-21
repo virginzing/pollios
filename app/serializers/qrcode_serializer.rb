@@ -1,10 +1,13 @@
 class QrcodeSerializer < ActiveModel::Serializer
   self.root = false
-  attributes :id, :qrcode_key
+  attributes :id, :key, :series
 
-  # def type
-  #   object.series_text
-  # end
-
+  def key
+    object.qrcode_key
+  end
+  
+  def series
+    object.class.name == "Poll" ? false : true
+  end
 
 end
