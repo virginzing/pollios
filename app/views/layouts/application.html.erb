@@ -86,7 +86,6 @@
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/smartadmin/js/plugin/jquery.simplr.smoothscroll.js" type="text/javascript" charset="utf-8"></script>
 
 	</head>
 	<body class="fixed-header">
@@ -515,7 +514,7 @@
 
       function smoothScroll () {
         $(function () {
-            $.srSmoothscroll();
+            $.sr
         });
       }
 
@@ -531,7 +530,6 @@
 				drawBreadCrumb();
 				dataTable();
         validateMemberProfile();
-        smoothScroll();
         
 				var searchFunc = function (term, callback) {
 				  $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
