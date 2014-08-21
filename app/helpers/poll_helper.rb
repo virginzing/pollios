@@ -61,5 +61,10 @@ module PollHelper
     list.flatten
   end
 
+  def is_max_badge(vote, max)
+    if vote == max && vote != 0
+      'bg-color-red'
+    end
+  end
   
 end

@@ -9,13 +9,14 @@
 
   <div class="panel-padding">
     <ul class="list-group">
+      <% @choice_poll_latest = @poll_latest.cached_choices.collect{|e| [e.answer, e.vote] } %>
+      <% @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max %>
+      
       <% @poll_latest.cached_choices.each do |choice| %>
       <li class="list-group-item">
-        <span class="badge badge-primary"><%= choice.vote %></span>
+        <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_latest_max) %>"><%= choice.vote %></span>
         <%= choice.answer %>
-        <% @choice_poll_latest << [choice.answer, choice.vote] %>
       </li>
-
       <% end %>
     </ul>
   </div>
