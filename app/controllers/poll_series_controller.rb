@@ -38,7 +38,7 @@ class PollSeriesController < ApplicationController
           format.json { render json: { response_status: "ERROR", response_message: "Key is invalid" }, status: 403 }
         end
       end
-
+      format.json
     end
   end
 
