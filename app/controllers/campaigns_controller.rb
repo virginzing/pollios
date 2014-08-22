@@ -36,6 +36,8 @@ class CampaignsController < ApplicationController
   # GET /campaigns/1
   # GET /campaigns/1.json
   def show
+    puts "#{@member_campagin}"
+    @member_campagin = CampaignMember.includes(:member, :poll).where(campaign_id: @campaign.id)
   end
 
   # GET /campaigns/new

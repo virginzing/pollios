@@ -67,26 +67,17 @@
               </section>
             </div>
         
-            <div class="col col-md-4">
+            <div class="col col-md-2">
               <section>
                 <div class="form-group">
-                  <div class="col-md-4">
-                    <label class="string optional control-label" for="datetimepicker">Expire date</label>
+                  <label class="label">Expire</label>
+                  <label class="input">
+                  <div class="input-group">
+                    <input type="text" name="campaign[expire]" placeholder="Select a date" class="string form-control datepicker" data-dateformat="dd/mm/yy">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                   </div>
-
-                  <div class="col-md-4">
-                    <div class="input-group input-small date date-picker" data-date-format="dd-mm-yyyy" style="display: -webkit-inline-box;">
-                    <% if action_name == "edit" %>
-                      <input class="string optional form-control input-small" id="datetimepicker" name="campaign[expire]" readonly="readonly" type="text" value="<%= @campaign.expire.strftime('%d-%m-%Y') %>" data-validetta="required">
-                    <% else %>
-                      <input class="string optional form-control input-small" id="datetimepicker" name="campaign[expire]" readonly="readonly" type="text" data-validetta="required">
-                    <% end %>     
-                      <span class="input-group-btn">
-                        <button class="btn default" type="button"><i class="icon-calendar"></i></button>
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                  </label>
+                </div>  
               </section>
             </div>
           </div>

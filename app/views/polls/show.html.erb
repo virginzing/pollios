@@ -216,7 +216,6 @@
         </div>
       </div>
     </div>
-    <% if current_member.company? %>
     <div class="col col-md-6">
       <div class="jarviswidget" id="wid-id-poll-<%= @poll.id %>-novote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
         <header>
@@ -266,7 +265,6 @@
         </div>
       </div>
     </div>
-    <% end %>
   </div>
   
   <div class="row">
@@ -366,6 +364,48 @@
       </div>
     </div>
   </div>
+<% end %>
+
+<% if current_member.brand? %>
+  <h1>Mock up, Analysis by Province</h1>
+    <div class="row">
+      <div class="well">
+        <div class="col col-8">
+        <script type='text/javascript'>
+          google.load('visualization', '1', {'packages': ['geochart']});
+          google.setOnLoadCallback(drawMarkersMap);
+
+          function drawMarkersMap() {
+          var data = google.visualization.arrayToDataTable([
+            ['City',   'Vote'],
+            ['Bangkok',    959574],
+            ['Amnat Charoen',     7563],
+            ['Chai Nat',   655875],
+            ['Lampang',     607906],
+            ['Phayao',   380181],
+            ['Yala', 10000],
+            ['Nakhon Pathom', 40000]
+          ]);
+
+          var options = {
+            region: 'TH',
+            displayMode: 'markers',
+            showLegend: true,
+            colorAxis: {colors: ['green', 'yellow', 'red']}
+          };
+
+          var chart = new google.visualization.GeoChart(document.getElementById('geo_chart'));
+          chart.draw(data, options);
+          };
+        </script>
+          <div id="geo_chart" style="width: 784px; height: 400px;"></div>
+        </div>      
+        <div class="col col-4">
+          
+        </div>
+      </div>
+    </div>
+
 <% end %>
 
 </section>
@@ -490,5 +530,5 @@ $(document).ready(function () {
   }
 
 });
-
 </script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
