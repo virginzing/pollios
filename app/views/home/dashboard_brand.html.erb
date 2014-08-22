@@ -33,7 +33,7 @@
         <h2><strong>Poll</strong> <i>latest</i></h2> 
           <div class="widget-toolbar">
             <% if Poll.where(member_id: @current_member.id).present? %>
-              <a href="/polls/<%= Poll.where(member_id: @current_member.id).first.id %>" class="btn btn-default">More</a>
+              <a href="/polls/<%= Poll.where(member_id: @current_member.id).first.id %>" class="btn btn-default" data-method="get">More</a>
             <% end %>
 
           </div>
