@@ -3,9 +3,12 @@ if @group.present?
   json.group do
     json.partial! 'response_helper/group/full_info', group: @group
   end
+  json.member do
+    json.admin @is_admin
+  end
   json.member_group do
-    json.active @group.get_member_active, partial: 'response_helper/member/short_info', as: :member
-    json.pending @group.get_member_inactive, partial: 'response_helper/member/short_info', as: :member
+    json.active @member_active, partial: 'response_helper/group/member_group', as: :member
+    json.pending @member_pendding, partial: 'response_helper/group/member_group', as: :member
   end
 else
   json.response_status "ERROR"

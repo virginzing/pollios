@@ -1,7 +1,7 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_current_member, only: [:detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
   before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
   
@@ -57,8 +57,9 @@ class GroupController < ApplicationController
   end
 
   def detail_group
-    @member_active = @group.get_member_active
-    @member_pendding = @group.get_member_inactive
+    @member_active ||= Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 't' AND group_members.group_id = ?", @group.id)
+    @member_pendding ||= Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 'f' AND group_members.group_id = ?", @group.id)
+    @is_admin = @member_active.collect {|e| [e.id, e.admin] }.collect{|e| e.last if e.first == @current_member.id }.compact.first
   end
 
   def cancel_group
