@@ -45,6 +45,7 @@
                 <th>Avatar</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Status</th>
                 <th>Joined at</th>
                 <th>Action</th>
               </tr>
@@ -56,6 +57,7 @@
                   <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
                   <td><%= member.get_name %></td>
                   <td><%= member.email %></td>
+                  <td><a href="#" class="admin_status" data-type="select" data-pk="<%= member.id %>" data-url="/group/<%= @find_group.id %>/group_update.json" data-original-title="Select Status" data-value="<%= member.admin ? 2 : 1 %>"><%= member.is_admin_group(member.admin) %></a></td>
                   <td><span data-livestamp="<%= member.joined_at.to_i %>"></span></td>
                   <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= remove_member_group_path(member_id: member.id) %>" rel="nofollow">Delete</a></td>
                 </tr>
@@ -71,3 +73,27 @@
 
   </div>
 </section>
+
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+    $('.admin_status').editable({
+      showbuttons: false,
+      source: [
+              {value: 1, text: 'Member'},
+              {value: 2, text: 'Admin'}
+      ],
+      value: function(value) {
+        $(this).text(value);
+      },
+      error: function(response, newValue) {
+          if(response.status === 500) {
+              return 'Service unavailable. Please try later.';
+          } else {
+              return response.responseText;
+          }
+      }
+    });
+
+  });
+</script>

@@ -45,7 +45,7 @@ class CompaniesController < ApplicationController
   end
 
   def list_members
-    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at").where("group_members.group_id = #{@find_group.id} AND group_members.active = 't'") || []
+    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin").where("group_members.group_id = #{@find_group.id} AND group_members.active = 't'") || []
   end
 
   def add_member

@@ -257,6 +257,10 @@ class Member < ActiveRecord::Base
     self.friend_limit = FRIEND_LIMIT
   end
 
+  def is_admin_group(status)
+    status ? "Admin" : "Member"
+  end
+
   def get_recurring_available
     list_recurring = []
     recurrings.includes(:polls).each do |rec|

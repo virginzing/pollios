@@ -89,6 +89,7 @@ Pollios::Application.routes.draw do
     get ':id/polls',          to: 'group#poll_group'
     post ':id/delete_poll',   to: 'group#delete_poll'
     post ':id/notification',  to: 'group#notification'
+    post ':id/group_update',  to: 'group#group_update'
   end
 
   scope 'member' do

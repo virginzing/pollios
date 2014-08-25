@@ -78,6 +78,26 @@ class GroupController < ApplicationController
     @notification = @group.set_notification(group_params[:member_id]) 
   end
 
+  def group_update
+    group_id = group_update_params[:id]
+    member_id = group_update_params[:pk]
+    is_master = group_update_params[:value] == "1" ? false : true
+
+    find_group_member = GroupMember.where("member_id = ? AND group_id = ?", member_id, group_id).first
+
+    respond_to do |format|
+      if find_group_member.present?
+        find_group_member.update(is_master: is_master)
+        format.json { render json: [
+              {value: 1, text: 'Member'},
+              {value: 2, text: 'Admin'}
+      ], root: false }
+      else
+        format.json { render text: "Unable update record." , status: :unprocessable_entity }
+      end 
+    end
+  end
+
   private
 
   def set_group
@@ -88,6 +108,10 @@ class GroupController < ApplicationController
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
       end
     end
+  end
+
+  def group_update_params
+    params.permit(:pk, :id, :value)
   end
 
   def options_params
