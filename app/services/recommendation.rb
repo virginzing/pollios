@@ -44,6 +44,7 @@ class Recommendation
     query = Member.with_member_type(:brand, :celebrity).order("fullname asc")
     query = query.where("id NOT IN (?)", following) if following.length > 0
     query = query.where("id NOT IN (?)", unrecommented) if unrecommented.length > 0
+    query = query.where("id != ?", @member.id)
     return query
   end
 
