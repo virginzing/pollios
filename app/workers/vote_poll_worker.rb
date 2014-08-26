@@ -58,7 +58,7 @@ class VotePollWorker
         action: ACTION[:vote],
         poll: PollSerializer.new(poll).as_json()
       }
-
+      
       check_group = check_in_group(member, poll_within_group)
       # puts "group detail => #{check_group}, group present => #{check_group.present?}"
       if check_group.present? 

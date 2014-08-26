@@ -53,6 +53,7 @@ group :production do
   gem 'libv8', '~> 3.11.8.3'
   gem 'therubyracer', :platform => :ruby
   gem 'unicorn'
+  gem 'unicorn-worker-killer'
 end
 
 gem 'versioncake', github: 'bwillis/versioncake'
