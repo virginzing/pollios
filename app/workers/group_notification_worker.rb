@@ -3,9 +3,9 @@ class GroupNotificationWorker
   include SymbolHash
 
   def perform(member_id, group_id, poll_id, custom_data = nil)
-    member = Member.find(member_id)
-    group = Group.find(group_id)
-    poll = Poll.cached_find(poll_id)
+    member = Member.find_by(id: member_id)
+    group = Group.find_by(id: group_id)
+    poll = Poll.find_by(id: poll_id)
     
     @group_nofication = AskJoinGroup.new(member, group, poll)
 

@@ -3,7 +3,7 @@ class ApnPokePollWorker
   include SymbolHash
 
   def perform(sender_id, list_member, poll_id, custom_data = {})
-    poll = Poll.cached_find(poll_id)
+    poll = Poll.find_by(id: poll_id)
 
     @apn_poke_poll = Apn::PokePoll.new(poll)
 
