@@ -2,7 +2,7 @@
 
 # --- Start of unicorn worker killer code ---
 
-if Rails.env.production?
+if ENV['RAILS_ENV'] == 'production' 
   require 'unicorn/worker_killer'
 
   max_request_min =  400
