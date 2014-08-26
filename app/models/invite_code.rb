@@ -29,6 +29,7 @@ class InviteCode < ActiveRecord::Base
   end
 
   def self.add_more_invite_code(number, company_id)
+    list_invite_code = []
     total_code = number || 10
     company_id = company_id || 0
 
@@ -39,9 +40,9 @@ class InviteCode < ActiveRecord::Base
     @code_prefix = company.short_name || 'CA'
 
     total_code.times do 
-      InviteCode.create!(code: generate_invite_code, company_id: company_id, group_id: group_id)
+      list_invite_code << InviteCode.create!(code: generate_invite_code, company_id: company_id, group_id: group_id)
     end
-
+    list_invite_code
   end
 
   def self.check_valid_invite_code(code)

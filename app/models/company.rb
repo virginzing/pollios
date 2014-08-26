@@ -32,4 +32,11 @@ class Company < ActiveRecord::Base
     Group.create(name: @company_name, authorize_invite: :everyone, public: false)
   end
 
+  def as_json options={}
+   {
+      id: id,
+      name: name
+   }
+  end
+
 end

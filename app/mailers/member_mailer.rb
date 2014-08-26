@@ -12,4 +12,12 @@ class MemberMailer < ActionMailer::Base
 
     mail to: member.email, subject: 'Password Reset'
   end
+
+  def send_invite_group(email_url, group_name, invite_code)
+    @group_name = group_name
+    @invite_code = invite_code
+    
+    mail to: email_url, subject: "Your invite code from #{@group_name}"
+  end
+
 end
