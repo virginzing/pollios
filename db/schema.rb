@@ -400,9 +400,10 @@ ActiveRecord::Schema.define(version: 20140821032332) do
     t.integer  "friend_limit"
     t.integer  "friend_count",               default: 0
     t.integer  "member_type",                default: 0
+    t.integer  "province_id"
     t.string   "key_color"
-    t.datetime "poll_public_req_at",         default: '2014-05-12 07:38:10'
-    t.datetime "poll_overall_req_at",        default: '2014-05-12 11:39:19'
+    t.datetime "poll_public_req_at",         default: '2014-07-18 04:40:23'
+    t.datetime "poll_overall_req_at",        default: '2014-07-18 04:40:23'
     t.string   "cover"
     t.text     "description"
     t.boolean  "apn_add_friend",             default: true
@@ -434,6 +435,7 @@ ActiveRecord::Schema.define(version: 20140821032332) do
 
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
   add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at", using: :btree
+  add_index "members", ["province_id"], name: "index_members_on_province_id", using: :btree
   add_index "members", ["username"], name: "index_members_on_username", using: :btree
 
   create_table "notify_logs", force: true do |t|
@@ -494,7 +496,7 @@ ActiveRecord::Schema.define(version: 20140821032332) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2014-02-03 15:36:16'
+    t.datetime "start_date",     default: '2014-07-18 04:40:20'
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
@@ -532,7 +534,7 @@ ActiveRecord::Schema.define(version: 20140821032332) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",         default: 0
-    t.datetime "start_date",       default: '2014-02-03 15:36:16'
+    t.datetime "start_date",       default: '2014-07-18 04:40:20'
     t.boolean  "series",           default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"

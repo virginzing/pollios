@@ -36,6 +36,12 @@ GIT
       tzinfo (>= 0.3.37)
 
 GIT
+  remote: git://github.com/mperham/dalli.git
+  revision: ab8cf7bf8b2502d82dd921a40164c05b775a91a8
+  specs:
+    dalli (2.7.2)
+
+GIT
   remote: git://github.com/nov/itunes-receipt.git
   revision: a480f35b1cfc6adf8bc806288d0fb079f49c3f5e
   specs:
@@ -122,7 +128,6 @@ GEM
       compass (>= 0.12.2)
     configatron (3.2.0)
     connection_pool (2.0.0)
-    dalli (2.7.2)
     decent_exposure (2.3.2)
     devise (3.2.4)
       bcrypt (~> 3.0)
@@ -357,7 +362,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   compass-rails
   configatron (= 3.2.0)
-  dalli
+  dalli!
   decent_exposure
   devise
   enumerize
