@@ -2,12 +2,10 @@ class VotePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member_id, poll_id, custom_data = {})
+  def perform(member_id, poll_id, anonymous_status)
     member = Member.find(member_id)
     poll = Poll.find_by(id: poll_id)
-
-    anonymous = custom_data[:anonymous]
-
+    anonymous = anonymous_status
     member_id = member.id
     
     @apn_poll = Apn::VotePoll.new(member, poll)
