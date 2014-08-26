@@ -117,7 +117,7 @@ class PollsController < ApplicationController
           puts "#{ @poll.in_group_ids}"
           Group.add_poll(current_member, @poll, @poll.in_group_ids)
         else
-          ApnPollWorker.new.perform(current_member, @poll) if Rails.env.production?
+          ApnPollWorker.perform_async(current_member.id, @poll.id) if Rails.env.production?
         end
 
         current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
@@ -212,7 +212,7 @@ class PollsController < ApplicationController
       list_history_vote_poll
 
       if @member_novoted_poll.length > 0
-        ApnPokePollWorker.new.perform(@current_member, @member_novoted_poll, @poll)
+        ApnPokePollWorker.perform_async(@current_member.id, @member_novoted_poll.collect{|e| e.id }, @poll.id)
 
         format.json { render json: [], status: 200 }
       else
@@ -227,7 +227,7 @@ class PollsController < ApplicationController
       list_history_view_poll
 
       if @member_noviewed_poll.length > 0
-        ApnPokePollWorker.new.perform(@current_member, @member_noviewed_poll, @poll)
+        ApnPokePollWorker.perform_async(@current_member.id, @member_noviewed_poll.collect{|e| e.id }, @poll.id)
 
         format.json { render json: [], status: 200 }
       else
@@ -246,7 +246,7 @@ class PollsController < ApplicationController
       @member_viewed_no_vote_poll = @member_viewed_poll.select {|e| e unless member_voted_poll_ids.include?(e.id) }
 
       if @member_viewed_no_vote_poll.length > 0
-        ApnPokePollWorker.new.perform(@current_member, @member_viewed_no_vote_poll, @poll)
+        ApnPokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, @poll)
 
         format.json { render json: [], status: 200 }
       else
@@ -476,7 +476,7 @@ class PollsController < ApplicationController
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
 
-        CommentPollWorker.new.perform(@current_member, @poll, { comment_message: @comment.message })
+        CommentPollWorker.perform_async(@current_member.id, @poll.id, { comment_message: @comment.message })
       rescue => e
         @error_message = e.message
         puts "#{e.message}"

@@ -448,7 +448,7 @@ class Poll < ActiveRecord::Base
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
           else
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-            ApnPollWorker.new.perform(member, @poll) if Rails.env.production?
+            ApnPollWorker.perform_async(member_id, @poll.id) if Rails.env.production?
           end
 
           member.decrement!(:point) if member.point > 0
@@ -537,7 +537,7 @@ class Poll < ActiveRecord::Base
               get_anonymous = member.get_anonymous_with_poll(find_poll)
 
               if (member_id.to_i != find_poll.member.id) && !find_poll.series
-                VotePollWorker.new.perform(member, find_poll, { anonymous: get_anonymous })
+                VotePollWorker.perform_async(member_id, poll_id, { anonymous: get_anonymous })
               end
               # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 

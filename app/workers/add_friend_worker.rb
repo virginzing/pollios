@@ -2,7 +2,10 @@ class AddFriendWorker
   include Sidekiq::Worker
   include SymbolHash
   
-  def perform(member, friend, options = {})
+  def perform(member_id, friend_id, options = {})
+    member = Member.find(member_id)
+    friend = Member.find(friend_id)
+
     member_id = member.id
 
     action = options[:action]

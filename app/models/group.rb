@@ -54,7 +54,7 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
 
-      JoinGroupWorker.new.perform(member, @group)
+      JoinGroupWorker.perform_async(member, @group)
 
       Rails.cache.delete([member_id, 'group_active'])
       # Rails.cache.delete([member_id, 'group_count'])
@@ -107,7 +107,7 @@ class Group < ActiveRecord::Base
         Member.where(id: check_valid_friend).each do |friend|
           @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         end
-        InviteFriendWorker.new.perform(member, list_friend, @group_member.group)
+        InviteFriendWorker.perform_async(member_id, list_friend, group_id)
         @group_member.group
       end
     end
@@ -124,7 +124,7 @@ class Group < ActiveRecord::Base
       where(id: list_group).each do |group|
         if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
           group.increment!(:poll_count)
-          GroupNotificationWorker.new.perform(member, group, poll) if Rails.env.production?
+          GroupNotificationWorker.perform_async(member, group, poll) if Rails.env.production?
         end
       end
     end

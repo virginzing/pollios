@@ -89,7 +89,7 @@ class Friend < ActiveRecord::Base
       end
       flush_cached_friend(member_id, friend_id)
       # AddFriendWorker.perform_async(member_id, friend_id)
-      AddFriendWorker.perform_async(find_member, find_friend, {action: 'Invite'} )
+      AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: 'Invite'} )
       [find_friend, status]
     rescue  => e
       puts "error => #{e}"
@@ -209,7 +209,7 @@ class Friend < ActiveRecord::Base
         Activity.create_activity_friend( member, friend ,'BecomeFriend')
         Activity.create_activity_friend( friend, member ,'BecomeFriend')
 
-        AddFriendWorker.new.perform(member, friend, { accept_friend: true, action: 'BecomeFriend' } )
+        AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: 'BecomeFriend' } )
       else
         find_member.destroy
         find_friend.destroy

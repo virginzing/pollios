@@ -2,7 +2,10 @@ class CommentPollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member, poll, custom_data = {})
+  def perform(member_id, poll_id, custom_data = {})
+    member = Member.find(member_id)
+    poll = Poll.cached_find(poll_id)
+
     comment_message = custom_data[:comment_message]
 
     member_id = member.id

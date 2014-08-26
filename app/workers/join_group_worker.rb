@@ -2,7 +2,9 @@ class JoinGroupWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member, group, custom_data = nil)
+  def perform(member_id, group_id, custom_data = nil)
+    member = Member.find(member_id)
+    group = Group.find(group_id)
 
     @group_nofication = AskJoinGroup.new(member, group, nil, "join")
 

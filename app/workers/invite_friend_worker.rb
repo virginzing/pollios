@@ -2,8 +2,10 @@ class InviteFriendWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  def perform(member, friend_ids, group, custom_data = nil)
-
+  def perform(member_id, friend_ids, group_id, custom_data = nil)
+    member = Member.find(member_id)
+    group = Group.find(group_id)
+    
     member_id = member.id
 
     @invite_group = InviteGroup.new(member_id, friend_ids, group)
