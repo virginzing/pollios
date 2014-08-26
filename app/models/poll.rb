@@ -684,10 +684,13 @@ class Poll < ActiveRecord::Base
   end
 
   def serializer_member_detail
-    @creator = member
-    @find_member_cached = Member.cached_member(@creator)
-    member_as_json = Member.serializer_member_hash(@find_member_cached)
-    member_hash = member_as_json.merge( { "status" => entity_info } )
+    @find_member_cached ||= Member.cached_member(member)
+    @member_id = @find_member_cached[:member_id]
+    @member_type = @find_member_cached[:type]
+
+    # puts "read from cached #{@find_member_cached}"
+    # member_as_json = Member.serializer_member_hash(@find_member_cached)
+    member_hash = @find_member_cached.merge( { "status" => entity_info } )
     member_hash
   end
 
@@ -697,18 +700,18 @@ class Poll < ActiveRecord::Base
     @friend_request = Member.list_friend_request.map(&:id)
     @my_following = Member.list_friend_following.map(&:id)
     
-    if @my_friend.include?(@creator.id)
+    if @my_friend.include?(@member_id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
-    elsif @your_request.include?(@creator.id)
+    elsif @your_request.include?(@member_id)
       hash = Hash["add_friend_already" => true, "status" => :invite]
-    elsif @friend_request.include?(@creator.id)
+    elsif @friend_request.include?(@member_id)
       hash = Hash["add_friend_already" => true, "status" => :invitee]
     else
       hash = Hash["add_friend_already" => false, "status" => :nofriend]
     end
 
-    if @creator.celebrity? || @creator.brand?
-      @my_following.include?(@creator.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+    if @member_type == "Citizen" || @member_type == "Brand"
+      @my_following.include?(@member_id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
     else
       hash.merge!({"following" => "" })
     end

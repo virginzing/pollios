@@ -31,7 +31,7 @@ class V5::MemberSerializer < ActiveModel::Serializer
   end
 
   def avatar
-    object.detect_image(object.avatar)
+    object.avatar.present? ? object.avatar.url(:thumbnail) : ""
   end
 
   def key_color

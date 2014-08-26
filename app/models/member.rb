@@ -573,7 +573,9 @@ class Member < ActiveRecord::Base
   end
 
   def self.cached_member(member)
-    Rails.cache.fetch(member) { member }
+    Rails.cache.fetch(member) do
+      member.as_json
+    end
   end
 
   def self.serializer_member_hash(member)
@@ -612,10 +614,10 @@ class Member < ActiveRecord::Base
       name: fullname,
       username: username,
       email: email,
-      avatar: detect_image(avatar),
+      avatar: avatar.present? ? avatar.url : "",
       key_color: get_key_color,
-      cover: get_cover_image,
-      description: get_description
+      cover: cover.present? ? cover.url : "",
+      description: get_description,
    }
   end
 

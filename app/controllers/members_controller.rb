@@ -37,7 +37,7 @@ class MembersController < ApplicationController
         end
         format.json { render json: Hash["response_status" => "OK", "response_message" => "Success"] }  
       else
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Fail"] } 
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Fail"] }
       end
     end
   end
