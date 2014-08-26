@@ -614,11 +614,19 @@ class Member < ActiveRecord::Base
       name: fullname,
       username: username,
       email: email,
-      avatar: avatar.present? ? avatar.url : "",
+      avatar: avatar.present? ? resize_avatar(avatar.url) : "",
       key_color: get_key_color,
-      cover: cover.present? ? cover.url : "",
+      cover: cover.present? ? resize_cover(cover.url) : "",
       description: get_description,
    }
+  end
+
+  def resize_avatar(avatar_url)
+    avatar_url.split("upload").insert(1, "upload/c_fill,h_180,w_180").sum
+  end
+
+  def resize_cover(cover_url)
+    cover_url.split("upload").insert(1, "upload/c_fit,w_640").sum
   end
 
   def is_friend(user_obj)
