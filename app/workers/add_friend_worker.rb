@@ -8,7 +8,7 @@ class AddFriendWorker
 
     member_id = member.id
 
-    action = options[:action]
+    action = options["action"]
 
     @add_friend = AddFriend.new(member, friend, options)
 

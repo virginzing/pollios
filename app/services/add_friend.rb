@@ -24,7 +24,7 @@ class AddFriend
   end
 
   def custom_message
-    if @options[:accept_friend]
+    if @options["accept_friend"]
       message = member_name + " is now friends with you"
     else
       message = member_name + " request friend with you" 
