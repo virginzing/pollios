@@ -212,6 +212,7 @@ Pollios::Application.routes.draw do
 
     post 'download_csv', to: 'companies#download_csv', as: :download_csv
     post 'download_excel', to: 'companies#download_excel', as: :download_excel
+    post 'download_txt', to: 'companies#download_txt', as: :download_txt
 
     get '/invites/new', to: 'companies#new',  as: :invites_new
     delete '/remove_member',  to: 'companies#remove_member',  as: :remove_member_group

@@ -25,18 +25,21 @@ class CompaniesController < ApplicationController
   def send_email
     list_email_text = invite_code_params[:list_email].split("\r\n")
     list_email_file = []
+    file = invite_code_params[:file]
 
-    # if invite_code_params[:file].present?
-    #   CSV.foreach(invite_code_params[:file].path, :headers => true) do |row|
-    #     list_email_file << row
-    #   end
-    # end
-    if invite_code_params[:file].present?
-      spreadsheet = Company.open_spreadsheet(invite_code_params[:file])
-      header = spreadsheet.row(1)
-      (2..spreadsheet.last_row).each do |i|
-        list_email_file << spreadsheet.row(i).first
+    if file.present?
+      if File.extname(file.original_filename) == ".txt"
+        File.readlines(file.path).each do |line|
+          list_email_file << line.strip
+        end
+      else
+        spreadsheet = Company.open_spreadsheet(file)
+        header = spreadsheet.row(1)
+        (2..spreadsheet.last_row).each do |i|
+          list_email_file << spreadsheet.row(i).first
+        end
       end
+
     end
     
     total_email = ( list_email_text | list_email_file).uniq
@@ -51,7 +54,7 @@ class CompaniesController < ApplicationController
         format.html { redirect_to company_invites_path }
       else
         flash[:error] = "Error"
-        format.html { render 'via_email' } 
+        format.html { redirect_to via_email_path } 
       end
     end
   end
@@ -135,6 +138,14 @@ class CompaniesController < ApplicationController
       "#{Rails.root}/public/example/email_list.xls",
       filename: "email_list.xls",
       type: "application/xls"
+    )
+  end
+
+  def download_txt
+    send_file(
+      "#{Rails.root}/public/example/email_list.txt",
+      filename: "email_list.txt",
+      type: "application/txt"
     )
   end
 

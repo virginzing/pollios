@@ -15,9 +15,9 @@
       </div>
 
       <div class="col col-12">
-        <%= f.input :file, as: :file, label: 'Import (Excel, CSV)', input_html: { 'data-parsley-required' => true } %>
+        <%= f.input :file, as: :file, label: 'Import (Excel, CSV, TXT)', input_html: { 'data-parsley-required' => true } %>
         <div class="note">
-          <strong>Example File:</strong> <b><%= link_to "CSV", download_csv_url, method: "POST" %>, <%= link_to "Excel", download_excel_url, method: "POST" %></b>
+          <strong>Example File:</strong> <b><%= link_to "CSV", download_csv_url, method: "POST" %>, <%= link_to "Excel", download_excel_url, method: "POST" %>, <%= link_to "Text", download_txt_url, method: "POST" %></b>
         </div>
       </div>
   
