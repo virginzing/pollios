@@ -207,6 +207,12 @@ Pollios::Application.routes.draw do
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
     post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
     get 'invites',  to: 'companies#invites',    as: :company_invites
+    get 'invites/via_email',  to: 'companies#via_email',  as: :via_email
+    post 'invites/send_email', to: 'companies#send_email'
+
+    post 'download_csv', to: 'companies#download_csv', as: :download_csv
+    post 'download_excel', to: 'companies#download_excel', as: :download_excel
+
     get '/invites/new', to: 'companies#new',  as: :invites_new
     delete '/remove_member',  to: 'companies#remove_member',  as: :remove_member_group
   end

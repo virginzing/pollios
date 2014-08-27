@@ -246,7 +246,7 @@
           </li>
           
           <% if current_member.company? %>
-            <li class="<%= is_active_2nd_level('companies', 'invites') %>">
+            <li class="<%= is_active_2nd_level('companies', 'invites') || is_active_2nd_level('companies', 'via_email') %>">
               <a href="<%= company_invites_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invites</span></a>
             </li>
 

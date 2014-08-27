@@ -7,6 +7,9 @@ require 'htmlentities'
 require 'yajl'
 require 'itunes/receipt'
 require 'net/http'
+require 'roo'
+require 'csv'
+require 'spreadsheet'
 
 # MultiJson.engine = :yajl
 # Benchmark.bmbm(5) do |x|

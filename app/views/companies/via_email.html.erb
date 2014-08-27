@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-plus fa-fw "></i> 
+        Send Invite via Email
+    </h1>
+  </div>
+</div>
+
+<div class="well">
+  <%= simple_form_for @via_email, url: '/company/invites/send_email', method: :post, :html => { :multipart => true } do |f| %>
+      
+      <div class="col col-12">
+        <%= f.input :list_email, as: :text, label: 'List Email', placeholder: "test1@exmaple.com", input_html: { id: "list_email_text", rows: "10", 'data-parsley-required' => true } %>
+      </div>
+
+      <div class="col col-12">
+        <%= f.input :file, as: :file, label: 'Import (Excel, CSV)', input_html: { 'data-parsley-required' => true } %>
+        <div class="note">
+          <strong>Example File:</strong> <b><%= link_to "CSV", download_csv_url, method: "POST" %>, <%= link_to "Excel", download_excel_url, method: "POST" %></b>
+        </div>
+      </div>
+  
+      <br/>
+
+      <div class="col col-12">
+        <%= f.submit "Send", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
+      </div>
+  <% end %>
+
+</div>
+
+<style type="text/css">
+#list_email_text::-webkit-input-placeholder::after {
+    display:block;
+    content:"test2@exmaple.com\A test3@exmaple.com\A test4@exmaple.com";
+}
+</style>

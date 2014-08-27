@@ -4,7 +4,7 @@ class InviteCode < ActiveRecord::Base
   belongs_to :company
   belongs_to :group
 
-  attr_accessor :amount_code, :prefix_name
+  attr_accessor :amount_code, :prefix_name, :list_email
 
   def self.generate_invite_code
     begin

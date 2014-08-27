@@ -67,7 +67,6 @@ class InvitesController < ApplicationController
     end
   end
 
-
   private
 
   def set_invite_code
