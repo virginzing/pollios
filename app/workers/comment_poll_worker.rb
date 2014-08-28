@@ -6,7 +6,7 @@ class CommentPollWorker
     member = Member.find(member_id)
     poll = Poll.find_by(id: poll_id)
 
-    comment_message = custom_data[:comment_message]
+    comment_message = custom_data["comment_message"]
 
     member_id = member.id
     
