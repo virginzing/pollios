@@ -59,7 +59,7 @@ class MembersController < ApplicationController
   end
 
   def profile
-    @poll_latest_list = Poll.where(member_id: @current_member.id).order("created_at desc").limit(5)
+    @poll_latest_list = Poll.where(member_id: @current_member.id, series: false).order("created_at desc").limit(5)
   end
 
   def public_id
