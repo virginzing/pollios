@@ -73,6 +73,10 @@ class Poll < ActiveRecord::Base
     end 
   }
 
+  scope :unexpire, -> {
+    where("polls.expire_status = 'f'")
+  }
+
   LIMIT_POLL = 10
   LIMIT_TIMELINE = 3000
 

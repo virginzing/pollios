@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
 
-  before_action :set_current_member, only: [:poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
+  before_action :set_current_member, only: [:set_expire, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
@@ -11,7 +11,7 @@ class PollsController < ApplicationController
   
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
-  before_action :set_poll, only: [:poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:set_expire, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
   
   before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, 
                 :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -253,6 +253,16 @@ class PollsController < ApplicationController
         format.json { render json: [], status: 200 }
       else
         format.json { render json: { error_message: "No" }, status: 403 }
+      end
+    end
+  end
+
+  def set_expire
+    respond_to do |format|
+      if (@poll.member_id == @current_member.id) && @poll.update_attributes!(expire_status: true)
+        format.json { render json: Hash["response_status" => "OK", "response_message" => "Success" ] }
+      else
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => @poll.errors.full_messages.presence || "ERROR" ] }
       end
     end
   end

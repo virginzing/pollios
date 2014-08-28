@@ -62,7 +62,7 @@ class GroupTimelinable
   def find_poll_in_my_group
     query_poll_in_group = "group_id IN (?) AND share_poll_of_id = 0"
 
-    poll_group = PollGroup.joins(:poll).where("(#{query_poll_in_group} AND #{poll_unexpire}) OR (#{query_poll_in_group} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids).limit(LIMIT_TIMELINE)
+    poll_group = PollGroup.joins(:poll).where("polls.expire_status = 'f'").where("(#{query_poll_in_group} AND #{poll_unexpire}) OR (#{query_poll_in_group} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids).limit(LIMIT_TIMELINE)
     # puts "poll_group => #{poll_group.to_a.uniq_by {|e| e.poll_id } }"
     poll_group = poll_group.to_a.uniq_by {|poll| poll.poll_id }
     ids, poll_ids = poll_group.map(&:id), poll_group.map(&:poll_id)
@@ -71,7 +71,7 @@ class GroupTimelinable
   def find_poll_share_in_group
     query_poll_shared_in_group = "poll_groups.group_id IN (?) AND share_poll_of_id <> 0"
 
-    poll_group = PollGroup.joins(:poll).where("#{query_poll_shared_in_group} AND #{poll_unexpire}", your_group_ids)
+    poll_group = PollGroup.joins(:poll).where("polls.expire_status = 'f'").where("#{query_poll_shared_in_group} AND #{poll_unexpire}", your_group_ids)
 
     poll_group.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end

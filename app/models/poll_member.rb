@@ -20,6 +20,10 @@ class PollMember < ActiveRecord::Base
     end 
   }
 
+  scope :unexpire, -> {
+    where("polls.expire_status = 'f'")
+  }
+
   LIMIT_TIMELINE = 3000
 
   def self.find_poll_celebrity_or_public(type)

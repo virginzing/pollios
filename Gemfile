@@ -35,6 +35,7 @@ gem 'enumerize'
 gem 'pg', '0.17.0'
 gem 'activerecord-postgres-hstore'
 gem 'roo'
+
 # gem "squeel"
 
 group :doc do
