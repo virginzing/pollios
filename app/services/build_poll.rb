@@ -25,6 +25,13 @@ class BuildPoll
     @params["type_poll"]
   end
 
+  def check_qr_only
+    @params["qr_only"] == "on" ? true : false
+  end
+
+  def check_require_info
+    @params["require_info"] == "on" ? true : false
+  end
   def set_poll_public
     if @member.celebrity? || @params["recurring_id"].present? || @member.brand?
       true
@@ -72,7 +79,9 @@ class BuildPoll
       "photo_poll" => @params["photo_poll"],
       "status_poll" => 0,
       "member_type" => @member.member_type_text,
-      "allow_comment" => check_allow_comment
+      "allow_comment" => check_allow_comment,
+      "qr_only" => check_qr_only,
+      "require_info" => check_require_info
     }
   end
 

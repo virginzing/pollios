@@ -120,8 +120,10 @@ class PollsController < ApplicationController
           ApnPollWorker.perform_async(current_member.id, @poll.id) if Rails.env.production?
         end
 
-        current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
-
+        unless @poll.qr_only
+          current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
+        end
+        
         PollStats.create_poll_stats(@poll)
         # Rails.cache.delete([current_member.id, 'poll_member'])
         Rails.cache.delete([current_member.id, 'my_poll'])
@@ -562,7 +564,7 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
   end
 
   protected

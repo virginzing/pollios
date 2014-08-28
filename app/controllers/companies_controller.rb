@@ -39,10 +39,10 @@ class CompaniesController < ApplicationController
           list_email_file << spreadsheet.row(i).first
         end
       end
-
     end
+
     
-    total_email = ( list_email_text | list_email_file).uniq
+    total_email = ( list_email_text | list_email_file.collect).collect{|e| e.downcase }.uniq
 
     # puts "total email #{total_email}"
 
