@@ -37,7 +37,7 @@ $(function() {
   });
 
   $("textarea#tagged_text").highlightTextarea({
-    words: ["#([a-zA-Z0-9ก-๙]+)"]
+    words: ["#([[:word]]+)"]
   });
 
   $('.maxlength_textarea').maxlength({

@@ -31,7 +31,7 @@
         showImageOrIcon : false,
         keys_map        : {id: 'id', title: 'name', description: '', img: 'avatar', no_img_class: 'icon', type: 'type'},
         syntax          : _.template('#<%= title %>'),
-        parser          : /#([a-zA-Z0-9ก-๙]+)/gi,
+        parser          : /#([[:word:]]+)/gi,
         parserGroups    : {title: 4},
         classes         : {
             tagsDropDown      : '',
@@ -102,7 +102,7 @@
                 } else {
                   var regex_key = key;
                 }
-                settings.triggers[key].finder = new RegExp(regex_key + '([a-zA-Z0-9ก-๙]+)?$', 'gi');
+                settings.triggers[key].finder = new RegExp(regex_key + '([[:word:]]+)?$', 'gi');
             });
             
             templates = settings.templates;
