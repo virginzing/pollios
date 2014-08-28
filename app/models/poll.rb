@@ -494,7 +494,7 @@ class Poll < ActiveRecord::Base
 
   def create_tag(title)
     split_tags = []
-    title.gsub(/\B#([a-zA-Z0-9ก-๙_]+)/) { split_tags << $1 }
+    title.gsub(/\B#([[:word:]]+)/) { split_tags << $1 }
     if split_tags.count > 0
       tag_list = []
       split_tags.each do |tag_name|
