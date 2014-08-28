@@ -38,15 +38,18 @@
                   <label class="textarea">
                     <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,255]" style="display: block; width: 100%;"></textarea>
                   </label>
-                  <div class="onoffswitch-container" style="margin-left: 0px;">
-                    <span class="onoffswitch-title">Allow Comment</span> 
-                    <span class="onoffswitch">
-                      <input type="checkbox" class="onoffswitch-checkbox" name="poll[allow_comment]" id="autoopen" checked>
-                      <label class="onoffswitch-label" for="autoopen"> 
-                        <span class="onoffswitch-inner" data-swchon-text="ON" data-swchoff-text="OFF"></span> 
-                        <span class="onoffswitch-switch"></span>
-                      </label> 
-                    </span> 
+                  <div class="option_config">
+                    <label class="toggle">
+                      <input type="checkbox" name="poll[allow_comment]" checked="checked">
+                    <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Comment</label>
+                    
+                    <label class="toggle">
+                      <input type="checkbox" name="poll[qr_only]">
+                    <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
+                    
+                    <label class="toggle">
+                      <input type="checkbox" name="poll[require_info]" checked="checked">
+                    <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
                   </div>
                 </section>
 
