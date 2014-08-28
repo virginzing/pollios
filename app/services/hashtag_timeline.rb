@@ -45,13 +45,32 @@ class HashtagTimeline
 
   def tag_popular
     query = Tag.joins(:taggings => [:poll => :poll_members]).
-      where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0)", true, your_friend_ids).
+      where("polls.in_group_ids = '0'").
+      where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0 AND poll_members.series = 'f')", true, your_friend_ids).
       select("tags.*, count(taggings.tag_id) as count").
       group("taggings.tag_id, tags.id").
       order("count desc").limit(5)
 
-    query = query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.count > 0
+    query = report_poll_filter(query)
+    query = hidden_poll_filter(query)
+    query = block_poll_filter(query)
+
     return query
+  end
+
+  def report_poll_filter(query)
+    query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.count > 0
+    query
+  end
+
+  def hidden_poll_filter(query)
+    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.count > 0
+    query
+  end
+
+  def block_poll_filter(query)
+    query.where("polls.member_id NOT IN (?)", @block_member.map(&:id)) if @block_member.count > 0
+    query
   end
 
   def tag_friend_group_public
@@ -67,7 +86,7 @@ class HashtagTimeline
     poll_without_group = "poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     poll_with_group = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
-    query = Poll.available.joins([:poll_members,:taggings => :tag]).uniq.
+    query = Poll.available.unexpire.joins([:poll_members,:taggings => :tag]).uniq.
 
     where("((#{poll_without_group} AND #{poll_unexpire}) OR (#{poll_without_group} AND #{poll_expire_have_vote}))" \
       "OR ((#{poll_with_group} AND #{poll_unexpire}) OR (#{poll_with_group} AND #{poll_expire_have_vote}))",

@@ -22,7 +22,7 @@ class PollsController < ApplicationController
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
   before_action :load_resource_poll_feed, only: [:overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
-                :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched]
+                :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
