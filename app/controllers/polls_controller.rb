@@ -117,7 +117,7 @@ class PollsController < ApplicationController
           puts "#{ @poll.in_group_ids}"
           Group.add_poll(current_member, @poll, @poll.in_group_ids)
         else
-          ApnPollWorker.perform_async(current_member.id, @poll.id) if Rails.env.production?
+          ApnPollWorker.perform_in(5.seconds, current_member.id, @poll.id) if Rails.env.production?
         end
 
         unless @poll.qr_only
