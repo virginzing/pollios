@@ -454,8 +454,10 @@ class Poll < ActiveRecord::Base
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
             ApnPollWorker.perform_async(member_id.to_i, @poll.id)
           end
-
-          member.decrement!(:point) if member.point > 0
+          
+          if member.citizen? && is_public == "1"
+            member.decrement!(:point) if member.point > 0  
+          end
 
           PollStats.create_poll_stats(@poll)
 

@@ -3,9 +3,12 @@ class CommentSerializer < ActiveModel::Serializer
   
   attributes :id, :fullname, :avatar, :message, :created_at
 
-
   def created_at
     object.created_at.to_i
+  end
+
+  def member_id
+    object.member_id
   end
 
   def fullname
