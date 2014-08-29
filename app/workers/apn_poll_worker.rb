@@ -3,12 +3,12 @@ class ApnPollWorker
   include SymbolHash
 
   def perform(member_id, poll_id, custom_data = {})
-    member = Member.find(member_id)
-    poll = Poll.find_by(id: poll_id)
+    @member = Member.find(member_id)
+    @poll = Poll.find(id: poll_id)
 
-    member_id = member.id
+    member_id = @member.id
     
-    @apn_poll = ApnPoll.new(member, poll)
+    @apn_poll = ApnPoll.new(@member, @poll)
 
     recipient_ids = @apn_poll.recipient_ids
 
@@ -17,13 +17,13 @@ class ApnPollWorker
     device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
     @custom_properties = { 
-      poll_id: poll.id
+      poll_id: @poll.id
     }
 
     hash_custom = {
       type: TYPE[:poll],
       action: ACTION[:create],
-      poll: PollSerializer.new(poll).as_json(),
+      poll: PollSerializer.new(@poll).as_json(),
     }
 
     device_ids.each do |device_id|
