@@ -4,7 +4,7 @@ class ApnPollWorker
 
   def perform(member_id, poll_id, custom_data = {})
     @member = Member.find(member_id)
-    @poll = Poll.find(id: poll_id)
+    @poll = Poll.find(poll_id)
 
     member_id = @member.id
     
