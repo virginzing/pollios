@@ -487,7 +487,7 @@ class PollsController < ApplicationController
         else
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
-
+        Activity.create_activity_comment(@current_member, @poll, 'Comment')
         CommentPollWorker.perform_async(@current_member.id, @poll.id, { comment_message: @comment.message })
       rescue => e
         @error_message = e.message

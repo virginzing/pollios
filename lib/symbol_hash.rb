@@ -21,6 +21,7 @@ module SymbolHash
     :change_avatar => 'ChangeAvatar',
     :change_cover => 'ChangeCover',
     :comment => 'Comment',
+    :mention => 'Mention',
     :also_comment => 'AlsoComment'
   }
 

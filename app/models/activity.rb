@@ -14,69 +14,47 @@ class Activity
     @member = member
     @poll = poll
     @action = action
-
-    @hash_activity = manange_action_with_poll
-
-    @find_activity = member_find_by_activity
-
-    update_activity
-
-    @find_activity
+    create_or_update_activity(manange_action_with_poll)
   end
 
   def self.create_activity_poll_series(member, poll_series, action)
     @member = member
     @poll_series = poll_series
     @action = action
-
-    @hash_activity = manange_action_with_poll_series
-
-    @find_activity = member_find_by_activity
-
-    update_activity
-
-    @find_activity
-
+    create_or_update_activity(manange_action_with_poll_series)
   end
 
   def self.create_activity_friend(member, friend, action)
     @member = member
     @friend = friend
     @action = action
-
-    @hash_activity = manange_action_with_friend
-
-    @find_activity = member_find_by_activity
-
-    update_activity
-
-    @find_activity
+    create_or_update_activity(manange_action_with_friend)
   end
 
   def self.create_activity_group(member, group, action)
     @member = member
     @group = group
     @action = action
+    create_or_update_activity(manage_action_with_group)
+  end
 
-    @hash_activity = manage_action_with_group
-
-    @find_activity = member_find_by_activity
-
-    update_activity
-
-    @find_activity
+  def self.create_activity_comment(member, poll, action)
+    @member = member
+    @poll = poll
+    @action = action
+    create_or_update_activity(manage_action_with_comment)
   end
 
   def self.create_activity_my_self(member, action)
     @member = member
     @action = action
+    create_or_update_activity(manage_action_my_self)
+  end
 
-    @hash_activity = manage_action_my_self
-
+  def self.create_or_update_activity(action_type)
+    @hash_activity = action_type
     @find_activity = member_find_by_activity
-
     update_activity
-
     @find_activity
   end
 
@@ -209,6 +187,23 @@ class Activity
         },
         action: ACTION[:join],
         type: TYPE[:group],
+        activity_at: Time.zone.now.to_i
+      }
+    end
+  end
+
+  def self.manage_action_with_comment
+    if @action == ACTION[:comment]
+      {
+        poll: {
+          id: @poll.id,
+          title: @poll.title,
+          created_at: @poll.created_at.to_i,
+          public: @poll.public
+        },
+        authority: check_authority_poll,
+        action: ACTION[:comment],
+        type: TYPE[:comment],
         activity_at: Time.zone.now.to_i
       }
     end
