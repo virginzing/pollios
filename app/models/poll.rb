@@ -436,7 +436,7 @@ class Poll < ActiveRecord::Base
         end
       end
 
-      @poll = create(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, 
+      @poll = create!(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, 
                      type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text)
 
       if @poll.valid? && choices
@@ -452,7 +452,7 @@ class Poll < ActiveRecord::Base
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
           else
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-            ApnPollWorker.perform_async(member_id, @poll.id) if Rails.env.production?
+            ApnPollWorker.perform_async(member_id.to_i, @poll.id)
           end
 
           member.decrement!(:point) if member.point > 0
