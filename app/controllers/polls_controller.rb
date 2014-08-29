@@ -478,6 +478,7 @@ class PollsController < ApplicationController
     Poll.transaction do
       begin
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
+        @comment.create_mentions_list(@current_member, comment_params[:mentionable_list])
         @poll.increment!(:comment_count)
         # puts "#{@current_member.id == @poll.member_id}"
         find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
@@ -497,7 +498,11 @@ class PollsController < ApplicationController
   end
 
   def load_comment
-    @comments = Comment.joins(:member).select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar").where(poll_id: comment_params[:id], delete_status: false).order("created_at desc").paginate(page: comment_params[:next_cursor])
+    @comments = Comment.joins(:member).select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
+                .includes(:mentions)
+                .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
+                .group("comments.id, members.fullname, members.avatar")
+                .paginate(page: comment_params[:next_cursor])
     @new_comment_sort ||= @comments.sort! { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
@@ -534,7 +539,7 @@ class PollsController < ApplicationController
   end
 
   def comment_params
-    params.permit(:id, :message, :next_cursor, :comment_id, :member_id)
+    params.permit(:id, :message, :next_cursor, :comment_id, :member_id, :mentionable_list => [])
   end
 
   def hashtag_params

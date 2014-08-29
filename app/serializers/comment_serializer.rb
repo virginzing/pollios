@@ -1,7 +1,7 @@
 class CommentSerializer < ActiveModel::Serializer
   self.root false
   
-  attributes :id, :member_id, :fullname, :avatar, :message, :created_at
+  attributes :id, :member_id, :fullname, :avatar, :message, :created_at, :mentionable_list
 
   def created_at
     object.created_at.to_i
@@ -13,6 +13,14 @@ class CommentSerializer < ActiveModel::Serializer
 
   def fullname
     object.member_fullname
+  end
+
+  def mentionable_list
+    if object.mentions.present?
+      object.mentions.collect{|e| { id: e.mentionable_id, name: e.mentionable_name }}
+    else
+      ""
+    end
   end
 
   def avatar
