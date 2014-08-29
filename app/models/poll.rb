@@ -419,7 +419,11 @@ class Poll < ActiveRecord::Base
       choice_count = get_choice_count(choices)
       in_group_ids = group_id.presence || "0"
 
-      convert_expire_date = Time.now + expire_date.to_i.day
+      if expire_date.present?
+        convert_expire_date = Time.now + expire_date.to_i.day
+        else
+        convert_expire_date = Time.now + 100.years.to_i 
+      end
       
       raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0) 
 
@@ -454,7 +458,7 @@ class Poll < ActiveRecord::Base
             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
             ApnPollWorker.perform_async(member_id.to_i, @poll.id)
           end
-          
+
           if member.citizen? && is_public == "1"
             member.decrement!(:point) if member.point > 0  
           end
@@ -640,6 +644,10 @@ class Poll < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def get_expire_date
+    expire_date.present? ? expire_date.to_i : ""
   end
 
   def hour

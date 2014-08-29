@@ -259,7 +259,7 @@ class PollsController < ApplicationController
 
   def set_close
     respond_to do |format|
-      if (@poll.member_id == @current_member.id) && @poll.update_attributes!(expire_status: true)
+      if (@poll.member_id == @current_member.id) && @poll.update_attributes!(expire_status: true, expire_date: Time.now)
         format.json { render json: Hash["response_status" => "OK", "response_message" => "Success" ] }
       else
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => @poll.errors.full_messages.presence || "ERROR" ] }
