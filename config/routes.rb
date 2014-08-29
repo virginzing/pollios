@@ -158,7 +158,7 @@ Pollios::Application.routes.draw do
     get ':member_id/reward_timeline',            to: 'polls#reward_poll_timeline'
 
     get ':id/detail',       to: 'polls#detail'
-    post ':id/expire',      to: 'polls#set_expire'
+    post ':id/close',      to: 'polls#set_close'
   end
 
 
