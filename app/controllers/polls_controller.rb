@@ -477,8 +477,9 @@ class PollsController < ApplicationController
   def comment  #post comment
     Poll.transaction do
       begin
+        mentionable_list = comment_params[:mentionable_list]
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-        @comment.create_mentions_list(@current_member, comment_params[:mentionable_list])
+        @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
         @poll.increment!(:comment_count)
         # puts "#{@current_member.id == @poll.member_id}"
         find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
@@ -490,6 +491,7 @@ class PollsController < ApplicationController
         end
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
         CommentPollWorker.perform_async(@current_member.id, @poll.id, { comment_message: @comment.message })
+        CommentMentionWorker.perform_async(@current_member.id, @poll.id, mentionable_list) if mentionable_list.present?
       rescue => e
         @error_message = e.message
         puts "#{e.message}"
