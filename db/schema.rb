@@ -11,12 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140901061006) do
+ActiveRecord::Schema.define(version: 20140901103634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pg_trgm"
   enable_extension "unaccent"
+  enable_extension "hstore"
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -331,8 +332,10 @@ ActiveRecord::Schema.define(version: 20140901061006) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "poll_series_id", default: 0
+    t.hstore   "data_analysis"
   end
 
+  add_index "history_votes", ["data_analysis"], name: "index_history_votes_on_data_analysis", using: :gist
   add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id", using: :btree
   add_index "history_votes", ["poll_id"], name: "index_history_votes_on_poll_id", using: :btree
 

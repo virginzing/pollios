@@ -13,8 +13,7 @@ class MemberSharedDetailSerializer < ActiveModel::Serializer
   def info
     @creator = object
     @find_member_cached = Member.cached_member(@creator)
-    member_as_json = Member.serializer_member_hash(@find_member_cached)
-    member_hash = member_as_json.merge( { "status" => entity_info } )
+    member_hash = @find_member_cached.merge( { "status" => entity_info } )
     member_hash
   end
 

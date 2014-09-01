@@ -117,3 +117,4 @@ gem 'itunes-receipt' , :git => 'git://github.com/nov/itunes-receipt.git'
 gem 'zeus'
 
 gem 'rack-cache'
+gem 'activerecord-postgres-hstore'
