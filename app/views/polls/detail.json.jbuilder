@@ -6,7 +6,7 @@ if @poll.present?
     json.answer choice.answer
     if @expired
       json.vote choice.vote
-    elsif @voted["voted"]
+    elsif @voted["voted"] || (!@poll.creator_must_vote && (@poll.member_id  == @current_member.id))
       json.vote choice.vote
     else
     # json.vote choice.vote

@@ -39,7 +39,8 @@ module Pollios
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Bangkok'
-
+    config.active_record.schema_format = :sql
+    
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
 
     config.assets.precompile += %w(.svg .eot .woff .ttf .js .css)
