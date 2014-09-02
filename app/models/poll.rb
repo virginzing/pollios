@@ -104,7 +104,7 @@ class Poll < ActiveRecord::Base
 
   def cached_choices
     Rails.cache.fetch([self, 'choices']) do
-      choices
+      choices.to_a
     end
   end
 
@@ -523,7 +523,7 @@ class Poll < ActiveRecord::Base
         
         unless ever_vote.present?
           find_poll = Poll.cached_find(poll_id)
-          find_choice = find_poll.choices.where(id: choice_id).first
+          find_choice = find_poll.choices.find_by(id: choice_id)
 
           if find_poll.series
             poll_series_id = find_poll.poll_series_id
@@ -565,7 +565,7 @@ class Poll < ActiveRecord::Base
         end
       rescue => e
         puts "error => #{e}"
-        nil
+        [@error_message = e.message, nil]
       end
     end  
   end

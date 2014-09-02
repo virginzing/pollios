@@ -333,7 +333,13 @@ class Member < ActiveRecord::Base
 
   def cached_my_poll
     Rails.cache.fetch([self.id, 'my_poll']) do
-      Poll.where(member_id: id).to_a
+      Poll.where(member_id: id, series: false).to_a
+    end
+  end
+
+  def cached_my_questionnaire
+    Rails.cache.fetch([self.id, 'my_questionnaire']) do
+      PollSeries.where(member_id: id).to_a
     end
   end
 

@@ -7,6 +7,7 @@ class HomeController < ApplicationController
     @poll_latest_list = Poll.where(member_id: @current_member.id, series: false).order("created_at desc").limit(5)
     @poll_popular_list = Poll.where("member_id = #{@current_member.id} AND vote_all != 0 AND series = 'f'").order("vote_all desc").limit(5)
     if current_member.brand?
+      @questionnaire = PollSeries.where(member_id: current_member.id).last
       render 'home/dashboard_brand'
     else
       render 'home/dashboard_company'

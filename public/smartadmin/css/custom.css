@@ -24,6 +24,12 @@ dl.dl-horizontal {
   font-size: 14px;
 }
 
+.poll_header {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;

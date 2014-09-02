@@ -34,7 +34,7 @@
 
 	// Warning: Enabling mobile widgets could potentially crash your webApp if you have too many
 	// 			widgets running at once (must have $.enableJarvisWidgets = true)
-	$.enableMobileWidgets = false;
+	$.enableMobileWidgets = true;
 
 
 	/*
@@ -1287,7 +1287,7 @@ function setup_widgets_desktop() {
 			colorButton : true,
 			// full screen
 			fullscreenButton : true,
-			fullscreenClass : 'fa fa-resize-full | fa fa-resize-small',
+			fullscreenClass : 'fa fa-expand| fa fa-compress',
 			fullscreenDiff : 3,
 			onFullscreen : function() {
 			},
