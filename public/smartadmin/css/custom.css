@@ -30,6 +30,12 @@ dl.dl-horizontal {
   text-align: center;
 }
 
+table.questionnaire th.header-questionnaire {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;

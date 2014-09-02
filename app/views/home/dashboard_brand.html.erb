@@ -146,7 +146,7 @@
           <div class="widget-body no-padding" style="min-height: 0px;">
             <div class="table-responsive">
 
-              <table class="table" style="margin-bottom: 0px;">
+              <table class="table table-hover" style="margin-bottom: 0px;">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -207,7 +207,7 @@
           <div class="widget-body no-padding" style="min-height: 0px;">
             <div class="table-responsive">
 
-              <table class="table" style="margin-bottom: 0px;">
+              <table class="table table-hover" style="margin-bottom: 0px;">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -271,11 +271,11 @@
 
             <div class="table-responsive">
               <% if @questionnaire.present? %>
-              <h2><%= @questionnaire.description %></h2>
-              <table class="table" style="margin-bottom: 0px;">
+              <h2 class="text-center"><%= truncate(@questionnaire.description, length: 200) %></h2>
+              <table class="table table-bordered table-hover questionnaire" style="margin-bottom: 0px;" id="dashboard-questionnaire">
                 <thead>
                   <tr>
-                    <th width="500">#</th>
+                    <th width="400"></th>
                     <th>5</th>
                     <th>4</th>
                     <th>3</th>
@@ -288,11 +288,11 @@
                   <% @temp_poll = Poll.cached_find(poll.id).cached_choices.sort {|x,y| y.answer.to_i <=> x.answer.to_i}.collect{|e| e.vote } %>
                   <tr>
                     <td><%= poll.title %></td>
-                    <td><%= @temp_poll[0] %></td>
-                    <td><%= @temp_poll[1] %></td>
-                    <td><%= @temp_poll[2] %></td>
-                    <td><%= @temp_poll[3] %></td>
-                    <td><%= @temp_poll[4] %></td>
+                    <td class="text-center"><%= @temp_poll[0] %></td>
+                    <td class="text-center"><%= @temp_poll[1] %></td>
+                    <td class="text-center"><%= @temp_poll[2] %></td>
+                    <td class="text-center"><%= @temp_poll[3] %></td>
+                    <td class="text-center"><%= @temp_poll[4] %></td>
                   </tr>
                   <% end %>
                 </tbody>
@@ -314,3 +314,9 @@
 </div>
 
 </section>
+
+<script>
+  $(document).ready(function() {
+    $("table.questionnaire th").addClass("header-questionnaire");
+  });
+</script>

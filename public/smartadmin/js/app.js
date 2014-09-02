@@ -1575,6 +1575,14 @@ function drawBreadCrumb() {
 }
 
 function dataTable() {
+	$('#dashboard-questionnaire').dataTable({
+		retrieve: true,
+		iDisplayLength: 25,
+		order: [[0, 'desc']],
+		responsive: true,
+		dom: '<"toolbar">frtip',
+		paginate: false
+	});
 	$('#invite_codes').dataTable({
 		retrieve: true,
 		iDisplayLength: 25,
@@ -1632,7 +1640,8 @@ function dataTable() {
 	});
 	$('#list_polls').dataTable({
 		retrieve: true,
-		iDisplayLength: 25
+		iDisplayLength: 25,
+		responsive: true
 	});
 	$('#list_recurring').dataTable({
 		retrieve: true,
