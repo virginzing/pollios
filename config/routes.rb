@@ -188,6 +188,8 @@ Pollios::Application.routes.draw do
     get 'report/load_reason_member',  to: 'admin#load_reason_member' 
     
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
+
+    post 'login_as',  to: 'admin#login_as', as: :login_as
     resources :invites
     resources :commercials
   end

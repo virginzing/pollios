@@ -1,6 +1,7 @@
 class AdminController < ApplicationController
   layout 'admin'
-  
+  skip_before_action :verify_authenticity_token, only: [:login_as]
+
   before_filter :authenticate_admin!, :redirect_unless_admin
 
   def dashboard
@@ -28,8 +29,27 @@ class AdminController < ApplicationController
     @invite_codes = InviteCode.joins(:company).select("invite_codes.*, companies.name as company_name")
   end
 
+  def login_as
+    begin
+      member = Member.find_by(email: login_as_params[:email])
+      cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+      flash[:success] = "Login success as #{member.email}"
+      redirect_to dashboard_path
+    rescue => e
+      flash[:error] = "Error"
+      redirect_to commercials_path
+    end
+  end
+
   def signout
     sign_out current_admin
     redirect_to root_url
   end
+
+  private
+
+  def login_as_params
+    params.permit(:email)
+  end
+
 end
