@@ -490,8 +490,8 @@ class PollsController < ApplicationController
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
-        CommentPollWorker.perform_async(@current_member.id, @poll.id, { comment_message: @comment.message })
-        CommentMentionWorker.perform_async(@current_member.id, @poll.id, mentionable_list) if mentionable_list.present?
+        CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })
+        CommentMentionWorker.perform_in(5.seconds, @current_member.id, @poll.id, mentionable_list) if mentionable_list.present?
       rescue => e
         @error_message = e.message
         puts "#{e.message}"

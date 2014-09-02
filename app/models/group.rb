@@ -124,7 +124,7 @@ class Group < ActiveRecord::Base
       where(id: list_group).each do |group|
         if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
           group.increment!(:poll_count)
-          GroupNotificationWorker.perform_async(member.id, group.id, poll.id) if Rails.env.production?
+          GroupNotificationWorker.perform_in(5.seconds, member.id, group.id, poll.id) if Rails.env.production?
         end
       end
     end
