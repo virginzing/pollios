@@ -38,7 +38,7 @@ class CompaniesController < ApplicationController
         (2..spreadsheet.last_row).each do |i|
           list_email_file << spreadsheet.row(i).first
         end
-      endif
+      end
     end
 
     
