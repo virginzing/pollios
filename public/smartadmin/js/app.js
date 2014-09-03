@@ -1581,7 +1581,11 @@ function dataTable() {
 		order: [[0, 'desc']],
 		responsive: true,
 		dom: '<"toolbar">frtip',
-		paginate: false
+		paginate: false,
+		createdRow: function (row, data, index) {
+			$('td', row).eq(6).html((data[1].replace(/[\$,]/g, '') * 1 * 5) + (data[2].replace(/[\$,]/g, '') * 1 * 4) + (data[3].replace(/[\$,]/g, '') * 1 * 3)
+			 + (data[4].replace(/[\$,]/g, '') * 1 * 2) + (data[5].replace(/[\$,]/g, '') * 1)).addClass("summary-questionnaire");
+		}
 	});
 	$('#invite_codes').dataTable({
 		retrieve: true,

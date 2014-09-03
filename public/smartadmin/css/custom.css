@@ -36,6 +36,11 @@ table.questionnaire th.header-questionnaire {
   font-weight: 600;
 }
 
+.summary-questionnaire {
+  font-size: 18px;
+  font-weight: 600;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;

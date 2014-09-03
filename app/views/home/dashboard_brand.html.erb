@@ -281,8 +281,16 @@
                     <th>3</th>
                     <th>2</th>
                     <th>1</th>
+                    <th>Summary</th>
                   </tr>
                 </thead>
+                <tfoot>
+                  <tr>
+                      <th colspan="6" style="text-align:right">Total:</th>
+                      <th></th>
+                  </tr>
+                </tfoot>
+
                 <tbody>
                   <% @questionnaire.polls.each do |poll| %>
                   <% @temp_poll = Poll.cached_find(poll.id).cached_choices.sort {|x,y| y.answer.to_i <=> x.answer.to_i}.collect{|e| e.vote } %>
@@ -293,6 +301,7 @@
                     <td class="text-center"><%= @temp_poll[2] %></td>
                     <td class="text-center"><%= @temp_poll[3] %></td>
                     <td class="text-center"><%= @temp_poll[4] %></td>
+                    <td class="text-center"></td>
                   </tr>
                   <% end %>
                 </tbody>
