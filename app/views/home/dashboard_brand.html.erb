@@ -272,6 +272,12 @@
             <div class="table-responsive">
               <% if @questionnaire.present? %>
               <h2 class="text-center"><%= truncate(@questionnaire.description, length: 200) %></h2>
+              <dl class="dl-horizontal">
+                <dt>Total vote : </dt><dd> <%= @questionnaire.vote_all %> </dd>
+                <dt>Total view : </dt><dd> <%= @questionnaire.view_all %> </dd>
+                <dt>Created at : </dt><dd><span data-livestamp="<%= @questionnaire.created_at.to_i %>"></span></dd>
+                <dt>Updated at : </dt><dd><span data-livestamp="<%= @questionnaire.updated_at.to_i %>"></span></dd>
+              </dl>
               <table class="table table-bordered table-hover questionnaire" style="margin-bottom: 0px;" id="dashboard-questionnaire">
                 <thead>
                   <tr>
@@ -306,7 +312,6 @@
                   <% end %>
                 </tbody>
               </table>
-              <h1>eiei</h1>
               <% else %>
                 <h3 class="alert alert-warning">Don't have questionnaire.</h3>
               <% end %>
