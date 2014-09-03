@@ -640,13 +640,16 @@ class Member < ActiveRecord::Base
     @your_request ||= user_obj.cached_get_your_request.map(&:id)
     @friend_request ||= user_obj.cached_get_friend_request.map(&:id)
     @my_following ||= user_obj.cached_get_following.map(&:id)
-    
+    @block_friend ||= user_obj.cached_block_friend.map(&:id)
+
     if @my_friend.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
     elsif @your_request.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :invite]
     elsif @friend_request.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :invitee]
+    elsif @block_friend.include?(id)
+      hash = Hash["add_friend_already" => true, "status" => :block]
     else
       hash = Hash["add_friend_already" => false, "status" => :nofriend]
     end

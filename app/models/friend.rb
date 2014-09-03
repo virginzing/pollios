@@ -245,7 +245,8 @@ class Friend < ActiveRecord::Base
     your_request = member_obj.cached_get_your_request.map(&:id)
     friend_request = member_obj.cached_get_friend_request.map(&:id)
     my_following = member_obj.cached_get_following.map(&:id)
-    
+    block_friend = member_obj.cached_block_friend.map(&:id)
+
     search_member.each do |member|
       if my_friend.include?(member.id)
         hash = Hash["add_friend_already" => true, "status" => :friend]
@@ -253,6 +254,8 @@ class Friend < ActiveRecord::Base
         hash = Hash["add_friend_already" => true, "status" => :invite]
       elsif friend_request.include?(member.id)
         hash = Hash["add_friend_already" => true, "status" => :invitee]
+      elsif block_friend.include?(member.id)
+        hash = Hash["add_friend_already" => true, "status" => :block]
       else
         hash = Hash["add_friend_already" => false, "status" => :nofriend]
       end

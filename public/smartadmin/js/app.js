@@ -1586,6 +1586,22 @@ function dataTable() {
 			$('td', row).eq(6).html((data[1].replace(/[\$,]/g, '') * 1 * 5) + (data[2].replace(/[\$,]/g, '') * 1 * 4) + (data[3].replace(/[\$,]/g, '') * 1 * 3)
 			 + (data[4].replace(/[\$,]/g, '') * 1 * 2) + (data[5].replace(/[\$,]/g, '') * 1)).addClass("summary-questionnaire");
 		}
+		// footerCallback: function ( row, data, start, end, display) {
+		// 	var api = this.api(), data;
+		// 	var intVal = function ( i ) {
+	 //      return typeof i === 'string' ?
+	 //          i.replace(/[\$,]/g, '')*1 :
+	 //          typeof i === 'number' ?
+	 //              i : 0;
+  //     };
+  //     data = api.column( 6, { page: 'current'} ).data();
+  //     pageTotal = data.length ?
+  //         data.reduce( function (a, b) {
+  //         	return intVal(a) + intVal(b);
+  //         } ) : 
+  //     0;
+  //     $( api.column( 6 ).footer() ).html(pageTotal);
+		// }
 	});
 	$('#invite_codes').dataTable({
 		retrieve: true,

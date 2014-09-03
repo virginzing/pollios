@@ -284,12 +284,12 @@
                     <th>Summary</th>
                   </tr>
                 </thead>
-                <tfoot>
+<!--                 <tfoot>
                   <tr>
                       <th colspan="6" style="text-align:right">Total:</th>
                       <th></th>
                   </tr>
-                </tfoot>
+                </tfoot> -->
 
                 <tbody>
                   <% @questionnaire.polls.each do |poll| %>
@@ -306,6 +306,7 @@
                   <% end %>
                 </tbody>
               </table>
+              <h1>eiei</h1>
               <% else %>
                 <h3 class="alert alert-warning">Don't have questionnaire.</h3>
               <% end %>
