@@ -54,7 +54,7 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
 
-      JoinGroupWorker.perform_async(member, @group)
+      JoinGroupWorker.perform_async(member_id, group_id)
 
       Rails.cache.delete([member_id, 'group_active'])
       # Rails.cache.delete([member_id, 'group_count'])
@@ -138,7 +138,21 @@ class Group < ActiveRecord::Base
       else
         raise ExceptionHandler::MemberInGroupNotFound, "Not found this member in group"
       end
-      
+
+      Rails.cache.delete([friend_id, 'group_active'])
+      self
+    end
+  end
+
+  def promote_admin(promoter, friend_id)
+    begin
+      raise ExceptionHandler::GroupAdminNotFound, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
+      if find_member_in_group = group_members.find_by(member_id: friend_id)
+        find_member_in_group.update!(is_master: true)
+      else
+        raise ExceptionHandler::MemberInGroupNotFound, "Not found this member in group"
+      end
+
       Rails.cache.delete([friend_id, 'group_active'])
       self
     end

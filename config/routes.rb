@@ -91,6 +91,7 @@ Pollios::Application.routes.draw do
     post ':id/notification',  to: 'group#notification'
     post ':id/group_update',  to: 'group#group_update'
     post ':id/kick_member',   to: 'group#kick_member'
+    post ':id/promote_admin', to: 'group#promote_admin'
   end
 
   scope 'member' do
