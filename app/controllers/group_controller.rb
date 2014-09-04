@@ -75,7 +75,7 @@ class GroupController < ApplicationController
   end
 
   def promote_admin
-    @group = @group.promote_admin(@current_member, group_params[:friend_id])
+    @group = @group.promote_admin(@current_member, group_params[:friend_id], group_params[:admin])
   end
 
   def delete_group
@@ -128,6 +128,6 @@ class GroupController < ApplicationController
   end
 
   def group_params
-    params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public)
+    params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public, :admin)
   end
 end

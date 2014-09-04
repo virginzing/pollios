@@ -144,11 +144,11 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def promote_admin(promoter, friend_id)
+  def promote_admin(promoter, friend_id, admin_status = true)
     begin
       raise ExceptionHandler::GroupAdminNotFound, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
       if find_member_in_group = group_members.find_by(member_id: friend_id)
-        find_member_in_group.update!(is_master: true)
+        find_member_in_group.update!(is_master: admin_status)
       else
         raise ExceptionHandler::MemberInGroupNotFound, "Not found this member in group"
       end
