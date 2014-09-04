@@ -1,8 +1,8 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
+  before_action :set_current_member, only: [:kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_group, only: [:kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
   
   before_action :load_resource_poll_feed, only: [:poll_group]
@@ -70,6 +70,10 @@ class GroupController < ApplicationController
     @group = @current_member.cancel_or_leave_group(group_params[:id], "L")
   end
 
+  def kick_member
+    @group = @group.kick_member_out_group(@current_member, group_params[:friend_id])
+  end
+
   def delete_group
     @group  = @current_member.delete_group(group_params[:group_id])
   end
@@ -102,11 +106,8 @@ class GroupController < ApplicationController
 
   def set_group
     begin
-      @group = Group.find(params[:id])
-    rescue => e
-      respond_to do |wants|
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
-      end
+      @group = Group.find_by(id: params[:id])
+      raise ExceptionHandler::GroupAdminNotFound, "Group not found" unless @group.present?
     end
   end
 

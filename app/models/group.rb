@@ -130,6 +130,20 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def kick_member_out_group(kicker, friend_id)
+    begin
+      raise ExceptionHandler::GroupAdminNotFound, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
+      if find_member_in_group = group_members.find_by(member_id: friend_id)
+        find_member_in_group.destroy
+      else
+        raise ExceptionHandler::MemberInGroupNotFound, "Not found this member in group"
+      end
+      
+      Rails.cache.delete([friend_id, 'group_active'])
+      self
+    end
+  end
+
   def get_description
     description.present? ? description : ""
   end
