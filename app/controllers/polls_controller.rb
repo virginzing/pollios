@@ -305,7 +305,9 @@ class PollsController < ApplicationController
 
   def detail
     begin
-      raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already" unless (@poll.in_group_ids.split(",").collect{|e| e.to_i } & Member.list_group_active.map(&:id)).count > 0
+      if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & Member.list_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
+        raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already"
+      end
       Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
       @expired = @poll.expire_date < Time.now
       @voted = @current_member.list_voted?(@poll)
