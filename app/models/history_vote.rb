@@ -9,6 +9,10 @@ class HistoryVote < ActiveRecord::Base
 
   default_scope { order("id desc") }
 
+  # %w[color salary].each do |key|
+  #   scope "has_#{key}", lambda { |value| where("data_analysis -> (? = ?)", key, value) }
+  # end
+
   def self.voted?(member, poll_id)
     cached_history_voted = member.cached_my_voted
 
