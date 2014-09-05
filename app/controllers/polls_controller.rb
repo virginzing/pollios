@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   protect_from_forgery
   skip_before_action :verify_authenticity_token, if: :json_request?
 
-  before_action :set_current_member, only: [:set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
+  before_action :set_current_member, only: [:load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
   
@@ -305,9 +305,8 @@ class PollsController < ApplicationController
 
   def detail
     begin
-      if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & Member.list_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
-        raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already"
-      end
+      raise_exception_without_group
+
       Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
       @expired = @poll.expire_date < Time.now
       @voted = @current_member.list_voted?(@poll)
@@ -505,6 +504,8 @@ class PollsController < ApplicationController
   end
 
   def load_comment
+    raise_exception_without_group
+
     @comments = Comment.joins(:member).select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
                 .includes(:mentions)
                 .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
@@ -590,6 +591,12 @@ class PollsController < ApplicationController
 
   def json_request?
     request.format.json?
+  end
+
+  def raise_exception_without_group
+    if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
+      raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already"
+    end
   end
 
   def load_resoure_group
