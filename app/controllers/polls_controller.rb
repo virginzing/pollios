@@ -304,9 +304,12 @@ class PollsController < ApplicationController
   end
 
   def detail
-    Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
-    @expired = @poll.expire_date < Time.now
-    @voted = @current_member.list_voted?(@poll)
+    begin
+      raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already" unless (@poll.in_group_ids.split(",").collect{|e| e.to_i } & Member.list_group_active.map(&:id)).count > 0
+      Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
+      @expired = @poll.expire_date < Time.now
+      @voted = @current_member.list_voted?(@poll)
+    end
   end
 
   def friend_following_poll
@@ -424,7 +427,7 @@ class PollsController < ApplicationController
   end
 
   def vote
-    @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member)
+    @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
   end
 
@@ -533,10 +536,7 @@ class PollsController < ApplicationController
   def set_poll
     begin
       @poll = Poll.cached_find(params[:id])
-    rescue => e
-      respond_to do |wants|
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
-      end
+      raise ExceptionHandler::PollNotFound, "Poll not found" unless @poll.present?
     end
   end
 
@@ -573,7 +573,7 @@ class PollsController < ApplicationController
   end
 
   def vote_params
-    params.permit(:poll_id, :choice_id, :member_id, :id, :guest)
+    params.permit(:poll_id, :choice_id, :member_id, :id, :guest, :data_options)
   end
 
   def poll_params

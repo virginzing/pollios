@@ -511,7 +511,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.vote_poll(poll, member)
+  def self.vote_poll(poll, member, data_options = {})
     member_id = poll[:member_id]
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
@@ -524,6 +524,9 @@ class Poll < ActiveRecord::Base
         unless ever_vote.present?
           find_poll = Poll.cached_find(poll_id)
           find_choice = find_poll.choices.find_by(id: choice_id)
+
+          raise ExceptionHandler::PollNotFound, "Poll not found" unless find_poll.present?
+          raise ExceptionHandler::ChoiceNotFound, "Choice not found" unless find_choice.present?
 
           if find_poll.series
             poll_series_id = find_poll.poll_series_id
@@ -541,7 +544,7 @@ class Poll < ActiveRecord::Base
             if @voted.present?
               find_choice.increment!(:vote)
               # find_poll.poll_series.increment!(:vote_all) if find_poll.series
-              history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id)
+              history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
 
               find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
               # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
@@ -563,9 +566,9 @@ class Poll < ActiveRecord::Base
           end
 
         end
-      rescue => e
-        puts "error => #{e}"
-        [@error_message = e.message, nil]
+      # rescue => e
+      #   puts "error => #{e}"
+      #   [@error_message = e.message, nil]
       end
     end  
   end

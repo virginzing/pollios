@@ -10,6 +10,9 @@ module ExceptionHandler
   class GroupNotFound < StandardError; end
   class MemberInGroupNotFound < StandardError; end
 
+  class PollNotFound < StandardError; end
+  class ChoiceNotFound < StandardError; end
+
   def known_error(ex)
     Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: 404
