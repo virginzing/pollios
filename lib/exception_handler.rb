@@ -15,7 +15,7 @@ module ExceptionHandler
 
   def known_error(ex)
     Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
-    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: 404
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: 200
   end
 
 end
