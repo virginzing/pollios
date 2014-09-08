@@ -41,6 +41,11 @@ table.questionnaire th.header-questionnaire {
   font-weight: 600;
 }
 
+blockquote.analysis-gender {
+  margin: 0px;
+  font-size: 12px;
+}
+
 #result canvas {
   width: 200px;
   height: 200px;

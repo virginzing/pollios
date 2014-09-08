@@ -414,6 +414,7 @@ class Poll < ActiveRecord::Base
       photo_poll = poll[:photo_poll]
       allow_comment = poll[:allow_comment] || false
       creator_must_vote = poll[:creator_must_vote]
+      require_info = poll[:require_info].present? ? true : false
 
       choices = check_type_of_choice(choices)
 
@@ -442,7 +443,7 @@ class Poll < ActiveRecord::Base
       end
 
       @poll = create!(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, 
-                     type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote)
+                     type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info)
 
       if @poll.valid? && choices
         @choices = Choice.create_choices(@poll.id, choices)
@@ -604,6 +605,10 @@ class Poll < ActiveRecord::Base
 
   def get_choice_scroll
     choices.collect! {|choice| choice.vote }
+  end
+
+  def get_require_info
+    require_info.presence
   end
 
   def self.filter_type(query, type)

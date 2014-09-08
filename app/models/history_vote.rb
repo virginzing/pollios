@@ -9,9 +9,9 @@ class HistoryVote < ActiveRecord::Base
 
   default_scope { order("id desc") }
 
-  # %w[color salary].each do |key|
-  #   scope "has_#{key}", lambda { |value| where("data_analysis -> (? = ?)", key, value) }
-  # end
+  %w[gender province].each do |key|
+    scope "has_#{key}", lambda { |value| where("data_analysis @> hstore(?,?)", key, value) }
+  end
 
   def self.voted?(member, poll_id)
     cached_history_voted = member.cached_my_voted
@@ -28,6 +28,10 @@ class HistoryVote < ActiveRecord::Base
         "choice_id" => ever_voted[0].choice_id
       }
     end
+  end
+
+  def self.get_gender_analysis(poll_id, choice_id, gender_type)
+    HistoryVote.where("poll_id = #{poll_id} AND choice_id = #{choice_id}").has_gender(gender_type)
   end
 
 end

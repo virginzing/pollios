@@ -194,7 +194,6 @@ class PollsController < ApplicationController
       if @member_group.count > 0
         @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
         @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
-
         @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
         @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
       else
@@ -580,7 +579,7 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :choices => [])
+    params.permit(:title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, :choices => [])
   end
 
   def polls_params

@@ -367,44 +367,44 @@
 <% end %>
 
 <% if current_member.brand? %>
-  <h1>Mock up, Analysis by Province</h1>
+  <%= render 'analysis_poll_of_brand' %>
+<!--   <h1>Mock up, Analysis by Province</h1>
+    
+    <div class="well">
+      <div class="col col-8">
+      <script type='text/javascript'>
+        google.load('visualization', '1', {'packages': ['geochart']});
+        google.setOnLoadCallback(drawMarkersMap);
 
-      <div class="well">
-        <div class="col col-8">
-        <script type='text/javascript'>
-          google.load('visualization', '1', {'packages': ['geochart']});
-          google.setOnLoadCallback(drawMarkersMap);
+        function drawMarkersMap() {
+        var data = google.visualization.arrayToDataTable([
+          ['City',   'Vote'],
+          ['Bangkok',    959574],
+          ['Amnat Charoen',     7563],
+          ['Chai Nat',   655875],
+          ['Lampang',     607906],
+          ['Phayao',   380181],
+          ['Yala', 10000],
+          ['Nakhon Pathom', 40000]
+        ]);
 
-          function drawMarkersMap() {
-          var data = google.visualization.arrayToDataTable([
-            ['City',   'Vote'],
-            ['Bangkok',    959574],
-            ['Amnat Charoen',     7563],
-            ['Chai Nat',   655875],
-            ['Lampang',     607906],
-            ['Phayao',   380181],
-            ['Yala', 10000],
-            ['Nakhon Pathom', 40000]
-          ]);
+        var options = {
+          region: 'TH',
+          displayMode: 'markers',
+          showLegend: true,
+          colorAxis: {colors: ['green', 'yellow', 'red']}
+        };
 
-          var options = {
-            region: 'TH',
-            displayMode: 'markers',
-            showLegend: true,
-            colorAxis: {colors: ['green', 'yellow', 'red']}
-          };
-
-          var chart = new google.visualization.GeoChart(document.getElementById('geo_chart'));
-          chart.draw(data, options);
-          };
-        </script>
-          <div id="geo_chart" style="width: 784px; height: 400px;"></div>
-        </div>      
-        <div class="col col-4">
-          
-        </div>
+        var chart = new google.visualization.GeoChart(document.getElementById('geo_chart'));
+        chart.draw(data, options);
+        };
+      </script>
+        <div id="geo_chart" style="width: 784px; height: 400px;"></div>
+      </div>      
+      <div class="col col-4">
+        
       </div>
-
+    </div> -->
 
 <% end %>
 

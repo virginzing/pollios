@@ -1,0 +1,62 @@
+<h1>Analysis</h1>
+
+<section>
+  <div class="well">
+    <h3 class="text-primary">Gender</h3>
+    <table class="table table-hover" id="gender-analysis">
+      <thead>
+        <tr>
+          <th class="text-center">Choice</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @poll.cached_choices.each_with_index do |choice, index| %>
+        <% male = HistoryVote.get_gender_analysis(@poll.id, choice.id, "Male").count %>
+        <% female = HistoryVote.get_gender_analysis(@poll.id, choice.id, "Female").count %>
+  
+        <tr>
+          <td class="text-center" width="250" style="font-size: 18px;"><strong><%= choice.answer %></strong></td>
+          <td>
+            <ol>
+              <li>
+              <blockquote class="analysis-gender">
+              <% if (male + female) != 0 %>
+                <p>Male</p>
+                <div class="progress progress-striped active left" rel="tooltip" data-original-title="<%= number_to_percentage((male*100)/(male+female), precision: 0) %>" data-placement="top">
+                  <div class="progress-bar progress-bar-info" aria-valuetransitiongoal="<%= number_to_human((male*100)/(male+female), precision: 0) %>"></div>
+                </div>
+              <% else %>
+                <p>Male</p>
+                 <div class="alert alert-block alert-warning">
+                  <a class="close" data-dismiss="alert" href="#">×</a>
+                  <h4>Data don't enough for analysis.</h4>
+                </div>
+              <% end %>
+              </blockquote>
+              </li>
+              <li>
+              <blockquote class="analysis-gender">
+              <% if (male + female) != 0 %>
+                <p>Female</p>
+                <div class="progress progress-striped active left" rel="tooltip" data-original-title="<%= number_to_percentage((female*100)/(male+female), precision: 0) %>" data-placement="top">
+                  <div class="progress-bar progress-bar-info bg-color-redLight" aria-valuetransitiongoal="<%= number_to_human((female*100)/(male+female), precision: 0) %>"></div>
+                </div>
+              <% else %>
+                <p>Female</p>
+                <div class="alert alert-block alert-warning">
+                  <a class="close" data-dismiss="alert" href="#">×</a>
+                  <h4>Data don't enough for analysis.</h4>
+                </div>
+              <% end %>
+              </blockquote>
+              </li>
+            </ol>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+  </div>
+</section>

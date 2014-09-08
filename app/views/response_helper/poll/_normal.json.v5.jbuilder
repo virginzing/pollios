@@ -21,5 +21,5 @@ json.watched poll.check_watched
 json.photo poll.get_photo
 json.allow_comment poll.allow_comment
 json.comment_count poll.comment_count
-json.require_info poll.require_info
+json.require_info poll.get_require_info
 json.creator_must_vote poll.creator_must_vote
