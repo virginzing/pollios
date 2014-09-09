@@ -541,10 +541,7 @@ class PollsController < ApplicationController
   private
 
   def set_poll
-    begin
-      @poll = Poll.cached_find(params[:id])
-      raise ExceptionHandler::PollNotFound, "Poll not found" unless @poll.present?
-    end
+    @poll = Poll.cached_find(params[:id])
   end
 
   def comment_params

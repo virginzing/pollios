@@ -95,7 +95,10 @@ class Poll < ActiveRecord::Base
   end
 
   def self.cached_find(id)
-    Rails.cache.fetch([name, id]) { find(id) }
+    begin
+      raise ExceptionHandler::PollNotFound, "Poll not found or deleted." unless find_by(id: id).present?
+      Rails.cache.fetch([name, id]) { find(id) }
+    end
   end
 
   def flush_cache
