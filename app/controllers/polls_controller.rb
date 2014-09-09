@@ -92,7 +92,12 @@ class PollsController < ApplicationController
   end
 
   def index
-    @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
+    if current_member.company?
+      @init_poll = PollOfGroup.new(@current_member, @current_member.company.group, options_params)
+      @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
+    else
+      @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
+    end
   end
 
   def create ## for Web
