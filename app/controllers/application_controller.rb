@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   # before_action :restrict_only_admin
   layout :layout_by_resource
-  include ExceptionHandler
+  # include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
   include PollsHelper

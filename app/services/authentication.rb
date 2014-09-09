@@ -188,6 +188,6 @@ class Authentication
   end
 
   def check_activate_account
-    member.bypass_invite || member.member_invite_codes.present? || member.brand? || member.company?
+    member.bypass_invite || member.member_invite_codes.present? || member.brand? || approve_company
   end
 end

@@ -223,6 +223,10 @@ Pollios::Application.routes.draw do
     delete '/remove_member',  to: 'companies#remove_member',  as: :remove_member_group
   end
 
+  scope 'api/group' do
+    get ':group_id/polls',  to: 'companies#polls'
+  end
+
   get '/profile', to: 'members#profile',  as: :my_profile
   delete 'delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
   delete 'delete_cover',  to: 'members#delete_cover', as: :delete_cover

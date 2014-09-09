@@ -75,9 +75,10 @@
 	        <span class="logo-title">POLLIOS</span>
 	      </a>
       </h1>
-
+			<% if current_admin %>
 			<span id="login-header-space"> <span class="hidden-xs">Need an Brand or Company account?</span> <a href="<%= users_signup_brand_url %>" class="btn btn-danger">Brand</a> 
 			<a href="<%= users_signup_company_url %>" class="btn btn-primary">Company</a> </span>
+			<% end %>
 		</header>
 
 		<div id="main" role="main">
@@ -155,21 +156,7 @@
 							</form>
 
 						</div>
-						
-						<h5 class="text-center"> - Or sign in using -</h5>
-															
-										<ul class="list-inline text-center">
-											<li>
-												<a href="javascript:void(0);" class="btn btn-primary btn-circle"><i class="fa fa-facebook"></i></a>
-											</li>
-											<li>
-												<a href="javascript:void(0);" class="btn btn-info btn-circle"><i class="fa fa-twitter"></i></a>
-											</li>
-											<li>
-												<a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
-											</li>
-										</ul>
-						
+												
 					</div>
 				</div>
 			</div>

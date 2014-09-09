@@ -11,6 +11,8 @@ json.subscription do
   json.subscribe_expire member.subscribe_expire.to_i
 end
 
+json.group_id member.company.group.id if member.company?
+
 json.count do
   json.point member.point
   json.poll member.cached_my_poll.count

@@ -6,6 +6,12 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
 
+  before_action :set_current_member, only: [:polls]
+  before_action :find_group_from_id, only: [:polls]
+  before_action :load_resource_poll_feed, only: [:polls]
+
+  expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
+
   def new
     @invite = InviteCode.new
   end
@@ -97,6 +103,19 @@ class CompaniesController < ApplicationController
     @members = query.where("members.id NOT IN (?)", @member_in_group) if @member_in_group.count > 0
   end
 
+  def polls
+    @init_poll = PollOfGroup.new(@current_member, @group, options_params)
+    @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def poll_helper
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    @group_by_name ||= @init_poll.group_by_name
+    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
+  end
+
   def add_user_to_group
 
     find_user = Member.find_by(id: params[:member_id])     
@@ -151,6 +170,10 @@ class CompaniesController < ApplicationController
 
   private
 
+  def options_params
+    params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request)
+  end
+
   def invite_code_params
     params.require(:invite_code).permit(:list_email, :file)
   end
@@ -161,6 +184,10 @@ class CompaniesController < ApplicationController
 
   def set_company
     @find_company = current_member.company
+  end
+
+  def find_group_from_id
+    @group = Group.find(params[:group_id])
   end
 
   def company_params

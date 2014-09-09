@@ -55,6 +55,7 @@ class AuthenSentaiController < ApplicationController
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
         if @auth.activate_account? || @auth.approve_brand || @auth.approve_company
           @login = true
+
           # session[:member_id] = member.id
           if sessions_params[:remember_me]
             cookies.permanent[:auth_token] = member.auth_token
