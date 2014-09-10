@@ -195,7 +195,7 @@ class PollsController < ApplicationController
       @member_novoted_poll = init_company.get_member_not_voted_poll
 
       if @member_novoted_poll.length > 0
-        ApnPokePollWorker.perform_async(@current_member.id, @member_novoted_poll.collect{|e| e.id }, @poll.id)
+        ApnPokePollWorker.perform_async(@current_member.id, @member_novoted_poll.collect{|e| e.id }, params[:id])
 
         format.json { render json: [], status: 200 }
       else
@@ -210,7 +210,7 @@ class PollsController < ApplicationController
       @member_noviewed_poll = init_company.get_member_not_viewed_poll
 
       if @member_noviewed_poll.length > 0
-        ApnPokePollWorker.perform_async(@current_member.id, @member_noviewed_poll.collect{|e| e.id }, @poll.id)
+        ApnPokePollWorker.perform_async(@current_member.id, @member_noviewed_poll.collect{|e| e.id }, params[:id])
 
         format.json { render json: [], status: 200 }
       else
@@ -225,7 +225,7 @@ class PollsController < ApplicationController
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       if @member_viewed_no_vote_poll.length > 0
-        ApnPokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, @poll)
+        ApnPokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, params[:id])
 
         format.json { render json: [], status: 200 }
       else
