@@ -93,7 +93,7 @@ class PollsController < ApplicationController
 
   def index
     if current_member.company?
-      @init_poll = PollOfGroup.new(@current_member, @current_member.company.group, options_params)
+      @init_poll = PollOfGroup.new(current_member, current_member.company.group, options_params)
       @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
     else
       @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
@@ -163,38 +163,16 @@ class PollsController < ApplicationController
   #   @series = @current_member.poll_series.paginate(page: params[:page])
   # end
 
-  def list_history_vote_poll
-    @list_history_vote_poll = Member.joins("left outer join history_votes on members.id = history_votes.member_id")
-                  .select("members.*, history_votes.created_at as voted_at")
-                  .where("history_votes.poll_id = ? AND members.id IN (?)", @poll.id, @member_group_ids)
-
-    @member_voted_poll = @list_history_vote_poll.select {|e| e if e.voted_at.present? }
-    @member_novoted_poll = Member.where("id IN (?)", @member_group_ids - @member_voted_poll.map(&:id))
-  end
-
-  def list_history_view_poll
-    @list_history_view_poll = Member.joins("left outer join history_views on members.id = history_views.member_id")
-                  .select("members.*, history_views.created_at as viewed_at")
-                  .where("history_views.poll_id = ? AND members.id IN (?)", @poll.id, @member_group_ids)
-
-    @member_viewed_poll = @list_history_view_poll.select {|e| e if e.viewed_at.present? }
-    @member_noviewed_poll = Member.where("id IN (?)", @member_group_ids - @member_viewed_poll.map(&:id))
-  end
-
   def show
     @choice_data_chart = []
     if current_member.company?
-      load_resoure_group
-
-      list_history_vote_poll
-
-      list_history_view_poll
-
-      @member_view_but_no_vote = @member_viewed_poll.map(&:id)
-
-      member_voted_poll_ids ||= @member_voted_poll.map(&:id)
-
-      @member_viewed_no_vote_poll = @member_viewed_poll.select {|e| e unless member_voted_poll_ids.include?(e.id) }
+      init_company = PollDetailCompany.new(current_member.company.group, @poll)
+      @member_group = init_company.get_member_in_group
+      @member_voted_poll = init_company.get_member_voted_poll
+      @member_novoted_poll = init_company.get_member_not_voted_poll
+      @member_viewed_poll = init_company.get_member_viewed_poll
+      @member_noviewed_poll = init_company.get_member_not_viewed_poll
+      @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       if @member_group.count > 0
         @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
@@ -209,13 +187,12 @@ class PollsController < ApplicationController
         @percent_noview = zero_percent
       end
     end
-
   end
 
   def poke_dont_vote
     respond_to do |format|
-      load_resoure_group
-      list_history_vote_poll
+      init_company = PollDetailCompany.new(@current_member.company.group, @poll)
+      @member_novoted_poll = init_company.get_member_not_voted_poll
 
       if @member_novoted_poll.length > 0
         ApnPokePollWorker.perform_async(@current_member.id, @member_novoted_poll.collect{|e| e.id }, @poll.id)
@@ -229,8 +206,8 @@ class PollsController < ApplicationController
 
   def poke_dont_view
     respond_to do |format|
-      load_resoure_group
-      list_history_view_poll
+      init_company = PollDetailCompany.new(@current_member.company.group, @poll)
+      @member_noviewed_poll = init_company.get_member_not_viewed_poll
 
       if @member_noviewed_poll.length > 0
         ApnPokePollWorker.perform_async(@current_member.id, @member_noviewed_poll.collect{|e| e.id }, @poll.id)
@@ -244,12 +221,8 @@ class PollsController < ApplicationController
 
   def poke_view_no_vote
     respond_to do |format|
-      load_resoure_group
-      list_history_vote_poll
-      list_history_view_poll
-
-      member_voted_poll_ids ||= @member_voted_poll.map(&:id)
-      @member_viewed_no_vote_poll = @member_viewed_poll.select {|e| e unless member_voted_poll_ids.include?(e.id) }
+      init_company = PollDetailCompany.new(@current_member.company.group, @poll)
+      @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       if @member_viewed_no_vote_poll.length > 0
         ApnPokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, @poll)
@@ -310,7 +283,6 @@ class PollsController < ApplicationController
   def detail
     begin
       raise_exception_without_group
-
       Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
       @expired = @poll.expire_date < Time.now
       @voted = @current_member.list_voted?(@poll)
@@ -596,14 +568,11 @@ class PollsController < ApplicationController
 
   def raise_exception_without_group
     if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
-      raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already"
+      if @poll.member_id != @current_member.id
+        raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already"
+      end
     end
   end
 
-  def load_resoure_group
-    @group = current_member.present? ? current_member.company.group : @current_member.company.group 
-    @member_group = @group.get_member_active
-    @member_group_ids = @member_group.map(&:id)
-  end
 
 end

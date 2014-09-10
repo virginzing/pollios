@@ -21,6 +21,7 @@ class Group < ActiveRecord::Base
   has_one :group_company, dependent: :destroy
   
   validates :name, presence: true
+  store_accessor :properties
 
   mount_uploader :photo_group, PhotoGroupUploader
 

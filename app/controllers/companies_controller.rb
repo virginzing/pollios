@@ -6,9 +6,10 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
 
-  before_action :set_current_member, only: [:polls]
+  before_action :get_your_group, only: [:poll_detail]
+  before_action :set_current_member, only: [:polls, :poll_detail]
   before_action :find_group_from_id, only: [:polls]
-  before_action :load_resource_poll_feed, only: [:polls]
+  before_action :load_resource_poll_feed, only: [:polls, :poll_detail]
 
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
 
@@ -109,6 +110,7 @@ class CompaniesController < ApplicationController
     poll_helper
   end
 
+
   def poll_helper
     @poll_series, @poll_nonseries = Poll.split_poll(@polls)
     @group_by_name ||= @init_poll.group_by_name
@@ -169,6 +171,10 @@ class CompaniesController < ApplicationController
   end
 
   private
+
+  def set_poll
+    @poll = Poll.cached_find(params[:id])
+  end
 
   def options_params
     params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request)
