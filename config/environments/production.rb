@@ -74,7 +74,7 @@ Pollios::Application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
-  # config.active_record.schema_format = :ruby
+  config.active_record.schema_format = :ruby
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
