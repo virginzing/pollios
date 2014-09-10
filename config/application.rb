@@ -63,7 +63,7 @@ module Pollios
       config.page_method_name = :per_page_kaminari
     end
 
-    # config.active_record.schema_format = :sql
+    config.active_record.schema_format = :sql
     # Compass.sass_engine_options[:load_paths].collect { |path| path.try(:root) }.compact
   end
 end
