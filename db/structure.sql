@@ -718,9 +718,7 @@ CREATE TABLE groups (
     poll_count integer DEFAULT 0,
     authorize_invite integer,
     description text,
-    leave_group boolean DEFAULT true,
-    group_type integer,
-    properties hstore
+    leave_group boolean DEFAULT true
 );
 
 
@@ -2895,13 +2893,6 @@ CREATE INDEX index_group_members_on_member_id ON group_members USING btree (memb
 
 
 --
--- Name: index_groups_on_properties; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_groups_on_properties ON groups USING gist (properties);
-
-
---
 -- Name: index_hidden_polls_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3697,5 +3688,3 @@ INSERT INTO schema_migrations (version) VALUES ('20140901061006');
 INSERT INTO schema_migrations (version) VALUES ('20140901103319');
 
 INSERT INTO schema_migrations (version) VALUES ('20140901103634');
-
-INSERT INTO schema_migrations (version) VALUES ('20140909095809');
