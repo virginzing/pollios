@@ -26,7 +26,3 @@ run Rails.application
 require 'newrelic_rpm'
 require 'new_relic/rack/developer_mode'
 use NewRelic::Rack::DeveloperMode
-
-if ENV['RAILS_ENV'] == 'production'
-  Rake::Task["db:structure:dump"].clear
-end
