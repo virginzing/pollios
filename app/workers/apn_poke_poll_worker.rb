@@ -4,7 +4,7 @@ class ApnPokePollWorker
 
   def perform(sender_id, list_member, poll_id, custom_data = {})
     begin
-      poll = Poll.find_by(id: poll_id)
+      poll = Poll.find(poll_id)
 
       @apn_poke_poll = Apn::PokePoll.new(poll)
 
