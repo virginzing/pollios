@@ -1,14 +1,15 @@
 class PollsController < ApplicationController
 
   protect_from_forgery
+
   skip_before_action :verify_authenticity_token, if: :json_request?
+  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new]
+
 
   before_action :set_current_member, only: [:load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
                 :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
-  
-  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new]
-  
+    
   before_action :history_voted_viewed_guest, only: [:guest_poll]
   
   before_action :set_poll, only: [:set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
@@ -569,7 +570,7 @@ class PollsController < ApplicationController
   def raise_exception_without_group
     if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
       if @poll.member_id != @current_member.id
-        raise ExceptionHandler::MemberInGroupNotFound, "You've leave this group already"
+        raise ExceptionHandler::NotFound, "You've leave this group already"
       end
     end
   end

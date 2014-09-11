@@ -21,7 +21,6 @@ class Group < ActiveRecord::Base
   has_one :group_company, dependent: :destroy
   
   validates :name, presence: true
-  store_accessor :properties
 
   mount_uploader :photo_group, PhotoGroupUploader
 
@@ -133,11 +132,11 @@ class Group < ActiveRecord::Base
 
   def kick_member_out_group(kicker, friend_id)
     begin
-      raise ExceptionHandler::GroupAdminNotFound, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
+      raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
       else
-        raise ExceptionHandler::MemberInGroupNotFound, "Not found this member in group"
+        raise ExceptionHandler::NotFound, "Not found this member in group"
       end
 
       Rails.cache.delete([friend_id, 'group_active'])
@@ -147,11 +146,11 @@ class Group < ActiveRecord::Base
 
   def promote_admin(promoter, friend_id, admin_status = true)
     begin
-      raise ExceptionHandler::GroupAdminNotFound, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
+      raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.update!(is_master: admin_status)
       else
-        raise ExceptionHandler::MemberInGroupNotFound, "Not found this member in group"
+        raise ExceptionHandler::NotFound, "Not found this member in group"
       end
 
       Rails.cache.delete([friend_id, 'group_active'])

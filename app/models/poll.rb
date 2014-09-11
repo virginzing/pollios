@@ -96,7 +96,7 @@ class Poll < ActiveRecord::Base
 
   def self.cached_find(id)
     begin
-      raise ExceptionHandler::PollNotFound, "Poll not found or deleted." unless find_by(id: id).present?
+      raise ExceptionHandler::NotFound, "Poll not found or deleted." unless find_by(id: id).present?
       Rails.cache.fetch([name, id]) { find(id) }
     end
   end
@@ -529,8 +529,8 @@ class Poll < ActiveRecord::Base
           find_poll = Poll.cached_find(poll_id)
           find_choice = find_poll.choices.find_by(id: choice_id)
 
-          raise ExceptionHandler::PollNotFound, "Poll not found" unless find_poll.present?
-          raise ExceptionHandler::ChoiceNotFound, "Choice not found" unless find_choice.present?
+          raise ExceptionHandler::NotFound, "Poll not found" unless find_poll.present?
+          raise ExceptionHandler::NotFound, "Choice not found" unless find_choice.present?
 
           if find_poll.series
             poll_series_id = find_poll.poll_series_id

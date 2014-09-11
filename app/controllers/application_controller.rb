@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   # before_action :restrict_only_admin
   layout :layout_by_resource
+  
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
@@ -17,9 +18,6 @@ class ApplicationController < ActionController::Base
       @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-  before_filter :if => Proc.new{ |c| (c.request.format.html? && current_member.company?) if signed_in? } do
-    @group = current_member.company.group
-  end
 
   helper_method :current_member, :signed_in?, :render_to_string, :only_company
   

@@ -111,7 +111,7 @@ class GroupController < ApplicationController
   def set_group
     begin
       @group = Group.find_by(id: params[:id])
-      raise ExceptionHandler::GroupAdminNotFound, "Group not found" unless @group.present?
+      raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
     end
   end
 
