@@ -5,8 +5,8 @@ if @poll.present?
     json.choice_id choice.id
     json.answer choice.answer
     json.vote choice.vote
-    end
   end
+  
   json.member_voted @member_voted_poll do |member|
     json.partial! 'response_helper/member/short_info', member: member
   end
