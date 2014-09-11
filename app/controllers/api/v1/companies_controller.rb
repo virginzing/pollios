@@ -21,11 +21,7 @@ module Api
       end
 
       def poll_detail
-        puts "#{@current_member}"
         @poll = Poll.cached_find(params[:id])
-        @expired = @poll.expire_date < Time.now
-        @voted = @current_member.list_voted?(@poll)
-
         init_company = PollDetailCompany.new(@group, @poll)
         @member_group = init_company.get_member_in_group
         @member_voted_poll = init_company.get_member_voted_poll
