@@ -1,7 +1,6 @@
 class PollDetailCompany
   def initialize(group, poll, options={})
     @group = group
-    puts "group => #{@group}"
     @poll = poll
     @options = options
   end
