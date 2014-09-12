@@ -1211,7 +1211,8 @@ CREATE TABLE members (
     province integer,
     birthday date,
     interests text,
-    salary integer
+    salary integer,
+    setting hstore
 );
 
 
@@ -3075,6 +3076,13 @@ CREATE INDEX index_members_on_poll_public_req_at ON members USING btree (poll_pu
 
 
 --
+-- Name: index_members_on_setting; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_members_on_setting ON members USING gist (setting);
+
+
+--
 -- Name: index_members_on_username; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3688,3 +3696,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140901061006');
 INSERT INTO schema_migrations (version) VALUES ('20140901103319');
 
 INSERT INTO schema_migrations (version) VALUES ('20140901103634');
+
+INSERT INTO schema_migrations (version) VALUES ('20140912031610');
