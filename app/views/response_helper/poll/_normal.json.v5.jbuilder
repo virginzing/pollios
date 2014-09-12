@@ -7,7 +7,7 @@ json.view_count poll.view_all
 json.expire_date poll.expire_date.to_i
 json.created_at poll.created_at.to_i
 json.vote_max poll.get_vote_max
-json.choice_detail poll.get_choice_detail if poll.rating?
+json.choices poll.get_choice_detail if poll.rating?
 json.voted_detail @current_member.list_voted?(poll)
 json.viewed @current_member.list_viewed?(poll.id)
 json.choice_count poll.choice_count

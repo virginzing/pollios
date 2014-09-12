@@ -148,9 +148,7 @@ class Poll < ActiveRecord::Base
     cached_choices.each do |choice|
       hash_choice << {"choice_id" => choice.id, "answer" => choice.answer, "vote" => choice.vote }
     end
-    {
-      "choices" => hash_choice
-    }
+    hash_choice
   end
 
   def get_in_groups(groups_by_name)
