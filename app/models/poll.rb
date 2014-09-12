@@ -141,6 +141,18 @@ class Poll < ActiveRecord::Base
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
 
+
+  def get_choice_detail
+    @choice ||= cached_choices
+    hash_choice = []
+    cached_choices.each do |choice|
+      hash_choice << {"choice_id" => choice.id, "answer" => choice.answer, "vote" => choice.vote }
+    end
+    {
+      "choices" => hash_choice
+    }
+  end
+
   def get_in_groups(groups_by_name)
     group = []
     in_group_ids.split(",").each do |id|

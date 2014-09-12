@@ -116,6 +116,7 @@ Pollios::Application.routes.draw do
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile', as: :update_profile
+    post 'setting_default',   to: 'members#setting_default'
     post 'update_group',      to: 'members#update_group', as: :update_group
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'

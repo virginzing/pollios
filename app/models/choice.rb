@@ -47,5 +47,4 @@ class Choice < ActiveRecord::Base
   def self.find_choice(poll_id)
     where(poll_id: poll_id).to_a
   end
-
 end
