@@ -337,6 +337,10 @@ end
 #     "member_id": 
 # }' -X POST http://localhost:3000/group/51/accept.json -i
 
+# curl -H "Content-Type: application/json" -d '{}'-X POST http://localhost:3000/poll/928/open_comment.json -i
+
+
+
 # curl -H "Content-Type: application/json" -d '{
 #     "friend_id": 47,
 #     "message": "ภาพ cover เสื่อมมาก",
@@ -350,6 +354,8 @@ end
 # curl -H "Content-Type: application/json" -d '{}' -X POST http://localhost:3000/member/63/request_code.json -i
 
 
+# curl -H "Accept: application/vnd.pollios.v1" -H "Content-Type: application/json" -X GET "http://localhost:3000/api/group/65/polls?member_id=128" -i
+
 # curl -H "Content-Type: application/json" -d '{
 #     "txtUsername": "coconuzz",
 #     "txtPassword": "mefuwfhfu",
@@ -359,11 +365,10 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 85,
-#     "title": "​ลงกรุ๊ป",
+#     "title": "​ทดสอบๆๆๆ",
 #     "expire_within": "2",
-#     "choices": ["yes", "no", "eiei"],
-#     "type_poll": "freeform",
-#     "group_id": "51"
+#     "choices": ["yes", "no", "no vote"],
+#     "type_poll": "rating"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -432,7 +437,7 @@ end
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
 #     "choice_id": "2733"
-# }' -X POST http://localhost:3000/poll/790/vote.json -i
+# }' -X POST http://localhost:3000/poll/1/vote.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 30,
@@ -493,7 +498,9 @@ end
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
 
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{
+# "authen":"codeapp@gmail.com","password":"9code7app9", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" 
+# }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{

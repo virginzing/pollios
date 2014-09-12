@@ -12,7 +12,7 @@ class Member < ActiveRecord::Base
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
 
-  # attr_accessor :fullname
+  store_accessor :setting
   
   cattr_accessor :current_member, :reported_polls, :shared_polls, :viewed_polls, :voted_polls, :list_friend_block, :list_friend_active,
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls

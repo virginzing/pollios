@@ -162,7 +162,7 @@ Pollios::Application.routes.draw do
     post 'unshare/:id',     to: 'polls#unshare'
     post ':id/comments',     to: 'polls#comment'
     get ':id/comments',       to: 'polls#load_comment'
-    delete ':id/comments/:comment_id',  to: 'polls#delete_comment'
+    delete ':id/comments/:comment_id/delete',  to: 'polls#delete_comment'
     delete ':id/delete',           to: 'polls#delete_poll'
     get 'public_timeline',            to: 'polls#public_poll'
     get 'friend_following_timeline',  to: 'polls#friend_following_poll'
@@ -178,6 +178,9 @@ Pollios::Application.routes.draw do
 
     get ':id/detail',       to: 'polls#detail'
     post ':id/close',      to: 'polls#set_close'
+
+    post ':id/open_comment',   to: 'polls#open_comment'
+    post ':id/close_comment',   to: 'polls#close_comment'
   end
 
 
