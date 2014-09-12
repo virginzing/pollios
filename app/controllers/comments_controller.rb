@@ -6,6 +6,7 @@ class CommentsController < ApplicationController
     @destroy = false
     respond_to do |format|
       if @comment.update(delete_status: true)
+        @comment.poll.decrement!(:comment_count)
         @destroy = true
         format.js
       else
