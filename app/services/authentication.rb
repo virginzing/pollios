@@ -109,6 +109,7 @@ class Authentication
       member.member_type = member_type
       member.approve_brand = approved_brand
       member.auth_token = generate_auth_token
+      member.setting = { "post_poll"=>"friend_following", "vote_poll"=> true, "comment_poll"=> true }
       member.save!
       @new_member = true
     end

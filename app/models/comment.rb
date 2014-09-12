@@ -6,6 +6,9 @@ class Comment < ActiveRecord::Base
 
   has_many :member_mentionable, foreign_key: "comment_id", class_name: "Mention"
   has_many :get_member_mentionable, through: :member_mentionable, source: :mentionable
+
+  scope :valid, -> { where(delete_status: false) }
+
   self.per_page = 10
 
   def create_mentions_list(mentioner, mentionable_list)

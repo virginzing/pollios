@@ -152,7 +152,13 @@ class MembersController < ApplicationController
   end
 
   def setting_default
-    
+    respond_to do |format|
+      if @current_member.update!(setting: params[:setting])
+        format.json { render json: Hash["response_status" => "OK"] }
+      else
+        format.json { render json: Hash["response_status" => "ERROR"]}
+      end
+    end
   end
 
   def update_group

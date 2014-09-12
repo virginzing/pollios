@@ -1,0 +1,23 @@
+<% if @destroy %>
+  hide_row()
+<% else %>
+  error_message()
+<% end %>
+
+function hide_row() {
+  var row = $("#comment_<%= params[:id] %>");
+  row.css("background-color","#FF3700");
+  row.fadeOut(400, function(){
+    row.hide();
+  });
+}
+
+function error_message () {
+  $.smallBox({
+    title : "Warning",
+    content: "Comment was deleted wrong, try again please",
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}

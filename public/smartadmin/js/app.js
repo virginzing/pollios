@@ -1613,6 +1613,11 @@ function dataTable() {
 		iDisplayLength: 25,
 		order: [[0, 'desc']]
 	});
+	$('#list_comment_of_poll').dataTable({
+		retrieve: true,
+		iDisplayLength: 25,
+		order: [[0, 'desc']]
+	});
 	$('#list_member_view_no_vote_poll').dataTable({
 		retrieve: true,
 		iDisplayLength: 25,
