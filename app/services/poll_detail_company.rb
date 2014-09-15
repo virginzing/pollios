@@ -36,11 +36,15 @@ class PollDetailCompany
   private
 
   def group_member_active
-    @group.get_member_active  
+    list_member_ids_active = []
+    @group.each do |group|
+      list_member_ids_active << group.get_member_active.map(&:id)
+    end
+    list_member_ids_active
   end
 
   def group_member_active_ids
-    group_member_active.map(&:id)
+    group_member_active.flatten.uniq
   end
   
   def list_history_vote_poll

@@ -5,6 +5,7 @@ class CompaniesController < ApplicationController
   before_action :signed_user
   before_action :set_company
   before_action :find_group
+  before_action :set_group, only: [:polls, :poll_detail]
 
   def new
     @invite = InviteCode.new
@@ -90,7 +91,7 @@ class CompaniesController < ApplicationController
   end
 
   def list_groups
-    
+    @groups = set_company.groups
   end
 
   def add_member
@@ -102,8 +103,9 @@ class CompaniesController < ApplicationController
   end
 
   def polls
-    @init_poll = PollOfGroup.new(@current_member, @group, options_params)
-    @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
+    Member.list_group_active = current_member.cached_get_group_active
+    @init_poll = PollOfGroup.new(current_member, @group, options_params)
+    @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
     poll_helper
   end
 
@@ -135,7 +137,7 @@ class CompaniesController < ApplicationController
       if find_user.present?
         Group.transaction do
           find_user_group = find_user.get_group_active.map(&:id)
-          this_group = set_company.group
+          this_group = set_company.groups.last
 
           unless find_user_group.include?(this_group.id)
             this_group.group_members.create!(member_id: find_user.id, is_master: true, active: true)

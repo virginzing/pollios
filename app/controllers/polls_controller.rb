@@ -100,7 +100,7 @@ class PollsController < ApplicationController
 
   def index
     if current_member.company?
-      @init_poll = PollOfGroup.new(current_member, current_member.company.group, options_params)
+      @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params)
       @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
     else
       @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
@@ -173,7 +173,7 @@ class PollsController < ApplicationController
   def show
     @choice_data_chart = []
     if current_member.company?
-      init_company = PollDetailCompany.new(current_member.company.group, @poll)
+      init_company = PollDetailCompany.new(@poll.groups, @poll)
       @member_group = init_company.get_member_in_group
       @member_voted_poll = init_company.get_member_voted_poll
       @member_novoted_poll = init_company.get_member_not_voted_poll

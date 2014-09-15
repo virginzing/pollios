@@ -230,7 +230,9 @@ Pollios::Application.routes.draw do
 
   scope 'company' do
     get 'members',  to: 'companies#list_members',  as: :company_members
-    get 'groups',   to: 'group#list_groups', as: :company_groups
+    get 'groups',   to: 'companies#list_groups', as: :company_groups
+    get 'groups/:group_id/polls', to: 'companies#polls',  as: :company_groups_polls
+
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
     post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
     get 'invites',  to: 'companies#invites',    as: :company_invites

@@ -1608,6 +1608,10 @@ function dataTable() {
 		iDisplayLength: 25,
 		order: [[0, 'desc']]
 	});
+	$('#company_groups').dataTable({
+		retrieve: true,
+		order: [[0, 'desc']]
+	});
 	$('#member_campagin').dataTable({
 		retrieve: true,
 		iDisplayLength: 25,

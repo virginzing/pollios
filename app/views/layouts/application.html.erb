@@ -82,7 +82,7 @@
     <script src="/smartadmin/js/plugin/datatables/dataTables.colVis.min.js"></script>
     <script src="/smartadmin/js/plugin/datatables/dataTables.tableTools.min.js"></script>
     <script src="/smartadmin/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/responsive/1.0.1/js/dataTables.responsive.js"></script>
+    <script src="/smartadmin/js/plugin/dataTables/dataTables.responsive.min.js"></script>
 
 		<%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %> 
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
@@ -235,8 +235,8 @@
               <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
             </li>
 
-            <li class="<%= is_active_2nd_level('group', 'list_groups') %>">
-              <a href="<%= company_members_path %>" title="Group"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Group</span></a>
+            <li class="<%= is_active_2nd_level('companies', 'list_groups') || is_active_2nd_level('companies', 'polls') %>">
+              <a href="<%= company_groups_path %>" title="Group"><i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">Group</span></a>
             </li>
 
             <li class="<%= is_active?('campaigns') %>">
