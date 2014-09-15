@@ -120,7 +120,7 @@
 					<span> <a href="/users_signin" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
 				</div>
 				<!-- end logout button -->
-
+        
 				<!-- search mobile button (this is hidden till mobile view port) -->
 				<div id="search-mobile" class="btn-header transparent pull-right">
 					<span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
@@ -137,25 +137,30 @@
 				</form>
 				<!-- end input: search field -->
 
-				<!-- multiple lang dropdown : find all flags in the image folder -->
-				<!--
-				<ul class="header-dropdown-list hidden-xs">
-					<li>
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img alt="" src="/smartadmin/img/flags/us.png"> <span> US </span> <i class="fa fa-angle-down"></i> </a>
-						<ul class="dropdown-menu pull-right">
-							<li class="active">
-								<a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/us.png"> US</a>
-							</li>
-							<li>
-								<a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/es.png"> Spanish</a>
-							</li>
-							<li>
-								<a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/de.png"> German</a>
-							</li>
-						</ul>
-					</li>
-				</ul> -->
-				<!-- end multiple lang -->
+                <% if current_member.company? %>
+          <!-- multiple lang dropdown : find all flags in the flags page -->
+          <ul class="header-dropdown-list hidden-xs">
+            <li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="img/blank.gif" class="flag flag-us" alt="United States"> <span> English (US) </span> <i class="fa fa-angle-down"></i> </a>
+              <ul class="dropdown-menu pull-right">
+                <li class="active">
+                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-us" alt="United States"> English (US)</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-fr" alt="France"> Français</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-es" alt="Spanish"> Español</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-de" alt="German"> Deutsch</a>
+                </li>        
+              </ul>
+            </li>
+          </ul>
+          <!-- end multiple lang -->
+
+        <% end %>
 
 			</div>
 			<!-- end pulled right: nav area -->

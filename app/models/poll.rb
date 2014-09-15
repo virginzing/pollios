@@ -597,23 +597,14 @@ class Poll < ActiveRecord::Base
     guest_id = poll[:guest_id]
     find_poll = find(poll_id)
 
-    ever_view = guest_id.present? ? HistoryViewGuest.where(guest_id: guest_id, poll_id: poll_id).first.present? : HistoryView.where(member_id: member_id, poll_id: poll_id).first.present?
+    ever_view = HistoryView.where(member_id: member_id, poll_id: poll_id).first
+
     unless ever_view.present?
-
-      if guest_id.present?
-        HistoryViewGuest.create!(guest_id: guest_id, poll_id: poll_id)
-        find(poll_id).increment!(:view_all_guest)
-        find(poll_id).poll_series.increment!(:view_all_guest) if find(poll_id).series
-      else
         HistoryView.create!(member_id: member_id, poll_id: poll_id)
-        # find(poll_id).increment!(:view_all)
         find_poll.update_columns(view_all: find_poll.view_all + 1)
-        # find(poll_id).poll_series.increment!(:view_all) if find(poll_id).series
         find_poll.poll_series.update_columns!(view_all: find_poll.view_all + 1) if find_poll.series
-      end
-
     end
-
+    
   end
 
   def get_choice_scroll

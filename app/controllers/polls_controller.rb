@@ -46,13 +46,19 @@ class PollsController < ApplicationController
   def generate_qrcode
     @qr = QrcodeSerializer.new(Poll.find(params[:id])).as_json.to_json
     puts "#{@qr}"
-    respond_to do |format|
-      format.json
-      format.html
-      format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
-      format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
-      format.gif  { render :qrcode => @qr }
-      format.jpeg { render :qrcode => @qr }
+    if params[:png_size] == "2x"
+      respond_to do |format|
+        format.png  { render :qrcode => @qr, :level => :h, :unit => 6, layout: false }
+      end
+    else
+      respond_to do |format|
+        format.json
+        format.html
+        format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
+        format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
+        format.gif  { render :qrcode => @qr }
+        format.jpeg { render :qrcode => @qr }
+      end
     end
   end
 
@@ -283,10 +289,14 @@ class PollsController < ApplicationController
 
   def detail
     begin
-      raise_exception_without_group
-      Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
-      @expired = @poll.expire_date < Time.now
-      @voted = @current_member.list_voted?(@poll)
+      if params[:random_poll]
+        
+      else
+        raise_exception_without_group
+        Poll.view_poll({ id: @poll.id, member_id: @current_member.id})
+        @expired = @poll.expire_date < Time.now
+        @voted = @current_member.list_voted?(@poll)
+      end
     end
   end
 

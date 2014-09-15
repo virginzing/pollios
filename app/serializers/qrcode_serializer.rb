@@ -10,4 +10,8 @@ class QrcodeSerializer < ActiveModel::Serializer
     object.class.name == "Poll" ? false : true
   end
 
+  def random_poll
+    true
+  end
+
 end
