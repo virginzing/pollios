@@ -89,6 +89,10 @@ class CompaniesController < ApplicationController
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin").where("group_members.group_id = #{@find_group.id} AND group_members.active = 't'") || []
   end
 
+  def list_groups
+    
+  end
+
   def add_member
     @member_in_group ||= find_group.get_member_active
     # puts "#{@member_in_group.map(&:id)}"

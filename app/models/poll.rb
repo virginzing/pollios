@@ -54,8 +54,8 @@ class Poll < ActiveRecord::Base
   default_scope { order("#{table_name}.created_at desc") }
 
   scope :public_poll, -> { where(public: true) }
-  scope :active_poll, -> { where("expire_date > ?", Time.now) }
-  scope :inactive_poll, -> { where("expire_date < ?", Time.now) }
+  scope :active_poll, -> { where("expire_date > ?", Time.zone.now) }
+  scope :inactive_poll, -> { where("expire_date < ?", Time.zone.now) }
   scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
 
   scope :available, -> {
@@ -604,7 +604,7 @@ class Poll < ActiveRecord::Base
         find_poll.update_columns(view_all: find_poll.view_all + 1)
         find_poll.poll_series.update_columns!(view_all: find_poll.view_all + 1) if find_poll.series
     end
-    
+
   end
 
   def get_choice_scroll

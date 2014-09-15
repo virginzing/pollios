@@ -38,7 +38,6 @@ module Api
         @total_entries = @polls.total_entries
       end
 
-
       private
 
       def options_params

@@ -136,32 +136,6 @@
 					<a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
 				</form>
 				<!-- end input: search field -->
-
-                <% if current_member.company? %>
-          <!-- multiple lang dropdown : find all flags in the flags page -->
-          <ul class="header-dropdown-list hidden-xs">
-            <li>
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="img/blank.gif" class="flag flag-us" alt="United States"> <span> English (US) </span> <i class="fa fa-angle-down"></i> </a>
-              <ul class="dropdown-menu pull-right">
-                <li class="active">
-                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-us" alt="United States"> English (US)</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-fr" alt="France"> Français</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-es" alt="Spanish"> Español</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0);"><img src="img/blank.gif" class="flag flag-de" alt="German"> Deutsch</a>
-                </li>        
-              </ul>
-            </li>
-          </ul>
-          <!-- end multiple lang -->
-
-        <% end %>
-
 			</div>
 			<!-- end pulled right: nav area -->
 
@@ -260,6 +234,11 @@
             <li class="<%= is_active_2nd_level('companies', 'list_members') || is_active_2nd_level('companies', 'add_member') %>">
               <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
             </li>
+
+            <li class="<%= is_active_2nd_level('group', 'list_groups') %>">
+              <a href="<%= company_members_path %>" title="Group"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Group</span></a>
+            </li>
+
             <li class="<%= is_active?('campaigns') %>">
               <a href="/campaigns"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaign</span></a>
             </li>

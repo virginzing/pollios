@@ -67,7 +67,6 @@ class MyPollInProfile
   private
 
   def poll_created
-    # @member.polls.includes(:member, :campaign, :choices)
     Poll.available.joins(:poll_members).includes(:member, :campaign, :choices)
         .where("poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0")
   end
