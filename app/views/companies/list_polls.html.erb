@@ -69,9 +69,9 @@
                 <th width="350">Title</th>
                 <th>Vote All</th>
                 <th>View All</th>
-                <th width="200">Expire At</th>
-                <th width="200">Created At</th>
-                <th>Public</th>
+                <th width="150">Expire At</th>
+                <th width="150">Created At</th>
+                <th width="150">In Group</th>
                 <th>Qrcode</th>
                 <th>Re-Generate</th>
                 <th>Action</th>
@@ -86,7 +86,13 @@
                   <td><%= poll.view_all %></td>
                   <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
                   <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
-                  <td><%= poll.public %></td>
+                  <td>
+                    <ol>
+                    <% poll.groups.each do |group| %>
+                      <li><%= link_to group.name, "#" %></li>
+                    <% end %>
+                    </ol>
+                  </td>
                   <td><button data-toggle="modal" class="btn btn-primary" data-target="#myModal" onclick="showIFrame('/poll/<%= poll.id %>/qrcode.png', '<%= poll.title %>')">Show</button></td>
                   <td>
                     <%= form_tag '/poll/new_generate_qrcode' do %>

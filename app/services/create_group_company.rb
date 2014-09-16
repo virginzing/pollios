@@ -25,7 +25,9 @@ class CreateGroupCompany
 
       if @group.present?
         @company.group_companies.create!(group_id: @group.id)
-        add_member_to_group if new_list_members_count > 0
+        if new_list_members_count > 0
+          add_member_to_group
+        end
       end
       @group
     end
@@ -36,8 +38,8 @@ class CreateGroupCompany
   def add_member_to_group
     new_list_member_ids.each do |member_id|
       GroupMember.create!(member_id: member_id, group_id: @group.id, is_master: false, active: true, notification: true)
+      Rails.cache.delete([member_id, 'group_active'])
     end
   end
 
-  
 end

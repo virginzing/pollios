@@ -1527,7 +1527,8 @@ CREATE TABLE polls (
     qr_only boolean DEFAULT false,
     require_info boolean DEFAULT false,
     expire_status boolean DEFAULT false,
-    creator_must_vote boolean DEFAULT true
+    creator_must_vote boolean DEFAULT true,
+    in_group boolean DEFAULT false
 );
 
 
@@ -3707,3 +3708,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140901103634');
 INSERT INTO schema_migrations (version) VALUES ('20140912031610');
 
 INSERT INTO schema_migrations (version) VALUES ('20140916042132');
+
+INSERT INTO schema_migrations (version) VALUES ('20140916125303');

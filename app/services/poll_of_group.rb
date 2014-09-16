@@ -36,9 +36,7 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.unscoped.order("created_at DESC").joins(:poll_groups).includes(:history_votes)
-                .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
-                .where("poll_groups.group_id IN (?)", @group.map(&:id)).uniq
+    @query = Poll.unscoped.order("polls.created_at DESC").includes(:groups).where("poll_groups.group_id IN (?)", @group.map(&:id)).references(:groups)
     @query
   end
 

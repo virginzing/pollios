@@ -6,11 +6,14 @@ class BuildPoll
     @choice_list = []
     @series = false
     @poll_series_id = 0
-    # puts "@options = #{@options[:choices]}"
   end
 
   def expire_date
-    Time.now + @params["expire_date"].to_i.days
+    if @params["expire_date"] == "0"
+      Time.now + 100.years
+    else
+      Time.now + @params["expire_date"].to_i.days
+    end
   end
 
   def title_with_tag
@@ -32,6 +35,11 @@ class BuildPoll
   def check_require_info
     @params["require_info"] == "on" ? true : false
   end
+
+  def check_in_group
+    @params["group_id"].present? ? true : false
+  end
+
   def set_poll_public
     if @member.celebrity? || @params["recurring_id"].present? || @member.brand?
       true
@@ -42,7 +50,7 @@ class BuildPoll
 
   def in_group_ids
     if @member.company?
-      @member.company.group.id.to_s
+      @params["group_id"]
     else
       "0"
     end
@@ -59,10 +67,6 @@ class BuildPoll
   def list_of_choice
     @list_of_choice ||= list_choices
   end
-
-  # def choice_count
-  #   puts "choice count => #{list_choices}"
-  # end
   
   def poll_binary_params
     {
@@ -81,7 +85,8 @@ class BuildPoll
       "member_type" => @member.member_type_text,
       "allow_comment" => check_allow_comment,
       "qr_only" => check_qr_only,
-      "require_info" => check_require_info
+      "require_info" => check_require_info,
+      "in_group" => check_in_group
     }
   end
 

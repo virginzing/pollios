@@ -95,51 +95,55 @@
           </header>
           
             <fieldset>
-<!--               <div class="row">
-                <section class="col col-3">
-                  <label class="label">Expire with in</label>
-                  <label class="select">
-                    <%= f.input :expire_date, collection: 1..20, label: false, include_blank: false %>
-                    <i></i>
-                  </label>
-                </section>
-              </div>
- -->
               <div class="row">
 
                 <section class="col col-2">
 
-<!--                   <label class="label">Expire</label>
-                  <label class="input">
-                    <div class="input-group">
-                      <input type="text" name="mydate" placeholder="Select a date" class="form-control" data-dateformat="dd/mm/yy">
-                      <%= f.input :expire_date, as: :string, input_html: { class: 'expire_date_poll', 'data-dateformat' => "dd/mm/yy", placeholder: "Select a date" }, label: false, readonly: true %>
-                      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    </div>
-                  </label> -->
-
                 <label class="label">Expire within (day)</label>
-                  <label class="select">
-                    <%= f.input :expire_date, collection: 1..30, label: false, include_blank: false %>
-                    <i></i>
+                <label class="select">
+                  <select name="poll[expire_date]">
+                    <option value="0" selected="">Unexpired</option>
+                    <% (1..30).each do |e| %>
+                      <option value="<%= e %>"><%= e %></option>
+                    <% end %>
+                  </select> <i></i> 
                 </label>
 
                 </section>
-                <section class="col col-5">
-                  <label class="label">Campaign</label>
-                  <label class="select">
-                    <%= f.select :campaign_id, current_member.campaigns.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
-                  </label>
-                </section>
+
+                <% if current_member.company? %>
+
+                <section class="col col-5"> 
+                  <div class="form-group">
+                    <label class="label">In Group</label>
+                      <input type="text" name="poll[group_id]" id="group_list">
+                  </div>
+                </section>  
 
                 <section class="col col-5">
-                  <label class="label">Recurring</label>
-                  <label class="select">
-                    <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
-                  </label>
-                </section>
+                    <label class="label">Campaign</label>
+                    <label class="select">
+                      <%= f.select :campaign_id, current_member.campaigns.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                    </label>
+                  </section>
+
+                <% else %>
+                  <section class="col col-5">
+                    <label class="label">Campaign</label>
+                    <label class="select">
+                      <%= f.select :campaign_id, current_member.campaigns.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                    </label>
+                  </section>
+
+                  <section class="col col-5">
+                    <label class="label">Recurring</label>
+                    <label class="select">
+                      <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
+                    </label>
+                  </section>
+
+                <% end %>
               </div>
-            
             </fieldset>
         
 
@@ -163,9 +167,30 @@
   </div>
 </section>
 
+<% if current_member.company? %>
+  <script type="text/javascript">
+  $( document ).ready(function() {
+    $("#group_list").select2({
+        width: "100%",
+        multiple: true,
+        placeholder: "Select a group",
+        query: function (query){
+          var data = {results: []};
+
+            $.each(<%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %>, function(){
+                if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                    data.results.push({id: this.id, text: this.text });
+                }
+            });
+
+            query.callback(data);
+        }
+    });
+    $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
+  });
+  </script>
+<% end %>
+
 <script type="text/javascript">
   $("#form-input").parsley();
-  // $(document).ready( function () {
-
-  // });
 </script>

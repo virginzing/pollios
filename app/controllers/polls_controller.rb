@@ -88,14 +88,17 @@ class PollsController < ApplicationController
 
   def binary
     @poll = Poll.new
+    @group_list = current_member.company.groups if current_member.company?
   end
 
   def rating
     @poll = Poll.new
+    @group_list = current_member.company.groups if current_member.company?
   end
 
   def freeform
     @poll = Poll.new
+    @group_list = current_member.company.groups if current_member.company?
   end
 
   def index
@@ -112,7 +115,6 @@ class PollsController < ApplicationController
       in_group = false
       @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
       new_poll_binary_params = @build_poll.poll_binary_params
-      # puts "new_poll_binary_params => #{new_poll_binary_params}"
       @poll = Poll.new(new_poll_binary_params)
       @poll.choice_count = @build_poll.list_of_choice.count
       
@@ -126,7 +128,7 @@ class PollsController < ApplicationController
 
         if @poll.in_group_ids != "0"
           in_group = true
-          puts "#{ @poll.in_group_ids}"
+          # puts "#{ @poll.in_group_ids}"
           Group.add_poll(current_member, @poll, @poll.in_group_ids)
         else
           ApnPollWorker.perform_in(5.seconds, current_member.id, @poll.id) if Rails.env.production?
@@ -142,7 +144,7 @@ class PollsController < ApplicationController
         Activity.create_activity_poll(current_member, @poll, 'Create')
 
         flash[:success] = "Create poll successfully."
-        redirect_to polls_path
+        redirect_to current_member.company? ? polls_path : company_polls_path
       else
         # puts "#{@poll.errors.full_messages}"
         render @build_poll.type_poll
@@ -580,7 +582,7 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :group_id, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
   end
 
   protected
