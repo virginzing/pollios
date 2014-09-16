@@ -22,7 +22,7 @@
     
         <!-- widget content -->
         <div class="widget-body">
-          <%= simple_form_for @group, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= simple_form_for @group,  :url => company_create_group_path, :html => { :multipart => true, class: "smart-form", id: "new_group" } do |f| %>
           <header>
             Group Detail
           </header>
@@ -63,24 +63,24 @@
           <header>
             Select Member
           </header>
-          <br>
+
           <fieldset>
             <section>
             <table id="select_member_company" class="table table-border" width="100%">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Avatar</th>
+                  <th width="50">#</th>
+                  <th width="50">Avatar</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Joined at</th>
+                  <th width="100">Joined at</th>
                 </tr>
               </thead>
               <tbody>
                 <% @members.each do |member| %>
                   <tr>
                     <td><%= member.id %></td>
-                    <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
+                    <td><%= image_tag(member.avatar.url(:thumbnail), size: '30x30') %></td>
                     <td><%= member.get_name %></td>
                     <td><%= member.email %></td>
                     <td><span data-livestamp="<%= member.joined_at.to_i %>"></span></td>
@@ -113,8 +113,9 @@
 <button id="button">Row count</button>
 
 <script type="text/javascript">
-  $("#form-input").parsley();
+  $("#new_group").parsley();
   $(document).ready( function () {
+      var list_member = [];
       $('#select_member_company').dataTable({
         retrieve: true,
         iDisplayLength: 10,
@@ -127,9 +128,19 @@
         $(this).toggleClass('selected');
     } );
  
-    $('#button').click( function () {
-        alert( table.rows('.selected').data().length +' row(s) selected' );
-    } )
+    $('#new_group').submit(function () {
+      var member_select = table.rows('.selected').data()
+      $.each(member_select, function(index, value) {
+        list_member.push(value[0]);
+      });
+      $(this).append(function () {
+          return $('<input>', {
+              type: 'hidden',
+              name: 'list_member',
+              value: list_member
+          })
+      })
+    });
   });
 </script>
 
@@ -141,27 +152,18 @@
     height: 16px;
     padding-top: 8px;
   }
-
-  .selected:after {
-    width: 0;
-    height: 0;
-    border-top: 35px solid #0091d9;
-    border-left: 35px solid rgba(0,0,0,0);
-    position: static; 
-    display: block;
-    right: 0;
-    content: "";
-    top: 0;
-    z-index: 1;
+  .selected {
+    border: 2px solid #0091d9!important;
+    background: aliceblue;
   }
-
-  .selected:before {
+  .selected:after {
     display: block;
     position: absolute;
     content: "\f00c";
-    color: #fff;
+    color: #0091d9;
     right: 4px;
     font-family: FontAwesome;
     z-index: 2;
+    font-size: 14px;
   }
 </style>

@@ -239,6 +239,8 @@ Pollios::Application.routes.draw do
 
     get 'groups/:group_id/polls', to: 'companies#list_polls_in_group',  as: :company_groups_polls
 
+    post 'create_group',  to: 'companies#create_group', as: :company_create_group
+
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
     post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
     get 'invites',  to: 'companies#invites',    as: :company_invites

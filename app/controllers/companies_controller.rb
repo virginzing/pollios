@@ -127,6 +127,13 @@ class CompaniesController < ApplicationController
     @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
   end
 
+  def create_group
+    respond_to do |wants|
+      flash[:error] = "error"
+      wants.html { redirect_to company_add_group_path  }
+    end
+  end
+
   def delete_poll
     @poll.groups.each do |group|
       group.decrement!(:poll_count)
