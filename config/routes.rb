@@ -229,20 +229,22 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
-    get 'members',  to: 'companies#list_members',   as: :company_members
-    get 'groups',   to: 'companies#list_groups',    as: :company_groups
+   
+    get 'groups',   to: 'companies#company_groups',    as: :company_groups
     get 'groups/add', to: 'companies#new_group',  as: :company_add_group
-    get 'polls',    to: 'companies#list_polls',     as: :company_polls
-    get 'polls/:id',to: 'companies#poll_detail',    as: :company_polls_detail
-
-    delete 'polls/:id/destroy', to: 'companies#delete_poll',  as: :company_delete_poll
-
+    get 'groups/:group_id', to: 'companies#group_detail', as: :company_group_detail
     get 'groups/:group_id/polls', to: 'companies#list_polls_in_group',  as: :company_groups_polls
-
+    post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
     post 'create_group',  to: 'companies#create_group', as: :company_create_group
 
+    get 'polls',    to: 'companies#list_polls',     as: :company_polls
+    get 'polls/:id',to: 'companies#poll_detail',    as: :company_polls_detail
+    delete 'polls/:id/destroy', to: 'companies#delete_poll',  as: :company_delete_poll
+    
+    get 'members',  to: 'companies#company_members',   as: :company_members
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
-    post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
+    delete 'remove_member',  to: 'companies#remove_member',  as: :remove_member_group
+
     get 'invites',  to: 'companies#invites',    as: :company_invites
     get 'invites/via_email',  to: 'companies#via_email',  as: :via_email
     post 'invites/send_email', to: 'companies#send_email'
@@ -251,8 +253,8 @@ Pollios::Application.routes.draw do
     post 'download_excel', to: 'companies#download_excel', as: :download_excel
     post 'download_txt', to: 'companies#download_txt', as: :download_txt
 
-    get '/invites/new', to: 'companies#new',  as: :invites_new
-    delete '/remove_member',  to: 'companies#remove_member',  as: :remove_member_group
+    get 'invites/new', to: 'companies#new',  as: :invites_new
+    
   end
 
   scope 'api/group/:group_id' do

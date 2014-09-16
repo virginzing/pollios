@@ -50,11 +50,11 @@
     </ul>
   </li>
   
-    <li class="<%= is_active_2nd_level('companies', 'list_members') || is_active_2nd_level('companies', 'add_member') %>">
+    <li class="<%= is_active_2nd_level('companies', 'company_members') || is_active_2nd_level('companies', 'add_member') %>">
       <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
     </li>
 
-    <li class="<%= is_active_2nd_level('companies', 'list_groups') || is_active_2nd_level('companies', 'polls') %>">
+    <li class="<%= is_active_2nd_level('companies', 'company_groups') || is_active_2nd_level('companies', 'new_group') %>">
       <a href="<%= company_groups_path %>" title="Group"><i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">Group</span></a>
     </li>
 

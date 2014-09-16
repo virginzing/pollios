@@ -2,8 +2,8 @@ class Company < ActiveRecord::Base
 
   has_many :invite_codes, dependent: :destroy
 
-  has_many :group_company, dependent: :destroy
-  has_many :groups, through: :group_company , source: :group
+  has_many :group_companies, dependent: :destroy
+  has_many :groups, through: :group_companies , source: :group
 
   # validates :amount_code, :prefix_name, presence: true
   

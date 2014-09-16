@@ -8,6 +8,8 @@ class CompaniesController < ApplicationController
   before_action :set_poll, only: [:poll_detail, :delete_poll]
   before_action :set_group, only: [:list_polls_in_group]
 
+  expose(:group_company) { current_member.company.groups if current_member }
+
   def new
     @invite = InviteCode.new
   end
@@ -87,10 +89,6 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def list_groups
-    @groups = set_company.groups
-  end
-
   def list_polls
     @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params)
     @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
@@ -122,17 +120,40 @@ class CompaniesController < ApplicationController
     end    
   end
 
+
+  ### Group ###
+
+  def company_groups
+    @groups = set_company.groups
+  end
+
   def list_polls_in_group
     @init_poll = PollOfGroup.new(current_member, @group, options_params)
     @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
   end
 
+  def new_group
+    @group = Group.new
+    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
+                      .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
+  end
+
   def create_group
+    @init_group_company = CreateGroupCompany.new(current_member, set_company, group_params, params[:list_member])
+    @group = @init_group_company.create_group
+
     respond_to do |wants|
-      flash[:error] = "error"
-      wants.html { redirect_to company_add_group_path  }
+      if @group
+        flash[:success] = "Success"
+        wants.html { redirect_to company_groups_path }
+      else
+        flash[:error] = "Error"
+        wants.html { redirect_to company_add_group_path  }
+      end
     end
   end
+
+
 
   def delete_poll
     @poll.groups.each do |group|
@@ -146,6 +167,10 @@ class CompaniesController < ApplicationController
   def list_members
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
                       .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
+  end
+
+  def company_members
+    @members = Member.joins(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id))
   end
 
   def add_member
@@ -184,11 +209,6 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def new_group
-    @group = Group.new
-    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
-                      .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
-  end
 
   def download_csv
     send_file(
@@ -218,6 +238,10 @@ class CompaniesController < ApplicationController
 
   def set_poll
     @poll = Poll.cached_find(params[:id])
+  end
+
+  def group_params
+    params.require(:group).permit(:name, :description, :photo_group)  
   end
 
   def options_params
