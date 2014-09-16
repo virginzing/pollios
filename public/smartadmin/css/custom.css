@@ -36,6 +36,12 @@ table.questionnaire th.header-questionnaire {
   font-weight: 600;
 }
 
+.page-well-header {
+  margin-bottom: -10px;
+  margin-top: -10px;
+  font-family: "Roboto" !important;
+}
+
 .summary-questionnaire {
   font-size: 18px;
   font-weight: 600;

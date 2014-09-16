@@ -1,10 +1,11 @@
+<div class="well">
 <div class="row">
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-    <h1 class="page-title txt-color-blueDark">
-      <i class="fa fa-group fa-fw "></i> 
-        List Member
+    <h1 class="page-title txt-color-blueDark page-well-header">
+        <%= image_tag(@group.photo_group.url(:thumbnail), size: '50x50') %> <%= @group.name %> Group
     </h1>
   </div>
+</div>
 </div>
 
 
@@ -29,7 +30,7 @@
   <div class="jarviswidget" id="wid-company-members" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-group"></i> </span>
-      <h2><strong>Members</strong></h2>          
+      <h2><strong>Members of <%= @group.name %></strong></h2>          
     </header>
 
     <!-- widget div-->
@@ -57,7 +58,7 @@
                   <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
                   <td><%= member.get_name %></td>
                   <td><%= member.email %></td>
-                  <td><a href="#" class="admin_status" data-type="select" data-pk="<%= member.id %>" data-url="/group/<%= @find_group.id %>/group_update.json" data-original-title="Select Status" data-value="<%= member.admin ? 2 : 1 %>"><%= member.is_admin_group(member.admin) %></a></td>
+                  <td><a href="#" class="admin_status" data-type="select" data-pk="<%= member.id %>" data-url="/group/<%= params[:group_id] %>/group_update.json" data-original-title="Select Status" data-value="<%= member.admin ? 2 : 1 %>"><%= member.is_admin_group(member.admin) %></a></td>
                   <td><span data-livestamp="<%= member.joined_at.to_i %>"></span></td>
                   <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= remove_member_group_path(member_id: member.id) %>" rel="nofollow">Delete</a></td>
                 </tr>

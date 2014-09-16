@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll]
-  before_action :set_group, only: [:list_polls_in_group]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -132,6 +132,11 @@ class CompaniesController < ApplicationController
     @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
   end
 
+  def list_members_in_group
+    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
+                      .where("group_members.group_id = ? AND group_members.active = 't'", @group) || []
+  end
+
   def new_group
     @group = Group.new
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
@@ -162,11 +167,6 @@ class CompaniesController < ApplicationController
     @poll.destroy
     flash[:notice] = "Destroy successfully."
     redirect_to company_polls_path
-  end
-
-  def list_members
-    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
-                      .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
   end
 
   def company_members
