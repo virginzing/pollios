@@ -12,7 +12,11 @@ json.subscription do
   json.subscribe_expire member.subscribe_expire.to_i
 end
 
-json.group_id member.company.group.id if member.company?
+if member.company?
+  json.list_group member.company.groups do |group|
+    json.partial! 'response_helper/group/full_info', group: group
+  end
+end
 
 json.count do
   json.point member.point
