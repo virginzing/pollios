@@ -6,6 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll]
+  before_action :set_group, only: [:list_polls_in_group]
 
   def new
     @invite = InviteCode.new
@@ -119,6 +120,11 @@ class CompaniesController < ApplicationController
         @percent_noview = zero_percent
       end
     end    
+  end
+
+  def list_polls_in_group
+    @init_poll = PollOfGroup.new(current_member, @group, options_params)
+    @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
   end
 
   def delete_poll
