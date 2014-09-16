@@ -591,20 +591,22 @@ class Poll < ActiveRecord::Base
     campaign.prediction(member_id, poll_id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
-  def self.view_poll(poll)
-    member_id = poll[:member_id]
-    poll_id = poll[:id]
-    guest_id = poll[:guest_id]
-    find_poll = find(poll_id)
+  def self.view_poll(poll, member)
+    @poll = poll
+    @member = member
+    ever_view = true
 
-    ever_view = HistoryView.where(member_id: member_id, poll_id: poll_id).first
-
-    unless ever_view.present?
-        HistoryView.create!(member_id: member_id, poll_id: poll_id)
-        find_poll.update_columns(view_all: find_poll.view_all + 1)
-        find_poll.poll_series.update_columns!(view_all: find_poll.view_all + 1) if find_poll.series
+    HistoryView.where(member_id: @member.id, poll_id: @poll.id).first_or_create do |hv|
+      hv.member_id = @member.id
+      hv.poll_id = @poll.id
+      hv.save!
+      ever_view = false
     end
 
+    if ever_view.present?
+      @poll.update_columns(view_all: @poll.view_all + 1)
+    end
+    
   end
 
   def get_choice_scroll

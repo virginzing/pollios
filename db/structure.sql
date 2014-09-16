@@ -2957,6 +2957,13 @@ CREATE INDEX index_history_views_on_member_id ON history_views USING btree (memb
 
 
 --
+-- Name: index_history_views_on_member_id_and_poll_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_history_views_on_member_id_and_poll_id ON history_views USING btree (member_id, poll_id);
+
+
+--
 -- Name: index_history_views_on_poll_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3698,3 +3705,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140901103319');
 INSERT INTO schema_migrations (version) VALUES ('20140901103634');
 
 INSERT INTO schema_migrations (version) VALUES ('20140912031610');
+
+INSERT INTO schema_migrations (version) VALUES ('20140916042132');

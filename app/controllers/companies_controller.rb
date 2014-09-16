@@ -5,7 +5,7 @@ class CompaniesController < ApplicationController
   before_action :signed_user
   before_action :set_company
   before_action :find_group
-  before_action :set_group, only: [:polls, :poll_detail]
+  before_action :set_poll, only: [:poll_detail, :delete_poll]
 
   def new
     @invite = InviteCode.new
@@ -86,12 +86,53 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def list_members
-    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin").where("group_members.group_id = #{@find_group.id} AND group_members.active = 't'") || []
-  end
-
   def list_groups
     @groups = set_company.groups
+  end
+
+  def list_polls
+    @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params)
+    @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
+  end
+
+  def poll_detail
+    @choice_data_chart = []
+    if current_member.company?
+      init_company = PollDetailCompany.new(@poll.groups, @poll)
+      @member_group = init_company.get_member_in_group
+      @member_voted_poll = init_company.get_member_voted_poll
+      @member_novoted_poll = init_company.get_member_not_voted_poll
+      @member_viewed_poll = init_company.get_member_viewed_poll
+      @member_noviewed_poll = init_company.get_member_not_viewed_poll
+      @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
+
+      if @member_group.count > 0
+        @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
+        @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
+        @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
+        @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
+      else
+        zero_percent = "0"
+        @percent_vote = zero_percent
+        @percent_novote = zero_percent
+        @percent_view = zero_percent
+        @percent_noview = zero_percent
+      end
+    end    
+  end
+
+  def delete_poll
+    @poll.groups.each do |group|
+      group.decrement!(:poll_count)
+    end
+    @poll.destroy
+    flash[:notice] = "Destroy successfully."
+    redirect_to company_polls_path
+  end
+
+  def list_members
+    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
+                      .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
   end
 
   def add_member
@@ -100,34 +141,6 @@ class CompaniesController < ApplicationController
     query = Member.searchable_member(params[:q]).without_member_type(:company)
     @members = query
     @members = query.where("members.id NOT IN (?)", @member_in_group) if @member_in_group.count > 0
-  end
-
-  def polls
-    Member.list_group_active = current_member.cached_get_group_active
-    @init_poll = PollOfGroup.new(current_member, @group, options_params)
-    @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
-    poll_helper
-  end
-
-  def poll_detail
-    @poll = Poll.cached_find(params[:id])
-    @expired = @poll.expire_date < Time.now
-    @voted = @current_member.list_voted?(@poll)
-
-    init_company = PollDetailCompany.new(@group, @poll)
-    @member_group = init_company.get_member_in_group
-    @member_voted_poll = init_company.get_member_voted_poll
-    @member_novoted_poll = init_company.get_member_not_voted_poll
-    @member_viewed_poll = init_company.get_member_viewed_poll
-    @member_noviewed_poll = init_company.get_member_not_viewed_poll
-    @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
-  end
-
-  def poll_helper
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @init_poll.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
   end
 
   def add_user_to_group
@@ -156,6 +169,10 @@ class CompaniesController < ApplicationController
       end
 
     end
+  end
+
+  def new_group
+    @group = Group.new
   end
 
   def download_csv
