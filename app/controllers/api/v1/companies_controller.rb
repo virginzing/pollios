@@ -22,7 +22,7 @@ module Api
 
       def poll_detail
         @poll = Poll.cached_find(params[:id])
-        init_company = PollDetailCompany.new(@group, @poll)
+        init_company = PollDetailCompany.new(@poll.groups, @poll)
         @member_group = init_company.get_member_in_group
         @member_voted_poll = init_company.get_member_voted_poll
         @member_novoted_poll = init_company.get_member_not_voted_poll
