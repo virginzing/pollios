@@ -235,7 +235,8 @@ Pollios::Application.routes.draw do
     get 'groups/:group_id', to: 'companies#group_detail', as: :company_group_detail
     get 'groups/:group_id/polls', to: 'companies#list_polls_in_group',  as: :company_groups_polls
     get 'groups/:group_id/members', to: 'companies#list_members_in_group',  as: :company_groups_members
-
+    delete 'groups/:group_id/destroy',  to: 'companies#destroy_group',  as: :company_destroy_group
+    
     post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
     post 'create_group',  to: 'companies#create_group', as: :company_create_group
 

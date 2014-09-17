@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll]
-  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -158,7 +158,11 @@ class CompaniesController < ApplicationController
     end
   end
 
-
+  def destroy_group
+    @group.destroy
+    flash[:success] = "Destroy #{@group.name}'group successfully"
+    redirect_to company_groups_path
+  end
 
   def delete_poll
     @poll.groups.each do |group|

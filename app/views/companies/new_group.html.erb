@@ -117,17 +117,22 @@
       $('#select_member_company').dataTable({
         retrieve: true,
         iDisplayLength: 10,
-        order: [[0, 'desc']]
+        order: [[0, 'desc']],
+        dom: 'T<"clear">lfrtip',
+        tableTools: {
+            "sRowSelect": "multi",
+            "aButtons": [ "select_all", "select_none" ]
+        }
       });
 
     var table = $('#select_member_company').DataTable();
  
-    $('#select_member_company tbody').on( 'click', 'tr', function () {
-        $(this).toggleClass('selected');
-    } );
+    // $('#select_member_company tbody').on( 'click', 'tr', function () {
+    //     $(this).toggleClass('ac');
+    // } );
  
     $('#new_group').submit(function () {
-      var member_select = table.rows('.selected').data()
+      var member_select = table.rows('.active').data()
       $.each(member_select, function(index, value) {
         list_member.push(value[0]);
       });
@@ -150,11 +155,11 @@
     height: 16px;
     padding-top: 8px;
   }
-  .selected {
+  tr.active {
     border: 2px solid #0091d9!important;
     background: aliceblue;
   }
-  .selected:after {
+  tr.active:after {
     display: block;
     position: absolute;
     content: "\f00c";
@@ -164,4 +169,20 @@
     z-index: 2;
     font-size: 14px;
   }
+  #select_member_company_length {
+    float: right;
+  }
+  .dataTables_filter {
+
+  }
+  .DTTT.btn-group {
+    padding: 10px 0px;
+  }
+  a.DTTT_button_text {
+    padding: 5px;
+  }
+  input[type="search"] {
+    padding: 8px 10px;
+  }
+
 </style>

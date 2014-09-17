@@ -57,7 +57,6 @@ class Group < ActiveRecord::Base
       JoinGroupWorker.perform_async(member_id, group_id)
 
       Rails.cache.delete([member_id, 'group_active'])
-      # Rails.cache.delete([member_id, 'group_count'])
 
       if @group.public
         Activity.create_activity_group(member, @group, 'Join')
