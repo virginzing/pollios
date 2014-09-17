@@ -51,6 +51,7 @@
             </thead>
             <tbody>
               <% @members.each do |member| %>
+                <% list_group = [] %>
                 <tr>
                   <td><%= member.id %></td>
                   <td><%= image_tag(member.avatar.url(:thumbnail), size: '30x30') %></td>
@@ -59,11 +60,12 @@
                   <td>
                     <ol>
                     <% (member.groups & group_company).each do |group| %>
+                      <% list_group << group.id %>
                       <li><%= link_to group.name, "#" %></li>
                     <% end %>
                     </ol>
                   </td>
-                  <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= remove_member_group_path(member_id: member.id) %>" rel="nofollow">Delete</a></td>
+                  <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= company_delete_member_path(member_id: member.id, group_id: list_group) %>" rel="nofollow">Delete</a></td>
                 </tr>
               <% end %>
             </tbody>

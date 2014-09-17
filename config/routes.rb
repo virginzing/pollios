@@ -247,6 +247,7 @@ Pollios::Application.routes.draw do
     get 'members',  to: 'companies#company_members',   as: :company_members
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
     delete 'remove_member',  to: 'companies#remove_member',  as: :remove_member_group
+    delete 'members/remove',  to: 'companies#delete_member_company', as: :company_delete_member
 
     get 'invites',  to: 'companies#invites',    as: :company_invites
     get 'invites/via_email',  to: 'companies#via_email',  as: :via_email

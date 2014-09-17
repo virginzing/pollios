@@ -77,11 +77,11 @@ class CompaniesController < ApplicationController
   end
 
   def remove_member
-    @group = Member.find(params[:member_id]).cancel_or_leave_group(@find_group.id, "L")
+    @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
     respond_to do |format|
       if @group
         flash[:success] = "Remove successfully."
-        format.html { redirect_to company_members_path }
+        format.html { redirect_to company_groups_members_path(params[:group_id]) }
       else
         flash[:error] = "Error"
         format.html { render 'list_members' }
@@ -124,7 +124,7 @@ class CompaniesController < ApplicationController
   ### Group ###
 
   def company_groups
-    @groups = set_company.groups
+    @groups = Group.joins(:group_company, :poll_groups).select("DISTINCT groups.*, count(poll_groups.group_id) as poll_group_count").where("group_companies.company_id = #{set_company.id}").group("groups.id")
   end
 
   def list_polls_in_group
@@ -210,6 +210,24 @@ class CompaniesController < ApplicationController
         format.json { render json: { error_message: @error_message }, status: 403 }
       end
 
+    end
+  end
+
+  def delete_member_company
+    Group.transaction do 
+      params[:group_id].each do |group_id|
+        @group = Member.find(params[:member_id]).cancel_or_leave_group(group_id, "L")
+      end
+
+      respond_to do |format|
+        if @group
+          flash[:success] = "Remove successfully."
+          format.html { redirect_to company_members_path }
+        else
+          flash[:error] = "Error"
+          format.html { render 'list_members' }
+        end
+      end
     end
   end
 

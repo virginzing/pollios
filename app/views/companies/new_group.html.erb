@@ -116,6 +116,7 @@
       var list_member = [];
       $('#select_member_company').dataTable({
         retrieve: true,
+        responsive: true,
         iDisplayLength: 10,
         order: [[0, 'desc']],
         dom: 'T<"clear">lfrtip',
@@ -164,7 +165,7 @@
     position: absolute;
     content: "\f00c";
     color: #0091d9;
-    right: 4px;
+    right: 6px;
     font-family: FontAwesome;
     z-index: 2;
     font-size: 14px;
