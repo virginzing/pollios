@@ -117,7 +117,6 @@ Pollios::Application.routes.draw do
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile', as: :update_profile
     post ':member_id/setting_default',   to: 'members#setting_default'
-    post 'update_group',      to: 'members#update_group', as: :update_group
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
     get 'notify',         to: 'members#notify'
@@ -234,7 +233,8 @@ Pollios::Application.routes.draw do
     get 'groups/add', to: 'companies#new_group',  as: :company_add_group
     get 'groups/:group_id', to: 'companies#group_detail', as: :company_group_detail
     get 'groups/:group_id/edit',  to: 'companies#edit_group', as: :company_edit_group
-    
+    post 'groups/update_group',      to: 'companies#update_group', as: :company_update_group
+
     get 'groups/:group_id/polls', to: 'companies#list_polls_in_group',  as: :company_groups_polls
     get 'groups/:group_id/members', to: 'companies#list_members_in_group',  as: :company_groups_members
     delete 'groups/:group_id/destroy',  to: 'companies#destroy_group',  as: :company_destroy_group

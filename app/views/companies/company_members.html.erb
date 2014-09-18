@@ -61,7 +61,7 @@
                     <ol>
                     <% (member.groups & group_company).each do |group| %>
                       <% list_group << group.id %>
-                      <li><%= link_to group.name, "#" %></li>
+                      <li><%= link_to group.name, company_group_detail_path(group) %></li>
                     <% end %>
                     </ol>
                   </td>

@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll]
-  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -176,6 +176,24 @@ class CompaniesController < ApplicationController
 
   def edit_group
     
+  end
+
+  def update_group
+    respond_to do |format|
+      group = @group
+      if group.update(group_params)
+        group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+        flash[:success] = "Update group profile successfully."
+        format.html { redirect_to company_group_detail_path(@group) }
+        format.json
+      else
+        # puts "have error"
+        @error_message = @current_member.errors.messages
+
+        format.json
+        format.html { render 'profile' ,errors: @error_message }
+      end
+    end
   end
 
   def destroy_group

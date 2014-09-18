@@ -9,8 +9,8 @@ class MembersController < ApplicationController
 
   before_action :load_resource_poll_feed, only: [:detail_friend]
 
-  before_action :set_company, only: [:profile, :update_group, :delete_photo_group], :if => :only_company
-  before_action :find_group, only: [:profile, :update_group, :delete_photo_group], :if => :only_company
+  before_action :set_company, only: [:profile, :delete_photo_group], :if => :only_company
+  before_action :find_group, only: [:profile, :delete_photo_group], :if => :only_company
 
   expose(:list_friend) { current_member.friend_active.pluck(:followed_id) }
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
@@ -157,24 +157,6 @@ class MembersController < ApplicationController
         format.json { render json: Hash["response_status" => "OK"] }
       else
         format.json { render json: Hash["response_status" => "ERROR"]}
-      end
-    end
-  end
-
-  def update_group
-    respond_to do |format|
-      group = set_company.group
-      if group.update(group_params)
-        group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
-        flash[:success] = "Update group profile successfully."
-        format.html { redirect_to my_profile_path }
-        format.json
-      else
-        puts "have error"
-        @error_message = @current_member.errors.messages
-
-        format.json
-        format.html { render 'profile' ,errors: @error_message }
       end
     end
   end
