@@ -18,6 +18,10 @@
  * - CUSTOM STYLES
  */
 
+a#header-link {
+  color: #4c4f53 !important;
+}
+
  /* PROFILE */
 .profile-content {
   border-top: none !important;

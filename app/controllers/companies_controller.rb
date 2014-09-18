@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll]
-  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -172,6 +172,10 @@ class CompaniesController < ApplicationController
         wants.html { redirect_to company_add_group_path  }
       end
     end
+  end
+
+  def edit_group
+    
   end
 
   def destroy_group
