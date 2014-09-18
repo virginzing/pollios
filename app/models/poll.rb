@@ -433,6 +433,7 @@ class Poll < ActiveRecord::Base
 
       choice_count = get_choice_count(choices)
       in_group_ids = group_id.presence || "0"
+      in_group = group_id.present? ? true : false
 
       if expire_date.present?
         convert_expire_date = Time.now + expire_date.to_i.day
@@ -456,7 +457,7 @@ class Poll < ActiveRecord::Base
       end
 
       @poll = create!(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, 
-                     type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info)
+                     type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, in_group: in_group)
 
       if @poll.valid? && choices
         @choices = Choice.create_choices(@poll.id, choices)
