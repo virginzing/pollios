@@ -7,6 +7,8 @@ class Group < ActiveRecord::Base
   has_many :poll_groups, dependent: :destroy
   has_many :polls, through: :poll_groups, source: :poll
 
+  has_many :polls_active, -> { where("polls.expire_date > ? AND polls.status_poll != -1", Time.zone.now) }, through: :poll_groups, source: :poll
+
   has_many :member_active, -> { where(active: true) }, class_name: "GroupMember"
   has_many :get_member_active, through: :member_active, source: :member
 
@@ -162,10 +164,10 @@ class Group < ActiveRecord::Base
   end
 
   def get_poll_not_vote_count
-    poll_groups_ids = poll_groups.map(&:poll_id)
+    poll_groups_ids = polls_active.map(&:id)
     my_vote_poll_ids = Member.voted_polls.collect{|e| e.first } 
-    puts "#{poll_groups_ids}"
-    puts "#{my_vote_poll_ids}"
+    # puts "#{poll_groups_ids}"
+    # puts "#{my_vote_poll_ids}"
     return (poll_groups_ids - my_vote_poll_ids).count
   end
 

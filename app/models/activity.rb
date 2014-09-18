@@ -122,7 +122,8 @@ class Activity
       },
       creator: {
         member_id: @poll.member.id,
-        name: @poll.member.fullname
+        name: @poll.member.fullname,
+        avatar: @poll.member.get_avatar
       },
       authority: check_authority_poll,
       action: ACTION[:vote],
@@ -142,7 +143,8 @@ class Activity
       },
       creator: {
         member_id: @poll_series.member.id,
-        name: @poll_series.member.fullname
+        name: @poll_series.member.fullname,
+        avatar: @poll_series.member.get_avatar
       },
       authority: check_authority_poll_series,
       action: ACTION[:vote],
@@ -157,7 +159,8 @@ class Activity
       {
         friend: {
           member_id: @friend.id,
-          name: @friend.fullname
+          name: @friend.fullname,
+          avatar: @friend.get_avatar
         },
         authority: AUTHORITY[:public],
         action: ACTION[:become_friend],
@@ -168,7 +171,8 @@ class Activity
       {
         friend: {
           member_id: @friend.id,
-          name: @friend.fullname
+          name: @friend.fullname,
+          avatar: @friend.get_avatar
         },
         authority: AUTHORITY[:public],
         action: ACTION[:follow],
@@ -219,7 +223,8 @@ class Activity
       {
         member: {
           id: @member.id,
-          name: @member.fullname
+          name: @member.fullname,
+          avatar: @member.get_avatar
         },
         action: action_change_name,
         type: type_member,
@@ -230,7 +235,8 @@ class Activity
       {
         member: {
           id: @member.id,
-          name: @member.fullname
+          name: @member.fullname,
+          avatar: @member.get_avatar
         },
         action: action_change_cover,
         type: type_member,
