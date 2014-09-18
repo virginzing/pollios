@@ -20,6 +20,8 @@ class FriendPollInProfile
     @friend_group_ids ||= @friend_group.map(&:id)
   end
 
+  a = Member.find(93).cached_get_group_active
+  b = Member.find(100).cached_get_group_active
   def my_and_friend_group
     my_group_id & friend_group_id
   end
@@ -77,7 +79,7 @@ class FriendPollInProfile
   end
 
   def group_friend_count
-    groups.count.count
+    my_and_friend_group.count
   end
 
   def block_friend_count
@@ -192,24 +194,13 @@ class FriendPollInProfile
   Member.find(93).cached_get_group_active
 
   def mutual_or_public_group
-    member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
-    member_block = Member.list_friend_block.map(&:id)  ## member ids
-
-    query = Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group)
-          .includes(:polls_active, :group_members_active)
-          .select("groups.*")
-          .group("groups.id, polls.id, members.id")
-          .order("groups.name asc")
-          .references(:polls_active, :group_members_active)
-
-    # query = query.where("polls.id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
-    # query = query.where("polls.member_id NOT IN (?)", member_block) if member_block.count > 0
+    query = Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group).includes(:polls_active, :group_members_active).select("groups.*").group("groups.id, polls.id, members.id").order("groups.name asc").references(:polls_active, :group_members_active)
     query
   end
 
   def my_group
-    member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
-    member_block = Member.list_friend_block.map(&:id)  ## member ids
+    # member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
+    # member_block = Member.list_friend_block.map(&:id)  ## member ids
 
     query = Group.where("groups.id IN (?)", my_group_id)
                 .includes(:polls_active, :group_members_active)
