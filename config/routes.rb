@@ -229,7 +229,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
-   
+    get 'list_group', to: 'companies#list_group'
     get 'groups',   to: 'companies#company_groups',    as: :company_groups
     get 'groups/add', to: 'companies#new_group',  as: :company_add_group
     get 'groups/:group_id', to: 'companies#group_detail', as: :company_group_detail

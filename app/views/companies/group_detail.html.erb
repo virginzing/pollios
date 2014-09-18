@@ -1,0 +1,33 @@
+<div class="well">
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="txt-color-blueDark page-well-header">
+        <%= image_tag(@group.photo_group.url(:thumbnail), size: '50x50') %> <%= @group.name %> Group
+    </h1>
+  </div>
+</div>
+</div>
+
+
+<div class="well">
+  <h4 class="alert-heading">Please Note!</h4>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong> Pollios</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+  </p>
+  <br>
+  <a href="#" class="icon-btn">
+    <i class="fa fa-edit"></i>
+    <div>Poll</div>
+  </a>
+
+  <a href="<%= company_add_member_url %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>User</div>
+  </a>
+
+  <a href="#" class="icon-btn">
+    <i class="fa fa-edit"></i>
+    <div>Edit</div>
+  </a>
+
+</div>

@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll]
-  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -123,8 +123,16 @@ class CompaniesController < ApplicationController
 
   ### Group ###
 
+  def list_group
+    @member = Member.find(params[:member_id])
+    @company = Company.find(params[:company_id])
+    @member_group_active = @member.cached_get_group_active.map(&:id)
+    render layout: false
+  end
+
   def company_groups
-    @groups = Group.joins(:group_company, :poll_groups).select("DISTINCT groups.*, count(poll_groups.group_id) as poll_group_count").where("group_companies.company_id = #{set_company.id}").group("groups.id")
+    @groups = Group.eager_load(:group_company,:poll_groups, :poll_groups).where("group_companies.company_id = #{set_company.id}")
+    .select("DISTINCT group.*, count(poll_groups.group_id) as poll_count, count(group_members.group_id) as member_count")
   end
 
   def list_polls_in_group
@@ -141,6 +149,10 @@ class CompaniesController < ApplicationController
     @group = Group.new
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
                       .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
+  end
+
+  def group_detail
+    
   end
 
   def create_group
@@ -177,12 +189,10 @@ class CompaniesController < ApplicationController
     @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).references(:groups)
   end
 
-  def add_member
-    @member_in_group ||= find_group.get_member_active
+  def add_member # wait for new imprement
     # puts "#{@member_in_group.map(&:id)}"
     query = Member.searchable_member(params[:q]).without_member_type(:company)
     @members = query
-    @members = query.where("members.id NOT IN (?)", @member_in_group) if @member_in_group.count > 0
   end
 
   def add_user_to_group
@@ -191,11 +201,11 @@ class CompaniesController < ApplicationController
     respond_to do |format| 
       if find_user.present?
         Group.transaction do
-          find_user_group = find_user.get_group_active.map(&:id)
-          this_group = set_company.groups.last
+          find_user_group = find_user.cached_get_group_active.map(&:id)
+          this_group = Group.find(params[:group_id])
 
           unless find_user_group.include?(this_group.id)
-            this_group.group_members.create!(member_id: find_user.id, is_master: true, active: true)
+            this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
             this_group.increment!(:member_count)
             find_user.cached_flush_active_group
             format.json { render json: { error_message: nil }, status: 200 }

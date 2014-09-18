@@ -292,7 +292,7 @@ class PollsController < ApplicationController
   def detail
     begin
       if params[:random_poll].present?
-        @poll = Poll.public_poll.active_poll.order("random()").first
+        @poll = Poll.public_poll.active_poll.limit(1).offset(rand(Poll.count)).first
         Poll.view_poll(@poll, @current_member)
         @expired = @poll.expire_date < Time.now
         @voted = @current_member.list_voted?(@poll)

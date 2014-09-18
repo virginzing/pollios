@@ -57,7 +57,9 @@
                   <td><%= image_tag(member.avatar.url(:thumbnail), size: '50x50') %></td>
                   <td><%= member.get_name %></td>
                   <td><%= member.email %></td>
-                  <td><a href="<%= add_user_to_group_path(member_id: member.id) %>" id="add_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Add</a></td>
+                  <td>
+                  <a href="javascript:void(0)" class="btn btn-default btn-xs" rel="tooltip" data-original-title="Select Group" onclick="load_group_list(<%= member.id %>, <%= @find_company.id %>)"><i class="fa fa-cog">
+                  </td>
                 </tr>
               <% end %>
             </tbody>
@@ -77,32 +79,21 @@
 </div> <!-- well -->
 
 <script type="text/javascript">
-$(document).ready(function () {
-  $.add_button_to_group = $('#add_user_to_group[data-remote]');
-  
-  $.add_button_to_group.on('ajax:send', function(xhr) {
-  $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
-  }).on('ajax:success', function (data, status, xhr) {
-    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Added")
+$('[rel=tooltip]').tooltip();
+function load_group_list(member_id, company_id) {
 
-  }).on('ajax:error', function (event, xhr, status) {
-    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    var json_response = JSON.parse(xhr.responseText);
-    handleErrorAddGroup(json_response.error_message);
-
+  BootstrapDialog.show({
+        title: 'List Group',
+        message: function(dialog) {
+              var $message = $('<div></div>');
+              var pageToLoad = dialog.getData('pageToLoad');
+              $message.load(pageToLoad);
+      
+              return $message;
+          },
+          data: {
+              'pageToLoad': '/company/list_group?member_id=' + member_id + '&company_id=' + company_id
+          }
   });
-
-  function handleErrorAddGroup (error_message) {
-    $.smallBox({
-      title : "Warning",
-      content: error_message,
-      color: "#C46A69",
-      icon: "fa fa-warning",
-      timeout: 6000
-    });
-  }
-
-});
-
+}
 </script>
