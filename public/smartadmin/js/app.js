@@ -1631,9 +1631,20 @@ function dataTable() {
   //     $( api.column( 6 ).footer() ).html(pageTotal);
 		// }
 	});
+	$('#list_default').dataTable({
+		retrieve: true,
+		iDisplayLength: 10,
+		responsive: true,
+		order: [[0, 'desc']]
+	});
 	$('#invite_codes').dataTable({
 		retrieve: true,
 		iDisplayLength: 25,
+		order: [[0, 'desc']]
+	});
+	$('#list_members').dataTable({
+		retrieve: true,
+		iDisplayLength: 10,
 		order: [[0, 'desc']]
 	});
 	$('#company_groups').dataTable({
@@ -1697,8 +1708,15 @@ function dataTable() {
 	});
 	$('#list_polls').dataTable({
 		retrieve: true,
-		iDisplayLength: 25,
-		responsive: true
+		iDisplayLength: 10,
+		responsive: true,
+		order: [[0, 'desc']]
+	});
+	$('#list_groups').dataTable({
+		retrieve: true,
+		iDisplayLength: 10,
+		responsive: true,
+		order: [[0, 'desc']]
 	});
 	$('#list_recurring').dataTable({
 		retrieve: true,
