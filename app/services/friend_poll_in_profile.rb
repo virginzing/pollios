@@ -197,7 +197,9 @@ class FriendPollInProfile
           joins(:group_members).includes(:polls_active).
           select("groups.*, count(group_members.group_id) as member_in_group").
           group("groups.id").
-          order("groups.name asc")
+          order("groups.name asc").
+          group("polls.id")
+
     query = query.where("polls.id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
     query = query.where("polls.member_id NOT IN (?)", member_block) if member_block.count > 0
     query
