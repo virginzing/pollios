@@ -74,7 +74,7 @@ class Group < ActiveRecord::Base
     member_id = group[:member_id]
     photo_group = group[:photo_group]
     description = group[:description]
-    set_privacy = group[:public] || false
+    set_privacy = group[:public] || true
 
     name = group[:name]
     friend_id = group[:friend_id]
