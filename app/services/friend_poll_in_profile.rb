@@ -197,7 +197,7 @@ class FriendPollInProfile
 
     query = Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group)
           .includes(:polls_active, :group_members_active)
-          .select("groups.*, count(group_members.group_id) as member_in_group")
+          .select("groups.*")
           .group("groups.id, polls.id, members.id")
           .order("groups.name asc")
           .references(:polls_active, :group_members_active)

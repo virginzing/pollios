@@ -131,8 +131,7 @@ class CompaniesController < ApplicationController
   end
 
   def company_groups
-    @groups = Group.eager_load(:group_company,:poll_groups, :poll_groups).where("group_companies.company_id = #{set_company.id}")
-    .select("DISTINCT group.*, count(poll_groups.group_id) as poll_count, count(group_members.group_id) as member_count")
+    @groups = Group.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{set_company.id}").uniq
   end
 
   def list_polls_in_group

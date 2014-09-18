@@ -58,8 +58,8 @@
                   <td><%= image_tag(group.photo_group.url(:thumbnail), size: '50x50') %></td>
                   <td><%= link_to group.name, company_group_detail_path(group) %></td>
                   <td><%= group.description %></td>
-                  <td><%= group.member_count %> members</td>
-                  <td><%= group.poll_count %> polls</td>
+                  <td><%= group.group_members.map(&:id).count %> members</td>
+                  <td><%= group.poll_groups.map(&:id).count %> polls</td>
                   <td><span data-livestamp="<%= group.created_at.to_i %>"></span></td>
                   <td><%= link_to '<i class="fa fa-trash"></i>'.html_safe, company_destroy_group_path(group), method: :delete, data: { confirm: 'Are you sure?' } %></td>
                 </tr>
