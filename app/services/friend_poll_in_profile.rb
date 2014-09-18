@@ -20,8 +20,6 @@ class FriendPollInProfile
     @friend_group_ids ||= @friend_group.map(&:id)
   end
 
-  a = Member.find(93).cached_get_group_active
-  b = Member.find(100).cached_get_group_active
   def my_and_friend_group
     my_group_id & friend_group_id
   end
@@ -79,7 +77,7 @@ class FriendPollInProfile
   end
 
   def group_friend_count
-    my_and_friend_group.count
+    mutual_or_public_group.map(&:id).uniq.count
   end
 
   def block_friend_count
@@ -191,10 +189,13 @@ class FriendPollInProfile
     query = @friend.get_friend_blocked
   end
 
-  Member.find(93).cached_get_group_active
-
   def mutual_or_public_group
-    query = Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group).includes(:polls_active, :group_members_active).select("groups.*").group("groups.id, polls.id, members.id").order("groups.name asc").references(:polls_active, :group_members_active)
+    query = Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group)
+                .includes(:polls_active, :group_members_active)
+                .select("groups.*")
+                .group("groups.id, polls.id, members.id")
+                .order("groups.name asc")
+                .references(:polls_active, :group_members_active)
     query
   end
 
