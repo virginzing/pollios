@@ -3,6 +3,8 @@ class Group < ActiveRecord::Base
 
   has_many :group_members, dependent: :destroy
   has_many :members, through: :group_members, source: :member
+
+  has_many :group_members_active, -> { where("group_members.active = 't'") },through: :group_members, source: :member
   
   has_many :poll_groups, dependent: :destroy
   has_many :polls, through: :poll_groups, source: :poll
@@ -169,6 +171,10 @@ class Group < ActiveRecord::Base
     # puts "#{poll_groups_ids}"
     # puts "#{my_vote_poll_ids}"
     return (poll_groups_ids - my_vote_poll_ids).count
+  end
+
+  def get_member_count
+    group_members_active.map(&:id).count
   end
 
   def as_json options={}
