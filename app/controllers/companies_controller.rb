@@ -5,8 +5,8 @@ class CompaniesController < ApplicationController
   before_action :signed_user
   before_action :set_company
   before_action :find_group
-  before_action :set_poll, only: [:poll_detail, :delete_poll]
-  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group]
+  before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -171,6 +171,33 @@ class CompaniesController < ApplicationController
         wants.html { redirect_to company_add_group_path  }
       end
     end
+  end
+
+  def group_poll_detail
+    @choice_data_chart = []
+    if current_member.company?
+      init_company = PollDetailCompany.new([@group], @poll)
+      @member_group = init_company.get_member_in_group
+      puts "member_group => #{@member_group}"
+      @member_voted_poll = init_company.get_member_voted_poll
+      @member_novoted_poll = init_company.get_member_not_voted_poll
+      @member_viewed_poll = init_company.get_member_viewed_poll
+      @member_noviewed_poll = init_company.get_member_not_viewed_poll
+      @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
+
+      if @member_group.count > 0
+        @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
+        @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
+        @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
+        @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
+      else
+        zero_percent = "0"
+        @percent_vote = zero_percent
+        @percent_novote = zero_percent
+        @percent_view = zero_percent
+        @percent_noview = zero_percent
+      end
+    end  
   end
 
   def edit_group

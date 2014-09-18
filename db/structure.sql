@@ -2895,6 +2895,13 @@ CREATE INDEX index_group_members_on_member_id ON group_members USING btree (memb
 
 
 --
+-- Name: index_group_members_on_member_id_and_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_group_members_on_member_id_and_group_id ON group_members USING btree (member_id, group_id);
+
+
+--
 -- Name: index_hidden_polls_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3710,3 +3717,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140912031610');
 INSERT INTO schema_migrations (version) VALUES ('20140916042132');
 
 INSERT INTO schema_migrations (version) VALUES ('20140916125303');
+
+INSERT INTO schema_migrations (version) VALUES ('20140918140041');

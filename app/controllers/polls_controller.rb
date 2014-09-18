@@ -175,7 +175,7 @@ class PollsController < ApplicationController
   def show
     @choice_data_chart = []
     if current_member.company?
-      init_company = PollDetailCompany.new(@poll.groups, @poll)
+      init_company = PollDetailCompany.new(params[:group_id] || @poll.groups, @poll)
       @member_group = init_company.get_member_in_group
       @member_voted_poll = init_company.get_member_voted_poll
       @member_novoted_poll = init_company.get_member_not_voted_poll
@@ -200,7 +200,7 @@ class PollsController < ApplicationController
 
   def poke_dont_vote
     respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.company.group, @poll)
+      init_company = PollDetailCompany.new(@current_member.company.groups, @poll)
       @member_novoted_poll = init_company.get_member_not_voted_poll
 
       if @member_novoted_poll.length > 0
@@ -215,7 +215,7 @@ class PollsController < ApplicationController
 
   def poke_dont_view
     respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.company.group, @poll)
+      init_company = PollDetailCompany.new(@current_member.company.groups, @poll)
       @member_noviewed_poll = init_company.get_member_not_viewed_poll
 
       if @member_noviewed_poll.length > 0
@@ -230,7 +230,7 @@ class PollsController < ApplicationController
 
   def poke_view_no_vote
     respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.company.group, @poll)
+      init_company = PollDetailCompany.new(@current_member.company.groups, @poll)
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       if @member_viewed_no_vote_poll.length > 0

@@ -73,3 +73,15 @@ a#header-link {
   margin-right: 10px;
   margin-bottom: 10px;
 }
+
+.dl-horizontal.dl-custom dt{
+  padding: 3px !important;
+}
+
+.dl-horizontal.dl-custom dd{
+  padding: 3px !important;
+}
+
+.text-primary {
+  font-family: "Roboto";
+}

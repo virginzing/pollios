@@ -10,7 +10,7 @@ class PollDetailCompany
   end
 
   def get_member_in_group
-    @member_active ||= group_member_active
+    @member_active ||= group_member_active_ids
   end
 
   def get_member_voted_poll

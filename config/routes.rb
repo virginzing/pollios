@@ -233,6 +233,8 @@ Pollios::Application.routes.draw do
     get 'groups/add', to: 'companies#new_group',  as: :company_add_group
     get 'groups/:group_id', to: 'companies#group_detail', as: :company_group_detail
     get 'groups/:group_id/edit',  to: 'companies#edit_group', as: :company_edit_group
+    get 'groups/:group_id/polls/:id',  to: 'companies#group_poll_detail', as: :company_group_poll_detail
+    
     post 'groups/update_group',      to: 'companies#update_group', as: :company_update_group
 
     get 'groups/:group_id/polls', to: 'companies#list_polls_in_group',  as: :company_groups_polls
