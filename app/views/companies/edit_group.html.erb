@@ -7,3 +7,84 @@
   </div>
 </div>
 </div>
+
+
+<div class="row profile-account">
+   <div class="col-md-3">
+      <ul class="ver-inline-menu tabbable margin-bottom-10">
+         <li class="active">
+            <a data-toggle="tab" href="#tab_5-1">
+            <i class="fa fa-cog"></i> 
+            Group info
+            </a> 
+            <span class="after"></span>                                    
+         </li>
+         <li class=""><a data-toggle="tab" href="#tab_5-2"><i class="fa fa-picture-o"></i> Change Photo</a></li>
+      </ul>
+   </div>
+   <div class="col-md-9">
+      <div class="tab-content">
+         <div id="tab_5-1" class="tab-pane active">
+            <form role="form" action="<%= update_group_path %>" class="smart-form" method="post" id="group_profile">
+
+              <fieldset>
+                <section>
+                  <label class="label">Group Name</label>
+                  <label class="input">
+                    <input type="text" name="name" value="<%= @find_group.name %>" data-parsley-required="true">
+                  </label>
+                  <div class="note">
+                    <strong>Note</strong> Group name is show in app Pollios.
+                  </div>
+                </section>
+
+                <section>
+                  <label class="label">Description</label>
+                  <label class="textarea">                    
+                    <textarea rows="3" class="custom-scroll" name="description"><%= @find_group.description %></textarea> 
+                  </label>
+                  <div class="note">
+                    <strong>Note</strong> description is show in app Pollios.
+                  </div>
+                </section>
+
+              </fieldset>
+
+              <footer>
+                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >  
+                  Submit
+                </button>
+              </footer>
+
+            </form>
+
+         </div>
+
+         <div id="tab_5-2" class="tab-pane">
+
+           <div class="alert alert-info alert-block">
+              <a class="close" data-dismiss="alert" href="#">×</a>
+              <h4 class="alert-heading">Group Photo Upload</h4>
+              Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+           </div>
+
+          <form role="form" action="<%= update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+            <div class="form-group dropzone-photo">
+              <input type="file" class="default" name="photo_group" id="drop_photo_group" accept="image/png, image/jpeg, image/gif"/>
+            </div>
+
+            <footer>
+              <% if @find_group.photo_group.present? %>
+              <%= link_to 'Delete', delete_photo_group_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+              <% end %>
+              <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+                Submit
+              </button>
+            </footer>
+          </form>
+
+         </div>
+      </div>
+   </div>
+   <!--end col-md-9-->                                   
+</div>
