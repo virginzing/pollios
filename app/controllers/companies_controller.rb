@@ -136,7 +136,7 @@ class CompaniesController < ApplicationController
 
   def list_polls_in_group
     @init_poll = PollOfGroup.new(current_member, @group, options_params)
-    @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
+    @polls = @init_poll.get_poll_of_group
   end
 
   def list_members_in_group
