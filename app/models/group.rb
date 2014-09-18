@@ -161,6 +161,14 @@ class Group < ActiveRecord::Base
     description.present? ? description : ""
   end
 
+  def get_poll_not_vote_count
+    poll_groups_ids = poll_groups.map(&:poll_id)
+    my_vote_poll_ids = Member.voted_polls.collect{|e| e.first } 
+    puts "#{poll_groups_ids}"
+    puts "#{my_vote_poll_ids}"
+    return (poll_groups_ids - my_vote_poll_ids).count
+  end
+
   def as_json options={}
    {
       id: id,

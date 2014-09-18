@@ -5,7 +5,7 @@ if @groups
     json.name group.name
     json.photo group.get_photo_group
     json.member_count group.member_in_group
-    json.poll_count group.poll_count   ## amount total of member don't vote poll in group
+    json.poll_count group.get_poll_not_vote_count   ## amount total of member don't vote poll in group
     json.description group.get_description
     json.public group.public
     json.created_at group.created_at.to_i
