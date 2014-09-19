@@ -9,6 +9,11 @@ Pollios::Application.routes.draw do
         get 'polls',  to: 'companies#polls'
         get 'polls/:id/detail', to: 'companies#poll_detail'
       end
+
+      scope 'company' do
+        get 'groups',     to: 'companies#company_groups'
+        get 'members',    to: 'companies#company_members'
+      end
     end
 
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do

@@ -4,15 +4,19 @@ module Api
       respond_to :json
 
       skip_before_action :verify_authenticity_token
-      before_action :set_current_member, only: [:polls, :poll_detail]
+
+      before_action :set_current_member
+
       before_action :load_resource_poll_feed, only: [:polls, :poll_detail]
       
       before_action :get_your_group, only: [:poll_detail]
       before_action :set_group, only: [:polls, :poll_detail]
-      before_action :compress_gzip, only: [:polls, :poll_detail]
+
+      before_action :compress_gzip
+      before_action :set_company
 
       expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
-
+      expose(:group_company) { @current_member.company.groups if @current_member }
 
       def polls
         @init_poll = PollOfGroup.new(@current_member, @group, options_params)
@@ -38,10 +42,22 @@ module Api
         @total_entries = @polls.total_entries
       end
 
+      def company_groups
+        @groups = Group.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{@company.id}").uniq
+      end
+
+      def company_members
+        @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", @company.groups.map(&:id)).uniq.references(:groups)
+      end
+
       private
 
       def options_params
         params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request)
+      end
+
+      def set_company
+        @company = @current_member.company
       end
 
       def set_group

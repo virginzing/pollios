@@ -238,7 +238,7 @@ class CompaniesController < ApplicationController
   end
 
   def company_members
-    @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).references(:groups)
+    @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
   end
 
   def add_member # wait for new imprement

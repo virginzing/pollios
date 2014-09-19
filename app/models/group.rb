@@ -177,6 +177,14 @@ class Group < ActiveRecord::Base
     group_members_active.map(&:id).count
   end
 
+  def get_all_member_count
+    group_members.map(&:member_id).uniq.count
+  end
+
+  def get_all_poll_count
+    poll_groups.map(&:poll_id).uniq.count
+  end
+
   def as_json options={}
    {
       id: id,
