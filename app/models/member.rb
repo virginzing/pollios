@@ -401,6 +401,12 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def cached_get_my_reward
+    Rails.cache.fetch([self.id, 'reward']) do
+      CampaignMember.where("member_id = #{id} AND luck = 't' AND redeem = 'f'").to_a
+    end
+  end
+
   def campaigns_available
     campaign = campaigns.includes(:poll).order("name desc")
     campaign.delete_if{|x| x.poll.present? }

@@ -4,6 +4,10 @@ if @poll.present?
   json.scroll @poll.get_choice_scroll
   json.vote_max @poll.get_vote_max
 
+  if @poll.campaign_id != 0
+    json.feedback_message @message
+  end
+
 else
   json.response_status "ERROR"
   json.response_message "Voted Already."

@@ -22,6 +22,7 @@ json.count do
     json.group member.cached_get_group_active.count
     json.watched member.cached_watched.count
     json.block member.cached_block_friend.count
+    json.reward member.cached_get_my_reward.count
   else
     json.poll friend.cached_poll_friend_count(member)
     json.vote friend.cached_voted_friend_count(member)

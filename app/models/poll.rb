@@ -565,7 +565,7 @@ class Poll < ActiveRecord::Base
               # find_poll.poll_series.increment!(:vote_all) if find_poll.series
               history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
 
-              find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
+              @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
               # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
               get_anonymous = member.get_anonymous_with_poll(find_poll)
 
@@ -580,7 +580,7 @@ class Poll < ActiveRecord::Base
 
               Rails.cache.delete([member_id, 'my_voted'])
               Rails.cache.delete([find_poll.class.name, find_poll.id])
-              [find_poll, history_voted]
+              [find_poll, history_voted, @campaign, @message]
             end
           end
 

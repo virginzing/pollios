@@ -420,7 +420,7 @@ class PollsController < ApplicationController
   end
 
   def vote
-    @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
+    @poll, @history_voted, @campaign, @message = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
   end
 
