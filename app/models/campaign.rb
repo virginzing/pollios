@@ -80,15 +80,21 @@ class Campaign < ActiveRecord::Base
     return id.to_s + Time.now.to_i.to_s
   end
 
+  def get_photo_campaign
+    photo_campaign.url(:thumbnail).presence || ""
+  end
+
   def as_json(options={})
     {
       id: id,
-      name: name,
+      name: name.presence || "",
+      description: description.presence || "",
+      how_to_redeem: how_to_redeem.presence || "",
       expire: expire.to_i,
-      photo_campaign: photo_campaign.url(:thumbnail),
+      photo_campaign: get_photo_campaign,
       used: used,
       limit: limit,
-      created_at: created_at.to_date.to_date
+      created_at: created_at.to_i
     }
   end
   

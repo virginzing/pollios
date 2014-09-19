@@ -436,7 +436,9 @@ CREATE TABLE campaigns (
     updated_at timestamp without time zone,
     begin_sample integer DEFAULT 1,
     end_sample integer,
-    expire timestamp without time zone
+    expire timestamp without time zone,
+    description text,
+    how_to_redeem text
 );
 
 
@@ -3719,3 +3721,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140916042132');
 INSERT INTO schema_migrations (version) VALUES ('20140916125303');
 
 INSERT INTO schema_migrations (version) VALUES ('20140918140041');
+
+INSERT INTO schema_migrations (version) VALUES ('20140919152656');

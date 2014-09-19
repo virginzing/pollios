@@ -207,7 +207,11 @@ class Poll < ActiveRecord::Base
   end
 
   def get_campaign
-    campaign.present? ? true : false
+    (campaign_id != 0) ? true : false
+  end
+
+  def get_campaign_detail
+    campaign.as_json()
   end
 
   def get_photo
