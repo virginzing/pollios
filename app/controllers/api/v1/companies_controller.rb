@@ -42,12 +42,19 @@ module Api
         @total_entries = @polls.total_entries
       end
 
+      ## main of company ##
+
       def company_groups
         @groups = Group.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{@company.id}").uniq
       end
 
       def company_members
         @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", @company.groups.map(&:id)).uniq.references(:groups)
+      end
+
+      def company_polls
+        @init_poll = PollOfGroup.new(@current_member, @company.groups, options_params)
+        @polls = @init_poll.get_poll_of_group_company
       end
 
       private

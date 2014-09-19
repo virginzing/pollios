@@ -89,7 +89,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def list_polls
+  def list_polls  ## company polls
     @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params)
     @polls = @init_poll.get_poll_of_group_company
   end

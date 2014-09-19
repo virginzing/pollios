@@ -13,6 +13,7 @@ Pollios::Application.routes.draw do
       scope 'company' do
         get 'groups',     to: 'companies#company_groups'
         get 'members',    to: 'companies#company_members'
+        get 'polls',      to: 'companies#company_polls'
       end
     end
 

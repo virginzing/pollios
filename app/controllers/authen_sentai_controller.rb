@@ -48,21 +48,22 @@ class AuthenSentaiController < ApplicationController
 	def signin_sentai
 
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
-    puts "response => #{@response}"
+    # puts "response => #{@response}"
 		respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai"]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login]]))
 			if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
         if @auth.activate_account? || @auth.approve_brand || @auth.approve_company
           @login = true
 
-          # session[:member_id] = member.id
-          if sessions_params[:remember_me]
-            cookies.permanent[:auth_token] = member.auth_token
-          else
-            cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+          if params[:web_login]
+            if sessions_params[:remember_me]
+              cookies.permanent[:auth_token] = member.auth_token
+            else
+              cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+            end
           end
-
+          
           wants.html { redirect_back_or polls_path }
           wants.json
           wants.js

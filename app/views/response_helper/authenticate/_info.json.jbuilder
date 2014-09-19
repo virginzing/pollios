@@ -12,12 +12,6 @@ json.subscription do
   json.subscribe_expire member.subscribe_expire.to_i
 end
 
-if member.company?
-  json.list_group member.company.groups do |group|
-    json.partial! 'response_helper/group/full_info', group: group
-  end
-end
-
 json.count do
   json.point member.point
   json.poll member.cached_my_poll.count

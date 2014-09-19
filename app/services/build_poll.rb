@@ -69,25 +69,28 @@ class BuildPoll
   end
   
   def poll_binary_params
-    {
-      "member_id" => @member.id,
-      "title" => title_with_tag,
-      "public" => set_poll_public,
-      "series" => @series,
-      "expire_date" => expire_date,
-      "poll_series_id" => @poll_series_id,
-      "campaign_id" => @params["campaign_id"],
-      "recurring_id" => @params["recurring_id"],
-      "type_poll" => @params["type_poll"],
-      "in_group_ids" => in_group_ids,
-      "photo_poll" => @params["photo_poll"],
-      "status_poll" => 0,
-      "member_type" => @member.member_type_text,
-      "allow_comment" => check_allow_comment,
-      "qr_only" => check_qr_only,
-      "require_info" => check_require_info,
-      "in_group" => check_in_group
-    }
+    begin
+      raise ExceptionHandler::MemberNotFoundHtml, "Member not found" unless @member.present?
+      {
+        "member_id" => @member.id,
+        "title" => title_with_tag,
+        "public" => set_poll_public,
+        "series" => @series,
+        "expire_date" => expire_date,
+        "poll_series_id" => @poll_series_id,
+        "campaign_id" => @params["campaign_id"],
+        "recurring_id" => @params["recurring_id"],
+        "type_poll" => @params["type_poll"],
+        "in_group_ids" => in_group_ids,
+        "photo_poll" => @params["photo_poll"],
+        "status_poll" => 0,
+        "member_type" => @member.member_type_text,
+        "allow_comment" => check_allow_comment,
+        "qr_only" => check_qr_only,
+        "require_info" => check_require_info,
+        "in_group" => check_in_group
+      }
+    end
   end
 
   def list_choices

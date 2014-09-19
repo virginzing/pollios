@@ -11,6 +11,10 @@ class Authentication
     @member ||= member_from_authen
   end
 
+  def web_login
+    @params[:web_login]
+  end
+
   def approve_brand
     @member.approve_brand
   end
@@ -108,7 +112,9 @@ class Authentication
       member.email = email
       member.member_type = member_type
       member.approve_brand = approved_brand
-      member.auth_token = generate_auth_token
+      if web_login.present?
+        member.auth_token = generate_auth_token
+      end
       member.setting = { "post_poll"=>"friend_following", "vote_poll"=> true, "comment_poll"=> true }
       member.save!
       @new_member = true
@@ -153,7 +159,7 @@ class Authentication
   end
 
   def update_member(member)
-      member.update!(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday, auth_token: Authentication.generate_auth_token)
+    member.update!(fullname: member.fullname.presence || name, birthday: member.birthday.presence || birthday)
   end
 
   def update_member_provider(member_provider)
