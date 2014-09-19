@@ -37,31 +37,22 @@ class VotePollWorker
         end
       end
 
-      if @poll_within_group.present?
-        group_options = Hash["group" => @poll_within_group.first.as_json()]
-        @hash_custom = @custom_properties.merge!(group_options)
-      else
-        @hash_custom = @custom_properties
-      end
-
-      find_recipient_notify.each do |member|
-        hash_custom = {
+      hash_custom = {
           anonymous: anonymous,
           type: TYPE[:poll],
           action: ACTION[:vote],
           poll: PollSerializer.new(poll).as_json()
-        }
-        
-        # check_group = check_in_group(member, poll_within_group)
-        # # puts "group detail => #{check_group}, group present => #{check_group.present?}"
-        # if check_group.present? 
-        #   # puts "merge group detail"
-        #   new_hash = hash_custom.merge!( Hash["group" => check_group.as_json()] )
-        # else
-        #   new_hash = hash_custom
-        # end
+      }
 
-        NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @hash_custom)
+      if @poll_within_group.present?
+        group_options = Hash["group" => @poll_within_group.first.as_json()]
+        @new_hash_options = @custom_properties.merge!(hash_custom).merge!(group_options)
+      else
+        @new_hash_options = @custom_properties.merge!(hash_custom)
+      end
+
+      find_recipient_notify.each do |member|        
+        NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_poll.custom_message, custom_properties: @new_hash_options)
       end
 
       Apn::App.first.send_notifications
@@ -69,11 +60,5 @@ class VotePollWorker
       puts "VotePollWorker => #{e.message}"
     end
   end
-
-  # def check_in_group(member, poll_within_group)
-  #   group_of_receiver = member.cached_get_group_active
-  #   group = (poll_with_group && group_of_receiver).first
-  #   group
-  # end
 
 end
