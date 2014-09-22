@@ -26,6 +26,17 @@ module PollHelper
 
   # end
 
+  def show_star_answer(star_count)
+    star_text = "<i class='fa fa-star'></i>"
+    case star_count.split("").count
+      when 1 then star_text*1
+      when 2 then star_text*2
+      when 3 then star_text*3
+      when 4 then star_text*4
+      when 5 then star_text*5
+    end
+  end
+
   def polls_ago_chart(end_date)
     (end_date.to_date..Date.current).map do |date|
       @query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).to_a

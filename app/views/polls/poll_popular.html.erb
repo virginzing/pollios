@@ -16,7 +16,7 @@
         <% @poll_popular.cached_choices.each do |choice| %>
         <li class="list-group-item">
           <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_popular_max) %>"><%= choice.vote %></span>
-          <%= choice.answer %>
+          <%= @poll_popular.rating? ? show_star_answer(choice.answer).html_safe : choice.answer %>
         </li>
         <% end %>
       </ul>
