@@ -83,7 +83,7 @@
                     <td><%= image_tag(member.avatar.url(:thumbnail), size: '30x30') %></td>
                     <td><%= member.get_name %></td>
                     <td><%= member.email %></td>
-                    <td><span data-livestamp="<%= member.joined_at.to_i %>"></span></td>
+                    <td><span data-livestamp="<%= member.created_at.to_i %>"></span></td>
                   </tr>
                 <% end %>
               </tbody>

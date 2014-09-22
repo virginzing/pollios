@@ -146,8 +146,7 @@ class CompaniesController < ApplicationController
 
   def new_group
     @group = Group.new
-    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
-                      .where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq || []
+    @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
   end
 
   def group_detail
