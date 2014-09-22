@@ -154,7 +154,7 @@ class CompaniesController < ApplicationController
     @polls = @init_poll.get_poll_of_group
 
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
-                      .where("group_members.group_id = ? AND group_members.active = 't'", @group) || []
+                      .where("group_members.group_id = ? AND group_members.active = 't'", @group).uniq || []
   end
 
   def create_group

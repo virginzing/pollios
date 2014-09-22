@@ -7,7 +7,7 @@ module Api
 
       before_action :set_current_member
 
-      before_action :load_resource_poll_feed, only: [:polls, :poll_detail]
+      before_action :load_resource_poll_feed, only: [:polls, :poll_detail, :company_polls]
       
       before_action :get_your_group, only: [:poll_detail]
       before_action :set_group, only: [:polls, :poll_detail]
@@ -54,7 +54,9 @@ module Api
 
       def company_polls
         @init_poll = PollOfGroup.new(@current_member, @company.groups, options_params)
-        @polls = @init_poll.get_poll_of_group_company
+        @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
+        @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+        @total_entries = @polls.total_entries
       end
 
       private

@@ -36,7 +36,7 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.unscoped.order("polls.created_at DESC").eager_load(:groups).where("poll_groups.group_id IN (?)", @group.map(&:id))
+    @query = Poll.unscoped.order("polls.created_at DESC").eager_load(:groups, :member).where("poll_groups.group_id IN (?)", @group.map(&:id))
     @query
   end
 
