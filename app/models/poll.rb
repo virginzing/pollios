@@ -595,7 +595,7 @@ class Poll < ActiveRecord::Base
 # {"birthday"=>"Jan 15, 1990", "gender"=>1, "salary"=>3, "interests"=>[3, 2, 1], "province"=>27}
 
   def self.new_hash_for_analysis(hash_analysis)
-    puts "hash_analysis => #{hash_analysis.present?}"
+    # puts "hash_analysis => #{hash_analysis.present?}"
     if hash_analysis.present?
       new_hash = {}
       list_gender ||= Member.gender.values.collect{|e| [e.value, e.text]}
@@ -616,7 +616,7 @@ class Poll < ActiveRecord::Base
           new_hash.merge!(key => value)
         end
       end
-      puts "new hash => #{new_hash}"
+      # puts "new hash => #{new_hash}"
       return new_hash
     end
   end
