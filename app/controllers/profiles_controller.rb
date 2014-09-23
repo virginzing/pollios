@@ -57,6 +57,7 @@ class ProfilesController < ApplicationController
   def update_personal_detail
     respond_to do |format|
       if @current_member.update(personal_detail_params)
+        @current_member.update!(update_personal: true)
         format.json { render json: { "response_status" => "OK" }, status: 200 }
       else
         format.json { render json: { "response_status" => @current_member.errors.full_messages }, status: 403 }

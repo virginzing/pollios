@@ -563,7 +563,7 @@ class Poll < ActiveRecord::Base
             if @voted.present?
               find_choice.increment!(:vote)
               # find_poll.poll_series.increment!(:vote_all) if find_poll.series
-              history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
+              history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: new_hash_for_analysis(data_options))
 
               @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
               # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
@@ -590,6 +590,29 @@ class Poll < ActiveRecord::Base
       #   [@error_message = e.message, nil]
       end
     end  
+  end
+
+  def self.new_hash_for_analysis(hash_analysis)
+    new_hash = {}
+    list_gender ||= Member.gender.values.collect{|e| [e.value, e.text]}
+    list_salary ||= Member.salary.values.collect{|e| [e.value, e.text]}
+    list_provice ||= Member.province.values.collect{|e| [e.value, e.text]}
+
+    hash_analysis.each do |key, value|
+      if key == "Gender"
+        compare = list_gender.select{|e| e.first == value.to_i }.first.last
+        new_hash.merge!(key => compare)
+      elsif key == "Salary"
+        compare = list_salary.select{|e| e.first == value.to_i }.first.last
+        new_hash.merge!(key => compare)
+      elsif key == "Province"
+        compare = list_provice.select{|e| e.first == value.to_i }.first.last
+        new_hash.merge!(key => compare)
+      elsif key == "Birthday"
+        new_hash.merge!(key => value)
+      end
+    end
+    new_hash
   end
 
   def find_campaign_for_predict?(member_id, poll_id)

@@ -1214,7 +1214,8 @@ CREATE TABLE members (
     birthday date,
     interests text,
     salary integer,
-    setting hstore
+    setting hstore,
+    update_personal boolean DEFAULT false
 );
 
 
@@ -3723,3 +3724,5 @@ INSERT INTO schema_migrations (version) VALUES ('20140916125303');
 INSERT INTO schema_migrations (version) VALUES ('20140918140041');
 
 INSERT INTO schema_migrations (version) VALUES ('20140919152656');
+
+INSERT INTO schema_migrations (version) VALUES ('20140923105842');
