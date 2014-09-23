@@ -34,4 +34,16 @@ class HistoryVote < ActiveRecord::Base
     HistoryVote.where("poll_id = #{poll_id} AND choice_id = #{choice_id}").has_gender(gender_type)
   end
 
+  rails_admin do
+      list do
+      field :id
+      field :member
+      field :poll
+      field :choice
+      field :data_analysis
+      field :created_at
+      field :updated_at
+    end
+  end
+
 end
