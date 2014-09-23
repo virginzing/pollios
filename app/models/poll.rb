@@ -593,26 +593,28 @@ class Poll < ActiveRecord::Base
   end
 
   def self.new_hash_for_analysis(hash_analysis)
-    new_hash = {}
-    list_gender ||= Member.gender.values.collect{|e| [e.value, e.text]}
-    list_salary ||= Member.salary.values.collect{|e| [e.value, e.text]}
-    list_provice ||= Member.province.values.collect{|e| [e.value, e.text]}
+    if hash_analysis.present?
+      new_hash = {}
+      list_gender ||= Member.gender.values.collect{|e| [e.value, e.text]}
+      list_salary ||= Member.salary.values.collect{|e| [e.value, e.text]}
+      list_provice ||= Member.province.values.collect{|e| [e.value, e.text]}
 
-    hash_analysis.each do |key, value|
-      if key == "Gender"
-        compare = list_gender.select{|e| e.first == value.to_i }.first.last
-        new_hash.merge!(key => compare)
-      elsif key == "Salary"
-        compare = list_salary.select{|e| e.first == value.to_i }.first.last
-        new_hash.merge!(key => compare)
-      elsif key == "Province"
-        compare = list_provice.select{|e| e.first == value.to_i }.first.last
-        new_hash.merge!(key => compare)
-      elsif key == "Birthday"
-        new_hash.merge!(key => value)
+      hash_analysis.each do |key, value|
+        if key == "Gender"
+          compare = list_gender.select{|e| e.first == value.to_i }.first.last
+          new_hash.merge!(key => compare)
+        elsif key == "Salary"
+          compare = list_salary.select{|e| e.first == value.to_i }.first.last
+          new_hash.merge!(key => compare)
+        elsif key == "Province"
+          compare = list_provice.select{|e| e.first == value.to_i }.first.last
+          new_hash.merge!(key => compare)
+        elsif key == "Birthday"
+          new_hash.merge!(key => value)
+        end
       end
+      new_hash
     end
-    new_hash
   end
 
   def find_campaign_for_predict?(member_id, poll_id)
