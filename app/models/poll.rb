@@ -603,16 +603,16 @@ class Poll < ActiveRecord::Base
       list_provice ||= Member.province.values.collect{|e| [e.value, e.text]}
 
       hash_analysis.each do |key, value|
-        if key == "Gender"
+        if key == "gender"
           compare = list_gender.select{|e| e.first == value.to_i }.first.last
           new_hash.merge!(key => compare)
-        elsif key == "Salary"
+        elsif key == "salary"
           compare = list_salary.select{|e| e.first == value.to_i }.first.last
           new_hash.merge!(key => compare)
-        elsif key == "Province"
+        elsif key == "province"
           compare = list_provice.select{|e| e.first == value.to_i }.first.last
           new_hash.merge!(key => compare)
-        elsif key == "Birthday"
+        elsif key == "birthday"
           new_hash.merge!(key => value)
         end
       end
