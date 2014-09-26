@@ -354,8 +354,8 @@ class Member < ActiveRecord::Base
   end
 
   def cached_watched
-    Rails.cache.fetch([ self, "watcheds" ]) do
-      watcheds.to_a
+    Rails.cache.fetch([ self.id, "watcheds" ]) do
+      watcheds.where("watcheds.poll_notify = 't'").to_a
     end
   end
 
