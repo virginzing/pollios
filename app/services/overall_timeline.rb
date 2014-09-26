@@ -235,7 +235,7 @@ class OverallTimeline
         else
           poll_nonseries << poll_member.poll
           nonseries_shared << not_shared
-          count_feeded_load(poll_member.poll)
+          # count_feeded_load(poll_member.poll)
         end
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
