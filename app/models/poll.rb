@@ -3,14 +3,14 @@ class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
   include PgSearch
   include PollsHelper
-  
+
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
   cattr_accessor :custom_error_message
 
   pg_search_scope :search_with_tag, against: [:title],
-                  using: { tsearch: {dictionary: "english", prefix: true} },
-                  associated_against: {tags: [:name]}
-  
+    using: { tsearch: {dictionary: "english", prefix: true} },
+    associated_against: {tags: [:name]}
+
   has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy
 
@@ -28,14 +28,14 @@ class Poll < ActiveRecord::Base
   has_many :campaign_members, dependent: :destroy
 
   has_many :comments, dependent: :destroy
-  
+
   has_many :history_votes, dependent: :destroy
   has_many :history_views, dependent: :destroy
   has_many :share_polls, dependent: :destroy
   has_many :hidden_polls, dependent: :destroy
 
   has_many :member_report_polls, dependent: :destroy
-  
+
   belongs_to :member, touch: true
   belongs_to :poll_series
   belongs_to :campaign
@@ -43,7 +43,7 @@ class Poll < ActiveRecord::Base
 
   before_save :set_default_value
   before_create :generate_qrcode_key
-  
+
   after_create :set_new_title_with_tag
   after_commit :flush_cache
 
@@ -70,7 +70,7 @@ class Poll < ActiveRecord::Base
       having_status_poll(:gray, :white).where("#{table_name}.member_id NOT IN (?)", member_block)
     else
       having_status_poll(:gray, :white)
-    end 
+    end
   }
 
   scope :unexpire, -> {
@@ -85,10 +85,10 @@ class Poll < ActiveRecord::Base
   amoeba do
     enable
     set [{:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:favorite_count => 0}, {:share_count => 0} ]
-    
+
     customize(lambda { |original_poll, new_poll|
-      new_poll.expire_date = original_poll.expire_date + 1.day
-      new_poll.created_at = Time.now
+                new_poll.expire_date = original_poll.expire_date + 1.day
+                new_poll.created_at = Time.now
     })
 
     include_field :choices
@@ -243,7 +243,7 @@ class Poll < ActiveRecord::Base
         query_poll.load_more(option[:next_poll])
       end
     else
-      if option[:type] == "active"  
+      if option[:type] == "active"
         query_poll.active_poll
       elsif option[:type] == "inactive"
         query_poll.inactive_poll
@@ -259,7 +259,7 @@ class Poll < ActiveRecord::Base
     if status == ENV["MY_POLL"]
       query_poll = member_obj.get_my_poll
     end
-    
+
     @poll = filter_type(query_poll, type)
 
     if next_cursor.presence && status == ENV["MY_POLL"]
@@ -288,7 +288,7 @@ class Poll < ActiveRecord::Base
       elsif status == ENV["MY_POLL"]
         PollMember.find_my_poll(member_obj.id, @type)
       else
-          
+
       end
     end
   end
@@ -331,7 +331,7 @@ class Poll < ActiveRecord::Base
     elsif status == ENV["MY_POLL"]
       filter_my_poll_my_vote(poll, next_cursor)
     else
-        
+
     end
   end
 
@@ -410,7 +410,7 @@ class Poll < ActiveRecord::Base
     list_group = member.groups.map(&:id)
     if option[:next_poll]
       Poll.joins(:groups).where("groups.id IN (?)", list_group).includes(:member, :choices).where("id < ?", option[:next_poll])
-    else  
+    else
       Poll.joins(:groups).where("groups.id IN (?)", list_group).includes(:member, :choices)
     end
   end
@@ -418,82 +418,82 @@ class Poll < ActiveRecord::Base
   def self.create_poll(poll, member) ## create poll for API
     Poll.transaction do
       begin
-      # puts "test log allow commnet => #{poll[:allow_comment]}"
-      title = poll[:title]
-      expire_date = poll[:expire_within]
-      choices = poll[:choices]
-      group_id = poll[:group_id]
-      member_id = poll[:member_id]
-      friend_id = poll[:friend_id]
-      # buy_poll = poll[:buy_poll] || false
-      type_poll = poll[:type_poll]
-      is_public = poll[:is_public] || "0"
-      photo_poll = poll[:photo_poll]
-      allow_comment = poll[:allow_comment] || false
-      creator_must_vote = poll[:creator_must_vote]
-      require_info = poll[:require_info].present? ? true : false
+        # puts "test log allow commnet => #{poll[:allow_comment]}"
+        title = poll[:title]
+        expire_date = poll[:expire_within]
+        choices = poll[:choices]
+        group_id = poll[:group_id]
+        member_id = poll[:member_id]
+        friend_id = poll[:friend_id]
+        # buy_poll = poll[:buy_poll] || false
+        type_poll = poll[:type_poll]
+        is_public = poll[:is_public] || "0"
+        photo_poll = poll[:photo_poll]
+        allow_comment = poll[:allow_comment] || false
+        creator_must_vote = poll[:creator_must_vote]
+        require_info = poll[:require_info].present? ? true : false
 
-      choices = check_type_of_choice(choices)
+        choices = check_type_of_choice(choices)
 
-      choice_count = get_choice_count(choices)
-      in_group_ids = group_id.presence || "0"
-      in_group = group_id.present? ? true : false
+        choice_count = get_choice_count(choices)
+        in_group_ids = group_id.presence || "0"
+        in_group = group_id.present? ? true : false
 
-      if expire_date.present?
-        convert_expire_date = Time.now + expire_date.to_i.day
+        if expire_date.present?
+          convert_expire_date = Time.now + expire_date.to_i.day
         else
-        convert_expire_date = Time.now + 100.years.to_i 
-      end
-      
-      raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0) 
+          convert_expire_date = Time.now + 100.years.to_i
+        end
 
-      if group_id.present?
-        @set_public = false
-      else
-        if (is_public == "1" || member.celebrity? || member.brand?)
-          @set_public = true
-          if is_public == "0"
+        raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
+
+        if group_id.present?
+          @set_public = false
+        else
+          if (is_public == "1" || member.celebrity? || member.brand?)
+            @set_public = true
+            if is_public == "0"
+              @set_public = false
+            end
+          else
             @set_public = false
           end
+        end
+
+        @poll = create!(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
+                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, in_group: in_group)
+
+        if @poll.valid? && choices
+          @choices = Choice.create_choices(@poll.id, choices)
+          if @choices.present?
+
+            @poll.create_tag(title)
+
+            @poll.create_watched(member, @poll.id)
+
+            if group_id
+              Group.add_poll(member, @poll, group_id)
+              @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
+            else
+              @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
+              ApnPollWorker.perform_async(member_id.to_i, @poll.id)
+            end
+
+            if member.citizen? && is_public == "1"
+              member.decrement!(:point) if member.point > 0
+            end
+
+            PollStats.create_poll_stats(@poll)
+
+            Activity.create_activity_poll(member, @poll, 'Create')
+            # Rails.cache.delete([member_id, 'poll_member'])
+            Rails.cache.delete([member_id, 'my_poll'])
+
+            [@poll, nil]
+          end
         else
-          @set_public = false
+          [nil, @poll.errors.full_messages]
         end
-      end
-
-      @poll = create!(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids, 
-                     type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, in_group: in_group)
-
-      if @poll.valid? && choices
-        @choices = Choice.create_choices(@poll.id, choices)
-        if @choices.present?
-
-          @poll.create_tag(title)
-
-          @poll.create_watched(member, @poll.id)
-
-          if group_id
-            Group.add_poll(member, @poll, group_id)
-            @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
-          else
-            @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-            ApnPollWorker.perform_async(member_id.to_i, @poll.id)
-          end
-
-          if member.citizen? && is_public == "1"
-            member.decrement!(:point) if member.point > 0  
-          end
-
-          PollStats.create_poll_stats(@poll)
-
-          Activity.create_activity_poll(member, @poll, 'Create')
-          # Rails.cache.delete([member_id, 'poll_member'])
-          Rails.cache.delete([member_id, 'my_poll'])
-
-          [@poll, nil]
-        end
-      else
-        [nil, @poll.errors.full_messages]
-      end
 
       rescue ArgumentError => detail
         [@poll = nil, detail.message]
@@ -539,7 +539,7 @@ class Poll < ActiveRecord::Base
     Poll.transaction do
       begin
         ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
-        
+
         unless ever_vote.present?
           find_poll = Poll.cached_find(poll_id)
           find_choice = find_poll.choices.find_by(id: choice_id)
@@ -575,7 +575,7 @@ class Poll < ActiveRecord::Base
               # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
 
               VoteStats.create_vote_stats(find_poll) unless find_poll.series
-              
+
               Activity.create_activity_poll(member, find_poll, 'Vote') unless find_poll.series
 
               Rails.cache.delete([member_id, 'my_voted'])
@@ -585,14 +585,14 @@ class Poll < ActiveRecord::Base
           end
 
         end
-      # rescue => e
-      #   puts "error => #{e}"
-      #   [@error_message = e.message, nil]
+        # rescue => e
+        #   puts "error => #{e}"
+        #   [@error_message = e.message, nil]
       end
-    end  
+    end
   end
 
-# {"birthday"=>"Jan 15, 1990", "gender"=>1, "salary"=>3, "interests"=>[3, 2, 1], "province"=>27}
+  # {"birthday"=>"Jan 15, 1990", "gender"=>1, "salary"=>3, "interests"=>[3, 2, 1], "province"=>27}
 
   def self.new_hash_for_analysis(hash_analysis)
     # puts "hash_analysis => #{hash_analysis.present?}"
@@ -640,7 +640,7 @@ class Poll < ActiveRecord::Base
     if ever_view.present?
       @poll.update_columns(view_all: @poll.view_all + 1)
     end
-    
+
   end
 
   def get_choice_scroll
@@ -653,9 +653,9 @@ class Poll < ActiveRecord::Base
 
   def self.filter_type(query, type)
     case type
-      when "active" then query.active_poll
-      when "inactive" then query.inactive_poll
-      else query
+    when "active" then query.active_poll
+    when "inactive" then query.inactive_poll
+    else query
     end
   end
 
@@ -687,7 +687,7 @@ class Poll < ActiveRecord::Base
 
   def check_watched
     watched_poll_ids = Member.watched_polls.map(&:poll_id)
-    puts "watched_poll_ids => #{watched_poll_ids}"
+    # puts "watched_poll_ids => #{watched_poll_ids}"
     if watched_poll_ids.include?(id)
       true
     else
@@ -704,10 +704,10 @@ class Poll < ActiveRecord::Base
   end
 
   def as_json options={}
-   {
+    {
       id: id,
       text: title
-   }
+    }
   end
 
   def self.total_grouped_by_date(start)
@@ -718,7 +718,7 @@ class Poll < ActiveRecord::Base
     polls.each_with_object({}) do |poll, hsh|
       hsh[poll.created_at.to_date] = poll.total_poll
     end
-    
+
   end
 
   ## for group api ##
@@ -738,7 +738,7 @@ class Poll < ActiveRecord::Base
     group = PollGroup.where(poll_id: @poll_id).pluck(:group_id)
     your_group_ids = Member.list_group_active.map(&:id)
     group_list = group & your_group_ids
-     
+
     if group.present?
       ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json()
     else
@@ -762,7 +762,7 @@ class Poll < ActiveRecord::Base
     @your_request = Member.list_your_request.map(&:id)
     @friend_request = Member.list_friend_request.map(&:id)
     @my_following = Member.list_friend_following.map(&:id)
-    
+
     if @my_friend.include?(@member_id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
     elsif @your_request.include?(@member_id)
@@ -783,5 +783,3 @@ class Poll < ActiveRecord::Base
 
 
 end
-
-

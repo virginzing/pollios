@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   # before_action :restrict_only_admin
   layout :layout_by_resource
-  
+
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
@@ -15,18 +15,18 @@ class ApplicationController < ActionController::Base
   end
 
   before_filter :if => Proc.new{ |c| c.request.path =~ /admin/ } do
-      @head_stylesheet_paths = ['rails_admin_custom.css']
+    @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
 
   helper_method :current_member, :signed_in?, :render_to_string, :only_company
-  
+
   def history_voted_viewed
     # @history_voted  = @current_member.history_votes.includes(:choice).collect!  { |voted| [voted.poll_id, voted.choice_id, voted.choice.answer, voted.poll_series_id, voted.choice.vote] }
     @history_voted = HistoryVote.joins(:member, :choice, :poll)
-                                  .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
-                                  .where("history_votes.member_id = #{@current_member.id}")
-                                  .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }
+    .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")
+    .where("history_votes.member_id = #{@current_member.id}")
+    .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote] }
     @history_viewed = @current_member.history_views.collect!  { |viewed| viewed.poll_id }
   end
 
@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def restrict_access  
+  def restrict_access
     authenticate_or_request_with_http_token do |token, options|
       access_token = set_current_member.providers.where("token = ?", token)
       unless access_token.present?
@@ -184,13 +184,13 @@ class ApplicationController < ActionController::Base
 
   def correct_member
     find_member = Member.find_by(username: params[:username])
-      unless current_member?(find_member)
-        respond_to do |format|
+    unless current_member?(find_member)
+      respond_to do |format|
         flash[:error] = "Permission Deny"
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
         format.html { redirect_to root_url }
-        end
       end
+    end
   end
 
   def redirect_unless_admin

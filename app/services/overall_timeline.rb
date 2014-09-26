@@ -116,11 +116,11 @@ class OverallTimeline
     # end
 
     query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
-        "OR (#{poll_group_query} AND #{poll_unexpire})" \
-        "OR (#{poll_public_query} AND #{poll_unexpire})" \
-        "OR (#{poll_reward_query} AND #{poll_unexpire})",
-        new_your_friend_ids,
-        new_find_poll_in_my_group)
+                                                             "OR (#{poll_group_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_public_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_reward_query} AND #{poll_unexpire})",
+                                                             new_your_friend_ids,
+                                                             new_find_poll_in_my_group)
 
     # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
     # query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
@@ -153,9 +153,9 @@ class OverallTimeline
     query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0"
 
     query = PollMember.available.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
-      "OR (#{query_poll_shared} AND #{poll_unexpire})", 
-      your_friend_ids,
-      your_following_ids).limit(LIMIT_TIMELINE)
+                                                    "OR (#{query_poll_shared} AND #{poll_unexpire})",
+                                                    your_friend_ids,
+                                                    your_following_ids).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
     # poll_member = check_hidden_poll(query)
@@ -169,11 +169,11 @@ class OverallTimeline
     end
     query
   end
-  
+
   # def check_hidden_poll(query)
   #   @hidden_poll.empty? ? query : query.hidden(@hidden_poll)
   # end
-  
+
   def overall_timeline
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
     shared = find_poll_share
@@ -209,9 +209,9 @@ class OverallTimeline
       if @poll_ids.count == LIMIT_POLL
         if cache_polls[-1] == @poll_ids.last
           next_cursor = 0
-         else
+        else
           next_cursor = @poll_ids.last
-         end 
+        end
       else
         next_cursor = 0
       end
@@ -271,7 +271,7 @@ class OverallTimeline
   def serailize_group_detail_as_json(poll_id)
     group = PollGroup.where(poll_id: poll_id).pluck(:group_id)
     group_list = group & your_group_ids
-    
+
     if group.present?
       ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json
     else

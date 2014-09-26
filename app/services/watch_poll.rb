@@ -6,7 +6,7 @@ class WatchPoll
 
   def watching
     unless find_watch_poll
-       watching = @member.watcheds.create!(poll_id: @poll_id)
+      watching = @member.watcheds.create!(poll_id: @poll_id)
     end
     watching
   end
@@ -23,5 +23,5 @@ class WatchPoll
   def find_watch_poll
     @member.watcheds.find_by(poll_id: @poll_id, poll_notify: true)
   end
-  
+
 end
