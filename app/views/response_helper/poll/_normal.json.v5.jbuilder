@@ -6,7 +6,9 @@ json.vote_count poll.vote_all
 json.view_count poll.view_all
 json.expire_date poll.expire_date.to_i
 json.created_at poll.created_at.to_i
-json.vote_max poll.get_vote_max
+if poll.show_result
+  json.vote_max poll.get_vote_max
+end
 json.choices poll.get_choice_detail if poll.rating?
 json.voted_detail @current_member.list_voted?(poll)
 json.viewed @current_member.list_viewed?(poll.id)
@@ -25,3 +27,4 @@ json.allow_comment poll.allow_comment
 json.comment_count poll.comment_count
 json.require_info poll.get_require_info
 json.creator_must_vote poll.creator_must_vote
+json.show_result poll.show_result

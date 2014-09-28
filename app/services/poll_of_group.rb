@@ -11,6 +11,7 @@ class PollOfGroup
     @poll_nonseries = []
     @series_shared = []
     @nonseries_shared = []
+    @only_poll_available = false
   end
 
   def group_id
@@ -18,6 +19,11 @@ class PollOfGroup
   end
 
   def get_poll_of_group
+    @poll_of_group ||= poll_of_group
+  end
+
+  def get_poll_available_of_group
+    @only_poll_available = true
     @poll_of_group ||= poll_of_group
   end
 
@@ -29,9 +35,10 @@ class PollOfGroup
 
   def poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    @query = Poll.unscoped.order("updated_at DESC, created_at DESC").joins(:poll_groups).includes(:history_votes)
+    @query = Poll.unscoped.order("updated_at DESC, created_at DESC").joins(:poll_groups).includes(:history_votes, :member)
                 .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                 .where("#{poll_group_query}").uniq
+    @query = @query.available if @only_poll_available
     @query
   end
 

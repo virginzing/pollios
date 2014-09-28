@@ -1,11 +1,11 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification]
-  before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group]
+  before_action :set_current_member, only: [:promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_group, only: [:promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group]
+  before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group]
   
-  before_action :load_resource_poll_feed, only: [:poll_group]
+  before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -32,6 +32,12 @@ class GroupController < ApplicationController
   def poll_group
     @init_poll = PollOfGroup.new(@current_member, @group, options_params)
     @polls = @init_poll.get_poll_of_group.paginate(page: params[:next_cursor])
+    poll_helper
+  end
+
+  def poll_available_group
+    @init_poll = PollOfGroup.new(@current_member, @group, options_params)
+    @polls = @init_poll.get_poll_available_of_group.paginate(page: params[:next_cursor])
     poll_helper
   end
 

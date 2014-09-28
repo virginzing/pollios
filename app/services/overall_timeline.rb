@@ -226,6 +226,8 @@ class OverallTimeline
 
   def filter_overall_timeline(next_cursor)
     poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
+    poll_member = poll_member.where("poll_id NOT IN (?)", check_poll_not_show_result) if check_poll_not_show_result.count > 0
+
     poll_member.each do |poll_member|
       if poll_member.share_poll_of_id == 0
         not_shared = Hash["shared" => false]
@@ -254,6 +256,10 @@ class OverallTimeline
 
     end
     [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
+  end
+
+  def check_poll_not_show_result
+    Member.voted_polls.select{|e| e.first if e.last == false}.collect{|e| e.first }
   end
 
   def poll_shared_at(poll_member)

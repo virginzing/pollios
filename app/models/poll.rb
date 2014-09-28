@@ -432,6 +432,7 @@ class Poll < ActiveRecord::Base
         allow_comment = poll[:allow_comment] || false
         creator_must_vote = poll[:creator_must_vote]
         require_info = poll[:require_info].present? ? true : false
+        show_result = poll[:show_result].present? ? true : false
 
         choices = check_type_of_choice(choices)
 

@@ -40,6 +40,10 @@ class BuildPoll
     @params["group_id"].present? ? true : false
   end
 
+  def check_show_result
+    @params["show_result"]  == "on" ? true : false
+  end
+
   def set_poll_public
     if @member.celebrity? || @params["recurring_id"].present? || @member.brand?
       true
@@ -88,7 +92,8 @@ class BuildPoll
         "allow_comment" => check_allow_comment,
         "qr_only" => check_qr_only,
         "require_info" => check_require_info,
-        "in_group" => check_in_group
+        "in_group" => check_in_group,
+        "show_result" => check_show_result
       }
     end
   end
