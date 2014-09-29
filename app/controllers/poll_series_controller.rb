@@ -104,7 +104,7 @@ class PollSeriesController < ApplicationController
 
     if current_member.company?
       is_public = false
-      in_group_ids = current_member.company.group.id.to_s
+      # in_group_ids = current_member.company.groups
     end
 
     @poll_series.public = is_public
