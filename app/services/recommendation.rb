@@ -65,11 +65,11 @@ class Recommendation
 
   def find_non_friend_in_group
     find_friend_ids = find_list_friend_ids
-    puts "find_friend_ids => #{find_friend_ids}"
+    # puts "find_friend_ids => #{find_friend_ids}"
     find_group_and_return_member_ids = @member.cached_get_group_active.collect{|g| g.member_active.map(&:member_id) }.flatten.uniq
-    puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
+    # puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
     list_non_friend_ids = find_group_and_return_member_ids - find_friend_ids
-    puts "list_non_friend_ids => #{list_non_friend_ids}"
+    # puts "list_non_friend_ids => #{list_non_friend_ids}"
     return list_non_friend_ids
   end
   
