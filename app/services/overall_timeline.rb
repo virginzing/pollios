@@ -119,9 +119,9 @@ class OverallTimeline
 
     query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_group_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_following_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_public_query} AND #{poll_unexpire})" \     
-                                                             "OR (#{poll_reward_query} AND #{poll_unexpire})",
+                                                             "OR (#{poll_public_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_reward_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_following_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
                                                              new_find_poll_in_my_group,
                                                              your_following_ids)
