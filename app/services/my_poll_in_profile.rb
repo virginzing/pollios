@@ -77,7 +77,7 @@ class MyPollInProfile
   end
 
   def poll_watched
-    Poll.available.joins(:watcheds).includes(:member, :campaign).where("watcheds.member_id = #{member_id}").order("watcheds.created_at DESC")
+    Poll.available.joins(:watcheds).includes(:member, :campaign).where("watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't'").order("watcheds.created_at DESC")
   end
   
 end
