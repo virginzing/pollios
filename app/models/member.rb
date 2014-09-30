@@ -336,7 +336,7 @@ class Member < ActiveRecord::Base
 
   def cached_my_poll
     Rails.cache.fetch([self.id, 'my_poll']) do
-      Poll.available.unexpire.joins(:poll_members).includes(:member, :campaign, :choices)
+      Poll.available.joins(:poll_members).includes(:member, :campaign, :choices)
         .where("polls.vote_all > 0")
         .where("(poll_members.member_id = #{self.id} AND poll_members.share_poll_of_id = 0) OR (polls.id IN (?) AND polls.member_id = #{self.id} AND poll_members.share_poll_of_id = 0)", my_vote_poll_ids).to_a
     end

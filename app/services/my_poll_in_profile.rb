@@ -71,7 +71,7 @@ class MyPollInProfile
   private
 
   def poll_created
-    query = Poll.available.unexpire.joins(:poll_members).includes(:member, :campaign, :choices)
+    query = Poll.available.joins(:poll_members).includes(:member, :campaign, :choices)
         .where("polls.vote_all > 0")
         .where("(poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0) OR (polls.id IN (?) AND polls.member_id = #{member_id} AND poll_members.share_poll_of_id = 0)", my_vote_poll_ids)
     query
