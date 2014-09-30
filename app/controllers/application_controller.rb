@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     @history_voted = HistoryVote.joins(:member, :choice, :poll)
     .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result")
     .where("history_votes.member_id = #{@current_member.id}")
-    .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, vote.display_result] }
+    .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }
     @history_viewed = @current_member.history_views.collect!  { |viewed| viewed.poll_id }
   end
 
