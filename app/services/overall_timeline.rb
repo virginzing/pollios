@@ -54,12 +54,12 @@ class OverallTimeline
 
   def your_friend_ids
     # @friend_ids ||= @member.cached_get_friend_active.map(&:id)
-    @friend_ids ||= Member.current_member.list_friend_active.map(&:id)
+    @friend_ids ||= Member.list_friend_active.map(&:id)
   end
 
   def your_following_ids
     # @following_ids ||= @member.cached_get_following.map(&:id)
-    @following_ids ||= Member.current_member.list_friend_following.map(&:id)
+    @following_ids ||= Member.list_friend_following.map(&:id)
   end
 
   def poll_overall
@@ -90,6 +90,8 @@ class OverallTimeline
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
 
+    poll_following_query = "poll_members.member_id IN (?) AND #{poll_non_share_non_in_group}"
+
     poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
     poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
@@ -117,10 +119,12 @@ class OverallTimeline
 
     query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_group_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_public_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_following_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_public_query} AND #{poll_unexpire})" \     
                                                              "OR (#{poll_reward_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
-                                                             new_find_poll_in_my_group)
+                                                             new_find_poll_in_my_group,
+                                                             your_following_ids)
 
     # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
     # query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
