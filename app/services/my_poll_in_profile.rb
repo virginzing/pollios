@@ -72,7 +72,7 @@ class MyPollInProfile
 
   def poll_created
     query = Poll.available.unexpire.joins(:poll_members).includes(:member, :campaign, :choices)
-        .where("(poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0) OR (polls.id IN (?))", my_vote_poll_ids)
+        .where("(poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0) OR (polls.id IN (?) AND polls.member_id = #{member_id} AND poll_members.share_poll_of_id = 0)", my_vote_poll_ids)
     query
   end
 
@@ -83,7 +83,7 @@ class MyPollInProfile
 
   def poll_watched
     query = Poll.available.unexpire.joins(:watcheds).includes(:member, :campaign)
-                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't') OR (polls.id IN (?))", my_vote_poll_ids)
+                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't') OR (polls.id IN (?) AND watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')", my_vote_poll_ids)
                 .order("watcheds.created_at DESC")
     query
   end
