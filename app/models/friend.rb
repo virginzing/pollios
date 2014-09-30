@@ -142,7 +142,7 @@ class Friend < ActiveRecord::Base
       end
 
       Activity.create_activity_friend( member, find_friend ,'Follow')
-
+      AddFollowWorker.perform_async(member.id, find_friend.id, { action: 'Follow' } )
       Rails.cache.delete([ friend_id , 'follower' ])
       Rails.cache.delete([ member_id, 'following' ])
       flush_cached_friend(member_id, friend_id)

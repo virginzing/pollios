@@ -24,9 +24,8 @@ module NotificationsHelper
   end
 
   def add_double_quotation(custom_message)
-    last_word = custom_message.last.match(/"/)
-
-    unless last_word.present?
+    last_word = custom_message.last(3)
+    if last_word == "..."
       custom_message = custom_message + "\""
     end 
     
