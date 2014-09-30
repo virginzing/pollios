@@ -15,33 +15,37 @@
 //= require_tree .
 
 $(function() {
-  var ajax_request = false;
-  $('textarea#tagged_text').textntags({
-    triggers: {'#': {
-      uniqueTags   : true
-    }},
-    onDataRequest: function (mode, query, triggerChar, callback) {
-      // fix for overlapping requests
-      if(ajax_request) ajax_request.abort();
+    var ajax_request = false;
+    $('textarea#tagged_text').textntags({
+        triggers: {
+            '#': {
+                uniqueTags: true
+            }
+        },
+        onDataRequest: function(mode, query, triggerChar, callback) {
+            // fix for overlapping requests
+            if (ajax_request) ajax_request.abort();
 
-      ajax_request = $.getJSON('/search_autocmp_tags.json', { search: query }, function(responseData) {
-          query = query.toLowerCase();
-          responseData = _.filter(responseData, function(item) {
-            return item.name.toLowerCase().indexOf(query) > -1; 
-          });
-          callback.call(this, responseData);
-          ajax_request = false;
-      });
+            ajax_request = $.getJSON('/search_autocmp_tags.json', {
+                search: query
+            }, function(responseData) {
+                query = query.toLowerCase();
+                responseData = _.filter(responseData, function(item) {
+                    return item.name.toLowerCase().indexOf(query) > -1;
+                });
+                callback.call(this, responseData);
+                ajax_request = false;
+            });
 
-    }
-  });
+        }
+    });
 
-  $("textarea#tagged_text").highlightTextarea({
-    words: ["#([[:word]]+)"]
-  });
+    $("textarea#tagged_text").highlightTextarea({
+        words: ["#([[:word]]+)"]
+    });
 
-  $('.maxlength_textarea').maxlength({
-      limitReachedClass: "label label-danger",
-      alwaysShow: true
-  });
+    $('.maxlength_textarea').maxlength({
+        limitReachedClass: "label label-danger",
+        alwaysShow: true
+    });
 });
