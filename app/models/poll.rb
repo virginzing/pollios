@@ -686,7 +686,7 @@ class Poll < ActiveRecord::Base
   end
 
   def check_watched
-    watched_poll_ids = Member.watched_polls.map(&:poll_id)
+    watched_poll_ids = Member.watched_polls.map(&:id)
     # puts "watched_poll_ids => #{watched_poll_ids}"
     if watched_poll_ids.include?(id)
       true

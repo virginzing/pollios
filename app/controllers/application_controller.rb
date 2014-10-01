@@ -172,7 +172,6 @@ class ApplicationController < ActionController::Base
       Member.shared_polls   = Member.current_member.cached_shared_poll
       Member.viewed_polls   = Member.current_member.get_history_viewed
       Member.voted_polls    = Member.current_member.cached_my_voted
-
       Member.watched_polls  = Member.current_member.cached_watched
       p "=== End ==="
     end
