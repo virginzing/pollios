@@ -120,6 +120,6 @@ gem 'rack-cache'
 
 
 # gem 'axlsx'
-# gem 'acts_as_xlsx'
-# gem 'yard'
-# gem 'rubyzip',  "~> 0.9.9"
+gem 'axlsx_rails'
+gem 'rubyzip', '>= 1.0.0'
+gem 'zip-zip'

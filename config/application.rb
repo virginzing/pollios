@@ -10,7 +10,7 @@ require 'net/http'
 require 'roo'
 require 'csv'
 require 'spreadsheet'
-
+require 'zip'
 
 
 # MultiJson.engine = :yajl

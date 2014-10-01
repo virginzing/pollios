@@ -1,4 +1,5 @@
 class Member < ActiveRecord::Base
+
   serialize :interests, Array
   # has_paper_trail
   include PgSearch
@@ -359,9 +360,15 @@ class Member < ActiveRecord::Base
 
   def cached_watched
     Rails.cache.fetch([ self.id, "watcheds" ]) do
-      watcheds.where("watcheds.poll_notify = 't'").to_a
+      Poll.available.joins(:watcheds).includes(:member, :campaign)
+                .where("(watcheds.member_id = #{self.id} AND watcheds.poll_notify = 't')")
+                .order("watcheds.created_at DESC").to_a
     end
   end
+
+      Poll.available.unexpire.joins(:watcheds).includes(:member, :campaign)
+                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't') OR (polls.id IN (?) AND watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')", my_vote_poll_ids)
+                .order("watcheds.created_at DESC").to_a
 
   def cached_get_unrecomment
     Rails.cache.fetch([self.id, 'unrecomment']) do

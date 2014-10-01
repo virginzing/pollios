@@ -83,9 +83,8 @@ class MyPollInProfile
   end
 
   def poll_watched
-    query = Poll.available.unexpire.joins(:watcheds).includes(:member, :campaign)
-                .where("polls.vote_all > 0")
-                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't') OR (polls.id IN (?) AND watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')", my_vote_poll_ids)
+    query = Poll.available.joins(:watcheds).includes(:member, :campaign)
+                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')")
                 .order("watcheds.created_at DESC")
     query
   end
