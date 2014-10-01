@@ -92,10 +92,18 @@ GEM
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
+    acts_as_xlsx (1.0.6)
+      activerecord (>= 2.3.9)
+      axlsx (>= 1.0.13)
+      i18n (>= 0.4.1)
     amoeba (2.0.0)
       activerecord (>= 3.0)
     arel (4.0.2)
     aws_cf_signer (0.1.3)
+    axlsx (1.3.6)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (>= 0.9.5)
     bcrypt (3.1.7)
     bert (1.1.6)
     breadcrumbs_on_rails (2.3.0)
@@ -369,8 +377,10 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   activerecord-postgres-hstore
+  acts_as_xlsx
   amoeba
   apn_on_rails!
+  axlsx
   breadcrumbs_on_rails
   bson (~> 2.2)
   bson_ext
