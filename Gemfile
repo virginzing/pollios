@@ -119,5 +119,7 @@ gem 'zeus'
 gem 'rack-cache'
 
 
-gem 'axlsx'
-gem 'acts_as_xlsx'
+# gem 'axlsx'
+# gem 'acts_as_xlsx'
+# gem 'yard'
+# gem 'rubyzip',  "~> 0.9.9"
