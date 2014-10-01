@@ -366,10 +366,6 @@ class Member < ActiveRecord::Base
     end
   end
 
-      Poll.available.unexpire.joins(:watcheds).includes(:member, :campaign)
-                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't') OR (polls.id IN (?) AND watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')", my_vote_poll_ids)
-                .order("watcheds.created_at DESC").to_a
-
   def cached_get_unrecomment
     Rails.cache.fetch([self.id, 'unrecomment']) do
       member_un_recomments.to_a
