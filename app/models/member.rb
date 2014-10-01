@@ -360,8 +360,7 @@ class Member < ActiveRecord::Base
 
   def cached_watched
     Rails.cache.fetch([ self.id, "watcheds" ]) do
-      Poll.available.joins(:watcheds).includes(:member, :campaign)
-                  .where("(watcheds.member_id = #{self.id} AND watcheds.poll_notify = 't')").to_a
+      Poll.joins(:member).available.joins(:watcheds).where("(watcheds.member_id = #{self.id} AND watcheds.poll_notify = 't')").to_a
     end
   end
 
