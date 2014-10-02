@@ -37,13 +37,13 @@
             <% @report_polls.each do |poll| %>
               <tr>
                 <td>
-                  <%=p oll.id %>
+                  <%= poll.id %>
                 </td>
                 <td>
-                  <%=p oll.title %>
+                  <%= poll.title %>
                 </td>
                 <td>
-                  <%=p oll.report_count %>
+                  <%= poll.report_count %>
                 </td>
                 <td>
                   <span data-livestamp="<%= poll.created_at.to_i %>"></span>
@@ -95,13 +95,13 @@
             <% @report_members.each do |member| %>
               <tr>
                 <td>
-                  <%=i mage_tag(member.get_avatar, size: '50x50') %>
+                  <%= image_tag(member.get_avatar, size: '50x50') %>
                 </td>
                 <td>
-                  <%=m ember.fullname %>
+                  <%= member.fullname %>
                 </td>
                 <td>
-                  <%=m ember.report_count %>
+                  <%= member.report_count %>
                 </td>
                 <td>
                   <span data-livestamp="<%= member.created_at.to_i %>"></span>
