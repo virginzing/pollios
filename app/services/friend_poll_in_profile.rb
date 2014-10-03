@@ -24,10 +24,6 @@ class FriendPollInProfile
     my_group_id & friend_group_id
   end
 
-  def list_vote_questionnaire
-    PollSeriesGroup.where(group_id: my_and_friend_group).map(&:poll_series_id).uniq
-  end
-
   def list_my_friend_ids
     Member.list_friend_active.map(&:id) << @member.id
   end
@@ -151,7 +147,7 @@ class FriendPollInProfile
                 "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
                 (list_my_friend_ids << friend_id),
-                my_and_friend_group).uniq.references(:poll_groups)
+                my_and_friend_group).references(:poll_groups)
   end
 
   def poll_watched
@@ -174,12 +170,12 @@ class FriendPollInProfile
   end
 
   def poll_voted_with_visibility
-    query = Poll.available.joins(:history_votes).includes(:choices, :member, :campaign, :poll_groups, :poll_series)
+    query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
             .where("(history_votes.member_id = #{is_friend} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
             "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
-            "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id IN (?))" \
             "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
-            list_my_friend_ids, list_vote_questionnaire, my_and_friend_group).references(:poll_groups)
+            list_my_friend_ids,
+            my_and_friend_group).references(:poll_groups)
   end
 
   def poll_watched_with_visibility
