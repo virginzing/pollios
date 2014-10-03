@@ -79,7 +79,7 @@ class MyPollInProfile
 
   def poll_voted
     Poll.available.joins(:history_votes).includes(:member, :campaign).where("history_votes.member_id = ?", member_id)
-        .order("history_votes.created_at DESC")
+        .order("history_votes.created_at DESC").uniq
   end
 
   def poll_watched

@@ -151,7 +151,7 @@ class FriendPollInProfile
                 "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
                 (list_my_friend_ids << friend_id),
-                my_and_friend_group).references(:poll_groups)
+                my_and_friend_group).references(:poll_groups).uniq
   end
 
   def poll_watched
