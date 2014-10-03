@@ -353,7 +353,7 @@ class Member < ActiveRecord::Base
     Rails.cache.fetch([self.id, 'my_voted']) do
       HistoryVote.joins(:member, :choice, :poll)
                   .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result")
-                  .where("history_votes.member_id = #{id} AND history_votes.poll_series_id = '0'")
+                  .where("history_votes.member_id = #{id}")
                   .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }.to_a
     end
   end
