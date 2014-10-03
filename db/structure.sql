@@ -542,7 +542,9 @@ CREATE TABLE companies (
     member_id integer,
     address character varying(255),
     telephone_number character varying(255),
-    max_invite_code integer DEFAULT 0
+    max_invite_code integer DEFAULT 0,
+    select_service integer,
+    internal_poll integer DEFAULT 0
 );
 
 
@@ -1388,7 +1390,8 @@ CREATE TABLE poll_members (
     public boolean,
     series boolean,
     expire_date timestamp without time zone,
-    in_group boolean DEFAULT false
+    in_group boolean DEFAULT false,
+    poll_series_id integer DEFAULT 0
 );
 
 
@@ -1438,8 +1441,42 @@ CREATE TABLE poll_series (
     comment_count integer DEFAULT 0,
     qr_only boolean DEFAULT true,
     qrcode_key character varying(255),
-    require_info boolean DEFAULT true
+    require_info boolean DEFAULT true,
+    in_group boolean DEFAULT false
 );
+
+
+--
+-- Name: poll_series_groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE poll_series_groups (
+    id integer NOT NULL,
+    poll_series_id integer,
+    group_id integer,
+    member_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: poll_series_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE poll_series_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: poll_series_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE poll_series_groups_id_seq OWNED BY poll_series_groups.id;
 
 
 --
@@ -2206,6 +2243,13 @@ ALTER TABLE ONLY poll_series ALTER COLUMN id SET DEFAULT nextval('poll_series_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY poll_series_groups ALTER COLUMN id SET DEFAULT nextval('poll_series_groups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY poll_series_tags ALTER COLUMN id SET DEFAULT nextval('poll_series_tags_id_seq'::regclass);
 
 
@@ -2595,6 +2639,14 @@ ALTER TABLE ONLY poll_groups
 
 ALTER TABLE ONLY poll_members
     ADD CONSTRAINT poll_members_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: poll_series_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY poll_series_groups
+    ADD CONSTRAINT poll_series_groups_pkey PRIMARY KEY (id);
 
 
 --
@@ -3179,6 +3231,27 @@ CREATE INDEX index_poll_members_on_poll_id ON poll_members USING btree (poll_id)
 
 
 --
+-- Name: index_poll_series_groups_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_poll_series_groups_on_group_id ON poll_series_groups USING btree (group_id);
+
+
+--
+-- Name: index_poll_series_groups_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_poll_series_groups_on_member_id ON poll_series_groups USING btree (member_id);
+
+
+--
+-- Name: index_poll_series_groups_on_poll_series_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_poll_series_groups_on_poll_series_id ON poll_series_groups USING btree (poll_series_id);
+
+
+--
 -- Name: index_poll_series_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3729,3 +3802,11 @@ INSERT INTO schema_migrations (version) VALUES ('20140919152656');
 INSERT INTO schema_migrations (version) VALUES ('20140923105842');
 
 INSERT INTO schema_migrations (version) VALUES ('20140928133052');
+
+INSERT INTO schema_migrations (version) VALUES ('20141002073347');
+
+INSERT INTO schema_migrations (version) VALUES ('20141003060015');
+
+INSERT INTO schema_migrations (version) VALUES ('20141003063911');
+
+INSERT INTO schema_migrations (version) VALUES ('20141003065150');

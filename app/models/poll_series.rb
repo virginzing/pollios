@@ -1,6 +1,6 @@
 class PollSeries < ActiveRecord::Base
   include PollSeriesHelper
-  attr_accessor :tag_tokens, :same_choices, :expire_within
+  attr_accessor :tag_tokens, :same_choices, :expire_within, :group_id
 
   belongs_to :member
   belongs_to :campaign
@@ -11,6 +11,8 @@ class PollSeries < ActiveRecord::Base
   has_many :history_view_questionnaires, dependent: :destroy
   has_many :poll_series_tags, dependent: :destroy
   has_many :tags, through: :poll_series_tags, source: :tag
+
+  has_many :poll_series_groups, dependent: :destroy
 
   validates :description, presence: true
 
@@ -38,7 +40,6 @@ class PollSeries < ActiveRecord::Base
   end
 
   def set_poll_series
-    in_group = false
     self.number_of_poll = polls.count
     self.save
     list_choice = self.same_choices
@@ -50,15 +51,11 @@ class PollSeries < ActiveRecord::Base
       else
         choices_count = poll.choices.count
       end
-      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, member_type: Member.find(self.member_id).member_type_text)
-    end
-
-    if self.in_group_ids != "0"
-      in_group = true
+      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
     end
 
     unless self.qr_only
-      PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: in_group)
+      PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
     end
   end
 

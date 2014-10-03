@@ -68,6 +68,7 @@ class PollSeriesController < ApplicationController
         poll.choices.build
       end
     end
+    @group_list = current_member.company.groups if current_member.company?
   end
 
   def same_choice
@@ -75,6 +76,7 @@ class PollSeriesController < ApplicationController
     2.times do
       @poll_series.polls.build
     end
+    @group_list = current_member.company.groups if current_member.company?
   end
 
   def edit
@@ -104,11 +106,11 @@ class PollSeriesController < ApplicationController
 
     if current_member.company?
       is_public = false
-      # in_group_ids = current_member.company.groups
+      @poll_series.in_group = true
+      @poll_series.in_group_ids = poll_series_params[:group_id]
     end
 
     @poll_series.public = is_public
-    @poll_series.in_group_ids = in_group_ids
 
     type_series = poll_series_params["type_series"]
 
@@ -117,6 +119,9 @@ class PollSeriesController < ApplicationController
     end
 
     if @poll_series.save
+      @poll_series.in_group_ids.split(",").each do |group_id|
+        PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)
+      end
       flash[:success] = "Successfully created poll series."
       redirect_to poll_series_index_path
     else
@@ -156,6 +161,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :qr_only, :require_info, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:group_id, :allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :qr_only, :require_info, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

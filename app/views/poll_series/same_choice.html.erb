@@ -108,6 +108,13 @@
               </div>
             </section>
 
+            <section> 
+                <label class="label">In Group</label>
+                <label class="select">
+                  <input type="text" name="poll_series[group_id]" id="group_list">
+                </label>
+            </section>  
+
             <section>
               <label class="label">Campaign</label>
               <label class="select">
@@ -145,3 +152,26 @@
   $(".remove_nested_fields")[1].style.visibility='hidden';
 
 </script>
+<% if current_member.company? %>
+  <script type="text/javascript">
+  $( document ).ready(function() {
+    $("#group_list").select2({
+        width: "100%",
+        multiple: true,
+        placeholder: "Select a group",
+        query: function (query){
+          var data = {results: []};
+
+            $.each(<%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %>, function(){
+                if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                    data.results.push({id: this.id, text: this.text });
+                }
+            });
+
+            query.callback(data);
+        }
+    });
+    $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
+  });
+  </script>
+<% end %>

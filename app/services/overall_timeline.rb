@@ -92,6 +92,8 @@ class OverallTimeline
 
     poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
+    poll_series_group_query = "poll_members.series = 't' AND poll_members.in_group = 't' AND poll_members.poll_series_id IN (?)"
+
     poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
     poll_public_query = filter_public.eql?("1") ? "poll_members.public = 't' AND #{poll_non_share_non_in_group}" : "NULL"
@@ -117,10 +119,11 @@ class OverallTimeline
 
     query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_group_query} AND #{poll_unexpire})" \
+                                                             "OR (#{poll_series_group_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_public_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_reward_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
-                                                             new_find_poll_in_my_group)
+                                                             new_find_poll_in_my_group, find_poll_series_in_group)
 
     # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
     # query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
@@ -146,7 +149,11 @@ class OverallTimeline
   end
 
   def find_poll_in_my_group
-    query = PollGroup.where("group_id IN (?)", your_group_ids).limit(LIMIT_TIMELINE).map(&:poll_id).uniq
+    PollGroup.where("group_id IN (?)", your_group_ids).limit(LIMIT_TIMELINE).map(&:poll_id).uniq
+  end
+
+  def find_poll_series_in_group
+    PollSeriesGroup.where("group_id IN (?)", your_group_ids).limit(LIMIT_TIMELINE).map(&:poll_series_id).uniq
   end
 
   def find_poll_share

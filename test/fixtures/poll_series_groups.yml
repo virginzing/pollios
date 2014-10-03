@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  poll_series_id: 
+  group_id: 
+  member_id: 
+
+two:
+  poll_series_id: 
+  group_id: 
+  member_id: 
