@@ -51,7 +51,7 @@ class PollSeries < ActiveRecord::Base
       else
         choices_count = poll.choices.count
       end
-      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
+      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
     end
 
     unless self.qr_only
