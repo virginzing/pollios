@@ -146,12 +146,12 @@ class FriendPollInProfile
   end
 
   def poll_voted
-    query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.available.select("DISTINCT polls.*").joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
                 "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
                 (list_my_friend_ids << friend_id),
-                my_and_friend_group).references(:poll_groups).uniq
+                my_and_friend_group).references(:poll_groups)
   end
 
   def poll_watched
