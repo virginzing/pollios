@@ -11,7 +11,7 @@ class MyPollInProfile
   end
 
   def my_vote_poll_ids
-    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e[3] == 0 }.collect{|e| e.first }
+    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e[2] == 0 }.collect{|e| e.first }
   end
 
   def my_poll

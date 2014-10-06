@@ -13,22 +13,22 @@ class HistoryVote < ActiveRecord::Base
     scope "has_#{key}", lambda { |value| where("data_analysis @> hstore(?,?)", key, value) }
   end
 
-  def self.voted?(member, poll_id)
-    cached_history_voted = member.cached_my_voted
+  # def self.voted?(member, poll_id)
+  #   cached_history_voted = member.cached_my_voted
 
-    ever_voted = cached_history_voted.select! {|voted| voted.poll_id == poll_id }
+  #   ever_voted = cached_history_voted.select! {|voted| voted.poll_id == poll_id }
 
-    if ever_voted.empty?
-      {
-        "voted" => false
-      }
-    else
-      {
-        "voted" => true, 
-        "choice_id" => ever_voted[0].choice_id
-      }
-    end
-  end
+  #   if ever_voted.empty?
+  #     {
+  #       "voted" => false
+  #     }
+  #   else
+  #     {
+  #       "voted" => true, 
+  #       "choice_id" => ever_voted[0].choice_id
+  #     }
+  #   end
+  # end
 
   def self.get_gender_analysis(poll_id, choice_id, gender_type)
     HistoryVote.where("poll_id = #{poll_id} AND choice_id = #{choice_id}").has_gender(gender_type)

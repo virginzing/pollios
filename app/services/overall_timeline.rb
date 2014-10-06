@@ -49,7 +49,7 @@ class OverallTimeline
   end
 
   def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e[3] != 0 }.collect{|e| e[0] }
+    Member.voted_polls.select{|e| e[2] != 0 }.collect{|e| e.first }
   end
 
   def your_friend_ids

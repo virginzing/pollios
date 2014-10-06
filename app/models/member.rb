@@ -299,9 +299,6 @@ class Member < ActiveRecord::Base
   end
 
   def cached_groups_friend_count(member)
-    # Rails.cache.fetch([ self.id, 'group_count']) do
-    #   FriendPollInProfile.new(member, self, {}).group_friend_count
-    # end
     FriendPollInProfile.new(member, self, {}).group_friend_count
   end
 
@@ -332,7 +329,7 @@ class Member < ActiveRecord::Base
   end
 
   def my_vote_poll_ids
-    Member.voted_polls.select{|e| e[3] == 0 }.collect{|e| e.first }
+    Member.voted_polls.select{|e| e[2] == 0 }.collect{|e| e.first }
   end
 
   def cached_my_poll
@@ -351,10 +348,15 @@ class Member < ActiveRecord::Base
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
-      HistoryVote.joins(:member, :choice, :poll)
-                  .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result")
-                  .where("history_votes.member_id = #{id}")
-                  .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }.to_a
+      Poll.available.joins(:history_votes => :choice).includes(:member)
+        .select("polls.*, history_votes.choice_id as choice_id")
+        .where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", self.id)
+        .collect! { |poll| [poll.id, poll.choice_id, poll.poll_series_id, poll.show_result] }.to_a
+      # query = HistoryVote.joins(:member, :choice, :poll)
+      #             .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result")
+      #             .where("history_votes.member_id = #{id} AND poll")
+
+      #             .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }.to_a
     end
   end
 
@@ -419,22 +421,28 @@ class Member < ActiveRecord::Base
 
   def list_voted?(poll)
     history_voted = Member.voted_polls
-    history_voted.each do |poll_choice|
-      if poll_choice.first == poll.id
-
-        choice_list ||= poll.cached_choices
-        choice_voted = choice_list.select {|e| e.id == poll_choice[1] }.first.vote
-        return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => choice_voted]
-      end
+    # history_voted.each do |poll_choice|
+    #   if poll_choice.first == poll.id
+    #     choice_list ||= poll.cached_choices
+    #     choice_voted = choice_list.select {|e| e.id == poll_choice[1] }.first.vote
+    #     return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => choice_voted]
+    #   end
+    select_poll = history_voted.select {|his_vote| his_vote.first == poll.id }.first
+    if select_poll.present?
+      choice_list ||= poll.cached_choices
+      choice_voted = choice_list.select {|e| e.id == select_poll[1] }.first.vote
+      choice_answer = choice_list.select { |e| e.id == select_poll[1] }.first.answer
+      return Hash["voted" => true, "choice_id" => select_poll[1], "answer" => choice_answer, "vote" => choice_voted]
+    else
+      return Hash["voted" => false]
     end
-    Hash["voted" => false]
   end
 
   def list_voted_questionnaire?(poll_series)
     history_voted = Member.voted_polls
 
     history_voted.each do |poll|
-      if poll[3] == poll_series.id
+      if poll[2] == poll_series.id
         return Hash["voted" => true]
       end
     end
