@@ -190,12 +190,12 @@ class FriendPollInProfile
   end
 
   def mutual_or_public_group
-    query = Group.where("groups.id IN (?) OR groups.public = 't'", my_and_friend_group)
-                .includes(:polls_active, :group_members_active)
+    query = Group.joins(:group_members_active).where("group_members.active = 't' AND (groups.id IN (?) OR groups.public = 't')", my_and_friend_group)
+                .includes(:polls_active)
                 .select("groups.*")
                 .group("groups.id, polls.id, members.id")
                 .order("groups.name asc")
-                .references(:polls_active, :group_members_active)
+                .references(:polls_active)
     query
   end
 
@@ -203,11 +203,11 @@ class FriendPollInProfile
     # member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     # member_block = Member.list_friend_block.map(&:id)  ## member ids
 
-    query = Group.where("groups.id IN (?)", my_group_id)
-                .includes(:polls_active, :group_members_active)
+    query = Group.joins(:group_members_active).where("group_members.active = 't' AND groups.id IN (?)", my_group_id)
+                .includes(:polls_active)
                 .select("groups.*, count(group_members.group_id) as member_in_group")
                 .group("groups.id, polls.id, members.id").order("groups.name asc")
-                .references(:polls_active, :group_members_active)
+                .references(:polls_active)
 
     # query = query.where("polls.id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
     # query = query.where("polls.member_id NOT IN (?)", member_block) if member_block.count > 0

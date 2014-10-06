@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.1.2"
+ruby "2.0.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
@@ -95,7 +95,7 @@ gem "gretel"
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
-gem 'houston'
+# gem 'houston'
 gem 'htmlentities'
 gem 'breadcrumbs_on_rails'
 gem 'nprogress-rails'
@@ -114,12 +114,12 @@ gem 'will_paginate_mongoid'
 
 gem 'itunes-receipt' , :git => 'git://github.com/nov/itunes-receipt.git'
 
-gem 'zeus'
+# gem 'zeus'
 
 gem 'rack-cache'
 
 
 # gem 'axlsx'
-gem 'axlsx_rails'
+# gem 'axlsx_rails'
 gem 'rubyzip', '>= 1.0.0'
 gem 'zip-zip'
