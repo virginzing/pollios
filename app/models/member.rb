@@ -414,6 +414,24 @@ class Member < ActiveRecord::Base
     end
   end
 
+  ## flush cache ##
+
+  def flush_cache_my_poll
+    Rails.cache.delete([self.id, 'my_poll'])
+  end
+
+  def flush_cache_my_vote
+    Rails.cache.delete([self.id, 'my_voted'])
+  end
+
+  def flush_cache_my_watch
+    Rails.cache.delete([self.id, 'my_watched'])
+  end
+
+  def flush_cache_my_group
+    Rails.cache.delete([self.id, 'group_active'])
+  end
+
   def campaigns_available
     campaign = campaigns.includes(:poll).order("name desc")
     campaign.delete_if{|x| x.poll.present? }
