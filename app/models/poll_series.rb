@@ -43,6 +43,7 @@ class PollSeries < ActiveRecord::Base
     self.number_of_poll = polls.count
     self.save
     list_choice = self.same_choices
+    order_poll = 1
 
     polls.order("id asc").each do |poll|
       if list_choice.present?
@@ -51,11 +52,13 @@ class PollSeries < ActiveRecord::Base
       else
         choices_count = poll.choices.count
       end
-      poll.update!(expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
+      poll.update!(order_poll: order_poll, expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
+      order_poll += 1
     end
 
     unless self.qr_only
-      PollMember.create!(member_id: self.member_id, poll_id: polls.last.id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
+      min_poll_id = polls.select{|poll| poll if poll.order_poll }.min.id
+      PollMember.create!(member_id: self.member_id, poll_id: min_poll_id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
     end
   end
 
@@ -89,7 +92,7 @@ class PollSeries < ActiveRecord::Base
       if @votes.present?
         increment!(:vote_all)
         poll_series.suggests.create!(member_id: member_id, message: params[:suggest])
-        Rails.cache.delete([member_id, 'my_voted'])
+        member.flush_cache_my_vote
         # Activity.create_activity_poll_series(member, poll_series, 'Vote')
       end
       @votes

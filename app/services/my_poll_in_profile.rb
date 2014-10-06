@@ -11,7 +11,7 @@ class MyPollInProfile
   end
 
   def my_vote_poll_ids
-    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e[2] == 0 }.collect{|e| e.first }
+    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e["poll_series_id"] == 0 }.collect{|e| e["poll_id"] }
   end
 
   def my_poll
@@ -78,8 +78,11 @@ class MyPollInProfile
   end
 
   def poll_voted
-    Poll.available.joins(:history_votes).includes(:member, :campaign).where("history_votes.member_id = ? AND history_votes.poll_series_id = 0", member_id)
+    query = Poll.available.joins(:history_votes).includes(:member)
+        .where("(history_votes.member_id = #{member_id} AND history_votes.poll_series_id = 0) " \
+               "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
         .order("history_votes.created_at DESC")
+    query
   end
 
   def poll_watched

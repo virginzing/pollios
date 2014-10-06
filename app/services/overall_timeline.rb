@@ -49,7 +49,7 @@ class OverallTimeline
   end
 
   def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e[2] != 0 }.collect{|e| e.first }
+    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
   def your_friend_ids
@@ -80,7 +80,7 @@ class OverallTimeline
 
   def unvote_count
     poll_id_from_poll_member = PollMember.available.where("id IN (?)", cached_poll_ids_of_poll_member).map(&:poll_id)
-    (poll_id_from_poll_member - Member.voted_polls.collect{|e| e.first }).count
+    (poll_id_from_poll_member - Member.voted_polls.collect{|e| e["poll_id"] }).count
   end
 
   private
@@ -266,7 +266,7 @@ class OverallTimeline
   end
 
   def check_poll_not_show_result
-    Member.voted_polls.select{|e| e.first if e.last == false}.collect{|e| e.first }
+    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
   end
 
   def poll_shared_at(poll_member)
