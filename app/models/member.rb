@@ -416,6 +416,12 @@ class Member < ActiveRecord::Base
 
   ## flush cache ##
 
+  def flush_cache_about_poll
+    flush_cache_my_poll
+    flush_cache_my_vote
+    flush_cache_my_watch
+  end
+
   def flush_cache_my_poll
     Rails.cache.delete([self.id, 'my_poll'])
   end

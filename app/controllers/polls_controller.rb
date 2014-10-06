@@ -160,7 +160,7 @@ class PollsController < ApplicationController
           if @poll.in_group_ids != 0
             Group.where("id IN (?)", @poll.in_group_ids.split(",")).collect {|group| group.decrement!(:poll_count)}
           end
-          Rails.cache.delete([@current_member.id, 'my_poll'])
+          @current_member.flush_cache_about_poll
         end
       rescue => e
         @error_message = e.message
