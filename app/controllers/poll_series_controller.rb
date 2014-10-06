@@ -121,6 +121,7 @@ class PollSeriesController < ApplicationController
     if @poll_series.save
       @poll_series.in_group_ids.split(",").each do |group_id|
         PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)
+        ApnQuestionnaireWorker.perform_in(5.seconds, current_member.id, @poll_series.id, group_id)
       end
       flash[:success] = "Successfully created poll series."
       redirect_to poll_series_index_path
