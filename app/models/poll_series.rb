@@ -40,20 +40,22 @@ class PollSeries < ActiveRecord::Base
   end
 
   def set_poll_series
-    self.number_of_poll = polls.count
-    self.save
-    list_choice = self.same_choices
-    order_poll = 1
+    begin
+      self.number_of_poll = polls.count
+      self.save
+      list_choice = self.same_choices
+      order_poll = 1
 
-    polls.order("id asc").each do |poll|
-      if list_choice.present?
-        list_choice.collect{ |answer| poll.choices.create!(answer: answer) }
-        choices_count = list_choice.count
-      else
-        choices_count = poll.choices.count
+      polls.order("id asc").each do |poll|
+        if list_choice.present?
+          list_choice.collect{ |answer| poll.choices.create!(answer: answer) }
+          choices_count = list_choice.count
+        else
+          choices_count = poll.choices.count
+        end
+        poll.update!(order_poll: order_poll, expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
+        order_poll += 1
       end
-      poll.update!(order_poll: order_poll, expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text)
-      order_poll += 1
     end
 
     unless self.qr_only
