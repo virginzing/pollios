@@ -6,6 +6,13 @@ namespace :poll do
     end
   end
 
+  desc "Clear Questionnaire"
+  task clear_questionnaire: :environment do
+    PollSeries.all.each do |questionnaire|
+      questionnaire.destroy
+    end
+  end
+
   desc "Update History Vote"
   task :update_history_vote => :environment do
     HistoryVote.all.each do |hv|

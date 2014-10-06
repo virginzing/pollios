@@ -59,8 +59,15 @@ class PollSeries < ActiveRecord::Base
     end
 
     unless self.qr_only
-      min_poll_id = polls.select{|poll| poll if poll.order_poll }.min.id
-      PollMember.create!(member_id: self.member_id, poll_id: min_poll_id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
+      @min_poll_id = polls.select{|poll| poll if poll.order_poll }.min.id
+      PollMember.create!(member_id: self.member_id, poll_id: @min_poll_id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
+      add_questionnaire_to_group if in_group
+    end
+  end
+
+  def add_questionnaire_to_group
+    in_group_ids.split(",").each do |group_id|
+      PollGroup.create!(member_id: self.member_id, poll_id: @min_poll_id, share_poll_of_id: 0, group_id: group_id)
     end
   end
 
@@ -98,6 +105,18 @@ class PollSeries < ActiveRecord::Base
         # Activity.create_activity_poll_series(member, poll_series, 'Vote')
       end
       @votes
+    end
+  end
+
+  def poll_is_where
+    if public
+      Hash["in" => "Public"]
+    else
+      if in_group_ids == "0"
+        Hash["in" => "Friends & Following"]
+      else
+        Hash["in" => "Group"]
+      end
     end
   end
 

@@ -132,7 +132,7 @@ class Group < ActiveRecord::Base
       end
     end
   end
-
+  
   def kick_member_out_group(kicker, friend_id)
     begin
       raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master

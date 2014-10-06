@@ -2,6 +2,7 @@ module SymbolHash
 
   TYPE = {
     :poll => 'Poll',
+    :poll_series => 'PollSeries',
     :friend => 'Friend',
     :group => 'Group',
     :member => 'Member',
