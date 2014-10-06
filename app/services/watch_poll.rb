@@ -10,15 +10,15 @@ class WatchPoll
     else
       watching = @member.watcheds.create!(poll_id: @poll_id)
     end
-    Rails.cache.delete([ @member.id, "watcheds" ])
+    @member.flush_cache_my_watch
     watching
   end
 
   def unwatch
     if find_watch_poll
       unwatch = find_watch_poll.update!(poll_notify: false)
+      @member.flush_cache_my_watch
     end
-    Rails.cache.delete([ @member.id, "watcheds" ])
     unwatch
   end
 

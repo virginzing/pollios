@@ -361,7 +361,7 @@ class Member < ActiveRecord::Base
   end
 
   def cached_watched
-    Rails.cache.fetch([ self.id, "watcheds" ]) do
+    Rails.cache.fetch([ self.id, 'watcheds' ]) do
       Poll.joins(:member).available.joins(:watcheds).where("(watcheds.member_id = #{self.id} AND watcheds.poll_notify = 't')").to_a
     end
   end
@@ -425,7 +425,7 @@ class Member < ActiveRecord::Base
   end
 
   def flush_cache_my_watch
-    Rails.cache.delete([self.id, 'my_watched'])
+    Rails.cache.delete([self.id, 'watcheds'])
   end
 
   def flush_cache_my_group
