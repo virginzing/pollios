@@ -107,13 +107,15 @@
               <%= f.input :tag_tokens, label: false, :input_html => { :class => "tag_token", :id => "tag_list_normal" } %>
               </div>
             </section>
-
+            
+            <% if current_member.company? %>
             <section> 
                 <label class="label">In Group</label>
                 <label class="select">
                   <input type="text" name="poll_series[group_id]" id="group_list">
                 </label>
             </section>  
+            <% end %>
 
             <section>
               <label class="label">Campaign</label>
