@@ -160,7 +160,7 @@ class PollsController < ApplicationController
           if @poll.in_group_ids != 0
             Group.where("id IN (?)", @poll.in_group_ids.split(",")).collect {|group| group.decrement!(:poll_count)}
           end
-          @current_member.flush_cache_about_poll
+          @current_member.flush_cache_about_poll(@poll)
           DeletePoll.create_log(@poll)
         end
       rescue => e
@@ -465,6 +465,7 @@ class PollsController < ApplicationController
 
   def destroy
     @poll.destroy
+    @poll.member.flush_cache_about_poll(@poll)
     DeletePoll.create_log(@poll)
     flash[:notice] = "Destroy successfully."
     redirect_to polls_url

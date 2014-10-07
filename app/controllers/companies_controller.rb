@@ -232,6 +232,7 @@ class CompaniesController < ApplicationController
       group.decrement!(:poll_count)
     end
     @poll.destroy
+    @poll.member.flush_cache_about_poll(@poll)
     DeletePoll.create_log(@poll)
     flash[:notice] = "Destroy successfully."
     redirect_to company_polls_path

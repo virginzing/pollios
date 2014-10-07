@@ -418,7 +418,8 @@ class Member < ActiveRecord::Base
 
   ## flush cache ##
 
-  def flush_cache_about_poll
+  def flush_cache_about_poll(poll = nil)
+    @poll = poll
     flush_cache_my_poll
     flush_cache_my_vote
     flush_cache_my_watch
@@ -430,14 +431,24 @@ class Member < ActiveRecord::Base
 
   def flush_cache_my_vote
     Rails.cache.delete([self.id, 'my_voted'])
+    flush_cache_relate_with_vote
   end
 
   def flush_cache_my_watch
     Rails.cache.delete([self.id, 'watcheds'])
+    flush_cache_relate_with_watch
   end
 
   def flush_cache_my_group
     Rails.cache.delete([self.id, 'group_active'])
+  end
+
+  def flush_cache_relate_with_vote
+    FlushCachePollVoteWorker.perform_async(@poll.history_votes.map(&:member_id).uniq)
+  end
+
+  def flush_cache_relate_with_watch
+    FlushCachePollWatchWorker.perform_async(@poll.watcheds.map(&:member_id).uniq)
   end
 
   def campaigns_available
