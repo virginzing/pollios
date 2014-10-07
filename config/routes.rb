@@ -2,7 +2,7 @@ require 'sidekiq/web'
 require 'api_constraints'
 
 Pollios::Application.routes.draw do
-
+  
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true) do
       scope 'group/:group_id' do
