@@ -101,7 +101,7 @@ class FriendsController < ApplicationController
     else
       @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
       @polls = @init_poll.get_vote_friend_with_visibility.paginate(page: params[:next_cursor])
-      check_vote_flush_cache(@find_friend, @init_poll.get_vote_friend_with_visibility.to_a.count)
+      check_vote_flush_cache?(@find_friend, @init_poll.get_vote_friend_with_visibility.to_a.count)
     end
     poll_helper
   end
