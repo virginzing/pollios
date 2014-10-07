@@ -211,6 +211,14 @@ class Member < ActiveRecord::Base
 
   end
 
+  def get_poll_count
+    Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").count
+  end
+
+  def get_questionnaire_count
+    PollSeries.where("(poll_series.member_id = #{self.id})").count
+  end
+
   def new_avatar
     avatar.url(:thumbnail)
   end
@@ -419,40 +427,26 @@ class Member < ActiveRecord::Base
 
   ## flush cache ##
 
-  def flush_cache_about_poll(poll)
-    @poll = poll
+  def flush_cache_about_poll
     flush_cache_my_poll
-    flush_cache_my_vote(@poll)
-    flush_cache_my_watch(@poll)
+    flush_cache_my_vote
+    flush_cache_my_watch
   end
 
   def flush_cache_my_poll
     Rails.cache.delete([self.id, 'my_poll'])
   end
 
-  def flush_cache_my_vote(poll)
+  def flush_cache_my_vote
     Rails.cache.delete([self.id, 'my_voted'])
-    puts "@poll => #{poll}"
-    @votes = poll.history_votes
-    flush_cache_relate_with_vote
   end
 
-  def flush_cache_my_watch(poll)
+  def flush_cache_my_watch
     Rails.cache.delete([self.id, 'watcheds'])
-    @watches = poll.watcheds
-    flush_cache_relate_with_watch
   end
 
   def flush_cache_my_group
     Rails.cache.delete([self.id, 'group_active'])
-  end
-
-  def flush_cache_relate_with_vote
-    FlushCachePollVoteWorker.perform_in(3.seconds, @votes.map(&:member_id).uniq)
-  end
-
-  def flush_cache_relate_with_watch
-    FlushCachePollWatchWorker.perform_in(3.seconds, @watches.map(&:member_id).uniq)
   end
 
   def campaigns_available

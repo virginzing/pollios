@@ -8,8 +8,6 @@ class DeletePoll
   field :voter, type: Array
   field :delete_at, type: Time, default: -> { Time.now }
 
-
-
   def self.create_log(poll)
     if (poll.vote_all > 0 || poll.view_all > 0)
       voter = ActiveModel::ArraySerializer.new(poll.history_votes, each_serializer: VoterFordeleteSerializer).as_json()

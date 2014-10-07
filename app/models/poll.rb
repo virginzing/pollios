@@ -102,6 +102,8 @@ class Poll < ActiveRecord::Base
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
+    self.member.flush_cache_my_poll
+    self.member.flush_cache_my_watch
   end
 
   def cached_choices
@@ -110,9 +112,17 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  # def get_poll_in_groups(group_ids)
-  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  # def flush_cache_relate_with_vote
+  #   FlushCachePollVoteWorker.perform_async(history_votes.map(&:member_id).uniq)
   # end
+
+  # def flush_cache_relate_with_watch
+  #   FlushCachePollWatchWorker.perform_async(watcheds.map(&:member_id).uniq)
+  # end
+
+  def get_poll_in_groups(group_ids)
+    groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  end
 
   def set_new_title_with_tag
     poll_title = self.title
@@ -139,7 +149,6 @@ class Poll < ActiveRecord::Base
     @choice ||= cached_choices
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
-
 
   def get_choice_detail
     @choice ||= cached_choices
@@ -476,7 +485,7 @@ class Poll < ActiveRecord::Base
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
             else
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-              ApnPollWorker.perform_async(member_id.to_i, @poll.id)
+              ApnPollWorker.perform_in(5.seconds, member_id.to_i, @poll.id)
             end
 
             if member.citizen? && is_public == "1"
@@ -499,6 +508,7 @@ class Poll < ActiveRecord::Base
       end ## begin
 
     end ## transaction
+              # puts "have poll #{@poll}"
   end
 
   def self.check_type_of_choice(choices)
