@@ -50,7 +50,7 @@ class MemberDevise
   end
 
   def current_devise
-    current_devise ||= Apn::Device.find_by_token(device_token)
+    current_devise = Apn::Device.find_by(token: device_token)
   end
 
   
