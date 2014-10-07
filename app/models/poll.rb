@@ -487,7 +487,7 @@ class Poll < ActiveRecord::Base
 
             Activity.create_activity_poll(member, @poll, 'Create')
             # Rails.cache.delete([member_id, 'poll_member'])
-            member.flush_cache_about_poll
+            member.flush_cache_about_poll(@poll)
 
             [@poll, nil]
           end

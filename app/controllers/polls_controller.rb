@@ -140,7 +140,7 @@ class PollsController < ApplicationController
         
         PollStats.create_poll_stats(@poll)
         # Rails.cache.delete([current_member.id, 'poll_member'])
-        current_member.flush_cache_about_poll
+        current_member.flush_cache_about_poll(@poll)
         Activity.create_activity_poll(current_member, @poll, 'Create')
 
         flash[:success] = "Create poll successfully."
