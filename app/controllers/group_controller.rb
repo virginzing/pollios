@@ -55,6 +55,7 @@ class GroupController < ApplicationController
         find_poll_in_group.first.poll.destroy
         find_poll_in_group.first.destroy
         @group.decrement!(:poll_count)
+        DeletePoll.create_log(find_poll_in_group.first.poll)
         wants.json { render json: Hash["response_status" => "OK"] }
       else
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Unable to delete poll"] }

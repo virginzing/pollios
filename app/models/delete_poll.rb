@@ -10,8 +10,11 @@ class DeletePoll
 
 
 
-  def create_delete_poll(poll)
-    
+  def self.create_log(poll)
+    if (poll.vote_all > 0 || poll.view_all > 0)
+      voter = ActiveModel::ArraySerializer.new(poll.history_votes, each_serializer: VoterFordeleteSerializer).as_json()
+      DeletePoll.create!(creator: poll.member.as_json(), poll: PollForDeleteSerializer.new(poll).as_json(), voter: voter)
+    end
   end
 
 end
