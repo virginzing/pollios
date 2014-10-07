@@ -295,13 +295,13 @@ class Member < ActiveRecord::Base
   end
 
   def cached_poll_friend_count(member)
-    Rails.cache.fetch([ self.id, 'poll_count']) do
+    Rails.cache.fetch([ self.id, 'friend_poll_count']) do
       FriendPollInProfile.new(member, self, {}).poll_friend_count
     end
   end
 
   def cached_voted_friend_count(member)
-    Rails.cache.fetch([ self.id, 'vote_count']) do
+    Rails.cache.fetch([ self.id, 'friend_vote_count']) do
       FriendPollInProfile.new(member, self, {}).vote_friend_count
     end
   end
@@ -311,13 +311,13 @@ class Member < ActiveRecord::Base
   end
 
   def cached_watched_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_count']) do
+    Rails.cache.fetch([ self.id, 'friend_watch_count']) do
       FriendPollInProfile.new(member, self, {}).watched_friend_count
     end
   end
 
   def cached_block_friend_count(member)
-    Rails.cache.fetch([ self.id, 'block_count']) do
+    Rails.cache.fetch([ self.id, 'friend_block_count']) do
       FriendPollInProfile.new(member, self, {}).block_friend_count
     end
   end
@@ -447,6 +447,20 @@ class Member < ActiveRecord::Base
 
   def flush_cache_my_group
     Rails.cache.delete([self.id, 'group_active'])
+  end
+
+  ## flush cache friend ##
+
+  def flush_cache_friend_poll
+    Rails.cache.delete([self.id, 'friend_poll_count'])
+  end
+
+  def flush_cache_friend_vote
+    Rails.cache.delete([self.id, 'friend_vote_count'])
+  end
+
+  def flush_cache_friend_watch
+    Rails.cache.delete([self.id, 'friend_watch_count'])
   end
 
   def campaigns_available
