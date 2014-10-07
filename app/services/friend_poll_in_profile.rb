@@ -172,7 +172,7 @@ class FriendPollInProfile
   def poll_voted_with_visibility
     query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
             .where("(history_votes.member_id = #{is_friend} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
-            "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1" \
+            "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
             "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
             "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
             list_my_friend_ids,
