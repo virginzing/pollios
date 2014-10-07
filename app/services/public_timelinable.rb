@@ -12,6 +12,10 @@ class PublicTimelinable
     HiddenPoll.my_hidden_poll(member_id)
   end
 
+  def my_vote_questionnaire_ids
+    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+  end
+
   def since_id
     @params["since_id"] || 0
   end
@@ -37,6 +41,8 @@ class PublicTimelinable
       query = Poll.available.unexpire.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
                   where("(#{query_poll_public_with_hidden} AND #{poll_unexpire})", my_hidden)
     end
+
+    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
 
     if to_bool(@pull_request)
       query = query.where("polls.id > ? AND polls.updated_at > ?", since_id, @member.poll_public_req_at)
