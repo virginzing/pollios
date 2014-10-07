@@ -483,11 +483,10 @@ class Poll < ActiveRecord::Base
               member.decrement!(:point) if member.point > 0
             end
 
+
             PollStats.create_poll_stats(@poll)
 
             Activity.create_activity_poll(member, @poll, 'Create')
-            # Rails.cache.delete([member_id, 'poll_member'])
-            member.flush_cache_about_poll(@poll)
 
             [@poll, nil]
           end

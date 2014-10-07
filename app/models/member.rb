@@ -348,6 +348,7 @@ class Member < ActiveRecord::Base
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
+
       Poll.available.joins(:history_votes => :choice).includes(:member)
         .select("polls.*, history_votes.choice_id as choice_id")
         .where("(history_votes.member_id = #{self.id} AND history_votes.poll_series_id = 0) " \
@@ -418,24 +419,27 @@ class Member < ActiveRecord::Base
 
   ## flush cache ##
 
-  def flush_cache_about_poll(poll = nil)
+  def flush_cache_about_poll(poll)
     @poll = poll
     flush_cache_my_poll
-    flush_cache_my_vote
-    flush_cache_my_watch
+    flush_cache_my_vote(@poll)
+    flush_cache_my_watch(@poll)
   end
 
   def flush_cache_my_poll
     Rails.cache.delete([self.id, 'my_poll'])
   end
 
-  def flush_cache_my_vote
+  def flush_cache_my_vote(poll)
     Rails.cache.delete([self.id, 'my_voted'])
+    puts "@poll => #{poll}"
+    @votes = poll.history_votes
     flush_cache_relate_with_vote
   end
 
-  def flush_cache_my_watch
+  def flush_cache_my_watch(poll)
     Rails.cache.delete([self.id, 'watcheds'])
+    @watches = poll.watcheds
     flush_cache_relate_with_watch
   end
 
@@ -444,11 +448,11 @@ class Member < ActiveRecord::Base
   end
 
   def flush_cache_relate_with_vote
-    FlushCachePollVoteWorker.perform_async(@poll.history_votes.map(&:member_id).uniq)
+    FlushCachePollVoteWorker.perform_in(3.seconds, @votes.map(&:member_id).uniq)
   end
 
   def flush_cache_relate_with_watch
-    FlushCachePollWatchWorker.perform_async(@poll.watcheds.map(&:member_id).uniq)
+    FlushCachePollWatchWorker.perform_in(3.seconds, @watches.map(&:member_id).uniq)
   end
 
   def campaigns_available
