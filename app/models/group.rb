@@ -27,7 +27,7 @@ class Group < ActiveRecord::Base
   validates :name, presence: true
 
   mount_uploader :photo_group, PhotoGroupUploader
-
+  mount_uploader :cover, PhotoGroupUploader
 
   def cached_created_by
     Rails.cache.fetch([ self, 'created_by' ]) do
@@ -41,6 +41,10 @@ class Group < ActiveRecord::Base
 
   def get_photo_group
     photo_group.present? ? photo_group.url(:thumbnail) : ""
+  end
+
+  def get_cover_group
+    cover.present? ? cover.url(:cover) : ""
   end
 
   def set_notification(member_id)
@@ -74,12 +78,13 @@ class Group < ActiveRecord::Base
     member_id = group[:member_id]
     photo_group = group[:photo_group]
     description = group[:description]
+    cover = group[:cover]
     set_privacy = group[:public] || true
 
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy)
+    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)

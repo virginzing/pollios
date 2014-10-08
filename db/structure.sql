@@ -722,7 +722,8 @@ CREATE TABLE groups (
     poll_count integer DEFAULT 0,
     authorize_invite integer,
     description text,
-    leave_group boolean DEFAULT true
+    leave_group boolean DEFAULT true,
+    cover character varying(255)
 );
 
 
@@ -3813,3 +3814,5 @@ INSERT INTO schema_migrations (version) VALUES ('20141003063911');
 INSERT INTO schema_migrations (version) VALUES ('20141003065150');
 
 INSERT INTO schema_migrations (version) VALUES ('20141006082040');
+
+INSERT INTO schema_migrations (version) VALUES ('20141008051532');

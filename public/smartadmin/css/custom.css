@@ -30,6 +30,9 @@ dl.dl-horizontal {
   text-align: center;
 }
 
+.ezdz-dropzone {
+  width: 100% !important;
+}
 table.questionnaire th.header-questionnaire {
   text-align: center;
   font-size: 16px;

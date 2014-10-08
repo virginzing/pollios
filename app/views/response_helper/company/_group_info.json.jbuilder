@@ -7,3 +7,4 @@ json.description group.get_description
 json.public group.public
 json.created_at group.created_at.to_i
 json.leave_group group.leave_group
+json.cover group.get_cover_group
