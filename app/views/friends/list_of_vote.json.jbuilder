@@ -3,6 +3,7 @@ if @poll_series || @poll_nonseries
   
   json.count do
     json.in_public @init_poll.vote_public_poll
+    puts "@init_poll.vote_public_poll => #{@init_poll.vote_public_poll}"
     json.in_friend_following @init_poll.vote_friend_following_poll
     json.in_group @init_poll.vote_group_poll
   end

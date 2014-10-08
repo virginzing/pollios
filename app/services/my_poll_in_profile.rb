@@ -43,29 +43,29 @@ class MyPollInProfile
   ## vote ##
 
   def vote_public_poll
-    poll_voted.select{|p| p.public == true }.count
+    my_vote.select{|p| p.public == true }.count
   end
 
   def vote_friend_following_poll
-    poll_voted.select{|p| p.public == false && p.in_group_ids == "0" }.count
+    my_vote.select{|p| p.public == false && p.in_group_ids == "0" }.count
   end
 
   def vote_group_poll
-    poll_voted.select{|p| p.public == false && p.in_group_ids != "0" }.count
+    my_vote.select{|p| p.public == false && p.in_group_ids != "0" }.count
   end
 
   ## watched ##
 
   def watch_public_poll
-    poll_watched.select{|p| p.public == true }.count
+    my_watched.select{|p| p.public == true }.count
   end
 
   def watch_friend_following_poll
-    poll_watched.select{|p| p.public == false && p.in_group_ids == "0" }.count
+    my_watched.select{|p| p.public == false && p.in_group_ids == "0" }.count
   end
 
   def watch_group_poll
-    poll_watched.select{|p| p.public == false && p.in_group_ids != "0" }.count
+    my_watched.select{|p| p.public == false && p.in_group_ids != "0" }.count
   end
 
   private
@@ -78,6 +78,7 @@ class MyPollInProfile
   end
 
   def poll_voted
+    puts "query 1"
     query = Poll.available.joins(:history_votes).includes(:member)
         .where("(history_votes.member_id = #{member_id} AND history_votes.poll_series_id = 0) " \
                "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")

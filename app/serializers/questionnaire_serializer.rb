@@ -1,9 +1,9 @@
 class QuestionnaireSerializer < ActiveModel::Serializer
   self.root = false
-  attributes :id, :creator, :description, :questionnaire_within
+  attributes :id, :creator, :title, :poll_within, :series
 
   def id
-    object.id
+    object.polls.select{|poll| poll if poll.order_poll }.min.id
   end
 
   def creator
@@ -13,11 +13,16 @@ class QuestionnaireSerializer < ActiveModel::Serializer
     }
   end
 
-  def description
+  def title
     object.description
   end
 
-  def questionnaire_within
+  def poll_within
     object.poll_is_where
   end
+
+  def series
+    true
+  end
+  
 end
