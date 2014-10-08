@@ -356,7 +356,6 @@ class Member < ActiveRecord::Base
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
-
       Poll.available.joins(:history_votes => :choice).includes(:member)
         .select("polls.*, history_votes.choice_id as choice_id")
         .where("(history_votes.member_id = #{self.id} AND history_votes.poll_series_id = 0) " \
