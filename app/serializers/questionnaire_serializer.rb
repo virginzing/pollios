@@ -3,7 +3,7 @@ class QuestionnaireSerializer < ActiveModel::Serializer
   attributes :id, :creator, :title, :poll_within, :series
 
   def id
-    object.polls.select{|poll| poll if poll.order_poll }.min.id
+    object.id
   end
 
   def creator
