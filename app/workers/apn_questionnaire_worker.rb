@@ -21,7 +21,7 @@ class ApnQuestionnaireWorker
       device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
       @custom_properties = { 
-        poll_id: @poll_id_for_questionnaire,
+        poll_id: @poll_series.id,
         series: true
       }
 
