@@ -64,7 +64,8 @@ class GroupTimelinable
 
     poll_group = PollGroup.joins(:poll).where("polls.expire_status = 'f'").where("(#{query_poll_in_group} AND #{poll_unexpire}) OR (#{query_poll_in_group} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids).limit(LIMIT_TIMELINE)
     # puts "poll_group => #{poll_group.to_a.uniq_by {|e| e.poll_id } }"
-    poll_group = poll_group.to_a.uniq_by {|poll| poll.poll_id }
+    poll_group = poll_group.to_a.uniq {|poll| poll.poll_id }
+
     ids, poll_ids = poll_group.map(&:id), poll_group.map(&:poll_id)
   end
 
@@ -107,9 +108,9 @@ class GroupTimelinable
       if @poll_ids.count == LIMIT_POLL
         if cache_polls[-1] == @poll_ids.last
           next_cursor = 0
-         else
+        else
           next_cursor = @poll_ids.last
-         end 
+        end
       else
         next_cursor = 0
       end
@@ -160,7 +161,7 @@ class GroupTimelinable
   def serailize_group_detail_as_json(poll_id)
     group = PollGroup.where(poll_id: poll_id).pluck(:group_id)
     group_list = group & your_group_ids
-    
+
     if group.present?
       ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json
     else
@@ -171,5 +172,5 @@ class GroupTimelinable
   def serailize_member_detail_as_json(member_of_share)
     ActiveModel::ArraySerializer.new(member_of_share, serializer_options: { current_member: @member }, each_serializer: MemberSharedDetailSerializer).as_json
   end
-  
+
 end

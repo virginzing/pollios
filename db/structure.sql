@@ -723,6 +723,8 @@ CREATE TABLE groups (
     authorize_invite integer,
     description text,
     leave_group boolean DEFAULT true,
+    group_type integer,
+    properties hstore,
     cover character varying(255)
 );
 
@@ -1442,9 +1444,9 @@ CREATE TABLE poll_series (
     in_group_ids character varying(255) DEFAULT '0'::character varying,
     allow_comment boolean DEFAULT true,
     comment_count integer DEFAULT 0,
-    qr_only boolean DEFAULT true,
+    qr_only boolean,
     qrcode_key character varying(255),
-    require_info boolean DEFAULT true,
+    require_info boolean,
     in_group boolean DEFAULT false
 );
 
@@ -1567,8 +1569,8 @@ CREATE TABLE polls (
     comment_count integer DEFAULT 0,
     member_type character varying(255),
     loadedfeed_count integer DEFAULT 0,
-    qr_only boolean DEFAULT false,
-    require_info boolean DEFAULT false,
+    qr_only boolean,
+    require_info boolean,
     expire_status boolean DEFAULT false,
     creator_must_vote boolean DEFAULT true,
     in_group boolean DEFAULT false,
@@ -2962,6 +2964,13 @@ CREATE UNIQUE INDEX index_group_members_on_member_id_and_group_id ON group_membe
 
 
 --
+-- Name: index_groups_on_properties; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_groups_on_properties ON groups USING gist (properties);
+
+
+--
 -- Name: index_hidden_polls_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3792,6 +3801,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140901061006');
 INSERT INTO schema_migrations (version) VALUES ('20140901103319');
 
 INSERT INTO schema_migrations (version) VALUES ('20140901103634');
+
+INSERT INTO schema_migrations (version) VALUES ('20140909095809');
 
 INSERT INTO schema_migrations (version) VALUES ('20140912031610');
 

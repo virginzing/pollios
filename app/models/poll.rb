@@ -161,11 +161,19 @@ class Poll < ActiveRecord::Base
 
   def get_in_groups(groups_by_name)
     group = []
-    in_group_ids.split(",").each do |id|
-      if groups_by_name.has_key?(id.to_i)
-        group << groups_by_name.fetch(id.to_i)
+    split_group_id ||= in_group_ids.split(",").collect{|e| e.to_i }
+
+    split_group_id.each do |id|
+      if groups_by_name.has_key?(id)
+        group << groups_by_name.fetch(id)
       end
     end
+
+    if group.empty?
+      find_group = Group.where("id IN (?)", split_group_id).first
+      group << [Hash["id" => find_group.id, "name" => find_group.name, "photo" => find_group.get_photo_group]]
+    end
+
     group
   end
 
@@ -507,7 +515,7 @@ class Poll < ActiveRecord::Base
       end ## begin
 
     end ## transaction
-              # puts "have poll #{@poll}"
+    # puts "have poll #{@poll}"
   end
 
   def self.check_type_of_choice(choices)
@@ -586,7 +594,9 @@ class Poll < ActiveRecord::Base
 
               Activity.create_activity_poll(member, find_poll, 'Vote') unless find_poll.series
 
-              Rails.cache.delete([member_id, 'my_voted'])
+              member.flush_cache_my_vote
+              member.flush_cache_my_vote_all
+              
               Rails.cache.delete([find_poll.class.name, find_poll.id])
               [find_poll, history_voted, @campaign, @message]
             end
@@ -635,28 +645,28 @@ class Poll < ActiveRecord::Base
 
   def self.view_poll(poll, member)
     begin
-    @poll = poll
-    @member = member
+      @poll = poll
+      @member = member
 
-    find_history_view = @member.history_views.where(poll_id: @poll.id).first
-    
-    unless find_history_view.present?
-      @member.history_views.create!(poll_id: @poll.id)
-      @poll.update_columns(view_all: @poll.view_all + 1)
-    end
+      find_history_view = @member.history_views.where(poll_id: @poll.id).first
 
-    # ever_view = true
+      unless find_history_view.present?
+        @member.history_views.create!(poll_id: @poll.id)
+        @poll.update_columns(view_all: @poll.view_all + 1)
+      end
 
-    # HistoryView.where(member_id: @member.id, poll_id: @poll.id).first_or_create do |hv|
-    #   hv.member_id = @member.id
-    #   hv.poll_id = @poll.id
-    #   hv.save!
-    #   ever_view = false
-    # end
+      # ever_view = true
 
-    # if ever_view.present?
-    #   @poll.update_columns(view_all: @poll.view_all + 1)
-    # end
+      # HistoryView.where(member_id: @member.id, poll_id: @poll.id).first_or_create do |hv|
+      #   hv.member_id = @member.id
+      #   hv.poll_id = @poll.id
+      #   hv.save!
+      #   ever_view = false
+      # end
+
+      # if ever_view.present?
+      #   @poll.update_columns(view_all: @poll.view_all + 1)
+      # end
     end
   end
 

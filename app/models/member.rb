@@ -370,6 +370,16 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def cached_my_voted_all
+    Rails.cache.fetch([self.id, 'my_voted_all']) do
+      Poll.joins(:history_votes => :choice).includes(:member)
+        .select("polls.*, history_votes.choice_id as choice_id")
+        .where("(history_votes.member_id = #{self.id} AND history_votes.poll_series_id = 0) " \
+               "OR (history_votes.member_id = #{self.id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
+        .collect! { |poll| Hash["poll_id" => poll.id, "choice_id" => poll.choice_id, "poll_series_id" => poll.poll_series_id, "show_result" => poll.show_result ] }.to_a
+    end
+  end
+
   def cached_watched
     Rails.cache.fetch([ self.id, 'watcheds' ]) do
       Poll.joins(:member).available.joins(:watcheds).where("(watcheds.member_id = #{self.id} AND watcheds.poll_notify = 't')").to_a
@@ -438,6 +448,10 @@ class Member < ActiveRecord::Base
 
   def flush_cache_my_vote
     Rails.cache.delete([self.id, 'my_voted'])
+  end
+
+  def flush_cache_my_vote_all
+    Rails.cache.delete([self.id, 'my_voted_all'])
   end
 
   def flush_cache_my_watch

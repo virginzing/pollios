@@ -60,6 +60,7 @@ namespace :poll do
     PollSeries.delete_all
     Choice.delete_all
     PollSeriesTag.delete_all
+    PollSeriesGroup.delete_all
     Campaign.delete_all
     HistoryVoteGuest.delete_all
     HistoryViewGuest.delete_all
@@ -85,7 +86,7 @@ namespace :poll do
     Apn::Notification.delete_all
 
     Activity.delete_all
-    Commmnt.delete_all
+    Comment.delete_all
     Company.delete_all
 
     UserStats.delete_all
@@ -96,6 +97,11 @@ namespace :poll do
     GroupCompany.delete_all
     HistoryPurchase.delete_all
     PollStats.delete_all
+    DeletePoll.delete_all
+    Suggest.delete_all
+    RequestCode.delete_all
+    Mention.delete_all
+    MemberUnRecomment.delete_all
   end
 
   desc "clear some data"

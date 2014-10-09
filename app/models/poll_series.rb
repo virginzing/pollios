@@ -4,7 +4,7 @@ class PollSeries < ActiveRecord::Base
 
   belongs_to :member
   belongs_to :campaign
-  
+
   has_many :polls, dependent: :destroy
   has_many :suggests, dependent: :destroy
 
@@ -35,7 +35,7 @@ class PollSeries < ActiveRecord::Base
     self.tag_ids = Tag.ids_from_tokens(tokens)
   end
 
-  def creator 
+  def creator
     member.as_json(only: [:id, :fullname, :avatar])
   end
 
@@ -101,7 +101,9 @@ class PollSeries < ActiveRecord::Base
       if @votes.present?
         increment!(:vote_all)
         poll_series.suggests.create!(member_id: member_id, message: params[:suggest])
+
         member.flush_cache_my_vote
+        member.flush_cache_my_vote_all
         # Activity.create_activity_poll_series(member, poll_series, 'Vote')
       end
       @votes
@@ -134,7 +136,7 @@ class PollSeries < ActiveRecord::Base
         share_count: share_count,
         poll: polls.as_json()
       }
-    }
+      }
   end
 
 end
