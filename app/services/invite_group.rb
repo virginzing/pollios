@@ -26,7 +26,7 @@ class InviteGroup
     message = "#{member_name} invited you in: \"#{group_name}\""
     truncate_message(message)
   end
-
+  
   private
 
   def member

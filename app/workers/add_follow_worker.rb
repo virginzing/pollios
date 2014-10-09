@@ -5,11 +5,13 @@ class AddFollowWorker
   def perform(member_id, friend_id, options = {})
     begin
       member = Member.find(member_id)
-      # friend = Member.find(friend_id)
+      friend = Member.find(friend_id)
 
       action = options["action"]
 
-      @following = Apn::FollowMember.new(member)
+      @following = Apn::FollowMember.new(member, friend)
+
+      @count_notification = @following.count_notification
 
       find_recipient ||= Member.where(id: friend_id)
 
@@ -28,7 +30,7 @@ class AddFollowWorker
       device_ids.each do |device_id|
         @notf = Apn::Notification.new
         @notf.device_id = device_id
-        @notf.badge = 1
+        @notf.badge = @count_notification
         @notf.alert = @following.custom_message
         @notf.sound = true
         @notf.custom_properties = @custom_properties

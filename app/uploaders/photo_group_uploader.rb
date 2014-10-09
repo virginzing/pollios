@@ -18,12 +18,12 @@ class PhotoGroupUploader < CarrierWave::Uploader::Base
 
   version :thumbnail do
     process :resize_to_fill => [200, 200]
-  end    
+  end
 
   version :cover do
     process :eager => true
     process :resize_to_fit => [640]
-  end   
+  end
 
   def extension_white_list
     %w(jpg jpeg gif png)
@@ -32,10 +32,10 @@ class PhotoGroupUploader < CarrierWave::Uploader::Base
   def default_url
     # For Rails 3.1+ asset pipeline compatibility:
     ActionController::Base.helpers.asset_path("fallback/" + [version_name, "group_default.png"].compact.join('_'))
-  
+
     "/images/fallback/" + [version_name, "group_default.png"].compact.join('_')
   end
-  
+
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url
   #   # For Rails 3.1+ asset pipeline compatibility:

@@ -1218,7 +1218,9 @@ CREATE TABLE members (
     interests text,
     salary integer,
     setting hstore,
-    update_personal boolean DEFAULT false
+    update_personal boolean DEFAULT false,
+    notification_count integer DEFAULT 0,
+    request_count integer DEFAULT 0
 );
 
 
@@ -3816,3 +3818,5 @@ INSERT INTO schema_migrations (version) VALUES ('20141003065150');
 INSERT INTO schema_migrations (version) VALUES ('20141006082040');
 
 INSERT INTO schema_migrations (version) VALUES ('20141008051532');
+
+INSERT INTO schema_migrations (version) VALUES ('20141009030211');

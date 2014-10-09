@@ -280,8 +280,8 @@ class Friend < ActiveRecord::Base
     Rails.cache.delete([ friend_id, 'your_request'])
     Rails.cache.delete([ friend_id, 'friend_request'])
 
-    Rails.cache.delete(['user', member_id, 'relate', 'member', friend_id])
-    Rails.cache.delete(['user', friend_id, 'relate', 'member', member_id])
+    # Rails.cache.delete(['user', member_id, 'relate', 'member', friend_id])
+    # Rails.cache.delete(['user', friend_id, 'relate', 'member', member_id])
   end
 
   def self.flush_cached_friend_entity(member_id, friend_id)

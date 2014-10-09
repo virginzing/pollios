@@ -131,7 +131,7 @@ class PollsController < ApplicationController
           # puts "#{ @poll.in_group_ids}"
           Group.add_poll(current_member, @poll, @poll.in_group_ids)
         else
-          ApnPollWorker.perform_in(5.seconds, current_member.id, @poll.id) if Rails.env.production?
+          ApnPollWorker.perform_in(5.second, current_member.id, @poll.id)
         end
 
         unless @poll.qr_only
@@ -140,7 +140,7 @@ class PollsController < ApplicationController
         
         PollStats.create_poll_stats(@poll)
         # Rails.cache.delete([current_member.id, 'poll_member'])
-        current_member.flush_cache_about_poll(@poll)
+        current_member.flush_cache_about_poll
         Activity.create_activity_poll(current_member, @poll, 'Create')
 
         flash[:success] = "Create poll successfully."
@@ -160,7 +160,7 @@ class PollsController < ApplicationController
           if @poll.in_group_ids != 0
             Group.where("id IN (?)", @poll.in_group_ids.split(",")).collect {|group| group.decrement!(:poll_count)}
           end
-          @current_member.flush_cache_about_poll(@poll)
+          @current_member.flush_cache_about_poll
           DeletePoll.create_log(@poll)
         end
       rescue => e
@@ -465,7 +465,7 @@ class PollsController < ApplicationController
 
   def destroy
     @poll.destroy
-    @poll.member.flush_cache_about_poll(@poll)
+    @poll.member.flush_cache_about_poll
     DeletePoll.create_log(@poll)
     flash[:notice] = "Destroy successfully."
     redirect_to polls_url

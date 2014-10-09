@@ -32,5 +32,5 @@ module SymbolHash
     :group => 'Group',
     :private => 'Private'
   }
-  
+
 end

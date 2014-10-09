@@ -14,6 +14,24 @@ class AddFriend
     end
   end
 
+  def check_apn_device?
+    friend_deivce ||= @friend.apn_devices.present?
+  end
+
+  def count_notification
+    if check_apn_device?
+      @friend.update_columns(notification_count: @friend.notification_count + 1)
+      return @friend.notification_count
+    end
+  end
+
+  def count_request
+    if check_apn_device?
+      @friend.update_columns(request_count: @friend.request_count + 1)
+      return @friend.request_count
+    end
+  end
+
   def member_name
     # member.fullname.split(%r{\s}).first
     @member.fullname

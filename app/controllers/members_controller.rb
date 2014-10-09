@@ -184,6 +184,11 @@ class MembersController < ApplicationController
     @notify = @current_member.received_notifies.order('created_at DESC').paginate(page: params[:next_cursor])
     @total_entries =  @notify.total_entries
     @next_cursor = @notify.next_page.nil? ? 0 : @notify.next_page
+    clear_notification_count if params[:clear_notification]
+  end
+
+  def clear_notification_count
+    @current_member.update_columns(notification_count: 0)
   end
 
   def stats

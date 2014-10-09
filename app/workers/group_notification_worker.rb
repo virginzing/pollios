@@ -7,30 +7,31 @@ class GroupNotificationWorker
       member = Member.find_by(id: member_id)
       group = Group.find_by(id: group_id)
       poll = Poll.find_by(id: poll_id)
-      
+      @poll_serializer_json ||= PollSerializer.new(poll).as_json()
+
       @group_nofication = AskJoinGroup.new(member, group, poll)
 
       recipient_ids = @group_nofication.recipient_ids
 
       find_recipient ||= Member.where(id: recipient_ids)
 
-      device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
+      @count_notification = CountNotification.new(find_recipient)
+
+      device_ids ||= @count_notification.device_ids
+
+      member_ids ||= @count_notification.member_ids
+
+      hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = { 
-        poll_id: poll.id
+        poll_id: poll.id,
+        series: poll.series
       }
 
-      hash_custom = {
-        group: group.as_json(), 
-        type: TYPE[:poll],
-        action: ACTION[:create],
-        poll: PollSerializer.new(poll).as_json()
-      }
-
-      device_ids.each do |device_id|
+      device_ids.each_with_index do |device_id, index|
         @notf = Apn::Notification.new
         @notf.device_id = device_id
-        @notf.badge = 1
+        @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @group_nofication.custom_message
         @notf.sound = true
         @notf.custom_properties = @custom_properties
@@ -38,6 +39,14 @@ class GroupNotificationWorker
       end
 
       find_recipient.each do |member_receive|
+        hash_custom = {
+          group: group.as_json(), 
+          type: TYPE[:poll],
+          action: ACTION[:create],
+          poll: @poll_serializer_json,
+          notification_count: hash_list_member_badge[member_receive.id] 
+        }
+
         NotifyLog.create(sender_id: member.id, recipient_id: member_receive.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 

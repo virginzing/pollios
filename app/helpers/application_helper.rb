@@ -428,9 +428,9 @@ end
 # where("(polls.public = ?) OR (poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", true, 11, false)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 85,
-#     "answer": [{"id": 805, "choice_id": 2790}, {"id": 806, "choice_id": 2792}]
-# }' -X POST http://localhost:3000/questionnaire/19/vote.json -i
+#   "member_id": 85,
+#   "answer": [{"id": 1002, "choice_id": 3506}, {"id": 1003, "choice_id": 3511}]
+# }' -X POST http://localhost:3000/questionnaire/70/vote.json -i
 
 
 # # http://localhost:3000/new_public_timeline.json?member_id=3
@@ -538,6 +538,8 @@ end
 #     p.save!
 #   end
 # end
+
+# NotifyLog.where("custom_properties LIKE ?","%type: PollSeries%")
 
 # 9494bda2 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811
 #db = Mongoid::Sessions.default

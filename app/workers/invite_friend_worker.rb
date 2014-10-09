@@ -6,7 +6,7 @@ class InviteFriendWorker
     begin
       member = Member.find(member_id)
       group = Group.find(group_id)
-      
+
       member_id = member.id
 
       @invite_group = InviteGroup.new(member_id, friend_ids, group)
@@ -15,22 +15,24 @@ class InviteFriendWorker
 
       find_recipient ||= Member.where(id: recipient_ids)
 
-      device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
+      @count_notification = CountNotification.new(find_recipient)
 
-      @custom_properties = { 
+      device_ids ||= @count_notification.device_ids
+
+      member_ids ||= @count_notification.member_ids
+
+      hash_list_member_badge ||= @count_notification.hash_list_member_badge
+
+      hash_list_member_request_count ||= @count_notification.hash_list_member_request_count
+
+      @custom_properties = {
         group_id: group.id
       }
 
-      hash_custom = {
-        type: TYPE[:group],
-        action: ACTION[:invite],
-        group: group.as_json()
-      }
-
-      device_ids.each do |device_id|
+      device_ids.each_with_index do |device_id, index|
         @notf = Apn::Notification.new
         @notf.device_id = device_id
-        @notf.badge = 1
+        @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @invite_group.custom_message
         @notf.sound = true
         @notf.custom_properties = @custom_properties
@@ -38,6 +40,14 @@ class InviteFriendWorker
       end
 
       find_recipient.each do |member|
+        hash_custom = {
+          type: TYPE[:group],
+          action: ACTION[:invite],
+          group: group.as_json(),
+          notification_count: hash_list_member_badge[member.id],
+          request_count: hash_list_member_request_count[member.id]
+        }
+        
         NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
@@ -48,4 +58,3 @@ class InviteFriendWorker
   end
 
 end
-

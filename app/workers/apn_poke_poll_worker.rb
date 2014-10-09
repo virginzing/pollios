@@ -4,28 +4,31 @@ class ApnPokePollWorker
 
   def perform(sender_id, list_member, poll_id, custom_data = {})
     begin
-      poll = Poll.find(poll_id)
+      @poll = Poll.find(poll_id)
 
-      @apn_poke_poll = Apn::PokePoll.new(poll)
+      @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
+
+      @apn_poke_poll = Apn::PokePoll.new(@poll)
 
       find_recipient ||= Member.where(id: list_member)
 
-      device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
+      @count_notification = CountNotification.new(find_recipient)
 
-      @custom_properties = { 
-        poll_id: poll.id
+      device_ids ||= @count_notification.device_ids
+
+      member_ids ||= @count_notification.member_ids
+
+      hash_list_member_badge ||= @count_notification.hash_list_member_badge
+
+      @custom_properties = {
+        poll_id: @poll.id,
+        series: @poll.series
       }
 
-      hash_custom = {
-        type: TYPE[:poll],
-        action: ACTION[:create],
-        poll: PollSerializer.new(poll).as_json(),
-      }
-
-      device_ids.each do |device_id|
+      device_ids.each_with_index do |device_id, index|
         @notf = Apn::Notification.new
         @notf.device_id = device_id
-        @notf.badge = 1
+        @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @apn_poke_poll.custom_message
         @notf.sound = true
         @notf.custom_properties = @custom_properties
@@ -33,6 +36,13 @@ class ApnPokePollWorker
       end
 
       find_recipient.each do |member|
+        hash_custom = {
+          type: TYPE[:poll],
+          action: ACTION[:create],
+          poll: @poll_serializer_json,
+          notification_count: hash_list_member_badge[member.id]
+        }
+
         NotifyLog.create(sender_id: sender_id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
@@ -41,5 +51,5 @@ class ApnPokePollWorker
       puts "ApnPokePollWorker => #{e.message}"
     end
   end
-  
+
 end

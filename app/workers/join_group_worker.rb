@@ -13,22 +13,22 @@ class JoinGroupWorker
 
       find_recipient ||= Member.where(id: recipient_ids)
 
-      device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
+      @count_notification = CountNotification.new(find_recipient)
 
-      @custom_properties = { 
+      device_ids ||= @count_notification.device_ids
+
+      member_ids ||= @count_notification.member_ids
+
+      hash_list_member_badge ||= @count_notification.hash_list_member_badge
+
+      @custom_properties = {
         group_id: group.id
       }
 
-      hash_custom = {
-        type: TYPE[:group],
-        action: ACTION[:join],
-        group: group.as_json()
-      }
-
-      device_ids.each do |device_id|
+      device_ids.each_with_index do |device_id, index|
         @notf = Apn::Notification.new
         @notf.device_id = device_id
-        @notf.badge = 1
+        @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @group_nofication.custom_message
         @notf.sound = true
         @notf.custom_properties = @custom_properties
@@ -36,6 +36,13 @@ class JoinGroupWorker
       end
 
       find_recipient.each do |member_receive|
+        hash_custom = {
+          type: TYPE[:group],
+          action: ACTION[:join],
+          group: group.as_json(),
+          notification_count: hash_list_member_badge[member_receive.id]
+        }
+
         NotifyLog.create(sender_id: member.id, recipient_id: member_receive.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
@@ -46,4 +53,3 @@ class JoinGroupWorker
   end
 
 end
-
