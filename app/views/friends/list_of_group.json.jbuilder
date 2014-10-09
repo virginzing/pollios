@@ -7,6 +7,7 @@ if @groups
     json.cover group.get_cover_group
     json.member_count group.get_member_count
     json.poll_count group.get_poll_not_vote_count   ## amount total of member don't vote poll in group
+    # json.poll_count group.poll_all_group
     json.description group.get_description
     json.public group.public
     json.created_at group.created_at.to_i

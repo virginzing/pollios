@@ -403,6 +403,7 @@ class Poll < ActiveRecord::Base
   end
 
   def self.split_poll(list_of_poll)
+    # puts "list_of_poll => #{list_of_poll.to_a.map(&:id)}"
     poll_series = []
     poll_nonseries = []
 
@@ -415,6 +416,9 @@ class Poll < ActiveRecord::Base
     end
 
     [poll_series, poll_nonseries]
+
+    # puts "poll_series #{poll_series.map(&:id)}"
+    # puts "poll_nonseries #{poll_nonseries.map(&:id)}"
   end
 
 
@@ -596,7 +600,7 @@ class Poll < ActiveRecord::Base
 
               member.flush_cache_my_vote
               member.flush_cache_my_vote_all
-              
+
               Rails.cache.delete([find_poll.class.name, find_poll.id])
               [find_poll, history_voted, @campaign, @message]
             end

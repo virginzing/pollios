@@ -1,4 +1,4 @@
-if @polls
+if @poll_series || @poll_nonseries
   json.response_status "OK"
 
   json.poll_series @poll_series do |poll|
@@ -18,7 +18,7 @@ if @polls
 
   end
 
-  json.poll_nonseries @polls do |poll|
+  json.poll_nonseries @poll_nonseries do |poll|
     
     json.poll do
       json.partial! 'response_helper/poll/normal', poll: poll
