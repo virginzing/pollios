@@ -96,14 +96,15 @@ class OverallTimeline
 
     poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
-    poll_public_query = filter_public.eql?("1") ? "poll_members.public = 't' AND #{poll_non_share_non_in_group}" : "NULL"
+    poll_public_query = filter_public.eql?("1") ? "(poll_members.public = 't' AND #{poll_non_share_non_in_group}) OR (polls.campaign_id != 0 AND #{poll_non_share_non_in_group})" : "NULL"
 
-    poll_reward_query = filter_reward.eql?("1") ? "polls.campaign_id != 0 AND #{poll_non_share_non_in_group}" : "NULL"
+    # poll_reward_query = filter_reward.eql?("1") ? "polls.campaign_id != 0 AND #{poll_non_share_non_in_group}" : "NULL"
 
     new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
 
+    new_find_poll_series_in_group = filter_group.eql?("1") ? find_poll_series_in_group : [0]
 
     # new_my_poll = filter_my_poll.eql?("1") ? member_id : 0
     # new_member_id = member_id
@@ -120,10 +121,10 @@ class OverallTimeline
     query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_group_query} AND #{poll_unexpire})" \
                                                              "OR (#{poll_series_group_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_public_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_reward_query} AND #{poll_unexpire})",
+                                                             "OR (#{poll_public_query} AND #{poll_unexpire})",
+                                                             # "OR (#{poll_reward_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
-                                                             new_find_poll_in_my_group, find_poll_series_in_group)
+                                                             new_find_poll_in_my_group, new_find_poll_series_in_group)
 
     # query = query.where("polls.member_id != #{member_id}") unless filter_my_poll.eql?("1")
     # query = query.where("poll_members.member_id NOT IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}", (your_friend_ids << member_id)) unless filter_friend_following.eql?("1")
@@ -159,9 +160,12 @@ class OverallTimeline
   def find_poll_share
     query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0"
 
+    new_your_friend_ids = filter_public.eql?("1") ? your_friend_ids : [0]
+    your_following_ids = filter_public.eql?("1") ? your_following_ids : [0]
+
     query = PollMember.available.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
                                                     "OR (#{query_poll_shared} AND #{poll_unexpire})",
-                                                    your_friend_ids,
+                                                    new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)
 
     query = check_new_pull_request(query)
