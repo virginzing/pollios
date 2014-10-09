@@ -468,15 +468,17 @@ class Member < ActiveRecord::Base
   end
 
   def list_voted?(poll)
-    history_voted = cached_my_voted
+    history_voted = Member.voted_polls
+    # puts "history_voted => #{history_voted}"
     # history_voted.each do |poll_choice|
     #   if poll_choice.first == poll.id
     #     choice_list ||= poll.cached_choices
     #     choice_voted = choice_list.select {|e| e.id == poll_choice[1] }.first.vote
     #     return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => choice_voted]
     #   end
-    select_poll = history_voted.select {|his_vote| his_vote["poll_id"] == poll.id }
+    select_poll = history_voted.select {|his_vote| his_vote["poll_id"] == poll.id }.first
     
+    # puts "select_poll => #{select_poll}"
     if select_poll.present?
       choice_list ||= poll.cached_choices
       choice_voted = choice_list.select {|e| e.id == select_poll["choice_id"] }.first.vote
