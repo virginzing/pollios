@@ -38,8 +38,6 @@ class PollOfGroup
     @query = Poll.available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:history_votes, :member)
                 .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                 .where("#{poll_group_query}").uniq
-
-    puts "poll_ids => #{@query.map(&:id)}"
     @query = @query.available if @only_poll_available
     @query
   end
