@@ -169,6 +169,12 @@ class MembersController < ApplicationController
 
     @is_your_request = is_friend(@current_member, @your_request) if @your_request.present?
     @is_friend_request = is_friend(@current_member, @friend_request) if @friend_request.present?
+
+    clear_request_count if params[:clear_request]
+  end
+
+  def clear_request_count
+    @current_member.update_columns(request_count: 0)  
   end
 
   def is_friend(member_obj, list_compare)
