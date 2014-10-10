@@ -20,7 +20,7 @@ class MemberUploader < CarrierWave::Uploader::Base
 
   version :thumbnail_small do
     process :eager => true
-    process :resize_to_fill => [30, 30]
+    process :resize_to_fill => [40, 40]
   end    
 
   # Provide a default URL as a default if there hasn't been a file uploaded:

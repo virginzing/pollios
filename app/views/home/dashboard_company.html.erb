@@ -133,19 +133,21 @@
               <table class="table" style="margin-bottom: 0px;">
                 <thead>
                   <tr>
+                    <th>Creator</th>
                     <th>Title</th>
                     <th>Vote All</th>
                     <th>View All</th>
-                    <th>Created at</th>
+                    <th>Updated at</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% @poll_latest_list.each do |poll| %>
-                  <tr>
-                    <td><%= link_to poll.title, poll_path(poll) %></td>
+                  <tr>                    
+                    <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
+                    <td><%= link_to truncate(poll.title, length: 50), poll_path(poll) %></td>
                     <td><%= poll.vote_all %></td>
                     <td><%= poll.view_all %></td>
-                    <td><span data-livestamp="<%= poll.created_at.to_i %>"></span></td>
+                    <td><span data-livestamp="<%= poll.updated_at.to_i %>"></span></td>
                   </tr>
                   <% end %>
                 </tbody>
@@ -192,19 +194,21 @@
               <table class="table" style="margin-bottom: 0px;">
                 <thead>
                   <tr>
+                    <th>Creator</th>
                     <th>Title</th>
                     <th>Vote All</th>
                     <th>View All</th>
-                    <th>Created at</th>
+                    <th>Updated at</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% @poll_popular_list.each do |poll| %>
                   <tr>
-                    <td><%= link_to poll.title, poll_path(poll) %></td>
+                    <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" class="img img-circle" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
+                    <td><%= link_to truncate(poll.title, length: 50), poll_path(poll) %></td>
                     <td><%= poll.vote_all %></td>
                     <td><%= poll.view_all %></td>
-                    <td><span data-livestamp="<%= poll.created_at.to_i %>"></span></td>
+                    <td><span data-livestamp="<%= poll.updated_at.to_i %>"></span></td>
                   </tr>
                   <% end %>
                 </tbody>

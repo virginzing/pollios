@@ -30,6 +30,10 @@ class PollOfGroup
     @poll_of_group_company ||= poll_of_group_company
   end
 
+  def get_questionnaire_of_group_company
+    @questionnaire_of_group_company ||= questionnaire_of_group_company
+  end
+
   def my_vote_questionnaire_ids
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
@@ -56,7 +60,12 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.unscoped.order("polls.created_at DESC").eager_load(:groups, :member).where("poll_groups.group_id IN (?)", @group.map(&:id))
+    @query = Poll.unscoped.order("polls.created_at DESC").eager_load(:groups, :member).where("poll_groups.group_id IN (?) AND polls.series = 'f'", @group.map(&:id))
+    @query
+  end
+
+  def questionnaire_of_group_company
+    @query = PollSeries.joins(:poll_series_group).unscoped.order("poll_series.created_at DESC").where("poll_series.group_id IN (?)", @group.map(&:id))
     @query
   end
 

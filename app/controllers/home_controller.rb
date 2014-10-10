@@ -11,12 +11,22 @@ class HomeController < ApplicationController
       @questionnaire = PollSeries.where(member_id: current_member.id).last
       render 'home/dashboard_brand'
     else
+      @init_poll ||= PollOfGroup.new(current_member, current_member.company.groups, options_params)
+      @poll_latest_list = @init_poll.get_poll_of_group_company.limit(5)
+
+      @poll_popular_list = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5)
       render 'home/dashboard_company'
     end
   end
   
   def index
     render layout: 'homepage'
+  end
+
+  private
+
+  def options_params
+    params.permit(:next_cursor, :type, :member_id, :since_id, :pull_request)
   end
 
 end

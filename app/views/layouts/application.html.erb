@@ -327,116 +327,127 @@
   <!-- Full Calendar -->
   <!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
   <script>
-    $.bread_crumb = $('#ribbon ol.breadcrumb');
-    dropZonePicture();
-    dropZonePhotoEachGroup();
-    dropZoneCoverEachGroup();
-    function drawBreadCrumb() {
-      var nav_elems = $('nav li.active > a'), count = nav_elems.length;
-      //console.log("breadcrumb")
-      $.bread_crumb.empty();
-      $.bread_crumb.append($("<li>Home</li>"));
-      nav_elems.each(function() {
-        $.bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text())));
-        // update title when breadcrumb is finished...
-        if (!--count) document.title = $.bread_crumb.find("li:last-child").text();
-      });
-    }
-    // /\B#([a-zA-Z0-9ก-๙_]+)/
-    $('#textarea3').textcomplete([
-      { // mention strategy
+  $.bread_crumb = $('#ribbon ol.breadcrumb');
+  dropZonePicture();
+  dropZonePhotoEachGroup();
+  dropZoneCoverEachGroup();
+
+  function drawBreadCrumb() {
+          var nav_elems = $('nav li.active > a'),
+              count = nav_elems.length;
+          //console.log("breadcrumb")
+          $.bread_crumb.empty();
+          $.bread_crumb.append($("<li>Home</li>"));
+          nav_elems.each(function() {
+              $.bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text())));
+              // update title when breadcrumb is finished...
+              if (!--count) document.title = $.bread_crumb.find("li:last-child").text();
+          });
+      }
+      // /\B#([a-zA-Z0-9ก-๙_]+)/
+  $('#textarea3').textcomplete([{ // mention strategy
       match: /(^|\s)#([a-zA-Z0-9ก-๙_぀-ゟ゠-ヿ]{1,})$/,
-      search: function (term, callback) {
-      $.getJSON('/search_autocmp_tags.json', { q: term })
-      .done(function (resp) { callback(resp); })
-      .fail(function ()     { callback([]);   });
+      search: function(term, callback) {
+          $.getJSON('/search_autocmp_tags.json', {
+                  q: term
+              })
+              .done(function(resp) {
+                  callback(resp);
+              })
+              .fail(function() {
+                  callback([]);
+              });
       },
-      replace: function (value) {
-      return ' #' + value + " ";
+      replace: function(value) {
+          return ' #' + value + " ";
       }
-      }
-      ]).overlay([
-      {
+  }]).overlay([{
       match: /(^|\s)#([a-zA-Z0-9ก-๙_぀-ゟ゠-ヿ]+)/g,
       css: {
-      'background-color': '#d8dfea'
+          'background-color': '#d8dfea'
       }
-      }
-    ]);
-  function smoothScroll () {
-  $(function () {
-  $.sr
-  });
+  }]);
+
+  function smoothScroll() {
+      $(function() {
+          $.sr
+      });
   }
   $(document).ready(function() {
-  $('.progress .progress-bar').progressbar({
-  display_text: 'center'
+      $('.progress .progress-bar').progressbar({
+          display_text: 'center'
+      });
   });
-  });
-    $(document).on('page:change', function() {
+  $(document).on('page:change', function() {
       // DO NOT REMOVE : GLOBAL FUNCTIONS!
       pageSetUp();
       drawBreadCrumb();
       dataTable();
-  validateMemberProfile();
-  
-      var searchFunc = function (term, callback) {
-      $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
-      .done(function (resp) {
-      callback(resp); // `resp` must be an Array
-      })
-      .fail(function () {
-      callback([]); // Callback must be invoked even if something went wrong.
-      });
+      validateMemberProfile();
+
+      $("[data-toggle=tooltip]").tooltip();;
+
+      var searchFunc = function(term, callback) {
+          $.getJSON('/search_autocmp_tags.json', {
+                  search: "nuttapon"
+              })
+              .done(function(resp) {
+                  callback(resp); // `resp` must be an Array
+              })
+              .fail(function() {
+                  callback([]); // Callback must be invoked even if something went wrong.
+              });
       };
-    
+
       /*
-      * PAGE RELATED SCRIPTS
-      */
+       * PAGE RELATED SCRIPTS
+       */
       $(".js-status-update a").click(function() {
-        var selText = $(this).text();
-        var $this = $(this);
-        $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
-        $this.parents('.dropdown-menu').find('li').removeClass('active');
-        $this.parent().addClass('active');
+          var selText = $(this).text();
+          var $this = $(this);
+          $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
+          $this.parents('.dropdown-menu').find('li').removeClass('active');
+          $this.parent().addClass('active');
       });
       /*
-      * TODO: add a way to add more todo's to list
-      */
+       * TODO: add a way to add more todo's to list
+       */
       // initialize sortable
       $(function() {
-        $("#sortable1, #sortable2").sortable({
-          handle : '.handle',
-          connectWith : ".todo",
-          update : countTasks
-        }).disableSelection();
+          $("#sortable1, #sortable2").sortable({
+              handle: '.handle',
+              connectWith: ".todo",
+              update: countTasks
+          }).disableSelection();
       });
       // check and uncheck
       $('.todo .checkbox > input[type="checkbox"]').click(function() {
-        var $this = $(this).parent().parent().parent();
-        if ($(this).prop('checked')) {
-          $this.addClass("complete");
-          // remove this if you want to undo a check list once checked
-          //$(this).attr("disabled", true);
-          $(this).parent().hide();
-          // once clicked - add class, copy to memory then remove and add to sortable3
-          $this.slideUp(500, function() {
-            $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
-            $this.remove();
-            countTasks();
-          });
-        } else {
-          // insert undo code here...
-        }
+          var $this = $(this).parent().parent().parent();
+          if ($(this).prop('checked')) {
+              $this.addClass("complete");
+              // remove this if you want to undo a check list once checked
+              //$(this).attr("disabled", true);
+              $(this).parent().hide();
+              // once clicked - add class, copy to memory then remove and add to sortable3
+              $this.slideUp(500, function() {
+                  $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
+                  $this.remove();
+                  countTasks();
+              });
+          } else {
+              // insert undo code here...
+          }
       })
+
       function countTasks() {
-        $('.todo-group-title').each(function() {
-          var $this = $(this);
-          $this.find(".num-of-tasks").text($this.next().find("li").size());
-        });
+          $('.todo-group-title').each(function() {
+              var $this = $(this);
+              $this.find(".num-of-tasks").text($this.next().find("li").size());
+          });
       }
-    });
+  });
   </script>
+
   <!-- Your GOOGLE ANALYTICS CODE Below -->
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
