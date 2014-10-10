@@ -5,7 +5,7 @@ if @current_member
   json.response_status "OK"
   json.your_request do
     json.array! @your_request do |member|
-      json.partial! 'response_helper/member/short_info', member: member
+      json.partial! 'response_helper/member/short_info_feed', member: member
       json.status @is_your_request[count_your_request]
       count_your_request += 1
     end
@@ -13,7 +13,7 @@ if @current_member
 
   json.friend_request do
     json.array! @friend_request do |member|
-      json.partial! 'response_helper/member/short_info', member: member
+      json.partial! 'response_helper/member/short_info_feed', member: member
       json.status @is_friend_request[count_friend_request]
       count_friend_request += 1
     end

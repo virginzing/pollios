@@ -255,7 +255,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_username
-    username.presence || ""
+    username.present? ? username : ""
   end
 
   def get_cover_image
@@ -665,7 +665,8 @@ class Member < ActiveRecord::Base
 
   def self.cached_member(member)
     Rails.cache.fetch(member) do
-      member.as_json
+      # member.as_json
+      MemberInfoFeedSerializer.new(member).as_json()
     end
   end
 

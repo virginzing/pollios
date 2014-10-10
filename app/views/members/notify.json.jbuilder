@@ -2,7 +2,7 @@ if @notify
   json.response_status "OK"
   json.notify @notify do |notify|
     json.sender do
-      json.partial! 'response_helper/member/short_info', member: notify.sender
+      json.partial! 'response_helper/member/short_info_feed', member: notify.sender
     end
     json.message notify.message
     json.custom_properties notify.custom_properties

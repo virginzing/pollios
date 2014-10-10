@@ -2,12 +2,12 @@ if @your_request && @friend_request
   json.response_status "OK"
   json.your_request do
     json.array! @your_request.citizen do |member|
-      json.partial! 'response_helper/member/short_info', member: member
+      json.partial! 'response_helper/member/short_info_feed', member: member
     end
   end
   json.friend_request do
     json.array! @friend_request.citizen do |member|
-      json.partial! 'response_helper/member/short_info', member: member
+      json.partial! 'response_helper/member/short_info_feed', member: member
     end
   end
 else
