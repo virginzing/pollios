@@ -242,6 +242,14 @@ class CompaniesController < ApplicationController
     # puts "#{@member_in_group.map(&:id)}"
     query = Member.searchable_member(params[:q]).without_member_type(:company)
     @members = query
+
+    @member_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
+
+  end
+
+  def search_member
+    query = Member.searchable_member(params[:q]).without_member_type(:company)
+    @members = query
   end
 
   def add_user_to_group

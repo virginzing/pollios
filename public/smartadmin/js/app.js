@@ -1694,6 +1694,12 @@ function dataTable() {
 		responsive: true,
 		order: [[0, 'desc']]
 	});
+	$('#list_members_in_company').dataTable({
+		retrieve: true,
+		iDisplayLength: 10,
+		responsive: true,
+		order: [[0, 'desc']]
+	});
 	$('#invite_codes').dataTable({
 		retrieve: true,
 		iDisplayLength: 25,
