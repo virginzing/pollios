@@ -30,9 +30,14 @@ dl.dl-horizontal {
   text-align: center;
 }
 
-.ezdz-dropzone {
+/*.ezdz-dropzone {
   width: 100% !important;
+}*/
+
+.new_group > .ezdz-dropzone {
+  width: 100%;
 }
+
 table.questionnaire th.header-questionnaire {
   text-align: center;
   font-size: 16px;

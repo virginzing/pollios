@@ -92,7 +92,7 @@ class Group < ActiveRecord::Base
       GroupStats.create_group_stats(@group)
 
       if @group.public
-        Activity.create_activity_group(member, @group, 'Join')
+        Activity.create_activity_group(member, @group, 'Create')
       end
       
       Rails.cache.delete([member_id, 'group_active'])

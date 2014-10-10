@@ -193,6 +193,16 @@ class Activity
         type: TYPE[:group],
         activity_at: Time.zone.now.to_i
       }
+    elsif @action == ACTION[:create]
+      {
+        group: {
+          id: @group.id,
+          name: @group.name
+        },
+        action: ACTION[:create],
+        type: TYPE[:group],
+        activity_at: Time.zone.now.to_i
+      }
     end
   end
 

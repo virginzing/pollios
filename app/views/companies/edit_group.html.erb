@@ -1,103 +1,111 @@
 <div class="well">
-<div class="row">
-  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-    <h1 class="page-title txt-color-blueDark page-well-header">
-        <%= image_tag(@group.photo_group.url(:thumbnail), size: '50x50') %> <%= link_to @group.name + ' Group', company_group_detail_path(@group), id: 'header-link'%> > Edit
-    </h1>
+  <div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+      <h1 class="page-title txt-color-blueDark page-well-header">
+      <%= image_tag(@group.photo_group.url(:thumbnail), size: '50x50') %> <%= link_to @group.name + ' Group', company_group_detail_path(@group), id: 'header-link'%> > Edit
+      </h1>
+    </div>
   </div>
 </div>
-</div>
-
 <div class="well well-sm">
-
   <div class="row profile-account">
-     <div class="col-md-3">
-        <ul class="ver-inline-menu tabbable margin-bottom-10">
-           <li class="active">
-              <a data-toggle="tab" href="#tab_5-1">
-              <i class="fa fa-cog"></i> 
-              Group info
-              </a> 
-              <span class="after"></span>                                    
-           </li>
-           <li class=""><a data-toggle="tab" href="#tab_5-2"><i class="fa fa-picture-o"></i> Change Photo</a></li>
-        </ul>
-     </div>
-
-     <div class="col-md-9">
-        <div class="tab-content">
-           <div id="tab_5-1" class="tab-pane active">
-              <form role="form" action="<%= company_update_group_path %>" class="smart-form" method="post" id="group_profile">
-
-                <fieldset>
-                  <section>
-                    <label class="label">Group Name</label>
-                    <label class="input">
-                      <input type="hidden" name="group_id" value="<%= @group.id %>">
-                      <input type="text" name="group[name]" value="<%= @group.name %>" data-parsley-required="true">
-                    </label>
-                    <div class="note">
-                      <strong>Note</strong> Group name is show in app Pollios.
-                    </div>
-                  </section>
-
-                  <section>
-                    <label class="label">Description</label>
-                    <label class="textarea">                    
-                      <textarea rows="3" class="custom-scroll" name="group[description]"><%= @group.description %></textarea> 
-                    </label>
-                    <div class="note">
-                      <strong>Note</strong> description is show in app Pollios.
-                    </div>
-                  </section>
-
-                </fieldset>
-
-                <footer>
-                  <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >  
-                    Submit
-                  </button>
-                </footer>
-
-              </form>
-
-           </div>
-
-           <div id="tab_5-2" class="tab-pane">
-
-             <div class="alert alert-info alert-block">
-                <a class="close" data-dismiss="alert" href="#">×</a>
-                <h4 class="alert-heading">Group Photo Upload</h4>
-                Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-             </div>
-
-            <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
-              <div class="form-group dropzone-photo">
-                <input type="hidden" name="group_id" value="<%= @group.id %>">
-                <input type="file" class="default" name="group[photo_group]" id="drop_photo_group" accept="image/png, image/jpeg, image/gif"/>
-              </div>
-
-              <footer>
-                <% if @group.photo_group.present? %>
-                <%= link_to 'Delete', delete_photo_group_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
-                <% end %>
-                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
-                  Submit
-                </button>
-              </footer>
-            </form>
-
-           </div>
+    <div class="col-md-3">
+      <ul class="ver-inline-menu tabbable margin-bottom-10">
+        <li class="active">
+          <a data-toggle="tab" href="#tab_5-1">
+            <i class="fa fa-cog"></i>
+            Group info
+          </a>
+          <span class="after"></span>
+        </li>
+        <li class=""><a data-toggle="tab" href="#tab_5-2"><i class="fa fa-picture-o"></i> Change Photo</a></li>
+        <li class=""><a data-toggle="tab" href="#tab_5-3"><i class="fa fa-picture-o"></i> Change Cover</a></li>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <div class="tab-content">
+        <div id="tab_5-1" class="tab-pane active">
+          <form role="form" action="<%= company_update_group_path %>" class="smart-form" method="post" id="group_profile">
+            <fieldset>
+              <section>
+                <label class="label">Group Name</label>
+                <label class="input">
+                  <input type="hidden" name="group_id" value="<%= @group.id %>">
+                  <input type="text" name="group[name]" value="<%= @group.name %>" data-parsley-required="true">
+                </label>
+                <div class="note">
+                  <strong>Note</strong> Group name is show in app Pollios.
+                </div>
+              </section>
+              <section>
+                <label class="label">Description</label>
+                <label class="textarea">
+                  <textarea rows="3" class="custom-scroll" name="group[description]"><%= @group.description %></textarea>
+                </label>
+                <div class="note">
+                  <strong>Note</strong> description is show in app Pollios.
+                </div>
+              </section>
+            </fieldset>
+            <footer>
+              <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+              Submit
+              </button>
+            </footer>
+          </form>
         </div>
-     </div>
-     <!--end col-md-9-->                                   
+        <div id="tab_5-2" class="tab-pane">
+          <div class="alert alert-info alert-block">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">Group Photo Upload</h4>
+            Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+          </div>
+          <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+            <div class="form-group dropzone-photo">
+              <input type="hidden" name="group_id" value="<%= @group.id %>">
+              <input type="file" class="default" name="group[photo_group]" id="drop_photo_group" accept="image/png, image/jpeg, image/gif"/>
+            </div>
+            <footer>
+              <% if @group.photo_group.present? %>
+              <%= link_to 'Delete', delete_photo_group_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+              <% end %>
+              <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+              Submit
+              </button>
+            </footer>
+          </form>
+        </div>
+        <div id="tab_5-3" class="tab-pane">
+          <div class="alert alert-info alert-block">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <h4 class="alert-heading">Group Cover Upload</h4>
+            Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+          </div>
+          <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+            <div class="form-group dropzone-photo">
+              <input type="hidden" name="group_id" value="<%= @group.id %>">
+              <input type="file" class="default" name="group[cover]" id="drop_cover_group" accept="image/png, image/jpeg, image/gif"/>
+            </div>
+            <footer>
+              <% if @group.cover.present? %>
+              <%= link_to 'Delete', delete_photo_group_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+              <% end %>
+              <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+              Submit
+              </button>
+            </footer>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+    <!--end col-md-9-->
   </div>
-
 </div>
-
 <script>
-  $("#group_profile").parsley();
-  $(document).ready(function() {
-    dropZonePhotoGroup("<%= @group.photo_group.url(:thumbnail).presence || "" %>");
-  });
+$("#group_profile").parsley();
+$(document).ready(function() {
+  dropZonePhotoGroup("<%= @group.photo_group.url(:thumbnail).presence || "" %>");
+  dropZoneCoverGroup("<%= @group.cover.url(:thumbnail).presence || "" %>");
+});
 </script>
