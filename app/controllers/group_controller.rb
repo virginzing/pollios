@@ -21,15 +21,8 @@ class GroupController < ApplicationController
   end
 
   def edit_group
-    respond_to do |wants|
-      if @group.update(edit_group_params)
-        @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
-        
-        wants.json { render json: Hash["response_status" => "OK"] }
-      else
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => @group.errors.full_messages] }
-      end
-    end
+    @group.update!(edit_group_params)
+    @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
   end
 
   def add_friend_to_group
