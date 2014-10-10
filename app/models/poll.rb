@@ -679,7 +679,7 @@ class Poll < ActiveRecord::Base
   end
 
   def get_require_info
-    require_info.presence
+    require_info.present? ? true : false
   end
 
   def self.filter_type(query, type)
