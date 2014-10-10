@@ -66,14 +66,15 @@
             <thead>
               <tr>
                 <th width="50">#</th>
-                <th width="350">Title</th>
+                <th width="300">Member</th>
+                <th width="200">Title</th>
                 <th>Vote All</th>
                 <th>View All</th>
                 <th width="150">Expire At</th>
                 <th width="150">Created At</th>
                 <th width="150">In Group</th>
                 <th>Qrcode</th>
-                <th>Re-Generate</th>
+<!--                 <th>Re-Generate</th> -->
                 <th>Action</th>
               </tr>
             </thead>
@@ -81,6 +82,10 @@
               <% @polls.each do |poll| %>
                 <tr>
                   <td><%= poll.id %></td>
+                  <td><div class="profile">
+                          <img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user">
+                          <span class="fullname"> <a href="javascript:void(0);"><%= poll.member.fullname %></a></span>
+                        </div></td>
                   <td><%= link_to poll.title, company_polls_detail_path(poll) %></td>
                   <td><%= poll.vote_all %></td>
                   <td><%= poll.view_all %></td>
@@ -94,12 +99,12 @@
                     </ol>
                   </td>
                   <td><button data-toggle="modal" class="btn btn-primary" data-target="#myModal" onclick="showIFrame('/poll/<%= poll.id %>/qrcode.png', '<%= poll.title %>')">Show</button></td>
-                  <td>
+<!--                   <td>
                     <%= form_tag '/poll/new_generate_qrcode' do %>
                       <%= hidden_field_tag 'id', poll.id %>
                       <%= submit_tag 'Re new', class: 'btn btn-primary' %>
                     <% end %>
-                  </td>
+                  </td> -->
                   <td><%= link_to '<i class="fa fa-trash-o"><i>'.html_safe , company_delete_poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' }, class: '' %></td>
                 </tr>
               <% end %>

@@ -199,10 +199,6 @@ class CompaniesController < ApplicationController
     end  
   end
 
-  def edit_group
-    
-  end
-
   def update_group
     respond_to do |format|
       group = @group
@@ -326,7 +322,7 @@ class CompaniesController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :photo_group)  
+    params.require(:group).permit(:name, :description, :photo_group, :cover)  
   end
 
   def options_params

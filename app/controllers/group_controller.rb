@@ -1,8 +1,8 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group]
+  before_action :set_current_member, only: [:edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_group, only: [:edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group]
   
   before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
@@ -18,6 +18,18 @@ class GroupController < ApplicationController
 
   def build_group
     @group =  Group.build_group(@current_member, group_params)
+  end
+
+  def edit_group
+    respond_to do |wants|
+      if @group.update(edit_group_params)
+        @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+        
+        wants.json { render json: Hash["response_status" => "OK"] }
+      else
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => @group.errors.full_messages] }
+      end
+    end
   end
 
   def add_friend_to_group
@@ -138,5 +150,9 @@ class GroupController < ApplicationController
 
   def group_params
     params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public, :admin, :cover)
+  end
+
+  def edit_group_params
+    params.permit(:name, :description, :photo_group, :cover)
   end
 end

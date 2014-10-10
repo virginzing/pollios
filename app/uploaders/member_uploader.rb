@@ -16,6 +16,11 @@ class MemberUploader < CarrierWave::Uploader::Base
   version :cover do
     process :eager => true
     process :resize_to_fit => [640]
+  end
+
+  version :thumbnail_small do
+    process :eager => true
+    process :resize_to_fill => [30, 30]
   end    
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
