@@ -104,6 +104,8 @@ class Poll < ActiveRecord::Base
     Rails.cache.delete([self.class.name, id])
     self.member.flush_cache_my_poll
     self.member.flush_cache_my_watch
+    self.member.flush_cache_my_vote
+    self.member.flush_cache_my_vote_all
   end
 
   def cached_choices

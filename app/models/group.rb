@@ -5,6 +5,8 @@ class Group < ActiveRecord::Base
   has_many :members, through: :group_members, source: :member
 
   has_many :group_members_active, -> { where("group_members.active = 't'") },through: :group_members, source: :member
+
+  has_many :get_admin_group, -> { where("group_members.active = 't' AND is_master = 't'") },through: :group_members, source: :member
   
   has_many :poll_groups, dependent: :destroy
   has_many :polls, through: :poll_groups, source: :poll

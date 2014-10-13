@@ -6,24 +6,24 @@ class PollsController < ApplicationController
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new]
 
 
-  before_action :set_current_member, only: [:close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag, 
-                :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
+  before_action :set_current_member, only: [:close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+                                            :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
   before_action :set_current_guest, only: [:guest_poll]
-    
+
   before_action :history_voted_viewed_guest, only: [:guest_poll]
-  
+
   before_action :set_poll, only: [:close_comment, :open_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
-  
-  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote, 
-                :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
+
+  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote,
+                                       :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
 
   before_action :get_your_group, only: [:detail, :create_poll]
-  
+
   # before_action :restrict_access, only: [:overall_timeline]
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
   before_action :load_resource_poll_feed, only: [:overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
-                :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
+                                                 :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -72,8 +72,8 @@ class PollsController < ApplicationController
     @poll.update!(qrcode_key: SecureRandom.hex(5))
     flash[:success] = "Re-Generate QRCode"
     respond_to do |wants|
-       wants.html { redirect_to polls_path }
-     end
+      wants.html { redirect_to polls_path }
+    end
   end
 
   def scan_qrcode
@@ -117,7 +117,7 @@ class PollsController < ApplicationController
       new_poll_binary_params = @build_poll.poll_binary_params
       @poll = Poll.new(new_poll_binary_params)
       @poll.choice_count = @build_poll.list_of_choice.count
-      
+
       if @poll.save
 
         @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
@@ -137,9 +137,8 @@ class PollsController < ApplicationController
         unless @poll.qr_only
           current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
         end
-        
+
         PollStats.create_poll_stats(@poll)
-        # Rails.cache.delete([current_member.id, 'poll_member'])
         current_member.flush_cache_about_poll
         Activity.create_activity_poll(current_member, @poll, 'Create')
 
@@ -155,18 +154,44 @@ class PollsController < ApplicationController
   def delete_poll
     Poll.transaction do
       begin
-        if @poll.member_id == @current_member.id
-          @poll.destroy
-          if @poll.in_group_ids != 0
-            Group.where("id IN (?)", @poll.in_group_ids.split(",")).collect {|group| group.decrement!(:poll_count)}
+        @member_id = @current_member.id
+
+        if @poll.in_group
+          if params[:group_id].present? ## delete poll in some group.
+            raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
+            if @poll.in_group_ids.split(",").count > 1
+              delete_poll_in_more_group
+            else
+              delete_poll_in_one_group
+            end
+          else
+            delete_my_poll
           end
-          @current_member.flush_cache_about_poll
-          DeletePoll.create_log(@poll)
+        else
+          delete_my_poll
         end
-      rescue => e
-        @error_message = e.message
       end
     end
+  end
+
+  def delete_poll_in_more_group
+    find_poll_group = PollGroup.find_by(poll_id: @poll.id, group_id: params[:group_id])
+    find_poll_group.destroy if find_poll_group.present?
+  end
+
+  def delete_poll_in_one_group
+    find_poll = PollGroup.find_by(poll_id: @poll.id, group_id: params[:group_id])
+    if find_poll_group.present?
+      find_poll_group.destroy
+      @poll.destroy
+      DeletePoll.create_log(@poll)
+    end
+  end
+
+  def delete_my_poll
+    raise ExceptionHandler::Forbidden, "You're not creator poll" unless @poll.member_id == @member_id
+    @poll.destroy
+    DeletePoll.create_log(@poll)
   end
 
   # def series
@@ -396,12 +421,12 @@ class PollsController < ApplicationController
     puts "query_poll => #{query_poll}"
     if params[:next_cursor]
       @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-                          .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
-                          .order("poll_members.created_at desc")
+      .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
+      .order("poll_members.created_at desc")
     else
       @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-                          .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
-                          .order("poll_members.created_at desc")
+      .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
+      .order("poll_members.created_at desc")
     end
   end
 
@@ -503,10 +528,10 @@ class PollsController < ApplicationController
     raise_exception_without_group
 
     @comments = Comment.joins(:member).select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
-                .includes(:mentions)
-                .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
-                .group("comments.id, members.fullname, members.avatar")
-                .paginate(page: comment_params[:next_cursor])
+    .includes(:mentions)
+    .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
+    .group("comments.id, members.fullname, members.avatar")
+    .paginate(page: comment_params[:next_cursor])
     @new_comment_sort ||= @comments.sort! { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
@@ -542,6 +567,14 @@ class PollsController < ApplicationController
 
   def set_poll
     @poll = Poll.cached_find(params[:id])
+  end
+
+  def set_group
+    begin
+      @group = Group.find(params[:group_id])
+      raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+      @group
+    end
   end
 
   def comment_params
