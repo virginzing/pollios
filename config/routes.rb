@@ -171,6 +171,7 @@ Pollios::Application.routes.draw do
     get ':id/comments',       to: 'polls#load_comment'
     delete ':id/comments/:comment_id/delete',  to: 'polls#delete_comment'
     delete ':id/delete',           to: 'polls#delete_poll'
+    delete ':id/delete_share',     to: 'polls#delete_poll_share'
     get 'public_timeline',            to: 'polls#public_poll'
     get 'friend_following_timeline',  to: 'polls#friend_following_poll'
     get 'overall_timeline',           to: 'polls#overall_timeline'
