@@ -12,7 +12,7 @@ class Authentication
   end
 
   def web_login
-    @params[:web_login]
+    @params["web_login"]
   end
 
   def approve_brand
@@ -121,6 +121,10 @@ class Authentication
     end
 
     if @member
+      if web_login.present?
+        update_new_token unless @member.auth_token.present?
+      end
+
       @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
         provider.name = @params["provider"]
         provider.pid = pid
@@ -144,6 +148,10 @@ class Authentication
     @member
   end
 
+  def update_new_token
+    @member.update!(auth_token: generate_auth_token)
+  end
+
   def follow_pollios
     find_pollios = Member.find_by_email("pollios@gmail.com")
     if find_pollios.present?
@@ -154,8 +162,8 @@ class Authentication
 
   def add_new_group_company
     company = Company.create!(name: name, address: address, member_id: member.id)
-    group = Group.create(name: name, authorize_invite: :master, public: false, leave_group: false)
-    GroupCompany.create!(group_id: group.id, company_id: company.id)
+    group = Group.create(name: name, authorize_invite: :master, public: false, leave_group: false,)
+    GroupCompany.create!(group_id: group.id, company_id: company.id, main_group: true)
   end
 
   def update_member(member)

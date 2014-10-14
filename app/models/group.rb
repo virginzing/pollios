@@ -1,4 +1,5 @@
 class Group < ActiveRecord::Base
+  resourcify
   include GroupHelper
 
   has_many :group_members, dependent: :destroy
@@ -7,7 +8,7 @@ class Group < ActiveRecord::Base
   has_many :group_members_active, -> { where("group_members.active = 't'") },through: :group_members, source: :member
 
   has_many :get_admin_group, -> { where("group_members.active = 't' AND is_master = 't'") },through: :group_members, source: :member
-  
+
   has_many :poll_groups, dependent: :destroy
   has_many :polls, through: :poll_groups, source: :poll
 
@@ -25,7 +26,7 @@ class Group < ActiveRecord::Base
   has_many :invite_codes, dependent: :destroy
 
   has_one :group_company, dependent: :destroy
-  
+
   validates :name, presence: true
 
   mount_uploader :photo_group, PhotoGroupUploader
@@ -96,9 +97,9 @@ class Group < ActiveRecord::Base
       if @group.public
         Activity.create_activity_group(member, @group, 'Create')
       end
-      
+
       Rails.cache.delete([member_id, 'group_active'])
-      
+
       add_friend_to_group(@group.id, member, friend_id) if friend_id
     end
     @group
@@ -106,7 +107,7 @@ class Group < ActiveRecord::Base
 
   def self.add_friend_to_group(group_id, member, friend)
     member_id = member.id
-    
+
     list_friend = friend.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group_id)
     find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
@@ -139,7 +140,7 @@ class Group < ActiveRecord::Base
       end
     end
   end
-  
+
   def kick_member_out_group(kicker, friend_id)
     begin
       raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
@@ -158,7 +159,33 @@ class Group < ActiveRecord::Base
     begin
       raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
       if find_member_in_group = group_members.find_by(member_id: friend_id)
-        find_member_in_group.update!(is_master: admin_status)
+        find_group = find_member_in_group.group
+
+        if find_group.is_company? ## Is it group of company?
+          find_member = find_member_in_group.member
+
+          find_role_member = find_member.roles.first
+
+          if find_role_member.present?
+            find_exist_role_member = find_role_member.resource.get_company
+          end
+
+          if find_role_member.nil? || (find_exist_role_member.id == find_group.get_company.id)
+            find_member_in_group.update!(is_master: admin_status)
+
+            if admin_status
+              find_member.add_role :group_admin, find_group
+            else
+              find_member.remove_role :group_admin, find_group
+            end
+          else
+            raise ExceptionHandler::Forbidden, "You have already exist admin of #{find_exist_role_member.name} Company"
+          end
+
+        else
+          find_member_in_group.update!(is_master: admin_status)
+        end
+
       else
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end
@@ -174,7 +201,7 @@ class Group < ActiveRecord::Base
 
   def get_poll_not_vote_count
     poll_groups_ids = Poll.available.joins(:groups).where("poll_groups.group_id = #{self.id}").uniq.map(&:id)
-    my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] } 
+    my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
     # puts "#{poll_groups_ids}"
     # puts "#{my_vote_poll_ids}"
     return (poll_groups_ids - my_vote_poll_ids).count
@@ -193,15 +220,23 @@ class Group < ActiveRecord::Base
     poll_groups.map(&:poll_id).uniq.count
   end
 
+  def is_company?
+    group_company.present?
+  end
+
+  def get_company
+    group_company.company
+  end
+
   def as_json options={}
-   {
+    {
       id: id,
       name: name,
       photo: get_photo_group,
       public: public,
       description: get_description,
       leave_group: leave_group
-   }
+    }
   end
 
 end

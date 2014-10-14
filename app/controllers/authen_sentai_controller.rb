@@ -53,13 +53,17 @@ class AuthenSentaiController < ApplicationController
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login]]))
 			if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-        if @auth.activate_account? || @auth.approve_brand || @auth.approve_company
+        puts "@auth.activate_account? => #{@auth.activate_account?}"
+        puts "member => #{member}"
+        if @auth.activate_account?
           @login = true
 
-          if params[:web_login]
+          if params[:web_login].present?
             if sessions_params[:remember_me]
+              puts "this case 1"
               cookies.permanent[:auth_token] = member.auth_token
             else
+              puts "this case 2"
               cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
             end
           end
@@ -208,7 +212,7 @@ class AuthenSentaiController < ApplicationController
   private
 
 	  def sessions_params
-	  	params.permit(:authen, :password, :device_token, :remember_me)
+	  	params.permit(:authen, :password, :device_token, :remember_me, :web_login)
 	  end
 
     def forgotpassword_params

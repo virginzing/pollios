@@ -1,5 +1,6 @@
 class Member < ActiveRecord::Base
-
+  rolify
+  
   serialize :interests, Array
   # has_paper_trail
   include PgSearch

@@ -648,7 +648,8 @@ CREATE TABLE group_companies (
     group_id integer,
     company_id integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    main_group boolean DEFAULT false
 );
 
 
@@ -1246,6 +1247,16 @@ ALTER SEQUENCE members_id_seq OWNED BY members.id;
 
 
 --
+-- Name: members_roles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE members_roles (
+    member_id integer,
+    role_id integer
+);
+
+
+--
 -- Name: mentions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1764,6 +1775,39 @@ CREATE SEQUENCE request_codes_id_seq
 --
 
 ALTER SEQUENCE request_codes_id_seq OWNED BY request_codes.id;
+
+
+--
+-- Name: roles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE roles (
+    id integer NOT NULL,
+    name character varying(255),
+    resource_id integer,
+    resource_type character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
 
 
 --
@@ -2305,6 +2349,13 @@ ALTER TABLE ONLY request_codes ALTER COLUMN id SET DEFAULT nextval('request_code
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY share_polls ALTER COLUMN id SET DEFAULT nextval('share_polls_id_seq'::regclass);
 
 
@@ -2717,6 +2768,14 @@ ALTER TABLE ONLY recurrings
 
 ALTER TABLE ONLY request_codes
     ADD CONSTRAINT request_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -3174,6 +3233,13 @@ CREATE INDEX index_members_on_username ON members USING btree (username);
 
 
 --
+-- Name: index_members_roles_on_member_id_and_role_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_members_roles_on_member_id_and_role_id ON members_roles USING btree (member_id, role_id);
+
+
+--
 -- Name: index_mentions_on_comment_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3339,6 +3405,20 @@ CREATE INDEX index_recurrings_on_member_id ON recurrings USING btree (member_id)
 --
 
 CREATE INDEX index_request_codes_on_member_id ON request_codes USING btree (member_id);
+
+
+--
+-- Name: index_roles_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_roles_on_name ON roles USING btree (name);
+
+
+--
+-- Name: index_roles_on_name_and_resource_type_and_resource_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_roles_on_name_and_resource_type_and_resource_id ON roles USING btree (name, resource_type, resource_id);
 
 
 --
@@ -3831,3 +3911,7 @@ INSERT INTO schema_migrations (version) VALUES ('20141006082040');
 INSERT INTO schema_migrations (version) VALUES ('20141008051532');
 
 INSERT INTO schema_migrations (version) VALUES ('20141009030211');
+
+INSERT INTO schema_migrations (version) VALUES ('20141014032142');
+
+INSERT INTO schema_migrations (version) VALUES ('20141014041603');

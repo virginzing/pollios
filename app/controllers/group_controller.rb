@@ -103,13 +103,42 @@ class GroupController < ApplicationController
   def group_update
     group_id = group_update_params[:id]
     member_id = group_update_params[:pk]
-    is_master = group_update_params[:value] == "1" ? false : true
+    @admin_status = group_update_params[:value] == "1" ? false : true
 
-    find_group_member = GroupMember.where("member_id = ? AND group_id = ?", member_id, group_id).first
+    #"value"=>"2" is admin
+
+    find_member_in_group = GroupMember.where("member_id = ? AND group_id = ?", member_id, group_id).first
 
     respond_to do |format|
-      if find_group_member.present?
-        find_group_member.update(is_master: is_master)
+      if find_member_in_group.present?
+        find_group = find_member_in_group.group
+
+        if find_group.is_company? ## Is it group of company?
+          find_member = find_member_in_group.member
+
+          find_role_member = find_member.roles.first
+
+          if find_role_member.present?
+            find_exist_role_member = find_role_member.resource.get_company
+          end
+
+          if find_role_member.nil? || (find_exist_role_member.id == find_group.get_company.id)
+            find_member_in_group.update!(is_master: @admin_status)
+
+            if @admin_status
+              find_member.add_role :group_admin, find_group
+            else
+              find_member.remove_role :group_admin, find_group
+            end
+          else
+            # raise ExceptionHandler::Forbidden, "You have already exist admin of #{find_exist_role_member.name} Company"
+            format.json { render text: "You have already exist admin of #{find_exist_role_member.name} Company" , status: :unprocessable_entity }
+          end
+
+        else
+          find_member_in_group.update!(is_master: @admin_status)
+        end
+
         format.json { render json: [
               {value: 1, text: 'Member'},
               {value: 2, text: 'Admin'}

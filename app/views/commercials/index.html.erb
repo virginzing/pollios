@@ -51,7 +51,7 @@
                   <td><%= commercial.get_name %></td>
                   <td><%= commercial.email %></td>
                   <td><span data-livestamp="<%= commercial.created_at.to_i %>"></span></td>
-                  <td><%= link_to 'Login as', login_as_path(email: commercial.email), method: :post %></td>
+                  <td><%= link_to 'edit', '#' %> | <%= link_to 'Login as', login_as_path(email: commercial.email), method: :post %></td>
                 </tr>
               <% end %>
             </tbody>
