@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   include PollHelper
   include PollsHelper
 
+  puts "TEST"
+  
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
   end
