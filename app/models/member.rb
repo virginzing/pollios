@@ -1,5 +1,6 @@
 class Member < ActiveRecord::Base
   rolify
+  rolify :surveyor => 'Class', :after_add => :create_group_surveyor, :after_remove => :remove_group_surveyor
 
   serialize :interests, Array
   # has_paper_trail
@@ -210,6 +211,16 @@ class Member < ActiveRecord::Base
       exclude_fields :avatar
     end
 
+  end
+
+  def create_group_surveyor(role)
+    GroupSurveyor.create!(member_id: self.id, group_id: role.resource_id)
+    # puts "self => #{self}"
+    # puts "role => #{role}"
+  end
+
+  def remove_group_surveyor(role)
+    GroupSurveyor.find_by(member_id: self.id, group_id: role.resource_id).destroy
   end
 
   def get_poll_count

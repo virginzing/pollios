@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail]
-  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
+  before_action :set_group, only: [:add_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -147,6 +147,10 @@ class CompaniesController < ApplicationController
   def new_group
     @group = Group.new
     @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
+  end
+
+  def add_surveyor
+    
   end
 
   def group_detail

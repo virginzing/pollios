@@ -27,6 +27,9 @@ class Group < ActiveRecord::Base
 
   has_one :group_company, dependent: :destroy
 
+  has_many :group_surveyors, dependent: :destroy
+  has_many :surveyor, through: :group_surveyors, source: :member
+  
   validates :name, presence: true
 
   mount_uploader :photo_group, PhotoGroupUploader

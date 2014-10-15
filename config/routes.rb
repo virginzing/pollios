@@ -272,6 +272,8 @@ Pollios::Application.routes.draw do
     post 'download_txt', to: 'companies#download_txt', as: :download_txt
 
     get 'invites/new', to: 'companies#new',  as: :invites_new
+
+    get 'groups/:group_id/add_surveyor',  to: 'companies#add_surveyor', as: :company_add_surveyor    
     
   end
 
