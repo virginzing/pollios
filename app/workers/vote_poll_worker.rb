@@ -34,6 +34,7 @@ class VotePollWorker
       end
 
       @custom_properties = {
+        type: TYPE[:poll],
         poll_id: poll.id,
         series: poll.series
       }
@@ -52,7 +53,6 @@ class VotePollWorker
 
       hash_custom = {
         anonymous: anonymous,
-        type: TYPE[:poll],
         action: ACTION[:vote],
         poll: @poll_serializer_json
       }

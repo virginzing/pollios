@@ -29,7 +29,6 @@ class AddFriendWorker
       }
 
       hash_custom = {
-        type: TYPE[:friend],
         action: action,
         notification_count: @notification_count,
         request_count: @request_count 

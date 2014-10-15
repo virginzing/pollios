@@ -23,7 +23,6 @@ class AddFollowWorker
       }
 
       hash_custom = {
-        type: TYPE[:friend],
         action: action
       }
 

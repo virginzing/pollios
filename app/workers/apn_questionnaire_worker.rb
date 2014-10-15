@@ -27,7 +27,8 @@ class ApnQuestionnaireWorker
 
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
-      @custom_properties = { 
+      @custom_properties = {
+        type: TYPE[:poll], 
         poll_id: @poll_series.id,
         series: true
       }
@@ -44,7 +45,6 @@ class ApnQuestionnaireWorker
 
       find_recipient.each do |member|
         hash_custom = {
-          type: TYPE[:poll_series],
           action: ACTION[:create],
           poll: @poll_series_serializer_json,
           notification_count: hash_list_member_badge[member.id]

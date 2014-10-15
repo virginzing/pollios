@@ -22,6 +22,7 @@ class JoinGroupWorker
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
+        type: TYPE[:group],
         group_id: group.id
       }
 
@@ -37,7 +38,6 @@ class JoinGroupWorker
 
       find_recipient.each do |member_receive|
         hash_custom = {
-          type: TYPE[:group],
           action: ACTION[:join],
           group: group.as_json(),
           notification_count: hash_list_member_badge[member_receive.id]

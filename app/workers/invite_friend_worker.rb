@@ -26,6 +26,7 @@ class InviteFriendWorker
       hash_list_member_request_count ||= @count_notification.hash_list_member_request_count
 
       @custom_properties = {
+        type: TYPE[:group],
         group_id: group.id
       }
 
@@ -41,7 +42,6 @@ class InviteFriendWorker
 
       find_recipient.each do |member|
         hash_custom = {
-          type: TYPE[:group],
           action: ACTION[:invite],
           group: group.as_json(),
           notification_count: hash_list_member_badge[member.id],

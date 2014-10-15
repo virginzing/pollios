@@ -23,7 +23,8 @@ class GroupNotificationWorker
 
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
-      @custom_properties = { 
+      @custom_properties = {
+        type: TYPE[:poll], 
         poll_id: poll.id,
         series: poll.series
       }
@@ -40,8 +41,7 @@ class GroupNotificationWorker
 
       find_recipient.each do |member_receive|
         hash_custom = {
-          group: group.as_json(), 
-          type: TYPE[:poll],
+          group: group.as_json(),
           action: ACTION[:create],
           poll: @poll_serializer_json,
           notification_count: hash_list_member_badge[member_receive.id] 
