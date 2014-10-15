@@ -579,6 +579,7 @@ class Member < ActiveRecord::Base
     if find_group_member
       # find_group_member.group.decrement!(:member_count) if type == "L" && find_group_member.group.member_count > 0 
       find_group_member.destroy
+      self.remove_role :group_admin, find_group_member.group
     end
     cached_flush_active_group
     find_group_member.group
@@ -803,7 +804,8 @@ class Member < ActiveRecord::Base
   def post_poll_in_group(in_group_ids)
     get_list_group_ids = cached_get_group_active.collect{|e| e.id }
     split_group_ids = in_group_ids.split(",").collect{|e| e.to_i }
-    
+
+    return split_group_ids & get_list_group_ids
   end
 
   # def get_history_voted

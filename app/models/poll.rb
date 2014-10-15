@@ -469,7 +469,12 @@ class Poll < ActiveRecord::Base
         end
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
-        # raise ExceptionHandler::Forbidden, "You are not a member of this group" if (member.post_poll_in_group(in_group_ids)  && in_group)
+
+        if (member.post_poll_in_group(in_group_ids).count > 0  && in_group)
+          list_group_id = member.post_poll_in_group(in_group_ids)
+        else
+          raise ExceptionHandler::Forbidden, "You are not a member of this group" 
+        end
 
         if group_id.present?
           @set_public = false
@@ -496,7 +501,7 @@ class Poll < ActiveRecord::Base
             @poll.create_watched(member, @poll.id)
 
             if group_id
-              Group.add_poll(member, @poll, group_id)
+              Group.add_poll(member, @poll, list_group_id)
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
             else
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)

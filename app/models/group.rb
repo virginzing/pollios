@@ -130,7 +130,7 @@ class Group < ActiveRecord::Base
 
 
   def self.add_poll(member, poll, group_id)
-    list_group = group_id.split(",")
+    list_group = group_id
     Group.transaction do
       where(id: list_group).each do |group|
         if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
