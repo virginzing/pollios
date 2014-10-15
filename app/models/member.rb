@@ -1,6 +1,6 @@
 class Member < ActiveRecord::Base
   rolify
-  
+
   serialize :interests, Array
   # has_paper_trail
   include PgSearch
@@ -577,11 +577,11 @@ class Member < ActiveRecord::Base
   def cancel_or_leave_group(group_id, type)
     find_group_member = group_members.where(group_id: group_id).first
     if find_group_member
-      find_group_member.group.decrement!(:member_count) if type == "L" && find_group_member.group.member_count > 0 
+      # find_group_member.group.decrement!(:member_count) if type == "L" && find_group_member.group.member_count > 0 
       find_group_member.destroy
     end
     cached_flush_active_group
-    true
+    find_group_member.group
   end
 
   def delete_group(group_id)
