@@ -10,5 +10,5 @@ if @group.present?
   
 else
   json.response_status "ERROR"
-  json.response_message "Unable..."
+  json.response_message "You are not a admin of this group"
 end

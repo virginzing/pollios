@@ -1,4 +1,4 @@
-class WhichPoll
+class PollType
 
   WHERE = {
     :public => 0,

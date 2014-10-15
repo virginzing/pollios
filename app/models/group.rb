@@ -100,20 +100,21 @@ class Group < ActiveRecord::Base
 
       Rails.cache.delete([member_id, 'group_active'])
 
-      add_friend_to_group(@group.id, member, friend_id) if friend_id
+      add_friend_to_group(@group, member, friend_id) if friend_id
     end
     @group
   end
 
-  def self.add_friend_to_group(group_id, member, friend)
+  def self.add_friend_to_group(group, member, friend)
+    group_id = group.id
     member_id = member.id
 
     list_friend = friend.split(",").collect {|e| e.to_i }
-    check_valid_friend = friend_exist_group(list_friend, group_id)
-    find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
-    master_of_group = find_master_of_group.present? ? find_master_of_group.member_id : false
+    check_valid_friend = friend_exist_group(list_friend, group)
+    # find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
+    find_admin_group = group.get_admin_group.map(&:id)
 
-    if find(group_id).authorize_invite.everyone? || (master_of_group == member_id)
+    if find_admin_group.include?(member_id)
       if check_valid_friend.count > 0
         Member.where(id: check_valid_friend).each do |friend|
           @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
@@ -124,8 +125,8 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.friend_exist_group(list_friend, group_id)
-    return list_friend - find(group_id).group_members.map(&:member_id) if find(group_id).present?
+  def self.friend_exist_group(list_friend, group)
+    return list_friend - group.group_members.map(&:member_id) if group.present?
   end
 
 
