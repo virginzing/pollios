@@ -217,7 +217,12 @@ class Member < ActiveRecord::Base
   end
 
   def create_group_surveyor(role)
-    GroupSurveyor.create!(member_id: self.id, group_id: role.resource_id)
+    GroupSurveyor.where(member_id: self.id, group_id: role.resource_id).first_or_create do |group_surveyor|
+      group_surveyor.member_id = self.id
+      group_surveyor.group_id = role.resource_id
+      group_surveyor.save!
+    end
+    # GroupSurveyor.create!(member_id: self.id, group_id: role.resource_id)
     # puts "self => #{self}"
     # puts "role => #{role}"
   end
