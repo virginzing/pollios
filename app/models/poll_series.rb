@@ -112,12 +112,12 @@ class PollSeries < ActiveRecord::Base
 
   def poll_is_where
     if public
-      Hash["in" => "Public"]
+      WhichPoll.to_hash(WhichPoll::WHERE[:public])
     else
-      if in_group_ids == "0"
-        Hash["in" => "Friends & Following"]
+      if in_group != true
+        WhichPoll.to_hash(WhichPoll::WHERE[:friend_following])
       else
-        Hash["in" => "Group"]
+        WhichPoll.to_hash(WhichPoll::WHERE[:group])
       end
     end
   end

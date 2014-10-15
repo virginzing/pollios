@@ -277,7 +277,7 @@ class OverallTimeline
     if poll_member.in_group
       Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(poll_member.share_poll_of_id) ]
     else
-      Hash["in" => "Friends & Following"]
+      WhichPoll.to_hash(WhichPoll::WHERE[:friend_following])
     end
   end
 

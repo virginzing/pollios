@@ -1,9 +1,9 @@
 class WhichPoll
 
   WHERE = {
-    0 => :public,
-    1 => :friend_and_following,
-    2 => :group
+    :public => 0,
+    :friend_following => 1,
+    :group => 2
   }
 
   def self.to_hash(value = nil)

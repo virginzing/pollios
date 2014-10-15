@@ -800,6 +800,12 @@ class Member < ActiveRecord::Base
     request_codes.first.present?
   end
 
+  def post_poll_in_group(in_group_ids)
+    get_list_group_ids = cached_get_group_active.collect{|e| e.id }
+    split_group_ids = in_group_ids.split(",").collect{|e| e.to_i }
+    
+  end
+
   # def get_history_voted
   #   @history_voted = HistoryVote.joins(:member, :choice, :poll)
   #                               .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote")

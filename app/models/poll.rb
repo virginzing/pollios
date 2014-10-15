@@ -122,9 +122,9 @@ class Poll < ActiveRecord::Base
   #   FlushCachePollWatchWorker.perform_async(watcheds.map(&:member_id).uniq)
   # end
 
-  # def get_poll_in_groups(group_ids)
-  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
-  # end
+  def get_poll_in_groups(group_ids)
+    groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  end
 
   def set_new_title_with_tag
     poll_title = self.title
@@ -182,13 +182,13 @@ class Poll < ActiveRecord::Base
   def get_within(options = {}, action_timeline = {})
     if public
       if action_timeline["friend_following_poll"]
-        Hash["in" => "Friends & Following"]
+        WhichPoll.to_hash(WhichPoll::WHERE[:friend_following])
       else
-        Hash["in" => "Public"]
+        WhichPoll.to_hash(WhichPoll::WHERE[:public])
       end
     else
-      if in_group_ids == "0"
-        Hash["in" => "Friends & Following"]
+      if in_group != true
+        WhichPoll.to_hash(WhichPoll::WHERE[:friend_following])
       else
         Hash["in" => "Group", "group_detail" => get_in_groups(options)]
       end
@@ -197,12 +197,12 @@ class Poll < ActiveRecord::Base
 
   def poll_is_where
     if public
-      Hash["in" => "Public"]
+      WhichPoll.to_hash(WhichPoll::WHERE[:public])
     else
       if in_group != true
-        Hash["in" => "Friends & Following"]
+        WhichPoll.to_hash(WhichPoll::WHERE[:friend_following])
       else
-        Hash["in" => "Group"]
+        WhichPoll.to_hash(WhichPoll::WHERE[:group])
       end
     end
   end
@@ -469,6 +469,7 @@ class Poll < ActiveRecord::Base
         end
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
+        # raise ExceptionHandler::Forbidden, "You are not a member of this group" if (member.post_poll_in_group(in_group_ids)  && in_group)
 
         if group_id.present?
           @set_public = false
