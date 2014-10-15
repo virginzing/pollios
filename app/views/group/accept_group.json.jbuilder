@@ -5,5 +5,5 @@ if @group
   end
 else
   json.response_status "ERROR"
-  json.response_message "Unable.."
+  json.response_message "This request was canceled by host"
 end

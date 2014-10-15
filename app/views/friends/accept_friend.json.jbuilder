@@ -5,5 +5,5 @@ if @friend.present?
   json.partial! 'response_helper/member/short_info_feed', member: @detail_friend
 else
   json.response_status "ERROR"
-  json.response_message "Unable..."
+  json.response_message "This request was canceled by host"
 end
