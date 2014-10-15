@@ -3,6 +3,10 @@ if @current_member
   count_friend_request = 0
 
   json.response_status "OK"
+  
+  json.request @current_member.request_count
+  json.notify @current_member.notification_count
+
   json.your_request do
     json.array! @your_request do |member|
       json.partial! 'response_helper/member/short_info_feed', member: member
