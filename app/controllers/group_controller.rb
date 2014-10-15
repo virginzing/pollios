@@ -2,7 +2,7 @@ class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :set_current_member, only: [:edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group]
+  before_action :set_group, only: [:delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group]
   
   before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]

@@ -122,9 +122,9 @@ class Poll < ActiveRecord::Base
   #   FlushCachePollWatchWorker.perform_async(watcheds.map(&:member_id).uniq)
   # end
 
-  def get_poll_in_groups(group_ids)
-    groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
-  end
+  # def get_poll_in_groups(group_ids)
+  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  # end
 
   def set_new_title_with_tag
     poll_title = self.title
@@ -199,7 +199,7 @@ class Poll < ActiveRecord::Base
     if public
       Hash["in" => "Public"]
     else
-      if in_group_ids == "0"
+      if in_group != true
         Hash["in" => "Friends & Following"]
       else
         Hash["in" => "Group"]
