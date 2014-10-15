@@ -4,7 +4,7 @@ class ApnPokePollWorker
 
   def perform(sender_id, list_member, poll_id, custom_data = {})
     begin
-      @poll = Poll.find(poll_id)
+      @poll ||= Poll.find(poll_id)
 
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
 
@@ -27,12 +27,19 @@ class ApnPokePollWorker
       }
 
       device_ids.each_with_index do |device_id, index|
+        apn_custom_properties = {
+          type: TYPE[:poll],
+          poll_id: @poll.id,
+          series: @poll.series,
+          notify: hash_list_member_badge[member_ids[index]]
+        }
+
         @notf = Apn::Notification.new
         @notf.device_id = device_id
         @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @apn_poke_poll.custom_message
         @notf.sound = true
-        @notf.custom_properties = @custom_properties
+        @notf.custom_properties = apn_custom_properties
         @notf.save!
       end
 
@@ -40,7 +47,7 @@ class ApnPokePollWorker
         hash_custom = {
           action: ACTION[:create],
           poll: @poll_serializer_json,
-          notification_count: hash_list_member_badge[member.id]
+          notify: hash_list_member_badge[member.id]
         }
 
         NotifyLog.create(sender_id: sender_id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

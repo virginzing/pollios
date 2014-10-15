@@ -5,7 +5,7 @@ class CommentPollWorker
   def perform(member_id, poll_id, custom_data = {})
     begin
       member = Member.find(member_id)
-      poll = Poll.find_by(id: poll_id)
+      poll ||= Poll.find_by(id: poll_id)
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
       comment_message = custom_data["comment_message"]
@@ -36,12 +36,19 @@ class CommentPollWorker
 
       find_recipient_notify.each_with_index do |member, index|
         member.apn_devices.each do |device|
+          apn_custom_properties = {
+            type: TYPE[:poll],
+            poll_id: poll.id,
+            series: poll.series,
+            notify: hash_list_member_badge[member_ids[index]]
+          }
+
           @notf = Apn::Notification.new
           @notf.device_id = device.id
           @notf.badge = hash_list_member_badge[member_ids[index]]
           @notf.alert = @apn_comment.custom_message(member.id)
           @notf.sound = true
-          @notf.custom_properties = @custom_properties
+          @notf.custom_properties = apn_custom_properties
           @notf.save!
         end
       end
@@ -52,7 +59,7 @@ class CommentPollWorker
           action: @apn_comment.custom_action(member.id),
           poll: @poll_serializer_json,
           comment: comment_message,
-          notification_count: hash_list_member_badge[member.id]
+          notify: hash_list_member_badge[member.id]
         }
 
         NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_comment.custom_message(member.id), custom_properties: @custom_properties.merge!(hash_custom))

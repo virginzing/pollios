@@ -5,7 +5,7 @@ class JoinGroupWorker
   def perform(member_id, group_id, custom_data = nil)
     begin
       member = Member.find(member_id)
-      group = Group.find(group_id)
+      group ||= Group.find(group_id)
 
       @group_nofication = AskJoinGroup.new(member, group, nil, "join")
 
@@ -27,12 +27,18 @@ class JoinGroupWorker
       }
 
       device_ids.each_with_index do |device_id, index|
+        apn_custom_properties = {
+          type: TYPE[:group],
+          group_id: group.id,
+          notify: hash_list_member_badge[member_ids[index]]
+        }
+
         @notf = Apn::Notification.new
         @notf.device_id = device_id
         @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @group_nofication.custom_message
         @notf.sound = true
-        @notf.custom_properties = @custom_properties
+        @notf.custom_properties = apn_custom_properties
         @notf.save!
       end
 
@@ -40,7 +46,7 @@ class JoinGroupWorker
         hash_custom = {
           action: ACTION[:join],
           group: group.as_json(),
-          notification_count: hash_list_member_badge[member_receive.id]
+          notify: hash_list_member_badge[member_receive.id]
         }
 
         NotifyLog.create(sender_id: member.id, recipient_id: member_receive.id, message: @group_nofication.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

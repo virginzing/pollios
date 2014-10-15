@@ -5,9 +5,9 @@ class ApnQuestionnaireWorker
   def perform(member_id, poll_series_id, group_id, custom_data = {})
     begin
       @member = Member.find(member_id)
-      @poll_series = PollSeries.find(poll_series_id)
+      @poll_series ||= PollSeries.find(poll_series_id)
       @poll_series_serializer_json ||= QuestionnaireSerializer.new(@poll_series).as_json()
-      
+
       @group = Group.find(group_id)
       member_id = @member.id
 
@@ -28,18 +28,25 @@ class ApnQuestionnaireWorker
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
-        type: TYPE[:poll], 
+        type: TYPE[:poll],
         poll_id: @poll_series.id,
         series: true
       }
 
       device_ids.each_with_index do |device_id, index|
+        apn_custom_properties = {
+          type: TYPE[:poll],
+          poll_id: @poll_series.id,
+          series: true,
+          notify: hash_list_member_badge[member_ids[index]]
+        }
+
         @notf = Apn::Notification.new
         @notf.device_id = device_id
         @notf.badge = hash_list_member_badge[member_ids[index]]
         @notf.alert = @apn_questionnaire.custom_message
         @notf.sound = true
-        @notf.custom_properties = @custom_properties
+        @notf.custom_properties = apn_custom_properties
         @notf.save!
       end
 
@@ -47,7 +54,7 @@ class ApnQuestionnaireWorker
         hash_custom = {
           action: ACTION[:create],
           poll: @poll_series_serializer_json,
-          notification_count: hash_list_member_badge[member.id]
+          notify: hash_list_member_badge[member.id]
         }
 
         NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_questionnaire.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

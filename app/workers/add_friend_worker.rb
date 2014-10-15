@@ -25,13 +25,13 @@ class AddFriendWorker
 
       @custom_properties = {
         type: TYPE[:friend],
-        member_id: member_id
+        member_id: member_id,
+        notify: @notification_count,
+        request: @request_count 
       }
 
       hash_custom = {
-        action: action,
-        notification_count: @notification_count,
-        request_count: @request_count 
+        action: action
       }
 
       device_ids.each do |device_id|
