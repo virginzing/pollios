@@ -113,6 +113,9 @@ class Member < ActiveRecord::Base
 
   has_many :request_codes, dependent: :destroy
 
+  has_many :group_surveyor, dependent: :destroy
+
+  has_many :surveyor_in_group, through: :group_surveyor, source: :group
   # after_create :set_follow_pollios
 
 

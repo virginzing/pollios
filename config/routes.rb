@@ -2,7 +2,7 @@ require 'sidekiq/web'
 require 'api_constraints'
 
 Pollios::Application.routes.draw do
-  
+
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true) do
       scope 'group/:group_id' do
@@ -36,7 +36,7 @@ Pollios::Application.routes.draw do
   resources :polls do
     resources :choices
   end
-  resources :members 
+  resources :members
   resources :poll_series
   resources :password_resets
   # resources :invites
@@ -141,7 +141,7 @@ Pollios::Application.routes.draw do
     post ':member_id/subscribe', to: 'purchase#subscribe'
     get ':member_id/load_form',  to: 'profiles#load_form'
     post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'
-    post ':member_id/unrecomment',  to: 'members#unrecomment'          
+    post ':member_id/unrecomment',  to: 'members#unrecomment'
   end
 
   scope 'poll' do
@@ -215,8 +215,8 @@ Pollios::Application.routes.draw do
     get '',               to: 'admin#dashboard',  as: :admin_management_dashboard
     get 'report',         to: 'admin#report',     as: :admin_report_dashboard
     get 'report/load_reason_poll',  to: 'admin#load_reason_poll'
-    get 'report/load_reason_member',  to: 'admin#load_reason_member' 
-    
+    get 'report/load_reason_member',  to: 'admin#load_reason_member'
+
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
 
     post 'login_as',  to: 'admin#login_as', as: :login_as
@@ -236,30 +236,33 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
+    get 'load_surveyor',  to: 'surveyor#load_surveyor'
     get 'list_group', to: 'companies#list_group'
     get 'groups',   to: 'companies#company_groups',    as: :company_groups
     get 'groups/add', to: 'companies#new_group',  as: :company_add_group
     get 'groups/:group_id', to: 'companies#group_detail', as: :company_group_detail
     get 'groups/:group_id/edit',  to: 'companies#edit_group', as: :company_edit_group
     get 'groups/:group_id/polls/:id',  to: 'companies#group_poll_detail', as: :company_group_poll_detail
-    
+
     post 'groups/update_group',      to: 'companies#update_group', as: :company_update_group
 
     get 'groups/:group_id/polls', to: 'companies#list_polls_in_group',  as: :company_groups_polls
     get 'groups/:group_id/members', to: 'companies#list_members_in_group',  as: :company_groups_members
     delete 'groups/:group_id/destroy',  to: 'companies#destroy_group',  as: :company_destroy_group
-    
+
     post 'add_user_to_group', to: 'companies#add_user_to_group',  as: :add_user_to_group
     post 'create_group',  to: 'companies#create_group', as: :company_create_group
 
     get 'polls',    to: 'companies#list_polls',     as: :company_polls
     get 'polls/:id',to: 'companies#poll_detail',    as: :company_polls_detail
     delete 'polls/:id/destroy', to: 'companies#delete_poll',  as: :company_delete_poll
-    
+
     get 'members',  to: 'companies#company_members',   as: :company_members
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
+    get 'members/new_add_surveyor',  to: 'companies#new_add_surveyor', as: :company_new_add_surveyor
+    post 'members/add_surveyor',  to: 'companies#add_surveyor', as: :company_add_surveyor
     get 'members/search', to: 'companies#search_member',  as: :company_search_member
-    
+
     delete 'remove_member',  to: 'companies#remove_member',  as: :remove_member_group
     delete 'members/remove',  to: 'companies#delete_member_company', as: :company_delete_member
 
@@ -273,8 +276,7 @@ Pollios::Application.routes.draw do
 
     get 'invites/new', to: 'companies#new',  as: :invites_new
 
-    get 'groups/:group_id/add_surveyor',  to: 'companies#add_surveyor', as: :company_add_surveyor    
-    
+
   end
 
   scope 'api/group/:group_id' do
@@ -290,7 +292,7 @@ Pollios::Application.routes.draw do
 
   get '/dashboard',  to: 'home#dashboard', as: :dashboard
   post '/invites',    to: 'companies#create'
-  
+
   get '/campaigns_polls',  to: 'campaigns#polls'
   get 'questionnaire',  to: 'poll_series#index'
   post '/scan_qrcode',      to: 'polls#scan_qrcode'
@@ -314,7 +316,7 @@ Pollios::Application.routes.draw do
   get 'users_signout',     to: 'authen_sentai#signout', as: :users_signout
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
-  
+
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'
   post 'users_forgotpassword',  to: 'authen_sentai#forgot_password'

@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-plus fa-fw "></i> 
+        Add Surveyor
+    </h1>
+  </div>
+</div>
+
+<div class="well">
+  <%= simple_form_for @add_surveyor, url: company_add_surveyor_path, method: :post, :html => { :multipart => true, id: 'form-input' } do |f| %>
+      
+      <div class="col col-12">
+        <%= f.label 'Member in Company' %>
+        <%= f.select :member_id, @list_members_in_company.map! {|r| [r.fullname, r.id ] }, { include_blank: true },  { class: 'select2_surveyor', placeholder: "Select a member", :"data-parsley-required" => "true" } %>
+      </div>
+      
+      <br>
+
+      <div class="col col-12">
+        <%= f.label 'Choose Group for surveyor' %>
+
+        <% @groups.each do |group| %>
+          <div class="checkbox">
+            <label>
+            <input type="checkbox" class="checkbox style-0" id="<%= group.id %>" name="group_id[]" value="<%= group.id %>">
+            <span><%= group.name %></span>
+             </label>
+          </div>
+        <% end %>
+      </div>
+  
+      <br/>
+
+      <div class="col col-12">
+        <%= f.submit "Submit", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
+      </div>
+  <% end %>
+
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('select.select2_surveyor').select2({
+        width: '100%',
+        allowClear: true
+    }).on('change', function (e) {
+      // console.log(e.added.id);
+      clear_select_box();
+      fill_exist_surveyor_in_group(e.added.id)
+    });
+
+    function fill_exist_surveyor_in_group(member_id) {
+
+      var request = $.ajax({
+        url: '/company/load_surveyor.json',
+        type: "GET",
+        data: { id: member_id },
+        dataType: "json"
+      })
+
+      request.done(function(msg) {
+        // console.log(msg.group_id)
+        var list_group_id = msg.group_id
+        if (list_group_id.length > 0) {
+          $.each(list_group_id, function (index, value) {
+            // console.log(value);
+            var find_element_group_id = document.getElementById(value)
+            find_element_group_id.checked = true;
+            find_element_group_id.disabled = true;
+          });
+        };
+      });
+
+      request.fail(function (jqXHR, textStatus) {
+        console.log("Request failed: " + textStatus);
+      });
+
+      console.log(member_id);
+    }
+
+    function clear_select_box () {
+      $('.checkbox').attr('disabled', false).prop('checked', false);
+
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  $("#form-input").parsley();
+</script>

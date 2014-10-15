@@ -6,7 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail]
-  before_action :set_group, only: [:add_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
+  before_action :set_group, only: [:list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
 
   expose(:group_company) { current_member.company.groups if current_member }
 
@@ -149,8 +149,29 @@ class CompaniesController < ApplicationController
     @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
   end
 
+  def new_add_surveyor
+    @groups = Group.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{set_company.id}").uniq
+    @list_members_in_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
+    @add_surveyor = Company.new
+  end
+
   def add_surveyor
-    
+    GroupSurveyor.transaction do
+      begin
+        member_id = params[:company][:member_id]
+        find_member = Member.find(member_id)
+        group_id = params[:group_id]
+
+        list_group = Group.where(id: group_id)
+
+        list_group.each do |group|
+          find_member.add_role :surveyor, group
+        end
+        flash[:success] = "Add surveyor successfully"
+        redirect_to company_members_path
+      end
+    end
+
   end
 
   def group_detail
@@ -159,6 +180,8 @@ class CompaniesController < ApplicationController
 
     @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
                       .where("group_members.group_id = ? AND group_members.active = 't'", @group).uniq || []
+
+    @list_surveyor = @group.surveyor
   end
 
   def create_group
