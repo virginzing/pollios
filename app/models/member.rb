@@ -362,9 +362,8 @@ class Member < ActiveRecord::Base
 
   def cached_my_poll
     Rails.cache.fetch([self.id, 'my_poll']) do
-      Poll.available.joins(:poll_members).includes(:member, :campaign, :choices)
-        .where("polls.vote_all > 0")
-        .where("(poll_members.member_id = #{self.id} AND poll_members.share_poll_of_id = 0) OR (polls.id IN (?) AND polls.member_id = #{self.id} AND poll_members.share_poll_of_id = 0)", my_vote_poll_ids).to_a
+      @init_poll = MyPollInProfile.new(self)
+      @init_poll.my_poll.to_a
     end
   end
 
@@ -376,23 +375,14 @@ class Member < ActiveRecord::Base
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
-      Poll.available.joins(:history_votes => :choice).includes(:member)
-        .select("polls.*, history_votes.choice_id as choice_id")
-        .where("(history_votes.member_id = #{self.id} AND history_votes.poll_series_id = 0) " \
-               "OR (history_votes.member_id = #{self.id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
-        .collect! { |poll| Hash["poll_id" => poll.id, "choice_id" => poll.choice_id, "poll_series_id" => poll.poll_series_id, "show_result" => poll.show_result ] }.to_a
-      # .collect! { |poll| [poll.id, poll.choice_id, poll.poll_series_id, poll.show_result] }.to_a
-      # query = HistoryVote.joins(:member, :choice, :poll)
-      #             .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result")
-      #             .where("history_votes.member_id = #{id} AND poll")
-
-      #             .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }.to_a
+      @init_poll = MyPollInProfile.new(self)
+      @init_poll.my_vote.to_a
     end
   end
 
   def cached_my_voted_all
     Rails.cache.fetch([self.id, 'my_voted_all']) do
-      Poll.joins(:history_votes => :choice).includes(:member)
+      Poll.joins(:history_votes => :choice)
         .select("polls.*, history_votes.choice_id as choice_id")
         .where("(history_votes.member_id = #{self.id} AND history_votes.poll_series_id = 0) " \
                "OR (history_votes.member_id = #{self.id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
@@ -402,7 +392,8 @@ class Member < ActiveRecord::Base
 
   def cached_watched
     Rails.cache.fetch([ self.id, 'watcheds' ]) do
-      Poll.joins(:member).available.joins(:watcheds).where("(watcheds.member_id = #{self.id} AND watcheds.poll_notify = 't')").to_a
+      @init_poll = MyPollInProfile.new(self)
+      @init_poll.my_watched.to_a
     end
   end
 
