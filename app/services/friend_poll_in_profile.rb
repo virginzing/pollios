@@ -86,45 +86,45 @@ class FriendPollInProfile
 
   ## create ##
 
-  def create_public_poll
-    get_poll_friend.select{|p| p.public == true }.count
-  end
+  # def create_public_poll
+  #   get_poll_friend.select{|p| p.public == true }.count
+  # end
 
-  def create_friend_following_poll
-    get_poll_friend.select{|p| p.public == false && p.in_group_ids == "0" }.count
-  end
+  # def create_friend_following_poll
+  #   get_poll_friend.select{|p| p.public == false && p.in_group_ids == "0" }.count
+  # end
 
-  def create_group_poll
-    get_poll_friend.select{|p| p.public == false && p.in_group_ids != "0" }.count
-  end
+  # def create_group_poll
+  #   get_poll_friend.select{|p| p.public == false && p.in_group_ids != "0" }.count
+  # end
 
-    ## vote ##
+  #   ## vote ##
 
-  def vote_public_poll
-    get_vote_friend.select{|p| p.public == true }.count
-  end
+  # def vote_public_poll
+  #   get_vote_friend.select{|p| p.public == true }.count
+  # end
 
-  def vote_friend_following_poll
-    get_vote_friend.select{|p| p.public == false && p.in_group_ids == "0" }.count
-  end
+  # def vote_friend_following_poll
+  #   get_vote_friend.select{|p| p.public == false && p.in_group_ids == "0" }.count
+  # end
 
-  def vote_group_poll
-    get_vote_friend.select{|p| p.public == false && p.in_group_ids != "0" }.count
-  end
+  # def vote_group_poll
+  #   get_vote_friend.select{|p| p.public == false && p.in_group_ids != "0" }.count
+  # end
 
-  ## watched ##
+  # ## watched ##
 
-  def watch_public_poll
-    get_watched_friend.select{|p| p.public == true }.count
-  end
+  # def watch_public_poll
+  #   get_watched_friend.select{|p| p.public == true }.count
+  # end
 
-  def watch_friend_following_poll
-    get_watched_friend.select{|p| p.public == false && p.in_group_ids == "0" }.count
-  end
+  # def watch_friend_following_poll
+  #   get_watched_friend.select{|p| p.public == false && p.in_group_ids == "0" }.count
+  # end
 
-  def watch_group_poll
-    get_watched_friend.select{|p| p.public == false && p.in_group_ids != "0" }.count
-  end
+  # def watch_group_poll
+  #   get_watched_friend.select{|p| p.public == false && p.in_group_ids != "0" }.count
+  # end
 
 
   private

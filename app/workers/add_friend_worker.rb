@@ -23,12 +23,20 @@ class AddFriendWorker
 
       device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 
-      @custom_properties = {
-        type: TYPE[:friend],
-        member_id: member_id,
-        notify: @notification_count,
-        request: @request_count 
-      }
+      if action == "BecomeFriend"
+        @custom_properties = {
+          type: TYPE[:friend],
+          member_id: member_id,
+          notify: @notification_count
+        }
+      else
+        @custom_properties = {
+          type: TYPE[:friend],
+          member_id: member_id,
+          notify: @notification_count,
+          request: @request_count 
+        }
+      end
 
       hash_custom = {
         action: action
@@ -37,7 +45,7 @@ class AddFriendWorker
       device_ids.each do |device_id|
         @notf = Apn::Notification.new
         @notf.device_id = device_id
-        @notf.badge = @count_notification
+        @notf.badge = @notification_count
         @notf.alert = @add_friend.custom_message
         @notf.sound = true
         @notf.custom_properties = @custom_properties

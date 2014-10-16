@@ -5,7 +5,7 @@ class FriendsController < ApplicationController
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]
   # before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote, :list_of_watched]
-  
+
   before_action :load_resource_poll_feed, only: [:list_of_poll, :list_of_vote, :list_of_watched, :list_friend, :profile, :list_of_group]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
@@ -86,8 +86,9 @@ class FriendsController < ApplicationController
       @init_poll = MyPollInProfile.new(@current_member, options_params)
       @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
     else
-      @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-      @polls = @init_poll.get_poll_friend_with_visibility.paginate(page: params[:next_cursor])
+      @init_poll = MyPollInProfile.new(@find_friend, options_params)
+      @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+      @polls = @init_poll_friend.get_poll_friend_with_visibility.paginate(page: params[:next_cursor])
     end
     poll_helper
   end
@@ -99,9 +100,10 @@ class FriendsController < ApplicationController
       @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
       check_my_vote_flush_cache?(@current_member, @init_poll.my_vote.to_a.count) unless params[:next_cursor].present?
     else
-      @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-      @polls = @init_poll.get_vote_friend_with_visibility.paginate(page: params[:next_cursor])
-      check_friend_vote_flush_cache?(@find_friend, @current_member, @init_poll.get_vote_friend_with_visibility.to_a.count) unless params[:next_cursor].present?
+      @init_poll = MyPollInProfile.new(@find_friend, options_params)
+      @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+      @polls = @init_poll_friend.get_vote_friend_with_visibility.paginate(page: params[:next_cursor])
+      # check_friend_vote_flush_cache?(@find_friend, @current_member, @init_poll.get_vote_friend_with_visibility.to_a.count) unless params[:next_cursor].present?
     end
     poll_helper
   end
@@ -120,9 +122,10 @@ class FriendsController < ApplicationController
       @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
       check_my_watch_flush_cache?(@current_member, @init_poll.my_watched.to_a.count) unless params[:next_cursor].present?
     else
-      @init_poll = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-      @polls = @init_poll.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
-      check_friend_watch_flush_cache?(@find_friend, @current_member, @init_poll.get_watched_friend_with_visibility.to_a.count) unless params[:next_cursor].present?
+      @init_poll = MyPollInProfile.new(@find_friend, options_params)
+      @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+      @polls = @init_poll_friend.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
+      # check_friend_watch_flush_cache?(@find_friend, @current_member, @init_poll.get_watched_friend_with_visibility.to_a.count) unless params[:next_cursor].present?
     end
     poll_helper
   end
@@ -182,17 +185,17 @@ class FriendsController < ApplicationController
   private
 
   def set_friend
-     @find_friend = Member.find_by(id: params[:friend_id])
-     unless @find_friend.present?
-        respond_to do |format|
-          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Don't have this id of friend"]}
-        end
-     end
+    @find_friend = Member.find_by(id: params[:friend_id])
+    unless @find_friend.present?
+      respond_to do |format|
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Don't have this id of friend"]}
+      end
+    end
   end
 
   def poll_friend_params
-     params.permit(:friend_id, :member_id, :next_cursor, :type)
-   end 
+    params.permit(:friend_id, :member_id, :next_cursor, :type)
+  end
 
   def friend_params
     params.permit(:friend_id, :q, :member_id)
