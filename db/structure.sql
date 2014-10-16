@@ -1810,6 +1810,38 @@ ALTER SEQUENCE request_codes_id_seq OWNED BY request_codes.id;
 
 
 --
+-- Name: request_groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE request_groups (
+    id integer NOT NULL,
+    member_id integer,
+    group_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: request_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE request_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: request_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE request_groups_id_seq OWNED BY request_groups.id;
+
+
+--
 -- Name: roles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2388,6 +2420,13 @@ ALTER TABLE ONLY request_codes ALTER COLUMN id SET DEFAULT nextval('request_code
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY request_groups ALTER COLUMN id SET DEFAULT nextval('request_groups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
 
 
@@ -2815,6 +2854,14 @@ ALTER TABLE ONLY recurrings
 
 ALTER TABLE ONLY request_codes
     ADD CONSTRAINT request_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: request_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY request_groups
+    ADD CONSTRAINT request_groups_pkey PRIMARY KEY (id);
 
 
 --
@@ -3469,6 +3516,20 @@ CREATE INDEX index_request_codes_on_member_id ON request_codes USING btree (memb
 
 
 --
+-- Name: index_request_groups_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_request_groups_on_group_id ON request_groups USING btree (group_id);
+
+
+--
+-- Name: index_request_groups_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_request_groups_on_member_id ON request_groups USING btree (member_id);
+
+
+--
 -- Name: index_roles_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3978,3 +4039,5 @@ INSERT INTO schema_migrations (version) VALUES ('20141014032142');
 INSERT INTO schema_migrations (version) VALUES ('20141014041603');
 
 INSERT INTO schema_migrations (version) VALUES ('20141015132936');
+
+INSERT INTO schema_migrations (version) VALUES ('20141016085500');

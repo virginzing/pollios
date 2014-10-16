@@ -29,6 +29,9 @@ class Group < ActiveRecord::Base
 
   has_many :group_surveyors, dependent: :destroy
   has_many :surveyor, through: :group_surveyors, source: :member
+
+  has_many :request_groups, dependent: :destroy
+  has_many :members_request, through: :request_groups, source: :member
   
   validates :name, presence: true
 
@@ -64,6 +67,7 @@ class Group < ActiveRecord::Base
     find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
     if find_group_member
       @group = find_group_member.group
+      @member = member
 
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
@@ -72,13 +76,19 @@ class Group < ActiveRecord::Base
 
       Rails.cache.delete([member_id, 'group_active'])
 
-      if @group.public
+      clear_request_group
+
+      if @group
         Activity.create_activity_group(member, @group, 'Join')
       end
     end
     @group
   end
 
+  def clear_request_group
+    find_request_group = @group.request_groups.find_by(member_id: @member.id)
+    find_request_group.destroy if find_request_group.present?
+  end
 
   def self.build_group(member, group)
     member_id = group[:member_id]
@@ -125,6 +135,8 @@ class Group < ActiveRecord::Base
         InviteFriendWorker.perform_async(member_id, list_friend, group_id)
         @group_member.group
       end
+    else
+      raise ExceptionHandler::Forbidden, "You are not admin of group"
     end
   end
 
@@ -150,6 +162,7 @@ class Group < ActiveRecord::Base
       raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
+        Member.find(friend_id).remove_role :group_admin, find_member_in_group.group
       else
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end

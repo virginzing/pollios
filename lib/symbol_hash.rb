@@ -6,7 +6,8 @@ module SymbolHash
     :friend => 'Friend',
     :group => 'Group',
     :member => 'Member',
-    :comment => 'Comment'
+    :comment => 'Comment',
+    :requset_group => 'RequestGroup'
   }
 
   ACTION = {
