@@ -42,11 +42,11 @@ class MyPollInProfile
   end
 
   def create_friend_following_poll
-    my_poll.select{|p| p.public == false && p.in_group_ids == "0" }.count
+    my_poll.select{|p| p.public == false && p.in_group == false }.count
   end
 
   def create_group_poll
-    my_poll.select{|p| p.public == false && p.in_group_ids != "0" }.count
+    my_poll.select{|p| p.in_group == true }.count
   end
 
   ## vote ##
@@ -56,11 +56,11 @@ class MyPollInProfile
   end
 
   def vote_friend_following_poll
-    my_vote.select{|p| p.public == false && p.in_group_ids == "0" }.count
+    my_vote.select{|p| p.public == false && p.in_group == false }.count
   end
 
   def vote_group_poll
-    my_vote.select{|p| p.public == false && p.in_group_ids != "0" }.count
+    my_vote.select{|p| p.in_group == true }.count
   end
 
   ## watched ##
@@ -70,11 +70,11 @@ class MyPollInProfile
   end
 
   def watch_friend_following_poll
-    my_watched.select{|p| p.public == false && p.in_group_ids == "0" }.count
+    my_watched.select{|p| p.public == false && p.in_group == false }.count
   end
 
   def watch_group_poll
-    my_watched.select{|p| p.public == false && p.in_group_ids != "0" }.count
+    my_watched.select{|p| p.in_group == true }.count
   end
 
   private
