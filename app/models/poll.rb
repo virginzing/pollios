@@ -72,6 +72,7 @@ class Poll < ActiveRecord::Base
     end
   }
 
+  scope :have_vote, -> { where("polls.vote_all > 0") }
   scope :unexpire, -> {
     where("polls.expire_status = 'f'")
   }

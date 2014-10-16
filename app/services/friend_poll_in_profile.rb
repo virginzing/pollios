@@ -134,7 +134,7 @@ class FriendPollInProfile
     query_group_together = "poll_members.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
     query_public = "poll_members.public = 't' AND poll_members.member_id = #{friend_id} AND poll_members.share_poll_of_id = 0"
 
-    query = Poll.available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
+    query = Poll.available.have_vote.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
                 where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                 "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
@@ -143,7 +143,7 @@ class FriendPollInProfile
 
   def poll_voted
     query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
-                .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
+                .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group = 'f') " \
                 "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
                 (list_my_friend_ids << friend_id),
@@ -158,12 +158,12 @@ class FriendPollInProfile
   end
 
   def poll_created_with_visibility
-    query_poll_member = "poll_members.member_id = #{is_friend} AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
-    query_group_together = "poll_members.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
-    query_public = "poll_members.public = 't' AND poll_members.member_id = #{friend_id} AND poll_members.share_poll_of_id = 0"
+    query_poll_member = "polls.member_id = #{is_friend} AND polls.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    query_group_together = "polls.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
+    query_public = "polls.public = 't' AND polls.member_id = #{friend_id} AND poll_members.share_poll_of_id = 0"
 
-    query = Poll.available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
-                where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
+    query = Poll.available.have_vote.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+                .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                 "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
                 my_and_friend_group, my_and_friend_group).references(:poll_groups)
@@ -171,19 +171,20 @@ class FriendPollInProfile
 
   def poll_voted_with_visibility
     query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
-            .where("(history_votes.member_id = #{is_friend} AND polls.member_id IN (?) AND polls.in_group_ids = '0') " \
+            .where("(history_votes.member_id = #{is_friend} AND polls.in_group = 'f') " \
             "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
-            "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
-            "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
-            list_my_friend_ids,
+            "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))",
             my_and_friend_group).references(:poll_groups)
   end
 
   def poll_watched_with_visibility
-    query = Poll.available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
-            .where("(watcheds.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group_ids = '0')" \
+    query = Poll.available.have_vote.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+            .where("(watcheds.member_id = #{friend_id} AND watcheds.poll_notify = 't')")
+            .where("(watcheds.member_id = #{friend_id} AND polls.in_group = 'f')" \
             "OR (watcheds.member_id = #{friend_id} AND polls.public = 't') " \
-            "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", list_my_friend_ids, my_and_friend_group).references(:poll_groups)
+            "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", my_and_friend_group)
+            .order("watcheds.created_at DESC")
+            .references(:poll_groups)
   end
 
   def block_friend

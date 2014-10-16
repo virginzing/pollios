@@ -98,7 +98,7 @@ class FriendsController < ApplicationController
     if params[:member_id] == params[:friend_id]
       @init_poll = MyPollInProfile.new(@current_member, options_params)
       @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
-      check_my_vote_flush_cache?(@current_member, @init_poll.my_vote.to_a.count) unless params[:next_cursor].present?
+      # check_my_vote_flush_cache?(@current_member, @init_poll.my_vote.to_a.count) unless params[:next_cursor].present?
     else
       @init_poll = MyPollInProfile.new(@find_friend, options_params)
       @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
@@ -120,7 +120,7 @@ class FriendsController < ApplicationController
     if params[:member_id] == params[:friend_id]
       @init_poll = MyPollInProfile.new(@current_member, options_params)
       @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
-      check_my_watch_flush_cache?(@current_member, @init_poll.my_watched.to_a.count) unless params[:next_cursor].present?
+      # check_my_watch_flush_cache?(@current_member, @init_poll.my_watched.to_a.count) unless params[:next_cursor].present?
     else
       @init_poll = MyPollInProfile.new(@find_friend, options_params)
       @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)

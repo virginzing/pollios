@@ -4,10 +4,19 @@ class MyPollInProfile
   def initialize(member, options)
     @member = member
     @options = options
+    @my_group = Member.list_group_active
+  end
+
+  def my_group_id
+    @my_group_ids ||= @my_group.map(&:id)  
   end
 
   def member_id
     @member.id
+  end
+
+  def list_my_friend_ids
+    Member.list_friend_active.map(&:id) << @member.id
   end
 
   def my_vote_poll_ids
@@ -71,24 +80,41 @@ class MyPollInProfile
   private
 
   def poll_created
-    query = Poll.available.joins(:poll_members).includes(:member, :campaign, :choices)
-        .where("polls.vote_all > 0")
-        .where("(poll_members.member_id = #{member_id} AND poll_members.share_poll_of_id = 0) OR (polls.id IN (?) AND polls.member_id = #{member_id} AND poll_members.share_poll_of_id = 0)", my_vote_poll_ids)
-    query
+    query_poll_member = "polls.member_id = #{member_id} AND polls.in_group = 'f' AND poll_members.share_poll_of_id = 0"
+    query_group_together = "polls.member_id = #{member_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
+    query_public = "polls.public = 't' AND polls.member_id = #{member_id} AND poll_members.share_poll_of_id = 0"
+
+    query = Poll.available.have_vote.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+                .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
+                "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
+                "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
+                my_group_id, my_group_id).references(:poll_groups)
   end
 
   def poll_voted
-    query = Poll.available.joins(:history_votes).includes(:member)
-        .where("(history_votes.member_id = #{member_id} AND history_votes.poll_series_id = 0) " \
-               "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
-        .order("history_votes.created_at DESC")
+    query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+            .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f') " \
+            "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
+            "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
+            my_group_id).references(:poll_groups)
   end
 
   def poll_watched
-    query = Poll.available.joins(:watcheds).includes(:member, :campaign)
-                .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')")
-                .order("watcheds.created_at DESC")
-    query
+    query = Poll.available.have_vote.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+              .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')")
+              .where("(watcheds.member_id = #{member_id} AND polls.in_group = 'f')" \
+              "OR (watcheds.member_id = #{member_id} AND polls.public = 't') " \
+              "OR (watcheds.member_id = #{member_id} AND poll_groups.group_id IN (?))", my_group_id)
+              .order("watcheds.created_at DESC")
+              .references(:poll_groups)
+  end
+
+  def poll_expire_have_vote
+    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
+  end
+
+  def poll_unexpire
+    "polls.expire_date > '#{Time.now}'"
   end
   
 end
