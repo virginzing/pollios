@@ -30,9 +30,9 @@ class Group < ActiveRecord::Base
   has_many :group_surveyors, dependent: :destroy
   has_many :surveyor, through: :group_surveyors, source: :member
 
-  has_many :request_groups, dependent: :destroy
+  has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
   has_many :members_request, through: :request_groups, source: :member
-  
+
   validates :name, presence: true
 
   mount_uploader :photo_group, PhotoGroupUploader
@@ -76,8 +76,6 @@ class Group < ActiveRecord::Base
 
       Rails.cache.delete([member_id, 'group_active'])
 
-      clear_request_group
-
       if @group
         Activity.create_activity_group(member, @group, 'Join')
       end
@@ -85,9 +83,28 @@ class Group < ActiveRecord::Base
     @group
   end
 
-  def clear_request_group
-    find_request_group = @group.request_groups.find_by(member_id: @member.id)
-    find_request_group.destroy if find_request_group.present?
+  def self.accept_request_group(member, friend, group)
+    GroupMember.transaction do
+      begin
+        @friend = friend
+        @member = member
+        @group = group
+
+        if @group.group_members.create!(member_id: @friend.id, active: true, is_master: false)
+          @group.increment!(:member_count)
+          clear_request_group
+          JoinGroupWorker.perform_async(@friend.id, @group.id)
+          Rails.cache.delete([@friend.id, 'group_active'])
+          Activity.create_activity_group(@friend, @group, 'Join')
+        end
+        @group
+      end
+    end
+  end
+
+  def self.clear_request_group
+    find_request_group = @group.request_groups.find_by(member_id: @friend.id, accepted: false)
+    find_request_group.update!(accepted: true, accepter_id: @member.id) if find_request_group.present?
   end
 
   def self.build_group(member, group)

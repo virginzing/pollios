@@ -18,7 +18,7 @@ module NotificationsHelper
     begin
       custom_message = message.truncate(truncate_default)
       truncate_default = truncate_default - truncate_decentment
-    end while custom_message.bytesize > 170
+    end while custom_message.bytesize > 140
 
     add_double_quotation(custom_message)
   end

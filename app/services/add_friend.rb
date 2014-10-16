@@ -19,17 +19,13 @@ class AddFriend
   end
 
   def count_notification
-    if check_apn_device?
-      @friend.update_columns(notification_count: @friend.notification_count + 1)
-      return @friend.notification_count
-    end
+    @friend.update_columns(notification_count: @friend.notification_count + 1)
+    return @friend.notification_count
   end
 
   def count_request
-    if check_apn_device?
-      @friend.update_columns(request_count: @friend.request_count + 1)
-      return @friend.request_count
-    end
+    @friend.update_columns(request_count: @friend.request_count + 1)
+    return @friend.request_count
   end
 
   def member_name
