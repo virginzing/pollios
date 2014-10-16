@@ -21,7 +21,7 @@
 
   <a href="<%= company_add_group_path %>" class="icon-btn">
     <i class="fa fa-plus"></i>
-    <div>Add Group</div>
+    <div>New Group</div>
   </a>
 </div>
 
@@ -41,8 +41,8 @@
           <table id="list_groups" class="table table-striped table-bordered table-hover" width="100%">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Photo Group</th>
+                <th width="50">#</th>
+                <th width="50">Photo Group</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Member</th>
@@ -55,7 +55,7 @@
               <% @groups.each do |group| %>
                 <tr>
                   <td><%= group.id %></td>
-                  <td><%= image_tag(group.photo_group.url(:thumbnail), size: '50x50') %></td>
+                  <td><img src="<%= group.photo_group.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= group.name %>"></td>
                   <td><%= link_to group.name, company_group_detail_path(group) %></td>
                   <td><%= group.description %></td>
                   <td><%= group.get_all_member_count %> members</td>

@@ -18,13 +18,13 @@
       <br>
 
       <div class="col col-12">
-        <%= f.label 'Choose Group for surveyor' %>
+        <%= f.label 'Select group for surveyor' %>
 
         <% @groups.each do |group| %>
-          <div class="checkbox">
+          <div class="checkbox checkbox-surveyor">
             <label>
             <input type="checkbox" class="checkbox style-0" id="<%= group.id %>" name="group_id[]" value="<%= group.id %>">
-            <span><%= group.name %></span>
+            <span><img src="<%= group.photo_group.url(:thumbnail_small) %>" alt="group" class="img img-circle img-surveyor" data-toggle="tooltip" data-placement="top" title="<%= group.name %>" width="40" height="40"><%= group.name %></span>
              </label>
           </div>
         <% end %>
@@ -41,9 +41,20 @@
 
 <script>
   $(document).ready(function(){
+    function format (state) {
+      if (!state.id) return state.text; // optgroup
+      console.log(state);
+      return state.text;
+    }
+
     $('select.select2_surveyor').select2({
         width: '100%',
-        allowClear: true
+        allowClear: true,
+        formatResult: format,
+        formatSelection: format,
+        escapeMarkup: function (m) {
+            return m;
+        }
     }).on('change', function (e) {
       // console.log(e.added.id);
       clear_select_box();

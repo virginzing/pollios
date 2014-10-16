@@ -25,11 +25,16 @@ json.count do
     json.block member.cached_block_friend.count
     json.reward member.cached_get_my_reward.count
   else
-    json.poll friend.cached_poll_friend_count(member)
-    json.vote friend.cached_voted_friend_count(member)
-    json.group friend.cached_groups_friend_count(member)
-    json.watched friend.cached_watched_friend_count(member)
-    json.block friend.cached_block_friend_count(member)
+    # json.poll friend.cached_poll_friend_count(member)
+    # json.vote friend.cached_voted_friend_count(member)
+    # json.group friend.cached_groups_friend_count(member)
+    # json.watched friend.cached_watched_friend_count(member)
+    # json.block friend.cached_block_friend_count(member)
+    json.poll friend.cached_my_poll.count
+    json.vote friend.cached_my_voted.count
+    json.group friend.cached_get_group_active.count
+    json.watched friend.cached_watched.count
+    json.block friend.cached_block_friend.count
   end
 
   json.activity friend.get_activity_count
