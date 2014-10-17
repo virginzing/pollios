@@ -477,6 +477,18 @@ class Member < ActiveRecord::Base
     Rails.cache.delete([self.id, 'group_active'])
   end
 
+  def flush_cached_my_following
+    Rails.cache.delete([self.id, 'following'])
+  end
+
+  def flush_cached_my_follower
+    Rails.cache.delete([self.id, 'follower'])
+  end
+
+  def flush_cached_my_block
+    Rails.cache.delete([self.id, 'block_friend'])
+  end
+
   ## flush cache friend ##
 
   def flush_cache_friend_poll
