@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
     <h1 class="page-title txt-color-blueDark">
-      <i class="fa fa-edit fa-fw "></i> 
-        Binary Poll
+      <i class="fa fa-plus fa-fw "></i> 
+      New Poll
     </h1>
   </div>
 </div>
@@ -24,13 +24,13 @@
         <!-- widget content -->
         <div class="widget-body">
           <%= simple_form_for @poll, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
-          <%= f.input :type_poll, as: :hidden, input_html: { value: "binary" } %>
+          <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
           <header>
             Poll Detail 
           </header>
 
           <fieldset>
-            
+              
             <section>
               <div class="row">
                 <section class="col col-9">
@@ -38,10 +38,6 @@
                   <label class="textarea">
                     <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,255]" style="display: block; width: 100%;"></textarea>
                   </label>
-<!--                   <div class="note">
-                    <strong>Note: </strong> use tag by '#'
-                  </div> -->
-                  
                   <div class="option_config">
                     <label class="toggle">
                       <input type="checkbox" name="poll[allow_comment]" checked="checked">
@@ -55,11 +51,11 @@
                       <input type="checkbox" name="poll[require_info]" checked="checked">
                     <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
 
+                    
                     <label class="toggle">
                       <input type="checkbox" name="poll[show_result]" checked="checked">
                     <i data-swchon-text="on" data-swchoff-text="off"></i>Show Result Vote.</label>
                   </div>
-
                 </section>
 
                 <section class="col col-3">
@@ -67,33 +63,33 @@
                     <input type="file" class="default" name="poll[photo_poll]" id="drop_photo_poll" accept="image/png, image/jpeg, image/gif"/>
                   </div>
                 </section>
-
               </div>
-            </section>
+              
+              <br>
+              <section>
+                  <label class="label">Choose from present</label>
+                  <div class="inline-group" id="template">
+                      <label class="radio">
+                          <input type="radio" name="radio-inline" checked="checked" id="freeform-template">
+                          <i></i>Freeform</label>
+                      <label class="radio">
+                          <input type="radio" name="radio-inline" id="yesno-template">
+                          <i></i>Yes/No</label>
+                      <label class="radio">
+                          <input type="radio" name="radio-inline" id="star-template">
+                          <i></i>Star Rating</label>
+                  </div>
+              </section>
 
-            <section>
-              <label class="label">Choice</label>
-              <label class="input">
-                <%= f.input :choice_one, label: false, input_html: { :"data-parsley-required" => "true" }  %>
-              </label>
-            </section>
-
-            <section>
-              <label class="label">Choice</label>
-              <label class="input">
-                <%= f.input :choice_two, label: false, input_html: { :"data-parsley-required" => "true" }  %>
-              </label>
-            </section>
+            <div id="select_form_template"></div>       
 
           </fieldset>
 
           <header>
             Config
           </header>
-          
             <fieldset>
               <div class="row">
-
                 <section class="col col-2">
 
                 <label class="label">Expire within (day)</label>
@@ -138,11 +134,9 @@
                       <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
                     </label>
                   </section>
-
                 <% end %>
-              </div>
+              </div>            
             </fieldset>
-        
 
           <footer>
             <button type="submit" class="btn btn-primary">
@@ -152,7 +146,7 @@
               Back
             </button>
           </footer>
-          <% end %>
+            <% end %>
 
         </div>
         <!-- end widget content -->
@@ -163,6 +157,25 @@
     </div>
   </div>
 </section>
+
+<script type="text/javascript">
+  $("#form-input").parsley();
+</script>
+
+<script type="text/javascript">
+  $('#select_form_template').html('<%= j render "freeform" %>');
+
+  $('#template').on('click', function () {
+    if ($('#freeform-template').is(':checked')) {
+      $('#select_form_template').html('<%= j render "freeform" %>');
+    } else if ($('#yesno-template').is(':checked')) {
+      $('#select_form_template').html('<%= j render "yesno" %>');
+    } else {
+      $('#select_form_template').html('<%= j render "rating" %>');
+    };  
+  });
+
+</script>
 
 <% if current_member.company? %>
   <script type="text/javascript">
@@ -188,6 +201,3 @@
   </script>
 <% end %>
 
-<script type="text/javascript">
-  $("#form-input").parsley();
-</script>

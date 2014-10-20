@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   protect_from_forgery
 
   skip_before_action :verify_authenticity_token, if: :json_request?
-  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new]
+  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :new_poll]
 
 
   before_action :set_current_member, only: [:delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
@@ -84,6 +84,11 @@ class PollsController < ApplicationController
 
   def new
     @poll = Poll.new
+  end
+
+  def create_new_poll
+    @poll = Poll.new
+    @group_list = current_member.company.groups if current_member.company?
   end
 
   def binary

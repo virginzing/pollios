@@ -6,7 +6,7 @@
   <li class="<%= is_active?('polls') %>">
     <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Polls</span></a>
       <ul>
-        <li class="<%= is_active_3rd_level('polls', action_name) %>">
+<!--         <li class="<%= is_active_3rd_level('polls', action_name) %>">
           <a href="#"><i class="fa fa-fw fa-folder-open"></i> Creating a Poll</a>
           <ul>
             <li class="<%= is_active_2nd_level('polls', 'binary') %>">
@@ -19,9 +19,9 @@
               <a href="/build_poll/freeform"><i class="fa fa-fw fa-th-list"></i> Simple</a>
             </li>
           </ul>
-        </li>
+        </li> -->
 
-      <li class="<%= is_active_2nd_level('companies', 'list_polls') || is_active_2nd_level('companies', 'poll_detail') %>">
+      <li class="<%= is_active_2nd_level('companies', 'list_polls') || is_active_2nd_level('companies', 'poll_detail') || is_active_2nd_level('polls', 'create_new_poll') %>">
         <a href="<%= company_polls_url %>"> List Polls</a>
       </li>
 
