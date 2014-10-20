@@ -43,7 +43,7 @@ class Poll < ActiveRecord::Base
   before_save :set_default_value
   before_create :generate_qrcode_key
 
-  after_create :set_new_title_with_tag
+  # after_create :set_new_title_with_tag
   after_commit :flush_cache
 
   validates :title, :member_id, presence: true
@@ -95,10 +95,7 @@ class Poll < ActiveRecord::Base
   end
 
   def self.cached_find(id)
-    begin
-      raise ExceptionHandler::NotFound, "Poll not found or deleted." unless find_by(id: id).present?
-      Rails.cache.fetch([name, id]) { find(id) }
-    end
+    Rails.cache.fetch([name, id]) { find(id) }
   end
 
   def flush_cache
@@ -127,13 +124,13 @@ class Poll < ActiveRecord::Base
     groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
   end
 
-  def set_new_title_with_tag
-    poll_title = self.title
-    tags.pluck(:name).each do |tag|
-      poll_title = poll_title + " " + "#" + tag
-    end
-    update_attributes!(title: poll_title)
-  end
+  # def set_new_title_with_tag
+  #   poll_title = self.title
+  #   tags.pluck(:name).each do |tag|
+  #     poll_title = poll_title + " " + "#" + tag
+  #   end
+  #   update_attributes!(title: poll_title)
+  # end
 
   def generate_qrcode_key
     begin
