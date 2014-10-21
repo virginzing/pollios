@@ -51,9 +51,10 @@ class MembersController < ApplicationController
 
   def verify_email
     @response = Authenticate::Sentai.verify_email(verify_email_params)
+    puts "response => #{@response}"
     if @response["response_status"] == "OK"
       @member = Member.find_by(email: verify_email_params[:email])
-      
+
       @verify_email = true
     else
       @verify_email = false
