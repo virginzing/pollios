@@ -1,5 +1,6 @@
 class Poll < ActiveRecord::Base
   mount_uploader :photo_poll, PhotoPollUploader
+  
   include PgSearch
   include PollsHelper
 
