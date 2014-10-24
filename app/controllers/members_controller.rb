@@ -174,7 +174,7 @@ class MembersController < ApplicationController
     @is_friend_request = is_friend(@current_member, @friend_request) if @friend_request.present?
 
     clear_request_count if params[:clear_request]
-    puts "all request"
+
   end
 
   def clear_request_count
