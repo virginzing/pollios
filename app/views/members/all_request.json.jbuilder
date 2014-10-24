@@ -24,6 +24,8 @@ if @current_member
   end
 
   json.group_request @group_inactive, partial: 'response_helper/group/request', as: :group
+
+  json.ask_join_group @ask_join_group, partial: 'response_helper/group/full_info', as: :group
 else
   json.response_status "ERROR"
 end

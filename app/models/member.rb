@@ -119,6 +119,9 @@ class Member < ActiveRecord::Base
   has_many :surveyor_in_group, through: :group_surveyor, source: :group
   # after_create :set_follow_pollios
 
+  has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
+  has_many :ask_join_groups, through: :request_groups, source: :group
+
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
@@ -448,6 +451,12 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def cached_ask_join_groups
+    Rails.cache.fetch([self.id, 'ask_join_groups']) do
+      ask_join_groups.to_a
+    end
+  end
+
   ## flush cache ##
 
   def flush_cache_about_poll
@@ -477,15 +486,15 @@ class Member < ActiveRecord::Base
     Rails.cache.delete([self.id, 'group_active'])
   end
 
-  def flush_cached_my_following
+  def flush_cache_my_following
     Rails.cache.delete([self.id, 'following'])
   end
 
-  def flush_cached_my_follower
+  def flush_cache_my_follower
     Rails.cache.delete([self.id, 'follower'])
   end
 
-  def flush_cached_my_block
+  def flush_cache_my_block
     Rails.cache.delete([self.id, 'block_friend'])
   end
 
@@ -501,6 +510,10 @@ class Member < ActiveRecord::Base
 
   def flush_cache_friend_watch
     Rails.cache.delete([self.id, 'friend_watch_count'])
+  end
+
+  def flush_cache_ask_join_groups
+    Rails.cache.delete([self.id, 'ask_join_groups'])
   end
 
   def campaigns_available

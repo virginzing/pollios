@@ -1,8 +1,8 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
+  before_action :set_current_member, only: [:cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_group, only: [:cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group]
   
   before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
@@ -36,6 +36,10 @@ class GroupController < ApplicationController
 
   def accept_request_group
     @group = Group.accept_request_group(@current_member, Member.find(params[:friend_id]), @group)
+  end
+
+  def cancel_ask_join_group
+    @group = Group.cancel_ask_join_group(@current_member, @group)
   end
 
   def poll_group
@@ -93,6 +97,7 @@ class GroupController < ApplicationController
         request_group.group_id = @group.id
         request_group.save!
         @new_request = true
+        @current_member.flush_cache_ask_join_groups
         RequestGroupWorker.perform_async(member_id, @group.id)
       end
     end

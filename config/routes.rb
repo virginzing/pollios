@@ -106,6 +106,7 @@ Pollios::Application.routes.draw do
     post ':id/invite',        to: 'group#add_friend_to_group'
     post ':id/accept',        to: 'group#accept_group'
     post ':id/accept_request_group',  to: 'group#accept_request_group'
+    post ':id/cancel_ask_join_group', to: 'group#cancel_ask_join_group'
     post ':id/cancel',        to: 'group#cancel_group'
     post ':id/leave',         to: 'group#leave_group'
     post 'delete_group',      to: 'group#delete_group'

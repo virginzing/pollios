@@ -94,11 +94,21 @@ class Group < ActiveRecord::Base
           @group.increment!(:member_count)
           clear_request_group
           JoinGroupWorker.perform_async(@friend.id, @group.id)
-          Rails.cache.delete([@friend.id, 'group_active'])
+          @friend.flush_cache_my_group
+          @friend.flush_cache_ask_join_groups
           Activity.create_activity_group(@friend, @group, 'Join')
         end
         @group
       end
+    end
+  end
+
+  def self.cancel_ask_join_group(member, group)
+    find_current_ask_group = group.request_groups.find_by(member_id: member.id)
+    if find_current_ask_group.present?
+      find_current_ask_group.destroy
+      member.flush_cache_ask_join_groups
+      group
     end
   end
 
