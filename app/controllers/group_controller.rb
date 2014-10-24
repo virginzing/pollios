@@ -85,12 +85,16 @@ class GroupController < ApplicationController
     member_id = params[:member_id]
     @new_request = false
 
-    @request_group = @group.request_groups.where(member_id: member_id).first_or_create do |request_group|
-      request_group.member_id = member_id
-      request_group.group_id = @group.id
-      request_group.save!
-      @new_request = true
-      RequestGroupWorker.perform_async(member_id, @group.id)
+    begin
+      find_member_in_group = @group.get_member_active.map(&:id)
+      raise ExceptionHandler::Forbidden, "You have joined in #{@group.name} already" if find_member_in_group.include?(member_id)
+      @request_group = @group.request_groups.where(member_id: member_id).first_or_create do |request_group|
+        request_group.member_id = member_id
+        request_group.group_id = @group.id
+        request_group.save!
+        @new_request = true
+        RequestGroupWorker.perform_async(member_id, @group.id)
+      end
     end
     
   end
