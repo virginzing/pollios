@@ -20,7 +20,8 @@ class HomeController < ApplicationController
   end
   
   def index
-    render layout: 'homepage'
+    # render layout: 'homepage'
+    render layout: 'new_homepage'
   end
 
   private

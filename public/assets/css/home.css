@@ -1,0 +1,286 @@
+@charset "utf-8";
+
+/*Section 01*/
+.section-01 .download-app{
+	display:block;
+	background:url(../images/shared/app-store.png) no-repeat 0 0;
+	background-size:35px 35px;
+	padding:3px 0 0 45px;
+	color:#de0d56;
+	font-size:1.2em;
+	line-height:1.1em;
+	min-height:45px;
+	margin-top:15px;
+}
+.section-01 .featured{
+	position:relative;
+}
+.section-01 .featured:before{
+	content:"";
+	display:block;
+	position:absolute;
+	background:#d32053;
+	width:100%;
+	height:270px;
+	top:-20px;
+	left:0;
+}
+.section-01 .featured:after{
+	content:"";
+	display:block;
+	position:absolute;
+	background:url(../images/home/glow.png) no-repeat 0 0;
+	width:100%;	
+	height:270px;
+	top:0;
+	left:0;
+}
+
+/*Mobile Slide*/
+.section-01 .featured .mobile-slide{
+	display:block;
+	position:absolute;
+	z-index:2000000000;
+	top:-63px;
+	left:10px;
+	background:url(../images/home/mobile-slide.png) no-repeat 0 0;
+	width:224px;
+	height:471px;
+}
+.section-01 .featured .mobile-slide:after{
+	content:"";
+	position:absolute;
+	background:url(../images/home/mobile-slide-mirror.jpg) no-repeat 0 bottom;
+	width:224px;
+	height:53px;
+	bottom:-56px;
+	left:1px;
+}
+.section-01 .featured .mobile-slide .image-carousel {
+	margin:66px 0 0 13px;
+	width:200px;
+}
+.section-01 .featured .mobile-slide .image-carousel img {
+	display: block;
+	float: left;
+}
+.section-01 .featured .mobile-slide .pagination {
+	text-align: center;
+	width:100%;
+}
+.section-01 .featured .mobile-slide .pagination a {
+	width: 10px;
+	height: 10px;
+	margin: 0 8px 0 0;
+	display: inline-block;
+	background:#9b9b9b;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.section-01 .featured .mobile-slide .pagination a.selected {
+	background:#d95969;
+	cursor: default;
+}
+.section-01 .featured .mobile-slide .pagination a span {
+	display: none;
+}
+
+.section-01 .featured .txt{
+	color:#fff;
+	font-family: 'AvenirLTStd35Light';
+	font-weight:normal;
+	font-size:30px;
+	font-size: 3.0rem;
+	line-height:1.2em;
+	text-transform:uppercase;
+	padding:3% 6%;
+}
+.section-01 .featured .txt span{
+	font-family: 'AvenirLTStd65Medium';
+	font-size:0.8em;
+}
+.section-01 .featured .txt p{
+	font-family: 'AvenirLTStd65Medium';
+	text-transform:none;
+	font-size:0.6em;
+	line-height:1.3em;
+}
+.section-01 .featured .download{
+	margin:53px 0 0 220px;
+}
+.section-01 .featured .download li{
+	display:block;
+}
+.section-01 .featured .download li a{
+	float:left;
+	position:relative;
+	width:100%;
+	padding:12px 10px;
+	background:url(../images/shared/dotted.png) repeat-x bottom left;
+	font-size:1.2em;
+	line-height:1.2em;
+	padding-left:80px;
+}
+.section-01 .featured .download li a span{
+	font-size:1.3em;
+	color:#d32053;
+}
+.section-01 .featured .download li a:before{
+	content:"";
+	display:block;
+	position:absolute;
+	background:url(../images/home/icon.png) no-repeat 0 0;
+	background-size:60px 30px;
+	width:30px;
+	height:30px;
+	left:30px;
+	top:0;
+	bottom:0;
+	margin-top:auto;
+	margin-bottom:auto;
+}
+.section-01 .featured .download li:last-child a:before{
+	background-position:-30px 0;
+}
+
+/*Polls*/
+.section-01 .polls h3{
+	color:#d32053;
+	font-size:14px;
+	font-size:1.4rem;
+}
+.section-01 .polls ul{
+	margin-top:15px;
+}
+.section-01 .polls ul li{
+	border-top:#ccc solid 1px;
+	padding: 15px 5px;
+}
+.section-01 .polls ul li:last-child{
+	border-bottom:#ccc solid 1px;
+}
+
+/*Section 02*/
+.wrapper .section-02{
+	position:relative;
+	background:url(../images/home/bg.jpg) no-repeat 0 0;
+	background-size:cover;
+	margin-top:25px;
+}
+.wrapper .section-02 .mobile-hand{
+	display:block;
+	color:#fff;
+	background:url(../images/home/mobile-hand.png) no-repeat 200px bottom;
+	background-size:249px 351px;
+	padding-left:500px;
+	height:400px;
+}
+.wrapper .section-02 .mobile-hand h3{
+	padding-top:85px;
+	line-height:1.3em;
+}
+.wrapper .section-02 .mobile-hand p{
+	font-size:1.3em;
+	line-height:1.3em;
+	font-family: 'AvenirLTStd45Book';
+	font-weight:normal;
+	padding:10px 0 0;
+}
+.wrapper .section-02 .mobile-hand p strong{
+	font-family: 'AvenirLTStd65Medium';
+	font-weight:normal;
+}
+
+/*Section 03*/
+.wrapper .section-03 .container{
+	position:relative;
+	background:url(../images/home/shadow.png) no-repeat bottom right;
+	height:400px;
+}
+.wrapper .section-03 .container .mobile{
+	background:url(../images/home/mobile.png) no-repeat 500px bottom;
+	min-height:400px;
+}
+.wrapper .section-03 .container h2{
+	width:550px;
+	text-align:left;
+	font-size:2em;
+	line-height:1.2em;
+	font-family: 'AvenirLTStd45Book';
+	font-weight:normal;
+	color:#d32053;
+	padding:100px 0 20px 160px;
+}
+.wrapper .section-03 .container h4{
+	width:450px;
+	padding:0 0 0 25px;
+	text-align:right;
+	font-size:1.3em;
+	line-height:1.3em;
+	font-family: 'AvenirLTStd45Book';
+	font-weight:normal;
+	clear:both;
+}
+
+/*Section 04*/
+.wrapper .section-04{
+	padding:60px 0 0;
+	text-align:center;
+}
+.wrapper .section-04 h2{
+	text-transform:uppercase;
+	color:#4d4d4d;
+	font-size:1.3em;
+	letter-spacing: 1px;
+}
+.wrapper .section-04 ul{
+	text-align: center;
+    display: block;
+    overflow: hidden;
+	margin-top:15px;
+}
+.wrapper .section-04 ul li{
+	display:block;
+	float:left;
+	margin:0;
+	padding:0;
+}
+.wrapper .section-04 ul li a{
+	display:block;
+	background:url(../images/home/logo-clients.jpg) no-repeat center top;
+	background-size:150px 510px;
+	width:150px;
+	height:85px;
+	text-indent:-9999px;
+}
+.wrapper .section-04 ul li:nth-child(2) a{
+	background-position:center -85px;
+}
+.wrapper .section-04 ul li:nth-child(3) a{
+	background-position:center -170px;
+}
+.wrapper .section-04 ul li:nth-child(4) a{
+	background-position:center -255px;
+}
+.wrapper .section-04 ul li:nth-child(5) a{
+	background-position:center -340px;
+}
+.wrapper .section-04 ul li:nth-child(6) a{
+	background-position:center -425px;
+}
+
+@media  only screen and (-webkit-min-device-pixel-ratio: 1.5),
+        only screen and (   min--moz-device-pixel-ratio: 1.5),
+        only screen and (     -o-min-device-pixel-ratio: 3/2),
+        only screen and (        min-device-pixel-ratio: 1.5),
+        only screen and (min-resolution: 192dpi) {
+
+	/*Retina*/
+	.section-01 .featured .download li a:before{
+		background-image:url(../images/home/icon@2x.png);
+	}
+	.wrapper .section-04 ul li a{
+		background-image:url(../images/home/logo-clients@2x.jpg);
+	}
+}

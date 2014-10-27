@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'AvenirLTStd45Book';
+    src: url('avenirltstd-book.eot');
+    src: url('avenirltstd-book.eot') format('embedded-opentype'),
+         url('avenirltstd-book.woff2') format('woff2'),
+         url('avenirltstd-book.woff') format('woff'),
+         url('avenirltstd-book.ttf') format('truetype'),
+         url('avenirltstd-book.svg#AvenirLTStd45Book') format('svg');
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AvenirLTStd35Light';
+    src: url('avenirltstd-light.eot');
+    src: url('avenirltstd-light.eot') format('embedded-opentype'),
+         url('avenirltstd-light.woff2') format('woff2'),
+         url('avenirltstd-light.woff') format('woff'),
+         url('avenirltstd-light.ttf') format('truetype'),
+         url('avenirltstd-light.svg#AvenirLTStd35Light') format('svg');
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AvenirLTStd55Roman';
+    src: url('avenirltstd-roman.eot');
+    src: url('avenirltstd-roman.eot') format('embedded-opentype'),
+         url('avenirltstd-roman.woff2') format('woff2'),
+         url('avenirltstd-roman.woff') format('woff'),
+         url('avenirltstd-roman.ttf') format('truetype'),
+         url('avenirltstd-roman.svg#AvenirLTStd55Roman') format('svg');
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AvenirLTStd65Medium';
+    src: url('avenirltstd-medium.eot');
+    src: url('avenirltstd-medium.eot') format('embedded-opentype'),
+         url('avenirltstd-medium.woff2') format('woff2'),
+         url('avenirltstd-medium.woff') format('woff'),
+         url('avenirltstd-medium.ttf') format('truetype'),
+         url('avenirltstd-medium.svg#AvenirLTStd65Medium') format('svg');
+	font-weight: normal;
+    font-style: normal;
+}
+
