@@ -29,6 +29,11 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
     process :resize_to_fill => [588, 588]
   end    
 
+  version :thumb_on_homepage do
+    process :eager => true
+    process :resize_to_fill => [200, 100]
+  end
+
   def extension_white_list
     %w(jpg jpeg gif png)
   end

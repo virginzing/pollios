@@ -106,7 +106,7 @@
                 <div class="col-xs-3 polls">
                   <h3>POPULAR POLLS</h3>
                     <ul>
-                      <li>
+    <!--                   <li>
                           <a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </a>
                         </li>
                         <li>
@@ -121,7 +121,13 @@
                         </li>
                         <li>
                           <a href="#">Donec hendrerit pulvinar tristique.</a>
+                        </li> -->
+                      <% @popular_poll.each do |poll| %>
+                        <li>
+                          <%= link_to poll.title, '#' %>
+                          <%= poll_that_image(poll) %>
                         </li>
+                      <% end %>
                     </ul>
                 </div>
             </div>

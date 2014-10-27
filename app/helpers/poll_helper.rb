@@ -77,5 +77,15 @@ module PollHelper
       'bg-color-red'
     end
   end
+
+  def poll_that_image(poll)
+    find_poll_photo = poll.photo_poll
+
+    if find_poll_photo.present?
+      content_tag :p do
+        image_tag poll.photo_poll.url(:thumb_on_homepage)
+      end
+    end
+  end
   
 end
