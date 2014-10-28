@@ -9,7 +9,7 @@ class AdminController < ApplicationController
   end
 
   def report
-    @report_polls = Poll.having_status_poll(:gray, :white).where("report_count != 0")
+    @report_polls = Admin::ReportPoll.new.get_report_poll
     @report_members = Member.having_status_account(:normal).where("report_count != 0")
   end
 

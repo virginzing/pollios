@@ -53,8 +53,8 @@ class AuthenSentaiController < ApplicationController
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login]]))
 			if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-        puts "@auth.activate_account? => #{@auth.activate_account?}"
-        puts "member => #{member}"
+        # puts "@auth.activate_account? => #{@auth.activate_account?}"
+        # puts "member => #{member}"
         if @auth.activate_account?
           @login = true
 

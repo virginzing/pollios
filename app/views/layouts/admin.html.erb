@@ -204,7 +204,7 @@
           <li class="<%= is_active_2nd_level('admin', 'report') %>">
             <a href="<%= admin_report_dashboard_path %>" title="Report"><i class="fa fa-lg fa-fw fa-warning"></i> <span class="menu-item-parent">Report</span>
             <span class="badge bg-color-redLight pull-right inbox-badge">
-              <%= Poll.having_status_poll(:gray, :white).where("report_count != 0").count + Member.having_status_account(:normal).where("report_count != 0").count %>
+              <%= Admin::ReportPoll.new.get_report_poll.count + Member.having_status_account(:normal).where("report_count != 0").count %>
             </span>
             </a>
           </li>

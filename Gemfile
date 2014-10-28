@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby "2.0.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.1.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '4.0.2'
@@ -64,7 +64,7 @@ gem 'rest-client'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'bson', '~> 2.2'
 gem 'bson_ext'
-gem 'mongoid_auto_increment_id', '0.6.3'
+gem 'mongoid_auto_increment_id', '0.6.5'
 gem 'dalli',  github: 'mperham/dalli'
 gem 'memcachier'
 gem 'carrierwave'
@@ -100,7 +100,7 @@ gem 'htmlentities'
 gem 'breadcrumbs_on_rails'
 gem 'nprogress-rails'
 gem 'yajl-ruby'
-gem 'jbuilder_cache_multi', '~> 0.0.2'
+gem 'jbuilder_cache_multi'
 
 gem "chartkick"
 

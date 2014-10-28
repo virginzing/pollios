@@ -24,7 +24,8 @@ module SymbolHash
     :change_cover => 'ChangeCover',
     :comment => 'Comment',
     :mention => 'Mention',
-    :also_comment => 'AlsoComment'
+    :also_comment => 'AlsoComment',
+    :report => 'Report'
   }
 
   AUTHORITY = {

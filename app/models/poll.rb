@@ -36,13 +36,13 @@ class Poll < ActiveRecord::Base
 
   has_many :member_report_polls, dependent: :destroy
 
-  belongs_to :member, touch: true
+  belongs_to :member
   belongs_to :poll_series
   belongs_to :campaign
   belongs_to :recurring
 
   before_save :set_default_value
-  before_create :generate_qrcode_key
+  # before_create :generate_qrcode_key
 
   # after_create :set_new_title_with_tag
   after_commit :flush_cache
@@ -109,7 +109,7 @@ class Poll < ActiveRecord::Base
 
   def cached_choices
     Rails.cache.fetch([self, 'choices']) do
-      choices.to_a
+      choices.all.to_a
     end
   end
 
@@ -137,6 +137,7 @@ class Poll < ActiveRecord::Base
     begin
       self.qrcode_key = SecureRandom.hex(4)
     end while self.class.exists?(qrcode_key: qrcode_key)
+    qrcode_key
   end
 
   # def get_vote_max
@@ -482,18 +483,19 @@ class Poll < ActiveRecord::Base
         else
           if (is_public == "1" || member.celebrity? || member.brand?)
             @set_public = true
-            if is_public == "0"
-              @set_public = false
-            end
           else
             @set_public = false
           end
         end
 
-        @poll = create!(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
+        @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
                         type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, in_group: in_group)
 
+        @poll.qrcode_key = @poll.generate_qrcode_key
+
         if @poll.valid? && choices
+          @poll.save!
+
           @choices = Choice.create_choices(@poll.id, choices)
           if @choices.present?
 

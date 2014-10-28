@@ -9,6 +9,7 @@ class ReportPoll
     unless find_report
       reporting = @member.member_report_polls.create!(poll_id: @poll.id, message: @options[:message])
       report_increment
+      send_notification if in_group?
       clear_cached
     end
     reporting
@@ -20,15 +21,21 @@ class ReportPoll
   end
 
   def clear_cached
-    @member.flush_cache_my_poll
-    @member.flush_cache_my_vote
-    @member.flush_cache_my_watch
+    @member.flush_cache_about_poll
+  end
+
+  def send_notification
+    ReportPollWorker.perform_async(@member.id, @poll.id)
   end
 
   private
 
   def find_report
     @member.member_report_polls.find_by(poll_id: @poll.id)
+  end
+
+  def in_group?
+    @poll.in_group
   end
   
 end

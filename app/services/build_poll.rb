@@ -117,4 +117,13 @@ class BuildPoll
       @choice_list
     end
   end
+
+  def build
+      
+  end
+
+  def create
+    
+  end
+
 end

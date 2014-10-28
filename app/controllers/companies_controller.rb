@@ -22,6 +22,10 @@ class CompaniesController < ApplicationController
     @invite = InviteCode.new
   end
 
+  def reports
+    @report_polls = Company::CompanyReportPoll.new(company_groups).get_report_poll_in_company  
+  end
+
   def via_email
     @via_email = InviteCode.new
   end

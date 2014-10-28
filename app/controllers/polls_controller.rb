@@ -3,7 +3,7 @@ class PollsController < ApplicationController
   protect_from_forgery
 
   skip_before_action :verify_authenticity_token, if: :json_request?
-  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :new_poll]
+  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
 
 
   before_action :set_current_member, only: [:delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
@@ -551,7 +551,8 @@ class PollsController < ApplicationController
     .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
     .group("comments.id, members.fullname, members.avatar")
     .paginate(page: comment_params[:next_cursor])
-    @new_comment_sort ||= @comments.sort! { |x,y| x.created_at <=> y.created_at }
+
+    @new_comment_sort = @comments.sort { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
     @total_entries = @comments.total_entries

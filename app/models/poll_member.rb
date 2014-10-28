@@ -1,7 +1,7 @@
 class PollMember < ActiveRecord::Base
 
   belongs_to :member
-  belongs_to :poll, -> { having_status_poll(:gray, :white) }, touch: true
+  belongs_to :poll, -> { having_status_poll(:gray, :white) }
 
   scope :active, -> { where("poll_members.expire_date > ?", Time.now) }
   scope :inactive, -> { where("expire_date < ?", Time.now) }
