@@ -30,6 +30,9 @@ class Poll < ActiveRecord::Base
   has_many :comments, dependent: :destroy
 
   has_many :history_votes, dependent: :destroy
+
+  has_many :who_voted,  through: :history_votes, source: :member
+
   has_many :history_views, dependent: :destroy
   has_many :share_polls, dependent: :destroy
   has_many :hidden_polls, dependent: :destroy
@@ -567,58 +570,43 @@ class Poll < ActiveRecord::Base
 
     Poll.transaction do
       begin
-        ever_vote = guest_id.present? ? HistoryVoteGuest.find_by_guest_id_and_poll_id(guest_id, poll_id) : HistoryVote.find_by_member_id_and_poll_id(member_id, poll_id)
+        ever_vote = HistoryVote.find_by(member_id: member_id, poll_id: poll_id)
 
         unless ever_vote.present?
-          find_poll = Poll.cached_find(poll_id)
+          find_poll = Poll.find_by(id: poll_id)
           find_choice = find_poll.choices.find_by(id: choice_id)
 
           raise ExceptionHandler::NotFound, "Poll not found" unless find_poll.present?
           raise ExceptionHandler::NotFound, "Choice not found" unless find_choice.present?
 
-          if find_poll.series
-            poll_series_id = find_poll.poll_series_id
-          else
-            poll_series_id = 0
+          poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
+
+          find_poll.increment!(:vote_all)
+
+          find_choice.increment!(:vote)
+
+          history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
+
+          @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
+
+          get_anonymous = member.get_anonymous_with_poll(find_poll)
+
+          if (member_id.to_i != find_poll.member.id) && !find_poll.series
+            VotePollWorker.perform_async(member_id, poll_id, get_anonymous)
           end
 
-          if guest_id.present?
-            find_poll.increment!(:vote_all_guest)
-            find_choice.increment!(:vote_guest)
-            # find_poll.poll_series.increment!(:vote_all_guest) if find_poll.series
-            history_voted = HistoryVoteGuest.create(guest_id: guest_id, poll_id: poll_id, choice_id: choice_id)
-          else
-            @voted = find_poll.increment!(:vote_all)
-            if @voted.present?
-              find_choice.increment!(:vote)
-              # find_poll.poll_series.increment!(:vote_all) if find_poll.series
-              history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
-
-              @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
-              # RawVotePoll.store_member_info(find_poll, find_choice, Member.find(member_id)) if find_poll.member.brand?
-              get_anonymous = member.get_anonymous_with_poll(find_poll)
-
-              if (member_id.to_i != find_poll.member.id) && !find_poll.series
-                VotePollWorker.perform_async(member_id, poll_id, get_anonymous)
-              end
-              # Campaign.manage_campaign(find_poll.id, member_id) if find_poll.campaign_id.present?
-
-              VoteStats.create_vote_stats(find_poll) unless find_poll.series
-
-              Activity.create_activity_poll(member, find_poll, 'Vote') unless find_poll.series
-
-              member.flush_cache_my_vote
-              member.flush_cache_my_vote_all
-
-              Rails.cache.delete([find_poll.class.name, find_poll.id])
-              [find_poll, history_voted, @campaign, @message]
-            end
+          unless find_poll.series
+            VoteStats.create_vote_stats(find_poll) 
+            Activity.create_activity_poll(member, find_poll, 'Vote')
           end
 
+          member.flush_cache_my_vote
+          member.flush_cache_my_vote_all
+
+          Rails.cache.delete([find_poll.class.name, find_poll.id])
+          [find_poll, history_voted, @campaign, @message]
         end
-        # rescue => e
-        #   puts "error => #{e}"
-        #   [@error_message = e.message, nil]
+
       end
     end
   end

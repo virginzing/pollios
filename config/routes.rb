@@ -15,6 +15,14 @@ Pollios::Application.routes.draw do
         get 'members',    to: 'companies#company_members'
         get 'polls',      to: 'companies#company_polls'
       end
+
+      scope 'surveyor' do
+        get 'polls',      to: 'surveyors#list_polls'
+        get 'polls/:id/detail', to: 'surveyors#poll_detail'
+        get 'polls/:id/members_surveyable', to: 'surveyors#members_surveyable'
+        post 'polls/:id/survey',  to: 'surveyors#survey'
+      end
+
     end
 
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do

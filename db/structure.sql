@@ -1019,7 +1019,8 @@ CREATE TABLE history_votes (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     poll_series_id integer DEFAULT 0,
-    data_analysis hstore
+    data_analysis hstore,
+    surveyor_id integer
 );
 
 
@@ -4045,3 +4046,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141015132936');
 INSERT INTO schema_migrations (version) VALUES ('20141016085500');
 
 INSERT INTO schema_migrations (version) VALUES ('20141016155622');
+
+INSERT INTO schema_migrations (version) VALUES ('20141028072811');
+

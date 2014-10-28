@@ -213,9 +213,6 @@ class PollsController < ApplicationController
     end
   end
 
-  # def series
-  #   @series = @current_member.poll_series.paginate(page: params[:page])
-  # end
 
   def show
     @choice_data_chart = []
@@ -546,11 +543,12 @@ class PollsController < ApplicationController
   def load_comment
     raise_exception_without_group
 
-    @comments = Comment.joins(:member).select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
-    .includes(:mentions)
-    .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
-    .group("comments.id, members.fullname, members.avatar")
-    .paginate(page: comment_params[:next_cursor])
+    @comments = Comment.joins(:member)
+                      .select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
+                      .includes(:mentions)
+                      .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
+                      .group("comments.id, members.fullname, members.avatar")
+                      .paginate(page: comment_params[:next_cursor])
 
     @new_comment_sort = @comments.sort { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
@@ -586,15 +584,15 @@ class PollsController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.cached_find(params[:id])
+    @poll = Poll.find_by(id: params[:id])
+    raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+    @poll
   end
 
   def set_group
-    begin
-      @group = Group.find(params[:group_id])
-      raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
-      @group
-    end
+    @group = Group.find_by(id: params[:group_id])
+    raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+    @group
   end
 
   def comment_params
