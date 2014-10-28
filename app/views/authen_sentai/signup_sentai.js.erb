@@ -1,7 +1,6 @@
 $.signup = <%= raw @signup %>;
 $.waiting = <%= raw @waiting || false %>;
 $.signup_company = <%= raw @signup_company || false %>;
-$.brand = <%= raw @auth.approve_brand || false %>;
 
 if ($.signup) {
   handleSignupSuccess();

@@ -47,14 +47,14 @@
               <div class="form-group">
                 <label class="control-label col-md-2">Campaign</label>
                 <div class="col-md-10">
-                  <%= f.select :campaign_id, current_member.campaigns_available.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
+                  <%= f.select :campaign_id, current_member.campaigns_available.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a campaign"} %>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-2">Recurring</label>
                 <div class="col-md-10">
-                  <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a recurring"} %>
+                  <%= f.select :recurring_id, list_recurring.map { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2me_campaign', placeholder: "Select a recurring"} %>
                 </div>
               </div>
               <%= f.input :expire_date, collection: 1..10,  wrapper: :horizontal, label: "Expire with in", include_blank: false %>

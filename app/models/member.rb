@@ -690,6 +690,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def get_roles
+    roles.map(&:name).uniq
+  end
+
   # def self.cached_member_of_poll(current_member, member_of_poll)
   #   MemberSerializer.new(member_of_poll, serializer_options: { current_member: current_member }).as_json
   # end

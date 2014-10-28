@@ -170,6 +170,7 @@ class CompaniesController < ApplicationController
 
         list_group.each do |group|
           find_member.add_role :surveyor, group
+          group.group_surveyors.create!(member_id: find_member.id)
         end
         flash[:success] = "Add surveyor successfully"
         redirect_to company_members_path
@@ -187,6 +188,7 @@ class CompaniesController < ApplicationController
 
     if remove_surveyor.present?
       flash[:success] = "Remove surveyor successfully."
+      find_group.group_surveyors.find_by(member_id: member_id).destroy
       redirect_to company_group_detail_path(find_group)
     end
   end

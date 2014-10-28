@@ -116,7 +116,7 @@
                 <section class="col col-5">
                     <label class="label">Campaign</label>
                     <label class="select">
-                      <%= f.select :campaign_id, current_member.campaigns.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                      <%= f.select :campaign_id, current_member.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
                     </label>
                   </section>
 
@@ -124,14 +124,14 @@
                   <section class="col col-5">
                     <label class="label">Campaign</label>
                     <label class="select">
-                      <%= f.select :campaign_id, current_member.campaigns.all.map! {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                      <%= f.select :campaign_id, current_member.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
                     </label>
                   </section>
 
                   <section class="col col-5">
                     <label class="label">Recurring</label>
                     <label class="select">
-                      <%= f.select :recurring_id, list_recurring.map! { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
+                      <%= f.select :recurring_id, list_recurring.map { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
                     </label>
                   </section>
                 <% end %>

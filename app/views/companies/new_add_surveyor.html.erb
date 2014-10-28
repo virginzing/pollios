@@ -12,7 +12,7 @@
       
       <div class="col col-12">
         <%= f.label 'Member in Company' %>
-        <%= f.select :member_id, @list_members_in_company.map! {|r| [r.fullname, r.id ] }, { include_blank: true },  { class: 'select2_surveyor', placeholder: "Select a member", :"data-parsley-required" => "true" } %>
+        <%= f.select :member_id, @list_members_in_company.map {|r| [r.fullname, r.id ] }, { include_blank: true },  { class: 'select2_surveyor', placeholder: "Select a member", :"data-parsley-required" => "true" } %>
       </div>
       
       <br>
