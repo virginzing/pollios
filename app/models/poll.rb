@@ -108,9 +108,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_choices
-    Rails.cache.fetch([self, 'choices']) do
-      choices.all.to_a
-    end
+    Rails.cache.fetch([self, 'choices']) { choices.to_a }
   end
 
   # def flush_cache_relate_with_vote
