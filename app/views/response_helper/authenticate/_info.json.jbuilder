@@ -19,7 +19,7 @@ if member.company?
   end
 end
 
-json.roles member.get_roles
+json.type member.get_roles
 
 # json.count do
 #   json.point member.point
