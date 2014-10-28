@@ -7,7 +7,7 @@ class MembersController < ApplicationController
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
   before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
-  before_action :load_resource_poll_feed, only: [:detail_friend]
+  before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile]
 
   before_action :set_company, only: [:profile, :delete_photo_group], :if => :only_company
   before_action :find_group, only: [:profile, :delete_photo_group], :if => :only_company

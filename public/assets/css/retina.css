@@ -1,0 +1,16 @@
+@charset "utf-8";
+
+@media  only screen and (-webkit-min-device-pixel-ratio: 1.5),
+        only screen and (   min--moz-device-pixel-ratio: 1.5),
+        only screen and (     -o-min-device-pixel-ratio: 3/2),
+        only screen and (        min-device-pixel-ratio: 1.5),
+        only screen and (min-resolution: 192dpi) {
+
+	/* Style Rules */
+	header .logo a{
+		background-image:url(../images/shared/logo@2x.png);
+	}
+	.content .download-app{
+		background-image:url(../images/shared/app-store@2x.png);
+	}
+}
