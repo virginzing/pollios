@@ -674,6 +674,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def get_email
+    email.present? ? email : ""
+  end
+
   def get_template
     Template.where(member_id: id).first
   end

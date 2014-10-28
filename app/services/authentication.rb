@@ -7,8 +7,12 @@ class Authentication
     @default_member_type = :citizen
   end
 
+  def provider
+    @params[:provider]
+  end
+
   def member
-    @member ||= member_from_authen
+    @member ||= provider == "facebook" ? member_from_facebook : member_from_authen
   end
 
   def web_login
@@ -115,7 +119,7 @@ class Authentication
       if web_login.present?
         member.auth_token = generate_auth_token
       end
-      member.setting = { "post_poll"=>"friend_following", "vote_poll"=> true, "comment_poll"=> true }
+      member.setting = member_setting
       member.save!
       @new_member = true
     end
@@ -137,7 +141,7 @@ class Authentication
         follow_pollios
         add_new_group_company if member_type == "3"
         @member.update_column(:avatar, avatar) if avatar.present?
-        UserStats.create_user_stats(@new_member, @params["provider"])
+        UserStats.create_user_stats(@member, @params["provider"])
       end
 
     end
@@ -148,14 +152,35 @@ class Authentication
     @member
   end
 
+  def member_from_facebook
+    find_provider = Provider.where(name: "facebook", pid: pid).first
+
+    unless find_provider.present?
+      member = Member.create!(fullname: name, member_type: member_type, auth_token: generate_auth_token, setting: member_setting)
+      find_provider = member.providers.create!(name: "facebook", pid: pid, token: generate_token)
+      @new_member = true
+    end
+
+    @member = find_provider.member
+
+    if @new_member
+      follow_pollios
+      UserStats.create_user_stats(@member, @params["provider"])
+    else
+      find_provider.update_columns(token: generate_token)
+    end
+
+    @member
+  end
+
   def update_new_token
     @member.update!(auth_token: generate_auth_token)
   end
 
   def follow_pollios
+    puts "member => #{@member}"
     find_pollios = Member.find_by_email("pollios@gmail.com")
     if find_pollios.present?
-      puts "member2 => #{@member.id}"
       Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id
     end
   end
@@ -187,6 +212,10 @@ class Authentication
   #   end
   #   @username
   # end
+
+  def member_setting
+    { "post_poll"=>"friend_following", "vote_poll"=> true, "comment_poll"=> true }
+  end
 
   def self.generate_api_token
     begin
