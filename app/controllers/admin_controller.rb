@@ -2,7 +2,7 @@ class AdminController < ApplicationController
   layout 'admin'
   skip_before_action :verify_authenticity_token, only: [:login_as]
 
-  before_filter :authenticate_admin!, :redirect_unless_admin
+  before_filter :authenticate_admin!, :redirect_unless_admin, except: [:load_reason_poll, :load_reason_member]
 
   def dashboard
 
