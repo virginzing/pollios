@@ -12,7 +12,7 @@
       
       <div class="col col-12">
         <%= f.label 'Member in Company' %>
-        <%= f.select :member_id, @list_members_in_company.map {|r| [r.fullname, r.id ] }, { include_blank: true },  { class: 'select2_surveyor', placeholder: "Select a member", :"data-parsley-required" => "true" } %>
+        <%= f.select :member_id, @list_members_in_company.map {|r| [r.fullname, r.id ] }, { include_blank: true },  { class: 'select2_surveyor', id: "select-surveyor", placeholder: "Select a member", :"data-parsley-required" => "true" } %>
       </div>
       
       <br>
@@ -43,7 +43,7 @@
   $(document).ready(function(){
     function format (state) {
       if (!state.id) return state.text; // optgroup
-      console.log(state);
+      // console.log(state);
       return state.text;
     }
 
@@ -70,7 +70,10 @@
         dataType: "json"
       })
 
+      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+
       request.done(function(msg) {
+        $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
         // console.log(msg.group_id)
         var list_group_id = msg.group_id
         if (list_group_id.length > 0) {
@@ -84,7 +87,9 @@
       });
 
       request.fail(function (jqXHR, textStatus) {
-        console.log("Request failed: " + textStatus);
+        $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+        var json_response = JSON.parse(jqXHR.responseText);
+        handleErrorAddSurveyor(json_response.error_message);
       });
 
       console.log(member_id);
@@ -94,6 +99,17 @@
       $('.checkbox').attr('disabled', false).prop('checked', false);
 
     }
+
+    function handleErrorAddSurveyor (error_message) {
+      $.smallBox({
+        title : "Warning",
+        content: error_message,
+        color: "#C46A69",
+        icon: "fa fa-warning",
+        timeout: 6000
+      });
+    }
+
   });
 </script>
 

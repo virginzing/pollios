@@ -37,7 +37,7 @@ class PollDetailCompany
 
   def group_member_active
     list_member_ids_active = []
-    @group.each do |group|
+    @poll.groups.each do |group|
       list_member_ids_active << group.get_member_active.map(&:id)
     end
     list_member_ids_active
