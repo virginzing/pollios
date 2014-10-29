@@ -1,7 +1,6 @@
 class Member < ActiveRecord::Base
-  rolify
+
   rolify :surveyor => 'Class', :after_add => :create_group_surveyor, :after_remove => :remove_group_surveyor
-  rolify :group_admin => 'Class'
 
   serialize :interests, Array
   # has_paper_trail
@@ -219,15 +218,16 @@ class Member < ActiveRecord::Base
 
   end
 
+  def update_group
+    
+  end
+
   def create_group_surveyor(role)
-    GroupSurveyor.where(member_id: self.id, group_id: role.resource_id).first_or_create do |group_surveyor|
+    GroupSurveyor.where(member_id: self.id, group_id: role.resource_id).first_or_initialize do |group_surveyor|
       group_surveyor.member_id = self.id
       group_surveyor.group_id = role.resource_id
       group_surveyor.save!
     end
-    # GroupSurveyor.create!(member_id: self.id, group_id: role.resource_id)
-    # puts "self => #{self}"
-    # puts "role => #{role}"
   end
 
   def remove_group_surveyor(role)
