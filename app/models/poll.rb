@@ -751,6 +751,18 @@ class Poll < ActiveRecord::Base
 
   end
 
+  def check_complete?
+    member_surveyable = []
+    self.in_group_ids.split(",").each do |group_id|
+      member_surveyable = member_surveyable | Group.cached_member_active(group_id.to_i)
+    end
+
+    member_ids_voted_already = HistoryVote.unscoped.where(poll_id: self.id).map(&:member_id)
+    remain_can_survey = member_surveyable - member_ids_voted_already
+    puts "remain_can_survey => #{remain_can_survey}"
+    remain_can_survey.count > 0 ? false : true
+  end
+
   ## for group api ##
 
   def get_member_shared_this_poll(group_id)

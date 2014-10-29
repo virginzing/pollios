@@ -75,6 +75,7 @@ class Group < ActiveRecord::Base
       JoinGroupWorker.perform_async(member_id, group_id)
 
       Rails.cache.delete([member_id, 'group_active'])
+      Group.flush_cached_member_active(group_id)
 
       if @group
         Activity.create_activity_group(member, @group, 'Join')
@@ -96,6 +97,7 @@ class Group < ActiveRecord::Base
           JoinGroupWorker.perform_async(@friend.id, @group.id)
           @friend.flush_cache_my_group
           @friend.flush_cache_ask_join_groups
+          Group.flush_cached_member_active(@group.id)
           Activity.create_activity_group(@friend, @group, 'Join')
         end
         @group
@@ -162,6 +164,7 @@ class Group < ActiveRecord::Base
         InviteFriendWorker.perform_async(member_id, list_friend, group_id)
         @group_member.group
       end
+      Group.flush_cached_member_active(group_id)
     else
       raise ExceptionHandler::Forbidden, "You are not admin of group"
     end
@@ -190,6 +193,7 @@ class Group < ActiveRecord::Base
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
         Member.find(friend_id).remove_role :group_admin, find_member_in_group.group
+        Group.flush_cached_member_active(find_member_in_group.group.id)
       else
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end
@@ -270,6 +274,16 @@ class Group < ActiveRecord::Base
 
   def get_company
     group_company.company
+  end
+
+  def self.cached_member_active(group_id)
+    Rails.cache.fetch([ 'group', group_id, 'member_active']) do
+      Group.find(group_id).get_member_active.to_a.map(&:id)
+    end
+  end
+
+  def self.flush_cached_member_active(group_id)
+    Rails.cache.delete([ 'group', group_id, 'member_active' ])
   end
 
   def as_json options={}

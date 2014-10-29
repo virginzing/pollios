@@ -88,6 +88,7 @@ class CompaniesController < ApplicationController
     @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
     respond_to do |format|
       if @group
+        Group.flush_cached_member_active(@group.id)
         flash[:success] = "Remove successfully."
         format.html { redirect_to company_groups_members_path(params[:group_id]) }
       else
@@ -316,6 +317,7 @@ class CompaniesController < ApplicationController
             this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
             this_group.increment!(:member_count)
             find_user.cached_flush_active_group
+            Group.flush_cached_member_active(this_group.id)
             format.json { render json: { error_message: nil }, status: 200 }
           else
             @error_message = "You already joined in this group."
@@ -335,6 +337,7 @@ class CompaniesController < ApplicationController
     Group.transaction do 
       params[:group_id].each do |group_id|
         @group = Member.find(params[:member_id]).cancel_or_leave_group(group_id, "L")
+        Group.flush_cached_member_active(group_id)
       end
 
       respond_to do |format|
