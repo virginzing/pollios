@@ -1,5 +1,5 @@
 class AuthenSentaiController < ApplicationController
-	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai, :change_password]
+	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company]
 	# before_action :current_login?, only: [:signin]
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
@@ -104,7 +104,7 @@ class AuthenSentaiController < ApplicationController
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{@response}"
   	respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"] ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"], "company_id" => signup_params["company_id"] ]))
   		if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
@@ -146,6 +146,28 @@ class AuthenSentaiController < ApplicationController
         wants.js
   		end
   	end
+  end
+
+  def signup_sentai_via_company
+    @response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
+    respond_to do |wants|
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "company_id" => signup_params["company_id"] ]))
+      if @response["response_status"] == "OK"
+        @auth.member
+        flash[:success] = "Create sucessfully."
+        @signup = true
+        wants.html { redirect_to company_members_path }
+        wants.json
+        wants.js
+      else
+        @signup = false
+        flash[:error] = @response["response_message"]
+        @flash_error = flash[:error]
+        wants.html { redirect_to(:back) }
+        wants.json
+        wants.js
+      end
+    end
   end
 
   def forgot_password
@@ -228,7 +250,7 @@ class AuthenSentaiController < ApplicationController
     end
 
 	  def signup_params
-	    params.permit(:approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address)
+	    params.permit(:approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id)
 	  end
 
 	  def update_profile_params

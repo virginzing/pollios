@@ -1,10 +1,10 @@
 module ApplicationHelper
   def flash_class(level)
       case level
-        when :notice then "alert alert-warning"
-        when :success then "alert alert-success"
-        when :error then "alert alert-danger"
-        when '' then 'alert alert-info'
+        when "notice" then "alert alert-warning"
+        when "success" then "alert alert-success"
+        when "error" then "alert alert-danger"
+        else 'alert alert-info'
       end
   end
 
@@ -57,11 +57,12 @@ module ApplicationHelper
   def manage_flash(flash, title = "", message = "", color = "", icon = "")
     if flash.present?
       flash.each do |name, msg|
-        if name == :warning
+
+        if name == "warning"
           title = "Warning"
           color = "#C46A69"
           icon  = "fa fa-warning"
-        elsif name == :success
+        elsif name == "success"
           title = "Success"
           color = "#739E73"
           icon  = "fa fa-check"

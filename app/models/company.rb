@@ -5,6 +5,7 @@ class Company < ActiveRecord::Base
   has_many :group_companies, dependent: :destroy
   has_many :groups, through: :group_companies , source: :group
 
+  has_many :main_groups, -> { where("group_companies.main_group = 't' ") }, through: :group_companies, source: :group
   # validates :amount_code, :prefix_name, presence: true
   
   # validates :name, presence: true, :uniqueness => { :case_sensitive => false, message: "Name must be unique" }, on: :create

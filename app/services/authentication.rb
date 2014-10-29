@@ -43,6 +43,14 @@ class Authentication
     !member.blacklist?
   end
 
+  def company_id
+    @params["company_id"]
+  end
+
+  def create_member_via_company?
+    company_id.present?
+  end
+
   def name
     @params["fullname"] || @params[:name]
   end
@@ -140,6 +148,7 @@ class Authentication
       if @new_member
         follow_pollios
         add_new_group_company if member_type == "3"
+        join_group_automatic if create_member_via_company?
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
       end
@@ -175,6 +184,12 @@ class Authentication
 
   def update_new_token
     @member.update!(auth_token: generate_auth_token)
+  end
+
+  def join_group_automatic
+    find_main_group = Company.find(company_id.to_i).main_groups.first
+    find_main_group.group_members.create!(member_id: @member.id, active: true, is_master: false)
+    find_main_group.increment!(:member_count)
   end
 
   def follow_pollios

@@ -210,6 +210,7 @@ Pollios::Application.routes.draw do
     delete 'signout',          to: 'authen_sentai#signout', as: :authen_signout
     post 'signin_sentai',   to: 'authen_sentai#signin_sentai'
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
+    post 'signup_sentai_via_company', to: 'authen_sentai#signup_sentai_via_company',  as: :authen_signup_via_company
     post 'update_sentai',   to: 'authen_sentai#update_sentai'
     post 'change_password', to: 'authen_sentai#change_password'
     post 'facebook',        to: 'facebook#login'
@@ -290,6 +291,8 @@ Pollios::Application.routes.draw do
     post 'download_txt', to: 'companies#download_txt', as: :download_txt
 
     get 'invites/new', to: 'companies#new',  as: :invites_new
+
+    get 'new_member', to: 'companies#new_member', as: :new_member_to_company
 
 
   end

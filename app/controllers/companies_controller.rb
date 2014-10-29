@@ -80,6 +80,10 @@ class CompaniesController < ApplicationController
     # add comment
   end
 
+  def new_member
+    
+  end
+  
   def remove_member
     @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
     respond_to do |format|
