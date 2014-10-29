@@ -27,7 +27,7 @@
 
 <br>
 
-<% if params[:q] && @members.count > 0 %>
+<% if params[:q] && @members.to_a.count > 0 %>
 <section id="widget-grid" class="">
   <div class="jarviswidget jarviswidget-color-greenLight" id="wid-list-users" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>

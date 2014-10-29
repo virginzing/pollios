@@ -87,7 +87,7 @@ gem 'amoeba'
 
 gem 'rails_admin'
 gem 'devise'
-gem 'paper_trail', '~> 3.0.0'
+# gem 'paper_trail', '~> 3.0.6'
 gem "sass", "~> 3.2.5"
 gem 'active_model_serializers'
 gem "gretel"
@@ -113,7 +113,7 @@ gem 'will_paginate_mongoid'
 # gem 'rollbar'  # for Notifier
 
 gem 'itunes-receipt' , :git => 'git://github.com/nov/itunes-receipt.git'
-
+gem 'will_paginate'
 # gem 'zeus'
 
 gem 'rack-cache'

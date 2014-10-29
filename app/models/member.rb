@@ -1,7 +1,5 @@
 class Member < ActiveRecord::Base
-
   rolify
-
   serialize :interests, Array
   # has_paper_trail
   include PgSearch
@@ -128,8 +126,9 @@ class Member < ActiveRecord::Base
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
 
   LIMIT_POLL = 10
-  self.per_page = 20
   FRIEND_LIMIT = 500
+  
+  self.per_page = 20
 
   rails_admin do 
 

@@ -202,9 +202,6 @@ GEM
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
-    paper_trail (3.0.6)
-      activerecord (>= 3.0, < 5.0)
-      activesupport (>= 3.0, < 5.0)
     pg (0.17.0)
     pg-hstore (1.2.0)
     pg_search (0.7.8)
@@ -402,7 +399,6 @@ DEPENDENCIES
   nested_form
   newrelic_rpm
   nprogress-rails
-  paper_trail (~> 3.0.0)
   pg (= 0.17.0)
   pg_search
   proxylocal
@@ -432,6 +428,7 @@ DEPENDENCIES
   unicorn
   unicorn-worker-killer
   versioncake!
+  will_paginate
   will_paginate-foundation
   will_paginate_mongoid
   yajl-ruby
