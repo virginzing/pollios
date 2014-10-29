@@ -122,7 +122,6 @@ class Member < ActiveRecord::Base
   has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
   has_many :ask_join_groups, through: :request_groups, source: :group
 
-
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
 
