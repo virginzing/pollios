@@ -1,6 +1,6 @@
 class Member < ActiveRecord::Base
 
-  rolify :surveyor => 'Class', :after_add => :create_group_surveyor, :after_remove => :remove_group_surveyor
+  rolify
 
   serialize :interests, Array
   # has_paper_trail
@@ -222,17 +222,16 @@ class Member < ActiveRecord::Base
     
   end
 
-  def create_group_surveyor(role)
-    GroupSurveyor.where(member_id: self.id, group_id: role.resource_id).first_or_initialize do |group_surveyor|
+  def create_group_surveyor(group_id)
+    GroupSurveyor.where(member_id: self.id, group_id: group_id).first_or_initialize do |group_surveyor|
       group_surveyor.member_id = self.id
-      group_surveyor.group_id = role.resource_id
+      group_surveyor.group_id = group_id
       group_surveyor.save!
     end
   end
 
-  def remove_group_surveyor(role)
-    puts "check callback remove surveyor"
-    find_group_surveyor = GroupSurveyor.find_by(member_id: self.id, group_id: role.resource_id)
+  def remove_group_surveyor(group_id)
+    find_group_surveyor = GroupSurveyor.find_by(member_id: self.id, group_id: group_id)
     find_group_surveyor.destroy if find_group_surveyor.present?
   end
 

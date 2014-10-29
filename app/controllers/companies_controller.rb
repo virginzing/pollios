@@ -170,7 +170,7 @@ class CompaniesController < ApplicationController
 
         list_group.each do |group|
           find_member.add_role :surveyor, group
-          # group.group_surveyors.create!(member_id: find_member.id)
+          find_member.create_group_surveyor(group.id)
         end
         flash[:success] = "Add surveyor successfully"
         redirect_to company_members_path
@@ -183,10 +183,12 @@ class CompaniesController < ApplicationController
     group_id = params[:group_id]
     member_id = params[:surveyor_id]
     find_group = Group.find(group_id)
+    find_member = Member.find(member_id)
 
-    remove_surveyor = Member.find(member_id).remove_role :surveyor, find_group
+    remove_surveyor = find_member.remove_role :surveyor, find_group
 
     if remove_surveyor.present?
+      find_member.remove_group_surveyor(group_id)
       flash[:success] = "Remove surveyor successfully."
       redirect_to company_group_detail_path(find_group)
     end
