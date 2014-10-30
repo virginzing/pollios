@@ -123,5 +123,3 @@ gem 'rack-cache'
 gem 'rubyzip', '>= 1.0.0'
 gem 'zip-zip'
 gem 'rolify'
-
-gem 'public_activity'
