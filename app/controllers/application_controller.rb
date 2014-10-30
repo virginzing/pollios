@@ -156,6 +156,10 @@ class ApplicationController < ActionController::Base
     @current_member.company? if @current_member
   end
 
+  def track_activity_feed(current_member, group_id, trackable, action = params[:action])
+    current_member.activity_feeds.create! action: action, trackable: trackable, group_id: group_id
+  end
+
   private
 
   # Member.current_member = Member.find(85)

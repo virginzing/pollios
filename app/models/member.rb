@@ -102,7 +102,6 @@ class Member < ActiveRecord::Base
   has_many :recurrings, dependent: :destroy
   
   has_many :poll_series
-  before_create :set_friend_limit
   
   has_many :providers, dependent: :destroy
 
@@ -118,6 +117,10 @@ class Member < ActiveRecord::Base
 
   has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
   has_many :ask_join_groups, through: :request_groups, source: :group
+
+  has_many :activity_feeds, dependent: :destroy
+
+  before_create :set_friend_limit
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }

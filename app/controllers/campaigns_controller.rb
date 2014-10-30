@@ -19,7 +19,6 @@ class CampaignsController < ApplicationController
 
   def check_redeem
     
-
     ## don't forget clear cache reward ##
   end
 

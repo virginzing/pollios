@@ -207,6 +207,8 @@ class CompaniesController < ApplicationController
                       .where("group_members.group_id = ? AND group_members.active = 't'", @group).uniq || []
 
     @list_surveyor = @group.surveyor
+
+    @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: params[:group_id]).order("created_at desc").paginate(page: params[:page], per_page: 10)  
   end
 
   def create_group
@@ -256,7 +258,7 @@ class CompaniesController < ApplicationController
       group = @group
       group.leave_group = group_params[:leave_group].present? ? true : false
       group.admin_post_only = group_params[:admin_post_only].present? ? true : false
-      
+
       if group.update(group_params)
         group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
         flash[:success] = "Update group profile successfully."

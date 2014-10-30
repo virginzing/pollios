@@ -72,6 +72,41 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: activity_feeds; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE activity_feeds (
+    id integer NOT NULL,
+    member_id integer,
+    action character varying(255),
+    trackable_id integer,
+    trackable_type character varying(255),
+    group_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: activity_feeds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE activity_feeds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activity_feeds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE activity_feeds_id_seq OWNED BY activity_feeds.id;
+
+
+--
 -- Name: admins; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2088,6 +2123,13 @@ ALTER SEQUENCE watcheds_id_seq OWNED BY watcheds.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY activity_feeds ALTER COLUMN id SET DEFAULT nextval('activity_feeds_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY admins ALTER COLUMN id SET DEFAULT nextval('admins_id_seq'::regclass);
 
 
@@ -2474,6 +2516,14 @@ ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq':
 --
 
 ALTER TABLE ONLY watcheds ALTER COLUMN id SET DEFAULT nextval('watcheds_id_seq'::regclass);
+
+
+--
+-- Name: activity_feeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY activity_feeds
+    ADD CONSTRAINT activity_feeds_pkey PRIMARY KEY (id);
 
 
 --
@@ -2922,6 +2972,27 @@ ALTER TABLE ONLY versions
 
 ALTER TABLE ONLY watcheds
     ADD CONSTRAINT watcheds_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_activity_feeds_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_activity_feeds_on_group_id ON activity_feeds USING btree (group_id);
+
+
+--
+-- Name: index_activity_feeds_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_activity_feeds_on_member_id ON activity_feeds USING btree (member_id);
+
+
+--
+-- Name: index_activity_feeds_on_trackable_id_and_trackable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_activity_feeds_on_trackable_id_and_trackable_type ON activity_feeds USING btree (trackable_id, trackable_type);
 
 
 --
@@ -4051,4 +4122,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141016155622');
 INSERT INTO schema_migrations (version) VALUES ('20141028072811');
 
 INSERT INTO schema_migrations (version) VALUES ('20141030073323');
+
+INSERT INTO schema_migrations (version) VALUES ('20141030075116');
 

@@ -7,6 +7,7 @@
 //= require parsley.remote
 //= require parsley
 //= require jquery.ezdz
+//= require jquery-ias
 //= require nprogress
 //= require nprogress-turbolinks
 //= require chartkick

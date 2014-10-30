@@ -1,0 +1,8 @@
+<small class="pull-right"><span data-livestamp="<%= activity.created_at.to_i %>"></span></small>
+<strong><%= activity.member.fullname %></strong> viewed on 
+  <% if activity.trackable %>
+    <strong><%= link_to activity.trackable.title, activity.trackable %></strong><br>
+  <% else %>
+    poll which has since been removed 
+  <% end %>
+<small class="text-muted"><%= activity.created_at.strftime("%d %B %Y %H:%M") %></small>

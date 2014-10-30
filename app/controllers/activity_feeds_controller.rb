@@ -1,0 +1,2 @@
+class ActivityFeedsController < ApplicationController
+end
