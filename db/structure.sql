@@ -758,7 +758,8 @@ CREATE TABLE groups (
     leave_group boolean DEFAULT true,
     group_type integer,
     properties hstore,
-    cover character varying(255)
+    cover character varying(255),
+    admin_post_only boolean DEFAULT false
 );
 
 
@@ -4048,4 +4049,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141016085500');
 INSERT INTO schema_migrations (version) VALUES ('20141016155622');
 
 INSERT INTO schema_migrations (version) VALUES ('20141028072811');
+
+INSERT INTO schema_migrations (version) VALUES ('20141030073323');
 

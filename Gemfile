@@ -118,9 +118,10 @@ gem 'will_paginate'
 
 gem 'rack-cache'
 
-
 # gem 'axlsx'
 # gem 'axlsx_rails'
 gem 'rubyzip', '>= 1.0.0'
 gem 'zip-zip'
 gem 'rolify'
+
+gem 'public_activity'

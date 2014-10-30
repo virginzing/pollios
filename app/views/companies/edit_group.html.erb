@@ -46,6 +46,26 @@
                   <strong>Note</strong> description is show in app Pollios.
                 </div>
               </section>
+              <section>
+                <div class="row">
+                  <div class="col col-md-4">
+                  <label class="toggle">
+                    <input type="checkbox" name="group[leave_group]">
+                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Can member leave this group?</label>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <div class="row">
+                  <div class="col col-md-4">
+                  <label class="toggle">
+                    <input type="checkbox" name="group[admin_post_only]">
+                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Can admin post poll only?</label>
+                  </div>
+                </div>
+              </section>
+
             </fieldset>
             <footer>
               <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
@@ -103,9 +123,20 @@
   </div>
 </div>
 <script>
-$("#group_profile").parsley();
-$(document).ready(function() {
-  dropZonePhotoGroup("<%= @group.photo_group.url(:thumbnail).presence || "" %>");
-  dropZoneCoverGroup("<%= @group.cover.url(:thumbnail).presence || "" %>");
-});
+  $.check_leave_group = <%= raw @group.leave_group %>;
+  $.check_admin_post_only = <%= raw @group.admin_post_only %>;
+
+  if ($.check_leave_group) {
+    $("input[name='group[leave_group]']").attr( 'checked', 'checked' );
+  };
+
+  if ($.check_admin_post_only) {
+    $("input[name='group[admin_post_only]']").attr( 'checked', 'checked' );
+  };
+
+  $("#group_profile").parsley();
+  $(document).ready(function() {
+    dropZonePhotoGroup("<%= @group.photo_group.url(:thumbnail).presence || "" %>");
+    dropZoneCoverGroup("<%= @group.cover.url(:thumbnail).presence || "" %>");
+  });
 </script>

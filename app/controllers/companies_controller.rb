@@ -254,6 +254,9 @@ class CompaniesController < ApplicationController
   def update_group
     respond_to do |format|
       group = @group
+      group.leave_group = group_params[:leave_group].present? ? true : false
+      group.admin_post_only = group_params[:admin_post_only].present? ? true : false
+      
       if group.update(group_params)
         group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
         flash[:success] = "Update group profile successfully."
@@ -384,7 +387,7 @@ class CompaniesController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :photo_group, :cover)  
+    params.require(:group).permit(:name, :description, :photo_group, :cover, :leave_group, :admin_post_only)  
   end
 
   def options_params
