@@ -127,7 +127,10 @@ class MembersController < ApplicationController
     respond_to do |format|
       cover_preset = update_profile_params[:cover_preset]
 
-      @current_member.cover_preset = MemberCoverPreset.get_cover_preset(cover_preset) if cover_preset
+      if cover_preset
+        @current_member.cover_preset = MemberCoverPreset.get_cover_preset(cover_preset)
+        CoverPreset.count_number_preset(cover_preset)
+      end
 
       if @current_member.update(update_profile_params.except(:member_id, :cover_preset))
         if update_profile_params[:fullname]

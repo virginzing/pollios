@@ -11,7 +11,7 @@ RailsAdmin.config do |config|
 
   config.included_models = ['HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
     'HistoryView', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
-    'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode', 'MemberReportPoll', 'MemberReportMember', 'Activity', 'Comment', 'Company', 'UserStats', 'PollStats', 'GroupStats', 'Role','GroupSurveyor', 'RequestGroup', 'GroupCompany']
+    'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode', 'MemberReportPoll', 'MemberReportMember', 'Activity', 'Comment', 'Company', 'UserStats', 'PollStats', 'GroupStats', 'Role','GroupSurveyor', 'RequestGroup', 'GroupCompany', 'CoverPreset']
 
 
   config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }
