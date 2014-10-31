@@ -650,9 +650,9 @@ class Poll < ActiveRecord::Base
       @poll = poll
       @member = member
 
-      find_history_view = HistoryView.find_by(member_id: @member.id, poll_id: @poll.id)
+      # find_history_view = HistoryView.find_by(member_id: @member.id, poll_id: @poll.id)
 
-      unless find_history_view.present?
+      unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
         HistoryView.create! member_id: @member.id, poll_id: @poll.id
         @poll.update_columns(view_all: @poll.view_all + 1)
       end

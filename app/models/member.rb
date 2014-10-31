@@ -19,6 +19,7 @@ class Member < ActiveRecord::Base
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
 
   include MemberHelper
+  include MemberCoverPreset
 
   has_many :member_invite_codes, dependent: :destroy
   has_many :member_un_recomments, dependent: :destroy
@@ -285,7 +286,19 @@ class Member < ActiveRecord::Base
   end
 
   def get_cover_image
-    cover.present? ? cover.url(:cover) : ""
+    if cover.present?
+      cover.url(:cover)
+    else
+      if cover_preset == 0
+        ""
+      else
+        get_link_cover_from_preset(cover_preset)
+      end
+    end
+  end
+
+  def get_link_cover_from_preset
+    
   end
 
   def set_friend_limit

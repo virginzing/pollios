@@ -124,17 +124,17 @@ class MembersController < ApplicationController
   def update_profile
     respond_to do |format|
 
-      if @current_member.update(update_profile_params.except(:member_id, :avatar))
+      if @current_member.update(update_profile_params.except(:member_id))
         if update_profile_params[:fullname]
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
         end
 
-        if update_profile_params[:cover]
+        if update_profile_params[:cover] || update_profile_params[:cover_preset]
           Activity.create_activity_my_self(@current_member, ACTION[:change_cover])
         end
 
         if update_profile_params[:avatar]
-          Member.update_avatar(@current_member, update_profile_params[:avatar])
+          # Member.update_avatar(@current_member, update_profile_params[:avatar])
           Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
         end
 
@@ -346,7 +346,7 @@ class MembersController < ApplicationController
   end
 
   def update_profile_params
-    params.permit(:member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup)
+    params.permit(:cover_preset, :member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup)
   end
 
   def verify_email_params

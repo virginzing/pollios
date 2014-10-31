@@ -1292,7 +1292,8 @@ CREATE TABLE members (
     setting hstore,
     update_personal boolean DEFAULT false,
     notification_count integer DEFAULT 0,
-    request_count integer DEFAULT 0
+    request_count integer DEFAULT 0,
+    cover_preset integer DEFAULT 0
 );
 
 
@@ -4124,4 +4125,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141028072811');
 INSERT INTO schema_migrations (version) VALUES ('20141030073323');
 
 INSERT INTO schema_migrations (version) VALUES ('20141030075116');
+
+INSERT INTO schema_migrations (version) VALUES ('20141031041353');
 
