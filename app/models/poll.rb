@@ -647,28 +647,16 @@ class Poll < ActiveRecord::Base
   def self.view_poll(poll, member)
     HistoryView.transaction do
       begin
-        @poll = poll
-        @member = member
+      @poll = poll
+      @member = member
+      find_history_view = HistoryView.find_by(member_id: @member.id, poll_id: @poll.id)
+      unless find_history_view.present?
+        HistoryView.create! member_id: @member.id, poll_id: @poll.id
+        @poll.update_columns(view_all: @poll.view_all + 1)
+      end
 
-        find_history_view = @member.history_views.where(poll_id: @poll.id).first
-
-        unless find_history_view.present?
-          @member.history_views.create!(poll_id: @poll.id)
-          @poll.update_columns(view_all: @poll.view_all + 1)
-        end
-
-        # ever_view = true
-
-        # HistoryView.where(member_id: @member.id, poll_id: @poll.id).first_or_create do |hv|
-        #   hv.member_id = @member.id
-        #   hv.poll_id = @poll.id
-        #   hv.save!
-        #   ever_view = false
-        # end
-
-        # if ever_view.present?
-        #   @poll.update_columns(view_all: @poll.view_all + 1)
-        # end
+      rescue => e
+        true
       end
     end
   end
