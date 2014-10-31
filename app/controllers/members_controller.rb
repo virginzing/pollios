@@ -7,7 +7,7 @@ class MembersController < ApplicationController
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
   before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
-  before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile]
+  before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile, :update_profile]
 
   before_action :set_company, only: [:profile, :delete_photo_group], :if => :only_company
   before_action :find_group, only: [:profile, :delete_photo_group], :if => :only_company
@@ -138,9 +138,10 @@ class MembersController < ApplicationController
           Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
         end
 
+        @current_member.cached_flush_active_group
+
         @member = Member.find(@current_member.id)
-        @member.cached_flush_active_group
-        
+
         flash[:success] = "Update profile successfully."
         format.html { redirect_to my_profile_path }
         format.json
