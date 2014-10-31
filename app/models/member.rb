@@ -19,7 +19,6 @@ class Member < ActiveRecord::Base
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
 
   include MemberHelper
-  include MemberCoverPreset
 
   has_many :member_invite_codes, dependent: :destroy
   has_many :member_un_recomments, dependent: :destroy
@@ -289,16 +288,17 @@ class Member < ActiveRecord::Base
     if cover.present?
       cover.url(:cover)
     else
-      if cover_preset == 0
-        ""
+      if cover_preset.present?
+        cover_preset
       else
-        get_link_cover_from_preset(cover_preset)
+        ""
       end
     end
   end
 
-  def get_link_cover_from_preset(cover_preset_number)
-    MemberCoverPreset.get_cover_preset(cover_preset_number)
+  def remove_old_cover
+    remove_cover!
+    save!
   end
 
   def set_friend_limit
@@ -835,6 +835,10 @@ class Member < ActiveRecord::Base
     end
     @member = Member.find(current_member.id)
     @member.update(avatar: file_avatar)
+  end
+
+  def self.remove_cover(current_member)
+    
   end
 
 

@@ -21,7 +21,7 @@ module MemberCoverPreset
   end
 
   def get_cover_preset(number_preset)
-    hash_of_cover_preset[number_preset]
+    hash_of_cover_preset[number_preset.to_i]
   end
 
 end

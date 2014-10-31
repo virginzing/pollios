@@ -1293,7 +1293,7 @@ CREATE TABLE members (
     update_personal boolean DEFAULT false,
     notification_count integer DEFAULT 0,
     request_count integer DEFAULT 0,
-    cover_preset integer DEFAULT 0
+    cover_preset character varying(255)
 );
 
 

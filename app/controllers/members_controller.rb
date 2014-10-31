@@ -1,3 +1,5 @@
+include MemberCoverPreset
+
 class MembersController < ApplicationController
   include SymbolHash
 
@@ -123,19 +125,26 @@ class MembersController < ApplicationController
 
   def update_profile
     respond_to do |format|
+      cover_preset = update_profile_params[:cover_preset]
 
-      if @current_member.update(update_profile_params.except(:member_id))
+      @current_member.cover_preset = MemberCoverPreset.get_cover_preset(cover_preset) if cover_preset
+
+      if @current_member.update(update_profile_params.except(:member_id, :cover_preset))
         if update_profile_params[:fullname]
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
         end
 
-        if update_profile_params[:cover] || update_profile_params[:cover_preset]
+        if update_profile_params[:cover] || cover_preset
           Activity.create_activity_my_self(@current_member, ACTION[:change_cover])
         end
 
         if update_profile_params[:avatar]
           # Member.update_avatar(@current_member, update_profile_params[:avatar])
           Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
+        end
+
+        if cover_preset && @current_member.cover.present?
+          @current_member.remove_old_cover
         end
 
         @current_member.cached_flush_active_group
