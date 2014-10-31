@@ -586,13 +586,21 @@ class PollsController < ApplicationController
   def set_poll
     @poll = Poll.find_by(id: params[:id])
     raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
-    @poll
   end
 
   def set_group
     @group = Group.find_by(id: params[:group_id])
     raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
-    @group
+  end
+
+  def raise_exception_without_group
+    unless @current_member.company?
+      if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
+        if @poll.member_id != @current_member.id
+          raise ExceptionHandler::NotFound, "You've leave this group already"
+        end
+      end
+    end
   end
 
   def comment_params
@@ -643,16 +651,6 @@ class PollsController < ApplicationController
 
   def json_request?
     request.format.json?
-  end
-
-  def raise_exception_without_group
-    unless @current_member.company?
-      if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
-        if @poll.member_id != @current_member.id
-          raise ExceptionHandler::NotFound, "You've leave this group already"
-        end
-      end
-    end
   end
 
 
