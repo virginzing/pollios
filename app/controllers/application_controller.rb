@@ -18,7 +18,6 @@ class ApplicationController < ActionController::Base
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-
   helper_method :current_member, :signed_in?, :render_to_string, :only_company
 
   def history_voted_viewed
@@ -154,10 +153,6 @@ class ApplicationController < ActionController::Base
 
   def only_company
     @current_member.company? if @current_member
-  end
-
-  def track_activity_feed(current_member, group_id, trackable, action = params[:action])
-    current_member.activity_feeds.create! action: action, trackable: trackable, group_id: group_id
   end
 
   private

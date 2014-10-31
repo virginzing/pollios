@@ -130,6 +130,7 @@ Pollios::Application.routes.draw do
     post ':id/promote_admin', to: 'group#promote_admin'
     post ':id/edit_group',    to: 'group#edit_group'
     post ':id/request_group', to: 'group#request_group'
+    # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
   scope 'member' do

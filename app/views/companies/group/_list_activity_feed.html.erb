@@ -1,0 +1,34 @@
+<!-- widget div-->
+<div>
+
+  <!-- widget content -->
+  <div class="widget-body">
+    <div>
+      <div id="overflow" style="max-width: auto; height: 600px; overflow-y: auto; padding: 1em;">
+        <div class="feed-activity-list" id="activity_feeds">
+
+          <% @activity_feeds.each do |activity| %>
+            <%= div_for activity, class: 'feed-element' do %>
+                <a href="#" class="pull-left">
+                    <img alt="image" class="img-circle" src="<%= activity.member.avatar.url(:thumbnail_small) %>">
+                </a>
+                <div class="media-body ">
+                  <%= render "activity_feeds/#{activity.trackable_type.underscore}/#{activity.action}", activity: activity %>
+                </div>
+            <% end %>
+          <% end %>
+
+          <% if @activity_feeds.next_page.present? %>
+            <div id="pagination">
+              <a href="/company/groups/54?page=<%= @activity_feeds.next_page %>" class="next">next</a>
+            </div>
+          <% end %>
+        </div>
+        <!-- <button class="btn btn-primary btn-block m-t">Show More</button> -->
+      </div>
+    </div>
+  </div>
+  <!-- end widget content -->
+
+</div>
+<!-- end widget div -->

@@ -635,7 +635,6 @@ class Poll < ActiveRecord::Base
           new_hash.merge!(key => value)
         end
       end
-      # puts "new hash => #{new_hash}"
       return new_hash
     end
   end
@@ -650,10 +649,9 @@ class Poll < ActiveRecord::Base
       @poll = poll
       @member = member
 
-      # find_history_view = HistoryView.find_by(member_id: @member.id, poll_id: @poll.id)
-
       unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
         HistoryView.create! member_id: @member.id, poll_id: @poll.id
+        Company::TrackActivityFeed.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
         @poll.update_columns(view_all: @poll.view_all + 1)
       end
 
