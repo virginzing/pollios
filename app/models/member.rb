@@ -297,8 +297,8 @@ class Member < ActiveRecord::Base
     end
   end
 
-  def get_link_cover_from_preset
-    
+  def get_link_cover_from_preset(cover_preset_number)
+    MemberCoverPreset.get_cover_preset(cover_preset_number)
   end
 
   def set_friend_limit
