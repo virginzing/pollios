@@ -22,6 +22,7 @@ class GroupController < ApplicationController
 
   def edit_group
     @group.update!(edit_group_params)
+    Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking
     @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
   end
 
