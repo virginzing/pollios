@@ -3,6 +3,6 @@
   <% if activity.trackable %>
     <strong><%= link_to activity.trackable.title, activity.trackable %></strong><br>
   <% else %>
-    poll which has since been removed 
+    poll which has since been removed <br>
   <% end %>
 <small class="text-muted"><%= activity.created_at.strftime("%d %B %Y %H:%M") %></small>

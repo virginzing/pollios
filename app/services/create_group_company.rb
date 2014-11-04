@@ -37,9 +37,10 @@ class CreateGroupCompany
   private
 
   def add_member_to_group
-    new_list_member_ids.each do |member_id|
-      GroupMember.create!(member_id: member_id, group_id: @group.id, is_master: false, active: true, notification: true)
-      Rails.cache.delete([member_id, 'group_active'])
+    Member.where(id: new_list_member_ids).each do |member|
+      GroupMember.create!(member_id: member.id, group_id: @group.id, is_master: false, active: true, notification: true)
+      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
+      Rails.cache.delete([member.id, 'group_active'])
     end
   end
 

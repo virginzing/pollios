@@ -322,7 +322,8 @@ class MembersController < ApplicationController
     if @group
       find_my_group = @current_member.get_group_active.map(&:id)
       unless find_my_group.include?(@group.id)
-        @group.group_members.create!(member_id: @current_member.id, is_master: true, active: true)
+        @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
+        Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
         @group.increment!(:member_count)
         @current_member.cached_flush_active_group
         true

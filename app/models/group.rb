@@ -71,7 +71,7 @@ class Group < ActiveRecord::Base
 
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
-
+      Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id)
 
       Rails.cache.delete([member_id, 'group_active'])
@@ -92,6 +92,7 @@ class Group < ActiveRecord::Base
         @group = group
 
         if @group.group_members.create!(member_id: @friend.id, active: true, is_master: false)
+          Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
           @group.increment!(:member_count)
           clear_request_group
           JoinGroupWorker.perform_async(@friend.id, @group.id)
@@ -133,7 +134,7 @@ class Group < ActiveRecord::Base
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
-
+      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
       GroupStats.create_group_stats(@group)
 
       if @group.public

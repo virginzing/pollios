@@ -7,7 +7,7 @@ class PollsController < ApplicationController
 
 
   before_action :set_current_member, only: [:delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
-                                            :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote]
+                                            :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
   before_action :history_voted_viewed_guest, only: [:guest_poll]
@@ -124,7 +124,6 @@ class PollsController < ApplicationController
       @poll.choice_count = @build_poll.list_of_choice.count
 
       if @poll.save
-
         @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
         @poll.create_tag(@build_poll.title_with_tag)
@@ -135,6 +134,7 @@ class PollsController < ApplicationController
           in_group = true
           # puts "#{ @poll.in_group_ids}"
           Group.add_poll(current_member, @poll, @poll.in_group_ids.split(",").collect{|e| e.to_i })
+          Company::TrackActivityFeedPoll.new(current_member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
         else
           ApnPollWorker.perform_in(5.second, current_member.id, @poll.id)
         end
@@ -507,6 +507,7 @@ class PollsController < ApplicationController
   def destroy
     @poll.destroy
     @poll.member.flush_cache_about_poll
+    Company::TrackActivityFeedPoll.new(@current_member, @poll.in_group_ids, @poll, "delete").tracking if @poll.in_group
     DeletePoll.create_log(@poll)
     flash[:notice] = "Destroy successfully."
     redirect_to polls_url

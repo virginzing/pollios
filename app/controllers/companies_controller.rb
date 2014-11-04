@@ -260,6 +260,7 @@ class CompaniesController < ApplicationController
       group.admin_post_only = group_params[:admin_post_only].present? ? true : false
 
       if group.update(group_params)
+        Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
         group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
         flash[:success] = "Update group profile successfully."
         format.html { redirect_to company_group_detail_path(@group) }
@@ -320,6 +321,7 @@ class CompaniesController < ApplicationController
 
           unless find_user_group.include?(this_group.id)
             this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
+            Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
             this_group.increment!(:member_count)
             find_user.cached_flush_active_group
             Group.flush_cached_member_active(this_group.id)

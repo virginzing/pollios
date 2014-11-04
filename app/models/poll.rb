@@ -507,6 +507,7 @@ class Poll < ActiveRecord::Base
             if group_id
               Group.add_poll(member, @poll, list_group_id)
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
+              Company::TrackActivityFeedPoll.new(member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
             else
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
               ApnPollWorker.perform_in(5.second, member_id.to_i, @poll.id)
@@ -587,6 +588,8 @@ class Poll < ActiveRecord::Base
 
           history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
 
+          Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
+
           @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
 
           get_anonymous = member.get_anonymous_with_poll(find_poll)
@@ -651,7 +654,7 @@ class Poll < ActiveRecord::Base
 
       unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
         HistoryView.create! member_id: @member.id, poll_id: @poll.id
-        Company::TrackActivityFeed.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
+        Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
         @poll.update_columns(view_all: @poll.view_all + 1)
       end
 

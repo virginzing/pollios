@@ -1,4 +1,4 @@
-class Company::TrackActivityFeed
+class Company::TrackActivityFeedPoll
   def initialize(member, group_ids, trackable, action = params[:action])
     @member = member
     @group_ids = group_ids
