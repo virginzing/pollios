@@ -129,7 +129,7 @@ class Group < ActiveRecord::Base
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover)
+    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, group_type: :normal)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
@@ -269,7 +269,7 @@ class Group < ActiveRecord::Base
   end
 
   def is_company?
-    group_company.present?
+    self.group_type == "company"
   end
 
   def get_company

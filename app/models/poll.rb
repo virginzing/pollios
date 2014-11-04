@@ -9,7 +9,7 @@ class Poll < ActiveRecord::Base
 
   pg_search_scope :search_with_tag, against: [:title],
     using: { tsearch: {dictionary: "english", prefix: true} },
-    associated_against: {tags: [:name]}
+    associated_against: {tags: [:name] }
 
   has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy
@@ -657,6 +657,7 @@ class Poll < ActiveRecord::Base
 
       rescue => e
         true
+
       end
     end
   end

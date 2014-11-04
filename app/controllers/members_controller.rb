@@ -56,7 +56,6 @@ class MembersController < ApplicationController
     puts "response => #{@response}"
     if @response["response_status"] == "OK"
       @member = Member.find_by(email: verify_email_params[:email])
-
       @verify_email = true
     else
       @verify_email = false
