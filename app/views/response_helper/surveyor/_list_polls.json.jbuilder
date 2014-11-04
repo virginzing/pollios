@@ -25,4 +25,5 @@ json.allow_comment poll.allow_comment
 json.comment_count poll.comment_count
 json.require_info poll.get_require_info
 
-json.complete poll.check_complete?
+json.status_survey poll.check_status_survey
+

@@ -743,7 +743,7 @@ class Poll < ActiveRecord::Base
 
   end
 
-  def check_complete?
+  def check_status_survey
     member_surveyable = []
     self.in_group_ids.split(",").each do |group_id|
       member_surveyable = member_surveyable | Group.cached_member_active(group_id.to_i)
@@ -751,8 +751,14 @@ class Poll < ActiveRecord::Base
 
     member_ids_voted_already = HistoryVote.unscoped.where(poll_id: self.id).map(&:member_id)
     remain_can_survey = member_surveyable - member_ids_voted_already
-    puts "remain_can_survey => #{remain_can_survey}"
-    remain_can_survey.count > 0 ? false : true
+    # puts "remain_can_survey => #{remain_can_survey}"
+    complete_status = remain_can_survey.count > 0 ? false : true
+
+    {
+      complete: complete_status,
+      member_voted: member_ids_voted_already.to_a.count,
+      member_amount: member_surveyable.count 
+    }
   end
 
   ## for group api ##
