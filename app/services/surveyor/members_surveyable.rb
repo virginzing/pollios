@@ -27,9 +27,7 @@ class Surveyor::MembersSurveyable
 
     Poll.transaction do
       begin
-        ever_vote = HistoryVote.find_by(member_id: surveyed_id, poll_id: poll_id)
-
-        unless ever_vote.present?
+        unless HistoryVote.exists?(member_id: surveyed_id, poll_id: poll_id)
 
           find_choice = @poll.choices.find_by(id: choice_id)
           find_surveyed = Member.find_by(id: surveyed_id)

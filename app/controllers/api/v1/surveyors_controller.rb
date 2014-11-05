@@ -31,6 +31,11 @@ module Api
         @survey = @init_survey.survey
       end
 
+      def list_of_survey
+        @init_list_survey = Surveyor::MembersListSurveyable.new(@current_member, list_survey_params.slice(:list_survey))
+        @list_survey = @init_list_survey.survey_all
+      end
+
       private
 
       def find_group_that_surveyor
@@ -45,10 +50,13 @@ module Api
         params.permit(:member_id, :surveyed_id, :choice_id, :data_options)
       end
 
+      def list_survey_params
+        params.permit(:member_id, list_survey: [ :poll_id, :list_voted => [:surveyed_id, :choice_id]])
+      end
+
       def set_poll
         @poll = Poll.find_by(id: params[:id])
         raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
-        @poll
       end
 
     end
