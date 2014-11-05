@@ -57,6 +57,7 @@ module Api
       def set_poll
         @poll = Poll.find_by(id: params[:id])
         raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+        @poll
       end
 
     end
