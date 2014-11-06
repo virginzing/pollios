@@ -298,7 +298,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_cover_preset
-    cover_preset.present? ? cover_preset : 0
+    cover_preset.to_i
   end
 
   def remove_old_cover
