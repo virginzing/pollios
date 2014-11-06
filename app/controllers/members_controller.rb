@@ -127,11 +127,11 @@ class MembersController < ApplicationController
       cover_preset = update_profile_params[:cover_preset]
 
       if cover_preset
-        @current_member.cover_preset = MemberCoverPreset.get_cover_preset(cover_preset)
+        # @current_member.cover_preset = MemberCoverPreset.get_cover_preset(cover_preset)
         CoverPreset.count_number_preset(cover_preset)
       end
 
-      if @current_member.update(update_profile_params.except(:member_id, :cover_preset))
+      if @current_member.update(update_profile_params.except(:member_id))
         if update_profile_params[:fullname]
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
         end

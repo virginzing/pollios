@@ -285,15 +285,20 @@ class Member < ActiveRecord::Base
   end
 
   def get_cover_image
-    if cover.present?
-      cover.url(:cover)
-    else
-      if cover_preset.present?
-        cover_preset
-      else
-        ""
-      end
-    end
+    # if cover.present?
+    #   cover.url(:cover)
+    # else
+    #   if cover_preset.present?
+    #     cover_preset
+    #   else
+    #     ""
+    #   end
+    # end
+    cover.present? ? cover.url(:cover) : ""
+  end
+
+  def get_cover_preset
+    cover_preset.present? ? cover_preset : 0
   end
 
   def remove_old_cover
