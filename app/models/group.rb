@@ -277,6 +277,10 @@ class Group < ActiveRecord::Base
     group_company.company
   end
 
+  def check_as_admin?(current_member)
+    get_admin_group.map(&:id).include?(current_member.id)
+  end
+
   def self.cached_member_active(group_id)
     Rails.cache.fetch([ 'group', group_id, 'member_active']) do
       Group.find(group_id).get_member_active.to_a.map(&:id)

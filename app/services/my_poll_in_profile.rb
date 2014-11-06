@@ -101,7 +101,7 @@ class MyPollInProfile
   end
 
   def poll_watched
-    query = Poll.available.have_vote.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')")
                 .where("(watcheds.member_id = #{member_id} AND polls.in_group = 'f')" \
                        "OR (watcheds.member_id = #{member_id} AND polls.public = 't') " \
