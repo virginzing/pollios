@@ -9,9 +9,10 @@ module Api
 
       def list_polls
         @init_poll = PollOfGroup.new(@current_member, find_group_that_surveyor, options_params)
-        @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
-        @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-        @total_entries = @polls.total_entries
+        # @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
+        @polls = @init_poll.get_poll_of_group_company
+        # @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+        # @total_entries = @polls.total_entries
       end
 
       def poll_detail
