@@ -39,7 +39,17 @@ class AdminController < ApplicationController
 
   def update_certification
      @certificate = Apn::App.find(params[:id])
-     @certificate.update!(params.except(:id))
+     
+     @certificate.apn_dev_cert = File.read(cert_params[:apn_dev_cert].path) if cert_params[:apn_dev_cert]
+     @certificate.apn_prod_cert = File.read(cert_params[:apn_prod_cert].path) if cert_params[:apn_prod_cert]
+
+     if @certificate.save
+      flash[:success] = "Update Success"
+      redirect_to admin_certification_path
+     else
+      flash[:error] = "Error"
+      render 'edit_ceritification'
+     end
   end
 
   def login_as
@@ -63,6 +73,10 @@ class AdminController < ApplicationController
 
   def login_as_params
     params.permit(:email)
+  end
+
+  def cert_params
+    params.require(:apn_app).permit(:apn_prod_cert, :apn_dev_cert)
   end
 
 end
