@@ -126,11 +126,12 @@ class Group < ActiveRecord::Base
     description = group[:description]
     cover = group[:cover]
     set_privacy = group[:public] || true
+    set_admin_post_only = group[:admin_post_only]
 
     name = group[:name]
     friend_id = group[:friend_id]
 
-    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, group_type: :normal)
+    @group = create(name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, group_type: :normal, admin_post_only: set_admin_post_only)
 
     if @group.valid?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)

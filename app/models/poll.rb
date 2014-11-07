@@ -48,7 +48,7 @@ class Poll < ActiveRecord::Base
   # before_create :generate_qrcode_key
 
   # after_create :set_new_title_with_tag
-  after_commit :flush_cache
+  # after_commit :flush_cache
 
   validates :title, :member_id, presence: true
 
@@ -111,7 +111,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_choices
-    Rails.cache.fetch([self, 'choices']) { choices.to_a }
+    Rails.cache.fetch([self, 'choices']) { choices }
   end
 
   # def flush_cache_relate_with_vote
@@ -520,6 +520,8 @@ class Poll < ActiveRecord::Base
             PollStats.create_poll_stats(@poll)
 
             Activity.create_activity_poll(member, @poll, 'Create')
+
+            @poll.flush_cache
 
             [@poll, nil]
           end

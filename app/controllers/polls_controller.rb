@@ -146,7 +146,7 @@ class PollsController < ApplicationController
         PollStats.create_poll_stats(@poll)
         current_member.flush_cache_about_poll
         Activity.create_activity_poll(current_member, @poll, 'Create')
-
+        @poll.flush_cache
         flash[:success] = "Create poll successfully."
         redirect_to current_member.company? ? company_polls_path : polls_path
       else
