@@ -234,6 +234,12 @@ Pollios::Application.routes.draw do
     get 'report/load_reason_poll',  to: 'admin#load_reason_poll'
     get 'report/load_reason_member',  to: 'admin#load_reason_member'
 
+    get 'certification',  to: 'admin#certification', as: :admin_certification
+
+    get 'certification/:id/edit', to: 'admin#edit_certification', as: :admin_edit_certification
+
+    post 'certification/:id', to: 'admin#update_certification', as: :admin_update_certification
+
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
 
     post 'login_as',  to: 'admin#login_as', as: :login_as

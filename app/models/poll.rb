@@ -111,7 +111,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_choices
-    Rails.cache.fetch([self, 'choices']) { choices }
+    Rails.cache.fetch([self, 'choices']) { choices.to_a }
   end
 
   # def flush_cache_relate_with_vote
@@ -150,6 +150,11 @@ class Poll < ActiveRecord::Base
 
   def get_vote_max
     @choice ||= cached_choices
+    @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
+  end
+
+  def get_vote_max_non_cache
+    @choice ||= choices.to_a
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
 

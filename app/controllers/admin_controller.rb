@@ -29,6 +29,18 @@ class AdminController < ApplicationController
     @invite_codes = InviteCode.joins(:company).select("invite_codes.*, companies.name as company_name")
   end
 
+  def certification
+    @certificate = Apn::App.first
+  end
+
+  def edit_ceritification
+   
+  end
+
+  def update_certification
+     @certificate = Apn::App.find(params[:id])
+  end
+
   def login_as
     begin
       member = Member.find_by(email: login_as_params[:email])

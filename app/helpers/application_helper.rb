@@ -143,7 +143,7 @@ end
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
 # http://localhost:3000/friend/search.json?member_id=21&q=Nuttapon
 
-# curl -F "member_id=85" -F "name=Mang" http://localhost:3000/group/build.json -i
+# curl -F "member_id=93" -F "name=Nutty Private Group" http://localhost:3000/group/build.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
@@ -365,11 +365,12 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 85,
+#     "member_id":93,
 #     "title": "​ทดสอบๆๆๆ",
 #     "expire_within": "2",
 #     "choices": ["yes", "no", "no vote"],
-#     "type_poll": "rating"
+#     "type_poll": "binary",
+#     "group_id": "73"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -392,14 +393,6 @@ end
 #     "expire_within": "5",
 #     "choices": "1,2,3",
 #     "type_poll": "freeform"
-# }' -X POST http://localhost:3000/poll/create.json -i
-
-# curl -H "Content-Type: application/json" -d '{
-#     "member_id": 11, 
-#     "title": "MK MK",
-#     "expire_within": "1",
-#     "choices": "yes,no",
-#     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -435,10 +428,44 @@ end
 
 
 # # http://localhost:3000/new_public_timeline.json?member_id=3
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 113,
+#     "choice_id": "4922"
+# }' -X POST http://localhost:3000/poll/1370/vote.json -i
+
+
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "choice_id": "2733"
-# }' -X POST http://localhost:3000/poll/1/vote.json -i
+#     "list_survey": [
+#         {
+#             "poll_id": 1374,
+#             "list_voted": [
+#                 {
+#                     "surveyed_id": 118,
+#                     "choice_id": 4931
+#                 }
+#             ]
+#         },
+#         {
+#             "poll_id": 0,
+#             "list_voted": [
+#                 {
+#                     "surveyed_id": 93,
+#                     "choice_id": 1100
+#                 },
+#                 {
+#                     "surveyed_id": 91,
+#                     "choice_id": 1101
+#                 },
+#                 {
+#                     "surveyed_id": 94,
+#                     "choice_id": 1102
+#                 }
+#             ]
+#         }
+#     ]
+# }' -X POST http://localhost:3000/api/surveyor/polls/list_of_survey.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 30,
@@ -515,7 +542,7 @@ end
 
 # http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
-# curl -F "member_id=70" -F "first_signup=false" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=93" -F "cover_preset=2" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "123",

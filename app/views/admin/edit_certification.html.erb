@@ -1,0 +1,7 @@
+<div class="well">
+  <%= simple_form_for Apn::App.new, url: admin_update_certification_path do |f| %>
+    <label for=""></label>
+    <%= f.input :apn_dev_cert %>
+    <%= f.submit %>
+  <% end %>
+</div>

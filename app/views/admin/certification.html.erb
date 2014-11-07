@@ -1,0 +1,106 @@
+<!-- row -->
+<div class="row">
+  
+  <!-- col -->
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      
+      <!-- PAGE HEADER -->
+      <i class="fa-fw fa fa-home"></i> 
+        Ceritification 
+    </h1>
+  </div>
+  <!-- end col -->
+  
+</div>
+<!-- end row -->
+
+<!--
+  The ID "widget-grid" will start to initialize all widgets below 
+  You do not need to use widgets if you dont want to. Simply remove 
+  the <section></section> and you can use wells or panels instead 
+  -->
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+  <!-- row -->
+  <div class="row">
+    
+    <!-- NEW WIDGET START -->
+    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      
+      <!-- Widget ID (each widget will need unique ID)-->
+      <div class="jarviswidget" id="wid-certification">
+        <!-- widget options:
+          usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+          
+          data-widget-colorbutton="false" 
+          data-widget-editbutton="false"
+          data-widget-togglebutton="false"
+          data-widget-deletebutton="false"
+          data-widget-fullscreenbutton="false"
+          data-widget-custombutton="false"
+          data-widget-collapsed="true" 
+          data-widget-sortable="false"
+          
+        -->
+        <header>
+          <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+          <h2>Certification</h2>        
+          
+        </header>
+
+        <!-- widget div-->
+        <div>
+          
+          <!-- widget edit box -->
+          <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+            <input class="form-control" type="text">  
+          </div>
+          <!-- end widget edit box -->
+          
+          <!-- widget content -->
+          <div class="widget-body">
+            <h3><strong>Update at: </strong><span class="label-warning label"><%= @certificate.updated_at %></span> <%= link_to 'edit', admin_edit_certification_path(@certificate), class: 'btn btn-primary btn-xs' %></h3>
+            <h2><strong>Apn Development</strong></h2>
+            <div class="well">
+              <%= @certificate.apn_dev_cert %>
+            </div>
+            
+            <h2><strong>Apn Production</strong></h2>
+            <div class="well">
+              <%= @certificate.apn_prod_cert %>
+            </div>
+          </div>
+          <!-- end widget content -->
+          
+        </div>
+        <!-- end widget div -->
+        
+      </div>
+      <!-- end widget -->
+
+    </article>
+    <!-- WIDGET END -->
+    
+  </div>
+
+  <!-- end row -->
+
+  <!-- row -->
+
+  <div class="row">
+
+    <!-- a blank row to get started -->
+    <div class="col-sm-12">
+      
+    </div>
+      
+  </div>
+
+  <!-- end row -->
+
+</section>
+<!-- end widget grid -->
