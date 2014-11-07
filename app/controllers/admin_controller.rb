@@ -39,6 +39,7 @@ class AdminController < ApplicationController
 
   def update_certification
      @certificate = Apn::App.find(params[:id])
+     @certificate.update!(params.except(:id))
   end
 
   def login_as
