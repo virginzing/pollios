@@ -12,6 +12,10 @@ class Recommendation
     @recommendations ||= find_brand
   end
 
+  def get_follower_recommendations
+    @follower_recommendations ||= @member.cached_get_follower
+  end
+
   def mutual_friend_recommendations
     @mutual_friend = find_mutual_friend.to_a
     @mutual_friend = @mutual_friend.select {|e| e unless find_list_friend_ids.include?(e["second_user"].to_i) }

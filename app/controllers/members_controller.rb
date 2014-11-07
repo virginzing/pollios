@@ -25,7 +25,7 @@ class MembersController < ApplicationController
 
     @mutual_friends = @init_recommendation.get_member_ids_from_mutual_and_group
 
-    # @follower = @init_recommendation.get_follower_
+    @recommendations_follower = @init_recommendation.get_follower_recommendations if @current_member.celebrity?
     # puts "#{@mutual_friend.map(&:id)}"
   end
 
