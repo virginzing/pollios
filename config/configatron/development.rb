@@ -8,7 +8,7 @@ configatron.apn.feedback.host = 'feedback.sandbox.push.apple.com'
 
 
 # apn = Apn::Notification.new
-#   apn.device_id = 60
+#   apn.device_id = 91
 #   apn.badge = 1
 #   apn.alert = "11"
 #   apn.sound = true
