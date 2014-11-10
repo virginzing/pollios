@@ -31,7 +31,7 @@ function handleLoginError() {
 }
 
 function handleLoginSuccess() {
-  window.location.href='/dashboard';
+  window.location.href = "<%= redirect_back dashboard_url %>";
 }
 
 function handleActivate() {

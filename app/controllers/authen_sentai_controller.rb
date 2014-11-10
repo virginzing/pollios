@@ -60,15 +60,15 @@ class AuthenSentaiController < ApplicationController
 
           if params[:web_login].present?
             if sessions_params[:remember_me]
-              puts "this case 1"
+              # puts "this case 1"
               cookies.permanent[:auth_token] = member.auth_token
             else
-              puts "this case 2"
+              # puts "this case 2"
               cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
             end
           end
           
-          wants.html { redirect_back_or polls_path }
+          wants.html
           wants.json
           wants.js
         else
