@@ -8,4 +8,4 @@ json.public group.public
 json.description group.get_description
 json.created_at group.created_at.to_i
 json.invite_by Member.find(group.invite_id)
-json.admin_post_only group.admin_post_only
+json.admin_post_only group.get_admin_post_only

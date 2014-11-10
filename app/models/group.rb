@@ -126,7 +126,7 @@ class Group < ActiveRecord::Base
     description = group[:description]
     cover = group[:cover]
     set_privacy = group[:public] || true
-    set_admin_post_only = group[:admin_post_only]
+    set_admin_post_only = group[:admin_post_only] || false
 
     name = group[:name]
     friend_id = group[:friend_id]
@@ -290,6 +290,10 @@ class Group < ActiveRecord::Base
 
   def self.flush_cached_member_active(group_id)
     Rails.cache.delete([ 'group', group_id, 'member_active' ])
+  end
+
+  def get_admin_post_only
+    admin_post_only.present? ? true : false
   end
 
   def as_json options={}
