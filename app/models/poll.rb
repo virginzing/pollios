@@ -81,10 +81,10 @@ class Poll < ActiveRecord::Base
     where("polls.expire_status = 'f'")
   }
 
-  LIMIT_POLL = 10
+  LIMIT_POLL = 50
   LIMIT_TIMELINE = 3000
 
-  self.per_page = 10
+  self.per_page = 50
 
   amoeba do
     enable
