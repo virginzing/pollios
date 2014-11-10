@@ -46,7 +46,7 @@ class PollSeries < ActiveRecord::Base
       list_choice = self.same_choices
       order_poll = 1
 
-      polls.order("id asc").each do |poll|
+      Poll.unscoped.where("poll_series_id = ?", self.id).order("id asc").each do |poll|
         if list_choice.present?
           list_choice.collect{ |answer| poll.choices.create!(answer: answer) }
           choices_count = list_choice.count
@@ -60,6 +60,7 @@ class PollSeries < ActiveRecord::Base
 
     unless self.qr_only
       @min_poll_id = polls.select{|poll| poll if poll.order_poll }.min.id
+      puts "poll min => #{polls.select{|poll| poll if poll.order_poll }}"
       PollMember.create!(member_id: self.member_id, poll_id: @min_poll_id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
       add_questionnaire_to_group if in_group
     end
