@@ -71,6 +71,9 @@ class Group < ActiveRecord::Base
 
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
+
+      clear_request_group(@member, @member)
+
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id)
 
@@ -91,16 +94,28 @@ class Group < ActiveRecord::Base
         @member = member
         @group = group
 
-        if @group.group_members.create!(member_id: @friend.id, active: true, is_master: false)
-          Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
-          @group.increment!(:member_count)
-          clear_request_group
-          JoinGroupWorker.perform_async(@friend.id, @group.id)
-          @friend.flush_cache_my_group
-          @friend.flush_cache_ask_join_groups
-          Group.flush_cached_member_active(@group.id)
-          Activity.create_activity_group(@friend, @group, 'Join')
+        find_member_in_group = @group.group_members.find_by(member_id: @friend.id)
+
+        if find_member_in_group.present?
+          find_member_in_group.update!(active: true)
+        else
+          GroupMember.create!(member_id: @friend.id, active: true, is_master: false)
         end
+
+        Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
+
+        @group.increment!(:member_count)
+
+        clear_request_group(@member, @friend)
+
+        JoinGroupWorker.perform_async(@friend.id, @group.id)
+
+        Activity.create_activity_group(@friend, @group, 'Join')
+
+        @friend.flush_cache_my_group
+        @friend.flush_cache_ask_join_groups
+        Group.flush_cached_member_active(@group.id)
+       
         @group
       end
     end
@@ -115,9 +130,9 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.clear_request_group
-    find_request_group = @group.request_groups.find_by(member_id: @friend.id, accepted: false)
-    find_request_group.update!(accepted: true, accepter_id: @member.id) if find_request_group.present?
+  def self.clear_request_group(member, friend)
+    find_request_group = @group.request_groups.find_by(member_id: friend.id, accepted: false)
+    find_request_group.update!(accepted: true, accepter_id: member.id) if find_request_group.present?
   end
 
   def self.build_group(member, group)
@@ -167,6 +182,7 @@ class Group < ActiveRecord::Base
         @group_member.group
       end
       Group.flush_cached_member_active(group_id)
+      @group_member.group
     else
       raise ExceptionHandler::Forbidden, "You are not admin of group"
     end
@@ -187,6 +203,11 @@ class Group < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def self.clear_request_member(group, member)
+    find_member = group.group_members.find_by(member_id: member.id)
+    find_member.destroy if find_member.present?
   end
 
   def kick_member_out_group(kicker, friend_id)
