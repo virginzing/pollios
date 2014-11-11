@@ -98,8 +98,6 @@ class OverallTimeline
 
     poll_public_query = filter_public.eql?("1") ? "(poll_members.public = 't' AND #{poll_non_share_non_in_group}) OR (polls.campaign_id != 0 AND #{poll_non_share_non_in_group})" : "NULL"
 
-    # poll_reward_query = filter_reward.eql?("1") ? "polls.campaign_id != 0 AND #{poll_non_share_non_in_group}" : "NULL"
-
     new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
 
     new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
@@ -117,9 +115,7 @@ class OverallTimeline
     # puts "my_vote_questionnaire_ids => #{my_vote_questionnaire_ids}"
     query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
     query = query.limit(LIMIT_TIMELINE)
-
-    query = check_new_pull_request(query)
-
+    # query = check_new_pull_request(query)
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
@@ -154,7 +150,7 @@ class OverallTimeline
                                                     new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)
 
-    query = check_new_pull_request(query)
+    # query = check_new_pull_request(query)
     # poll_member = check_hidden_poll(query)
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
@@ -178,7 +174,7 @@ class OverallTimeline
   end
 
   def cached_poll_ids_of_poll_member
-    @cache_poll_ids ||= Rails.cache.fetch([ ENV["OVERALL_TIMELINE"], member_id]) do
+    @cache_poll_ids ||= Rails.cache.fetch([ 'overall_timeline', member_id]) do
       overall_timeline
     end
   end
@@ -189,22 +185,22 @@ class OverallTimeline
 
     if next_cursor.presence && next_cursor != "0"
       next_cursor = next_cursor.to_i
-      cache_polls = cached_poll_ids_of_poll_member
-      index = cache_polls.index(next_cursor)
+      @cache_polls ||= cached_poll_ids_of_poll_member
+      index = @cache_polls.index(next_cursor)
       index = -1 if index.nil?
-      @poll_ids = cache_polls[(index+1)..(LIMIT_POLL+index)]
+      @poll_ids = @cache_polls[(index+1)..(LIMIT_POLL+index)]
     elsif to_bool(@pull_request)
       @poll_ids = overall_timeline
-      cache_polls = []
+      @cache_polls = []
     else
-      Rails.cache.delete([ ENV["OVERALL_TIMELINE"], member_id ])
-      cache_polls = cached_poll_ids_of_poll_member
-      @poll_ids   = cache_polls[0..(LIMIT_POLL - 1)]
+      Rails.cache.delete([ 'overall_timeline', member_id ])
+      @cache_polls ||= cached_poll_ids_of_poll_member
+      @poll_ids   = @cache_polls[0..(LIMIT_POLL - 1)]
     end
 
-    if cache_polls.count > LIMIT_POLL
+    if @cache_polls.count > LIMIT_POLL
       if @poll_ids.count == LIMIT_POLL
-        if cache_polls[-1] == @poll_ids.last
+        if @cache_polls[-1] == @poll_ids.last
           next_cursor = 0
         else
           next_cursor = @poll_ids.last
