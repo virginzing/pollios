@@ -314,9 +314,9 @@ end
 # }' -X POST http://localhost:3000/member/85/subscribe.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 85,
-#     "friend_id": "98"
-# }' -X POST http://localhost:3000/group/51/invite.json -i
+#     "member_id": 93,
+#     "friend_id": "161"
+# }' -X POST http://localhost:3000/group/79/invite.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 96
@@ -365,12 +365,11 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id":93,
+#     "member_id":133,
 #     "title": "​ทดสอบๆๆๆ",
 #     "expire_within": "2",
 #     "choices": ["yes", "no", "no vote"],
-#     "type_poll": "binary",
-#     "group_id": "73"
+#     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -422,9 +421,9 @@ end
 # where("(polls.public = ?) OR (poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", true, 11, false)
 
 # curl -H "Content-Type: application/json" -d '{
-#   "member_id": 85,
-#   "answer": [{"id": 1002, "choice_id": 3506}, {"id": 1003, "choice_id": 3511}]
-# }' -X POST http://localhost:3000/questionnaire/70/vote.json -i
+#   "member_id": 93,
+#   "answer": [{"id": 1408, "choice_id": 5041}, {"id": 1407, "choice_id": 5036}]
+# }' -X POST http://localhost:3000/questionnaire/52/vote.json -i
 
 
 # # http://localhost:3000/new_public_timeline.json?member_id=3
@@ -477,6 +476,19 @@ end
 #     "group_id": "10"
 # }' -X POST http://localhost:3000/poll/unshare/626.json -i
 
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 161
+# }' -X POST http://localhost:3000/group/79/request_group.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 161
+# }' -X POST http://localhost:3000/group/79/accept.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 93,
+#     "friend_id": 161
+# }' -X POST http://localhost:3000/group/79/accept_request_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "guest_id": "1"

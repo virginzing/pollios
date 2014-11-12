@@ -13,6 +13,7 @@ class OverallTimeline
     @poll_nonseries = []
     @series_shared = []
     @nonseries_shared = []
+    @order_ids = []
   end
 
   def member_id
@@ -64,6 +65,10 @@ class OverallTimeline
 
   def poll_overall
     @overall_timeline ||= split_poll_and_filter
+  end
+
+  def order_ids
+    @order_ids
   end
 
   def total_entries
