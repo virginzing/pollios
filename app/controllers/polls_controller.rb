@@ -355,11 +355,19 @@ class PollsController < ApplicationController
   end
 
   def overall_timeline
-    overall_timeline = OverallTimeline.new(@current_member, options_params)
-    @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
-    @group_by_name = overall_timeline.group_by_name
-    @total_entries = overall_timeline.total_entries
-    @unvote_count = overall_timeline.unvote_count
+    if params[:api_version].to_i < 6
+      overall_timeline = OverallTimeline.new(@current_member, options_params)
+      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
+      @group_by_name = overall_timeline.group_by_name
+      @total_entries = overall_timeline.total_entries
+      @unvote_count = overall_timeline.unvote_count
+    else
+      overall_timeline = V6::OverallTimeline.new(@current_member, options_params)
+      @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.poll_overall
+      @group_by_name = overall_timeline.group_by_name
+      @total_entries = overall_timeline.total_entries
+      @unvote_count = overall_timeline.unvote_count
+    end
   end
 
   # def group_timeline

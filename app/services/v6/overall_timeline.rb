@@ -1,8 +1,8 @@
-class OverallTimeline
+class V6::OverallTimeline
   include GroupApi
   include LimitPoll
 
-  attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared, :next_cursor
+  attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared, :next_cursor, :order_ids, :list_polls, :list_shared, :load_more
 
   def initialize(member, options)
     @member = member
@@ -13,6 +13,9 @@ class OverallTimeline
     @poll_nonseries = []
     @series_shared = []
     @nonseries_shared = []
+    @order_ids = []
+    @list_polls = []
+    @list_shared = []
   end
 
   def member_id
@@ -171,6 +174,7 @@ class OverallTimeline
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
+    poll_member_ids_sort - check_poll_not_show_result
   end
 
   def cached_poll_ids_of_poll_member
@@ -179,23 +183,24 @@ class OverallTimeline
     end
   end
 
-
   def split_poll_and_filter
     next_cursor = @options["next_cursor"]
 
     if next_cursor.presence && next_cursor != "0"
       next_cursor = next_cursor.to_i
       @cache_polls ||= cached_poll_ids_of_poll_member
-      index = @cache_polls.index(next_cursor)
-      index = -1 if index.nil?
-      @poll_ids = @cache_polls[(index+1)..(LIMIT_POLL+index)]
-    elsif to_bool(@pull_request)
-      @poll_ids = overall_timeline
-      @cache_polls = []
+
+      if next_cursor.in? @cache_polls
+        index = @cache_polls.index(next_cursor)
+        @poll_ids = @cache_polls[(index+1)..(LIMIT_POLL+index)]
+      else
+        @cache_polls.select!{ |e| e < next_cursor }
+        @poll_ids = @cache_polls[0..(LIMIT_POLL-1)] 
+      end
     else
-      Rails.cache.delete([ 'overall_timeline', member_id ])
+      Rails.cache.delete(['overall_timeline', member_id ])
       @cache_polls ||= cached_poll_ids_of_poll_member
-      @poll_ids   = @cache_polls[0..(LIMIT_POLL - 1)]
+      @poll_ids = @cache_polls[0..(LIMIT_POLL - 1)]
     end
 
     if @cache_polls.count > LIMIT_POLL
@@ -216,39 +221,26 @@ class OverallTimeline
   end
 
 
-
   def filter_overall_timeline(next_cursor)
     poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
-    poll_member = poll_member.where("poll_id NOT IN (?)", check_poll_not_show_result) if check_poll_not_show_result.count > 0
 
     poll_member.each do |poll_member|
       if poll_member.share_poll_of_id == 0
         not_shared = Hash["shared" => false]
-        if poll_member.poll.series
-          poll_series << poll_member.poll
-          series_shared << not_shared
-        else
-          poll_nonseries << poll_member.poll
-          nonseries_shared << not_shared
-          # count_feeded_load(poll_member.poll)
-        end
+        list_polls << poll_member.poll
+        list_shared << not_shared
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
         find_member_share = Member.joins(:share_polls).where("share_polls.poll_id = #{poll_member.poll_id}")
         shared = Hash["shared" => true, "shared_by" => serailize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
-        if find_poll.present?
-          if find_poll.series
-            poll_series << find_poll
-            series_shared << shared
-          else
-            poll_nonseries << find_poll
-            nonseries_shared << shared
-          end
-        end
-      end
 
+        list_polls << find_poll
+        list_shared << shared
+      end
+      order_ids << poll_member.id
     end
-    [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
+
+    [list_polls, list_shared, order_ids, next_cursor]
   end
 
   def check_poll_not_show_result
