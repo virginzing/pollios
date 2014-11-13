@@ -318,6 +318,10 @@ class PollsController < ApplicationController
       @poll_series, @poll_nonseries = Poll.split_poll(@polls)
       @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
       @total_entries = @polls.total_entries
+    elsif derived_version == 6
+      public_timeline = V6::PublicTimeline.new(@current_member, options_params)
+      @list_polls, @list_shared, @order_ids, @next_cursor = public_timeline.get_poll_public
+      @total_entries = public_timeline.total_entries
     else
       @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
 
@@ -377,11 +381,6 @@ class PollsController < ApplicationController
     end
   end
 
-  # def group_timeline
-  #   @init_poll = GroupTimelinable.new(@current_member, public_poll_params)
-  #   @polls = @init_poll.group_poll.paginate(page: params[:next_cursor])
-  #   poll_helper
-  # end
   def group_timeline
     group_timeline = GroupTimelinable.new(@current_member, options_params)
     @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = group_timeline.group_polls

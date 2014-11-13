@@ -2,9 +2,7 @@ if @group.present?
   json.response_status "OK"
   json.group do
     json.partial! 'response_helper/group/full_info', group: @group
-  end
-  json.member do
-    json.admin @is_admin
+    json.as_admin @is_admin
   end
   json.member_group do
     json.active @member_active, partial: 'response_helper/group/member_group', as: :member
