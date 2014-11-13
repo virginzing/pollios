@@ -2,17 +2,13 @@ class V6::OverallTimeline
   include GroupApi
   include LimitPoll
 
-  attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared, :next_cursor, :order_ids, :list_polls, :list_shared, :load_more
+  attr_accessor :next_cursor, :order_ids, :list_polls, :list_shared, :load_more
 
   def initialize(member, options)
     @member = member
     @options = options
     @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
     @pull_request = options["pull_request"] || "no"
-    @poll_series = []
-    @poll_nonseries = []
-    @series_shared = []
-    @nonseries_shared = []
     @order_ids = []
     @list_polls = []
     @list_shared = []
