@@ -21,7 +21,7 @@ class PollMember < ActiveRecord::Base
   }
 
   scope :unexpire, -> {
-    where("polls.expire_status = 'f'")
+    where("polls.expire_date > '#{Time.now}'")
   }
 
   LIMIT_TIMELINE = 3000

@@ -17,6 +17,10 @@ class V6::FriendFollowingTimeline
     @member.id
   end
 
+  def hidden_poll
+    @hidden_poll
+  end
+
   def your_friend_ids
     @friend_ids ||= @member.cached_get_friend_active.map(&:id)
   end
@@ -39,27 +43,25 @@ class V6::FriendFollowingTimeline
     query_poll_me = "poll_members.member_id = ? AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     query_poll_friend_and_following = "poll_members.member_id IN (?) AND poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     
-    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_me} AND #{poll_unexpire})" \
-        "OR (#{query_poll_friend_and_following} AND #{poll_unexpire})" \
-        "OR (#{query_poll_friend_and_following} AND #{poll_unexpire})" ,
+    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_me})" \
+        "OR (#{query_poll_friend_and_following})" \
+        "OR (#{query_poll_friend_and_following})" ,
         member_id,
         your_friend_ids,
         your_following_ids).limit(LIMIT_TIMELINE)
 
-      poll_member = check_hidden_poll(query)
-      ids, poll_ids = poll_member.map(&:id), poll_member.map(&:poll_id)
+    ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
   def find_poll_share
     query_poll_shared = "poll_members.member_id IN (?) AND poll_members.share_poll_of_id <> 0 AND poll_members.in_group = 'f'"
 
-    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire})" \
-      "OR (#{query_poll_shared} AND #{poll_unexpire})", 
+    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_shared})" \
+      "OR (#{query_poll_shared})", 
       your_friend_ids,
       your_following_ids).limit(LIMIT_TIMELINE)
 
-    poll_member = check_hidden_poll(query)
-    poll_member.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
+    query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 
   def poll_expire_have_vote
@@ -70,15 +72,11 @@ class V6::FriendFollowingTimeline
     "polls.expire_date > '#{Time.now}'"
   end
   
-  def check_hidden_poll(query)
-    @hidden_poll.empty? ? query : query.hidden(@hidden_poll)
-  end
-
   def friend_following_timeline
     ids, poll_ids = find_poll_me_and_friend_following
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
-    poll_member_ids_sort - check_poll_not_show_result
+    poll_member_ids_sort - check_poll_not_show_result - hidden_poll
   end
 
   def check_poll_not_show_result

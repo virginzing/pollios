@@ -321,6 +321,7 @@ class PollsController < ApplicationController
     elsif derived_version == 6
       public_timeline = V6::PublicTimeline.new(@current_member, options_params)
       @list_polls, @list_shared, @order_ids, @next_cursor = public_timeline.get_poll_public
+      @group_by_name = public_timeline.group_by_name
       @total_entries = public_timeline.total_entries
     else
       @init_poll = PublicTimelinable.new(public_poll_params, @current_member)

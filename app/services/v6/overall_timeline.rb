@@ -18,6 +18,10 @@ class V6::OverallTimeline
     @member.id
   end
 
+  def hidden_poll
+    @hidden_poll
+  end
+
   def since_id
     @options["since_id"] || 0
   end
@@ -103,18 +107,16 @@ class V6::OverallTimeline
 
     new_find_poll_series_in_group = filter_group.eql?("1") ? find_poll_series_in_group : [0]
 
-    query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_group_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_series_group_query} AND #{poll_unexpire})" \
-                                                             "OR (#{poll_public_query} AND #{poll_unexpire})",
+    query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query})" \
+                                                             "OR (#{poll_group_query})" \
+                                                             "OR (#{poll_series_group_query})" \
+                                                             "OR (#{poll_public_query})",
                                                              # "OR (#{poll_reward_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group)
 
-    # puts "my_vote_questionnaire_ids => #{my_vote_questionnaire_ids}"
-    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
     query = query.limit(LIMIT_TIMELINE)
-    # query = check_new_pull_request(query)
+
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
@@ -144,13 +146,11 @@ class V6::OverallTimeline
     new_your_friend_ids = filter_public.eql?("1") ? your_friend_ids : [0]
     your_following_ids = filter_public.eql?("1") ? your_following_ids : [0]
 
-    query = PollMember.available.joins(:poll).where("(#{query_poll_shared} AND #{poll_unexpire}) " \
-                                                    "OR (#{query_poll_shared} AND #{poll_unexpire})",
+    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_shared})" \
+                                                    "OR (#{query_poll_shared})",
                                                     new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)
 
-    # query = check_new_pull_request(query)
-    # poll_member = check_hidden_poll(query)
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 
@@ -162,15 +162,11 @@ class V6::OverallTimeline
     query
   end
 
-  # def check_hidden_poll(query)
-  #   @hidden_poll.empty? ? query : query.hidden(@hidden_poll)
-  # end
-
   def overall_timeline
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
-    poll_member_ids_sort - check_poll_not_show_result
+    poll_member_ids_sort - check_poll_not_show_result - hidden_poll - my_vote_questionnaire_ids
   end
 
   def cached_poll_ids_of_poll_member
