@@ -56,12 +56,10 @@ class V6::OverallTimeline
   end
 
   def your_friend_ids
-    # @friend_ids ||= @member.cached_get_friend_active.map(&:id)
     @friend_ids ||= Member.list_friend_active.map(&:id)
   end
 
   def your_following_ids
-    # @following_ids ||= @member.cached_get_following.map(&:id)
     @following_ids ||= Member.list_friend_following.map(&:id)
   end
 
