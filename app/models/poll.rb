@@ -62,6 +62,8 @@ class Poll < ActiveRecord::Base
 
   scope :load_more, -> (next_poll) { next_poll.present? ? where("polls.id < ?", next_poll) : nil }
 
+  scope :without_my_poll, -> (member_id) { where("polls.member_id != ?", member_id) }
+
   scope :available, -> {
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     member_block = Member.list_friend_block.map(&:id)  ## member ids
