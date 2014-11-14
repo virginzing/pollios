@@ -396,21 +396,39 @@ class PollsController < ApplicationController
   end
 
   def my_poll
-    @init_poll = MyPollInProfile.new(@current_member, options_params)
-    @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
-    poll_helper
+    if derived_version == 6
+      @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+      @list_polls, @next_cursor = @init_poll.get_my_poll
+      @group_by_name = @init_poll.group_by_name
+    else
+      @init_poll = MyPollInProfile.new(@current_member, options_params)
+      @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
+      poll_helper
+    end
   end
 
   def my_vote
-    @init_poll = MyPollInProfile.new(@current_member, options_params)
-    @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
-    poll_helper
+    if derived_version == 6
+      @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+      @list_polls, @next_cursor = @init_poll.get_my_vote
+      @group_by_name = @init_poll.group_by_name
+    else
+      @init_poll = MyPollInProfile.new(@current_member, options_params)
+      @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
+      poll_helper
+    end
   end
 
   def my_watched
-    @init_poll = MyPollInProfile.new(@current_member, options_params)
-    @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
-    poll_helper
+    if derived_version == 6
+      @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+      @list_polls, @next_cursor = @init_poll.get_my_watch
+      @group_by_name = @init_poll.group_by_name
+    else
+      @init_poll = MyPollInProfile.new(@current_member, options_params)
+      @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
+      poll_helper
+    end
   end
 
   def poll_helper

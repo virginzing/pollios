@@ -41,7 +41,6 @@ class ApplicationController < ActionController::Base
 
   def only_brand_or_company_account
     unless @current_member.brand? || @current_member.company?
-      # session[:member_id] = nil
       cookies.delete(:auth_token)
       respond_to do |format|
         flash[:warning] = 'Only brand or companry account.'
@@ -162,7 +161,7 @@ class ApplicationController < ActionController::Base
   def load_resource_poll_feed
     if params[:member_id] && request.format.json?
       p "=== Load Resource Poll Feed ==="
-      # Member.current_member = Member.find(85)
+      # Member.current_member = Member.find(93)
       Member.list_friend_block      = Member.current_member.cached_block_friend
       Member.list_friend_active     = Member.current_member.cached_get_friend_active
       Member.list_friend_request    = Member.current_member.cached_get_friend_request

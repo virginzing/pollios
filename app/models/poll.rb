@@ -59,7 +59,8 @@ class Poll < ActiveRecord::Base
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.zone.now) }
   scope :inactive_poll, -> { where("expire_date < ?", Time.zone.now) }
-  scope :load_more, -> (next_poll) { where("id < ?", next_poll) }
+
+  scope :load_more, -> (next_poll) { next_poll.present? ? where("polls.id < ?", next_poll) : nil }
 
   scope :available, -> {
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
