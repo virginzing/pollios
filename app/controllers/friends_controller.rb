@@ -110,7 +110,7 @@ class FriendsController < ApplicationController
     if derived_version == 6
       if params[:member_id] == params[:friend_id]
         @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
-        @list_polls, @next_cursor = @init_poll.get_my_poll
+        @list_polls, @next_cursor = @init_poll.get_my_vote
         @group_by_name = @init_poll.group_by_name
       else
         @init_poll = V6::FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
@@ -134,7 +134,7 @@ class FriendsController < ApplicationController
     if derived_version == 6
       if params[:member_id] == params[:friend_id]
         @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
-        @list_polls, @next_cursor = @init_poll.get_my_poll
+        @list_polls, @next_cursor = @init_poll.get_my_watch
         @group_by_name = @init_poll.group_by_name
       else
         @init_poll = V6::FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
