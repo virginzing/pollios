@@ -199,7 +199,7 @@ class V6::MyPollInProfile
   end
 
   def poll_with_my_watched
-    MemberPollFeed.where(member_id: member_id).first.poll_watched_update_feed.lazy
+    MemberPollFeed.where(member_id: member_id).first.poll_watched_feed.lazy
   end
 
   def update_type_of_poll_feed
