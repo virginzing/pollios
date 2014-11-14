@@ -31,7 +31,7 @@ class V6::MyPollInProfile
   end
 
   def my_poll
-    @my_poll ||= poll_created(nil, LIMIT_TIMELINE)
+    @my_poll ||= poll_created(nil, nil)
   end
 
   def get_my_poll
@@ -39,7 +39,7 @@ class V6::MyPollInProfile
   end
 
   def my_vote
-    @my_vote ||= poll_voted(nil, LIMIT_TIMELINE)
+    @my_vote ||= poll_voted(nil, nil)
   end
 
   def get_my_vote
@@ -47,7 +47,7 @@ class V6::MyPollInProfile
   end
 
   def my_watched
-    @my_watched ||= poll_watched(nil, LIMIT_TIMELINE)
+    @my_watched ||= poll_watched(nil, nil)
   end
 
   def get_my_watch
@@ -149,7 +149,7 @@ class V6::MyPollInProfile
     end
 
     if original_next_cursor.presence && original_next_cursor != "0"
-      @polls ||= get_type_of_poll_feed
+      @polls ||= get_type_of_poll_feed.to_a
       set_next_cursor = original_next_cursor.to_i
 
       if set_next_cursor.in? @polls
@@ -161,7 +161,7 @@ class V6::MyPollInProfile
       end
 
     else
-      @polls = update_type_of_poll_feed
+      @polls = update_type_of_poll_feed.to_a
       @poll_ids = @polls[0..(LIMIT_POLL - 1)]
     end
 
@@ -191,15 +191,15 @@ class V6::MyPollInProfile
   end
 
   def poll_with_my_created
-    MemberPollFeed.where(member_id: member_id).first.poll_created_feed
+    MemberPollFeed.where(member_id: member_id).first.poll_created_feed.lazy
   end
 
   def poll_with_my_voted
-    MemberPollFeed.where(member_id: member_id).first.poll_voted_feed
+    MemberPollFeed.where(member_id: member_id).first.poll_voted_feed.lazy
   end
 
   def poll_with_my_watched
-    MemberPollFeed.where(member_id: member_id).first.poll_watched_update_feed
+    MemberPollFeed.where(member_id: member_id).first.poll_watched_update_feed.lazy
   end
 
   def update_type_of_poll_feed
@@ -213,19 +213,19 @@ class V6::MyPollInProfile
   def poll_created_update_feed
     check_new_record_feed
     @member_poll_feed.update!(poll_created_feed: poll_created(nil, 1000).to_a.map(&:id))
-    @member_poll_feed.poll_created_feed
+    @member_poll_feed.poll_created_feed.lazy
   end
 
   def poll_voted_update_feed
     check_new_record_feed
     @member_poll_feed.update!(poll_voted_feed: poll_voted(nil, 1000).to_a.map(&:id))
-    @member_poll_feed.poll_voted_feed
+    @member_poll_feed.poll_voted_feed.lazy
   end
 
   def poll_watched_update_feed
     check_new_record_feed
     @member_poll_feed.update!(poll_watched_feed: poll_watched(nil, 1000).to_a.map(&:id))
-    @member_poll_feed.poll_watched_feed
+    @member_poll_feed.poll_watched_feed.lazy
   end
 
   def check_new_record_feed

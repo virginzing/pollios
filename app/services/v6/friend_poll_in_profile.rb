@@ -1,4 +1,7 @@
-class FriendPollInProfile
+class V6::FriendPollInProfile
+  include LimitPoll
+
+  attr_accessor :next_cursor
 
   def initialize(member, friend, options)
     @member = member
@@ -10,6 +13,10 @@ class FriendPollInProfile
   
   def friend_id
     @friend.id
+  end
+
+  def original_next_cursor
+    @original_next_cursor = @options[:next_cursor]
   end
 
   def my_group_id
@@ -53,15 +60,27 @@ class FriendPollInProfile
   end
 
   def get_poll_friend_with_visibility
-    @poll_created_visibility ||= poll_created_with_visibility
+    @poll_created_visibility ||= poll_created_with_visibility(nil, nil)
   end
 
   def get_vote_friend_with_visibility
-    @poll_voted_visibility ||= poll_voted_with_visibility
+    @poll_voted_visibility ||= poll_voted_with_visibility(nil, nil)
   end
 
   def get_watched_friend_with_visibility
-    @poll_watched_visibility ||= poll_watched_with_visibility
+    @poll_watched_visibility ||= poll_watched_with_visibility(nil, nil)
+  end
+
+  def get_friend_poll_feed
+    split_poll_and_filter("poll_created")
+  end
+
+  def get_friend_vote_feed
+    split_poll_and_filter("poll_voted")
+  end
+
+  def get_friend_watch_feed
+    split_poll_and_filter("poll_watched")
   end
 
   def poll_friend_count
@@ -114,34 +133,34 @@ class FriendPollInProfile
                 "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", (list_my_friend_ids << friend_id), my_and_friend_group).references(:poll_groups)
   end
 
-  def poll_created_with_visibility
+  def poll_created_with_visibility(next_cursor = nil, limit_poll = LIMIT_POLL)
     query_poll_member = "polls.member_id = #{is_friend} AND polls.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     query_group_together = "polls.member_id = #{friend_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
     query_public = "polls.public = 't' AND polls.member_id = #{friend_id} AND poll_members.share_poll_of_id = 0"
 
-    query = Poll.available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                 "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
-                my_and_friend_group, my_and_friend_group).references(:poll_groups)
+                my_and_friend_group, my_and_friend_group).references(:poll_groups).limit(limit_poll)
   end
 
-  def poll_voted_with_visibility
-    query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+  def poll_voted_with_visibility(next_cursor = nil, limit_poll = LIMIT_POLL)
+    query = Poll.load_more(next_cursor).available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
             .where("(history_votes.member_id = #{is_friend} AND polls.in_group = 'f') " \
             "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
             "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))",
-            my_and_friend_group).references(:poll_groups)
+            my_and_friend_group).references(:poll_groups).limit(limit_poll)
   end
 
-  def poll_watched_with_visibility
-    query = Poll.available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+  def poll_watched_with_visibility(next_cursor = nil, limit_poll = LIMIT_POLL)
+    query = Poll.load_more(next_cursor).available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
             .where("(watcheds.member_id = #{friend_id} AND watcheds.poll_notify = 't')")
             .where("(watcheds.member_id = #{friend_id} AND polls.in_group = 'f')" \
             "OR (watcheds.member_id = #{friend_id} AND polls.public = 't') " \
             "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", my_and_friend_group)
             .order("watcheds.created_at DESC")
-            .references(:poll_groups)
+            .references(:poll_groups).limit(limit_poll)
   end
 
   def block_friend
@@ -173,6 +192,98 @@ class FriendPollInProfile
 
   def poll_unexpire
     "polls.expire_date > '#{Time.now}'"
+  end
+
+  def split_poll_and_filter(type_feed)
+    @type_feed = type_feed
+
+    @select_poll = if @type_feed == "poll_created"
+      poll_created_with_visibility(original_next_cursor)
+    elsif @type_feed == "poll_voted"
+      poll_voted_with_visibility(original_next_cursor)
+    else
+      poll_watched_with_visibility(original_next_cursor)
+    end
+
+    if original_next_cursor.presence && original_next_cursor != "0"
+      @polls ||= get_type_of_poll_feed
+      set_next_cursor = original_next_cursor.to_i
+
+      if set_next_cursor.in? @polls
+        index = @polls.index(set_next_cursor)
+        @poll_ids = @polls[(index+1)..(LIMIT_POLL+index)]
+      else
+        @polls.select!{ |e| e < set_next_cursor }
+        @poll_ids = @polls[0..(LIMIT_POLL-1)] 
+      end
+
+    else
+      delete_cache_tpye_of_poll_feed
+      @polls = get_type_of_poll_feed
+      @poll_ids = @polls[0..(LIMIT_POLL - 1)]
+    end
+
+    if @polls.count > LIMIT_POLL
+      if @poll_ids.count == LIMIT_POLL
+        if @polls[-1] == @poll_ids.last
+          next_cursor = 0
+        else
+          next_cursor = @poll_ids.last
+        end
+      else
+        next_cursor = 0
+      end
+    else
+      next_cursor = 0
+    end
+
+    [@select_poll, next_cursor]
+  end
+
+  def get_type_of_poll_feed     
+    case @type_feed
+      when "poll_created" then poll_with_friend_created
+      when "poll_voted" then poll_with_friend_voted
+      when "poll_watched" then poll_with_friend_watched
+    end
+  end
+
+  def poll_with_friend_created
+    Rails.cache.fetch([@member.id, 'poll_visible_with', @friend.id]) do
+      poll_created_with_visibility(nil, 1000).to_a.map(&:id)
+    end
+  end
+
+  def poll_with_friend_voted
+    Rails.cache.fetch([@member.id, 'vote_visible_with', @friend.id]) do
+      poll_voted_with_visibility(nil, 1000).to_a.map(&:id)
+    end
+  end
+
+  def poll_with_friend_watched
+    Rails.cache.fetch([@member.id, 'watch_visible_with', @friend.id]) do
+      poll_watched_with_visibility(nil, 1000).to_a.map(&:id)
+    end
+  end
+
+  def delete_cache_tpye_of_poll_feed
+    case @type_feed
+      when "poll_created" then flush_poll_with_friend_created
+      when "poll_voted" then flush_poll_with_friend_voted
+      when "poll_watched" then flush_poll_with_friend_watched
+    end
+  end
+
+  def flush_poll_with_friend_created
+    Rails.cache.delete([@member.id, 'poll_visible_with', @friend.id])
+  end
+
+  def flush_poll_with_friend_voted
+    Rails.cache.delete([@member.id, 'vote_visible_with', @friend.id])
+  end
+
+  def flush_poll_with_friend_watched
+    Rails.cache.delete([@member.id, 'watch_visible_with', @friend.id])
   end
 
   

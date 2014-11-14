@@ -82,30 +82,76 @@ class FriendsController < ApplicationController
   end
 
   def list_of_poll
-    if params[:member_id] == params[:friend_id]
-      @init_poll = MyPollInProfile.new(@current_member, options_params)
-      @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
+    if derived_version == 6
+      if params[:member_id] == params[:friend_id]
+        @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+        @list_polls, @next_cursor = @init_poll.get_my_poll
+        @group_by_name = @init_poll.group_by_name
+      else
+        @init_poll = V6::FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+        @list_polls, @next_cursor = @init_poll.get_friend_poll_feed
+        @group_by_name = @init_poll.group_by_name
+      end
     else
-      @init_poll = MyPollInProfile.new(@find_friend, options_params)
-      @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-      @polls = @init_poll_friend.get_poll_friend_with_visibility.paginate(page: params[:next_cursor])
+      if params[:member_id] == params[:friend_id]
+        @init_poll = MyPollInProfile.new(@current_member, options_params)
+        @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
+      else
+        @init_poll = MyPollInProfile.new(@find_friend, options_params)
+        @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+        @polls = @init_poll_friend.get_poll_friend_with_visibility.paginate(page: params[:next_cursor])
+      end
+      poll_helper
     end
-    poll_helper
   end
 
 
   def list_of_vote
-    if params[:member_id] == params[:friend_id]
-      @init_poll = MyPollInProfile.new(@current_member, options_params)
-      @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
-      # check_my_vote_flush_cache?(@current_member, @init_poll.my_vote.to_a.count) unless params[:next_cursor].present?
+    if derived_version == 6
+      if params[:member_id] == params[:friend_id]
+        @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+        @list_polls, @next_cursor = @init_poll.get_my_poll
+        @group_by_name = @init_poll.group_by_name
+      else
+        @init_poll = V6::FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+        @list_polls, @next_cursor = @init_poll.get_friend_vote_feed
+        @group_by_name = @init_poll.group_by_name
+      end
     else
-      @init_poll = MyPollInProfile.new(@find_friend, options_params)
-      @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-      @polls = @init_poll_friend.get_vote_friend_with_visibility.paginate(page: params[:next_cursor])
-      # check_friend_vote_flush_cache?(@find_friend, @current_member, @init_poll.get_vote_friend_with_visibility.to_a.count) unless params[:next_cursor].present?
+      if params[:member_id] == params[:friend_id]
+        @init_poll = MyPollInProfile.new(@current_member, options_params)
+        @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
+      else
+        @init_poll = MyPollInProfile.new(@find_friend, options_params)
+        @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+        @polls = @init_poll_friend.get_vote_friend_with_visibility.paginate(page: params[:next_cursor])
+      end
+      poll_helper
     end
-    poll_helper
+  end
+
+  def list_of_watched
+    if derived_version == 6
+      if params[:member_id] == params[:friend_id]
+        @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+        @list_polls, @next_cursor = @init_poll.get_my_poll
+        @group_by_name = @init_poll.group_by_name
+      else
+        @init_poll = V6::FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+        @list_polls, @next_cursor = @init_poll.get_friend_watch_feed
+        @group_by_name = @init_poll.group_by_name
+      end
+    else
+      if params[:member_id] == params[:friend_id]
+        @init_poll = MyPollInProfile.new(@current_member, options_params)
+        @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
+      else
+        @init_poll = MyPollInProfile.new(@find_friend, options_params)
+        @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
+        @polls = @init_poll_friend.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
+      end
+      poll_helper
+    end
   end
 
   def check_my_vote_flush_cache?(member, vote_poll_count)
@@ -114,20 +160,6 @@ class FriendsController < ApplicationController
 
   def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
     friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
-  end
-
-  def list_of_watched
-    if params[:member_id] == params[:friend_id]
-      @init_poll = MyPollInProfile.new(@current_member, options_params)
-      @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
-      # check_my_watch_flush_cache?(@current_member, @init_poll.my_watched.to_a.count) unless params[:next_cursor].present?
-    else
-      @init_poll = MyPollInProfile.new(@find_friend, options_params)
-      @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-      @polls = @init_poll_friend.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
-      # check_friend_watch_flush_cache?(@find_friend, @current_member, @init_poll.get_watched_friend_with_visibility.to_a.count) unless params[:next_cursor].present?
-    end
-    poll_helper
   end
 
   def check_my_watch_flush_cache?(member, watch_poll_count)
