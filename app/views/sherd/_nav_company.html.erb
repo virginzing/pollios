@@ -43,7 +43,7 @@
           </ul>
         </li> -->
 
-      <li class="<%= is_active_2nd_level('poll_series', 'index') %>">
+      <li class="<%= is_active_2nd_level('poll_series', 'index') || is_active_2nd_level('poll_series', 'same_choice') %>">
         <a href="<%= poll_series_index_path %>"> List Questionnaire</a>
       </li>
 

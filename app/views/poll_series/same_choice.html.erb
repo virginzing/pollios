@@ -29,12 +29,16 @@
             </section>
 
             <section class="col col-3">
-              <label class="label">Expire with in</label>
-              <label class="select">
-                <%= f.input :expire_within, collection: 1..20, label: false, include_blank: false %>
-                <i></i>
-              </label>
-              
+              <label class="label">Expire within (day)</label>
+                <label class="select">
+                  <select name="poll_series[expire_date]">
+                    <option value="0" selected="">Unexpired</option>
+                    <% (1..30).each do |e| %>
+                      <option value="<%= e %>"><%= e %></option>
+                    <% end %>
+                  </select> <i></i> 
+                </label>
+
               <div class="option_config">
                 <label class="toggle">
                   <input type="checkbox" name="poll_series[allow_comment]" checked="checked">

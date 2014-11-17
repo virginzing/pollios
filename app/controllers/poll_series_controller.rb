@@ -96,8 +96,10 @@ class PollSeriesController < ApplicationController
   def create
     is_public = true
     in_group_ids = "0"
+    @expire_date = poll_series_params["expire_date"].to_i
+
     @poll_series = current_member.poll_series.new(poll_series_params)
-    @poll_series.expire_date = Time.now + poll_series_params["expire_within"].to_i.days
+    @poll_series.expire_date = set_expire_date
     @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
 
     @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
@@ -135,6 +137,15 @@ class PollSeriesController < ApplicationController
     end
     Rails.cache.delete([current_member.id, 'my_questionnaire'])
     puts "error: #{@poll_series.errors.full_messages}"
+  end
+
+  def set_expire_date
+    puts "@expire_date => #{@expire_date}"
+    if @expire_date == 0
+      return Time.zone.now + 100.years
+    else
+      return Time.zone.now + @expire_date.days
+    end
   end
 
   def destroy
