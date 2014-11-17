@@ -581,9 +581,9 @@ class Poll < ActiveRecord::Base
 
     Poll.transaction do
       begin
-        ever_vote = HistoryVote.find_by(member_id: member_id, poll_id: poll_id)
+        ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
 
-        unless ever_vote.present?
+        unless ever_vote
           find_poll = Poll.find_by(id: poll_id)
           find_choice = find_poll.choices.find_by(id: choice_id)
 
@@ -596,7 +596,7 @@ class Poll < ActiveRecord::Base
 
           find_choice.increment!(:vote)
 
-          history_voted = member.history_votes.create(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
+          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
 
           Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
