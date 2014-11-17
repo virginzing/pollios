@@ -1,7 +1,7 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_of_group, :follower_of_friend, :following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_of_watched,  :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
+  before_action :compress_gzip, only: [:list_of_group, :collection_profile, :follower_of_friend, :following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_of_watched,  :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]
   # before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote, :list_of_watched]
@@ -196,6 +196,22 @@ class FriendsController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
   end
 
+  def collection_profile
+    @list_friend = Friend.friend_of_friend(friend_params)
+    @list_friend_is_friend = is_friend(@list_friend) if @list_friend.present?
+
+    @list_following = Friend.following_of_friend(friend_params)
+    @list_following_is_friend = is_friend(@list_following) if @list_following.present?
+
+    @list_follower = Friend.follower_of_friend(friend_params)
+    @list_follower_is_friend = is_friend(@list_follower) if @list_follower.present?
+
+    if friend_params[:member_id] == friend_params[:friend_id]
+      @list_block = set_friend.cached_block_friend
+    end
+
+  end
+
   ###
 
   def poll_helper
@@ -223,6 +239,7 @@ class FriendsController < ApplicationController
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Don't have this id of friend"]}
       end
     end
+    @find_friend
   end
 
   def poll_friend_params
