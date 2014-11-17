@@ -50,9 +50,15 @@ class GroupController < ApplicationController
   end
 
   def poll_available_group
-    @init_poll = PollOfGroup.new(@current_member, @group, options_params)
-    @polls = @init_poll.get_poll_available_of_group.paginate(page: params[:next_cursor])
-    poll_helper
+    if derived_version == 6
+      @init_poll = V6::PollOfGroup.new(@current_member, @group, options_params)
+      @list_polls, @next_cursor = @init_poll.get_poll_available_of_group
+      @group_by_name = @init_poll.group_by_name
+    else
+      @init_poll = PollOfGroup.new(@current_member, @group, options_params)
+      @polls = @init_poll.get_poll_available_of_group.paginate(page: params[:next_cursor])
+      poll_helper
+    end
   end
 
   def poll_helper
