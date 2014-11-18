@@ -542,7 +542,6 @@ end
 # "authen":"codeapp@gmail.com","password":"9code7app9", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" 
 # }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
 
-
 # curl -H "Content-Type: application/json" -d '{
 #     "udid": "0000"
 # }' -X POST http://localhost:3000/guest/try_out.json -i

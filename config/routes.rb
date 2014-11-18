@@ -241,6 +241,8 @@ Pollios::Application.routes.draw do
 
     post 'certification/:id', to: 'admin#update_certification', as: :admin_update_certification
 
+    get 'notification', to: 'admin#notification', as: :admin_notification
+
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
 
     post 'login_as',  to: 'admin#login_as', as: :login_as

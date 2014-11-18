@@ -196,9 +196,13 @@
           <li class="<%= is_active?('commercials') %>">
             <a href="<%= commercials_path %>" title="Commercials"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Commercial</span></a>
           </li>
+
+          <li class="<%= is_active?('notification') %>">
+            <a href="<%= admin_notification_path %>" title="Notification"><i class="fa fa-lg fa-fw fa-bullhorn"></i> <span class="menu-item-parent">Notification</span></a>
+          </li>
           
-          <li class="<%= is_active?('certification') %>">
-            <a href="<%= admin_certification_path %>" title="Certification"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Certification</span></a>
+          <li class="<%= is_active_2nd_level('admin', 'notification') %>">
+            <a href="<%= admin_certification_path %>" title="Certification"><i class="fa fa-lg fa-fw fa-file-text"></i> <span class="menu-item-parent">Certification</span></a>
           </li>
 
 <!--           <li class="<%= is_active?('invites') %>">

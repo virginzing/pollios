@@ -7,7 +7,6 @@ class TemplatesController < ApplicationController
     member_template = @current_member.get_template
 
     if member_template.present?
-      puts "update poll_template => #{params[:poll_template]}"
       member_template.update(poll_template: params[:poll_template])
     else
       new_template = Template.create!(member_id: @current_member.id, poll_template: params[:poll_template])

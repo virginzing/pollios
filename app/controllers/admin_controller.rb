@@ -8,6 +8,14 @@ class AdminController < ApplicationController
 
   end
 
+  def notification
+    
+  end
+
+  def create_notification
+    
+  end
+
   def report
     @report_polls = Admin::ReportPoll.new.get_report_poll
     @report_members = Member.having_status_account(:normal).where("report_count != 0")
