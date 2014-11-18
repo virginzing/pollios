@@ -96,6 +96,7 @@ GEM
       tzinfo (~> 1.1)
     amoeba (2.1.0)
       activerecord (>= 3.2.6, < 5)
+    apns (1.0.0)
     arel (5.0.1.20140414130214)
     aws_cf_signer (0.1.3)
     bcrypt (3.1.7)
@@ -369,6 +370,7 @@ DEPENDENCIES
   activerecord-postgres-hstore
   amoeba
   apn_on_rails!
+  apns
   breadcrumbs_on_rails
   bson (~> 2.2)
   bson_ext

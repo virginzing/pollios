@@ -243,6 +243,8 @@ Pollios::Application.routes.draw do
 
     get 'notification', to: 'admin#notification', as: :admin_notification
 
+    post 'create_notification', to: 'admin#create_notification', as: :admin_create_notification
+
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
 
     post 'login_as',  to: 'admin#login_as', as: :login_as

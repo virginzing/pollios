@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   layout 'admin'
-  skip_before_action :verify_authenticity_token, only: [:login_as]
+  skip_before_action :verify_authenticity_token, only: [:login_as, :create_notification]
 
   before_filter :authenticate_admin!, :redirect_unless_admin, except: [:load_reason_poll, :load_reason_member]
 
@@ -13,7 +13,15 @@ class AdminController < ApplicationController
   end
 
   def create_notification
-    
+    @init_notification = Notify::PushNotification.new(notification_params)
+
+    if @init_notification.send
+      flash[:success] = "Send notification successfully"
+      redirect_to admin_notification_path
+    else
+      flash[:error] = "Something's went wrong"
+      render 'notification'
+    end
   end
 
   def report
@@ -87,4 +95,7 @@ class AdminController < ApplicationController
     params.require(:apn_app).permit(:apn_prod_cert, :apn_dev_cert)
   end
 
+  def notification_params
+    params.permit(:env, :device_token, :alert, :sound, :badge)
+  end
 end
