@@ -73,4 +73,12 @@ production:
     default:
       uri: <%= ENV['MONGOHQ_URL'] %>
   options:
+    consistency: :strong
+    retry_interval: 1
+    timeout: 15
+    safe: true
+    refresh_interval: 10
     raise_not_found_error: false
+    max_retries_on_connection_failure: 20
+    persist_in_safe_mode: true
+    skip_version_check: true
