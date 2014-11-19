@@ -317,6 +317,10 @@ Pollios::Application.routes.draw do
     get 'polls/:id/detail',  to: 'companies#poll_detail'
   end
 
+  scope 'm' do
+    get 'polls',  to: 'mobiles#polls'
+  end
+
   get '/profile', to: 'members#profile',  as: :my_profile
   delete 'delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
   delete 'delete_cover',  to: 'members#delete_cover', as: :delete_cover
