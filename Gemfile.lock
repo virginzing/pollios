@@ -279,7 +279,6 @@ GEM
       netrc (~> 0.7)
     restclient_with_cert (0.0.8)
       rest-client (>= 1.6)
-    rmagick (2.13.3)
     rolify (3.4.1)
     roo (1.13.2)
       nokogiri
@@ -413,7 +412,6 @@ DEPENDENCIES
   rails_admin_flatly_theme!
   randumb
   rest-client
-  rmagick
   rolify
   roo
   rqrcode

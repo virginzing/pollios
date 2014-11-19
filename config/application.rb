@@ -29,7 +29,6 @@ require 'zip'
 Bundler.require(:default, Rails.env)
 
 ENV['RAILS_ADMIN_THEME'] = 'flatly_theme'
-ENV['PATH'] = "/usr/local/bin:#{ENV['PATH']}"
 
 module Pollios
   class Application < Rails::Application
