@@ -1,0 +1,25 @@
+$.login = <%= raw @login || false %>;
+
+if ($.login) {
+  handleLoginSuccess();
+} else {
+  handleLoginError();
+}
+
+function handleLoginError() {
+  
+  $("[name=authen]").parent().removeClass("state-success").addClass("state-error");
+  $("[name=password]").parent().removeClass("state-success").addClass("state-error");
+
+  $.smallBox({
+    title : "Warning",
+    content: "Invalid username or password.",
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}
+
+function handleLoginSuccess() {
+  window.location.href = "<%= redirect_back mobile_dashboard_url %>";
+}

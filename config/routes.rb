@@ -319,6 +319,12 @@ Pollios::Application.routes.draw do
 
   scope 'm' do
     get 'polls',  to: 'mobiles#polls'
+    post 'vote_questionnaire',  to: 'mobiles#vote_questionnaire', as: :mobile_vote_questionnaire
+
+    get 'signin', to: 'mobiles#signin', as: :mobile_signin
+    get 'signin_form',  to: 'mobiles#signin_form',  as: :mobile_signin_form
+    post 'authen',  to: 'mobiles#authen'
+    get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
   end
 
   get '/profile', to: 'members#profile',  as: :my_profile

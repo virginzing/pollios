@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="logo-creator">
+      <img src="<%= @questionnaire.member.avatar.url(:thumbnail) %>" class="center-block img-responsive img-circle" alt="Responsive image">
+      <h1 class="text-center"><strong><%= @questionnaire.member.company.name %></strong></h1>
+      <p class="text-center" style="color: black; margin: 10px; margin-top: 30px;">
+        Thank you for your recent stay at our hotel. During your stay you dined at out 5-star Seafood Emporium Restaurant. We'ra conducting a
+        short survey to find out about your dining experience.
+      </p>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <a href="<%= mobile_signin_form_path %>" class="btn btn-primary btn-custom">Sign-in with Pollios Account</a>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <a href="" class="btn btn-primary" style="width:100%">Register with Pollios Account</a>
+      </div>
+    </div>
+
+    <br>
+
+  </div>
+</div>

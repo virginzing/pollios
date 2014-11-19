@@ -200,6 +200,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def m_signin
+    unless current_member.present?
+      store_location
+      flash[:warning] = "Please sign in before access this page."
+      redirect_to mobile_signin_path
+    end
+  end
+
   protected
 
   def layout_by_resource
