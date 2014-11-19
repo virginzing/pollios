@@ -21,15 +21,25 @@ class MobilesController < ApplicationController
   end
 
   def signin
-    url_parse = URI.parse(cookies[:return_to]).query
-
-    unless url_parse.nil?
-      extract_params = CGI.parse(url_parse)
-      id = extract_params["id"].first
-      @questionnaire = PollSeries.find_by(qrcode_key: id)
+    if cookies[:return_to].nil?
+      flash[:notice] = "Not found"
+      redirect_to mobile_dashboard_path
     else
-      flash[:notice] = "Please sign in"
-      redirect_to mobile_signin_path
+      url_parse = URI.parse(cookies[:return_to]).query
+
+      unless url_parse.nil?
+        extract_params = CGI.parse(url_parse)
+        id = extract_params["id"].first
+        @questionnaire = PollSeries.find_by(qrcode_key: id)
+        
+        unless @questionnaire.present?
+          flash[:notice] = "Not found"
+          redirect_to mobile_dashboard_path
+        end
+      else
+        flash[:notice] = "Please sign in"
+        redirect_to mobile_signin_path
+      end
     end
   end
 
@@ -63,6 +73,11 @@ class MobilesController < ApplicationController
 
   def set_series
     @questionnaire = PollSeries.find_by(qrcode_key: params[:id])
+
+    unless @questionnaire.present?
+      flash[:notice] = "Not found"
+      redirect_to mobile_dashboard_path
+    end
   end
 
   def authen_params
