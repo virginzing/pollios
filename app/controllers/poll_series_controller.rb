@@ -9,7 +9,9 @@ class PollSeriesController < ApplicationController
 
   def generate_qrcode
 
-    @qr = QrcodeSerializer.new(PollSeries.find(params[:id])).as_json.to_json
+    # @qr = QrcodeSerializer.new(PollSeries.find(params[:id])).as_json.to_json
+    @qr = get_link_for_qr_code(PollSeries.find(params[:id]))
+    puts "#{@qr}"
     # deflate = Zlib::Deflate.deflate(qrurl)
     # base64_qrcode = Base64.urlsafe_encode64(deflate)
 
@@ -27,6 +29,13 @@ class PollSeriesController < ApplicationController
     end
   end
 
+  def get_link_for_qr_code(poll_series)
+    if Rails.env.production?
+      "http://pollios.com/m/polls?" << "id=" << poll_series.qrcode_key << "&" << "series=true"
+    else
+      "http://localhost:3000/m/polls?" << "id=" << poll_series.qrcode_key << "&" << "series=true"
+    end
+  end
 
   def detail
     PollSeries.view_poll(@current_member, @poll_series)

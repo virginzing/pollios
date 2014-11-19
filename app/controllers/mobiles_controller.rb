@@ -25,8 +25,8 @@ class MobilesController < ApplicationController
 
     unless url_parse.nil?
       extract_params = CGI.parse(url_parse)
-      series_id = extract_params["series_id"].first
-      @questionnaire = PollSeries.find_by(qrcode_key: series_id)
+      id = extract_params["id"].first
+      @questionnaire = PollSeries.find_by(qrcode_key: id)
     else
       flash[:notice] = "Please sign in"
       redirect_to mobile_signin_path
@@ -62,7 +62,7 @@ class MobilesController < ApplicationController
   private
 
   def set_series
-    @questionnaire = PollSeries.find_by(qrcode_key: params[:series_id])
+    @questionnaire = PollSeries.find_by(qrcode_key: params[:id])
   end
 
   def authen_params
