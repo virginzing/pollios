@@ -31,14 +31,14 @@ class MobilesController < ApplicationController
         extract_params = CGI.parse(url_parse)
         id = extract_params["id"].first
         @questionnaire = PollSeries.find_by(qrcode_key: id)
-        
+
         unless @questionnaire.present?
           flash[:notice] = "Not found"
           redirect_to mobile_dashboard_path
         end
       else
-        flash[:notice] = "Please sign in"
-        redirect_to mobile_signin_path
+        flash[:notice] = "Not found"
+        redirect_to mobile_dashboard_path
       end
     end
   end
