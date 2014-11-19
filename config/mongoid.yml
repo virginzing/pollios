@@ -21,18 +21,18 @@ development:
         # read: secondary_preferred
 
         # How many times Moped should attempt to retry an operation after
-        # failure. (default: 30)
-        # max_retries: 30
+        # failure. (default: The number of nodes in the cluster)
+        # max_retries: 20
 
         # The time in seconds that Moped should wait before retrying an
-        # operation on failure. (default: 1)
-        # retry_interval: 1
+        # operation on failure. (default: 0.25)
+        # retry_interval: 0.25
   # Configure Mongoid specific options. (optional)
   options:
     # Includes the root model name in json serialization. (default: false)
     # include_root_in_json: false
 
-    # Include the _type field in serializaion. (default: false)
+    # Include the _type field in serialization. (default: false)
     # include_type_for_serialization: false
 
     # Preload all models in development, needed when models use
@@ -44,7 +44,7 @@ development:
 
     # Raise an error when performing a #find and the document is not found.
     # (default: true)
-    raise_not_found_error: false
+    # raise_not_found_error: true
 
     # Raise an error when defining a scope with the same name as an
     # existing method. (default: false)
@@ -73,8 +73,6 @@ production:
     default:
       uri: <%= ENV['MONGOHQ_URL'] %>
       options:
-        max_retries: 1
-        retry_interval: 0
-        raise_not_found_error: false
-        use_activesupport_time_zone: true
-        use_utc: true
+        read: primary
+        skip_version_check: true
+        safe: true
