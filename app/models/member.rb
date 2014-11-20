@@ -221,10 +221,6 @@ class Member < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    puts "uid => #{auth.uid}"
-    puts "image => #{auth.info.image}"
-    puts "expire => #{Time.at(auth.credentials.expires_at)}"
-
     fb_params = {
       id: auth.uid,
       provider: 'facebook',
@@ -236,10 +232,9 @@ class Member < ActiveRecord::Base
     @auth = Authentication.new(fb_params)
 
     if @auth.authenticated?
-
-    false
-
+      @auth.member
     end
+    @auth.member
   end
 
   def update_group

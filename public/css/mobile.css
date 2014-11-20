@@ -62,3 +62,10 @@ body {
 .logo-creator {
     margin-top: 40px;
 }
+img#image-navbar {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+#logo-group {
+    width: 140px !important;
+}

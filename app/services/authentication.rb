@@ -178,7 +178,6 @@ class Authentication
     else
       find_provider.update_columns(token: generate_token)
     end
-
     @member
   end
 

@@ -4,6 +4,7 @@ class MobilesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   expose(:member) { @auth.member }
+  expose(:image) { cookies[:login] == 'facebook' ? cookies[:image] : current_member.get_avatar }
 
   before_action :m_signin, only: [:polls, :vote_questionnaire]
 
@@ -12,7 +13,7 @@ class MobilesController < ApplicationController
   end
 
   def dashboard
-    
+
   end
 
   def polls
@@ -42,6 +43,7 @@ class MobilesController < ApplicationController
       unless url_parse.nil?
         extract_params = CGI.parse(url_parse)
         raise ExceptionHandler::MobileForbidden unless extract_params["key"].present?
+
         key = extract_params["key"].first
         id, series = decode64_key(key)
         @questionnaire = PollSeries.find_by(qrcode_key: id)
@@ -55,6 +57,14 @@ class MobilesController < ApplicationController
         redirect_to mobile_dashboard_path
       end
     end
+  end
+
+  def signout
+    cookies.delete(:auth_token)
+    cookies.delete(:login)
+    cookies.delete(:image)
+    flash[:success] = "Logout success"
+    redirect_to mobile_signin_path
   end
 
   def signin_form
@@ -72,6 +82,8 @@ class MobilesController < ApplicationController
         else
           cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
         end
+        cookies[:login] = 'sentai'
+
         flash[:success] = "Login Success"
         wants.js
       else
@@ -83,8 +95,18 @@ class MobilesController < ApplicationController
   end
 
   def authen_facebook
-    member = Member.from_omniauth(env["omniauth.auth"])
-    
+    env = request.env['omniauth.auth']
+    @member = Member.from_omniauth(env)
+
+    if @member.present?
+      cookies[:image] = env.info.image
+      cookies[:auth_token] = { value: @member.auth_token, expires: Time.at(env.credentials.expires_at)}
+      cookies[:login] = 'facebook'
+      redirect_back_or mobile_dashboard_url
+    else
+      flash[:errors] = "Login Fail."
+      redirect_to mobile_signin_path
+    end
   end
 
   private

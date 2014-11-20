@@ -318,12 +318,13 @@ Pollios::Application.routes.draw do
   end
 
   scope 'm' do
-    get 'home', to: 'mobiles#home'
+    get 'home', to: 'mobiles#home', as: :mobile_home
     get 'polls',  to: 'mobiles#polls'
     post 'vote_questionnaire',  to: 'mobiles#vote_questionnaire', as: :mobile_vote_questionnaire
 
     get 'signin', to: 'mobiles#signin', as: :mobile_signin
     get 'signin_form',  to: 'mobiles#signin_form',  as: :mobile_signin_form
+    delete 'signout', to: 'mobiles#signout',  as: :mobile_signout
     post 'authen',  to: 'mobiles#authen'
     get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
 
