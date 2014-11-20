@@ -9,7 +9,6 @@
  * Rename the stylesheet to whatever your liking so it will stay
  * unique to you with each update of SmartAdmin.
  */
-
 /*
  * INDEX
  * 
@@ -19,69 +18,63 @@
  */
 
 a#header-link {
-  color: #4c4f53 !important;
+    color: #4c4f53 !important;
 }
+/* PROFILE */
 
- /* PROFILE */
 .profile-content {
-  border-top: none !important;
+    border-top: none !important;
 }
 .feed-activity-list .feed-element {
-  border-bottom: 1px solid #e7eaec;
+    border-bottom: 1px solid #e7eaec;
 }
 .feed-element:first-child {
-  margin-top: 0;
+    margin-top: 0;
 }
 .feed-element {
-  padding-bottom: 15px;
+    padding-bottom: 15px;
 }
-.feed-element,
-.feed-element .media {
-  margin-top: 15px;
+.feed-element, .feed-element .media {
+    margin-top: 15px;
 }
-.feed-element,
-.media-body {
-  overflow: hidden;
+.feed-element, .media-body {
+    overflow: hidden;
 }
 .feed-element > .pull-left {
-  margin-right: 10px;
+    margin-right: 10px;
 }
-.feed-element img.img-circle,
-.dropdown-messages-box img.img-circle {
-  width: 38px;
-  height: 38px;
+.feed-element img.img-circle, .dropdown-messages-box img.img-circle {
+    width: 38px;
+    height: 38px;
 }
 .feed-element .well {
-  border: 1px solid #e7eaec;
-  box-shadow: none;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  padding: 10px 20px;
-  font-size: 11px;
-  line-height: 16px;
+    border: 1px solid #e7eaec;
+    box-shadow: none;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding: 10px 20px;
+    font-size: 11px;
+    line-height: 16px;
 }
 .feed-element .actions {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 .feed-element .photos {
-  margin: 10px 0;
+    margin: 10px 0;
 }
 .feed-photo {
-  max-height: 180px;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-right: 10px;
-  margin-bottom: 10px;
+    max-height: 180px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
-
-.dl-horizontal.dl-custom dt{
-  padding: 3px !important;
+.dl-horizontal.dl-custom dt {
+    padding: 3px !important;
 }
-
-.dl-horizontal.dl-custom dd{
-  padding: 3px !important;
+.dl-horizontal.dl-custom dd {
+    padding: 3px !important;
 }
-
 .text-primary {
-  font-family: "Roboto";
+    font-family: "Roboto";
 }

@@ -46,20 +46,18 @@
                 <th>View All</th>
                 <th width="150">Expire At</th>
                 <th width="200">Created At</th>
-                <th>QRCODE</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <% @poll_series.each do |series| %>
                 <tr>
-                  <td><%= link_to series.id, "#" %></td>
-                  <td><%= series.description %></td>
+                  <td><%= series.id %></td>
+                  <td><%= link_to series.description, poll_series_path(series) %></td>
                   <td><%= series.vote_all %></td>
                   <td><%= series.view_all %></td>
                   <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
                   <td><%= series.created_at %></td>
-                  <td><button data-toggle="modal" class="btn btn-primary" data-target="#myModal" onclick="showIFrame('/questionnaire/<%= series.id %>/qrcode.png', '<%= series.description %>')">Show</button></td>
                   <td><!-- <%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> |--> <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>
                 </tr>
               <% end %>
@@ -103,9 +101,10 @@
         <h4 class="modal-title" id="myModalLabel">QR Code</h4>
       </div>
       <div class="modal-body">
-        <div style="padding-left: 210px;">
+<!--         <div style="padding-left: 210px;">
           <iframe src="" id="iframebox"></iframe>
-        </div>
+        </div> -->
+         <%= image_tag @qr %>
          <img style="position: absolute; top: 20px; left: 230px; opacity:0.3;" src="/img/pollios3.png" />
         <h2 id="description" class="text-center"></h2>
       </div>

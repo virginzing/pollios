@@ -19,21 +19,17 @@ class PollSeriesController < ApplicationController
 
     # @qr = RQRCode::QRCode.new( qrcode , :level => :l , size: 4)
 
-    respond_to do |format|
-      format.json
-      format.html
-      format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
-      format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
-      format.gif  { render :qrcode => @qr }
-      format.jpeg { render :qrcode => @qr }
-    end
-  end
+    # respond_to do |format|
+    #   format.json
+    #   format.html
+    #   format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
+    #   format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
+    #   format.gif  { render :qrcode => @qr }
+    #   format.jpeg { render :qrcode => @qr }
+    # end
 
-  def get_link_for_qr_code(poll_series)
-    if Rails.env.production?
-      "http://pollios.com/m/polls?" << "id=" << poll_series.qrcode_key << "&" << "series=true"
-    else
-      "http://localhost:3000/m/polls?" << "id=" << poll_series.qrcode_key << "&" << "series=true"
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -86,6 +82,25 @@ class PollSeriesController < ApplicationController
       @poll_series.polls.build
     end
     @group_list = current_member.company.groups if current_member.company?
+  end
+
+  def show
+    @poll_series = PollSeries.find(params[:id])
+    puts "get_link_for_qr_code_series => #{get_link_for_qr_code_series}"
+    @qr = RQRCode::QRCode.new(get_link_for_qr_code_series, :size => 7, :level => :h ).to_img.resize(200, 200).to_data_url
+  end
+
+  def get_link_for_qr_code_series
+    if Rails.env.production?
+      "http://pollios.com/m/polls?key=" << secret_qrcode_key
+    else
+      "http://192.168.1.17:3000/m/polls?key=" << secret_qrcode_key
+    end
+  end
+
+  def secret_qrcode_key
+    string = "id=" + @poll_series.qrcode_key + "&s=t"
+    Base64.urlsafe_encode64(string)
   end
 
   def edit

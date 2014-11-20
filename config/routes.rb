@@ -369,6 +369,8 @@ Pollios::Application.routes.draw do
 
   match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
 
+  get '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/}
+
   root to: 'home#index'
   authenticate :admin do
     mount Sidekiq::Web => '/sidekiq'
