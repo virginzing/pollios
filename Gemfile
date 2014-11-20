@@ -126,3 +126,6 @@ gem 'zip-zip'
 gem 'rolify'
 
 gem 'apns'
+
+gem 'omniauth'
+gem 'omniauth-facebook', '1.4.0'
