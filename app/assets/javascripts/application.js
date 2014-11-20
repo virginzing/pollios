@@ -11,4 +11,5 @@
 //= require nprogress
 //= require nprogress-turbolinks
 //= require chartkick
+//= require facebook
 //= require turbolinks

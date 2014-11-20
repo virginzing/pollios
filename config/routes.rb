@@ -326,6 +326,7 @@ Pollios::Application.routes.draw do
     get 'signin_form',  to: 'mobiles#signin_form',  as: :mobile_signin_form
     post 'authen',  to: 'mobiles#authen'
     get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
+
   end
 
   get '/profile', to: 'members#profile',  as: :my_profile
@@ -371,6 +372,9 @@ Pollios::Application.routes.draw do
   match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
 
   get '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/}
+
+  get 'auth/:provider/callback',  to: 'mobiles#authen_facebook'
+  get 'auth/failure', to: redirect('/')
 
   root to: 'home#index'
   authenticate :admin do

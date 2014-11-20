@@ -220,6 +220,37 @@ class Member < ActiveRecord::Base
 
   end
 
+  def self.from_omniauth(auth)
+    puts "uid => #{auth.uid}"
+    puts "image => #{auth.info.image}"
+    puts "expire => #{Time.at(auth.credentials.expires_at)}"
+
+    fb_params = {
+      id: auth.uid,
+      provider: 'facebook',
+      name: auth.info.name,
+      email: auth.info.email,
+      gender: auth.extra.raw_info.gender
+    }
+
+    @auth = Authentication.new(fb_params.merge(Hash["provider" => "facebook"]))
+    if @auth.authenticated?
+      @apn_device = ApnDevice.check_device?(member, fb_params[:device_token])
+      # if @auth.activate_account?
+      # end
+    end
+  end
+
+
+  private
+
+  def fb_params
+    params.permit(:id, :name, :email, :user_photo, :username, :device_token, :birthday, :gender)
+  end
+
+
+  end
+
   def update_group
     
   end

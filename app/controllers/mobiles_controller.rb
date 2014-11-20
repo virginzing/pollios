@@ -82,6 +82,11 @@ class MobilesController < ApplicationController
     end
   end
 
+  def authen_facebook
+    member = Member.from_omniauth(env["omniauth.auth"])
+    
+  end
+
   private
 
   def set_series

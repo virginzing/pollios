@@ -176,13 +176,13 @@ class Group < ActiveRecord::Base
     if find_admin_group.include?(member_id)
       if check_valid_friend.count > 0
         Member.where(id: check_valid_friend).each do |friend|
-          @group_member = GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
+          GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         end
         InviteFriendWorker.perform_async(member_id, list_friend, group_id)
-        @group_member.group
+        group
       end
       Group.flush_cached_member_active(group_id)
-      @group_member.group
+      group
     else
       raise ExceptionHandler::Forbidden, "You are not admin of group"
     end
