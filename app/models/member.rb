@@ -233,22 +233,13 @@ class Member < ActiveRecord::Base
       gender: auth.extra.raw_info.gender
     }
 
-    @auth = Authentication.new(fb_params.merge(Hash["provider" => "facebook"]))
+    @auth = Authentication.new(fb_params)
+
     if @auth.authenticated?
-      @apn_device = ApnDevice.check_device?(member, fb_params[:device_token])
-      # if @auth.activate_account?
-      # end
+
+    false
+
     end
-  end
-
-
-  private
-
-  def fb_params
-    params.permit(:id, :name, :email, :user_photo, :username, :device_token, :birthday, :gender)
-  end
-
-
   end
 
   def update_group
