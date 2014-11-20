@@ -8,6 +8,7 @@ module ExceptionHandler
     rescue_from MemberNotFoundHtml, :with => :known_error_html
     rescue_from MobileNotFound, :with => :mobile_not_found
     rescue_from MobileForbidden, :with => :mobile_forbidden
+    rescue_from MobileSignInAlready, :with => :mobile_signin_already
   end
 
   class NotFound < StandardError; end
@@ -15,6 +16,7 @@ module ExceptionHandler
   class MemberNotFoundHtml < StandardError; end
   class MobileNotFound < StandardError; end
   class MobileForbidden < StandardError; end
+  class MobileSignInAlready < StandardError; end
 
   def known_error(ex)
     Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
@@ -32,6 +34,11 @@ module ExceptionHandler
 
   def mobile_forbidden
     render 'mobiles/errors/403'
+  end
+
+  def mobile_signin_already
+    flash[:notice] = "You already sign-in"
+    redirect_to mobile_dashboard_path
   end
 
 end

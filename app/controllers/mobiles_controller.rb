@@ -1,19 +1,29 @@
 class MobilesController < ApplicationController
+  layout 'mobile'
+
   skip_before_action :verify_authenticity_token
 
   expose(:member) { @auth.member }
-  before_action :m_signin, only: [:polls, :vote_questionnaire]
-  # before_action :set_series, only: [:polls, :vote_questionnaire]
 
-  layout 'mobile'
+  before_action :m_signin, only: [:polls, :vote_questionnaire]
+
+  def home
+    
+  end
 
   def dashboard
     
   end
 
   def polls
-    @questionnaire = get_questionnaire_from_key(params[:key])
-    @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
+    @poll, @series = get_questionnaire_from_key(params[:key])
+    if @series == "t"
+      @questionnaire = @poll
+      @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
+      render 'questionnaire'
+    else
+      render 'poll'
+    end
   end
 
   def vote_questionnaire
@@ -22,6 +32,8 @@ class MobilesController < ApplicationController
   end
 
   def signin
+    raise ExceptionHandler::MobileSignInAlready if current_member
+
     if cookies[:return_to].nil?
 
     else
@@ -83,9 +95,16 @@ class MobilesController < ApplicationController
 
   def get_questionnaire_from_key(key)
     id, series = decode64_key(key)
-    @questionnaire = PollSeries.find_by(qrcode_key: id)
-    raise ExceptionHandler::MobileNotFound unless @questionnaire.present?
-    @questionnaire
+
+    if series == "t"
+      @poll = PollSeries.find_by(qrcode_key: id)
+    else
+      @poll = Poll.find_by(qrcode_key: id, series: series)
+    end
+
+    raise ExceptionHandler::MobileNotFound unless @poll.present?
+
+    [@poll, series]
   end
 
   def decode64_key(key)

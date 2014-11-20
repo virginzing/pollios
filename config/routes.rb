@@ -318,6 +318,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'm' do
+    get 'home', to: 'mobiles#home'
     get 'polls',  to: 'mobiles#polls'
     post 'vote_questionnaire',  to: 'mobiles#vote_questionnaire', as: :mobile_vote_questionnaire
 
