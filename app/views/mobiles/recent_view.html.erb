@@ -1,0 +1,33 @@
+<div class="widget-body">
+  <div class="panel-group smart-accordion-default" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class=""> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Questionnaire </a></h4>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body no-padding">
+          <table class="table">
+            <tbody>
+              <tr>
+                <% @recent_view.each do |questionnaire| %>
+                <td><%= link_to truncate(questionnaire.description, length: 45), questionnaire.get_link, class: 'recent_view' %></td>
+                <% end %>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Poll </a></h4>
+      </div>
+      <div id="collapseTwo" class="panel-collapse collapse" style="height: 0px;">
+        <div class="panel-body">
+          Not available
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

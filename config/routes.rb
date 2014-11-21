@@ -327,6 +327,7 @@ Pollios::Application.routes.draw do
     delete 'signout', to: 'mobiles#signout',  as: :mobile_signout
     post 'authen',  to: 'mobiles#authen'
     get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
+    get 'recent_view',  to: 'mobiles#recent_view',  as: :mobile_recent_view
 
   end
 

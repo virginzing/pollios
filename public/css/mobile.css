@@ -11,9 +11,7 @@ body {
 #header {
     background: #d32053 !important;
 }
-#main {
-    margin-left: 0px;
-}
+
 .mobile p, .mobile h1, .mobile h2, .mobile h3, .mobile h4, .mobile h5 {
     color: #d32053;
 }
@@ -77,3 +75,12 @@ img#image-navbar {
 #toggle-menu i.fa.fa-reorder {  
     color: white;
 }
+a.recent_view {
+    color: #d32053;
+}
+
+@media only screen and (max-width: 479px) and (min-width: 320px) {
+    #main {
+        margin-left: 0px;
+    }
+}   

@@ -7,40 +7,48 @@
 <div class="row">
 
   <div class="col-xs-12 col-sm-12">
+    <% unless @history_votes %>
+      <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
+        <input type="hidden" name="id" value="<%= @questionnaire.id  %>">
+        <input type="hidden" name="member_id" value="<%= current_member.id %>">
 
-    <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
-      <input type="hidden" name="id" value="<%= @questionnaire.id  %>">
-      <input type="hidden" name="member_id" value="<%= current_member.id %>">
-
-      <% @list_poll.each do |poll| %>
-      <div class="well">
-        <div class="poll-title">
-          <%= poll.title %>
-        </div>
-        <div class="row row-centered">
-
-          <% poll.choices.each_with_index do |choice, index| %>
-            <div id="<%= choice.id  %>" class="<%=poll.id %> choice col-xs-2 col-centered"  onclick="ActiveBox('<%= choice.id %>', '<%=poll.id %>')">
-                <p class="text-center" style="font-size: 16px;"><%= choice.answer %></p>
+          <% @list_poll.each do |poll| %>
+          <div class="well">
+            <div class="poll-title">
+              <%= poll.title %>
             </div>
-          <% end %>
-        </div>
 
-      </div>
-        <input type="hidden" value="<%= poll.id %>" name="polls[]">
-        <input type="hidden" val="" id="answer_<%= poll.id %>" name="choices[]">
-      <% end %>
 
-      <div class="form-group">
-        <div class="row">
-          <div class="col-xs-10 col-xs-offset-1">
-            <button type="submit" class="btn btn-primary btn-custom">SUBMIT</button>
+            <div class="row row-centered">
+
+              <% poll.choices.each_with_index do |choice, index| %>
+                <div id="<%= choice.id  %>" class="<%=poll.id %> choice col-xs-2 col-centered"  onclick="ActiveBox('<%= choice.id %>', '<%=poll.id %>')">
+                    <p class="text-center" style="font-size: 16px;"><%= choice.answer %></p>
+                </div>
+              <% end %>
+            </div>
+
           </div>
-        </div>
+            <input type="hidden" value="<%= poll.id %>" name="polls[]">
+            <input type="hidden" val="" id="answer_<%= poll.id %>" name="choices[]">
+          <% end %>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-xs-10 col-xs-offset-1">
+                <button type="submit" class="btn btn-primary btn-custom">SUBMIT</button>
+              </div>
+            </div>
+          </div>
+      </form>
+
+    <% else %>
+      <div class="alert alert-warning alert-block">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">Info!</h4>
+          You already vote this questionnaire.
       </div>
-    
-  
-    </form>
+    <% end %>
 
   </div>
 

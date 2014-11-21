@@ -39,6 +39,23 @@ class PollSeries < ActiveRecord::Base
     member.as_json(only: [:id, :fullname, :avatar])
   end
 
+  def get_link
+    get_link_for_qr_code_series
+  end
+
+  def get_link_for_qr_code_series
+    if Rails.env.production?
+      "http://pollios.com/m/polls?key=" << secret_qrcode_key
+    else
+      "http://localhost:3000/m/polls?key=" << secret_qrcode_key
+    end
+  end
+
+  def secret_qrcode_key
+    string = "id=" + self.qrcode_key + "&s=t"
+    Base64.urlsafe_encode64(string)
+  end
+
   def set_poll_series
     begin
       self.number_of_poll = polls.count

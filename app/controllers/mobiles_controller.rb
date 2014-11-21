@@ -18,12 +18,19 @@ class MobilesController < ApplicationController
 
   end
 
+  def recent_view
+    @recent_view = PollSeries.joins(:history_view_questionnaires).where("history_view_questionnaires.member_id = ?", current_member.id).limit(10)
+  end
+
   def polls
     @poll, @series = get_questionnaire_from_key(params[:key])
     if @series == "t"
       @questionnaire = @poll
 
-      raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
+      # raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
+      @history_votes = HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
+      
+      PollSeries.view_poll(@current_member, @questionnaire) unless @history_votes
 
       @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
       render 'questionnaire'
