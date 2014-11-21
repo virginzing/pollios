@@ -22,7 +22,7 @@ class MobilesController < ApplicationController
     @poll, @series = get_questionnaire_from_key(params[:key])
     if @series == "t"
       @questionnaire = @poll
-      
+
       raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
 
       @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
