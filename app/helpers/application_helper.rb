@@ -421,9 +421,9 @@ end
 # where("(polls.public = ?) OR (poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", true, 11, false)
 
 # curl -H "Content-Type: application/json" -d '{
-#   "member_id": 93,
-#   "answer": [{"id": 1408, "choice_id": 5041}, {"id": 1407, "choice_id": 5036}]
-# }' -X POST http://localhost:3000/questionnaire/52/vote.json -i
+#   "member_id": 163,
+#   "answer": [{"id": 1443, "choice_id": 5216}, {"id": 1442, "choice_id": 5211}]
+# }' -X POST http://localhost:3000/questionnaire/69/vote.json -i
 
 
 # # http://localhost:3000/new_public_timeline.json?member_id=3

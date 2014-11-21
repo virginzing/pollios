@@ -6,13 +6,15 @@
       </div>
       <div id="collapseOne" class="panel-collapse collapse in">
         <div class="panel-body no-padding">
-          <table class="table">
+          <table class="table table-bordered table-condensed">
+          <thead>
+          </thead>
             <tbody>
+              <% @recent_view.each do |questionnaire| %>
               <tr>
-                <% @recent_view.each do |questionnaire| %>
                 <td><%= link_to truncate(questionnaire.description, length: 45), questionnaire.get_link, class: 'recent_view' %></td>
-                <% end %>
               </tr>
+              <% end %>
             </tbody>
           </table>
         </div>
