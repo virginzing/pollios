@@ -9,6 +9,7 @@ class V6::PollOfGroup
     @group = group
     @params = params
     @only_poll_available = false
+    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
   end
 
   def member_id
@@ -17,6 +18,10 @@ class V6::PollOfGroup
 
   def group_id
     @group.id
+  end
+
+  def hidden_poll
+    @hidden_poll
   end
 
   def original_next_cursor
@@ -43,6 +48,14 @@ class V6::PollOfGroup
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
+  def check_poll_not_show_result
+    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
+  end
+
+  def with_out_poll_ids
+    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
+  end
+
   private
 
   def poll_of_group
@@ -59,7 +72,7 @@ class V6::PollOfGroup
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("#{poll_group_query} AND #{poll_unexpire}").uniq
 
-    query = query.where("polls.id NOT IN (?)", my_vote_questionnaire_ids).limit(limit_poll) if my_vote_questionnaire_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
 
     query
   end

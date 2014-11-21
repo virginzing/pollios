@@ -7,6 +7,8 @@ class MobilesController < ApplicationController
   expose(:image) { cookies[:login] == 'facebook' ? cookies[:image] : current_member.get_avatar }
 
   before_action :m_signin, only: [:polls, :vote_questionnaire]
+  before_action :set_series, only: [:vote_questionnaire]
+  before_action :set_current_member, only: [:vote_questionnaire]
 
   def home
     
@@ -20,6 +22,9 @@ class MobilesController < ApplicationController
     @poll, @series = get_questionnaire_from_key(params[:key])
     if @series == "t"
       @questionnaire = @poll
+      
+      raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
+
       @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
       render 'questionnaire'
     else
@@ -28,9 +33,37 @@ class MobilesController < ApplicationController
   end
 
   def vote_questionnaire
-    flash[:success] = "Thanks you"
-    redirect_to mobile_dashboard_path
+    answer = []
+    id = params[:id]
+    member_id = params[:member_id]
+    choice_list = params[:choices]
+
+    params[:polls].each_with_index do |poll_id, index|
+      answer << { id: poll_id, choice_id: choice_list[index] }
+    end
+
+    vote_params = {
+      id: id,
+      member_id: member_id,
+      answer: answer
+    }
+
+    @votes = @questionnaire.vote_questionnaire(vote_params, @current_member, @questionnaire)
+
+    if @votes
+      flash[:success] = "Thanks you"
+      redirect_to mobile_dashboard_path
+    else
+      flash[:error] = "Error"
+      redirect_to mobile_dashboard_path
+    end
   end
+
+
+# curl -H "Content-Type: application/json" -d '{
+#   "member_id": 163,
+#   "answer": [{"id": 1443, "choice_id": 5216}, {"id": 1442, "choice_id": 5211}]
+# }' -X POST http://localhost:3000/questionnaire/69/vote.json -i
 
   def signin
     raise ExceptionHandler::MobileSignInAlready if current_member
@@ -112,7 +145,7 @@ class MobilesController < ApplicationController
   private
 
   def set_series
-    @questionnaire = PollSeries.find_by(qrcode_key: params[:id])
+    @questionnaire = PollSeries.find_by(id: params[:id])
 
     unless @questionnaire.present?
       flash[:notice] = "Not found"
@@ -148,6 +181,5 @@ class MobilesController < ApplicationController
   def authen_params
     params.permit(:authen, :password, :remember_me, :web_login)
   end
-
 
 end

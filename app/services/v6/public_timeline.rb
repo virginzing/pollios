@@ -45,23 +45,27 @@ class V6::PublicTimeline
     cached_poll_ids_of_poll_member.count
   end
 
+  def with_out_poll_ids
+    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
+  end
+
   private
 
   def find_poll_public
     query_poll_public = "poll_members.public = 't' AND poll_members.share_poll_of_id = 0 AND poll_members.in_group = 'f'"
     
-    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_public})").limit(LIMIT_TIMELINE)
+    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_public})")
+
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+
+    query = query.limit(LIMIT_TIMELINE) 
 
     ids = query.map(&:id)
   end
 
-  def public_timeline
-    find_poll_public - check_poll_not_show_result - hidden_poll - my_vote_questionnaire_ids
-  end
-
   def cached_poll_ids_of_poll_member
     @cache_poll_ids ||= Rails.cache.fetch([ 'public_timeline', member_id]) do
-      public_timeline
+      find_poll_public
     end
   end
 

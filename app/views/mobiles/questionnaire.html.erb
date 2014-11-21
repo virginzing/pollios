@@ -9,7 +9,7 @@
   <div class="col-xs-12 col-sm-12">
 
     <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
-      <input type="hidden" name="id" value="<%= @questionnaire.qrcode_key  %>">
+      <input type="hidden" name="id" value="<%= @questionnaire.id  %>">
       <input type="hidden" name="member_id" value="<%= current_member.id %>">
 
       <% @list_poll.each do |poll| %>

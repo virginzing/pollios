@@ -100,6 +100,11 @@
 
 	    // HIDE MENU
 	    $('#hide-menu >:first-child > a').click(function(e) {
+	        // $('body').toggleClass("hidden-menu");
+	        e.preventDefault();
+	    });
+
+	    $('#toggle-menu >:first-child > a').click(function(e) {
 	        $('body').toggleClass("hidden-menu");
 	        e.preventDefault();
 	    });

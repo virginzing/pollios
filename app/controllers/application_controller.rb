@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
-  
+
   # before_action :restrict_only_admin
   layout :layout_by_resource
 
@@ -206,6 +206,13 @@ class ApplicationController < ActionController::Base
       store_location
       flash[:warning] = "Please sign in before access this page."
       redirect_to mobile_signin_path
+    end
+  end
+
+  def render_error(status, exception)
+    respond_to do |wants|
+      wants.html { render action: request.path[1..-1] }
+      wants.json { render json: Hash["response_status" => status, "response_message" => exception] }
     end
   end
 

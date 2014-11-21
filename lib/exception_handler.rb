@@ -9,6 +9,7 @@ module ExceptionHandler
     rescue_from MobileNotFound, :with => :mobile_not_found
     rescue_from MobileForbidden, :with => :mobile_forbidden
     rescue_from MobileSignInAlready, :with => :mobile_signin_already
+    rescue_from MobileVoteQuestionnaireAlready, :with => :mobile_vote_questionnaire_already
   end
 
   class NotFound < StandardError; end
@@ -17,6 +18,7 @@ module ExceptionHandler
   class MobileNotFound < StandardError; end
   class MobileForbidden < StandardError; end
   class MobileSignInAlready < StandardError; end
+  class MobileVoteQuestionnaireAlready < StandardError; end
 
   def known_error(ex)
     Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
@@ -38,6 +40,11 @@ module ExceptionHandler
 
   def mobile_signin_already
     flash[:notice] = "You already sign-in"
+    redirect_to mobile_dashboard_path
+  end
+
+  def mobile_vote_questionnaire_already
+    flash[:notice] = "You already vote this questionnaire."
     redirect_to mobile_dashboard_path
   end
 

@@ -8,6 +8,7 @@ class V6::MyPollInProfile
     @member = member
     @options = options
     @my_group = Member.list_group_active
+    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
   end
 
   def my_group_id
@@ -16,6 +17,10 @@ class V6::MyPollInProfile
 
   def member_id
     @member.id
+  end
+
+  def hidden_poll
+    @hidden_poll
   end
 
   def original_next_cursor
@@ -52,6 +57,10 @@ class V6::MyPollInProfile
 
   def get_my_watch
     split_poll_and_filter("poll_watched")
+  end
+
+  def with_out_poll_ids
+    hidden_poll
   end
 
   ## create ##
@@ -116,7 +125,10 @@ class V6::MyPollInProfile
                 .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f') " \
                        "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
                        "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
-                       my_group_id).references(:poll_groups).limit(limit_poll)
+                       my_group_id).references(:poll_groups)    
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.limit(limit_poll)
+    query
   end
 
   def poll_watched(next_cursor = nil, limit_poll = LIMIT_POLL)
@@ -126,7 +138,10 @@ class V6::MyPollInProfile
                        "OR (watcheds.member_id = #{member_id} AND polls.public = 't') " \
                        "OR (watcheds.member_id = #{member_id} AND poll_groups.group_id IN (?))", my_group_id)
                 .order("watcheds.created_at DESC")
-                .references(:poll_groups).limit(limit_poll)
+                .references(:poll_groups)
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.limit(limit_poll)
+    query
   end
 
   def poll_expire_have_vote

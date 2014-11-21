@@ -9,10 +9,15 @@ class V6::FriendPollInProfile
     @options = options
     @friend_group = @friend.cached_get_group_active
     @my_group = Member.list_group_active
+    @my_hidden_poll = HiddenPoll.my_hidden_poll(member.id)
   end
   
   def friend_id
     @friend.id
+  end
+
+  def my_hidden_poll
+    @my_hidden_poll
   end
 
   def original_next_cursor
@@ -45,6 +50,14 @@ class V6::FriendPollInProfile
 
   def group_by_name
     Hash[@friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+  end
+
+  def check_poll_not_show_result
+    @member.cached_my_voted_all.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
+  end
+
+  def with_out_poll_ids
+    my_hidden_poll | check_poll_not_show_result
   end
 
   def get_poll_friend
@@ -142,7 +155,11 @@ class V6::FriendPollInProfile
                 .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                 "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
-                my_and_friend_group, my_and_friend_group).references(:poll_groups).limit(limit_poll)
+                my_and_friend_group, my_and_friend_group).references(:poll_groups)
+
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.limit(limit_poll)
+    query
   end
 
   def poll_voted_with_visibility(next_cursor = nil, limit_poll = LIMIT_POLL)
@@ -150,7 +167,11 @@ class V6::FriendPollInProfile
             .where("(history_votes.member_id = #{is_friend} AND polls.in_group = 'f') " \
             "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
             "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))",
-            my_and_friend_group).references(:poll_groups).limit(limit_poll)
+            my_and_friend_group).references(:poll_groups)
+
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.limit(limit_poll)
+    query
   end
 
   def poll_watched_with_visibility(next_cursor = nil, limit_poll = LIMIT_POLL)
@@ -160,7 +181,11 @@ class V6::FriendPollInProfile
             "OR (watcheds.member_id = #{friend_id} AND polls.public = 't') " \
             "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", my_and_friend_group)
             .order("watcheds.created_at DESC")
-            .references(:poll_groups).limit(limit_poll)
+            .references(:poll_groups)
+            
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.limit(limit_poll)
+    query
   end
 
   def block_friend

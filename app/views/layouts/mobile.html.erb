@@ -86,12 +86,12 @@
     <!-- pulled right: nav area -->
     <div class="pull-right">
       <% if current_member %>
-        <div id="hide-menu" class="btn-header pull-right">
+        <div id="toggle-menu" class="pull-right">
           <span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
         </div>
         <div class="pull-right" style="margin-top: 5px;color: white;">
         You log-in as: <br>
-        <strong><%= truncate(current_member.fullname, length: 18) %></strong>
+        <strong><%= truncate(current_member.fullname, length: 12) %></strong>
         </div>
         <div class="pull-right">
           <img src="<%= image %>" class="img-circle" id="image-navbar" width="40" height="40">

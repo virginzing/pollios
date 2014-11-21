@@ -77,6 +77,7 @@ class Poll < ActiveRecord::Base
     else
       having_status_poll(:gray, :white)
     end
+    
   }
 
   scope :have_vote, -> { where("polls.vote_all > 0") }

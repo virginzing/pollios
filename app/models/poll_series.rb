@@ -106,6 +106,8 @@ class PollSeries < ActiveRecord::Base
         member.flush_cache_my_vote
         member.flush_cache_my_vote_all
         # Activity.create_activity_poll_series(member, poll_series, 'Vote')
+      else
+        return false
       end
       @votes
     end

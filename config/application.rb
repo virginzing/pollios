@@ -66,7 +66,7 @@ module Pollios
 
     config.active_record.schema_format = :sql
 
-    config.action_dispatch.rescue_responses["MobilesController::Forbidden"] = :forbidden
+    # config.action_dispatch.rescue_responses["MobilesController::Forbidden"] = :forbidden
     config.exceptions_app = self.routes
     # Compass.sass_engine_options[:load_paths].collect { |path| path.try(:root) }.compact
   end

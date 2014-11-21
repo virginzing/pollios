@@ -69,3 +69,11 @@ img#image-navbar {
 #logo-group {
     width: 140px !important;
 }
+#toggle-menu {
+    margin-top: 10px;
+    font-size: 18px;
+    margin-left: 10px;
+}
+#toggle-menu i.fa.fa-reorder {  
+    color: white;
+}

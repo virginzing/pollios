@@ -36,6 +36,18 @@ class V6::FriendFollowingTimeline
   def total_entries
     cached_poll_ids_of_poll_member.count
   end
+
+  def my_vote_questionnaire_ids
+    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+  end
+
+  def check_poll_not_show_result
+    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
+  end
+
+  def with_out_poll_ids
+    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
+  end
   
   private
 
@@ -48,8 +60,12 @@ class V6::FriendFollowingTimeline
         "OR (#{query_poll_friend_and_following})" ,
         member_id,
         your_friend_ids,
-        your_following_ids).limit(LIMIT_TIMELINE)
+        your_following_ids)
 
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+
+    query = query.limit(LIMIT_TIMELINE)
+    
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
@@ -59,7 +75,9 @@ class V6::FriendFollowingTimeline
     query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_shared})" \
       "OR (#{query_poll_shared})", 
       your_friend_ids,
-      your_following_ids).limit(LIMIT_TIMELINE)
+      your_following_ids)
+
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids).limit(LIMIT_TIMELINE) if with_out_poll_ids.count > 0
 
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
@@ -79,9 +97,6 @@ class V6::FriendFollowingTimeline
     poll_member_ids_sort - check_poll_not_show_result - hidden_poll
   end
 
-  def check_poll_not_show_result
-    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
-  end
 
   def cached_poll_ids_of_poll_member
     @cache_poll_ids ||= Rails.cache.fetch([ 'friend_following_poll', member_id]) do

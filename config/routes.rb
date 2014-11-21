@@ -372,7 +372,7 @@ Pollios::Application.routes.draw do
 
   match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
 
-  get '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/}
+  get '(errors)/:status', to: 'errors#show', constraints: { status: /\d{3}/ }
 
   get 'auth/:provider/callback',  to: 'mobiles#authen_facebook'
   get 'auth/failure', to: redirect('/')
