@@ -55,6 +55,10 @@ class V6::OverallTimeline
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
+  def check_poll_not_show_result
+    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
+  end
+
   def your_friend_ids
     @friend_ids ||= Member.list_friend_active.map(&:id)
   end
@@ -77,6 +81,10 @@ class V6::OverallTimeline
 
   def get_overall_poll
     overall_timeline
+  end
+
+  def with_out_poll_ids
+    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
   end
 
   def unvote_count
@@ -112,6 +120,8 @@ class V6::OverallTimeline
                                                              # "OR (#{poll_reward_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group)
+
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
 
     query = query.limit(LIMIT_TIMELINE)
 
@@ -164,7 +174,7 @@ class V6::OverallTimeline
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
-    poll_member_ids_sort - check_poll_not_show_result - hidden_poll - my_vote_questionnaire_ids
+    poll_member_ids_sort
   end
 
   def cached_poll_ids_of_poll_member
@@ -231,10 +241,6 @@ class V6::OverallTimeline
     end
 
     [list_polls, list_shared, order_ids, next_cursor]
-  end
-
-  def check_poll_not_show_result
-    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
   end
 
   def poll_shared_at(poll_member)
