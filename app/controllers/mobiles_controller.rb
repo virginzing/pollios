@@ -4,7 +4,8 @@ class MobilesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   expose(:member) { @auth.member }
-  expose(:image) { cookies[:login] == 'facebook' ? cookies[:image] : current_member.get_avatar }
+  expose(:member_decorate) { current_member.decorate }
+  # expose(:image) { cookies[:login] == 'facebook' ? cookies[:image] : member_decorate. }
 
   before_action :m_signin, only: [:polls, :vote_questionnaire]
   before_action :set_series, only: [:vote_questionnaire]

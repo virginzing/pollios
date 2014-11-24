@@ -129,3 +129,5 @@ gem 'apns'
 
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
+
+gem 'draper', '~> 1.3'

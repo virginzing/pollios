@@ -77,6 +77,8 @@ img#image-navbar {
 }
 a.recent_view {
     color: #d32053;
+    font-family: "Roboto";
+    -webkit-font-smoothing: antialiased;
 }
 
 @media only screen and (max-width: 479px) and (min-width: 320px) {

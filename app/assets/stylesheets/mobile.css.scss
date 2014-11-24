@@ -5,6 +5,12 @@ $choice-color: #F2F2F2;
 body {
     background: white;
 }
+
+#content {
+    font-family: "Roboto";
+    -webkit-font-smoothing: antialiased;
+}
+
 .font-big {
     font-size: 50px;
 }

@@ -91,10 +91,10 @@
         </div>
         <div class="pull-right" style="margin-top: 5px;color: white;">
         You log-in as: <br>
-        <strong><%= truncate(current_member.fullname, length: 12) %></strong>
+        <strong><%= member_decorate.show_name %></strong>
         </div>
         <div class="pull-right">
-          <img src="<%= image %>" class="img-circle" id="image-navbar" width="40" height="40">
+          <img src="<%= member_decorate.show_image %>" class="img-circle" id="image-navbar" width="40" height="40">
         </div>
       <% end %>
       <!-- collapse menu button -->
