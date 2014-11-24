@@ -111,6 +111,10 @@ class MobilesController < ApplicationController
     
   end
 
+  def signup_form
+    
+  end
+
   def authen
     @response = Authenticate::Sentai.signin(authen_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
@@ -146,6 +150,29 @@ class MobilesController < ApplicationController
     else
       flash[:errors] = "Login Fail."
       redirect_to mobile_signin_path
+    end
+  end
+
+  def signup_sentai
+    @response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
+    respond_to do |wants|
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "web_login" => params[:web_login] ]))
+      if @response["response_status"] == "OK"
+        @auth.member
+        flash[:success] = "Signup Success"
+        @signup = true
+        cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+        cookies[:login] = 'sentai'
+
+        wants.js
+      else
+        @signup = false
+        flash[:error] = @response["response_message"]
+        @flash_error = flash[:error]
+        wants.html { redirect_to(:back) }
+        wants.json
+        wants.js
+      end
     end
   end
 
@@ -187,6 +214,10 @@ class MobilesController < ApplicationController
 
   def authen_params
     params.permit(:authen, :password, :remember_me, :web_login)
+  end
+
+  def signup_params
+    params.permit(:member_type, :email, :password, :web_login)
   end
 
 end

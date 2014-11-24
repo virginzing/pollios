@@ -1,0 +1,28 @@
+$.signup = <%= raw @signup %>;
+
+if ($.signup) {
+  handleSignupSuccess();
+} else {
+  handleSignupError();
+}
+
+function handleSignupError() {
+
+  $.msg_signup = JSON.parse('<%= @flash_error.to_json.html_safe %>');
+
+  for (var k in $.msg_signup) {
+    $("[name=" + k + "]").parent().removeClass("state-success").addClass("state-error").append("<em class='invalid'>" + $.msg_signup[k].join(",") + "</em>");
+  }
+
+  $.smallBox({
+    title : "Warning",
+    content: "<b>Sign up Error.</b>",
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}
+
+function handleSignupSuccess() {
+  window.location.href="<%= redirect_back mobile_dashboard_url %>"
+}

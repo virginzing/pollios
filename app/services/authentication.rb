@@ -228,7 +228,11 @@ class Authentication
   # end
 
   def member_setting
-    { "post_poll"=>"friend_following", "vote_poll"=> true, "comment_poll"=> true }
+    { 
+      "post_poll"=>"friend_following", 
+      "vote_poll"=> true, 
+      "comment_poll"=> true 
+    }
   end
 
   def self.generate_api_token

@@ -1,6 +1,7 @@
 $nav-bar-color: #d32053;
 $font-color: #d32053;
 $choice-color: #F2F2F2;
+
 body {
     background: white;
 }
@@ -16,9 +17,7 @@ body {
 #header {
     background: $nav-bar-color !important;
 }
-#main {
-    margin-left: 0px;
-}
+
 .mobile {
     p, h1, h2, h3, h4, h5 {
         color: $font-color;
@@ -69,3 +68,31 @@ body {
 .logo-creator {
     margin-top: 40px;
 }
+img#image-navbar {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+#logo-group {
+    width: 140px !important;
+}
+#toggle-menu {
+    margin-top: 10px;
+    font-size: 18px;
+    margin-left: 10px;
+}
+#toggle-menu i.fa.fa-reorder {  
+    color: white;
+}
+a.recent_view {
+    color: #d32053;
+}
+
+em.invalid {
+    font-size: 11px;
+}
+
+@media only screen and (max-width: 479px) and (min-width: 320px) {
+    #main {
+        margin-left: 0px;
+    }
+}   

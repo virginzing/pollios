@@ -324,7 +324,11 @@ Pollios::Application.routes.draw do
 
     get 'signin', to: 'mobiles#signin', as: :mobile_signin
     get 'signin_form',  to: 'mobiles#signin_form',  as: :mobile_signin_form
+    get 'signup_form',  to: 'mobiles#signup_form',  as: :mobile_signup_form
+
     delete 'signout', to: 'mobiles#signout',  as: :mobile_signout
+
+    post 'signup_sentai', to: 'mobiles#signup_sentai',  as: :mobile_signup_sentai
     post 'authen',  to: 'mobiles#authen'
     get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
     get 'recent_view',  to: 'mobiles#recent_view',  as: :mobile_recent_view
