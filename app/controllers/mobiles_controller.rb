@@ -57,13 +57,21 @@ class MobilesController < ApplicationController
     }
 
     @votes = @questionnaire.vote_questionnaire(vote_params, @current_member, @questionnaire)
+    # sleep 3
+    
+    @vote_status = false
 
-    if @votes
-      flash[:success] = "Thanks you"
-      redirect_to mobile_dashboard_path
-    else
-      flash[:error] = "Error"
-      redirect_to mobile_dashboard_path
+    respond_to do |wants|
+      if @votes
+        @vote_status = true;
+        flash[:success] = "Thanks you"
+        # redirect_to mobile_dashboard_path
+        wants.js
+      else
+        flash[:error] = "Error"
+        # redirect_to mobile_dashboard_path
+        wants.js
+      end
     end
   end
 

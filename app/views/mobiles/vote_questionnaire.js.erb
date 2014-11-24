@@ -1,0 +1,24 @@
+$.vote_status = <%= raw @vote_status %>;
+
+if ($.vote_status) {
+  handleVoteSuccess();
+} else {
+  handleVoteFail();
+}
+
+function handleVoteFail() {
+
+  $.msg_vote_fail = "Something went wrong, Please try again."
+
+  $.smallBox({
+    title : "Warning",
+    content: "<b>" + $.msg_vote_fail + "</b>",
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}
+
+function handleVoteSuccess() {
+  window.location.href="/m/dashboard"
+}

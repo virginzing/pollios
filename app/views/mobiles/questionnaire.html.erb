@@ -8,7 +8,7 @@
 
   <div class="col-xs-12 col-sm-12">
     <% unless @history_votes %>
-      <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
+      <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form" data-remote="true">
         <input type="hidden" name="id" value="<%= @questionnaire.id  %>">
         <input type="hidden" name="member_id" value="<%= current_member.id %>">
 
@@ -36,7 +36,7 @@
           <div class="form-group">
             <div class="row">
               <div class="col-xs-10 col-xs-offset-1">
-                <button type="submit" class="btn btn-primary btn-custom">SUBMIT</button>
+                <button type="submit" id="submit-questionnaire" class="btn btn-primary btn-custom" data-disable-with="Loading...">SUBMIT</button>
               </div>
             </div>
           </div>
@@ -55,9 +55,35 @@
 </div>
 
 <script>
+  disable_submit_btn();
+
+
   function ActiveBox(id, pollId){
     $("." + pollId ).removeClass( "active" );
     $("#" + id ).addClass( "active" );
     $("#answer_" + pollId).val(id);
+    check_btn_submit($('.choice.active').size());
+  }
+
+  function check_btn_submit (count_check) {
+    $.poll_count = $( "input[name='polls[]']" ).size();
+    $.vote_count = count_check;
+
+    console.log($.poll_count);
+    console.log($.vote_count);
+
+    if ($.poll_count == $.vote_count) {
+      active_submit_btn();
+    } else{
+      disable_submit_btn();
+    };
+  }
+
+  function active_submit_btn() {
+    $("#submit-questionnaire").prop('disabled', false);
+  }
+
+  function disable_submit_btn() {
+    $("#submit-questionnaire").prop('disabled', true);
   }
 </script>

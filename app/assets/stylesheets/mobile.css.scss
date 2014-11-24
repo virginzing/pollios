@@ -71,6 +71,14 @@ body {
         border-color: $nav-bar-color;
     }
 }
+.btn-custom[disabled] {
+    background-color: $nav-bar-color;
+    border-color: $nav-bar-color;
+    &:hover {
+        background-color: $nav-bar-color;
+        border-color: $nav-bar-color;
+    }
+}
 .logo-creator {
     margin-top: 40px;
 }
