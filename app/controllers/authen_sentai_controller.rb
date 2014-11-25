@@ -50,7 +50,7 @@ class AuthenSentaiController < ApplicationController
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response => #{@response}"
 		respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login]]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app]))
 			if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
         # puts "@auth.activate_account? => #{@auth.activate_account?}"
@@ -104,7 +104,7 @@ class AuthenSentaiController < ApplicationController
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{@response}"
   	respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"], "company_id" => signup_params["company_id"] ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"], "company_id" => signup_params["company_id"], "register" => :in_app ]))
   		if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
@@ -151,7 +151,7 @@ class AuthenSentaiController < ApplicationController
   def signup_sentai_via_company
     @response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "company_id" => signup_params["company_id"] ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "company_id" => signup_params["company_id"], "register" => :in_app ]))
       if @response["response_status"] == "OK"
         @auth.member
         flash[:success] = "Create sucessfully."

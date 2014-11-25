@@ -9,6 +9,11 @@ body {
 #content {
     font-family: "Roboto";
     -webkit-font-smoothing: antialiased;
+    .well {
+        margin-left: -5px;
+        margin-right: -5px;
+        border-bottom: 1px solid whitesmoke;
+    }
 }
 
 .font-big {
@@ -105,8 +110,18 @@ em.invalid {
     font-size: 11px;
 }
 
+.well.sub-header {
+    border-bottom: 1px solid rgb(223, 223, 223) !important;
+    border-radius: 0px;
+}
+
 @media only screen and (max-width: 479px) and (min-width: 320px) {
     #main {
         margin-left: 0px;
+    }
+
+    .well {
+        margin-top: -10px;
+        border: none;
     }
 }   

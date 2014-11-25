@@ -104,6 +104,10 @@ class Authentication
     @params["address"]
   end
 
+  def register_status
+    @params["register"]
+  end
+
   def first_signup
     @new_member
   end
@@ -123,6 +127,7 @@ class Authentication
       member.fullname = name
       member.email = email
       member.member_type = member_type
+      member.register = register_status
       member.approve_brand = approved_brand
       if web_login.present?
         member.auth_token = generate_auth_token
@@ -165,7 +170,7 @@ class Authentication
     find_provider = Provider.where(name: "facebook", pid: pid).first
 
     unless find_provider.present?
-      member = Member.create!(fullname: name, member_type: member_type, auth_token: generate_auth_token, setting: member_setting)
+      member = Member.create!(fullname: name, member_type: member_type, auth_token: generate_auth_token, setting: member_setting, register: register_status)
       find_provider = member.providers.create!(name: "facebook", pid: pid, token: generate_token)
       @new_member = true
     end

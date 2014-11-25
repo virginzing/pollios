@@ -229,7 +229,7 @@ class Member < ActiveRecord::Base
       gender: auth.extra.raw_info.gender
     }
 
-    @auth = Authentication.new(fb_params)
+    @auth = Authentication.new(fb_params.merge(Hash["register" => :web_mobile]))
 
     if @auth.authenticated?
       @auth.member

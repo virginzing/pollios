@@ -12,6 +12,8 @@ module MemberHelper
   enumerize :member_type, :in => { citizen: 0, celebrity: 1, brand: 2, company: 3 }, predicates: true, default: :citizen, scope: true
   enumerize :status_account, :in => { normal: 1, blacklist: -1 }, default: :normal, predicates: true, scope: :having_status_account
 
+  enumerize :register, :in => { in_app: 0, web_mobile: 1 }
+
   enumerize :salary, :in => {
     'No Income' => 0,
     'Lower than 18,000 THB' => 1,

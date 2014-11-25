@@ -20,7 +20,7 @@ class MobilesController < ApplicationController
   end
 
   def recent_view
-    @recent_view = PollSeries.joins(:history_view_questionnaires).where("history_view_questionnaires.member_id = ?", current_member.id).limit(10)
+    @recent_view = PollSeries.joins(:history_view_questionnaires).where("history_view_questionnaires.member_id = ?", current_member.id).uniq.limit(10)
   end
 
   def polls
@@ -127,7 +127,7 @@ class MobilesController < ApplicationController
   def authen
     @response = Authenticate::Sentai.signin(authen_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login]]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :web_mobile]))
       if @response["response_status"] == "OK"
         @login = true
         if authen_params[:remember_me]
@@ -165,7 +165,7 @@ class MobilesController < ApplicationController
   def signup_sentai
     @response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "web_login" => params[:web_login] ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "web_login" => params[:web_login], "register" => :web_mobile ]))
       if @response["response_status"] == "OK"
         @auth.member
         flash[:success] = "Signup Success"
