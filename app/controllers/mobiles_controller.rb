@@ -7,7 +7,7 @@ class MobilesController < ApplicationController
   expose(:member_decorate) { current_member.decorate }
   # expose(:image) { cookies[:login] == 'facebook' ? cookies[:image] : member_decorate. }
 
-  before_action :m_signin, only: [:polls, :vote_questionnaire]
+  before_action :m_signin, only: [:polls, :vote_questionnaire, :recent_view]
   before_action :set_series, only: [:vote_questionnaire]
   before_action :set_current_member, only: [:vote_questionnaire]
 
@@ -57,19 +57,21 @@ class MobilesController < ApplicationController
     }
 
     @votes = @questionnaire.vote_questionnaire(vote_params, @current_member, @questionnaire)
-    # sleep 3
+    # sleep 2
     
     @vote_status = false
 
     respond_to do |wants|
-      if @votes
+      if true
         @vote_status = true;
-        flash[:success] = "Thanks you"
+        # flash[:success] = "Thanks you"
         # redirect_to mobile_dashboard_path
+        wants.json { render json: { "msg" => "Vote Success" }, status: 200 }
         wants.js
       else
-        flash[:error] = "Error"
+        # flash[:error] = "Error"
         # redirect_to mobile_dashboard_path
+        wants.json { render json: { "msg" => "Vote fail" } , status: 403 }
         wants.js
       end
     end
@@ -102,8 +104,9 @@ class MobilesController < ApplicationController
           redirect_to mobile_dashboard_path
         end
       else
-        flash[:notice] = "Not found"
-        redirect_to mobile_dashboard_path
+        cookies.delete(:return_to)
+        flash[:notice] = "Sign in before."
+        redirect_to mobile_signin_path
       end
     end
   end

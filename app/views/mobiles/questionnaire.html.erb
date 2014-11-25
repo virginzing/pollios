@@ -8,7 +8,7 @@
 
   <div class="col-xs-12 col-sm-12">
     <% unless @history_votes %>
-      <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form" data-remote="true">
+      <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
         <input type="hidden" name="id" value="<%= @questionnaire.id  %>">
         <input type="hidden" name="member_id" value="<%= current_member.id %>">
 
@@ -36,7 +36,8 @@
           <div class="form-group" style="padding-top: 10px;">
             <div class="row">
               <div class="col-xs-10 col-xs-offset-1">
-                <button type="submit" id="submit-questionnaire" class="btn btn-primary btn-custom" data-disable-with="Loading...">SUBMIT</button>
+                <!-- <button type="submit" id="submit-questionnaire" class="btn btn-primary btn-custom" data-disable-with="Loading...">SUBMIT</button> -->
+                <button href="#" class="btn btn-primary btn-custom ladda-button btn-lg" id="submit-questionnaire" data-style="expand-left"><span class="ladda-label">SUBMIT</span></button>
               </div>
             </div>
           </div>
@@ -55,6 +56,32 @@
 </div>
 
 <script>
+  var post_data;
+
+  var id = <%= raw @questionnaire.id  %>;
+  var member_id = <%= raw current_member.id %>;
+  $.poll_data = [];
+  $.choice_data = [];
+
+  $(function() {
+  
+    $('#submit-questionnaire').click(function(e){
+      post_data = { "id": id, "member_id": member_id, "polls" : set_poll_data(), "choices" : set_choice_data() };
+      e.preventDefault();
+      var l = Ladda.create(this);
+      l.start();
+      $.post("<%= mobile_vote_questionnaire_path %>", 
+          post_data ,
+        function(response){
+          vote_success(response.msg);
+          // console.log(response.msg);
+        }, "json")
+      .fail(function(xhr, txt, error) { fail_error(xhr.responseText.msg); })
+      .always(function() { l.stop(); });
+      return false;
+    });
+  });
+
   disable_submit_btn();
 
 
@@ -65,13 +92,49 @@
     check_btn_submit($('.choice.active').size());
   }
 
+  function set_poll_data () {
+    $( "input[name='polls[]']" ).each(function (i, el) {
+      var elem = $( el );
+      $.poll_data.push(elem.val());
+    });
+    return $.poll_data;
+  }
+
+  function set_choice_data () {
+    $( "input[name='choices[]']" ).each(function (i, el) {
+      var elem = $( el );
+      $.choice_data.push(elem.val());
+    });
+    return $.choice_data;
+  }
+
+  function fail_error(msg) {
+    swal({
+      title: "Vote Fail",
+      text: msg,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Try again",
+      closeOnConfirm: false
+    }, function() {
+      $("#submit-questionnaire").click();
+    })
+  }
+
+  function vote_success(msg) {
+    swal({
+      title: "Vote Success",
+      text: "ขอบคุณสำหรับความคิดเห็นของคุณ",
+      type: "success"
+    },
+    function () {
+      window.location = "<%= mobile_dashboard_url %>";
+    })
+  }
+
   function check_btn_submit (count_check) {
     $.poll_count = $( "input[name='polls[]']" ).size();
     $.vote_count = count_check;
-
-    console.log($.poll_count);
-    console.log($.vote_count);
-
     if ($.poll_count == $.vote_count) {
       active_submit_btn();
     } else{

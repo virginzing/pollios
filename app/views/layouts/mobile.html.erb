@@ -34,6 +34,8 @@
     <!-- FAVICONS -->
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" type="text/css" href="/mobile/css/ladda-themeless.min.css">
+    <link rel="stylesheet" type="text/css" href="/mobile/css/sweet-alert.css">
 
     <style type="text/css">
     #ajaxLoader {
@@ -71,6 +73,8 @@
     <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
     <!-- BOOTSTRAP JS -->
     <script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script>
+    <script src="/mobile/js/spin.min.js"></script>
+    <script src="/mobile/js/ladda.min.js"></script>
   </head>
   <body class="fixed-header">
 
@@ -197,7 +201,7 @@
   <script src="/smartadmin/js/app.js"></script>
   <script src="/plugins/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
   <script src="/plugins/x-editable/moment.min.js"></script>
-
+  <script src="/mobile/js/sweet-alert.min.js"></script>
   <script>
 
   $(document).on('page:change', function() {
