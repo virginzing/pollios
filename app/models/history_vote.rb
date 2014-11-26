@@ -1,6 +1,7 @@
 class HistoryVote < ActiveRecord::Base
   belongs_to :member, touch: true
   belongs_to :poll
+  belongs_to :poll_series
   belongs_to :choice
   
   store_accessor :data_analysis

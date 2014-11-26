@@ -12,6 +12,9 @@ class PollSeries < ActiveRecord::Base
   has_many :poll_series_tags, dependent: :destroy
   has_many :tags, through: :poll_series_tags, source: :tag
 
+  has_many :history_votes, dependent: :destroy
+  has_many :who_voted,  through: :history_votes, source: :member
+
   has_many :poll_series_groups, dependent: :destroy
 
   validates :description, presence: true

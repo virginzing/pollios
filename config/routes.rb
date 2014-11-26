@@ -22,6 +22,7 @@ Pollios::Application.routes.draw do
         get 'polls',      to: 'surveyors#list_polls'
         get 'polls/:id/detail', to: 'surveyors#poll_detail'
         get 'polls/:id/members_surveyable', to: 'surveyors#members_surveyable'
+        get 'questionnaires/:id/members_surveyable',  to: 'surveyors#members_surveyable_questionnaire'
         post 'polls/:id/survey',  to: 'surveyors#survey'
         post 'polls/list_of_survey', to: 'surveyors#list_of_survey'
       end

@@ -27,6 +27,13 @@ module Api
         @members_voted = @init_member_suveyable.get_members_voted
       end
 
+      def members_surveyable_questionnaire
+        @init_member_suveyable = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire)
+        @members_surveyable = @init_member_suveyable.get_members_in_group
+
+        @members_voted = @init_member_suveyable.get_members_voted
+      end
+
       def survey
         @init_survey = Surveyor::MembersSurveyable.new(set_poll, @current_member, survey_params)
         @survey = @init_survey.survey
@@ -59,6 +66,12 @@ module Api
         @poll = Poll.find_by(id: params[:id])
         raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
         @poll
+      end
+
+      def set_quesitonnaire
+        @questionnaire = PollSeries.find_by(id: params[:id])
+        raise ExceptionHandler::NotFound, "Questionnaire not found" unless @questionnaire.present?
+        @questionnaire
       end
 
     end
