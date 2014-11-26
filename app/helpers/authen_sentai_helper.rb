@@ -2,7 +2,7 @@ module AuthenSentaiHelper
 
 	def redirect_back_or(default)
 		redirect_to cookies[:return_to] || default
-		cookies.delete(:return_to)
+		# cookies.delete(:return_to)
 	end
 
 	def store_location
@@ -15,7 +15,6 @@ module AuthenSentaiHelper
 
 	def redirect_back(default)
 		return_to_url = cookies[:return_to] || default
-    cookies.delete(:return_to)
     return return_to_url
 	end
 

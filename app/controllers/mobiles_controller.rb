@@ -147,6 +147,7 @@ class MobilesController < ApplicationController
         cookies[:login] = 'sentai'
 
         flash[:success] = "Login Success"
+        cookies.delete(:return_to)
         wants.js
       else
         @login = false
@@ -165,6 +166,7 @@ class MobilesController < ApplicationController
       cookies[:image] = { value: env.info.image, expires: 6.hour.from_now }
       cookies[:auth_token] = { value: @member.auth_token, expires: Time.at(env.credentials.expires_at)}
       cookies[:login] = 'facebook'
+      cookies.delete(:return_to)
       redirect_back_or mobile_dashboard_url
     else
       flash[:errors] = "Login Fail."
