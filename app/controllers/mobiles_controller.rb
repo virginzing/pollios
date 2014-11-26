@@ -161,7 +161,7 @@ class MobilesController < ApplicationController
     @member = Member.from_omniauth(env)
 
     if @member.present?
-      cookies[:image] = { value: env.info.image, expires: Time.at(env.credentials.expires_at)}
+      cookies[:image] = { value: env.info.image, expires: 6.hour.from_now }
       cookies[:auth_token] = { value: @member.auth_token, expires: Time.at(env.credentials.expires_at)}
       cookies[:login] = 'facebook'
       redirect_back_or mobile_dashboard_url
