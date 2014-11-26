@@ -24,7 +24,7 @@ class MemberDecorator < Draper::Decorator
 
   def show_image
     if h.cookies[:login] == 'facebook'
-      cookie_image = h.cookies[:image_test]
+      cookie_image = h.cookies[:image]
       if cookie_image.nil?
         image_default
       else
