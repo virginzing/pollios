@@ -60,10 +60,11 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.unscoped.order("polls.created_at DESC")
+    @query = Poll.unscoped.select('polls.*')
                   .eager_load(:groups, :member)
-                  .where("poll_groups.group_id IN (?)", @group.map(&:id))
+                  .where("poll_groups.group_id IN (?)", @group.map(&:id)).uniq
                   .includes(:history_votes)
+                  .order("polls.created_at DESC")
     @query
   end
 
