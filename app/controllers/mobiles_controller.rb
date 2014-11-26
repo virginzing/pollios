@@ -5,12 +5,11 @@ class MobilesController < ApplicationController
 
   expose(:member) { @auth.member }
   expose(:member_decorate) { current_member.decorate }
-  # expose(:image) { cookies[:login] == 'facebook' ? cookies[:image] : member_decorate. }
 
   before_action :m_signin, only: [:polls, :vote_questionnaire, :recent_view]
   before_action :set_series, only: [:vote_questionnaire]
   before_action :set_current_member, only: [:vote_questionnaire]
-
+  after_action :delete_cookie, only: [:authen, :authen_facebook]
   def home
     
   end
@@ -22,7 +21,6 @@ class MobilesController < ApplicationController
   def check_qrcode
     render layout: false
     @key = params[:key]
-    # puts "key => #{@key}"
   end
 
   def recent_view
@@ -31,7 +29,10 @@ class MobilesController < ApplicationController
   end
 
   def polls
+    # cookies.delete(:return_to)
+
     @poll, @series = get_questionnaire_from_key(params[:key])
+
     if @series == "t"
       @questionnaire = @poll
 
@@ -148,7 +149,6 @@ class MobilesController < ApplicationController
         cookies[:login] = 'sentai'
 
         flash[:success] = "Login Success"
-        cookies.delete(:return_to)
         wants.js
       else
         @login = false
@@ -167,7 +167,6 @@ class MobilesController < ApplicationController
       cookies[:image] = { value: env.info.image, expires: 6.hour.from_now }
       cookies[:auth_token] = { value: @member.auth_token, expires: Time.at(env.credentials.expires_at)}
       cookies[:login] = 'facebook'
-      cookies.delete(:return_to)
       redirect_back_or mobile_dashboard_url
     else
       flash[:errors] = "Login Fail."
@@ -232,6 +231,10 @@ class MobilesController < ApplicationController
     rescue => e
       cookies.delete(:return_to)
     end
+  end
+
+  def delete_cookie
+    cookies.delete(:return_to)
   end
 
   def authen_params
