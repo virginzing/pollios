@@ -6,6 +6,7 @@ module Api
       skip_before_action :verify_authenticity_token
     
       before_action :set_current_member
+      before_action :compress_gzip, if: :request_json?
 
       def list_polls
         @init_poll = PollOfGroup.new(@current_member, find_group_that_surveyor, options_params)
@@ -72,6 +73,10 @@ module Api
         @questionnaire = PollSeries.find_by(id: params[:id])
         raise ExceptionHandler::NotFound, "Questionnaire not found" unless @questionnaire.present?
         @questionnaire
+      end
+
+      def request_json
+        request.format.json?
       end
 
     end

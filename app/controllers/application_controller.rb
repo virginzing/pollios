@@ -183,6 +183,10 @@ class ApplicationController < ActionController::Base
     request.env['HTTP_ACCEPT_ENCODING'] = 'gzip'
   end
 
+  def request_json?
+    request.format.json?
+  end
+
   def correct_member
     find_member = Member.find_by(username: params[:username])
     unless current_member?(find_member)
