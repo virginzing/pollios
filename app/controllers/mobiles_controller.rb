@@ -26,7 +26,9 @@ class MobilesController < ApplicationController
   end
 
   def recent_view
-    @recent_view = PollSeries.joins(:history_view_questionnaires).where("history_view_questionnaires.member_id = ?", current_member.id).uniq.limit(10)
+    @recent_view = PollSeries.joins(:history_view_questionnaires)
+                              .where("history_view_questionnaires.member_id = ?", current_member.id)
+                              .order("history_view_questionnaires.created_at DESC").uniq.limit(10)
   end
 
   def polls

@@ -10,7 +10,7 @@ RailsAdmin.config do |config|
   config.current_user_method(&:current_admin)
 
   config.included_models = ['HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
-    'HistoryView', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
+    'HistoryView', 'HistoryViewQuestionnaire', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
     'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode', 'MemberReportPoll', 'MemberReportMember', 'Activity', 'Comment', 'Company', 'UserStats', 'PollStats', 'GroupStats', 'Role','GroupSurveyor', 'RequestGroup', 'GroupCompany', 'CoverPreset']
 
 
