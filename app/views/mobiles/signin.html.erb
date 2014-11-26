@@ -19,15 +19,11 @@
 
     <div class="row">
       <div class="col-xs-10 col-xs-offset-1">
-        <a href="<%= mobile_signin_form_path %>" class="btn btn-primary btn-custom">Sign-in with Pollios Account</a>
-      </div>
-    </div>
-
-    <br>
-
-    <div class="row">
-      <div class="col-xs-10 col-xs-offset-1">
-        <a href="<%= mobile_signup_form_path %>" class="btn btn-primary" style="width:100%">Register with Pollios Account</a>
+        <!-- <a href="<%= mobile_signin_form_path %>" class="btn btn-primary btn-custom">Sign-in with Pollios Account</a> -->
+        <a href="<%= mobile_signin_form_path %>" class="btn btn-custom btn-block btn-social btn-pollios" style="width: 100%;">
+          <i class="fa fa-pollios"></i>
+            <span class="text-social">Sign in with Pollios</span>
+        </a>
       </div>
     </div>
 
@@ -39,6 +35,19 @@
         <a href="/auth/facebook" data-method="get" class="btn btn-block btn-social btn-facebook" style="width: 100%;">
           <i class="fa fa-facebook"></i>
             <span class="text-social">Sign in with Facebook</span>
+        </a>
+
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col-xs-10 col-xs-offset-1">
+        <!--<a href="<%= mobile_signup_form_path %>" class="btn btn-primary" style="width:100%">Register with Pollios Account</a>-->     
+        <a href="<%= mobile_signup_form_path %>" class="btn btn-primary btn-block btn-social btn-pollios" style="width: 100%;">
+          <i class="fa fa-pollios"></i>
+            <span class="text-social">Register with Pollios</span>
         </a>
 
       </div>
