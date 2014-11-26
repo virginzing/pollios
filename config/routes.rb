@@ -332,8 +332,9 @@ Pollios::Application.routes.draw do
     post 'authen',  to: 'mobiles#authen'
     get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
     get 'recent_view',  to: 'mobiles#recent_view',  as: :mobile_recent_view
-
   end
+
+  get '/qrcode',  to: 'mobiles#check_qrcode'
 
   get '/profile', to: 'members#profile',  as: :my_profile
   delete 'delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar

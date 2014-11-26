@@ -19,6 +19,12 @@ class MobilesController < ApplicationController
 
   end
 
+  def check_qrcode
+    render layout: false
+    @key = params[:key]
+    # puts "key => #{@key}"
+  end
+
   def recent_view
     @recent_view = PollSeries.joins(:history_view_questionnaires).where("history_view_questionnaires.member_id = ?", current_member.id).uniq.limit(10)
   end

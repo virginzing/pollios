@@ -92,9 +92,10 @@ class PollSeriesController < ApplicationController
 
   def get_link_for_qr_code_series
     if Rails.env.production?
-      "http://pollios.com/m/polls?key=" << secret_qrcode_key
+      "http://pollios.com/qrcode?key=" << secret_qrcode_key
     else
-      "http://192.168.1.17:3000/m/polls?key=" << secret_qrcode_key
+      # "http://192.168.1.18:3000/m/polls?key=" << secret_qrcode_key
+      "http://192.168.1.18:3000/qrcode?key=" << secret_qrcode_key
     end
   end
 
