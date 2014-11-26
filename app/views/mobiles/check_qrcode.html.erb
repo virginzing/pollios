@@ -41,12 +41,18 @@ redirect("Pollios://192.168.1.18:3000/m/polls?key=" + '<%= @key %>');
 <body>
 <script src="/mobile/js/browser-deeplink.min.js" type="text/javascript"></script>
 <script type="text/javascript">
+  var env = '<%= raw Rails.env.development? %>';
   var mobile_url = "http://pollios.com/m/polls?key=" + '<%= params[:key] %>';
   var app_url = "Pollios://pollios.com/m/polls?key=" + '<%= params[:key] %>';
 
+  if (env) {
+    mobile_url = "http://192.168.1.18:3000/m/polls?key=" + '<%= params[:key] %>';
+    app_url = "Pollios://192.168.1.18:3000/m/polls?key=" + '<%= params[:key] %>';
+  };
+
   deeplink.setup({
     iOS: {
-        storeUrl: mobile_url,
+        storeUrl: mobile_url
       }
     });
 

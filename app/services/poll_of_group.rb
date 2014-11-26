@@ -62,7 +62,7 @@ class PollOfGroup
   def poll_of_group_company
     @query = Poll.unscoped.order("polls.created_at DESC")
                   .eager_load(:groups, :member)
-                  .where("poll_groups.group_id IN (?) AND polls.series = 'f'", @group.map(&:id))
+                  .where("poll_groups.group_id IN (?)", @group.map(&:id))
                   .includes(:history_votes)
     @query
   end

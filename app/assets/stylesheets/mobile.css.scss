@@ -124,4 +124,12 @@ em.invalid {
         margin-top: -10px;
         border: none;
     }
+    #content {
+        padding: 0px !important;
+    }
+    .smart-accordion-default.panel-group .panel-title a {
+        padding: 8px 10px;
+        font-weight: 600;
+        font-family: "Roboto";
+    }
 }   

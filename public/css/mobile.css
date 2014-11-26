@@ -85,4 +85,7 @@ a.recent_view {
     #main {
         margin-left: 0px;
     }
+    #content {
+        padding: 0px !important;
+    }
 }   

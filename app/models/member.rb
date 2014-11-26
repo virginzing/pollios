@@ -221,6 +221,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
+    puts "auth => #{auth}"
     fb_params = {
       id: auth.uid,
       provider: 'facebook',
