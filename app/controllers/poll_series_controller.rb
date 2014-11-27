@@ -87,22 +87,21 @@ class PollSeriesController < ApplicationController
 
   def show
     @poll_series = PollSeries.find(params[:id])
-    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@poll_series).get_link, :size => 7, :level => :h ).to_img.resize(200, 200).to_data_url
+    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@poll_series).get_redirect_link, :size => 7, :level => :h ).to_img.resize(200, 200).to_data_url
   end
 
-  # def get_link_for_qr_code_series
-  #   if Rails.env.production?
-  #     "http://pollios.com/qrcode?key=" << secret_qrcode_key
-  #   else
-  #     # "http://192.168.1.18:3000/m/polls?key=" << secret_qrcode_key
-  #     "http://192.168.1.18:3000/qrcode?key=" << secret_qrcode_key
-  #   end
-  # end
+  def get_link_for_qr_code_series
+    if Rails.env.production?
+      "http://pollios.com/qrcode?key=" << secret_qrcode_key
+    else
+      "http://192.168.1.18:3000/qrcode?key=" << secret_qrcode_key
+    end
+  end
 
-  # def secret_qrcode_key
-  #   string = "id=" + @poll_series.qrcode_key + "&s=t"
-  #   Base64.urlsafe_encode64(string)
-  # end
+  def secret_qrcode_key
+    string = "id=" + @poll_series.qrcode_key + "&s=t"
+    Base64.urlsafe_encode64(string)
+  end
 
   def edit
     @poll_tags = @poll_series.tags

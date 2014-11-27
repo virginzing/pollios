@@ -5,10 +5,15 @@ class GenerateQrcodeLink
     @series = false
     @host_link = Rails.env.production? ? 'http://pollios.com' : 'http://localhost:3000'
     @custom_url = '/m/polls?key='
+    @redirect_url = '/qrcode?key='
   end
 
   def get_link
     @host_link + @custom_url + secret_qrcode_key
+  end
+
+  def get_redirect_link
+    @host_link + @redirect_url + secret_qrcode_key
   end
 
   private
