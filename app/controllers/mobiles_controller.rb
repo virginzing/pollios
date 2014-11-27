@@ -31,9 +31,9 @@ class MobilesController < ApplicationController
     # cookies.delete(:return_to)
 
     @poll, @qr_key, @series = get_questionnaire_from_key(params[:key])
-    puts "qr key => #{@qr_key}"
-    puts "poll => #{@poll}"
-    puts "series => #{@series}"
+    # puts "qr key => #{@qr_key}"
+    # puts "poll => #{@poll}"
+    # puts "series => #{@series}"
     if @series == "t"
       @questionnaire = @poll
 
@@ -99,23 +99,33 @@ class MobilesController < ApplicationController
 
     else
       url_parse = URI.parse(cookies[:return_to]).query
-      puts "url_parse => #{url_parse}"
+      # puts "url_parse => #{url_parse}"
       unless url_parse.nil?
         extract_params = CGI.parse(url_parse)
         raise ExceptionHandler::MobileForbidden unless extract_params["key"].present?
 
         key = extract_params["key"].first
-        id, series = decode64_key(key)
-        @questionnaire = PollSeries.find_by(id: id)
+        id, qrcode_key, series = decode64_key(key)
 
-        unless @questionnaire.present?
-          flash[:notice] = "Not found"
-          redirect_to mobile_dashboard_path
+        # puts "id => #{id}"
+
+        if series == "t"
+          @poll = PollSeries.find_by(id: id)
+          unless @questionnaire.present?
+            flash[:notice] = "Questionnaire not found"
+            redirect_to mobile_dashboard_path
+          end
+        else
+          @poll = Poll.find_by(id: id)
+          unless @poll.present?
+            flash[:notice] = "Poll not found"
+            redirect_to mobile_dashboard_path
+          end
         end
       else
         cookies.delete(:return_to)
-        flash[:notice] = "Sign in before."
-        redirect_to mobile_signin_path
+        # flash[:notice] = "Sign in before."
+        # redirect_to mobile_signin_path
       end
     end
   end

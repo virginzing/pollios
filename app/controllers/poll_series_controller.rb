@@ -87,7 +87,7 @@ class PollSeriesController < ApplicationController
 
   def show
     @poll_series = PollSeries.find(params[:id])
-    # puts "#{GenerateQrcodeLink.new(@poll_series).get_redirect_link}"
+    puts "#{GenerateQrcodeLink.new(@poll_series).get_redirect_link}"
     @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@poll_series).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
   end
 
