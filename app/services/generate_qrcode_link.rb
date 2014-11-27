@@ -26,8 +26,12 @@ class GenerateQrcodeLink
     questionnaire? ? "&s=t" : "&s=f"
   end
 
+  def get_qrcode_key
+    "&qr_key=" + @poll_or_questionnaire.qrcode_key
+  end
+
   def secret_qrcode_key
-    string = "id=" + @poll_or_questionnaire.qrcode_key + series_key
+    string = "id=" + @poll_or_questionnaire.id.to_s + get_qrcode_key + series_key
     Base64.urlsafe_encode64(string)
   end
   

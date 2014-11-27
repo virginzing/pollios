@@ -104,7 +104,7 @@ class MobilesController < ApplicationController
 
         key = extract_params["key"].first
         id, series = decode64_key(key)
-        @questionnaire = PollSeries.find_by(qrcode_key: id)
+        @questionnaire = PollSeries.find_by(id: id)
 
         unless @questionnaire.present?
           flash[:notice] = "Not found"
@@ -208,12 +208,12 @@ class MobilesController < ApplicationController
   end
 
   def get_questionnaire_from_key(key)
-    id, series = decode64_key(key)
+    id, qrcode_key, series = decode64_key(key)
 
     if series == "t"
-      @poll = PollSeries.find_by(qrcode_key: id)
+      @poll = PollSeries.find_by(id: id)
     else
-      @poll = Poll.find_by(qrcode_key: id, series: series)
+      @poll = Poll.find_by(id: id, series: series)
     end
 
     raise ExceptionHandler::MobileNotFound unless @poll.present?
@@ -225,8 +225,9 @@ class MobilesController < ApplicationController
     begin
       decode64 = Base64.urlsafe_decode64(key).split("&")
       id = decode64.first.split("=").last
+      qrcode_key = decode64[1].split("=").last
       series = decode64.last.split("=").last
-      [id, series]
+      [id, qrcode_key, series]
     rescue => e
       cookies.delete(:return_to)
     end
