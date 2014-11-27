@@ -111,7 +111,7 @@ class MobilesController < ApplicationController
 
         if series == "t"
           @poll = PollSeries.find_by(id: id)
-          unless @questionnaire.present?
+          unless @poll.present?
             flash[:notice] = "Questionnaire not found"
             redirect_to mobile_dashboard_path
           end
