@@ -112,17 +112,18 @@ class PollSeries < ActiveRecord::Base
   end
 
   def vote_questionnaire(params, member, poll_series)
+    surveyed_id = params[:surveyed_id]
     member_id = params[:member_id]
 
     PollSeries.transaction do
-      list_answer = params[:answer].collect!{ |poll| poll.merge({ :member_id => member_id}) }
+      list_answer = params[:answer].collect!{ |poll| poll.merge({ member_id: surveyed_id, surveyor_id: member_id }) }
       list_answer.each do |answer|
         @votes = Poll.vote_poll(answer, member)
       end
 
       if @votes.present?
         self.increment!(:vote_all)
-        poll_series.suggests.create!(member_id: member_id, message: params[:suggest])
+        poll_series.suggests.create!(member_id: surveyed_id, message: params[:suggest])
 
         member.flush_cache_my_vote
         member.flush_cache_my_vote_all

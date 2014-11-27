@@ -61,7 +61,7 @@ class MobilesController < ApplicationController
 
     vote_params = {
       id: id,
-      member_id: member_id,
+      surveyed_id: member_id,
       answer: answer
     }
 

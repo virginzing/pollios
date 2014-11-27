@@ -1,6 +1,11 @@
 class Surveyor::MembersSurveyableQuestionnaire
-  def initialize(questionnaire)
+  def initialize(questionnaire, params = {})
     @questionnaire = questionnaire
+    @params = params
+  end
+
+  def surveyed
+    Member.find_by(id: @params[:surveyed_id])
   end
 
   def get_members_in_group
@@ -17,6 +22,9 @@ class Surveyor::MembersSurveyableQuestionnaire
     members_voted.pluck(:id).uniq & get_members_in_group.map(&:id)
   end
 
+  def survey
+    @questionnaire.vote_questionnaire(@params, surveyed, @questionnaire)
+  end
 
   private
 

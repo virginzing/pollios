@@ -576,6 +576,7 @@ class Poll < ActiveRecord::Base
 
   def self.vote_poll(poll, member, data_options = {})
     member_id = poll[:member_id]
+    surveyor_id = poll[:surveyor_id]
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
     guest_id = poll[:guest_id]
@@ -597,7 +598,7 @@ class Poll < ActiveRecord::Base
 
           find_choice.increment!(:vote)
 
-          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options)
+          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id)
 
           Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
