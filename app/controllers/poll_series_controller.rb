@@ -37,7 +37,7 @@ class PollSeriesController < ApplicationController
   def detail
     PollSeries.view_poll(@current_member, @poll_series)
     respond_to do |format|
-      key = params[:key]
+      key = params[:qr_key]
 
       if key.present?
         unless @poll_series.qrcode_key == key
