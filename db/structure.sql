@@ -2977,6 +2977,13 @@ ALTER TABLE ONLY watcheds
 
 
 --
+-- Name: by_member_and_poll_series; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX by_member_and_poll_series ON history_view_questionnaires USING btree (member_id, poll_series_id);
+
+
+--
 -- Name: index_activity_feeds_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4130,4 +4137,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141030075116');
 INSERT INTO schema_migrations (version) VALUES ('20141031041353');
 
 INSERT INTO schema_migrations (version) VALUES ('20141125031754');
+
+INSERT INTO schema_migrations (version) VALUES ('20141127063504');
 

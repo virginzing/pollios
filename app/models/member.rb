@@ -22,7 +22,9 @@ class Member < ActiveRecord::Base
 
   has_many :member_invite_codes, dependent: :destroy
   has_many :member_un_recomments, dependent: :destroy
-  has_many :history_view_questionnaires, dependent: :destroy
+
+  has_many :history_view_questionnaires, -> { order("history_view_questionnaires.created_at DESC") }, dependent: :destroy
+  has_many :questionnaire_viewed, -> { uniq }, through: :history_view_questionnaires, source: :poll_series
 
   has_one :company, dependent: :destroy
 

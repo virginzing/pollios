@@ -30,4 +30,5 @@ class ChoicesController < ApplicationController
   def set_current_poll
     @poll = Poll.find(params[:poll_id])
   end
+   
 end
