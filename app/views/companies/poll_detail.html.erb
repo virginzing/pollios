@@ -2,7 +2,7 @@
   <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
     <h1 class="page-title txt-color-blueDark">
       <i class="fa fa-info fa-fw "></i> 
-        Polls > <%= @poll.title %>
+        Polls : <%= @poll.title %>
     </h1>
   </div>
 </div>
@@ -23,7 +23,6 @@
       <div class="widget-body">
         <!-- <div class="well well-sm well-light"> -->
         <!-- <div class="custom-scroll table-responsive" style="height:350px; overflow-y: scroll;"> -->
-
           <h3 class="text-primary">Poll Detail:</h3>
           <dl class="dl-horizontal">
             <dt>Id: <dd><%= @poll.id %></dd></dt>
@@ -47,6 +46,7 @@
             <% end %>
           </dl>
 
+
         <!-- </div> -->
 
       </div> <!-- widget-->
@@ -64,8 +64,11 @@
         <ul id="widget-tab-1" class="nav nav-tabs pull-right">
 
           <li class="active">
-          
-            <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
+            <a data-toggle="tab" href="#qrcode"> <i class="fa fa-lg fa-arrow-circle-o-down"></i> <span class="hidden-mobile hidden-tablet"> Qr Code</span> </a>
+            </li>
+          <li>
+    
+            <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-arrow-circle-o-up"></i> <span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
 
           </li>
 
@@ -85,7 +88,13 @@
           <!-- widget body text-->
           
           <div class="tab-content padding-10">
-            <div class="tab-pane fade in active" id="hr1">
+            <div class="tab-pane fade in active" id="qrcode">
+              <div class="box">
+                <%= image_tag @qr, class: "img-responsive center-block" %>
+              </div>
+            </div>
+            
+            <div class="tab-pane fade" id="hr1">
               <div id="chart_div"></div>
               <% if @poll.vote_all < 1 %>
                 <div class="alert alert-info fade in">
@@ -97,6 +106,7 @@
                 </div>
               <% end %>
             </div>
+
             <div class="tab-pane fade" id="hr2">
               <div id="bar_chart_div"></div>
                 <% if @poll.vote_all < 1 %>

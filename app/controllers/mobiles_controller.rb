@@ -30,8 +30,10 @@ class MobilesController < ApplicationController
   def polls
     # cookies.delete(:return_to)
 
-    @poll, @series = get_questionnaire_from_key(params[:key])
-
+    @poll, @qr_key, @series = get_questionnaire_from_key(params[:key])
+    puts "qr key => #{@qr_key}"
+    puts "poll => #{@poll}"
+    puts "series => #{@series}"
     if @series == "t"
       @questionnaire = @poll
 
@@ -218,7 +220,7 @@ class MobilesController < ApplicationController
 
     raise ExceptionHandler::MobileNotFound unless @poll.present?
 
-    [@poll, series]
+    [@poll, qrcode_key, series]
   end
 
   def decode64_key(key)

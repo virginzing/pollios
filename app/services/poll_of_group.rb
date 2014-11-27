@@ -3,7 +3,7 @@ class PollOfGroup
 
   attr_accessor :poll_series, :poll_nonseries, :series_shared, :nonseries_shared
 
-  def initialize(member, group, params = {})
+  def initialize(member, group, params = {}, web = false)
     @member = member
     @group = group
     @params = params
@@ -12,6 +12,7 @@ class PollOfGroup
     @series_shared = []
     @nonseries_shared = []
     @only_poll_available = false
+    @web = web
   end
 
   def group_id
@@ -65,6 +66,7 @@ class PollOfGroup
                   .where("poll_groups.group_id IN (?)", @group.map(&:id)).uniq
                   .includes(:history_votes)
                   .order("polls.created_at DESC")
+    @query = @query.where("polls.series = 'f'") if @web == true
     @query
   end
 
