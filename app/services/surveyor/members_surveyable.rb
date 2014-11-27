@@ -16,7 +16,7 @@ class Surveyor::MembersSurveyable
   end
 
   def check_member_that_in_group
-    members_voted.map(&:id) & get_members_in_group.map(&:id)
+    members_voted.map(&:id).uniq & get_members_in_group.map(&:id)
   end
 
   def survey

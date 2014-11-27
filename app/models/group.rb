@@ -49,7 +49,8 @@ class Group < ActiveRecord::Base
   end
 
   def get_photo_group
-    photo_group.present? ? photo_group.url(:thumbnail) : ""
+    # photo_group.present? ? photo_group.url(:thumbnail) : ""
+    photo_group.present? ? resize_photo_group(photo_group.url) : ""
   end
 
   def api_get_photo_group
