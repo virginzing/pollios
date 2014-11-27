@@ -8,6 +8,10 @@ class Surveyor::MembersListSurveyable
     @params[:list_survey] || []
   end
 
+  def questionnaire_id
+    @params[:id]
+  end
+
   def data_options
     @params[:data_options]
   end
@@ -25,7 +29,13 @@ class Surveyor::MembersListSurveyable
         end
 
       end
+      update_vote_count
     end
+  end
+
+  def update_vote_count
+    find_questionnaire = PollSeries.find_by(id: questionnaire_id)
+    find_questionnaire.increment!(:vote_all) if find_questionnaire.present?
   end
 
   def surveyable
