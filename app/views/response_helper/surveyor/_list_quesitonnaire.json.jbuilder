@@ -16,8 +16,8 @@ json.require_info poll.poll_series.require_info
 json.poll_within poll.groups do |group|
   json.id group.id
   json.name group.name
-  json.photo group.get_photo_group
-  json.cover group.get_cover_group
+  json.photo group.api_get_photo_group
+  # json.cover group.get_cover_group
   json.description group.get_description
 end
 

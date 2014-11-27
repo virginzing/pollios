@@ -18,8 +18,8 @@ json.type_poll poll.type_poll
 json.poll_within poll.groups do |group|
   json.id group.id
   json.name group.name
-  json.photo group.get_photo_group
-  json.cover group.get_cover_group
+  json.photo group.api_get_photo_group
+  # json.cover group.get_cover_group
   json.description group.get_description
 end
 

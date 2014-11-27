@@ -435,6 +435,22 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
+#     "id": 72,
+#     "member_id": 179,
+#     "surveyed_id": 98,
+#     "answer": [
+#         {
+#             "id": 1449,
+#             "choice_id": 5246
+#         },
+#         {
+#             "id": 1448,
+#             "choice_id": 5241
+#         }
+#     ]
+# }' -X POST http://localhost:3000/api/surveyor/questionnaires/survey -i
+
+# curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
 #     "list_survey": [
 #         {
