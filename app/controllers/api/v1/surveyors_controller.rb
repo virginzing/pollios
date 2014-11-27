@@ -60,7 +60,7 @@ module Api
       end
 
       def list_survey_params
-        params.permit(:member_id, :id, list_survey: [ :poll_id, :list_voted => [:surveyed_id, :choice_id]])
+        params.permit(:member_id, list_survey: [ :poll_id, :list_voted => [:surveyed_id, :choice_id]])
       end
 
       def set_poll
