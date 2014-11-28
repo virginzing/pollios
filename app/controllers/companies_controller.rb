@@ -115,7 +115,7 @@ class CompaniesController < ApplicationController
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@poll).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
-      puts "qr => #{GenerateQrcodeLink.new(@poll).get_redirect_link}"
+      # puts "qr => #{GenerateQrcodeLink.new(@poll).get_redirect_link}"
       if @member_group.count > 0
         @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
         @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s

@@ -4,3 +4,131 @@
     <p>for this poll</p>
   </div>
 </div>
+
+
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+  <% unless @history_votes %>
+  <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
+    <input type="hidden" name="member_id" value="<%= current_member.id %>">
+
+      
+      <div class="choice_list">
+
+      <% @poll.choices.each_with_index do |choice, index| %>
+        <div id="<%= choice.id %>" class="<%= @poll.id %> choice col-xs-12 col-centered"  onclick="ActiveBox('<%= choice.id %>')">
+            <p class="text-center" style="font-size: 16px;"><%= choice.answer %></p>
+        </div>
+
+      <% end %>
+
+      <input type="hidden" value="<%= @poll.id %>" name="poll_id">
+      <input type="hidden" val="" id="answer_<%= @poll.id %>" name="choice_id">
+
+      <div class="form-group" style="padding-top: 20px;">
+        <div class="row">
+          <div class="col-xs-10 col-xs-offset-1">
+            <!-- <button type="submit" id="submit-questionnaire" class="btn btn-primary btn-custom" data-disable-with="Loading...">SUBMIT</button> -->
+            <button href="#" class="btn btn-primary btn-custom ladda-button btn-lg" id="submit-poll" data-style="expand-left"><span class="ladda-label">SUBMIT</span></button>
+          </div>
+        </div>
+      </div>
+
+  </form>
+  <% else %>
+    <div class="fade in alert alert-warning alert-block">
+      <a class="close" data-dismiss="alert" href="#">×</a>
+      <h4 class="alert-heading">Info!</h4>
+        You already vote this poll.
+    </div>
+  <% end %>
+
+  </div>
+</div>
+
+<script>
+
+  var post_data;
+
+  var id = <%= raw @poll.id  %>;
+  var member_id = <%= raw current_member.id %>;
+  var poll_id = <%= raw @poll.id %>;
+
+  $(function() {
+  
+  $('#submit-poll').click(function(e){
+      post_data = { "id": id, "member_id": member_id, "choice_id" : set_choice_data() };
+
+      e.preventDefault();
+      var l = Ladda.create(this);
+      l.start();
+      $.post("<%= mobile_vote_poll_path %>", 
+          post_data ,
+        function(response){
+          vote_success(response.msg);
+          // console.log(response.msg);
+        }, "json")
+      .fail(function(xhr, txt, error) { fail_error(xhr.responseText.msg); })
+      .always(function() { l.stop(); });
+      return false;
+    });
+  });
+
+
+  function set_choice_data () {
+    return $( "input[name='choice_id']" ).val();
+  }
+
+
+  disable_submit_btn();
+
+  function ActiveBox(choiceId){
+    $("." + '<%= @poll.id %>').removeClass( "active" );
+    $("#" + choiceId ).addClass( "active" );
+    $("#answer_" + '<%= @poll.id %>').val(choiceId);
+    check_btn_submit($('.choice.active').size());
+  }
+
+  function check_btn_submit (count_check) {
+    $.poll_count = $( "input[name='poll_id']" ).size();
+    $.vote_count = count_check;
+    if ($.poll_count == $.vote_count) {
+      active_submit_btn();
+    } else{
+      disable_submit_btn();
+    };
+  }
+
+  function active_submit_btn() {
+    $("#submit-poll").prop('disabled', false);
+  }
+
+  function disable_submit_btn() {
+    $("#submit-poll").prop('disabled', true);
+  }
+
+  function fail_error(msg) {
+    swal({
+      title: "Vote Fail",
+      text: msg,
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Try again",
+      closeOnConfirm: false
+    }, function() {
+      $("#submit-questionnaire").click();
+    })
+  }
+
+  function vote_success(msg) {
+    swal({
+      title: "Vote Success",
+      text: "ขอบคุณสำหรับความคิดเห็นของคุณ",
+      type: "success"
+    },
+    function () {
+      window.location = "<%= mobile_dashboard_url %>";
+    })
+  }
+
+</script>

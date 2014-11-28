@@ -8,7 +8,8 @@ class MobilesController < ApplicationController
 
   before_action :m_signin, only: [:polls, :vote_questionnaire, :recent_view]
   before_action :set_series, only: [:vote_questionnaire]
-  before_action :set_current_member, only: [:vote_questionnaire]
+  before_action :set_current_member, only: [:vote_questionnaire, :vote_poll]
+  before_action :set_poll, only: [:vote_poll]
   after_action :delete_cookie, only: [:authen, :authen_facebook]
   def home
     
@@ -24,7 +25,10 @@ class MobilesController < ApplicationController
   end
 
   def recent_view
-    @recent_view = PollSeries.joins(:history_view_questionnaires).select('poll_series.*, history_view_questionnaires.created_at as h_created_at').where("history_view_questionnaires.member_id = ?", current_member.id).order("h_created_at desc")
+    @recent_view_questionnaire = PollSeries.joins(:history_view_questionnaires).select('poll_series.*, history_view_questionnaires.created_at as h_created_at')
+                                            .where("history_view_questionnaires.member_id = ?", current_member.id).order("h_created_at desc")
+    @recent_view_poll = Poll.joins(:history_views).select("polls.*, history_views.created_at as h_created_at")
+                            .where("history_views.member_id = ?", current_member.id).order("h_created_at desc")
   end
 
   def polls
@@ -43,9 +47,29 @@ class MobilesController < ApplicationController
       PollSeries.view_poll(@current_member, @questionnaire) unless @history_votes
 
       @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
+
+      @list_poll_first = @list_poll.first.id
+
+      @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_id = ?", current_member.id, @list_poll_first).first
+      # puts "#{@reward}"
+      # puts "#{@list_poll_first}"
       render 'questionnaire'
     else
+      @history_votes = HistoryVote.exists?(member_id: current_member.id, poll_id: @poll.id)
+      Poll.view_poll(@poll, current_member) unless @history_votes
       render 'poll'
+    end
+  end
+
+  def vote_poll
+    @poll, @history_voted, @campaign, @message = Poll.vote_poll(vote_params, current_member, params[:data_options])
+
+    respond_to do |wants|
+      if @poll.present?
+        wants.json { render json: { "msg" => "Vote Success" }, status: 200 }
+      else
+        wants.json { render json: { "msg" => "Vote fail" } , status: 403 }
+      end
     end
   end
 
@@ -71,7 +95,7 @@ class MobilesController < ApplicationController
     @vote_status = false
 
     respond_to do |wants|
-      if true
+      if @votes
         @vote_status = true;
         # flash[:success] = "Thanks you"
         # redirect_to mobile_dashboard_path
@@ -124,8 +148,6 @@ class MobilesController < ApplicationController
         end
       else
         cookies.delete(:return_to)
-        # flash[:notice] = "Sign in before."
-        # redirect_to mobile_signin_path
       end
     end
   end
@@ -219,6 +241,11 @@ class MobilesController < ApplicationController
     end
   end
 
+  def set_poll
+    @poll = Poll.find_by(id: params[:id])
+    raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+  end
+
   def get_questionnaire_from_key(key)
     id, qrcode_key, series = decode64_key(key)
 
@@ -255,6 +282,10 @@ class MobilesController < ApplicationController
 
   def signup_params
     params.permit(:member_type, :email, :password, :web_login)
+  end
+
+  def vote_params
+    params.permit(:id, :member_id, :choice_id)
   end
 
 end

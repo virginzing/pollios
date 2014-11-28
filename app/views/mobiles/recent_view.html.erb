@@ -2,17 +2,17 @@
   <div class="panel-group smart-accordion-default" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class=""> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Questionnaire </a></h4>
+        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#questionnaire" class=""> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Questionnaire <span class="badge"><%= @recent_view_questionnaire.to_a.size %></span></a></h4>
       </div>
-      <div id="collapseOne" class="panel-collapse collapse in">
+      <div id="questionnaire" class="panel-collapse collapse in">
         <div class="panel-body no-padding">
           <table class="table table-bordered" style="margin-top: -1px;">
           <thead>
           </thead>
             <tbody>
-              <% @recent_view.each do |questionnaire| %>
+              <% @recent_view_questionnaire.each do |questionnaire| %>
               <tr>
-                <td><%= link_to truncate(questionnaire.description, length: 45), questionnaire.get_link, class: 'recent_view' %></td>
+                <td><%= link_to truncate(questionnaire.description, length: 45), GenerateQrcodeLink.new(questionnaire).get_link, class: 'recent_view' %></td>
               </tr>
               <% end %>
             </tbody>
@@ -22,12 +22,24 @@
     </div>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Poll </a></h4>
+        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#poll" class="collapsed"> <i class="fa fa-lg fa-angle-down pull-right"></i> <i class="fa fa-lg fa-angle-up pull-right"></i> Poll <span class="badge"><%= @recent_view_poll.to_a.size %></span></a></h4>
       </div>
-      <div id="collapseTwo" class="panel-collapse collapse" style="height: 0px;">
-        <div class="panel-body">
-          Not available
-        </div>
+      <div id="poll" class="panel-collapse collapse" style="height: 0px;">
+
+          <div class="panel-body no-padding">
+            <table class="table table-bordered" style="margin-top: -1px;">
+            <thead>
+            </thead>
+              <tbody>
+                <% @recent_view_poll.each do |poll| %>
+                <tr>
+                  <td><%= link_to truncate(poll.title, length: 45), GenerateQrcodeLink.new(poll).get_link, class: 'recent_view' %></td>
+                </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
       </div>
     </div>
   </div>

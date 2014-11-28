@@ -3,7 +3,7 @@ class GenerateQrcodeLink
   def initialize(poll_or_questionnaire)
     @poll_or_questionnaire = poll_or_questionnaire
     @series = false
-    @host_link = Rails.env.production? ? 'http://pollios.com' : 'http://localhost:3000'
+    @host_link = Rails.env.production? ? 'http://pollios.com' : 'http://192.168.1.18:3000'
     @custom_url = '/m/polls?key='
     @redirect_url = '/qrcode?key='
   end

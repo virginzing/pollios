@@ -324,6 +324,7 @@ Pollios::Application.routes.draw do
     get 'home', to: 'mobiles#home', as: :mobile_home
     get 'polls',  to: 'mobiles#polls'
     post 'vote_questionnaire',  to: 'mobiles#vote_questionnaire', as: :mobile_vote_questionnaire
+    post 'vote_poll', to: 'mobiles#vote_poll',  as: :mobile_vote_poll
 
     get 'signin', to: 'mobiles#signin', as: :mobile_signin
     get 'signin_form',  to: 'mobiles#signin_form',  as: :mobile_signin_form

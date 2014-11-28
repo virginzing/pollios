@@ -10,10 +10,13 @@ body {
     font-family: "Roboto";
     -webkit-font-smoothing: antialiased;
     .well {
-        margin-left: -5px;
-        margin-right: -5px;
-        border-bottom: 1px solid whitesmoke;
+        // margin-left: -5px;
+        // margin-right: -5px;
+        // border-bottom: 1px solid whitesmoke;
     }
+}
+.key-color {
+    color: $font-color;
 }
 
 .font-big {

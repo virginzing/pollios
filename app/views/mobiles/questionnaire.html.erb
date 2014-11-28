@@ -8,7 +8,7 @@
 
   <div class="col-xs-12 col-sm-12">
     <% unless @history_votes %>
-      <form action="<%= mobile_vote_questionnaire_path %>" method="POST" class="form-horizontal" role="form">
+      <form action="<%= mobile_vote_poll_path %>" method="POST" class="form-horizontal" role="form">
         <input type="hidden" name="id" value="<%= @questionnaire.id  %>">
         <input type="hidden" name="member_id" value="<%= current_member.id %>">
 
@@ -44,11 +44,33 @@
       </form>
 
     <% else %>
-      <div class="alert alert-warning alert-block">
-        <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">Info!</h4>
-          You already vote this questionnaire.
-      </div>
+      <% if @questionnaire.campaign_id != 0 %>
+        <% if @reward.luck %>
+            <div class="content">
+              <div class="row text-center">
+                <h2><strong>Lucky</strong></h2>
+                <h3><%= @reward.campaign.name %></h3>
+                
+                <div class="well">Serial Code : <span class="key-color"><strong><%= @reward.serial_code %></strong></span></div>
+
+                <span class="note"><%= @reward.campaign.how_to_redeem %></span>
+              </div>
+            </div>
+          <% else %>
+            <div class="content">
+              <div class="row text-center">
+                <h2><strong>Unlucky</strong></h2>
+              </div>
+            </div>
+
+          <% end %>
+      <% else %>
+        <div class="alert alert-warning alert-block">
+          <a class="close" data-dismiss="alert" href="#">×</a>
+          <h4 class="alert-heading">Info!</h4>
+            You already vote this questionnaire.
+        </div>
+      <% end %>
     <% end %>
 
   </div>

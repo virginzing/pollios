@@ -66,6 +66,7 @@
                 <div class="box">
                   <%= image_tag @qr, class: "img-responsive center-block" %>
                 </div>
+                <%= link_to 'Link', GenerateQrcodeLink.new(@poll_series).get_redirect_link %>
               </div>
             </div>
           </div>

@@ -12,7 +12,8 @@
       
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">-->
-    
+    <meta name="apple-itunes-app" content="app-id=392012646">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" data-turbolinks-track="true">
@@ -218,5 +219,14 @@
     ga('create', 'UA-50947005-1', 'codeapp-pollios.herokuapp.com');
     ga('send', 'pageview');
   </script>
+
+  <script type="text/javascript">
+  var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+  if (iOS) {
+    // $('head').append('<meta name="Pollios" content="app-id=123456">');
+  } else{};
+  </script>
+
+
 </body>
 </html>
