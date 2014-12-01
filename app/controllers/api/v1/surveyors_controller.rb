@@ -48,7 +48,7 @@ module Api
         @init_survey_questionnaire = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire, params)
         @survey_questionnaire = @init_survey_questionnaire.survey
       end
-
+      
       private
 
       def find_group_that_surveyor
