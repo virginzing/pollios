@@ -141,17 +141,57 @@ end
 # curl -H "Content-Type: application/json" -d '{
 #     "ops": [
 #         {
-#             "method": "get",
-#             "url": "/poll/my_poll.json",
+#             "method": "post",
+#             "url": "/api/surveyor/questionnaires/survey",
 #             "params": {
-#                 "member_id": "179"
+#                 "id": 74,
+#                 "member_id": 179,
+#                 "surveyed_id": 161,
+#                 "answer": [
+#                     {
+#                         "id": "1455",
+#                         "choice_id": "5276"
+#                     },
+#                     {
+#                         "id": "1454",
+#                         "choice_id": "5271"
+#                     },
+#                     {
+#                         "id": "1453",
+#                         "choice_id": "5266"
+#                     },
+#                     {
+#                         "id": "1452",
+#                         "choice_id": "5261"
+#                     }
+#                 ]
 #             }
 #         },
 #         {
-#             "method": "get",
-#             "url": "/poll/my_poll.json",
+#             "method": "post",
+#             "url": "/api/surveyor/questionnaires/survey",
 #             "params": {
-#                 "member_id": "89"
+#                 "id": 74,
+#                 "member_id": 179,
+#                 "surveyed_id": 161,
+#                 "answer": [
+#                     {
+#                         "id": "1455",
+#                         "choice_id": "5276"
+#                     },
+#                     {
+#                         "id": "1454",
+#                         "choice_id": "5271"
+#                     },
+#                     {
+#                         "id": "1453",
+#                         "choice_id": "5266"
+#                     },
+#                     {
+#                         "id": "1452",
+#                         "choice_id": "5261"
+#                     }
+#                 ]
 #             }
 #         }
 #     ],
