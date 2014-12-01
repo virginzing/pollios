@@ -47,7 +47,6 @@ group :development do
   # gem 'sqlite3'
   # gem 'thin'
   gem 'quiet_assets'
-  gem 'faker'
   gem 'proxylocal'
 end
 
@@ -59,7 +58,17 @@ group :production do
   gem 'unicorn-worker-killer'
 end
 
-gem "rspec-rails", :group => [:development, :test]
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'faker'
+end
+
+group :test do
+  gem 'capybara' 
+  gem 'guard-rspec' 
+  gem 'launchy'
+end
 
 gem 'versioncake', github: 'bwillis/versioncake'
 gem 'rest-client'
@@ -135,4 +144,5 @@ gem 'omniauth-facebook', '1.4.0'
 gem 'draper', '~> 1.3'
 
 gem 'batch_api', :git => 'git://github.com/easyPEP/batch_api.git'
-gem "factory_girl_rails", "~> 4.0"
+
+gem 'api_taster'

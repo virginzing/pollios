@@ -50,8 +50,18 @@ module Pollios
     config.versioncake.supported_version_numbers = (1...7)
 
     config.generators do |g| 
-        g.orm :active_record 
+      g.orm :active_record
+      g.test_framework :rspec,
+        :fixtures => true, 
+        :view_specs => false, 
+        :helper_specs => false, 
+        :routing_specs => false, 
+        :controller_specs => true, 
+        :request_specs => true
+      g.fixture_replacement :factory_girl, :dir => "spec/factories"
     end
+
+
 
     # config.serve_static_assets = true
 

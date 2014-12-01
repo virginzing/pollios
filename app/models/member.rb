@@ -240,10 +240,6 @@ class Member < ActiveRecord::Base
     @auth.member
   end
 
-  def update_group
-    
-  end
-
   def create_group_surveyor(group_id)
     GroupSurveyor.where(member_id: self.id, group_id: group_id).first_or_initialize do |group_surveyor|
       group_surveyor.member_id = self.id
