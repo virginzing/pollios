@@ -148,6 +148,7 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    diff-lcs (1.2.5)
     draper (1.4.0)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
@@ -158,6 +159,11 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.3)
     execjs (2.2.2)
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
+      railties (>= 3.0.0)
     faker (1.4.3)
       i18n (~> 0.5)
     faraday (0.9.0)
@@ -325,6 +331,22 @@ GEM
     rqrcode_png (0.1.2)
       chunky_png
       rqrcode
+    rspec-core (3.0.4)
+      rspec-support (~> 3.0.0)
+    rspec-expectations (3.0.4)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.0.0)
+    rspec-mocks (3.0.4)
+      rspec-support (~> 3.0.0)
+    rspec-rails (3.0.2)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+      rspec-support (~> 3.0.0)
+    rspec-support (3.0.4)
     ruby-ole (1.2.11.7)
     rubyzip (1.1.6)
     safe_yaml (1.0.4)
@@ -421,6 +443,7 @@ DEPENDENCIES
   devise
   draper (~> 1.3)
   enumerize
+  factory_girl_rails (~> 4.0)
   faker
   figaro
   gretel
@@ -456,6 +479,7 @@ DEPENDENCIES
   rqrcode
   rqrcode-rails3
   rqrcode_png
+  rspec-rails
   rubyzip (>= 1.0.0)
   sass (~> 3.2.5)
   sass-rails (= 4.0.2)
