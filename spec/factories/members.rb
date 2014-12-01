@@ -1,8 +1,11 @@
 require 'faker'
 
 FactoryGirl.define do
-  factory :member do |f|
-    f.email { Faker::Internet.email }
-    
+  factory :one, class: Member do
+    email "nuttapon@code-app.com"
+  end
+
+  factory :two, class: Member do
+    email "nutty@code-app.com"
   end
 end

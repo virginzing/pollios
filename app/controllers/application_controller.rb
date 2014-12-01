@@ -160,7 +160,7 @@ class ApplicationController < ActionController::Base
   # Member.current_member = Member.find(85)
 
   def load_resource_poll_feed
-    if params[:member_id] && request.format.json?
+    if params[:member_id]
       p "=== Load Resource Poll Feed ==="
       # Member.current_member = Member.find(93)
       Member.list_friend_block      = Member.current_member.cached_block_friend

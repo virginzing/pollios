@@ -19,6 +19,8 @@ class MembersController < ApplicationController
   expose(:members) { |default| default.paginate(page: params[:page]) }
   expose(:member) { @current_member }
 
+  respond_to :json
+
   def recommendations
     @init_recommendation = Recommendation.new(@current_member)
     @recommendations = @init_recommendation.get_member_recommendations
@@ -27,6 +29,10 @@ class MembersController < ApplicationController
 
     @recommendations_follower = @init_recommendation.get_follower_recommendations if @current_member.celebrity?
     # puts "#{@mutual_friend.map(&:id)}"
+  end
+
+  def list_members
+    respond_with Member.limit(2), root: false
   end
 
   def unrecomment

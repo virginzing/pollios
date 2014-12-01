@@ -5,7 +5,7 @@ ruby "2.0.0"
 gem 'rails', '4.1.4'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '4.0.2'
+gem 'sass-rails', '4.0.3'
 gem 'less-rails'
 gem 'compass-rails'
 
@@ -68,6 +68,7 @@ group :test do
   gem 'capybara' 
   gem 'guard-rspec' 
   gem 'launchy'
+  gem 'guard'
 end
 
 gem 'versioncake', github: 'bwillis/versioncake'
@@ -145,4 +146,4 @@ gem 'draper', '~> 1.3'
 
 gem 'batch_api', :git => 'git://github.com/easyPEP/batch_api.git'
 
-gem 'api_taster'
+gem 'api_taster', '~> 0.8'

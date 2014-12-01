@@ -3,6 +3,9 @@ require 'api_constraints'
 
 Pollios::Application.routes.draw do
 
+  get 'list_members', to: 'members#list_members'
+  
+  mount ApiTaster::Engine => "/api_taster" if Rails.env.development?
   resources :activity_feeds
 
   namespace :api, defaults: {format: 'json'} do
@@ -42,7 +45,7 @@ Pollios::Application.routes.draw do
   devise_for :admins, :controllers => { :registrations => "admin/registrations" }
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-
+  
   resources :recurrings
   resources :comments
   resources :campaigns
