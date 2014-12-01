@@ -19,6 +19,13 @@ GIT
       tzinfo
 
 GIT
+  remote: git://github.com/easyPEP/batch_api.git
+  revision: d44a3718f78d78773340619c988cbb80d56e18df
+  specs:
+    batch_api (0.2.1)
+      middleware
+
+GIT
   remote: git://github.com/konjoot/rails_admin_flatly_theme.git
   revision: d142841e7f56bf200efd3b717d6eb7e8526dd8ca
   specs:
@@ -193,6 +200,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     memcachier (0.0.2)
+    middleware (0.1.0)
     mime-types (1.25.1)
     mini_magick (3.5.0)
       subexec (~> 0.2.1)
@@ -398,6 +406,7 @@ DEPENDENCIES
   amoeba
   apn_on_rails!
   apns
+  batch_api!
   breadcrumbs_on_rails
   bson (~> 2.2)
   bson_ext

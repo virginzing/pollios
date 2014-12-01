@@ -131,3 +131,5 @@ gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
 
 gem 'draper', '~> 1.3'
+
+gem 'batch_api', :git => 'git://github.com/easyPEP/batch_api.git'

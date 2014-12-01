@@ -138,6 +138,26 @@ end
 # curl -H "Content-Type: application/json" -d '{"member_id": 85, "friend_id": 93 }' -X POST http://localhost:3000/friend/accept.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 61 }' -X POST http://localhost:3000/friend/deny.json -i
 
+# curl -H "Content-Type: application/json" -d '{
+#     "ops": [
+#         {
+#             "method": "get",
+#             "url": "/poll/my_poll.json",
+#             "params": {
+#                 "member_id": "179"
+#             }
+#         },
+#         {
+#             "method": "get",
+#             "url": "/poll/my_poll.json",
+#             "params": {
+#                 "member_id": "89"
+#             }
+#         }
+#     ],
+#     "sequential": true
+# }' -X POST http://localhost:3000/batchapi -i
+
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
