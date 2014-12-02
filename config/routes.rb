@@ -5,7 +5,8 @@ Pollios::Application.routes.draw do
 
   get 'list_members', to: 'members#list_members'
   
-  mount ApiTaster::Engine => "/api_taster" if Rails.env.development?
+  mount ApiTaster::Engine => "/api_taster"
+  
   resources :activity_feeds
 
   namespace :api, defaults: {format: 'json'} do

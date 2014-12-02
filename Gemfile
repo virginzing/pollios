@@ -69,6 +69,7 @@ group :test do
   gem 'guard-rspec' 
   gem 'launchy'
   gem 'guard'
+  gem 'shoulda-matchers', require: false
 end
 
 gem 'versioncake', github: 'bwillis/versioncake'

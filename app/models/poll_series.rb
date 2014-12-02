@@ -148,23 +148,21 @@ class PollSeries < ActiveRecord::Base
   end
 
   def check_status_survey
-    member_surveyable = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", self.in_group_ids.split(",")).uniq.references(:groups).map(&:id)
-    member_ids_voted_already = HistoryVote.unscoped.where(poll_series_id: self.id).map(&:member_id).uniq
 
-    puts "member_ids_voted_already => #{member_ids_voted_already.to_a}"
-    puts "member_surveyable => #{member_surveyable}"
+    @init_member_suveyable = Surveyor::MembersSurveyableQuestionnaire.new(self)
 
-    new_member_ids_voted = member_ids_voted_already & member_surveyable
+    @members_surveyable = @init_member_suveyable.get_members_in_group.to_a.map(&:id)
 
-    puts "new_member_ids_voted => #{new_member_ids_voted}"
+    @members_voted = @init_member_suveyable.get_members_voted.to_a.map(&:id)
 
-    remain_can_survey = member_surveyable - new_member_ids_voted
+    remain_can_survey = @members_surveyable - @members_voted
+
     complete_status = remain_can_survey.count > 0 ? false : true
 
     {
       complete: complete_status,
-      member_voted: new_member_ids_voted.count,
-      member_amount: member_surveyable.count 
+      member_voted: @members_voted.count,
+      member_amount: @members_surveyable.count 
     }
   end
 

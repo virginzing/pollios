@@ -50,8 +50,9 @@ class Poll < ActiveRecord::Base
   # after_create :set_new_title_with_tag
   # after_commit :flush_cache
 
-  validates :title, :member_id, presence: true
-
+  validates :title, presence: true
+  validates_presence_of :member_id, :on => :create, :message => "can't be blank"
+  
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
   default_scope { order("#{table_name}.created_at desc") }
@@ -756,20 +757,21 @@ class Poll < ActiveRecord::Base
   end
 
   def check_status_survey
-    member_surveyable = []
-    self.in_group_ids.split(",").each do |group_id|
-      member_surveyable = member_surveyable | Group.cached_member_active(group_id.to_i)
-    end
 
-    member_ids_voted_already = HistoryVote.unscoped.where(poll_id: self.id).map(&:member_id)
-    remain_can_survey = member_surveyable - member_ids_voted_already
-    # puts "remain_can_survey => #{remain_can_survey}"
+    @init_member_suveyable = Surveyor::MembersSurveyable.new(self, member)
+
+    @members_surveyable = @init_member_suveyable.get_members_in_group.to_a.map(&:id)
+
+    @members_voted = @init_member_suveyable.get_members_voted.to_a.map(&:id)
+
+    remain_can_survey = @members_surveyable - @members_voted
+
     complete_status = remain_can_survey.count > 0 ? false : true
 
     {
       complete: complete_status,
-      member_voted: member_ids_voted_already.to_a.count,
-      member_amount: member_surveyable.count 
+      member_voted: @members_voted.to_a.count,
+      member_amount: @members_surveyable.count 
     }
   end
 
