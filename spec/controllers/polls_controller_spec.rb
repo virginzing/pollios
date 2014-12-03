@@ -2,12 +2,13 @@ require 'rails_helper'
 
 RSpec.describe PollsController, :type => :controller do
 
-  let!(:poll) { create(:poll) }
+  # describe "Poll" do
+  #   let!(:poll) { create(:poll, title: "Nuttapon") }
 
-  describe "Poll" do
+  #   it "does valid" do
+  #     expect(poll).to be_valid 
+  #   end
+  # end
 
-    it { should validate_presence_of(:title) }
-
-  end
 end
 

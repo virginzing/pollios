@@ -580,9 +580,9 @@ class PollsController < ApplicationController
                       .select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
                       .includes(:mentions)
                       .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
-                      .group("comments.id, members.fullname, members.avatar")
                       .paginate(page: comment_params[:next_cursor])
-
+                      # .group("comments.id, members.fullname, members.avatar")
+                      
     @new_comment_sort = @comments.sort { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page

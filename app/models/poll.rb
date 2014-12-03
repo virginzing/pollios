@@ -50,8 +50,8 @@ class Poll < ActiveRecord::Base
   # after_create :set_new_title_with_tag
   # after_commit :flush_cache
 
-  validates :title, presence: true
-  validates_presence_of :member_id, :on => :create, :message => "can't be blank"
+  validates_presence_of :title, :on => :create
+  validates_presence_of :member_id, :on => :create
   
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
@@ -520,7 +520,7 @@ class Poll < ActiveRecord::Base
               Company::TrackActivityFeedPoll.new(member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
             else
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-              ApnPollWorker.perform_in(5.second, member_id.to_i, @poll.id)
+              ApnPollWorker.perform_in(5.second, member_id.to_i, @poll.id) if Rails.env.production?
             end
 
             if member.citizen? && is_public == "1"
@@ -834,6 +834,10 @@ class Poll < ActiveRecord::Base
     end
     hash
   end
+
+  # def public?
+  #   true
+  # end
 
 
 end

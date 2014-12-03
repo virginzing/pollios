@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
 
   def load_resource_poll_feed
     if params[:member_id]
-      p "=== Load Resource Poll Feed ==="
+      # p "=== Load Resource Poll Feed ==="
       # Member.current_member = Member.find(93)
       Member.list_friend_block      = Member.current_member.cached_block_friend
       Member.list_friend_active     = Member.current_member.cached_get_friend_active
@@ -175,7 +175,7 @@ class ApplicationController < ActionController::Base
       Member.viewed_polls   = Member.current_member.get_history_viewed
       Member.voted_polls    = Member.current_member.cached_my_voted_all
       Member.watched_polls  = Member.current_member.cached_watched
-      p "=== End ==="
+      # p "=== End ==="
     end
   end
 
