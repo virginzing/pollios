@@ -146,13 +146,6 @@ class Poll < ActiveRecord::Base
     qrcode_key
   end
 
-  # def get_vote_max
-  #   # max = choices.collect{|choice| Hash["answer" => choice.answer, "vote" => choice.vote]}.max_by {|k, v| k["vote"]}
-  #   @choice ||= cached_choices
-  #   # max = @choice.map(&:vote).max
-  #   @choice.collect {|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id] if c.vote == max }.compact
-  # end
-
   def get_vote_max
     @choice ||= cached_choices
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact

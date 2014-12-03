@@ -19,6 +19,7 @@ class PollsController < ApplicationController
   before_action :get_your_group, only: [:detail, :create_poll]
 
   # before_action :restrict_access, only: [:overall_timeline]
+  
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
   before_action :load_resource_poll_feed, only: [:overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,

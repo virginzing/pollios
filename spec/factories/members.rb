@@ -19,4 +19,10 @@ FactoryGirl.define do
     id "123456"
     name "Nutty Nuttapon Achachotipong"
   end
+
+  factory :sentai, class: Member do
+    authen "nuttapon@code-app.com"
+    password "1234567"
+  end
+
 end

@@ -79,6 +79,7 @@ class ApplicationController < ActionController::Base
 
   def restrict_access
     authenticate_or_request_with_http_token do |token, options|
+      puts "token => #{token}"
       access_token = set_current_member.providers.where("token = ?", token)
       unless access_token.present?
         respond_to do |format|

@@ -2,6 +2,8 @@ FactoryGirl.define do
 
   factory :poll do |f|
     f.title "Test Poll"
+    f.type_poll :binary
+    f.status_poll :gray
   end
 
 
