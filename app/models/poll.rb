@@ -797,9 +797,6 @@ class Poll < ActiveRecord::Base
     @find_member_cached ||= Member.cached_member(member)
     @member_id = @find_member_cached[:member_id]
     @member_type = @find_member_cached[:type]
-
-    # puts "read from cached #{@find_member_cached}"
-    # member_as_json = Member.serializer_member_hash(@find_member_cached)
     member_hash = @find_member_cached.merge( { "status" => entity_info } )
     member_hash
   end

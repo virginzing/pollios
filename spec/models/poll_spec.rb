@@ -41,6 +41,7 @@ RSpec.describe Poll, :type => :model do
   end
 
   describe "#get_vote_max" do
+
     let!(:poll) { create(:poll, member_id: member.id) }
 
     let!(:choice1) { create(:choice, poll: poll, vote: 10 ) }
@@ -67,6 +68,35 @@ RSpec.describe Poll, :type => :model do
       expect(poll.get_vote_max.count).to eq(2)
     end
 
+  end
+
+  describe "#get_choice_detail" do
+    let!(:poll) { create(:poll, member_id: member.id) }
+    let!(:choice1) { create(:choice, poll: poll, vote: 10 ) }
+    let!(:choice2) { create(:choice, poll: poll, vote: 20 ) }
+
+    it "sends a list of choice as json format" do
+      mock_choice = []
+
+      poll.reload.choices.each do |choice|
+        mock_choice << { "choice_id" => choice.id, "answer" => choice.answer, "vote" => choice.vote }
+      end
+
+      expect(poll.get_choice_detail).to eq(mock_choice)
+    end
+  end
+
+  describe ".check_type_of_choice" do
+    let!(:choice_list) { ["A", "B", "C"] }
+    let!(:choice_list_string) { "A,B,C" }
+
+    it "return same choice_list" do
+      expect(Poll.check_type_of_choice(choice_list)).to eq(choice_list)
+    end
+
+    it "split string by (,) and return arraoy of choice_list" do
+      expect(Poll.check_type_of_choice(choice_list_string)).to eq(choice_list)
+    end
   end
 
 end

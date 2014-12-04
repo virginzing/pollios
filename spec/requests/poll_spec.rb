@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "Poll Feed API" do
+RSpec.describe "Poll" do
 
-  # let(:ex_member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
+  let!(:member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
 
   # before do
   #   3.times do
@@ -29,6 +29,45 @@ RSpec.describe "Poll Feed API" do
   #   get "/poll/#{ex_member.id}/overall_timeline", { api_version: 6 }, { "Accept" => "application/json" }
 
   #   expect(json["timeline_polls"].size).to eq(20)
-  # end
+  # ends
+
+  describe "POST /poll/:id/un_see" do
+
+    let!(:poll) { create(:poll, member_id: member.id) }
+
+    it "creates unsee" do
+
+      post "/poll/#{poll.id}/un_see", { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(response).to be_success
+      expect(json["response_status"]).to eq("OK")
+
+      expect(UnSeePoll.count).to eq(1)
+    end
+
+    it "cannot unsee poll" do
+      UnSeePoll.create!(poll_id: poll.id, member_id: member.id)
+
+      post "/poll/#{poll.id}/un_see", { member_id: member.id }, { "Accept" => "application/json" }
+      expect(response).to be_success
+      expect(json["response_status"]).to eq("ERROR")
+      expect(json["response_message"]).to eq("You already save to unsee poll")
+      expect(UnSeePoll.count).to eq(1)
+    end
+  end
+
+  describe "POST /poll/:id/save_latar" do
+    let!(:poll) { create(:poll, member_id: member.id) }
+
+    it "creates save for later" do
+      post "/poll/#{poll.id}/save_latar", { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(response).to be_success
+
+      expect(json["response_status"]).to eq("OK")
+
+      expect(SaveForLater.count).to eq(1)
+    end
+  end
 
 end
