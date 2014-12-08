@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 describe "POST /authen/sentai", type: :api do
+
+  before do
+    generate_certification
+  end
+  
   it "authenticate with authen and right password" do
     post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:sentai).merge(password: "mefuwfhfu"), format: :json
 

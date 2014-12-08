@@ -2,6 +2,10 @@ require 'rails_helper'
 
 describe "POST /authen/facebook", type: :api do
 
+  before do
+    generate_certification
+  end
+
   describe "no devise token" do
     before do
       @user_params = FactoryGirl.attributes_for(:facebook)

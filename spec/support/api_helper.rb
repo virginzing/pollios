@@ -4,6 +4,7 @@ module ApiHelper
   def app
     Rails.application
   end
+  
 end
 
 RSpec.configure do |config|

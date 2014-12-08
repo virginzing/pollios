@@ -71,6 +71,7 @@ RSpec.describe Poll, :type => :model do
   end
 
   describe "#get_choice_detail" do
+
     let!(:poll) { create(:poll, member_id: member.id) }
     let!(:choice1) { create(:choice, poll: poll, vote: 10 ) }
     let!(:choice2) { create(:choice, poll: poll, vote: 20 ) }

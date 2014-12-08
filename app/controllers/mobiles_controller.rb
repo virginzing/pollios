@@ -25,9 +25,9 @@ class MobilesController < ApplicationController
   end
 
   def recent_view
-    @recent_view_questionnaire = PollSeries.joins(:history_view_questionnaires).select('poll_series.*, history_view_questionnaires.created_at as h_created_at')
+    @recent_view_questionnaire = PollSeries.joins(:history_view_questionnaires).select('DISTINCE poll_series.*, history_view_questionnaires.created_at as h_created_at')
                                             .where("history_view_questionnaires.member_id = ?", current_member.id).order("h_created_at desc")
-    @recent_view_poll = Poll.joins(:history_views).select("polls.*, history_views.created_at as h_created_at")
+    @recent_view_poll = Poll.joins(:history_views).select("DISTINCE polls.*, history_views.created_at as h_created_at")
                             .where("history_views.member_id = ?", current_member.id).order("h_created_at desc")
   end
 
