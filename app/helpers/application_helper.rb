@@ -227,6 +227,11 @@ end
 # }' -X POST http://localhost:3000/poll/752/comments.json -i
 
 # curl -H "Content-Type: application/json" -d '{
+#     "member_id": 179
+# }' -X POST http://localhost:3000/poll/1284/un_see.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
 #     "member_id": 86
 # }' -X DELETE http://localhost:3000/poll/752/comments/17.json -i
 
@@ -615,7 +620,7 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-# "authen":"codeapp@gmail.com","password":"9code7app9", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" 
+# "authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" 
 # }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
 
 # curl -H "Content-Type: application/json" -d '{
