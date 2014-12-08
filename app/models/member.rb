@@ -122,6 +122,8 @@ class Member < ActiveRecord::Base
 
   has_many :activity_feeds, dependent: :destroy
 
+  has_many :un_see_polls
+
   before_create :set_friend_limit
 
   scope :citizen,   -> { where(member_type: 0) }

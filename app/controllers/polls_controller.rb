@@ -32,12 +32,14 @@ class PollsController < ApplicationController
   respond_to :json
 
   def un_see
-    @un_see_poll = UnSeePoll.new(member_id: @current_member.id, poll_id: params[:id])
+    @un_see_poll = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
+      render :status => 201
     rescue => e
       @un_see_poll = nil
       @response_message = "You already save to unsee poll"
+      render :status => 422
     end
   end
 

@@ -8,7 +8,7 @@ class V6::OverallTimeline
     @member = member
     @options = options
     @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
-    @unsee_poll = UnSeePoll.get_my_unsee(member.id).map(&:poll_id)
+    @unsee_poll ||= UnSeePoll.get_my_unsee(member.id)
     @pull_request = options["pull_request"] || "no"
     @order_ids = []
     @list_polls = []
@@ -23,8 +23,12 @@ class V6::OverallTimeline
     @hidden_poll
   end
 
-  def unsee_poll
-    @unsee_poll
+  def unsee_poll_ids
+    @unsee_poll.select{|e| e if e.unseeable_type == "Poll" }.map(&:unseeable_id)
+  end
+
+  def unsee_questionnaire_ids
+    @unsee_poll.select{|e| e if e.unseeable_type == "PollSeries" }.map(&:unseeable_id)
   end
 
   def since_id
@@ -89,7 +93,11 @@ class V6::OverallTimeline
   end
 
   def with_out_poll_ids
-    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids | unsee_poll
+    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids | unsee_poll_ids
+  end
+
+  def with_out_questionnaire_id
+    unsee_questionnaire_ids
   end
 
   def unvote_count
@@ -127,6 +135,7 @@ class V6::OverallTimeline
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
 
     query = query.limit(LIMIT_TIMELINE)
 

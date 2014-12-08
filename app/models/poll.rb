@@ -38,6 +38,8 @@ class Poll < ActiveRecord::Base
   has_many :hidden_polls, dependent: :destroy
 
   has_many :member_report_polls, dependent: :destroy
+
+  has_many :un_see_polls, as: :unseeable
   
   belongs_to :member
   belongs_to :poll_series
