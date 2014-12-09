@@ -68,6 +68,10 @@ class V6::MyPollInProfile
     split_poll_and_filter("poll_watched")
   end
 
+  def get_my_save_later
+    split_poll_and_filter("poll_saved")
+  end
+
   def with_out_poll_ids
     hidden_poll | unsee_poll_ids
   end
@@ -174,6 +178,8 @@ class V6::MyPollInProfile
       poll_created(original_next_cursor)
     elsif @type_feed == "poll_voted"
       poll_voted(original_next_cursor)
+    elsif @type_feed == "poll_saved"
+      poll_saved(original_next_cursor)
     else
       poll_watched(original_next_cursor)
     end
@@ -217,6 +223,7 @@ class V6::MyPollInProfile
       when "poll_created" then poll_with_my_created
       when "poll_voted" then poll_with_my_voted
       when "poll_watched" then poll_with_my_watched
+      when "poll_saved" then poll_with_my_saved
     end
   end
 
@@ -232,11 +239,16 @@ class V6::MyPollInProfile
     MemberPollFeed.where(member_id: member_id).first.poll_watched_feed.lazy
   end
 
+  def poll_with_my_saved
+    MemberPollFeed.where(member_id: member_id).first.poll_saved_feed.lazy
+  end
+
   def update_type_of_poll_feed
     case @type_feed
       when "poll_created" then poll_created_update_feed
       when "poll_voted" then poll_voted_update_feed
       when "poll_watched" then poll_watched_update_feed
+      when "poll_saved" then poll_saved_update_feed
     end
   end
 
@@ -256,6 +268,12 @@ class V6::MyPollInProfile
     check_new_record_feed
     @member_poll_feed.update!(poll_watched_feed: poll_watched(nil, 1000).to_a.map(&:id))
     @member_poll_feed.poll_watched_feed.lazy
+  end
+
+  def poll_saved_update_feed
+    check_new_record_feed
+    @member_poll_feed.update!(poll_saved_feed: poll_saved(nil, 1000).to_a.map(&:id))
+    @member_poll_feed.poll_saved_feed.lazy
   end
 
   def check_new_record_feed
