@@ -45,5 +45,12 @@ if Rails.env.development?
       member_id: member_id
     }
 
+    desc "Detail of poll"
+
+    get '/poll/:id/detail', {
+      id: "",
+      member_id: member_id
+    }
+
   end
 end
