@@ -2,8 +2,8 @@ class PollSeriesController < ApplicationController
   include PollSeriesHelper
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new, :normal, :same_choice]
-  before_action :set_current_member, only: [:vote, :detail]
-  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail]
+  before_action :set_current_member, only: [:vote, :detail, :un_see]
+  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see]
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
 
@@ -31,6 +31,18 @@ class PollSeriesController < ApplicationController
 
     respond_to do |format|
       format.html
+    end
+  end
+
+  def un_see
+    @un_see_questionnaire = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll_series)
+    begin
+      @un_see_questionnaire.save
+      render :status => 201
+    rescue => e
+      @un_see_questionnaire = nil
+      @response_message = "You already save to unsee questionnaires"
+      render :status => 422
     end
   end
 
@@ -148,7 +160,9 @@ class PollSeriesController < ApplicationController
     if @poll_series.save
       @poll_series.in_group_ids.split(",").each do |group_id|
         PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)
-        ApnQuestionnaireWorker.perform_in(5.seconds, current_member.id, @poll_series.id, group_id) unless @poll_series.qr_only
+        if Rails.env.production?
+          ApnQuestionnaireWorker.perform_in(5.seconds, current_member.id, @poll_series.id, group_id) unless @poll_series.qr_only
+        end      
       end
       flash[:success] = "Successfully created poll series."
       redirect_to poll_series_index_path
@@ -188,7 +202,7 @@ class PollSeriesController < ApplicationController
     @poll_series = PollSeries.find(params[:id])
     rescue => e
       respond_to do |wants|
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => e.message ] }
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Questionnaire not found"], status: 404 }
       end
     end
   end
