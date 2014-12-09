@@ -24,11 +24,11 @@ class V6::OverallTimeline
   end
 
   def unsee_poll_ids
-    @unsee_poll.select{|e| e if e.unseeable_type == "Poll" }.map(&:unseeable_id)
+    UnSeePoll.get_only_poll_id(@unsee_poll)
   end
 
   def unsee_questionnaire_ids
-    @unsee_poll.select{|e| e if e.unseeable_type == "PollSeries" }.map(&:unseeable_id)
+    UnSeePoll.get_only_questionnaire_id(@unsee_poll)
   end
 
   def since_id

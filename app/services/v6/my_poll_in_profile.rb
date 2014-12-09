@@ -9,6 +9,7 @@ class V6::MyPollInProfile
     @options = options
     @my_group = Member.list_group_active
     @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
+    @unsee_poll ||= UnSeePoll.get_my_unsee(member.id)
   end
 
   def my_group_id
@@ -29,6 +30,14 @@ class V6::MyPollInProfile
 
   def list_my_friend_ids
     Member.list_friend_active.map(&:id) << @member.id
+  end
+
+  def unsee_poll_ids
+    UnSeePoll.get_only_poll_id(@unsee_poll)
+  end
+
+  def unsee_questionnaire_ids
+    UnSeePoll.get_only_questionnaire_id(@unsee_poll)
   end
 
   def my_vote_poll_ids
@@ -60,7 +69,11 @@ class V6::MyPollInProfile
   end
 
   def with_out_poll_ids
-    hidden_poll
+    hidden_poll | unsee_poll_ids
+  end
+
+  def with_out_questionnaire_id
+    unsee_questionnaire_ids
   end
 
   ## create ##
@@ -127,6 +140,7 @@ class V6::MyPollInProfile
                        "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
                        my_group_id).references(:poll_groups)    
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
     query = query.limit(limit_poll)
     query
   end
@@ -140,6 +154,7 @@ class V6::MyPollInProfile
                 .order("watcheds.created_at DESC")
                 .references(:poll_groups)
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
     query = query.limit(limit_poll)
     query
   end
