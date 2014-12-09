@@ -40,6 +40,7 @@ class Poll < ActiveRecord::Base
   has_many :member_report_polls, dependent: :destroy
 
   has_many :un_see_polls, as: :unseeable
+  has_many :save_poll_laters, as: :savable
   
   belongs_to :member
   belongs_to :poll_series

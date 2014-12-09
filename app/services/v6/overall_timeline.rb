@@ -9,6 +9,7 @@ class V6::OverallTimeline
     @options = options
     @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
     @unsee_poll ||= UnSeePoll.get_my_unsee(member.id)
+    @init_save_poll ||= SavePoll.new({ member_id: member.id})
     @pull_request = options["pull_request"] || "no"
     @order_ids = []
     @list_polls = []
@@ -29,6 +30,14 @@ class V6::OverallTimeline
 
   def unsee_questionnaire_ids
     UnSeePoll.get_only_questionnaire_id(@unsee_poll)
+  end
+
+  def saved_poll_ids_later
+    @init_save_poll.get_list_poll_id
+  end
+
+  def saved_questionnaire_ids_later
+    @init_save_poll.get_list_questionnaire_id
   end
 
   def since_id
@@ -93,11 +102,11 @@ class V6::OverallTimeline
   end
 
   def with_out_poll_ids
-    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids | unsee_poll_ids
+    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
   end
 
   def with_out_questionnaire_id
-    unsee_questionnaire_ids
+    unsee_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   def unvote_count

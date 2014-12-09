@@ -17,6 +17,9 @@ class PollSeries < ActiveRecord::Base
 
   has_many :poll_series_groups, dependent: :destroy
 
+  has_many :un_see_polls, as: :unseeable
+  has_many :save_poll_laters, as: :savable
+
   validates :description, presence: true
 
   accepts_nested_attributes_for :polls, :allow_destroy => true

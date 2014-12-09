@@ -1916,6 +1916,39 @@ ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
 
 
 --
+-- Name: save_poll_laters; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE save_poll_laters (
+    id integer NOT NULL,
+    member_id integer,
+    savable_id integer,
+    savable_type character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: save_poll_laters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE save_poll_laters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: save_poll_laters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE save_poll_laters_id_seq OWNED BY save_poll_laters.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2515,6 +2548,13 @@ ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY save_poll_laters ALTER COLUMN id SET DEFAULT nextval('save_poll_laters_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY share_polls ALTER COLUMN id SET DEFAULT nextval('share_polls_id_seq'::regclass);
 
 
@@ -2966,6 +3006,14 @@ ALTER TABLE ONLY request_groups
 
 ALTER TABLE ONLY roles
     ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: save_poll_laters_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY save_poll_laters
+    ADD CONSTRAINT save_poll_laters_pkey PRIMARY KEY (id);
 
 
 --
@@ -3676,6 +3724,27 @@ CREATE INDEX index_roles_on_name_and_resource_type_and_resource_id ON roles USIN
 
 
 --
+-- Name: index_save_poll_laters_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_save_poll_laters_on_member_id ON save_poll_laters USING btree (member_id);
+
+
+--
+-- Name: index_save_poll_laters_on_member_id_and_savable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_save_poll_laters_on_member_id_and_savable_id ON save_poll_laters USING btree (member_id, savable_id);
+
+
+--
+-- Name: index_save_poll_laters_on_savable_id_and_savable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_save_poll_laters_on_savable_id_and_savable_type ON save_poll_laters USING btree (savable_id, savable_type);
+
+
+--
 -- Name: index_share_polls_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4210,4 +4279,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141125031754');
 INSERT INTO schema_migrations (version) VALUES ('20141127063504');
 
 INSERT INTO schema_migrations (version) VALUES ('20141204062207');
+
+INSERT INTO schema_migrations (version) VALUES ('20141209081854');
 

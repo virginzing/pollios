@@ -5,6 +5,7 @@ RSpec.describe Poll, :type => :model do
   it { should validate_presence_of(:title) }
   it { should have_many(:choices) }
   it { should have_many(:un_see_polls) }
+  it { should have_many(:save_poll_laters) }
 
   let!(:member) { create(:member, email: "test@gmail.com") }
 

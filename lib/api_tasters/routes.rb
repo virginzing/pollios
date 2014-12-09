@@ -52,5 +52,11 @@ if Rails.env.development?
       member_id: member_id
     }
 
+    get '/friend/save_poll_later', {
+      member_id: member_id,
+      friend_id: member_id,
+      api_version: api_version
+    }
+
   end
 end
