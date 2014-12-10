@@ -57,6 +57,10 @@ RSpec.describe "Poll" do
     end
   end
 
+  describe "POST /poll/:id/vote" do
+    
+  end
+
   # describe "POST /poll/:id/save_latar" do
   #   let!(:poll) { create(:poll, member_id: member.id) }
 

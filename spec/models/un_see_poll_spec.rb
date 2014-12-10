@@ -5,16 +5,44 @@ RSpec.describe UnSeePoll, :type => :model do
   it { should belong_to(:member) }
   it { should belong_to(:unseeable) }
 
+  let!(:member) { create(:member) }
+  let!(:questionnaire) { create(:poll_series, member: member) }
+  let!(:first_poll) { create(:poll, poll_series: questionnaire, member: member) }
+  let!(:second_poll) { create(:poll, poll_series: questionnaire, member:member) }
 
-  describe ".get_my_unsee" do
-    let!(:member) {  create(:member) }
-    let!(:poll) { create(:poll, member: member) }
-    let!(:un_see_poll) { create(:un_see_poll, member: member, unseeable: poll) }
+  describe ".get_only_questionnaire_id" do
+    let!(:unsee_questionnaire) { create(:un_see_poll, member: member, unseeable: questionnaire) }
 
-    it "return list of poll which do unsee" do
-      list_un_see = UnSeePoll.where(member_id: member.id)
-
-      expect(UnSeePoll.get_my_unsee(member.id)).to eq(list_un_see)    
+    it "return array ids of poll series" do
+      expect(UnseePoll.new({ member_id: member.id}).get_list_questionnaire_id).to eq([questionnaire.id])
     end
+
   end
+
+  describe ".get_only_poll_id" do
+    let!(:unsee_poll) { create(:un_see_poll, member: member, unseeable: first_poll) }
+
+    it "return array ids of poll" do
+      expect(UnseePoll.new({ member_id: member.id}).get_list_poll_id).to eq([first_poll.id])  
+    end
+
+  end
+
+  describe ".delete_unsee" do
+    context 'poll' do
+      let!(:unsee_poll) { create(:un_see_poll, member: member, unseeable: first_poll) }
+
+      it "delete unsee" do
+        expect(UnSeePoll.count).to eq(1)
+        expect(UnseePoll.new({member_id: member.id, poll_id: first_poll.id}).delete_unsee_poll).to eq(true)
+        expect(UnSeePoll.count).to eq(0)
+      end
+    end
+
+    context 'questionnaire' do
+      
+    end
+  
+  end
+
 end

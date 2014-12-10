@@ -603,8 +603,10 @@ class Poll < ActiveRecord::Base
 
           get_anonymous = member.get_anonymous_with_poll(find_poll)
 
+          UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
+
           if (member_id.to_i != find_poll.member.id) && !find_poll.series
-            VotePollWorker.perform_in(5.second, member_id, poll_id, get_anonymous)
+            VotePollWorker.perform_in(5.second, member_id, poll_id, get_anonymous) if Rails.env.production?
           end
 
           unless find_poll.series
