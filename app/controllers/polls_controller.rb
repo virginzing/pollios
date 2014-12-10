@@ -56,7 +56,13 @@ class PollsController < ApplicationController
   end
 
   def un_save_later
-    
+    @un_save_later = SavePollLater.find_by(member_id: @current_member.id, savable: @poll)
+
+    if @un_save_later.destroy
+      render status: 200
+    else
+      render status: 422
+    end
   end
 
   def poll_latest

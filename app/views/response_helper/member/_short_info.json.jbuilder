@@ -14,3 +14,5 @@ json.anonymous do
   json.friend_following member.anonymous_friend_following
   json.group member.anonymous_group
 end
+
+json.activity member.get_recent_activity

@@ -765,6 +765,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def self.friend_entity(user, friend)
+    FriendSerializer.new(friend, serializer_options: { user: user } ).as_json
+  end
+
   def check_friend_entity(user)
     find_friend = Friend.where("(follower_id = ? AND followed_id = ? AND status = ?) " \
                         "OR (follower_id = ? AND followed_id = ? AND status = ?)", 
@@ -892,6 +896,16 @@ class Member < ActiveRecord::Base
     split_group_ids = in_group_ids.split(",").collect{|e| e.to_i }
 
     return split_group_ids & get_list_group_ids
+  end
+
+  def get_recent_activity
+    activity = Activity.find_by(member_id: id)
+
+    if activity.present?
+      activity.items.select{|e| e["type"] == "Poll" && e["authority"] == "Public" && e["action"] != "Share" }[0..1]
+    else
+      []
+    end
   end
 
   # def get_history_voted
