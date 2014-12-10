@@ -58,7 +58,37 @@ RSpec.describe "Poll" do
   end
 
   describe "POST /poll/:id/vote" do
-    
+    let!(:poll) { create(:poll, member: member) }
+    let!(:choice_one) { create(:choice, poll: poll, answer: "1", vote: 0) }
+    let!(:choice_two) { create(:choice, poll: poll, answer: "2", vote: 0) }
+
+    it "can vote" do
+      post "/poll/#{poll.id}/vote", { member_id: member.id, choice_id: choice_one.id }, { "Accept" => "application/json" }
+
+      expect(response.status).to eq(200)
+      expect(json["response_status"]).to eq("OK")
+      expect(json.has_key?("information")).to be true
+      expect(json.has_key?("scroll")).to be true
+      expect(json.has_key?("vote_max")).to be true
+      poll.reload
+      choice_one.reload
+      expect(poll.vote_all).to eq(1)
+      expect(choice_one.vote).to eq(1)
+    end
+
+    it "can not vote when not found poll" do
+      post "/poll/1/vote", { member_id: member.id, choice_id: choice_one.id }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("ERROR")
+      expect(json["response_message"]).to eq("Poll not found")
+    end
+
+    it "can not vote when not found choice" do
+      post "/poll/#{poll.id}/vote", { member_id: member.id, choice_id: 1 }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("ERROR")
+      expect(json["response_message"]).to eq("Choice not found")
+    end
   end
 
   # describe "POST /poll/:id/save_latar" do
