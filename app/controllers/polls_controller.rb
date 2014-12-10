@@ -5,13 +5,13 @@ class PollsController < ApplicationController
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
 
 
-  before_action :set_current_member, only: [:un_save_later, :save_latar, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+  before_action :set_current_member, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
   before_action :history_voted_viewed_guest, only: [:guest_poll]
 
-  before_action :set_poll, only: [:un_save_later, :save_latar, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
 
   before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -43,13 +43,13 @@ class PollsController < ApplicationController
     end
   end
 
-  def save_latar
-    @save_latar = SavePollLater.new(member_id: @current_member.id, savable: @poll)
+  def save_later
+    @save_later = SavePollLater.new(member_id: @current_member.id, savable: @poll)
     begin
-      @save_latar.save
+      @save_later.save
       render status: 201
     rescue => e
-      @save_latar = nil
+      @save_later = nil
       @response_message = "You already save for latar"
       render status: 422
     end

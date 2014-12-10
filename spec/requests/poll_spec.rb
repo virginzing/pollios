@@ -64,7 +64,7 @@ RSpec.describe "Poll" do
 
     it "save poll later" do
 
-      post "/poll/#{poll.id}/save_latar", { member_id: member.id }, { "Accept" => "application/json" }
+      post "/poll/#{poll.id}/save_later", { member_id: member.id }, { "Accept" => "application/json" }
 
       expect(response.status).to eq(201)
 
