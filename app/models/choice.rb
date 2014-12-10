@@ -4,7 +4,8 @@ class Choice < ActiveRecord::Base
   belongs_to :poll, inverse_of: :choices, touch: true
   
   validates :answer, presence: true
-
+  validates :poll_id, presence: true
+  
   default_scope { order("id asc") }
 
   amoeba do
