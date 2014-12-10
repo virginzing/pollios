@@ -507,7 +507,8 @@ CREATE TABLE choices (
     vote integer DEFAULT 0,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    vote_guest integer DEFAULT 0
+    vote_guest integer DEFAULT 0,
+    correct boolean DEFAULT false
 );
 
 
@@ -1657,7 +1658,8 @@ CREATE TABLE polls (
     creator_must_vote boolean DEFAULT true,
     in_group boolean DEFAULT false,
     show_result boolean DEFAULT true,
-    order_poll integer DEFAULT 1
+    order_poll integer DEFAULT 1,
+    quiz boolean DEFAULT false
 );
 
 
@@ -4281,4 +4283,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141127063504');
 INSERT INTO schema_migrations (version) VALUES ('20141204062207');
 
 INSERT INTO schema_migrations (version) VALUES ('20141209081854');
+
+INSERT INTO schema_migrations (version) VALUES ('20141210125039');
 
