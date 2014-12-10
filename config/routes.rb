@@ -173,6 +173,7 @@ Pollios::Application.routes.draw do
   scope 'poll' do
     post ':id/un_see',  to: 'polls#un_see'
     post ':id/save_latar',  to: 'polls#save_latar'
+    post ':id/un_save_later', to: 'polls#un_save_later'
     get ':id/qrcode',       to: 'polls#generate_qrcode'
     post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
     post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
