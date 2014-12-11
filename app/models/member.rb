@@ -224,6 +224,10 @@ class Member < ActiveRecord::Base
 
   end
 
+  def self.alert_save_poll
+    ApnSavePollWorker.perform_async({})
+  end
+
   def self.from_omniauth(auth)
     puts "auth => #{auth}"
     fb_params = {
@@ -846,7 +850,12 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    detect_image(avatar)
+    # detect_image(avatar)
+    if avatar.present?
+      avatar.url(:thumbnail)
+    else
+      ""
+    end
   end
 
   def self.update_avatar(current_member, file_avatar)

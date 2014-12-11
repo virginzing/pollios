@@ -7,7 +7,8 @@ module SymbolHash
     :group => 'Group',
     :member => 'Member',
     :comment => 'Comment',
-    :requset_group => 'RequestGroup'
+    :requset_group => 'RequestGroup',
+    :save_poll_later => 'SavePollLater'
   }
 
   ACTION = {

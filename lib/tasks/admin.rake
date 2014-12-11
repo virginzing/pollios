@@ -7,7 +7,7 @@ namespace :admin do
   desc "update follow pollios"
   task follow_pollios: :environment do
     Member.all.each do |member|
-      find_pollios = Member.find_by_email("pollios@pollios.com")
+      find_pollios = Member.find_by_email("pollios@gmail.com")
 
       find_used_follow_pollios = Friend.where(follower_id: member.id, followed_id: find_pollios.id, following: false).having_status(:friend).first
 
