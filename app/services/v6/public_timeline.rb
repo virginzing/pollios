@@ -11,6 +11,8 @@ class V6::PublicTimeline
     @order_ids = []
     @list_polls = []
     @list_shared = []
+    @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
+    @init_save_poll ||= SavePoll.new( { member_id: member.id} )
   end
 
   def member_id
@@ -37,6 +39,19 @@ class V6::PublicTimeline
     @following_ids ||= @member.cached_get_following.map(&:id)
   end
 
+  def unsee_questionnaire_ids
+    @init_unsee_poll.get_list_questionnaire_id
+  end
+
+  def saved_poll_ids_later
+    @init_save_poll.get_list_poll_id
+  end
+
+  def saved_questionnaire_ids_later
+    @init_save_poll.get_list_questionnaire_id
+  end
+
+
   def get_poll_public
     @overall_timeline ||= split_poll_and_filter
   end
@@ -47,6 +62,10 @@ class V6::PublicTimeline
 
   def with_out_poll_ids
     hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
+  end
+
+  def with_out_questionnaire_id
+    unsee_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   private

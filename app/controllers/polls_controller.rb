@@ -515,12 +515,16 @@ class PollsController < ApplicationController
 
 
   def hashtag
-    hashtag = HashtagTimeline.new(@current_member, hashtag_params)
-    @polls = hashtag.get_hashtag.paginate(page: params[:next_cursor])
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name = hashtag.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
+    # hashtag = HashtagTimeline.new(@current_member, hashtag_params)
+    # @polls = hashtag.get_hashtag.paginate(page: params[:next_cursor])
+    # @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    # @group_by_name = hashtag.group_by_name
+    # @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    # @total_entries = @polls.total_entries
+
+    @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
+    @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_hashtag
+    @group_by_name = @init_hash_tag.group_by_name
   end
 
   def hashtag_popular
