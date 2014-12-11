@@ -489,8 +489,11 @@ class Poll < ActiveRecord::Base
         if group_id.present?
           @set_public = false
         else
-          if (is_public == "1" || member.celebrity? || member.brand?)
+          if (member.celebrity? || member.brand?)
             @set_public = true
+            if is_public == "0"
+              @set_public = false
+            end
           else
             @set_public = false
           end
