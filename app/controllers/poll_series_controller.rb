@@ -2,8 +2,8 @@ class PollSeriesController < ApplicationController
   include PollSeriesHelper
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new, :normal, :same_choice]
-  before_action :set_current_member, only: [:vote, :detail, :un_see]
-  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see]
+  before_action :set_current_member, only: [:vote, :detail, :un_see, :save_later, :un_save_later]
+  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see, :save_later, :un_save_later]
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
 
@@ -44,6 +44,28 @@ class PollSeriesController < ApplicationController
       @response_message = "You already save to unsee questionnaires"
       render :status => 422
     end
+  end
+
+  def save_later
+    @save_later = SavePollLater.new(member_id: @current_member.id, savable: @poll_series)
+    begin
+      @save_later.save
+      render status: 201
+    rescue => e
+      @save_later = nil
+      @response_message = "You already save for latar"
+      render status: 422
+    end
+  end
+
+  def un_save_later
+    @un_save_later = SavePollLater.find_by(member_id: @current_member.id, savable: @poll_series)
+
+    if @un_save_later.destroy
+      render status: 200
+    else
+      render status: 422
+    end  
   end
 
   def detail
