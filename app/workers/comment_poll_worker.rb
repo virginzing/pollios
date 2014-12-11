@@ -22,10 +22,6 @@ class CommentPollWorker
 
       @count_notification = CountNotification.new(find_recipient_notify)
 
-      device_ids ||= @count_notification.device_ids
-
-      member_ids ||= @count_notification.member_ids
-
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
@@ -40,12 +36,12 @@ class CommentPollWorker
             type: TYPE[:poll],
             poll_id: poll.id,
             series: poll.series,
-            notify: hash_list_member_badge[member_ids[index]]
+            notify: hash_list_member_badge[member.id]
           }
 
           @notf = Apn::Notification.new
           @notf.device_id = device.id
-          @notf.badge = hash_list_member_badge[member_ids[index]]
+          @notf.badge = hash_list_member_badge[member.id]
           @notf.alert = @apn_comment.custom_message(member.id)
           @notf.sound = true
           @notf.custom_properties = apn_custom_properties

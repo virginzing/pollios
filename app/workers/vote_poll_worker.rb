@@ -22,12 +22,7 @@ class VotePollWorker
 
       @count_notification = CountNotification.new(find_recipient_notify)
 
-      device_ids ||= @count_notification.device_ids
-
-      member_ids ||= @count_notification.member_ids
-
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
-
 
       if poll.in_group_ids != "0"
         @poll_within_group ||= Group.joins(:poll_groups).where("poll_groups.poll_id = #{poll_id} AND poll_groups.share_poll_of_id = 0").uniq
@@ -45,12 +40,12 @@ class VotePollWorker
             type: TYPE[:poll],
             poll_id: poll.id,
             series: poll.series,
-            notify: hash_list_member_badge[member_ids[index]]
+            notify: hash_list_member_badge[member.id]
           }
 
           @notf = Apn::Notification.new
           @notf.device_id = device.id
-          @notf.badge = hash_list_member_badge[member_ids[index]]
+          @notf.badge = hash_list_member_badge[member.id]
           @notf.alert = @apn_poll.custom_message
           @notf.sound = true
           @notf.custom_properties = apn_custom_properties

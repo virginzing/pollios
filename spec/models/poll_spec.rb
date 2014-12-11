@@ -19,6 +19,7 @@ RSpec.describe Poll, :type => :model do
 
       expect(poll).to eq(poll) 
 
+      expect(poll.qrcode_key.length).to eq(8)
       # puts "poll => #{poll}"
       # puts "error_message => #{error_message}"
     end

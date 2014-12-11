@@ -156,7 +156,7 @@ class PollsController < ApplicationController
       new_poll_binary_params = @build_poll.poll_binary_params
       @poll = Poll.new(new_poll_binary_params)
       @poll.choice_count = @build_poll.list_of_choice.count
-
+      @poll.qrcode_key = @poll.generate_qrcode_key
       if @poll.save
         @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
