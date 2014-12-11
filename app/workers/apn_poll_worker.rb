@@ -2,8 +2,14 @@ class ApnPollWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options :retry => 2
+
+  sidekiq_retry_in do |count|
+    10 * (count + 1)
+  end
+
   def perform(member_id, poll_id, custom_data = {})
-    begin
+    # begin
       @member = Member.find(member_id)
       @poll ||= Poll.find(poll_id)
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
@@ -58,9 +64,9 @@ class ApnPollWorker
       end
 
       Apn::App.first.send_notifications
-    rescue => e
-      puts "ApnPollWorker => #{e.message}"
-    end
+    # rescue => e
+    #   puts "ApnPollWorker => #{e.message}"
+    # end
   end
 
 end

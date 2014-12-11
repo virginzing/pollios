@@ -470,6 +470,8 @@ class Poll < ActiveRecord::Base
         in_group_ids = group_id.presence || "0"
         in_group = group_id.present? ? true : false
 
+        time_have_photo = photo_poll.present? ? 15.second : 5.second
+
         if expire_date.present?
           convert_expire_date = Time.now + expire_date.to_i.day
         else
@@ -520,7 +522,7 @@ class Poll < ActiveRecord::Base
               Company::TrackActivityFeedPoll.new(member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
             else
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-              ApnPollWorker.perform_in(5.second, member_id.to_i, @poll.id) if Rails.env.production?
+              ApnPollWorker.perform_in(time_have_photo, member_id.to_i, @poll.id) if Rails.env.production?
             end
 
             if member.citizen? && is_public == "1"
