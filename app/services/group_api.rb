@@ -5,7 +5,6 @@ module GroupApi
   
   module InstanceMethods
     def your_group
-      # @your_group ||= @member.cached_get_group_active
       @your_group ||= Member.list_group_active
     end
 

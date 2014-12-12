@@ -13,7 +13,7 @@ class PollsController < ApplicationController
 
   before_action :set_poll, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
 
-  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :hashtag, :public_poll, :my_poll, :my_vote,
+  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
 
   before_action :get_your_group, only: [:detail, :create_poll]
@@ -354,7 +354,7 @@ class PollsController < ApplicationController
       @total_entries = @polls.total_entries
     elsif derived_version == 6
       public_timeline = V6::PublicTimeline.new(@current_member, options_params)
-      @list_polls, @list_shared, @order_ids, @next_cursor = public_timeline.get_poll_public
+      @list_polls, @list_shared, @order_ids, @next_cursor = public_timeline.get_timeline
       @group_by_name = public_timeline.group_by_name
       @total_entries = public_timeline.total_entries
     else
@@ -409,10 +409,9 @@ class PollsController < ApplicationController
       @unvote_count = overall_timeline.unvote_count
     else
       overall_timeline = V6::OverallTimeline.new(@current_member, options_params)
-      @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.poll_overall
+      @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.get_timeline
       @group_by_name = overall_timeline.group_by_name
       @total_entries = overall_timeline.total_entries
-      @unvote_count = overall_timeline.unvote_count
     end
   end
 
@@ -525,6 +524,7 @@ class PollsController < ApplicationController
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
     @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_hashtag
     @group_by_name = @init_hash_tag.group_by_name
+    @total_entries = @init_hash_tag.total_entries
   end
 
   def hashtag_popular

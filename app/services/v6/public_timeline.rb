@@ -1,71 +1,26 @@
 class V6::PublicTimeline
-  include LimitPoll
   include GroupApi
-  
-  attr_accessor :next_cursor, :order_ids, :list_polls, :list_shared, :load_more
+  include Timelinable
 
-  def initialize(member_obj, options)
-    @member = member_obj
+  TYPE_TIMELINE = 'public_timeline'
+
+  attr_accessor :list_polls, :list_shared, :order_ids, :next_cursor
+
+  def initialize(member, options)
+    @member = member
     @options = options
-    @hidden_poll = HiddenPoll.my_hidden_poll(member_obj.id)
-    @order_ids = []
+    @next_cursor = 0
     @list_polls = []
     @list_shared = []
-    @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
-    @init_save_poll ||= SavePoll.new( { member_id: member.id} )
+    @order_ids = []
   end
 
-  def member_id
-    @member.id
-  end
-
-  def hidden_poll
-    @hidden_poll
-  end
-
-  def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
-  end
-
-  def check_poll_not_show_result
-    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
-  end
-
-  def your_friend_ids
-    @friend_ids ||= @member.cached_get_friend_active.map(&:id)
-  end
-
-  def your_following_ids
-    @following_ids ||= @member.cached_get_following.map(&:id)
-  end
-
-  def unsee_questionnaire_ids
-    @init_unsee_poll.get_list_questionnaire_id
-  end
-
-  def saved_poll_ids_later
-    @init_save_poll.get_list_poll_id
-  end
-
-  def saved_questionnaire_ids_later
-    @init_save_poll.get_list_questionnaire_id
-  end
-
-
-  def get_poll_public
-    @overall_timeline ||= split_poll_and_filter
+  def get_timeline
+    split_poll_and_filter(TYPE_TIMELINE)
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member.count
-  end
-
-  def with_out_poll_ids
-    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
-  end
-
-  def with_out_questionnaire_id
-    unsee_questionnaire_ids | saved_questionnaire_ids_later
+    cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
   end
 
   private
@@ -82,70 +37,8 @@ class V6::PublicTimeline
     ids = query.map(&:id)
   end
 
-  def cached_poll_ids_of_poll_member
-    @cache_poll_ids ||= Rails.cache.fetch([ 'public_timeline', member_id]) do
-      find_poll_public
-    end
+  def main_timeline
+    find_poll_public
   end
 
-  def split_poll_and_filter
-    next_cursor = @options["next_cursor"]
-
-    if next_cursor.presence && next_cursor != "0"
-      next_cursor = next_cursor.to_i
-      @cache_polls ||= cached_poll_ids_of_poll_member
-
-      if next_cursor.in? @cache_polls
-        index = @cache_polls.index(next_cursor)
-        @poll_ids = @cache_polls[(index+1)..(LIMIT_POLL+index)]
-      else
-        @cache_polls.select!{ |e| e < next_cursor }
-        @poll_ids = @cache_polls[0..(LIMIT_POLL-1)] 
-      end
-    else
-      Rails.cache.delete([ 'public_timeline', member_id ])
-      @cache_polls ||= cached_poll_ids_of_poll_member
-      @poll_ids = @cache_polls[0..(LIMIT_POLL - 1)]
-    end
-
-    if @cache_polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
-        if @cache_polls[-1] == @poll_ids.last
-          next_cursor = 0
-        else
-          next_cursor = @poll_ids.last
-        end
-      else
-        next_cursor = 0
-      end
-    else
-      next_cursor = 0
-    end
-
-    filter_overall_timeline(next_cursor)
-  end
-
-  def filter_overall_timeline(next_cursor)
-    poll_member = PollMember.includes([{:poll => [:choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
-
-    poll_member.each do |poll_member|
-      if poll_member.share_poll_of_id == 0
-        not_shared = Hash["shared" => false]
-        list_polls << poll_member.poll
-        list_shared << not_shared
-      else
-        find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-        find_member_share = Member.joins(:share_polls).where("share_polls.poll_id = #{poll_member.poll_id}")
-        shared = Hash["shared" => true, "shared_by" => serailize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
-
-        list_polls << find_poll
-        list_shared << shared
-      end
-      order_ids << poll_member.id
-    end
-
-    [list_polls, list_shared, order_ids, next_cursor]
-  end
-
- 
 end

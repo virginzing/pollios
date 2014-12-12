@@ -17,12 +17,9 @@ describe "GET /overall_timeline", type: :api do
 
     expect(json["response_status"]).to eq("OK")
     expect(json["timeline_polls"].size).to eq(3)
+    expect(json["total_entries"]).to eq(3)
+    expect(json["next_cursor"]).to eq(0)
   end
-
-  # it "should return a Access Deny" do
-  #   get "/poll/#{member.id}/overall_timeline.json", { api_version: 6 }
-  #   expect(last_response.status).to eq(401)
-  # end
 
 
 end

@@ -83,6 +83,10 @@ class V6::HashtagTimeline
     @hashtag_popular ||= tag_popular.map(&:name)
   end
 
+  def total_entries
+    cached_poll_ids_of_poll_member.count
+  end
+
   private
 
   def tag_popular

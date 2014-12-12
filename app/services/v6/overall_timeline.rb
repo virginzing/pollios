@@ -1,47 +1,18 @@
 class V6::OverallTimeline
   include GroupApi
-  include LimitPoll
+  include Timelinable
 
-  attr_accessor :next_cursor, :order_ids, :list_polls, :list_shared, :load_more
+  TYPE_TIMELINE = 'overall_timeline'
+
+  attr_accessor :list_polls, :list_shared, :order_ids, :next_cursor
 
   def initialize(member, options)
     @member = member
     @options = options
-    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
-    @init_unsee_poll ||= UnseePoll.new({ member_id: member.id})
-    @init_save_poll ||= SavePoll.new({ member_id: member.id})
-    @pull_request = options["pull_request"] || "no"
-    @order_ids = []
+    @next_cursor = 0
     @list_polls = []
     @list_shared = []
-  end
-
-  def member_id
-    @member.id
-  end
-
-  def hidden_poll
-    @hidden_poll
-  end
-
-  def unsee_poll_ids
-    @init_unsee_poll.get_list_poll_id
-  end
-
-  def unsee_questionnaire_ids
-    @init_unsee_poll.get_list_questionnaire_id
-  end
-
-  def saved_poll_ids_later
-    @init_save_poll.get_list_poll_id
-  end
-
-  def saved_questionnaire_ids_later
-    @init_save_poll.get_list_questionnaire_id
-  end
-
-  def since_id
-    @options["since_id"] || 0
+    @order_ids = []
   end
 
   def filter_my_poll
@@ -51,7 +22,6 @@ class V6::OverallTimeline
   def filter_my_vote
     @options[:my_vote].presence || "0"
   end
-
 
   def filter_public
     @options[:public].presence || "1"
@@ -69,14 +39,6 @@ class V6::OverallTimeline
     @options[:reward].presence || "1"
   end
 
-  def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
-  end
-
-  def check_poll_not_show_result
-    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
-  end
-
   def your_friend_ids
     @friend_ids ||= Member.list_friend_active.map(&:id)
   end
@@ -85,33 +47,12 @@ class V6::OverallTimeline
     @following_ids ||= Member.list_friend_following.map(&:id)
   end
 
-  def poll_overall
-    @overall_timeline ||= split_poll_and_filter
+  def get_timeline
+    split_poll_and_filter(TYPE_TIMELINE)
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member.count
-  end
-
-  def get_poll_shared
-    find_poll_share
-  end
-
-  def get_overall_poll
-    overall_timeline
-  end
-
-  def with_out_poll_ids
-    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
-  end
-
-  def with_out_questionnaire_id
-    unsee_questionnaire_ids | saved_questionnaire_ids_later
-  end
-
-  def unvote_count
-    poll_id_from_poll_member = PollMember.available.where("id IN (?)", cached_poll_ids_of_poll_member).map(&:poll_id)
-    (poll_id_from_poll_member - Member.voted_polls.collect{|e| e["poll_id"] }).count
+    cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
   end
 
   private
@@ -139,7 +80,6 @@ class V6::OverallTimeline
                                                              "OR (#{poll_group_query})" \
                                                              "OR (#{poll_series_group_query})" \
                                                              "OR (#{poll_public_query})",
-                                                             # "OR (#{poll_reward_query} AND #{poll_unexpire})",
                                                              new_your_friend_ids,
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group)
 
@@ -149,14 +89,6 @@ class V6::OverallTimeline
     query = query.limit(LIMIT_TIMELINE)
 
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
-  end
-
-  def poll_expire_have_vote
-    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
-  end
-
-  def poll_unexpire
-    "polls.expire_date > '#{Time.now}'"
   end
 
   def poll_non_share_non_in_group
@@ -188,117 +120,10 @@ class V6::OverallTimeline
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 
-
-  def check_new_pull_request(query)
-    if to_bool(@pull_request)
-      query = query.joins(:poll).where("polls.updated_at > ? AND polls.id > ?", @member.poll_overall_req_at, since_id)
-    end
-    query
-  end
-
-  def overall_timeline
+  def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
     poll_member_ids_sort
   end
-
-  def cached_poll_ids_of_poll_member
-    @cache_poll_ids ||= Rails.cache.fetch([ 'overall_timeline', member_id]) do
-      overall_timeline
-    end
-  end
-
-  def split_poll_and_filter
-    next_cursor = @options["next_cursor"]
-
-    if next_cursor.presence && next_cursor != "0"
-      next_cursor = next_cursor.to_i
-      @cache_polls ||= cached_poll_ids_of_poll_member
-
-      if next_cursor.in? @cache_polls
-        index = @cache_polls.index(next_cursor)
-        @poll_ids = @cache_polls[(index+1)..(LIMIT_POLL+index)]
-      else
-        @cache_polls.select!{ |e| e < next_cursor }
-        @poll_ids = @cache_polls[0..(LIMIT_POLL-1)] 
-      end
-    else
-      Rails.cache.delete(['overall_timeline', member_id ])
-      @cache_polls ||= cached_poll_ids_of_poll_member
-      @poll_ids = @cache_polls[0..(LIMIT_POLL - 1)]
-    end
-
-    if @cache_polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
-        if @cache_polls[-1] == @poll_ids.last
-          next_cursor = 0
-        else
-          next_cursor = @poll_ids.last
-        end
-      else
-        next_cursor = 0
-      end
-    else
-      next_cursor = 0
-    end
-
-    filter_overall_timeline(next_cursor)
-  end
-
-
-  def filter_overall_timeline(next_cursor)
-    poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
-
-    poll_member.each do |poll_member|
-      if poll_member.share_poll_of_id == 0
-        not_shared = Hash["shared" => false]
-        list_polls << poll_member.poll
-        list_shared << not_shared
-      else
-        find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-        find_member_share = Member.joins(:share_polls).where("share_polls.poll_id = #{poll_member.poll_id}")
-        shared = Hash["shared" => true, "shared_by" => serailize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
-
-        list_polls << find_poll
-        list_shared << shared
-      end
-      order_ids << poll_member.id
-    end
-
-    [list_polls, list_shared, order_ids, next_cursor]
-  end
-
-  def poll_shared_at(poll_member)
-    if poll_member.in_group
-      Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(poll_member.share_poll_of_id) ]
-    else
-      PollType.to_hash(PollType::WHERE[:friend_following])
-    end
-  end
-
-  def count_feeded_load(poll)
-    poll.update_columns(loadedfeed_count: poll.loadedfeed_count + 1) if (poll.member_type == "Company" || poll.member_type == "Brand")
-  end
-
-  def serailize_group_detail_as_json(poll_id)
-    group = PollGroup.where(poll_id: poll_id).pluck(:group_id)
-    group_list = group & your_group_ids
-
-    if group.present?
-      ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json
-    else
-      nil
-    end
-  end
-
-  def to_bool(request)
-    return true   if request == "true"
-    return false  if request == "false"
-  end
-
-  def serailize_member_detail_as_json(member_of_share)
-    ActiveModel::ArraySerializer.new(member_of_share, serializer_options: { current_member: @member }, each_serializer: MemberSharedDetailSerializer).as_json
-  end
-
 end
