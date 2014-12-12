@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe "GET /poll/:member_id/public_timeline", type: :api do
-
   let!(:member) { create(:member, member_type: :celebrity) }
   let!(:friend) { create(:member, email: "friend@gmail.com", fullname: "Friend" ) }
 

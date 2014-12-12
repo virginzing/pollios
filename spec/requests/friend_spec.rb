@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Friend" do
+
   let!(:member) { create(:member, fullname: "Nutkub", email: "nutkub@gmail.com") }
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
 
@@ -77,4 +78,5 @@ RSpec.describe "Friend" do
       end
     end
   end
+
 end

@@ -133,6 +133,8 @@ class V6::MyPollInProfile
 
   private
 
+  # main query #
+
   def poll_created(next_cursor = nil, limit_poll = LIMIT_POLL)
     query_poll_member = "polls.member_id = #{member_id} AND polls.in_group = 'f' AND poll_members.share_poll_of_id = 0"
     query_group_together = "polls.member_id = #{member_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
@@ -190,6 +192,8 @@ class V6::MyPollInProfile
   def poll_unexpire
     "polls.expire_date > '#{Time.now}'"
   end
+
+  # make to timeline #
 
   def split_poll_and_filter(type_feed)
     @type_feed = type_feed

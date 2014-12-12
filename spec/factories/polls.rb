@@ -4,6 +4,7 @@ FactoryGirl.define do
     f.title "Test Poll"
     f.type_poll :binary
     f.status_poll :gray
+    f.in_group false
   end
 
 

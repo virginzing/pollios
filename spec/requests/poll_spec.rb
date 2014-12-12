@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Poll" do
 
   let!(:member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
+  let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
   let!(:poll) { create(:poll, member: member) }
   let!(:choice_one) { create(:choice, poll: poll, answer: "1", vote: 0) }
   let!(:choice_two) { create(:choice, poll: poll, answer: "2", vote: 0) }
@@ -88,5 +89,6 @@ RSpec.describe "Poll" do
       expect(SavePollLater.count).to eq(0)
     end
   end
+
 
 end
