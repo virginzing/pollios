@@ -14,4 +14,12 @@ FactoryGirl.define do
     type_poll "binary"
   end
 
+  factory :create_poll_public, class: Poll do
+    title "Poll Public"
+    expire_within 2
+    choices ["yes", "no"]
+    type_poll "binary"
+    is_public "1"
+  end
+
 end

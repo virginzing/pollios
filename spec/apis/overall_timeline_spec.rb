@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "GET /overall_timeline", type: :api do
+describe "GET /poll/:member_id/overall_timeline", type: :api do
   let!(:member) { create(:member) }
 
   before do
@@ -9,10 +9,10 @@ describe "GET /overall_timeline", type: :api do
     end
   end
 
-  it "sends a list of poll feed" do
+  it "return list of poll" do
     # 'HTTP_AUTHORIZATION' => ActionController::HttpAuthentication::Token.encode_credentials(member.get_token("facebook"))
     get "/poll/#{member.id}/overall_timeline.json", { api_version: 6 }
-    # puts last_response.body
+
     expect(last_response.status).to eq(200)
 
     expect(json["response_status"]).to eq("OK")

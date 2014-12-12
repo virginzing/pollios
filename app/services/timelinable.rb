@@ -8,11 +8,11 @@ module Timelinable
   end
 
   def init_un_see_poll
-    UnseePoll.new({ member_id: member_id})
+    @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
   end
 
   def init_save_poll
-    SavePoll.new({ member_id: member_id})
+    @init_save_poll ||= SavePoll.new({ member_id: member_id})
   end
 
   def unsee_poll_ids

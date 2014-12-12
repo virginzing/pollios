@@ -62,9 +62,13 @@ class V6::OverallTimeline
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
 
-    poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
+    # poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
-    poll_series_group_query = "poll_members.series = 't' AND poll_members.in_group = 't' AND poll_members.poll_series_id IN (?)"
+    poll_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id = 0"
+
+    # poll_series_group_query = "poll_members.series = 't' AND poll_members.in_group = 't' AND poll_members.poll_series_id IN (?)"
+
+    poll_series_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id != 0"
 
     poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
@@ -72,16 +76,20 @@ class V6::OverallTimeline
 
     new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
 
-    new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
+    # new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
+    new_find_poll_in_my_group = filter_group.eql?("1") ? your_group_ids : [0]
 
-    new_find_poll_series_in_group = filter_group.eql?("1") ? find_poll_series_in_group : [0]
+    # new_find_poll_series_in_group = filter_group.eql?("1") ? find_poll_series_in_group : [0]
 
-    query = PollMember.available.unexpire.joins(:poll).where("(#{poll_friend_query})" \
+    new_find_poll_series_in_group = filter_group.eql?("1") ? your_group_ids : [0]
+
+    query = PollMember.available.unexpire.joins(:poll).includes(:poll => [:poll_groups])
+                                                      .where("(#{poll_friend_query})" \
                                                              "OR (#{poll_group_query})" \
                                                              "OR (#{poll_series_group_query})" \
                                                              "OR (#{poll_public_query})",
                                                              new_your_friend_ids,
-                                                             new_find_poll_in_my_group, new_find_poll_series_in_group)
+                                                             new_find_poll_in_my_group, new_find_poll_series_in_group).references(:poll_groups)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
@@ -125,5 +133,28 @@ class V6::OverallTimeline
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
     poll_member_ids_sort
+  end
+
+  def poll_shared_at(poll_member)
+    if poll_member.in_group
+      Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json(poll_member.share_poll_of_id) ]
+    else
+      PollType.to_hash(PollType::WHERE[:friend_following])
+    end
+  end
+
+  def serailize_group_detail_as_json(poll_id)
+    group = PollGroup.where(poll_id: poll_id).pluck(:group_id)
+    group_list = group & your_group_ids
+
+    if group.present?
+      ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json
+    else
+      nil
+    end
+  end
+
+  def serailize_member_detail_as_json(member_of_share)
+    ActiveModel::ArraySerializer.new(member_of_share, serializer_options: { current_member: @member }, each_serializer: MemberSharedDetailSerializer).as_json
   end
 end

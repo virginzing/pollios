@@ -394,7 +394,7 @@ class PollsController < ApplicationController
       @total_entries = friend_following_timeline.total_entries
     else
       friend_following_timeline = V6::FriendFollowingTimeline.new(@current_member, options_params)
-      @list_polls, @list_shared, @order_ids, @next_cursor = friend_following_timeline.poll_friend_following
+      @list_polls, @list_shared, @order_ids, @next_cursor = friend_following_timeline.get_timeline
       @group_by_name = friend_following_timeline.group_by_name
       @total_entries = friend_following_timeline.total_entries
     end
@@ -522,7 +522,7 @@ class PollsController < ApplicationController
     # @total_entries = @polls.total_entries
 
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
-    @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_hashtag
+    @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_timeline
     @group_by_name = @init_hash_tag.group_by_name
     @total_entries = @init_hash_tag.total_entries
   end
