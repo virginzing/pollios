@@ -207,10 +207,11 @@ class Group < ActiveRecord::Base
     list_group = group_id
     Group.transaction do
       where(id: list_group).each do |group|
-        if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
-          group.increment!(:poll_count)
-          GroupNotificationWorker.perform_in(10.seconds.from_now, member.id, group.id, poll.id)
-        end
+        group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
+        # if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
+          # group.increment!(:poll_count)
+          # GroupNotificationWorker.perform_in(10.seconds.from_now, member.id, group.id, poll.id)
+        # end
       end
     end
   end
