@@ -470,7 +470,7 @@ class Poll < ActiveRecord::Base
         in_group_ids = group_id.presence || "0"
         in_group = group_id.present? ? true : false
 
-        time_have_photo = photo_poll.present? ? 15.second : 5.second
+        time_have_photo = photo_poll.present? ? 15.second.from_now : 5.second.from_now
 
         if expire_date.present?
           convert_expire_date = Time.now + expire_date.to_i.day

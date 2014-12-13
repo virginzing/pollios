@@ -109,7 +109,7 @@ class Group < ActiveRecord::Base
         if find_member_in_group.present?
           find_member_in_group.update!(active: true)
         else
-          GroupMember.create!(member_id: @friend.id, active: true, is_master: false)
+          GroupMember.create!(member_id: @friend.id, active: true, is_master: false, group_id: @group.id)
         end
 
         Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
@@ -209,7 +209,7 @@ class Group < ActiveRecord::Base
       where(id: list_group).each do |group|
         if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
           group.increment!(:poll_count)
-          GroupNotificationWorker.perform_in(5.seconds, member.id, group.id, poll.id)
+          GroupNotificationWorker.perform_in(10.seconds.from_now, member.id, group.id, poll.id)
         end
       end
     end
