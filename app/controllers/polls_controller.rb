@@ -590,10 +590,11 @@ class PollsController < ApplicationController
     Comment.transaction do
       begin
         raise ExceptionHandler::Forbidden, "This poll disallow your comment" unless @poll.allow_comment
-        mentionable_list = comment_params[:mentionable_list]
+        # mentionable_list = comment_params[:mentionable_list]
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-        @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
-        @poll.increment!(:comment_count)
+        # @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
+        # @poll.increment!(:comment_count)
+        @poll.update_columns(comment_count: @poll.comment_count + 1)
 
         find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
 
@@ -603,12 +604,12 @@ class PollsController < ApplicationController
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
-        
+
         # CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })
         # CommentMentionWorker.perform_in(5.seconds, @current_member.id, @poll.id, mentionable_list) if mentionable_list.present?
       rescue => e
         @error_message = e.message
-        puts "#{e.message}"
+        # puts "#{e.message}"
       end
     end
   end
