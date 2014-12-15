@@ -182,9 +182,9 @@ class PollSeriesController < ApplicationController
     if @poll_series.save
       @poll_series.in_group_ids.split(",").each do |group_id|
         PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)
-        if Rails.env.production?
-          ApnQuestionnaireWorker.perform_in(5.seconds, current_member.id, @poll_series.id, group_id) unless @poll_series.qr_only
-        end      
+        # if Rails.env.production?
+        #   ApnQuestionnaireWorker.perform_in(5.seconds, current_member.id, @poll_series.id, group_id) unless @poll_series.qr_only
+        # end      
       end
       flash[:success] = "Successfully created poll series."
       redirect_to poll_series_index_path
@@ -197,7 +197,7 @@ class PollSeriesController < ApplicationController
       end
     end
     Rails.cache.delete([current_member.id, 'my_questionnaire'])
-    puts "error: #{@poll_series.errors.full_messages}"
+    # puts "error: #{@poll_series.errors.full_messages}"
   end
 
   def set_expire_date
