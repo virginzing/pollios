@@ -130,9 +130,9 @@ class V6::OverallTimeline
 
   def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
-    # shared = find_poll_share
-    # poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
-    # poll_member_ids_sort
+    shared = find_poll_share
+    poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
+    poll_member_ids_sort
     ids
   end
 
