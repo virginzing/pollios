@@ -133,7 +133,6 @@ class V6::OverallTimeline
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
     poll_member_ids_sort
-    ids
   end
 
   def poll_shared_at(poll_member)
