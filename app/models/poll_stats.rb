@@ -66,7 +66,7 @@ class PollStats
   ## today or this week or this month
 
   def self.poll_popular(end_date, start_date = Date.current)
-    Poll.where("date(created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date).order("vote_all desc").limit(10)
+    Poll.unscoped.where("date(created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date).order("vote_all desc").limit(10)
   end
 
   def self.top_voter(end_date, start_date = Date.current)
@@ -152,7 +152,7 @@ class PollStats
   ## total ##
 
   def self.poll_popular_total
-    Poll.all.order("vote_all desc").limit(10)
+    Poll.unscoped.all.order("vote_all desc").limit(10)
   end
 
   def self.top_voter_total
@@ -172,7 +172,7 @@ class PollStats
   ## yesterday ##
 
   def self.poll_popular_yesterday
-    Poll.where("date(created_at + interval '7 hours') = ?", Date.current - 1.day).order("vote_all desc").limit(10)
+    Poll.unscoped.where("date(created_at + interval '7 hours') = ?", Date.current - 1.day).order("vote_all desc").limit(10)
   end
 
   def self.top_voter_yesterday
