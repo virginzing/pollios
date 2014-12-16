@@ -110,7 +110,7 @@ class BuildPoll
       end
       @choice_list
     else
-      array_of_star = ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐']
+      array_of_star = [1, 2, 3, 4, 5]
       array_of_star.each do |choice|
         @choice_list << choice        
       end
