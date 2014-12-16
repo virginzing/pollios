@@ -8,7 +8,7 @@ class HistoryVote < ActiveRecord::Base
 
   validates :poll_id, :member_id, :choice_id, presence: true
 
-  default_scope { order("id desc") }
+  default_scope { order("#{table_name}.id desc") }
 
   %w[gender province].each do |key|
     scope "has_#{key}", lambda { |value| where("data_analysis @> hstore(?,?)", key, value) }

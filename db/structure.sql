@@ -1659,7 +1659,9 @@ CREATE TABLE polls (
     in_group boolean DEFAULT false,
     show_result boolean DEFAULT true,
     order_poll integer DEFAULT 1,
-    quiz boolean DEFAULT false
+    quiz boolean DEFAULT false,
+    notify_state integer DEFAULT 0,
+    notify_state_at timestamp without time zone
 );
 
 
@@ -4285,4 +4287,8 @@ INSERT INTO schema_migrations (version) VALUES ('20141204062207');
 INSERT INTO schema_migrations (version) VALUES ('20141209081854');
 
 INSERT INTO schema_migrations (version) VALUES ('20141210125039');
+
+INSERT INTO schema_migrations (version) VALUES ('20141216034741');
+
+INSERT INTO schema_migrations (version) VALUES ('20141216074943');
 

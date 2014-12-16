@@ -167,7 +167,7 @@ class PollsController < ApplicationController
         if @poll.in_group_ids != "0"
           in_group = true
           # puts "#{ @poll.in_group_ids}"
-          # Group.add_poll(current_member, @poll, @poll.in_group_ids.split(",").collect{|e| e.to_i })
+          Group.add_poll(current_member, @poll, @poll.in_group_ids.split(",").collect{|e| e.to_i })
           Company::TrackActivityFeedPoll.new(current_member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
         else
           # ApnPollWorker.perform_in(5.second, current_member.id, @poll.id)

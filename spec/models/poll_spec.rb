@@ -25,6 +25,11 @@ RSpec.describe Poll, :type => :model do
     end
   end
 
+  it "return notify_state is idle when new poll" do
+    new_poll = Poll.new
+    expect(new_poll).to be_idle
+  end
+
   it "is titled new_poll" do
     poll = Poll.new(title: "new_poll")
     expect(poll.title).to eq("new_poll")
@@ -101,6 +106,38 @@ RSpec.describe Poll, :type => :model do
     it "split string by (,) and return arraoy of choice_list" do
       expect(Poll.check_type_of_choice(choice_list_string)).to eq(choice_list)
     end
+  end
+
+  describe "#vote_poll" do
+    let!(:poll) { create(:poll, member_id: member.id) }
+
+    let!(:choice1) { create(:choice, poll: poll, answer: "1", vote: 10 ) }
+    let!(:choice2) { create(:choice, poll: poll, answer: "2", vote: 20 ) }
+    let!(:choice3) { create(:choice, poll: poll, answer: "3", vote: 30 ) }
+    
+    let!(:member_one) { create(:member, fullname: "member_one") }
+
+    before do
+      Poll.vote_poll({ id: poll.id, member_id: member_one.id, choice_id: choice1.id}, member_one, {})
+    end
+
+    it "return notify_state is process" do
+      expect(poll.reload).to be_process
+    end
+
+    it "return vote_all is 1" do
+      expect(poll.reload.vote_all).to eq(1)
+    end
+
+    it "create to history vote record" do
+      expect(HistoryVote.count).to eq(1)
+    end
+
+    it "return notify_state_at is time now" do
+      expect(poll.reload.notify_state_at.present?).to be true
+    end
+
+
   end
 
 end
