@@ -21,6 +21,18 @@ if @list_polls
       json.poll do
         json.timeline_id poll.id
         json.partial! 'response_helper/poll/normal', poll: poll
+        json.my_shared poll.check_my_shared(share_poll_ids, poll.id)
+
+        json.other_shared do
+          if poll.share_poll == 0
+            json.shared false
+          else
+            json.shared true
+            json.shared_by poll.get_member_shared_this_poll(poll.group_of_id)
+            json.shared_at poll.get_group_shared(poll.group_of_id)
+          end
+        end
+
       end
     end
 
