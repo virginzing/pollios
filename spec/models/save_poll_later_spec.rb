@@ -27,4 +27,23 @@ RSpec.describe SavePollLater, :type => :model do
     end
 
   end
+
+  describe "#delete_save_later" do
+    context 'only poll' do
+      let!(:saved_poll) { create(:save_poll_later, member: member, savable: first_poll) }
+
+      it "remove save later" do
+        expect(SavePollLater.delete_save_later(member.id, first_poll)).to eq(true)
+      end      
+    end
+
+    context 'only questionnaire' do
+      let!(:saved_poll) { create(:save_poll_later, member: member, savable: questionnaire) }
+
+      it "remove save later" do
+        expect(SavePollLater.delete_save_later(member.id, questionnaire)).to eq(true)
+      end
+    end
+
+  end
 end

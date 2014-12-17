@@ -626,6 +626,8 @@ class Poll < ActiveRecord::Base
 
           UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
 
+          SavePollLater.delete_save_later(member_id, find_poll)
+
           if (member_id.to_i != find_poll.member.id) && !find_poll.series
             # VotePollWorker.perform_async(member_id, poll_id, get_anonymous) if Rails.env.production?
             if find_poll.notify_state.idle?

@@ -138,7 +138,7 @@ class PollSeries < ActiveRecord::Base
       if @votes.present?
         self.increment!(:vote_all)
         poll_series.suggests.create!(member_id: surveyed_id, message: params[:suggest])
-
+        SavePollLater.delete_save_later(member_id, poll_series)
         member.flush_cache_my_vote
         member.flush_cache_my_vote_all
         # Activity.create_activity_poll_series(member, poll_series, 'Vote')
