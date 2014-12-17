@@ -25,7 +25,7 @@ if @list_polls
     else
       json.poll do
         json.timeline_id @order_ids[count]
-      json.partial! 'response_helper/poll/normal', poll: poll
+        json.partial! 'response_helper/poll/normal', poll: poll
         json.my_shared poll.check_my_shared(share_poll_ids, poll.id)
         json.other_shared @list_shared[count]
       end
