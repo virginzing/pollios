@@ -79,4 +79,39 @@ RSpec.describe "Friend" do
     end
   end
 
+  describe "GET /friend/polls" do
+
+    let!(:poll) { create(:poll, member: member) }
+    let!(:poll_member) { create(:poll_member, poll: poll, member: member) }
+
+    context 'of mine' do
+      it "return list my poll" do
+        get '/friend/polls.json', { member_id: member.id, friend_id: member.id, api_version: 6 }, { "Accept" => "application/json" }
+
+        expect(response).to be_success
+        expect(json["response_status"]).to eq("OK")
+        expect(json["timeline_polls"].size).to eq(1)
+        expect(json["next_cursor"]).to eq(0)
+      end
+    end
+
+    context 'of friend' do
+      let!(:poll_friend) { create(:poll, member: friend) }
+      let!(:poll_member_friend) { create(:poll_member, poll: poll_friend, member: friend) }
+
+      before do
+        Friend.add_friend( {member_id: member.id, friend_id: friend.id})
+        Friend.accept_or_deny_freind({member_id: friend.id, friend_id: member.id}, true)
+      end
+
+      it "return list friend poll" do
+        get "/friend/polls.json", { member_id: member.id, friend_id: friend.id, api_version: 6 }, { "Accept" => "application/json" }
+
+        expect(response).to be_success
+        expect(json["response_status"]).to eq("OK")
+        expect(json["timeline_polls"].size).to eq(1)
+      end
+    end
+  end
+
 end

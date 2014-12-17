@@ -5,6 +5,9 @@ FactoryGirl.define do
     f.type_poll :binary
     f.status_poll :gray
     f.in_group false
+    f.public false
+    f.expire_date Time.zone.now + 1.weeks
+    f.expire_status false
   end
 
 

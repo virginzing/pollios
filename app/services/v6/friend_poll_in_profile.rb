@@ -9,19 +9,32 @@ class V6::FriendPollInProfile
     @options = options
     @friend_group = @friend.cached_get_group_active
     @my_group = Member.list_group_active
-    @my_hidden_poll = HiddenPoll.my_hidden_poll(member.id)
+    @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
+    @init_save_poll ||= SavePoll.new( { member_id: member.id} )
   end
   
   def friend_id
     @friend.id
   end
 
-  def my_hidden_poll
-    @my_hidden_poll
-  end
-
   def original_next_cursor
     @original_next_cursor = @options[:next_cursor]
+  end
+
+  def unsee_poll_ids
+    @init_unsee_poll.get_list_poll_id
+  end
+
+  def unsee_questionnaire_ids
+    @init_unsee_poll.get_list_questionnaire_id
+  end
+
+  def saved_poll_ids_later
+    @init_save_poll.get_list_poll_id
+  end
+
+  def saved_questionnaire_ids_later
+    @init_save_poll.get_list_questionnaire_id
   end
 
   def my_group_id
@@ -40,8 +53,8 @@ class V6::FriendPollInProfile
     Member.list_friend_active.map(&:id) << @member.id
   end
 
-  def groups
-    @groups ||= @member.id == friend_id ? my_group : mutual_or_public_group
+  def my_vote_questionnaire_ids
+    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
   def is_friend
@@ -52,12 +65,12 @@ class V6::FriendPollInProfile
     Hash[@friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
-  def check_poll_not_show_result
-    @member.cached_my_voted_all.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
+  def with_out_poll_ids
+    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
   end
 
-  def with_out_poll_ids
-    my_hidden_poll | check_poll_not_show_result
+  def with_out_questionnaire_id
+    unsee_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   def get_poll_friend
@@ -158,6 +171,7 @@ class V6::FriendPollInProfile
                 my_and_friend_group, my_and_friend_group).references(:poll_groups)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
     query = query.limit(limit_poll)
     query
   end
@@ -170,6 +184,7 @@ class V6::FriendPollInProfile
             my_and_friend_group).references(:poll_groups)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
     query = query.limit(limit_poll)
     query
   end

@@ -76,7 +76,7 @@ class V6::FriendFollowingTimeline
     ids, poll_ids = find_poll_me_and_friend_following
     shared = find_poll_share
     poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
-    poll_member_ids_sort - check_poll_not_show_result
+    poll_member_ids_sort
   end
 
   def main_timeline

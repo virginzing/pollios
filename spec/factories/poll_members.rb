@@ -5,6 +5,7 @@ FactoryGirl.define do
     series false
     in_group false
     poll_series_id 0
+    expire_date Time.zone.now + 1.weeks
   end
 
 end

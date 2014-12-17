@@ -43,7 +43,7 @@ class PollOfGroup
 
   def poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    @query = Poll.order("updated_at DESC, created_at DESC").joins(:groups).includes(:history_votes, :member)
+    @query = Poll.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("#{poll_group_query}").uniq
     @query
@@ -51,7 +51,7 @@ class PollOfGroup
 
   def api_poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    query = Poll.available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:history_votes, :member)
+    query = Poll.available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("#{poll_group_query}").uniq
 

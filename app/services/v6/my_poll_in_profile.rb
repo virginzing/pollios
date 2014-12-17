@@ -7,30 +7,16 @@ class V6::MyPollInProfile
   def initialize(member, options = nil)
     @member = member
     @options = options
-    @my_group = Member.list_group_active
-    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
     @init_unsee_poll ||= UnseePoll.new({ member_id: member.id})
     @init_save_poll ||= SavePoll.new( { member_id: member.id} )
-  end
-
-  def my_group_id
-    @my_group_ids ||= @my_group.map(&:id)
   end
 
   def member_id
     @member.id
   end
 
-  def hidden_poll
-    @hidden_poll
-  end
-
   def original_next_cursor
     @original_next_cursor = @options[:next_cursor]
-  end
-
-  def list_my_friend_ids
-    Member.list_friend_active.map(&:id) << @member.id
   end
 
   def unsee_poll_ids
@@ -49,9 +35,19 @@ class V6::MyPollInProfile
     @init_save_poll.get_list_questionnaire_id
   end
 
-  def my_vote_poll_ids
-    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e["poll_series_id"] == 0 }.collect{|e| e["poll_id"] }
+  def my_vote_questionnaire_ids
+    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
+
+  def with_out_poll_ids
+    unsee_poll_ids | saved_poll_ids_later
+  end
+
+  def with_out_questionnaire_id
+    unsee_questionnaire_ids
+  end
+
+  # Filter with out poll & questionnaire
 
   def my_poll
     @my_poll ||= poll_created(nil, nil)
@@ -79,14 +75,6 @@ class V6::MyPollInProfile
 
   def get_my_save_later
     split_poll_and_filter("poll_saved")
-  end
-
-  def with_out_poll_ids
-    hidden_poll | unsee_poll_ids
-  end
-
-  def with_out_questionnaire_id
-    unsee_questionnaire_ids
   end
 
   ## create ##
@@ -144,7 +132,10 @@ class V6::MyPollInProfile
                 .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                        "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                        "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
-                       my_group_id, my_group_id).references(:poll_groups).limit(limit_poll)
+                       your_group_ids, your_group_ids).references(:poll_groups)
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.limit(limit_poll)
+    query
   end
 
   def poll_voted(next_cursor = nil, limit_poll = LIMIT_POLL)
@@ -153,7 +144,7 @@ class V6::MyPollInProfile
                 .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f') " \
                        "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)" \
                        "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
-                       my_group_id).references(:poll_groups)    
+                       your_group_ids).references(:poll_groups)    
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
     query = query.limit(limit_poll)
@@ -165,7 +156,7 @@ class V6::MyPollInProfile
                 .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')")
                 .where("(watcheds.member_id = #{member_id} AND polls.in_group = 'f')" \
                        "OR (watcheds.member_id = #{member_id} AND polls.public = 't') " \
-                       "OR (watcheds.member_id = #{member_id} AND poll_groups.group_id IN (?))", my_group_id)
+                       "OR (watcheds.member_id = #{member_id} AND poll_groups.group_id IN (?))", your_group_ids)
                 .order("watcheds.created_at DESC")
                 .references(:poll_groups)
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0

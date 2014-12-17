@@ -1,6 +1,6 @@
 class V6::PollOfGroup
   include GroupApi
-  include LimitPoll
+  include Timelinable
 
   attr_accessor :next_cursor
 
@@ -8,8 +8,6 @@ class V6::PollOfGroup
     @member = member
     @group = group
     @params = params
-    @only_poll_available = false
-    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
   end
 
   def member_id
@@ -18,10 +16,6 @@ class V6::PollOfGroup
 
   def group_id
     @group.id
-  end
-
-  def hidden_poll
-    @hidden_poll
   end
 
   def original_next_cursor
@@ -44,23 +38,11 @@ class V6::PollOfGroup
     @questionnaire_of_group_company ||= questionnaire_of_group_company
   end
 
-  def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
-  end
-
-  def check_poll_not_show_result
-    Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
-  end
-
-  def with_out_poll_ids
-    hidden_poll | check_poll_not_show_result | my_vote_questionnaire_ids
-  end
-
   private
 
   def poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    @query = Poll.order("updated_at DESC, created_at DESC").joins(:groups).includes(:history_votes, :member)
+    @query = Poll.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("#{poll_group_query}").uniq
     @query
@@ -68,11 +50,12 @@ class V6::PollOfGroup
 
   def api_poll_of_group(next_cursor = nil, limit_poll = LIMIT_POLL)
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    query = Poll.load_more(next_cursor).available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:history_votes, :member)
+    query = Poll.load_more(next_cursor).available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("#{poll_group_query} AND #{poll_unexpire}").uniq
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
 
     query
   end
