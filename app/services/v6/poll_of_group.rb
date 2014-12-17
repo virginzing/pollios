@@ -94,7 +94,7 @@ class V6::PollOfGroup
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
-
+    query = query.limit(limit_poll)
     query
   end
 
