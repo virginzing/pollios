@@ -9,6 +9,7 @@ class FriendsController < ApplicationController
   before_action :load_resource_poll_feed, only: [:list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend, :list_of_group]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
+  expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
 
   def add_friend
     @friend = Friend.add_friend(friend_params)

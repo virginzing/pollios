@@ -18,6 +18,7 @@ class MembersController < ApplicationController
   expose(:friend_request) { current_member.get_your_request.pluck(:id) }
   expose(:members) { |default| default.paginate(page: params[:page]) }
   expose(:member) { @current_member }
+  expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
 
   respond_to :json
 
