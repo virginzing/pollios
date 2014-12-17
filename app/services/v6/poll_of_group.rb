@@ -1,6 +1,8 @@
 class V6::PollOfGroup
   include GroupApi
-  include Timelinable
+
+  LIMIT_TIMELINE = 1000
+  LIMIT_POLL = 20
 
   attr_accessor :next_cursor
 
@@ -20,6 +22,42 @@ class V6::PollOfGroup
 
   def original_next_cursor
     @original_next_cursor = @params[:next_cursor]
+  end
+
+  def init_un_see_poll
+    @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
+  end
+
+  def init_save_poll
+    @init_save_poll ||= SavePoll.new({ member_id: member_id})
+  end
+
+  def unsee_poll_ids
+    init_un_see_poll.get_list_poll_id
+  end
+
+  def unsee_questionnaire_ids
+    init_un_see_poll.get_list_questionnaire_id
+  end
+
+  def saved_poll_ids_later
+    init_save_poll.get_list_poll_id
+  end
+
+  def saved_questionnaire_ids_later
+    init_save_poll.get_list_questionnaire_id
+  end
+
+  def my_vote_questionnaire_ids
+    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+  end
+
+  def with_out_poll_ids
+    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
+  end
+
+  def with_out_questionnaire_id
+    unsee_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   def get_poll_of_group
