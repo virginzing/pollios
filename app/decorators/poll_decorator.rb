@@ -1,6 +1,10 @@
 class PollDecorator < Draper::Decorator
   delegate_all
 
+  def page_number
+    42
+  end
+
   # Define presentation-specific methods here. Helpers are accessed through
   # `helpers` (aka `h`). You can override attributes, for example:
   #

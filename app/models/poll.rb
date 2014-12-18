@@ -633,7 +633,7 @@ class Poll < ActiveRecord::Base
             if find_poll.notify_state.idle?
               find_poll.update_column(:notify_state, 1)
               find_poll.update_column(:notify_state_at, Time.zone.now)
-              SumVotePollWorker.perform_in(1.minutes, poll_id) if Rails.env.production?
+              SumVotePollWorker.perform_in(1.minutes, poll_id)
             end
           end
 
