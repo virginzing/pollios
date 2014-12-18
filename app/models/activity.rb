@@ -270,7 +270,7 @@ class Activity
 
 
   def self.check_authority_poll
-    if @poll.in_group_ids == '0' ## not in group
+    unless @poll.in_group
       if @poll.public
         AUTHORITY[:public]
       else
@@ -282,7 +282,7 @@ class Activity
   end
 
   def self.check_authority_poll_series
-    if @poll_series.in_group_ids == '0' ## not in group
+    unless @poll_series.in_group
       if @poll_series.public
         AUTHORITY[:public]
       else

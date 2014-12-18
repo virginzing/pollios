@@ -36,4 +36,18 @@ RSpec.describe Member, :type => :model do
     end
   end
 
+  describe ".get_recent_activity" do
+    let!(:member) { create(:member) }
+    let!(:poll) { create(:poll, member: member, public: true) }
+
+
+    it "return 3 recent activity" do
+      10.times do
+        Activity.create_activity_poll(member, poll, 'Vote')
+      end
+
+      expect(member.get_recent_activity.size).to eq(3)
+    end
+  end
+
 end

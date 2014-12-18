@@ -136,8 +136,6 @@ RSpec.describe Poll, :type => :model do
     it "return notify_state_at is time now" do
       expect(poll.reload.notify_state_at.present?).to be true
     end
-
-
   end
 
 end
