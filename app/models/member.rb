@@ -911,7 +911,7 @@ class Member < ActiveRecord::Base
     activity = Activity.find_by(member_id: id)
 
     if activity.present?
-      activity.items.select{|e| e["type"] == "Poll" && e["authority"] == "Public" && e["action"] != "Share" }[0..1]
+      activity.items.select{|e| e["type"] == "Poll" && e["authority"] == "Public" && e["action"] != "Share" }[0..2]
     else
       []
     end
