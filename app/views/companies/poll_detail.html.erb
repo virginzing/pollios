@@ -6,7 +6,7 @@
 
 <div class="row">
   <div class="col-md-8">
-  <div class="jarviswidget" id="wid-id-poll-detail" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+  <div class="jarviswidget" id="wid-id-poll-detail" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="glyphicon glyphicon-info-sign"></i> </span>
       <h2><strong>Detail</strong></h2>        
@@ -43,7 +43,7 @@
   </div>
 
   <div class="col-md-4">
-    <div class="jarviswidget" id="wid-id-poll-creator" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+    <div class="jarviswidget" id="wid-id-poll-creator" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="glyphicon glyphicon-info-sign"></i> </span>
       <h2><strong>Creator by</strong></h2>        
@@ -65,7 +65,7 @@
   </div>
 </div>
 
-  <div class="jarviswidget" id="wid-id-chart-choices" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+  <div class="jarviswidget" id="wid-id-chart-choices" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
       <header>
         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
         <h2><strong>Result</strong></h2>  
@@ -73,7 +73,7 @@
         <ul id="widget-tab-1" class="nav nav-tabs pull-right">
 
           <li class="active">
-            <a data-toggle="tab" href="#normal"><span class="hidden-mobile hidden-tablet"> Normal</span> </a>
+            <a data-toggle="tab" href="#bar_chart"><span class="hidden-mobile hidden-tablet"> Bar Chart</span> </a>
             </li>
           <li>
     
@@ -82,7 +82,7 @@
           </li>
 
           <li>
-            <a data-toggle="tab" href="#bar_chart"><span class="hidden-mobile hidden-tablet"> Bar Chart</span></a>
+            <a data-toggle="tab" href="#normal"><span class="hidden-mobile hidden-tablet"> Normal</span></a>
           </li>
 
         </ul> 
@@ -97,7 +97,7 @@
           <!-- widget body text-->
           
           <div class="tab-content padding-10">
-            <div class="tab-pane fade in active" id="normal">
+            <div class="tab-pane fade" id="normal">
               <h1>Normal</h1>
             </div>
             
@@ -114,7 +114,7 @@
               <% end %>
             </div>
 
-            <div class="tab-pane fade" id="bar_chart">
+            <div class="tab-pane fade in active" id="bar_chart">
               <div id="bar_chart_div"></div>
                 <% if @poll.vote_all < 1 %>
                 <div class="alert alert-info fade in">
@@ -138,7 +138,7 @@
       
   </div>
 
-  <div class="jarviswidget jarviswidget-color-darken" id="wid-id-comments" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+  <div class="jarviswidget jarviswidget-color-darken" id="wid-id-comments" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="glyphicon glyphicon-comment"></i> </span>
       <h2><strong>Comment</strong></h2>        
@@ -176,7 +176,7 @@
   </div>
 
 <% if current_member.company? %>
-  <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-view-no-vote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+  <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-view-no-vote" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-th-list"></i> </span>
       <h2><strong>View but don't vote</strong></h2>    
@@ -448,8 +448,7 @@
     var options = {
       'title'  : '<%= @poll.title %>',
       'width'  : '1000',
-      'height' : 300,
-      'is3D'   : true
+      'height' : 300
     };
 
     // Instantiate and draw our chart, passing in some options.
