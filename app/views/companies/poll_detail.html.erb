@@ -98,7 +98,19 @@
           
           <div class="tab-content padding-10">
             <div class="tab-pane fade" id="normal">
-              <h1>Normal</h1>
+              <div class="panel-padding">
+                <ul class="list-group">
+                  <% @choice_poll_latest = @poll.cached_choices.collect{|e| [e.answer, e.vote] } %>
+                  <% @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max %>
+                  
+                  <% @poll.cached_choices.each do |choice| %>
+                  <li class="list-group-item">
+                    <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_latest_max) %>"><%= choice.vote %></span>
+                    <%= choice.answer %>
+                  </li>
+                  <% end %>
+                </ul>
+              </div>
             </div>
             
             <div class="tab-pane fade" id="pie_chart">
