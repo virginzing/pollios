@@ -616,8 +616,6 @@ class Poll < ActiveRecord::Base
 
           find_choice.increment!(:vote)
 
-          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id)
-
           Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
           @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
@@ -636,6 +634,8 @@ class Poll < ActiveRecord::Base
               SumVotePollWorker.perform_in(1.minutes, poll_id)
             end
           end
+
+          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id)
 
           unless find_poll.series
             VoteStats.create_vote_stats(find_poll) 

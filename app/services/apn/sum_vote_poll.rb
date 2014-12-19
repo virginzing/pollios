@@ -15,7 +15,7 @@ class Apn::SumVotePoll
   end
 
   def last_notify_at
-    @poll.notify_state_at.present? ? (@poll.notify_state_at - 0.5.seconds) : 1.minutes.ago
+    @poll.notify_state_at.present? ? (@poll.notify_state_at - 1.seconds) : 1.minutes.ago
   end
 
   def get_voted_poll
@@ -23,7 +23,7 @@ class Apn::SumVotePoll
   end
 
   def custom_message
-    count = get_voted_poll.pluck(:member_id).count
+    count = get_voted_poll.map(&:member_id).count
 
     @list_fullname = get_voted_poll.map(&:new_fullname)
 
