@@ -14,7 +14,6 @@
   </a>
 </div>
 
-
 <section id="widget-grid" class="">
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
@@ -55,14 +54,14 @@
                 <!-- <th width="50">#</th> -->
                 <th width="50">Creator</th>
                 <th width="200">Title</th>
+                <th width="150">In Group</th>
                 <th>Vote</th>
                 <th>View</th>
                 <th>Report</th>
-                <th width="150">Expire At</th>
+                <th>Expire</th>
                 <th width="150">Created At</th>
-                <th width="150">In Group</th>
 <!--                 <th>Re-Generate</th> -->
-                <th>Action</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
             <tbody>
@@ -75,11 +74,6 @@
                       </div>
                   </td>
                   <td><%= link_to poll.title, company_polls_detail_path(poll) %></td>
-                  <td><%= poll.vote_all %></td>
-                  <td><%= poll.view_all %></td>
-                  <td><%= poll.report_count %></td>
-                  <td><%= poll.expire_date.strftime("%B %d, %Y") %></td>
-                  <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
                   <td>
                     <ol>
                     <% poll.groups.each do |group| %>
@@ -87,13 +81,18 @@
                     <% end %>
                     </ol>
                   </td>
+                  <td><%= poll.get_vote_count %></td>
+                  <td><%= poll.get_view_count %></td>
+                  <td><%= poll.get_report_count %></td>
+                  <td><%= poll.expire_status %></td>
+                  <td><%= poll.create_since %></td>
 <!--                   <td>
                     <%= form_tag '/poll/new_generate_qrcode' do %>
                       <%= hidden_field_tag 'id', poll.id %>
                       <%= submit_tag 'Re new', class: 'btn btn-primary' %>
                     <% end %>
                   </td> -->
-                  <td><%= link_to '<i class="fa fa-trash-o"><i>'.html_safe , company_delete_poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' }, class: '' %></td>
+<!--                   <td><%= link_to '<i class="fa fa-trash-o"><i>'.html_safe , company_delete_poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' }, class: '' %></td> -->
                 </tr>
               <% end %>
             </tbody>

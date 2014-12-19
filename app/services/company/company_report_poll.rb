@@ -14,9 +14,8 @@ class Company::CompanyReportPoll
   private
 
   def report_poll_in_company
-    Poll.joins(:member_report_polls, :poll_groups)
-    .includes(:groups, :member)
-    .where("polls.in_group = 't' AND poll_groups.group_id IN (?)", group_ids).uniq
+    Poll.joins(:member_report_polls).includes(:groups, :member)
+    .where("polls.in_group = 't'").uniq
   end
 
 

@@ -1,4 +1,6 @@
 class MemberDecorator < Draper::Decorator
+  include Draper::LazyHelpers
+
   delegate_all
 
   # Define presentation-specific methods here. Helpers are accessed through
@@ -37,6 +39,14 @@ class MemberDecorator < Draper::Decorator
         image_default
       end
     end
+  end
+
+  def header_fullanme
+    content_tag(:h1, object.fullname)
+  end
+
+  def show_member_description
+    content_tag(:p, object.description)
   end
 
   private 

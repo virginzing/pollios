@@ -1,4 +1,5 @@
 class CompaniesController < ApplicationController
+  decorates_assigned :poll, :member
 
   skip_before_action :verify_authenticity_token
   before_action :only_company_account
@@ -100,10 +101,11 @@ class CompaniesController < ApplicationController
 
   def list_polls  ## company polls
     @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params, true)
-    @polls = @init_poll.get_poll_of_group_company
+    @polls = @init_poll.get_poll_of_group_company.decorate
   end
 
   def poll_detail
+    @member = @poll.member
     @choice_data_chart = []
     if current_member.company?
       init_company = PollDetailCompany.new(@poll.groups, @poll)
