@@ -170,6 +170,7 @@ Pollios::Application.routes.draw do
     get ':member_id/load_form',  to: 'profiles#load_form'
     post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'
     post ':member_id/unrecomment',  to: 'members#unrecomment'
+    post ':member_id/device_token', to: 'members#device_token'
   end
 
   scope 'poll' do
