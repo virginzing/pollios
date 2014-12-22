@@ -553,7 +553,7 @@ class Poll < ActiveRecord::Base
   end
 
   def send_notification
-    if Rails.env.production?
+    unless Rails.env.test?
       if self.in_group
         self.in_group_ids.split(",").each do |group_id|
           GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id)

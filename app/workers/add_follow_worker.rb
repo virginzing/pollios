@@ -42,7 +42,7 @@ class AddFollowWorker
 
       Apn::App.first.send_notifications
     rescue => e
-      puts "AddFriendWorker => #{e.message}"
+      puts "AddFollowWorker => #{e.message}"
     end
   end
   

@@ -22,13 +22,13 @@ class RequestGroupWorker
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
-        type: TYPE[:requset_group],
+        type: TYPE[:group],
         group_id: group.id
       }
 
       device_ids.each_with_index do |device_id, index|
         apn_custom_properties = {
-          type: TYPE[:requset_group],
+          type: TYPE[:group],
           group_id: group.id,
           notify: hash_list_member_badge[member_ids[index]]
         }

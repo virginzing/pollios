@@ -15,11 +15,11 @@ class Apn::SumVotePoll
   end
 
   def last_notify_at
-    @poll.notify_state_at.present? ? (@poll.notify_state_at - 1.seconds) : 1.minutes.ago
+    @poll.notify_state_at.present? ? (@poll.notify_state_at - 0.5.seconds) : 1.minutes.ago
   end
 
   def get_voted_poll
-    get_voted_poll ||= voted_poll
+    @get_voted_poll ||= voted_poll
   end
 
   def custom_message
