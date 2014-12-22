@@ -4,6 +4,7 @@ if @notify
   json.notify @current_member.notification_count
 
   json.notify @notify do |notify|
+    json.notify_id notify.id
     json.sender do
 
       if notify.sender.nil?
