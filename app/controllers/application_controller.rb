@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
     if current_member
       unless current_member.brand?
         reset_session
-        flash[:notice] = "Only Brand Account."
+        flash[:warning] = "Only Brand Account."
         redirect_to authen_signin_path
       end
     end
@@ -106,7 +106,8 @@ class ApplicationController < ActionController::Base
     if current_member
       unless current_member.company?
         cookies.delete(:auth_token)
-        flash[:notice] = "Only Company Account"
+        cookies.delete(:return_to)
+        flash[:warning] = "Only Company Account"
         redirect_to users_signin_path
       end
     end

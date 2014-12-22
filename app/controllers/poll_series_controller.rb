@@ -89,7 +89,6 @@ class PollSeriesController < ApplicationController
 
   def index
     @poll_series = current_member.poll_series.paginate(page: params[:page])
-    puts "#{@poll_series.to_a}"
   end
 
   def new

@@ -31,9 +31,11 @@ class PollSeries < ActiveRecord::Base
   after_commit :send_notification, on: :create
 
   def send_notification
-    if Rails.env.production? && self.in_group
-      self.in_group_ids.split(",").each do |group_id|
-        ApnQuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
+    unless Rails.env.test?
+      if self.in_group
+        self.in_group_ids.split(",").each do |group_id|
+          ApnQuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
+        end
       end
     end 
   end

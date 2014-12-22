@@ -298,7 +298,11 @@ Pollios::Application.routes.draw do
 
     get 'polls',    to: 'companies#list_polls',     as: :company_polls
     get 'polls/:id',to: 'companies#poll_detail',    as: :company_polls_detail
+
+    get 'questionnaires', to: 'companies#list_questionnaires',  as: :company_questionnaires
     delete 'polls/:id/destroy', to: 'companies#delete_poll',  as: :company_delete_poll
+
+    get 'campaigns',  to: 'companies#list_campaigns', as: :company_campaigns
 
     get 'members',  to: 'companies#company_members',   as: :company_members
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
@@ -323,7 +327,7 @@ Pollios::Application.routes.draw do
 
     get 'new_member', to: 'companies#new_member', as: :new_member_to_company
 
-
+    get 'setting',  to: 'companies#setting',  as: :company_setting
   end
 
   scope 'api/group/:group_id' do

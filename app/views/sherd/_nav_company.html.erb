@@ -43,8 +43,8 @@
           </ul>
         </li> -->
 
-      <li class="<%= is_active_2nd_level('poll_series', 'index') || is_active_2nd_level('poll_series', 'same_choice') %>">
-        <a href="<%= poll_series_index_path %>"> List Questionnaire</a>
+      <li class="<%= is_active_2nd_level('companies', 'list_questionnaires') || is_active_2nd_level('poll_series', 'same_choice') %>">
+        <a href="<%= company_questionnaires_path %>"> List Questionnaire</a>
       </li>
 
     </ul>
@@ -58,8 +58,8 @@
       <a href="<%= company_groups_path %>" title="Group"><i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">Group</span></a>
     </li>
 
-    <li class="<%= is_active?('campaigns') %>">
-      <a href="/campaigns"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaign</span></a>
+    <li class="<%= is_active_2nd_level('companies', 'list_campaigns') %>">
+      <a href="<%= company_campaigns_path %>"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaign</span></a>
     </li>
 
     <li class="<%= is_active_2nd_level('companies', 'invites') || is_active_2nd_level('companies', 'via_email') %>">
@@ -70,7 +70,7 @@
       <a href="<%= company_reports_poll_path %>" title="Report"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Reports</span></a>
     </li>
 
-  <li class="<%= is_active?('members') %>">
-    <a href="/profile"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">Setting</span></a>
+  <li class="<%= is_active_2nd_level('companies', 'setting') %>">
+    <a href="<%= company_setting_path %>"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">Setting</span></a>
   </li>
 </ul>

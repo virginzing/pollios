@@ -1,0 +1,5 @@
+<% if current_member.brand? %>
+  <%= render 'brand_setting' %>
+<% else %>
+  <%= render 'company_setting' %>
+<% end %>

@@ -4,6 +4,7 @@ $.waiting_approve = <%= raw @waiting_approve || false %>
 
 if ($.login) {
   handleLoginSuccess();
+  console.log("permission");
 } else {
   if ($.waiting) {
     if ($.waiting_approve) {

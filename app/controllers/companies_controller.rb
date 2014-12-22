@@ -104,6 +104,18 @@ class CompaniesController < ApplicationController
     @polls = @init_poll.get_poll_of_group_company.decorate
   end
 
+  def list_questionnaires
+    @list_questionnaires = current_member.poll_series
+  end
+
+  def list_campaigns
+    @list_campaigns = current_member.campaigns.includes(:polls)
+  end
+
+  def setting
+
+  end
+
   def poll_detail
     @member = @poll.member
     @choice_data_chart = []
