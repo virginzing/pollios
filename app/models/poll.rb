@@ -634,8 +634,8 @@ class Poll < ActiveRecord::Base
               SumVotePollWorker.perform_in(1.minutes, poll_id) unless Rails.env.test?
             end
           end
-
-          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id)
+          
+          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds)
 
           unless find_poll.series
             VoteStats.create_vote_stats(find_poll) 

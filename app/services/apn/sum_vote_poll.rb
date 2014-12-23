@@ -5,6 +5,7 @@ class Apn::SumVotePoll
   PUBLIC = 'PUBLIC'
   GROUP = 'GROUP'
   FRIEND = 'FRIEND'
+  SOMEONE = 'Someone'
 
   def initialize(poll)
     @poll = poll
@@ -15,11 +16,23 @@ class Apn::SumVotePoll
   end
 
   def last_notify_at
-    @poll.notify_state_at.present? ? (@poll.notify_state_at - 0.5.seconds) : 1.minutes.ago
+    @poll.notify_state_at.present? ? @poll.notify_state_at : 1.minutes.ago
   end
 
   def get_voted_poll
     @get_voted_poll ||= voted_poll
+  end
+
+  def get_load_privacy
+    @get_load_privacy ||= check_privacy_vote
+  end
+
+  def anonymous
+    if get_load_privacy.first == SOMEONE
+      true
+    else
+      false
+    end
   end
 
   def custom_message
@@ -27,7 +40,7 @@ class Apn::SumVotePoll
 
     @list_fullname = get_voted_poll.map(&:new_fullname)
 
-    new_fullname = check_privacy_vote
+    new_fullname = get_load_privacy
 
     if count == 1
       message = "#{new_fullname[0]} voted a poll: \"#{@poll.title}\""
@@ -72,7 +85,7 @@ class Apn::SumVotePoll
     new_fullname = []
     @list_fullname.each_with_index do |fullname, index|
       if @load_privacy_vote[index]
-        new_fullname << 'Someone'
+        new_fullname << SOMEONE
       else
         new_fullname << fullname
       end

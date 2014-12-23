@@ -51,6 +51,7 @@ class SumVotePollWorker
       end
 
       hash_custom = {
+        anonymous: @apn_sum_vote_poll.anonymous,
         action: ACTION[:vote],
         poll: @poll_serializer_json
       }
