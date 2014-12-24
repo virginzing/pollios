@@ -189,6 +189,8 @@ GEM
     font-awesome-rails (4.2.0.0)
       railties (>= 3.2, < 5.0)
     formatador (0.2.5)
+    friendly_id (5.0.4)
+      activerecord (>= 4.0.0)
     fssm (0.2.10)
     fuubar (2.0.0)
       rspec (~> 3.0)
@@ -504,6 +506,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.0)
   faker
   figaro
+  friendly_id (= 5.0.4)
   fuubar
   gretel
   guard

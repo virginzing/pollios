@@ -1,6 +1,7 @@
 class Member < ActiveRecord::Base
   rolify
   serialize :interests, Array
+  friendly_id :fullname, use: :slugged
   # has_paper_trail
   include PgSearch
   # multisearchable :against => [:fullname, :username, :email]
