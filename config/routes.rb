@@ -178,6 +178,7 @@ Pollios::Application.routes.draw do
     post ':id/save_later',  to: 'polls#save_later'
     post ':id/un_save_later', to: 'polls#un_save_later'
     get ':id/qrcode',       to: 'polls#generate_qrcode'
+    post 'poke_poll',       to: 'polls#poke_poll',  as: :poke_poll
     post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
     post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
     post 'poke_view_no_vote',  to: 'polls#poke_view_no_vote', as: :poke_view_no_vote
@@ -306,6 +307,9 @@ Pollios::Application.routes.draw do
     get 'campaigns',  to: 'companies#list_campaigns', as: :company_campaigns
 
     get 'members',  to: 'companies#company_members',   as: :company_members
+
+    get 'member/:id',  to: 'companies#member_detail',  as: :company_member_detail
+
     get 'members/add',  to: 'companies#add_member',  as: :company_add_member
     get 'members/new_add_surveyor',  to: 'companies#new_add_surveyor', as: :company_new_add_surveyor
     post 'members/add_surveyor',  to: 'companies#add_surveyor', as: :company_add_surveyor

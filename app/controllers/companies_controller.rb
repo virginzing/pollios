@@ -169,6 +169,19 @@ class CompaniesController < ApplicationController
                       .where("group_members.group_id = ? AND group_members.active = 't'", @group) || []
   end
 
+  def member_detail
+    @member = Member.friendly.find(params[:id]).decorate
+
+    @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params, true)
+
+    list_voted_poll_ids = @member.cached_my_voted_all.collect{|e| e["poll_id"] }
+
+    query = @init_poll.get_poll_of_group_company.where("polls.id NOT IN (?)", list_voted_poll_ids) if list_voted_poll_ids.count > 0
+
+    @list_unvote_poll = query.decorate
+
+  end
+
   def new_group
     @group = Group.new
     @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []

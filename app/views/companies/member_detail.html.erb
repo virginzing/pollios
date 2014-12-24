@@ -1,0 +1,131 @@
+<div class="well">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="txt-color-blueDark page-well-header">
+          <%= image_tag( member.show_image, size: '50x50') %> <%= member.fullname %>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<div class="well">
+  <h1><b>Overall Profile</b></h1>
+  <br>
+  <ul class="list-unstyled member-profile">
+    <li>
+      <p>
+        <i class="fa fa-user text-muted" rel="tooltip" title="" data-placement="top" data-original-title="Fullname"></i>&nbsp;&nbsp;<%= member.fullname %>
+      </p>
+    </li>
+    <li>
+      <p class="text-muted">
+        <i class="fa fa-envelope" rel="tooltip" title="" data-placement="top" data-original-title="Email"></i>&nbsp;&nbsp;<a href="mailto:<%= member.email %>"><%= member.email %></a>
+      </p>
+    </li>
+    <li>
+      <p>
+        <i class="fa fa-newspaper-o text-muted" rel="tooltip" title="" data-placement="top" data-original-title="Description"></i>&nbsp;&nbsp;<%= member.description %>
+      </p>
+    </li>
+    <li>
+      <p>
+        <i class="fa fa-rss text-muted" rel="tooltip" title="" data-placement="top" data-original-title="Last Acitivity"></i>&nbsp;&nbsp;<%= member.last_activity %>
+      </p>
+    </li>
+  </ul>
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>List unvote poll</strong></h2>      
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_polls" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">Creator</th>
+                <th width="200">Title</th>
+                <th width="150">In Group</th>
+                <th>Vote</th>
+                <th>View</th>
+                <th>Expire</th>
+                <th width="150">Created At</th>
+                <th>Notification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @list_unvote_poll.each do |poll| %>
+                <tr>
+                  <td>
+                    <div class="profile">
+                      <img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>">
+                      </div>
+                  </td>
+                  <td><%= link_to poll.title, company_polls_detail_path(poll) %></td>
+                  <td>
+                    <ol>
+                    <% poll.groups.each do |group| %>
+                      <li><%= link_to group.name, company_group_detail_path(group) %></li>
+                    <% end %>
+                    </ol>
+                  </td>
+                  <td><%= poll.get_vote_count %></td>
+                  <td><%= poll.get_view_count %></td>
+                  <td><%= poll.expire_status %></td>
+                  <td><%= poll.create_since %></td>
+                  <td><a href="<%= poke_poll_path(id: poll.id, member_id: member.id, sender_id: current_member.id) %>" class="btn btn-danger" id="poke_poll" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+            Poke</a></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+  function poke_something(poke_something) { 
+    poke_something.on('ajax:send', function(xhr) {
+      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    }).on('ajax:success', function (data, status, xhr) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+      $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
+
+    }).on('ajax:error', function (event, xhr, status) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+      var json_response = JSON.parse(xhr.responseText);
+      handleErrorAddGroup(json_response.error_message);
+    });
+  }
+
+  $.poke_poll = $('#poke_poll[data-remote]');
+
+  poke_something($.poke_poll);
+
+  function handleErrorAddGroup (error_message) {
+    $.smallBox({
+      title : "Warning",
+      content: error_message,
+      color: "#C46A69",
+      icon: "fa fa-warning",
+      timeout: 6000
+    });
+  }
+});
+</script>

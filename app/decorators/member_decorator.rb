@@ -49,6 +49,10 @@ class MemberDecorator < Draper::Decorator
     content_tag(:p, object.description)
   end
 
+  def last_activity
+    content_tag(:span, nil , 'data-livestamp' => object.updated_at.to_i)
+  end
+
   private 
 
   def split_email

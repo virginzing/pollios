@@ -57,7 +57,7 @@
                 <tr>
                   <td><%= member.id %></td>
                   <td><img src="<%= member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= member.fullname %>"></td>
-                  <td><%= member.get_name %></td>
+                  <td><%= link_to member.get_name, company_member_detail_path(member) %></td>
                   <td><%= member.email %></td>
                   <td>
                     <ol>

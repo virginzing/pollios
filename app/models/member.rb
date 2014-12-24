@@ -1,9 +1,12 @@
 class Member < ActiveRecord::Base
-  rolify
-  serialize :interests, Array
-  friendly_id :fullname, use: :slugged
-  # has_paper_trail
+  extend FriendlyId
   include PgSearch
+  include MemberHelper
+
+  rolify
+  friendly_id :slug_candidates, use: :slugged
+  # has_paper_trail
+  
   # multisearchable :against => [:fullname, :username, :email]
   pg_search_scope :searchable_member, :against => [:fullname, :username, :email],
                   :using => { 
@@ -14,12 +17,12 @@ class Member < ActiveRecord::Base
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
 
+  serialize :interests, Array
+
   store_accessor :setting
-  
+
   cattr_accessor :current_member, :reported_polls, :shared_polls, :viewed_polls, :voted_polls, :list_friend_block, :list_friend_active,
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
-
-  include MemberHelper
 
   has_many :member_invite_codes, dependent: :destroy
   has_many :member_un_recomments, dependent: :destroy
@@ -223,6 +226,17 @@ class Member < ActiveRecord::Base
       exclude_fields :avatar
     end
 
+  end
+
+  def slug_candidates
+    [
+      :fullname,
+      [:id, :fullname]
+    ]
+  end
+
+  def should_generate_new_friendly_id?
+    fullname_changed?
   end
 
   def self.alert_save_poll

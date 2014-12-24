@@ -637,6 +637,39 @@ ALTER SEQUENCE devices_id_seq OWNED BY devices.id;
 
 
 --
+-- Name: friendly_id_slugs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE friendly_id_slugs (
+    id integer NOT NULL,
+    slug character varying(255) NOT NULL,
+    sluggable_id integer NOT NULL,
+    sluggable_type character varying(50),
+    scope character varying(255),
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: friendly_id_slugs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE friendly_id_slugs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: friendly_id_slugs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE friendly_id_slugs_id_seq OWNED BY friendly_id_slugs.id;
+
+
+--
 -- Name: friends; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1295,7 +1328,8 @@ CREATE TABLE members (
     notification_count integer DEFAULT 0,
     request_count integer DEFAULT 0,
     cover_preset character varying(255) DEFAULT '0'::character varying,
-    register integer DEFAULT 0
+    register integer DEFAULT 0,
+    slug character varying(255)
 );
 
 
@@ -2307,6 +2341,13 @@ ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('friendly_id_slugs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY friends ALTER COLUMN id SET DEFAULT nextval('friends_id_seq'::regclass);
 
 
@@ -2730,6 +2771,14 @@ ALTER TABLE ONLY companies
 
 ALTER TABLE ONLY devices
     ADD CONSTRAINT devices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: friendly_id_slugs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY friendly_id_slugs
+    ADD CONSTRAINT friendly_id_slugs_pkey PRIMARY KEY (id);
 
 
 --
@@ -3245,6 +3294,34 @@ CREATE INDEX index_devices_on_member_id ON devices USING btree (member_id);
 
 
 --
+-- Name: index_friendly_id_slugs_on_slug_and_sluggable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type ON friendly_id_slugs USING btree (slug, sluggable_type);
+
+
+--
+-- Name: index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope ON friendly_id_slugs USING btree (slug, sluggable_type, scope);
+
+
+--
+-- Name: index_friendly_id_slugs_on_sluggable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_friendly_id_slugs_on_sluggable_id ON friendly_id_slugs USING btree (sluggable_id);
+
+
+--
+-- Name: index_friendly_id_slugs_on_sluggable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_friendly_id_slugs_on_sluggable_type ON friendly_id_slugs USING btree (sluggable_type);
+
+
+--
 -- Name: index_friends_on_followed_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3515,6 +3592,13 @@ CREATE INDEX index_members_on_poll_public_req_at ON members USING btree (poll_pu
 --
 
 CREATE INDEX index_members_on_setting ON members USING gist (setting);
+
+
+--
+-- Name: index_members_on_slug; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_members_on_slug ON members USING btree (slug);
 
 
 --
@@ -4291,4 +4375,8 @@ INSERT INTO schema_migrations (version) VALUES ('20141210125039');
 INSERT INTO schema_migrations (version) VALUES ('20141216034741');
 
 INSERT INTO schema_migrations (version) VALUES ('20141216074943');
+
+INSERT INTO schema_migrations (version) VALUES ('20141224034549');
+
+INSERT INTO schema_migrations (version) VALUES ('20141224040545');
 

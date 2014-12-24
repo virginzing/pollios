@@ -1,17 +1,18 @@
 class PollsController < ApplicationController
   protect_from_forgery
 
-  skip_before_action :verify_authenticity_token, if: :json_request?
+  skip_before_action :verify_authenticity_token
+  
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
 
 
-  before_action :set_current_member, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+  before_action :set_current_member, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
   before_action :history_voted_viewed_guest, only: [:guest_poll]
 
-  before_action :set_poll, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
 
   before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -270,6 +271,17 @@ class PollsController < ApplicationController
         @percent_novote = zero_percent
         @percent_view = zero_percent
         @percent_noview = zero_percent
+      end
+    end
+  end
+
+  def poke_poll
+    respond_to do |format|
+      if params[:sender_id] && params[:member_id] && params[:id]
+        ApnPokePollWorker.perform_async(params[:sender_id], [params[:member_id]], params[:id])
+        format.json { render json: [], status: 200 }
+      else
+        format.json { render json: { error_message: "No" }, status: 403 }
       end
     end
   end
