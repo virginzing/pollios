@@ -20,7 +20,7 @@
         <h2><strong>Poll</strong> <i>latest</i></h2> 
           <div class="widget-toolbar">
             <% if Poll.where(member_id: @current_member.id, series: false).present? %>
-              <a href="/polls/<%= Poll.where(member_id: @current_member.id, series: false).first.id %>" class="btn btn-default">More</a>
+              <a href="/company/polls/<%= Poll.where(member_id: @current_member.id, series: false).first.id %>" class="btn btn-default">More</a>
             <% end %>
 
           </div>
@@ -112,7 +112,7 @@
       <header>
         <h2><strong>Poll</strong> <i>latest 1-5</i></h2> 
           <div class="widget-toolbar">
-            <a href="/polls" class="btn btn-default">More</a>
+            <a href="<%= company_polls_url %>" class="btn btn-default">More</a>
           </div>
       </header>
 
@@ -174,7 +174,7 @@
       <header>
         <h2><strong>Poll</strong> <i>popular 1-5</i></h2> 
         <div class="widget-toolbar">
-          <a href="/polls" class="btn btn-default">More</a>
+          <a href="<%= company_polls_url %>" class="btn btn-default">More</a>
         </div>
       </header>
 
