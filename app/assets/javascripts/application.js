@@ -12,4 +12,5 @@
 //= require nprogress-turbolinks
 //= require chartkick
 //= require facebook
+//= require star-rating
 //= require turbolinks

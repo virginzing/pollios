@@ -1,11 +1,7 @@
-class PollDecorator < Draper::Decorator
+class PollDecorator < ApplicationDecorator
   include Draper::LazyHelpers
 
   delegate_all
-
-  def page_number
-    42
-  end
 
   def get_vote_count
     span_badge(object.vote_all)
@@ -35,6 +31,16 @@ class PollDecorator < Draper::Decorator
     object.created_at.strftime("%d %B %Y")
   end
 
+  def get_rating_score
+    arr = object.choices.map(&:vote)
+    # arr.inject{|sum, e| sum + e }.to_f / arr.size
+    arr.reduce(:+).to_f / arr.size
+  end
+
+  def get_top_vote
+    object.get_vote_max.first["answer"]
+  end
+
   def poll_in_group
     content_tag(:li) do
       poll.groups.map do |group|
@@ -46,8 +52,12 @@ class PollDecorator < Draper::Decorator
   def get_photo_poll
     if photo_poll.present?
       image_tag(object.photo_poll.url(:thumbnail))  
-    else
-      image_tag('logo.png')
+    end
+  end
+
+  def search_poll_image
+    if photo_poll.present?
+      image_tag(object.photo_poll.url(:thumbnail))  
     end
   end
   

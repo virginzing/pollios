@@ -14,6 +14,10 @@ class Poll < ActiveRecord::Base
     using: { tsearch: {dictionary: "english", prefix: true} },
     associated_against: {tags: [:name] }
 
+  pg_search_scope :search_with_choice, against: [:title],
+    using: { tsearch: {dictionary: "english", prefix: true, :any_word => true }, :trigram => { :threshold => 0.1 } },
+    associated_against: { choices: [:answer] }
+
   has_many :choices, inverse_of: :poll, dependent: :destroy
   has_many :taggings, dependent: :destroy
 

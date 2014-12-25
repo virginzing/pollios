@@ -34,3 +34,4 @@
 # Member.last.update_attribute(member_type: 1)
 
 
+# Member.find_each(&:save)

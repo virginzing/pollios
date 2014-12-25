@@ -113,8 +113,8 @@
       </div>
       <!-- end search mobile button -->
       <!-- input: search field -->
-      <form action="#search.html" class="header-search pull-right">
-        <input type="text" placeholder="Find polls and more" id="search-fld">
+      <form action="<%= company_search_path %>" class="header-search pull-right" method="get">
+        <input type="text" placeholder="Find polls" name="q">
         <button type="submit">
         <i class="fa fa-search"></i>
         </button>

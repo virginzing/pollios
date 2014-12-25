@@ -301,6 +301,7 @@ Pollios::Application.routes.draw do
     get 'polls',    to: 'companies#list_polls',     as: :company_polls
     get 'polls/:id',to: 'companies#poll_detail',    as: :company_polls_detail
 
+    get 'search',   to: 'companies#search',  as: :company_search
     get 'questionnaires', to: 'companies#list_questionnaires',  as: :company_questionnaires
     delete 'polls/:id/destroy', to: 'companies#delete_poll',  as: :company_delete_poll
 

@@ -23,6 +23,15 @@ class CompaniesController < ApplicationController
     @invite = InviteCode.new
   end
 
+  def search
+    @search = Poll.includes(:choices, :member).select('polls.*').joins(:groups)
+                  .where("poll_groups.group_id IN (?)", current_member.company.groups.map(&:id)).uniq
+                  .where("polls.title LIKE (?)", "%#{params[:q]}%")
+                  .order("polls.created_at DESC")
+                  .paginate(page: params[:page], per_page: 10).decorate
+  end
+
+
   def reports
     @report_polls = Company::CompanyReportPoll.new(company_groups).get_report_poll_in_company  
   end

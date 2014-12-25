@@ -1,4 +1,4 @@
-<% @poll.cached_choices.each do |choice| %>
+<% poll.cached_choices.each do |choice| %>
   <% @choice_data_chart << [choice.answer, choice.vote] %>
 <% end %>
 
@@ -16,7 +16,7 @@
     <div>
       <!-- widget content -->
       <div class="widget-body">
-        <div class="left-inner">
+        <div class="left-inner" style="height: 147px;">
           <%= poll.get_photo_poll %>
 
           <%= poll.header_title %>
@@ -45,7 +45,7 @@
   <div class="col-md-4">
     <div class="jarviswidget" id="wid-id-poll-creator" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
-      <span class="widget-icon"> <i class="glyphicon glyphicon-info-sign"></i> </span>
+      <span class="widget-icon"> <i class="fa fa-user"></i> </span>
       <h2><strong>Creator by</strong></h2>        
     </header>
 
@@ -72,12 +72,19 @@
         
         <ul id="widget-tab-1" class="nav nav-tabs pull-right">
 
-          <li class="active">
-            <a data-toggle="tab" href="#bar_chart"><span class="hidden-mobile hidden-tablet"> Bar Chart</span> </a>
+          <% if poll.rating? %>
+            <li class="active">
+              <a data-toggle="tab" href="#star_rating"><i class="fa fa-lg fa-star"></i><span class="hidden-mobile hidden-tablet"> Star Rating</span> </a>
+              </li>
+            <li>
+          <% end %>
+
+          <li class="<%= 'active' unless poll.rating? %>">
+            <a data-toggle="tab" href="#bar_chart"><i class="fa fa-lg fa-bar-chart"></i><span class="hidden-mobile hidden-tablet"> Bar Chart</span> </a>
             </li>
           <li>
     
-            <a data-toggle="tab" href="#pie_chart"><span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
+            <a data-toggle="tab" href="#pie_chart"><i class="fa fa-lg fa-pie-chart"></i><span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
 
           </li>
 
@@ -100,10 +107,10 @@
             <div class="tab-pane fade" id="normal">
               <div class="panel-padding">
                 <ul class="list-group">
-                  <% @choice_poll_latest = @poll.cached_choices.collect{|e| [e.answer, e.vote] } %>
+                  <% @choice_poll_latest = poll.cached_choices.collect{|e| [e.answer, e.vote] } %>
                   <% @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max %>
                   
-                  <% @poll.cached_choices.each do |choice| %>
+                  <% poll.cached_choices.each do |choice| %>
                   <li class="list-group-item">
                     <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_latest_max) %>"><%= choice.vote %></span>
                     <%= choice.answer %>
@@ -115,7 +122,7 @@
             
             <div class="tab-pane fade" id="pie_chart">
               <div id="chart_div"></div>
-              <% if @poll.vote_all < 1 %>
+              <% if poll.vote_all < 1 %>
                 <div class="alert alert-info fade in">
                   <button class="close" data-dismiss="alert">
                     ×
@@ -126,9 +133,9 @@
               <% end %>
             </div>
 
-            <div class="tab-pane fade in active" id="bar_chart">
+            <div class="tab-pane fade in <%= 'active' unless poll.rating? %>" id="bar_chart">
               <div id="bar_chart_div"></div>
-                <% if @poll.vote_all < 1 %>
+                <% if poll.vote_all < 1 %>
                 <div class="alert alert-info fade in">
                   <button class="close" data-dismiss="alert">
                     ×
@@ -138,6 +145,16 @@
                 </div>  
                 <% end %>
             </div>
+
+            <% if poll.rating? %>
+              <div class="tab-pane fade in active" id="star_rating">
+                <div class="text-center">
+                  <input id="input-id" type="number" class="rating" data-size="lg" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-star-captions="{}" value="<%= poll.get_rating_score %>">
+                </div> 
+              </div>
+            <% end %>
+
+
           </div>
           
           <!-- end widget body text-->
@@ -171,7 +188,7 @@
             </tr>
           </thead>
           <tbody>
-            <% @poll.comments.valid.each do |comment| %>
+            <% poll.comments.valid.each do |comment| %>
               <tr id="comment_<%= comment.id %>">
                 <td><%= comment.id %></td>
                 <td><%= comment.message %></td>
@@ -188,13 +205,13 @@
   </div>
 
 <% if current_member.company? %>
-  <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-view-no-vote" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+  <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= poll.id %>-view-no-vote" data-widget-togglebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-th-list"></i> </span>
       <h2><strong>View but don't vote</strong></h2>    
 
       <div class="widget-toolbar">
-        <a href="<%= poke_view_no_vote_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_view_no_vote" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+        <a href="<%= poke_view_no_vote_path(id: poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_view_no_vote" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
         <i class="fa fa-bullhorn"></i>
         Poke All</a>
       </div>  
@@ -235,7 +252,7 @@
 
   <div class="row">
     <div class="col col-md-6">
-      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-vote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= poll.id %>-vote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
         <header>
           <span class="widget-icon"> <i class="glyphicon glyphicon-check"></i> </span>
           <h2><strong>Vote</strong></h2>     
@@ -281,13 +298,13 @@
       </div>
     </div>
     <div class="col col-md-6">
-      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-novote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= poll.id %>-novote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
         <header>
           <span class="widget-icon"> <i class="glyphicon glyphicon-ban-circle"></i> </span>
           <h2><strong>No Vote</strong></h2>
           
           <div class="widget-toolbar">
-            <a href="<%= poke_dont_vote_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_no_vote" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+            <a href="<%= poke_dont_vote_path(id: poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_no_vote" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
             <i class="fa fa-bullhorn"></i>
             Poke All</a>
           </div>  
@@ -333,7 +350,7 @@
   
   <div class="row">
     <div class="col col-md-6">
-      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-view" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= poll.id %>-view" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
         <header>
           <span class="widget-icon"> <i class="glyphicon glyphicon-eye-open"></i> </span>
           <h2><strong>View</strong></h2>     
@@ -380,13 +397,13 @@
     </div>
 
     <div class="col col-md-6">
-      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-noview" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
+      <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= poll.id %>-noview" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
         <header>
           <span class="widget-icon"> <i class="glyphicon glyphicon-eye-close"></i> </span>
           <h2><strong>No View</strong></h2>
           
           <div class="widget-toolbar">
-            <a href="<%= poke_dont_view_path(id: @poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_no_view" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+            <a href="<%= poke_dont_view_path(id: poll.id, member_id: current_member.id) %>" class="btn btn-danger" id="poke_no_view" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
             Poke All</a>
           </div>  
 
@@ -458,7 +475,7 @@
 
     // Set chart options
     var options = {
-      'title'  : '<%= @poll.title %>',
+      'title'  : '<%= poll.title %>',
       'width'  : '1000',
       'height' : 300
     };
@@ -476,7 +493,7 @@
 </script>
 
 <script type="text/javascript">
-  var vote_all = <%= @poll.vote_all %>;
+  var vote_all = <%= poll.vote_all %>;
   if (vote_all <= 0) {
     $('#chart_div').hide();
     $('#bar_chart_div').hide();
@@ -500,7 +517,7 @@
     var data = google.visualization.arrayToDataTable(chart_data);
     // Set chart options
     var options = {
-      'title'  : '<%= @poll.title %>',
+      'title'  : '<%= poll.title %>',
       'width'  : '1000'
     };
 

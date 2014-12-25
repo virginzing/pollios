@@ -130,6 +130,7 @@ gem 'will_paginate_mongoid'
 
 gem 'itunes-receipt' , :git => 'git://github.com/nov/itunes-receipt.git'
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 # gem 'zeus'
 
 gem 'rack-cache'

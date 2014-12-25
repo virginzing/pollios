@@ -1,0 +1,74 @@
+<div id="content">
+
+  <!-- row -->
+  
+  <div class="row">
+  
+    <div class="col-sm-12">
+      <div class="well">
+        <h1> Search <span class="semi-bold">Polls</span></h1>
+        <br>
+        <%= form_tag(company_search_path, method: 'get') do %>
+          <div class="input-group input-group-lg">
+            <input class="form-control input-lg" type="text" name="q" placeholder="Search..." id="search-member" name="q">
+            <div class="input-group-btn">
+              <button type="submit" class="btn btn-default">
+                &nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-search fa-lg"></i>&nbsp;&nbsp;&nbsp;
+              </button>
+            </div>
+          </div>
+        <% end %>
+
+        <h1 class="font-md"> Search Results for <span class="semi-bold">Polls</span><small class="text-danger"> &nbsp;&nbsp;(<%= @search.total_entries %> Results)</small></h1>
+
+        <% @search.each do |poll| %>
+
+          <div class="search-results clearfix">
+            <h4><%= link_to poll.title, company_polls_detail_path(poll) %></h4>
+            <%= poll.search_poll_image %>
+            <% if poll.rating? %>
+              <div class="rating" style="width: 100%">
+                <input id="input-id" type="number" class="rating" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-star-captions="{}" value="<%= poll.get_rating_score %>"> 
+              </div>
+            <% end %>
+            <div>
+              <ul class="list-unstyled list-inline summary">
+                <li><i class="fa fa-check-square"></i> <%= poll.vote_all %> Votes</li>
+                <li><i class="fa fa-eye"></i> <%= poll.view_all %> Views</li>
+                <li><i class="fa fa-comments"></i> <%= poll.comment_count %> Comments</li>
+                <li><i class="fa fa-lock"></i> <%= poll.report_count %> Reports</li>
+              </ul>
+
+              <% if poll.vote_all > 0 && !poll.rating? %>
+                <p class="top-vote">
+                  <div class="url text-success">
+                    <%= poll.get_top_vote %>
+                  </div>
+                </p>
+              <% end %>
+
+              <p class="description">
+                <div class="text-mute"><%= poll.create_since %> - <%= link_to poll.member.fullname, company_member_detail_path(poll.member) %> </div>
+              </p>
+
+            </div>  
+
+          </div>
+
+        <% end %>
+
+
+
+
+        <div class="text-center">
+          <%= will_paginate @search, renderer: BootstrapPagination::Rails %>
+        </div>
+
+      </div>
+    </div>
+  
+  </div>
+  
+  <!-- end row -->
+
+</div>
