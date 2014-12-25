@@ -634,14 +634,13 @@ end
 
 # http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
-# curl -F "member_id=93" -F "cover_preset=2" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=179" -F "fullname=WelbackCome" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "id": "123",
-#     "email": "nut123@code-app.com",
-#     "name": "Nuttapon Achachotipong",
-#     "gender": 1,
-#     "device_token": "12316fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda775"
+#     "id": "696969",
+#     "email": "welback@gmail.com",
+#     "name": "Welback",
+#     "gender": 1
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
 # curl "http://localhost:3000/poll/19/overall_timeline.json" -H 'Authorization: Token token="c209eb68b90ce508b0eb3be8e7b9f7cd"' -i
@@ -650,6 +649,11 @@ end
 #     "name": "1234567890",
 #     "email": "1234567890@gmail.com"
 # }' -X POST http://localhost:3000/authen/facebook.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "email": "nuttapon@code-app.com"
+# }' -X POST http://localhost:3000/users_forgotpassword.json -i
 
 
 # Member.all.each do |p|

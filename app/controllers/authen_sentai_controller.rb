@@ -178,11 +178,13 @@ class AuthenSentaiController < ApplicationController
         @forgot_password = true
         @password_reset_token = @response["password_reset_token"]
 
-        MemberMailer.password_reset(Member.find_by_email(forgotpassword_params["email"]), @password_reset_token).deliver
+        MemberMailer.delay.password_reset(Member.find_by_email(forgotpassword_params["email"]), @password_reset_token)
         wants.js
+        wants.json { render json: Hash["response_status" => "OK", "response_message" => "Email sent with password reset instructions"] }
       else
         @forgot_password = false
         wants.js
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Email not found"] }
       end
     end
   end
