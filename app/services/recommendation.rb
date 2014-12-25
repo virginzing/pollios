@@ -4,6 +4,10 @@ class Recommendation
     @list_member_block = member.cached_block_friend
   end
 
+  def get_friend_active
+    @get_friend_active ||= @member.cached_get_friend_active.map(&:id)
+  end
+
   def unrecommented
     @unrecomment_id ||= @member.cached_get_unrecomment.map(&:unrecomment_id)
   end
@@ -55,6 +59,7 @@ class Recommendation
     query = query.where("id NOT IN (?)", following) if following.length > 0
     query = query.where("id NOT IN (?)", unrecommented) if unrecommented.length > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.length > 0
+    query = query.where("id NOT IN (?)", get_friend_active) if get_friend_active.size > 0
     query = query.where("id != ?", @member.id)
     return query
   end
