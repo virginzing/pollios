@@ -16,7 +16,7 @@
     <div>
       <!-- widget content -->
       <div class="widget-body">
-        <div class="left-inner" style="height: 147px;">
+        <div class="left-inner" style="">
           <%= poll.get_photo_poll %>
 
           <%= poll.header_title %>
@@ -34,6 +34,10 @@
             <li><i class="fa fa-comments"></i> <%= poll.comment_count %> Comments</li>
             <li><i class="fa fa-lock"></i> <%= poll.report_count %> Reports</li>
           </ul>
+
+          <div class="qrcode">
+            <div class="btn btn-default" data-toggle="modal" data-target="#qrcode_poll" rel="tooltip" data-original-title="Qrcode"><i class="fa fa-qrcode"></i></div>
+          </div>
 
         </div>
       </div> <!-- widget-->
@@ -451,6 +455,33 @@
 
 <%= content_tag :div, "", id: 'choice_data_chart', data: { polls: @choice_data_chart } %>
 <%= content_tag :div, "", id: 'choice_data_bar_chart', data: { polls: @choice_data_chart.insert(0, ['Answer', 'Vote']) } %>
+
+<div class="well text-center">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <%= link_to '<i class="fa fa-trash-o fa-lg"></i> Delete Poll'.html_safe , company_delete_poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-lg'%>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="qrcode_poll" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><div class="text-center"><%= poll.title %></div></h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <%= image_tag(@qr) %>
+        </div>
+      </div>
+<!--       <div class="modal-footer">
+
+      </div> -->
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 

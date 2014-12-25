@@ -42,7 +42,7 @@
               <% if poll.vote_all > 0 && !poll.rating? %>
                 <p class="top-vote">
                   <div class="url text-success">
-                    <%= poll.get_top_vote %>
+                    <i class="fa fa-angle-double-right"></i> <%= poll.get_top_vote %>
                   </div>
                 </p>
               <% end %>

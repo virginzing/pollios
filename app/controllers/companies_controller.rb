@@ -154,7 +154,6 @@ class CompaniesController < ApplicationController
     end    
   end
 
-
   ### Group ###
 
   def list_group
