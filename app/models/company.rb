@@ -1,7 +1,8 @@
 class Company < ActiveRecord::Base
 
   has_many :invite_codes, dependent: :destroy
-
+  has_many :branches, dependent: :destroy
+  
   has_many :group_companies, dependent: :destroy
   has_many :groups, through: :group_companies , source: :group
 

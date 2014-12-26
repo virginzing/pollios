@@ -72,6 +72,39 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: access_webs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE access_webs (
+    id integer NOT NULL,
+    member_id integer,
+    accessable_id integer,
+    accessable_type character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: access_webs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE access_webs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: access_webs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE access_webs_id_seq OWNED BY access_webs.id;
+
+
+--
 -- Name: activity_feeds; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -386,6 +419,71 @@ ALTER SEQUENCE apn_pull_notifications_id_seq OWNED BY apn_pull_notifications.id;
 
 
 --
+-- Name: branch_polls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE branch_polls (
+    id integer NOT NULL,
+    poll_id integer,
+    branch_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: branch_polls_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE branch_polls_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: branch_polls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE branch_polls_id_seq OWNED BY branch_polls.id;
+
+
+--
+-- Name: branches; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE branches (
+    id integer NOT NULL,
+    name character varying(255),
+    address text,
+    company_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: branches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE branches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: branches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE branches_id_seq OWNED BY branches.id;
+
+
+--
 -- Name: campaign_guests; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -579,8 +677,8 @@ CREATE TABLE companies (
     address character varying(255),
     telephone_number character varying(255),
     max_invite_code integer DEFAULT 0,
-    select_service integer,
-    internal_poll integer DEFAULT 0
+    internal_poll integer DEFAULT 0,
+    using_service character varying(255)[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -2229,6 +2327,13 @@ ALTER SEQUENCE watcheds_id_seq OWNED BY watcheds.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY access_webs ALTER COLUMN id SET DEFAULT nextval('access_webs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY activity_feeds ALTER COLUMN id SET DEFAULT nextval('activity_feeds_id_seq'::regclass);
 
 
@@ -2286,6 +2391,20 @@ ALTER TABLE ONLY apn_notifications ALTER COLUMN id SET DEFAULT nextval('apn_noti
 --
 
 ALTER TABLE ONLY apn_pull_notifications ALTER COLUMN id SET DEFAULT nextval('apn_pull_notifications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY branch_polls ALTER COLUMN id SET DEFAULT nextval('branch_polls_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY branches ALTER COLUMN id SET DEFAULT nextval('branches_id_seq'::regclass);
 
 
 --
@@ -2646,6 +2765,14 @@ ALTER TABLE ONLY watcheds ALTER COLUMN id SET DEFAULT nextval('watcheds_id_seq':
 
 
 --
+-- Name: access_webs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY access_webs
+    ADD CONSTRAINT access_webs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: activity_feeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2715,6 +2842,22 @@ ALTER TABLE ONLY apn_notifications
 
 ALTER TABLE ONLY apn_pull_notifications
     ADD CONSTRAINT apn_pull_notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: branch_polls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY branch_polls
+    ADD CONSTRAINT branch_polls_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: branches_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY branches
+    ADD CONSTRAINT branches_pkey PRIMARY KEY (id);
 
 
 --
@@ -3133,6 +3276,20 @@ CREATE UNIQUE INDEX by_member_and_poll_series ON history_view_questionnaires USI
 
 
 --
+-- Name: index_access_webs_on_accessable_id_and_accessable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_access_webs_on_accessable_id_and_accessable_type ON access_webs USING btree (accessable_id, accessable_type);
+
+
+--
+-- Name: index_access_webs_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_access_webs_on_member_id ON access_webs USING btree (member_id);
+
+
+--
 -- Name: index_activity_feeds_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3224,6 +3381,27 @@ CREATE INDEX index_apn_notifications_on_device_id ON apn_notifications USING btr
 
 
 --
+-- Name: index_branch_polls_on_branch_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_branch_polls_on_branch_id ON branch_polls USING btree (branch_id);
+
+
+--
+-- Name: index_branch_polls_on_poll_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_branch_polls_on_poll_id ON branch_polls USING btree (poll_id);
+
+
+--
+-- Name: index_branches_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_branches_on_company_id ON branches USING btree (company_id);
+
+
+--
 -- Name: index_campaign_guests_on_campaign_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3284,6 +3462,13 @@ CREATE INDEX index_comments_on_poll_id ON comments USING btree (poll_id);
 --
 
 CREATE INDEX index_companies_on_member_id ON companies USING btree (member_id);
+
+
+--
+-- Name: index_companies_on_using_service; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_companies_on_using_service ON companies USING gin (using_service);
 
 
 --
@@ -4379,4 +4564,12 @@ INSERT INTO schema_migrations (version) VALUES ('20141216074943');
 INSERT INTO schema_migrations (version) VALUES ('20141224034549');
 
 INSERT INTO schema_migrations (version) VALUES ('20141224040545');
+
+INSERT INTO schema_migrations (version) VALUES ('20141226061227');
+
+INSERT INTO schema_migrations (version) VALUES ('20141226062021');
+
+INSERT INTO schema_migrations (version) VALUES ('20141226062642');
+
+INSERT INTO schema_migrations (version) VALUES ('20141226064134');
 
