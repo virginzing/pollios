@@ -384,6 +384,7 @@ Pollios::Application.routes.draw do
 
   get 'users_activate',     to: 'members#activate_account', as: :users_activate
   get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
+  
   get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
   get 'waiting_approve',  to: 'authen_sentai#waiting_approve',  as: :waiting_approve
 
@@ -394,6 +395,8 @@ Pollios::Application.routes.draw do
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
 
+  post 'new_sigin_sentai', to: 'authen_sentai#new_sigin_sentai', as: :new_users_signin
+  
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'
   post 'users_forgotpassword',  to: 'authen_sentai#forgot_password'

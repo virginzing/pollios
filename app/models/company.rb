@@ -1,5 +1,10 @@
 class Company < ActiveRecord::Base
 
+  belongs_to :member
+
+  has_many :company_members, dependent: :destroy
+  has_many :members, through: :company_members, source: :member
+
   has_many :invite_codes, dependent: :destroy
   has_many :branches, dependent: :destroy
   

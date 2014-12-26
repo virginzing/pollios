@@ -2,14 +2,14 @@ class CompaniesController < ApplicationController
   decorates_assigned :poll, :member
 
   skip_before_action :verify_authenticity_token
-  before_action :only_company_account
+  # before_action :only_company_account
   before_action :signed_user
   before_action :set_company
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail]
   before_action :set_group, only: [:remove_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
 
-  expose(:group_company) { current_member.company.groups if current_member }
+  expose(:group_company) { current_member.get_company.groups if current_member }
 
   def new
     @invite = InviteCode.new
@@ -25,7 +25,7 @@ class CompaniesController < ApplicationController
 
   def search
     @search = Poll.includes(:choices, :member).select('polls.*').joins(:groups)
-                  .where("poll_groups.group_id IN (?)", current_member.company.groups.map(&:id)).uniq
+                  .where("poll_groups.group_id IN (?)", current_member.get_company.groups.map(&:id)).uniq
                   .where("polls.title LIKE (?)", "%#{params[:q]}%")
                   .order("polls.created_at DESC")
                   .paginate(page: params[:page], per_page: 10).decorate
@@ -109,7 +109,7 @@ class CompaniesController < ApplicationController
   end
 
   def list_polls  ## company polls
-    @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params, true)
+    @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params, true)
     @polls = @init_poll.get_poll_of_group_company.decorate
   end
 
@@ -128,7 +128,7 @@ class CompaniesController < ApplicationController
   def poll_detail
     @member = @poll.member
     @choice_data_chart = []
-    if current_member.company?
+    if current_member.get_company.present?
       init_company = PollDetailCompany.new(@poll.groups, @poll)
       @member_group = init_company.get_member_in_group
       @member_voted_poll = init_company.get_member_voted_poll
@@ -180,7 +180,7 @@ class CompaniesController < ApplicationController
   def member_detail
     @member = Member.friendly.find(params[:id]).decorate
 
-    @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params, true)
+    @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params, true)
 
     list_voted_poll_ids = @member.cached_my_voted_all.collect{|e| e["poll_id"] }
 
@@ -265,7 +265,7 @@ class CompaniesController < ApplicationController
 
   def group_poll_detail
     @choice_data_chart = []
-    if current_member.company?
+    if current_member.get_company?
       init_company = PollDetailCompany.new([@group], @poll)
       @member_group = init_company.get_member_in_group
       puts "member_group => #{@member_group}"
@@ -444,7 +444,7 @@ class CompaniesController < ApplicationController
   end
 
   def set_company
-    @find_company = current_member.company
+    @find_company = current_member.company || current_member.company_member.company
   end
 
   def set_group

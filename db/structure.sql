@@ -702,6 +702,38 @@ ALTER SEQUENCE companies_id_seq OWNED BY companies.id;
 
 
 --
+-- Name: company_members; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE company_members (
+    id integer NOT NULL,
+    company_id integer,
+    member_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: company_members_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE company_members_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: company_members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE company_members_id_seq OWNED BY company_members.id;
+
+
+--
 -- Name: devices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2453,6 +2485,13 @@ ALTER TABLE ONLY companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY company_members ALTER COLUMN id SET DEFAULT nextval('company_members_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::regclass);
 
 
@@ -2906,6 +2945,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY companies
     ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: company_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY company_members
+    ADD CONSTRAINT company_members_pkey PRIMARY KEY (id);
 
 
 --
@@ -3469,6 +3516,20 @@ CREATE INDEX index_companies_on_member_id ON companies USING btree (member_id);
 --
 
 CREATE INDEX index_companies_on_using_service ON companies USING gin (using_service);
+
+
+--
+-- Name: index_company_members_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_company_members_on_company_id ON company_members USING btree (company_id);
+
+
+--
+-- Name: index_company_members_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_company_members_on_member_id ON company_members USING btree (member_id);
 
 
 --
@@ -4572,4 +4633,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141226062021');
 INSERT INTO schema_migrations (version) VALUES ('20141226062642');
 
 INSERT INTO schema_migrations (version) VALUES ('20141226064134');
+
+INSERT INTO schema_migrations (version) VALUES ('20141226072039');
 

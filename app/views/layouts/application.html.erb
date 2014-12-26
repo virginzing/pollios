@@ -149,7 +149,7 @@
     will not initialize.
     -->
     <nav>
-      <% if current_member.company? %>
+      <% if current_member.get_company.present? %>
       <%= render partial: 'sherd/nav_company' %>
       <% else %>
       <%= render partial: 'sherd/nav_brand' %>

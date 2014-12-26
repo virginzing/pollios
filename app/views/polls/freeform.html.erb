@@ -104,7 +104,7 @@
 
                 </section>
 
-                <% if current_member.company? %>
+                <% if current_member.get_company.present? %>
 
                 <section class="col col-5"> 
                   <div class="form-group">
@@ -177,7 +177,7 @@
 
 </script>
 
-<% if current_member.company? %>
+<% if current_member.get_company.present? %>
   <script type="text/javascript">
   $( document ).ready(function() {
     $("#group_list").select2({

@@ -123,27 +123,27 @@ class PollsController < ApplicationController
 
   def create_new_poll
     @poll = Poll.new
-    @group_list = current_member.company.groups if current_member.company?
+    @group_list = current_member.get_company.groups if current_member.get_company.present?
   end
 
   def binary
     @poll = Poll.new
-    @group_list = current_member.company.groups if current_member.company?
+    @group_list = current_member.get_company.groups if current_member.get_company.present?
   end
 
   def rating
     @poll = Poll.new
-    @group_list = current_member.company.groups if current_member.company?
+    @group_list = current_member.get_company.groups if current_member.get_company.present?
   end
 
   def freeform
     @poll = Poll.new
-    @group_list = current_member.company.groups if current_member.company?
+    @group_list = current_member.get_company.groups if current_member.get_company.present?
   end
 
   def index
-    if current_member.company?
-      @init_poll = PollOfGroup.new(current_member, current_member.company.groups, options_params)
+    if current_member.get_company.present?
+      @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
       @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
     else
       @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
@@ -183,7 +183,7 @@ class PollsController < ApplicationController
         Activity.create_activity_poll(current_member, @poll, 'Create')
         @poll.flush_cache
         flash[:success] = "Create poll successfully."
-        redirect_to current_member.company? ? company_polls_path : polls_path
+        redirect_to current_member.get_company.present? ? company_polls_path : polls_path
       else
         # puts "#{@poll.errors.full_messages}"
         render @build_poll.type_poll
@@ -251,7 +251,7 @@ class PollsController < ApplicationController
 
   def show
     @choice_data_chart = []
-    if current_member.company?
+    if current_member.get_company.present?
       init_company = PollDetailCompany.new(params[:group_id] || @poll.groups, @poll)
       @member_group = init_company.get_member_in_group
       @member_voted_poll = init_company.get_member_voted_poll
@@ -288,7 +288,7 @@ class PollsController < ApplicationController
 
   def poke_dont_vote
     respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.company.groups, @poll)
+      init_company = PollDetailCompany.new(@current_member.get_company.groups, @poll)
       @member_novoted_poll = init_company.get_member_not_voted_poll
 
       if @member_novoted_poll.length > 0
@@ -303,7 +303,7 @@ class PollsController < ApplicationController
 
   def poke_dont_view
     respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.company.groups, @poll)
+      init_company = PollDetailCompany.new(@current_member.get_company.groups, @poll)
       @member_noviewed_poll = init_company.get_member_not_viewed_poll
 
       if @member_noviewed_poll.length > 0
@@ -318,7 +318,7 @@ class PollsController < ApplicationController
 
   def poke_view_no_vote
     respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.company.groups, @poll)
+      init_company = PollDetailCompany.new(@current_member.get_company.groups, @poll)
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       if @member_viewed_no_vote_poll.length > 0
@@ -680,7 +680,7 @@ class PollsController < ApplicationController
   end
 
   def raise_exception_without_group
-    unless @current_member.company?
+    unless @current_member.get_company.present?
       if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
         if @poll.member_id != @current_member.id
           raise ExceptionHandler::NotFound, "You've leave this group already"

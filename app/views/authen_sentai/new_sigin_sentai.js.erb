@@ -1,0 +1,44 @@
+$.login = <%= raw @login || false %>;
+$.only_access_web = <%= raw @access_web || false %>;
+
+if ($.login) {
+  if ($.only_access_web) {
+    handleLoginSuccess();
+  } else {
+    handleOnlyAccessWeb();
+  }
+} else {
+  handleLoginError();
+}
+
+function handleLoginError() {
+  
+  $("[name=authen]").parent().removeClass("state-success").addClass("state-error");
+  $("[name=password]").parent().removeClass("state-success").addClass("state-error");
+
+  $.smallBox({
+    title : "Warning",
+    content: "Invalid username or password.",
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}
+
+function handleLoginSuccess() {
+  window.location.href = "<%= redirect_back dashboard_url %>";
+}
+
+function handleOnlyAccessWeb() {
+  
+  $("[name=authen]").parent().removeClass("state-success").addClass("state-error");
+  $("[name=password]").parent().removeClass("state-success").addClass("state-error");
+
+  $.smallBox({
+    title : "Warning",
+    content: "Only admin of company",
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}

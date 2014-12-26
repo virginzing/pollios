@@ -168,7 +168,7 @@
     </div>
     </div>
 
-<% if current_member.company? %>
+<% if current_member.get_company.present? %>
   <div class="jarviswidget jarviswidget-color-darken" id="wid-id-poll-<%= @poll.id %>-view-no-vote" data-widget-colorbutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"  data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-th-list"></i> </span>

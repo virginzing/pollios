@@ -11,7 +11,7 @@ class Member < ActiveRecord::Base
   pg_search_scope :searchable_member, :against => [:fullname, :username, :email],
                   :using => { 
                     :tsearch => { :prefix => true, :dictionary => "english" },
-                    :trigram => { :threshold => 0.5 }
+                    :trigram => { :threshold => 0.1 }
                   }
 
   mount_uploader :avatar, MemberUploader
@@ -32,6 +32,8 @@ class Member < ActiveRecord::Base
 
   has_one :company, dependent: :destroy
 
+  has_one :company_member, dependent: :destroy
+  
   has_many :comments, dependent: :destroy
   has_many :history_purchases, dependent: :destroy
 
@@ -237,6 +239,10 @@ class Member < ActiveRecord::Base
 
   def should_generate_new_friendly_id?
     fullname_changed?
+  end
+
+  def get_company
+    company || company_member.company
   end
 
   def self.alert_save_poll

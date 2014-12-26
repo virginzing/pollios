@@ -112,7 +112,7 @@
               </div>
             </section> -->
             
-            <% if current_member.company? %>
+            <% if current_member.get_company.present? %>
             <section> 
                 <label class="label">In Group</label>
                 <label class="select">
@@ -158,7 +158,7 @@
   $(".remove_nested_fields")[1].style.visibility='hidden';
 
 </script>
-<% if current_member.company? %>
+<% if current_member.get_company.present? %>
   <script type="text/javascript">
   $( document ).ready(function() {
     $("#group_list").select2({

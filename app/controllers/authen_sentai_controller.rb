@@ -1,5 +1,5 @@
 class AuthenSentaiController < ApplicationController
-	protect_from_forgery :except => [:signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company]
+	protect_from_forgery :except => [:new_sigin_sentai, :signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company]
 	# before_action :current_login?, only: [:signin]
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
@@ -44,6 +44,36 @@ class AuthenSentaiController < ApplicationController
 		flash[:success] = "Signout sucessfully."
 		redirect_to users_signin_url
 	end
+
+  def new_sigin_sentai
+    @response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
+    respond_to do |wants|
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app]))
+      if @response["response_status"] == "OK"
+         @login = true
+        if @auth.member.company? || AccessWeb.with_company(member.id).present?
+          @access_web = true
+          if sessions_params[:remember_me]
+            cookies.permanent[:auth_token] = member.auth_token
+          else
+            cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
+          end
+          wants.html
+          wants.json
+          wants.js
+        else
+          flash[:warning] = "Only admin of company"
+          wants.js
+        end
+      else
+        @login = false
+        flash[:warning] = "Invalid email or password."
+        wants.html { redirect_to(:back) }
+        wants.json
+        wants.js
+      end
+    end
+  end
 
 	def signin_sentai
 

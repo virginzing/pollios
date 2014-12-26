@@ -367,7 +367,7 @@ class MembersController < ApplicationController
   end
 
   def set_company
-    @find_company = current_member.company
+    @find_company = current_member.get_company
   end
 
   def report_params

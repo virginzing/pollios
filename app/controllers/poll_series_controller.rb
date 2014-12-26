@@ -107,7 +107,7 @@ class PollSeriesController < ApplicationController
         poll.choices.build
       end
     end
-    @group_list = current_member.company.groups if current_member.company?
+    @group_list = current_member.get_company.groups if current_member.get_company.present?
   end
 
   def same_choice
@@ -115,7 +115,7 @@ class PollSeriesController < ApplicationController
     2.times do
       @poll_series.polls.build
     end
-    @group_list = current_member.company.groups if current_member.company?
+    @group_list = current_member.get_company.groups if current_member.get_company.present?
   end
 
   def show
@@ -164,7 +164,7 @@ class PollSeriesController < ApplicationController
     @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
     @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
 
-    if current_member.company?
+    if current_member.get_company.present?
       is_public = false
       @poll_series.in_group = true
       @poll_series.in_group_ids = poll_series_params[:group_id]

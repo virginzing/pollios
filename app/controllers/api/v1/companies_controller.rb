@@ -16,7 +16,7 @@ module Api
       before_action :set_company
 
       expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
-      expose(:group_company) { @current_member.company.groups if @current_member }
+      expose(:group_company) { @current_member.get_company.groups if @current_member }
 
       def polls
         @init_poll = PollOfGroup.new(@current_member, @group, options_params)
@@ -26,6 +26,9 @@ module Api
 
       def poll_detail
         @poll = Poll.cached_find(params[:id])
+        @group_by_name ||= @init_poll.group_by_name
+        @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+        @total_entries = @polls.total_entries
         init_company = PollDetailCompany.new(@poll.groups, @poll)
         @member_group = init_company.get_member_in_group
         @member_voted_poll = init_company.get_member_voted_poll
@@ -37,9 +40,6 @@ module Api
 
       def poll_helper
         @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-        @group_by_name ||= @init_poll.group_by_name
-        @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-        @total_entries = @polls.total_entries
       end
 
       ## main of company ##
@@ -66,7 +66,7 @@ module Api
       end
 
       def set_company
-        @company = @current_member.company
+        @company = @current_member.get_company
       end
 
       def set_group
