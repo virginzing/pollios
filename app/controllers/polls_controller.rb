@@ -602,9 +602,9 @@ class PollsController < ApplicationController
     Comment.transaction do
       begin
         raise ExceptionHandler::Forbidden, "This poll disallow your comment" unless @poll.allow_comment
-        # mentionable_list = comment_params[:mentionable_list]
+        mentionable_list = comment_params[:mentionable_list]
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-        # @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
+        @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
         # @poll.increment!(:comment_count)
         @poll.update_columns(comment_count: @poll.comment_count + 1)
 
