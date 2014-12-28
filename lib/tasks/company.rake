@@ -17,5 +17,5 @@ namespace :company do
       g.update(group_type: :company) if g.company?
     end
   end
-  
+
 end
