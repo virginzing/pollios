@@ -11,4 +11,11 @@ namespace :company do
     end
   end
 
+  task update_group_type: :environment do
+    Group.update_all(group_type: 0)
+    Group.all.each do |g|
+      g.update(group_type: :company) if g.company?
+    end
+  end
+  
 end

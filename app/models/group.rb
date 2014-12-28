@@ -328,6 +328,10 @@ class Group < ActiveRecord::Base
     admin_post_only.present? ? true : false
   end
 
+  def company?
+    group_company.present?
+  end
+
   def as_json options={}
     {
       id: id,

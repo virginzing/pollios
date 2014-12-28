@@ -678,7 +678,9 @@ class Member < ActiveRecord::Base
     if find_group_member
       # find_group_member.group.decrement!(:member_count) if type == "L" && find_group_member.group.member_count > 0 
       find_group_member.destroy
-      self.remove_role :group_admin, find_group_member.group
+      if find_group_member.group.company?
+        self.remove_role :group_admin, find_group_member.group
+      end
     end
     cached_flush_active_group
     find_group_member.group

@@ -184,9 +184,13 @@ class CompaniesController < ApplicationController
 
     list_voted_poll_ids = @member.cached_my_voted_all.collect{|e| e["poll_id"] }
 
-    query = @init_poll.get_poll_of_group_company.where("polls.id NOT IN (?)", list_voted_poll_ids) if list_voted_poll_ids.count > 0
-
-    @list_unvote_poll = query.decorate
+    if @member.get_group_active.with_group_type(:company).present?
+      query = @init_poll.get_poll_of_group_company
+      query = query.where("polls.id NOT IN (?)", list_voted_poll_ids) if list_voted_poll_ids.count > 0
+      @list_unvote_poll = query.decorate
+    else
+      @list_unvote_poll = []
+    end
 
   end
 
@@ -330,7 +334,8 @@ class CompaniesController < ApplicationController
   end
 
   def company_members
-    @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
+    # @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
+    @members = Member.joins(:company_member).includes(:groups).where("company_members.company_id = ?", set_company.id).uniq.references(:groups)
   end
 
   def add_member # wait for new imprement
@@ -338,8 +343,8 @@ class CompaniesController < ApplicationController
     query = Member.searchable_member(params[:q]).without_member_type(:company)
     @members = query
 
-    @member_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
-
+    # @member_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
+      @member_company = Member.joins(:company_member).includes(:groups).where("company_members.company_id = ?", set_company.id).uniq.references(:groups)
   end
 
   def search_member
@@ -358,6 +363,7 @@ class CompaniesController < ApplicationController
 
           unless find_user_group.include?(this_group.id)
             this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
+            CompanyMember.add_member_to_company(find_user, @find_company)
             Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
             this_group.increment!(:member_count)
             find_user.cached_flush_active_group
@@ -379,10 +385,14 @@ class CompaniesController < ApplicationController
 
   def delete_member_company
     Group.transaction do 
+      find_member = Member.find(params[:member_id])
+
       params[:group_id].each do |group_id|
-        @group = Member.find(params[:member_id]).cancel_or_leave_group(group_id, "L")
+        @group = find_member.cancel_or_leave_group(group_id, "L")
         Group.flush_cached_member_active(group_id)
       end
+
+      CompanyMember.remove_member_to_company(find_member, Company.find(params[:company_id]))
 
       respond_to do |format|
         if @group

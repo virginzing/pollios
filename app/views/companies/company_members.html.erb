@@ -67,7 +67,7 @@
                     <% end %>
                     </ol>
                   </td>
-                  <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= company_delete_member_path(member_id: member.id, group_id: list_group) %>" rel="nofollow">Delete</a></td>
+                  <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= company_delete_member_path(member_id: member.id, group_id: list_group, company_id: @find_company.id) %>" rel="nofollow">Delete</a></td>
                 </tr>
               <% end %>
             </tbody>

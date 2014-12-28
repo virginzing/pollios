@@ -9,5 +9,10 @@ class CompanyMember < ActiveRecord::Base
       cm.save!
     end
   end
+
+  def self.remove_member_to_company(member, company)
+    find_company_member = CompanyMember.find_by(member: member, company: company)
+    find_company_member.destroy if find_company_member.present?
+  end
 end
 

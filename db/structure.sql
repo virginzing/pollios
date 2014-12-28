@@ -571,7 +571,8 @@ CREATE TABLE campaigns (
     end_sample integer,
     expire timestamp without time zone,
     description text,
-    how_to_redeem text
+    how_to_redeem text,
+    company_id integer
 );
 
 
@@ -3477,6 +3478,13 @@ CREATE INDEX index_campaign_members_on_member_id ON campaign_members USING btree
 
 
 --
+-- Name: index_campaigns_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_campaigns_on_company_id ON campaigns USING btree (company_id);
+
+
+--
 -- Name: index_campaigns_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4635,4 +4643,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141226062642');
 INSERT INTO schema_migrations (version) VALUES ('20141226064134');
 
 INSERT INTO schema_migrations (version) VALUES ('20141226072039');
+
+INSERT INTO schema_migrations (version) VALUES ('20141228105648');
 

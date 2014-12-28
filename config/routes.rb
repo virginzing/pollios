@@ -334,6 +334,11 @@ Pollios::Application.routes.draw do
     get 'new_member', to: 'companies#new_member', as: :new_member_to_company
 
     get 'setting',  to: 'companies#setting',  as: :company_setting
+
+    scope 'feedback' do
+      get 'branch', to: 'companies#feedback_branch',  as: :feedback_branch
+    end
+    
   end
 
   scope 'api/group/:group_id' do
