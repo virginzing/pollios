@@ -84,6 +84,7 @@ class Group < ActiveRecord::Base
 
       clear_request_group(@member, @member)
 
+
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id)
 
@@ -110,6 +111,10 @@ class Group < ActiveRecord::Base
           find_member_in_group.update!(active: true)
         else
           GroupMember.create!(member_id: @friend.id, active: true, is_master: false, group_id: @group.id)
+        end
+
+        if @group.group_type_company?
+          CompanyMember.add_member_to_company(@member, @group.get_company)  
         end
 
         Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking

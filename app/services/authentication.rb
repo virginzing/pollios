@@ -154,6 +154,7 @@ class Authentication
         follow_pollios
         add_new_group_company if member_type == "3"
         join_group_automatic if create_member_via_company?
+        join_company_member if create_member_via_company?
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
       end
@@ -194,6 +195,10 @@ class Authentication
     find_main_group = Company.find(company_id.to_i).main_groups.first
     find_main_group.group_members.create!(member_id: @member.id, active: true, is_master: false)
     find_main_group.increment!(:member_count)
+  end
+
+  def join_company_member
+    CompanyMember.add_member_to_company(@member, Company.find(company_id.to_i))
   end
 
   def follow_pollios
