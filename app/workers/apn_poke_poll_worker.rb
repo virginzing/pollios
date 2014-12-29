@@ -45,7 +45,7 @@ class ApnPokePollWorker
 
       find_recipient.each do |member|
         hash_custom = {
-          action: ACTION[:create],
+          action: ACTION[:poll],
           poll: @poll_serializer_json,
           notify: hash_list_member_badge[member.id]
         }

@@ -362,13 +362,19 @@ class CompaniesController < ApplicationController
           this_group = Group.find(params[:group_id])
 
           unless find_user_group.include?(this_group.id)
-            this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
-            CompanyMember.add_member_to_company(find_user, @find_company)
-            Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
-            this_group.increment!(:member_count)
-            find_user.cached_flush_active_group
-            Group.flush_cached_member_active(this_group.id)
-            format.json { render json: { error_message: nil }, status: 200 }
+            begin
+              this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
+              CompanyMember.add_member_to_company(find_user, @find_company)
+              Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
+              this_group.increment!(:member_count)
+              find_user.cached_flush_active_group
+              Group.flush_cached_member_active(this_group.id)
+              format.json { render json: { error_message: nil }, status: 200 }
+            rescue ActiveRecord::RecordNotUnique
+              @error_message = "This member join another company already"
+              format.json { render json: { error_message: @error_message }, status: 403 }
+            end
+
           else
             @error_message = "You already joined in this group."
             format.json { render json: { error_message: @error_message }, status: 403 }
