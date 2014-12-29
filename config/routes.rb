@@ -146,6 +146,12 @@ Pollios::Application.routes.draw do
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
+  scope 'feedback' do
+    resources :branches
+    get 'dashboard',  to: 'feedback#dashboard', as: :feedback_dashboard
+    get 'polls',      to: 'feedback#polls',     as: :feedback_polls
+  end
+
   scope 'member' do
     get 'recommendations',    to: 'members#recommendations'
     get 'detail_friend',      to: 'members#detail_friend'

@@ -8,6 +8,12 @@ module ApplicationHelper
       end
   end
 
+  def current_controller?(options)
+    url_string = CGI.escapeHTML(url_for(options))
+    params = ActionController::Routing::Routes.recognize_path(url_string, :method => :get)
+    params[:controller] == @controller.controller_name
+  end
+
   def filter_helper(filter_by, options = nil)
     if filter_by == params[:filter_by]
       'active'
@@ -203,7 +209,7 @@ end
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
 # http://localhost:3000/friend/search.json?member_id=21&q=Nuttapon
 
-# curl -F "member_id=93" -F "name=Nutty Private Group" http://localhost:3000/group/build.json -i
+# curl -F "member_id=93" -F "name=Nutty Private Group 2" http://localhost:3000/group/build.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
@@ -380,8 +386,8 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "friend_id": "161"
-# }' -X POST http://localhost:3000/group/79/invite.json -i
+#     "friend_id": "100"
+# }' -X POST http://localhost:3000/group/101/invite.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 96
@@ -558,8 +564,8 @@ end
 # }' -X POST http://localhost:3000/poll/unshare/626.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 161
-# }' -X POST http://localhost:3000/group/79/request_group.json -i
+#     "member_id": 100
+# }' -X POST http://localhost:3000/group/102/request_group.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -568,8 +574,8 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "friend_id": 161
-# }' -X POST http://localhost:3000/group/79/accept_request_group.json -i
+#     "friend_id": 100
+# }' -X POST http://localhost:3000/group/102/accept_request_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "guest_id": "1"
