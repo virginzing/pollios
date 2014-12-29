@@ -219,8 +219,8 @@ class Friend < ActiveRecord::Base
         search_member(member_id, friend_id).update_attributes!(active: active_status, status: :friend)
         search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
 
-        Activity.create_activity_friend( member, friend ,'BecomeFriend')
-        Activity.create_activity_friend( friend, member ,'BecomeFriend')
+        Activity.create_activity_friend( member, friend , ACTION[:become_friend])
+        Activity.create_activity_friend( friend, member , ACTION[:become_friend])
 
         AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) if Rails.env.production?
       else

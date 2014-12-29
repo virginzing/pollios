@@ -96,6 +96,10 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
 
+      if @group.group_type_company?
+        CompanyMember.add_member_to_company(@member, @group.get_company)  
+      end
+
       clear_request_group(@member, @member)
 
 
@@ -128,7 +132,7 @@ class Group < ActiveRecord::Base
         end
 
         if @group.group_type_company?
-          CompanyMember.add_member_to_company(@member, @group.get_company)  
+          CompanyMember.add_member_to_company(@friend, @group.get_company)  
         end
 
         Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
