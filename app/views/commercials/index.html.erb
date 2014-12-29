@@ -9,15 +9,10 @@
 
 
 <div class="well">
-  <h4 class="alert-heading">Please Note!</h4>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas magna lectus, eleifend sed augue a, commodo auctor turpis. Praesent ornare mi est, ac rutrum felis pharetra nec. Morbi aliquam turpis ut sagittis gravida. Quisque ut lacus eget justo hendrerit dignissim eget et nisl. Morbi quis augue lectus. Praesent placerat ultricies dolor, ut fringilla magna.<strong>Viva Vivar</strong>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-  </p>
-  <br>
-  <a href="<%= new_commercial_path %>" class="icon-btn">
+<!--   <a href="<%= new_commercial_path %>" class="icon-btn">
       <i class="fa fa-plus"></i>
       <div>Brand</div>
-  </a>
+  </a> -->
   <a href="<%= users_signup_company_path %>" class="icon-btn">
       <i class="fa fa-plus"></i>
       <div>Company</div>
@@ -55,7 +50,7 @@
                   <td><%= commercial.get_name %></td>
                   <td><%= commercial.email %></td>
                   <td><span data-livestamp="<%= commercial.created_at.to_i %>"></span></td>
-                  <td><%= link_to 'edit', '#' %> | <%= link_to 'Login as', login_as_path(email: commercial.email), method: :post %></td>
+                  <td><%= link_to 'edit', edit_commercial_path(commercial) %> | <%= link_to 'Login as', login_as_path(email: commercial.email), method: :post %></td>
                 </tr>
               <% end %>
             </tbody>

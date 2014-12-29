@@ -12,13 +12,9 @@
 #   i += 1
 # end
 
-# PollMember.create(poll_id: 1, member_id: 4, share_poll_of_id: 0)
-# PollMember.create(poll_id: 2, member_id: 2, share_poll_of_id: 0)
-# PollMember.create(poll_id: 3, member_id: 3, share_poll_of_id: 0)
-# PollMember.create(poll_id: 4, member_id: 2, share_poll_of_id: 1)
-# PollMember.create(poll_id: 5, member_id: 3, share_poll_of_id: 1)
-# PollMember.create(poll_id: 6, member_id: 3, share_poll_of_id: 2)
-# PollMember.create(poll_id: 7, member_id: 1, share_poll_of_id: 0)
+
+# after rollback must create pollios account first
+
 
 
 # PollMember.select("poll_id").where("member_id = ? OR member_id IN (?)", 1, [2, 3]).group.order("poll_id asc")

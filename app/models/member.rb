@@ -4,7 +4,7 @@ class Member < ActiveRecord::Base
   include MemberHelper
 
   rolify
-  friendly_id :slug_candidates, use: :slugged
+  friendly_id :slug_candidates, use: [:slugged, :finders]
   # has_paper_trail
   
   # multisearchable :against => [:fullname, :username, :email]
@@ -238,7 +238,7 @@ class Member < ActiveRecord::Base
   end
 
   def should_generate_new_friendly_id?
-    fullname_changed?
+    fullname_changed? || super
   end
 
   def get_company

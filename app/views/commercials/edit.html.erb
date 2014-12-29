@@ -1,0 +1,46 @@
+<div class="well">
+  <h1 class="page-title txt-color-blueDark">
+    <i class="fa fa-edit fa-fw "></i> 
+      Edit > <%= member.fullname %>
+  </h1>
+
+  <div class="row">
+    <%= form_tag(commercial_path(member), method: :put) do %>
+      
+
+    <section>
+      <label class="col-md-2 control-label">Select Service</label>
+      <div class="col-md-10">  
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="Survey">
+            <span>Internal Survey</span>
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="Feedback">
+            <span>Feedback</span>
+          </label>
+        </div>
+        <br>
+      </div>
+    </section>
+
+    <div class="text-center">
+      <%= button_tag(:update, class: 'btn btn-primary btn-lg') %>
+    </div>
+    <% end %>
+  </div> 
+</div>
+
+<script>
+  if (<%= raw member.get_select_service('Survey') %>) {
+    $("[value=Survey]").attr('checked', true);
+  };
+
+  if (<%= raw member.get_select_service('Feedback') %>) {
+    $("[value=Feedback]").attr('checked', true);
+  };
+</script>

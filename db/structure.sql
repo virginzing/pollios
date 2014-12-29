@@ -959,7 +959,8 @@ CREATE TABLE groups (
     group_type integer,
     properties hstore,
     cover character varying(255),
-    admin_post_only boolean DEFAULT false
+    admin_post_only boolean DEFAULT false,
+    slug character varying(255)
 );
 
 
@@ -1826,7 +1827,8 @@ CREATE TABLE polls (
     order_poll integer DEFAULT 1,
     quiz boolean DEFAULT false,
     notify_state integer DEFAULT 0,
-    notify_state_at timestamp without time zone
+    notify_state_at timestamp without time zone,
+    slug character varying(255)
 );
 
 
@@ -3653,6 +3655,13 @@ CREATE INDEX index_groups_on_properties ON groups USING gist (properties);
 
 
 --
+-- Name: index_groups_on_slug; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
+
+
+--
 -- Name: index_hidden_polls_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4000,6 +4009,13 @@ CREATE INDEX index_polls_on_poll_series_id ON polls USING btree (poll_series_id)
 --
 
 CREATE INDEX index_polls_on_recurring_id ON polls USING btree (recurring_id);
+
+
+--
+-- Name: index_polls_on_slug; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_polls_on_slug ON polls USING btree (slug);
 
 
 --
@@ -4645,4 +4661,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141226064134');
 INSERT INTO schema_migrations (version) VALUES ('20141226072039');
 
 INSERT INTO schema_migrations (version) VALUES ('20141228105648');
+
+INSERT INTO schema_migrations (version) VALUES ('20141229081535');
 

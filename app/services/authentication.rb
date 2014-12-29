@@ -47,6 +47,10 @@ class Authentication
     @params["company_id"]
   end
 
+  def select_service
+    @params["select_service"]
+  end
+
   def create_member_via_company?
     company_id.present?
   end
@@ -210,7 +214,7 @@ class Authentication
   end
 
   def add_new_group_company
-    company = Company.create!(name: name, address: address, member_id: member.id)
+    company = Company.create!(name: name, address: address, member_id: member.id, using_service: select_service)
     group = Group.create(name: name, authorize_invite: :master, public: false, leave_group: false, group_type: :company)
     GroupCompany.create!(group_id: group.id, company_id: company.id, main_group: true)
   end

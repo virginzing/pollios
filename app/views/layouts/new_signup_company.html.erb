@@ -135,20 +135,6 @@
                 </fieldset>
 
                 <fieldset>
-                  <section>
-                    <label class="label">Select Service</label>
-                    <div class="inline-group">
-                      <label class="checkbox">
-                        <input type="checkbox" name="internal_survey" value="1">
-                        <i></i>Internal Survey</label>
-                      <label class="checkbox">
-                        <input type="checkbox" name="feedback" value="1">
-                        <i></i>Feedback</label>
-                    </div>
-                  </section>
-                </fieldset>
-
-                <fieldset>
                   
                   <section>
                     <label class="input"> <i class="icon-append fa fa-info-circle"></i>
@@ -160,10 +146,27 @@
                     <label class="input"> <i class="icon-append fa fa-info-circle"></i>
                       <input type="text" name="address" placeholder="Address"></label>
                   </section>
+                </fieldset>
+
+                <fieldset>
                   <section>
-                    <label class="checkbox">
-                      <input type="checkbox" name="terms" id="terms">
-                      <i></i>I agree with the <a href="#" data-toggle="modal" data-target="#myModal"> Terms and Conditions </a></label>
+                      <label class="col-md-3 control-label">Select Service</label>
+                      <div class="col-md-9">  
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" class="checkbox style-0" name="select_service[]" value="Survey">
+                            <span>Internal Survey</span>
+                          </label>
+                        </div>
+    
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" class="checkbox style-0" name="select_service[]" value="Feedback">
+                            <span>Feedback</span>
+                          </label>
+                        </div>
+                        <br>
+                      </div>
                   </section>
                 </fieldset>
 
@@ -315,9 +318,6 @@
             fullname : {
               required : true
             },
-            // username : {
-            //   required : true
-            // },
             email : {
               required : true,
               email : true
@@ -342,7 +342,7 @@
             gender : {
               required : true
             },
-            terms : {
+            'select_service[]' : {
               required : true
             }
           },
@@ -352,9 +352,6 @@
             fullname : {
               required : 'Please enter your company name.'
             },
-            // username : {
-            //   required : 'Please enter your username'
-            // },
             email : {
               required : 'Please enter your email address',
               email : 'Please enter a VALID email address'
@@ -375,8 +372,8 @@
             gender : {
               required : 'Please select your gender'
             },
-            terms : {
-              required : 'You must agree with Terms and Conditions'
+            'select_service[]' : {
+              required : 'You must select at least 1 service'
             }
           },
 

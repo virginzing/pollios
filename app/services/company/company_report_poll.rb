@@ -1,6 +1,6 @@
 class Company::CompanyReportPoll
   def initialize(group_list)
-    @group_list = group_list
+    @group_list = group_list.pluck(:id)
   end
 
   def group_ids
@@ -15,7 +15,7 @@ class Company::CompanyReportPoll
 
   def report_poll_in_company
     Poll.joins(:member_report_polls).includes(:groups, :member)
-    .where("polls.in_group = 't'").uniq
+    .where("polls.in_group = 't' AND groups.id IN (?)", @group_list).uniq.references(:groups)
   end
 
 

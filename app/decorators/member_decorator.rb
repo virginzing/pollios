@@ -53,6 +53,10 @@ class MemberDecorator < Draper::Decorator
     content_tag(:span, nil , 'data-livestamp' => object.updated_at.to_i)
   end
 
+  def get_select_service(service_type)
+    get_company.using_service.include?(service_type)
+  end
+
   private 
 
   def split_email
