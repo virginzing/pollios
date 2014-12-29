@@ -27,7 +27,8 @@ module SymbolHash
     :mention => 'Mention',
     :also_comment => 'AlsoComment',
     :report => 'Report',
-    :poke => 'Poke'
+    :poke => 'Poke',
+    :request_friend => 'RequestFriend'
   }
 
   AUTHORITY = {

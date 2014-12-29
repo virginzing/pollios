@@ -1,5 +1,6 @@
 class Friend < ActiveRecord::Base
   include FriendsHelper
+  include SymbolHash
 
   belongs_to :follower, class_name: "Member"
   belongs_to :followed, class_name: "Member"
@@ -68,8 +69,8 @@ class Friend < ActiveRecord::Base
         find_invitee.update_attributes!(status: :friend)
         search_friend(friend_id, member_id).update_attributes!(status: :friend)
         status = :friend
-        Activity.create_activity_friend( find_member, find_friend ,'BecomeFriend')
-        Activity.create_activity_friend( find_friend, find_member ,'BecomeFriend')
+        Activity.create_activity_friend( find_member, find_friend , ACTION[:become_friend])
+        Activity.create_activity_friend( find_friend, find_member , ACTION[:become_friend])
       elsif find_used_friend
         # is_friend = false
 
@@ -89,7 +90,7 @@ class Friend < ActiveRecord::Base
       end
       flush_cached_friend(member_id, friend_id)
       # AddFriendWorker.perform_async(member_id, friend_id)
-      AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: 'Invite'} ) if Rails.env.production?
+      AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: ACTION[:request_friend]} ) if Rails.env.production?
       [find_friend, status]
     rescue  => e
       puts "error => #{e}"
@@ -221,7 +222,7 @@ class Friend < ActiveRecord::Base
         Activity.create_activity_friend( member, friend ,'BecomeFriend')
         Activity.create_activity_friend( friend, member ,'BecomeFriend')
 
-        AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: 'BecomeFriend' } ) if Rails.env.production?
+        AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) if Rails.env.production?
       else
         find_member.destroy
         find_friend.destroy
