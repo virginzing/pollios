@@ -960,7 +960,8 @@ CREATE TABLE groups (
     properties hstore,
     cover character varying(255),
     admin_post_only boolean DEFAULT false,
-    slug character varying(255)
+    slug character varying(255),
+    need_approve boolean DEFAULT true
 );
 
 
@@ -4663,4 +4664,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141226072039');
 INSERT INTO schema_migrations (version) VALUES ('20141228105648');
 
 INSERT INTO schema_migrations (version) VALUES ('20141229081535');
+
+INSERT INTO schema_migrations (version) VALUES ('20141229122846');
 
