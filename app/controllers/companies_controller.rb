@@ -269,7 +269,7 @@ class CompaniesController < ApplicationController
 
   def group_poll_detail
     @choice_data_chart = []
-    if current_member.get_company?
+    if current_member.get_company.present?
       init_company = PollDetailCompany.new([@group], @poll)
       @member_group = init_company.get_member_in_group
       puts "member_group => #{@member_group}"

@@ -32,9 +32,8 @@ class PollDecorator < ApplicationDecorator
   end
 
   def get_rating_score
-    arr = object.choices.map(&:vote)
-    # arr.inject{|sum, e| sum + e }.to_f / arr.size
-    arr.reduce(:+).to_f / arr.size
+    arr = object.choices.collect!{|e| e.answer.to_i * e.vote.to_f }
+    arr.reduce(:+).to_f / poll.vote_all
   end
 
   def get_top_vote

@@ -40,9 +40,9 @@
     <style type="text/css">
     #ajaxLoader {
       z-index: 100;
-      position: absolute;
+      position: fixed;
       top: 50%;
-      left: 40%;
+      left: 47%;
       background-color: #333;
       background-color: rgba(0,0,0,0.7);
       border-radius: 15px;
@@ -385,6 +385,7 @@
       dataTable();
       validateMemberProfile();
 
+      $("#input-id").rating();
       $("[data-toggle=tooltip]").tooltip();;
 
       var searchFunc = function(term, callback) {
@@ -398,6 +399,38 @@
                   callback([]); // Callback must be invoked even if something went wrong.
               });
       };
+
+      function poke_something(poke_something) { 
+        poke_something.on('ajax:send', function(xhr) {
+          $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+        }).on('ajax:success', function (data, status, xhr) {
+          $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+          $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
+
+        }).on('ajax:error', function (event, xhr, status) {
+          $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+          var json_response = JSON.parse(xhr.responseText);
+          handleErrorAddGroup(json_response.error_message);
+        });
+      }
+
+      $.poke_no_vote = $('#poke_no_vote[data-remote]');
+      $.poke_view_no_vote = $('#poke_view_no_vote[data-remote]');
+      $.poke_no_view = $('#poke_no_view[data-remote]');
+
+      poke_something($.poke_no_vote);
+      poke_something($.poke_view_no_vote);
+      poke_something($.poke_no_view);
+
+      function handleErrorAddGroup (error_message) {
+        $.smallBox({
+          title : "Warning",
+          content: error_message,
+          color: "#C46A69",
+          icon: "fa fa-warning",
+          timeout: 6000
+        });
+      }
 
       /*
        * PAGE RELATED SCRIPTS

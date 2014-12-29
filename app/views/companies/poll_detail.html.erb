@@ -564,48 +564,4 @@
  });
 </script>
 
-<script type="text/javascript">
-$(document).ready(function () {
-
-  function poke_something(poke_something) { 
-    poke_something.on('ajax:send', function(xhr) {
-      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
-    }).on('ajax:success', function (data, status, xhr) {
-      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-      $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Sent")
-
-    }).on('ajax:error', function (event, xhr, status) {
-      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-      var json_response = JSON.parse(xhr.responseText);
-      handleErrorAddGroup(json_response.error_message);
-    });
-  }
-
-  $.poke_no_vote = $('#poke_no_vote[data-remote]');
-  $.poke_view_no_vote = $('#poke_view_no_vote[data-remote]');
-  $.poke_no_view = $('#poke_no_view[data-remote]');
-
-  poke_something($.poke_no_vote);
-  poke_something($.poke_view_no_vote);
-  poke_something($.poke_no_view);
-
-  function handleErrorAddGroup (error_message) {
-    $.smallBox({
-      title : "Warning",
-      content: error_message,
-      color: "#C46A69",
-      icon: "fa fa-warning",
-      timeout: 6000
-    });
-  }
-
-  // $(".delete_comment").on("click", function() {
-  //    var tr = $(this).closest('tr');
-  //     tr.css("background-color","#FF3700");
-  //     tr.fadeOut(400, function(){
-  //         tr.hide();
-  //     });
-  // });
-});
-</script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

@@ -67,13 +67,15 @@ class PollsController < ApplicationController
   end
 
   def poll_latest
-    @poll_latest = Poll.where(member_id: @current_member.id, series: false).first
+    @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
+    @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
     @choice_poll_latest = []
     render layout: false
   end
 
   def poll_popular
-    @poll_popular = Poll.where("member_id = #{@current_member.id} AND vote_all != 0 AND series = 'f'").order("vote_all desc").limit(5).sample(5).first
+    @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
+    @poll_popular = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5).sample(5).first
     @choice_poll_popular = []
     render layout: false
   end
@@ -322,7 +324,7 @@ class PollsController < ApplicationController
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
       if @member_viewed_no_vote_poll.length > 0
-        ApnPokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, params[:id])
+        # ApnPokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, params[:id])
 
         format.json { render json: [], status: 200 }
       else

@@ -19,8 +19,8 @@
       <header>
         <h2><strong>Poll</strong> <i>latest</i></h2> 
           <div class="widget-toolbar">
-            <% if Poll.where(member_id: @current_member.id, series: false).present? %>
-              <a href="/company/polls/<%= Poll.where(member_id: @current_member.id, series: false).first.id %>" class="btn btn-default">More</a>
+            <% if @poll_latest_list.first.present? %>
+              <a href="/company/polls/<%= @poll_latest_list.first.id %>" class="btn btn-default">More</a>
             <% end %>
 
           </div>
