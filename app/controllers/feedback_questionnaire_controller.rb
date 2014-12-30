@@ -29,54 +29,56 @@ class FeedbackQuestionnaireController < ApplicationController
   end
 
   def create
-    @success = true
+    PollSeries.transaction do
+      @success = true
 
-    @collection = @company.collection_polls.create!(title: params[:poll_series][:description])
+      @collection = @company.collection_polls.create!(title: params[:poll_series][:description])
 
-    params[:poll_series][:branch_list].split(",").each do |branch_id|
-      @expire_date = poll_series_params["expire_date"].to_i
-      @poll_series = current_member.poll_series.new(poll_series_params)
-      @poll_series.expire_date = set_expire_date
-      @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
+      params[:poll_series][:branch_list].split(",").each do |branch_id|
+        @expire_date = poll_series_params["expire_date"].to_i
+        @poll_series = current_member.poll_series.new(poll_series_params)
+        @poll_series.expire_date = set_expire_date
+        @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
 
-      @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
-      @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
-      @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
+        @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
+        @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
+        @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
 
-      if current_member.get_company.present?
-        is_public = false
-        @poll_series.in_group = false
-        @poll_series.in_group_ids = "0"
+        if current_member.get_company.present?
+          is_public = false
+          @poll_series.in_group = false
+          @poll_series.in_group_ids = "0"
+        end
+
+        type_series = poll_series_params["type_series"]
+
+        if type_series == "1"
+          @poll_series.same_choices = params[:same_choices].delete_if {|choice| choice == "" }
+        end
+
+
+        if @poll_series.save
+          @collection.grouppings.create!(groupable: @poll_series)
+          BranchPollSeries.create!(poll_series_id: @poll_series.id, branch_id: branch_id.to_i)  
+        else
+          @success = false
+        end
       end
 
-      type_series = poll_series_params["type_series"]
 
-      if type_series == "1"
-        @poll_series.same_choices = params[:same_choices].delete_if {|choice| choice == "" }
-      end
-
-
-      if @poll_series.save
-        @collection.grouppings.create!(groupable: @poll_series)
-        BranchPollSeries.create!(poll_series_id: @poll_series.id, branch_id: branch_id.to_i)  
+      if @success
+        flash[:success] = "Successfully created questionnaires."
+        redirect_to feedback_questionnaires_path
       else
-        @success = false
+        flash[:error] = @poll_series.errors.full_messages
+        if poll_series_params["type_series"] == "0"
+          render action: 'normal'
+        else
+          render action: 'same_choice'
+        end
       end
     end
-
-
-    if @success
-      flash[:success] = "Successfully created questionnaires."
-      redirect_to feedback_questionnaires_path
-    else
-      flash[:error] = @poll_series.errors.full_messages
-      if poll_series_params["type_series"] == "0"
-        render action: 'normal'
-      else
-        render action: 'same_choice'
-      end
-    end
-
+    
   end
 
   def set_expire_date

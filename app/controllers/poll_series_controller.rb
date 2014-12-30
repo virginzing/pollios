@@ -152,51 +152,50 @@ class PollSeriesController < ApplicationController
   end
 
   def create
-    is_public = true
-    in_group_ids = "0"
-    @expire_date = poll_series_params["expire_date"].to_i
+    PollSeries.transaction do
+      is_public = true
+      in_group_ids = "0"
+      @expire_date = poll_series_params["expire_date"].to_i
 
-    @poll_series = current_member.poll_series.new(poll_series_params)
-    @poll_series.expire_date = set_expire_date
-    @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
+      @poll_series = current_member.poll_series.new(poll_series_params)
+      @poll_series.expire_date = set_expire_date
+      @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
 
-    @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
-    @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
-    @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
+      @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
+      @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
+      @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
 
-    if current_member.get_company.present?
-      is_public = false
-      @poll_series.in_group = true
-      @poll_series.in_group_ids = poll_series_params[:group_id]
-    end
-
-    @poll_series.public = is_public
-
-    type_series = poll_series_params["type_series"]
-
-    if type_series == "1"
-      @poll_series.same_choices = params[:same_choices].delete_if {|choice| choice == "" }
-    end
-
-    if @poll_series.save
-      @poll_series.in_group_ids.split(",").each do |group_id|
-        PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)
-        # if Rails.env.production?
-        #   ApnQuestionnaireWorker.perform_in(5.seconds, current_member.id, @poll_series.id, group_id) unless @poll_series.qr_only
-        # end      
+      if current_member.get_company.present?
+        is_public = false
+        @poll_series.in_group = true
+        @poll_series.in_group_ids = poll_series_params[:group_id]
       end
-      flash[:success] = "Successfully created poll series."
-      redirect_to poll_series_index_path
-    else
-      flash[:error] = @poll_series.errors.full_messages
-      if poll_series_params["type_series"] == "0"
-        render action: 'normal'
+
+      @poll_series.public = is_public
+
+      type_series = poll_series_params["type_series"]
+
+      if type_series == "1"
+        @poll_series.same_choices = params[:same_choices].delete_if {|choice| choice == "" }
+      end
+
+      if @poll_series.save
+        @poll_series.in_group_ids.split(",").each do |group_id|
+          PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    
+        end
+        flash[:success] = "Successfully created poll series."
+        redirect_to poll_series_index_path
       else
-        render action: 'same_choice'
+        flash[:error] = @poll_series.errors.full_messages
+        if poll_series_params["type_series"] == "0"
+          render action: 'normal'
+        else
+          render action: 'same_choice'
+        end
       end
+      Rails.cache.delete([current_member.id, 'my_questionnaire'])
+      # puts "error: #{@poll_series.errors.full_messages}"
     end
-    Rails.cache.delete([current_member.id, 'my_questionnaire'])
-    # puts "error: #{@poll_series.errors.full_messages}"
   end
 
   def set_expire_date

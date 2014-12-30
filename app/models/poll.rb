@@ -570,13 +570,15 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      puts "qr_only => #{self.qr_only}"
+      puts "poll normal => #{self.as_json()}"
       if in_group
         in_group_ids.split(",").each do |group_id|
-          GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id) unless self.qr_only
+          GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
         end
       else
-        ApnPollWorker.perform_async(self.member_id, self.id) unless qr_only
+        if poll_series_id == 0
+          ApnPollWorker.perform_async(self.member_id, self.id) unless qr_only
+        end
       end
     end
   end
