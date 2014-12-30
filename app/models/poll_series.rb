@@ -43,11 +43,9 @@ class PollSeries < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      unless self.qr_only
-        if self.in_group
-          self.in_group_ids.split(",").each do |group_id|
-            ApnQuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
-          end
+      if self.in_group
+        self.in_group_ids.split(",").each do |group_id|
+          ApnQuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
         end
       end
     end 
@@ -108,9 +106,7 @@ class PollSeries < ActiveRecord::Base
 
     unless qr_only
       @min_poll_id = polls.reload.select {|poll| poll if poll.order_poll }.min.id
-
       # puts "poll min => #{polls.select{|poll| poll if poll.order_poll }}"
-      
       PollMember.create!(member_id: self.member_id, poll_id: @min_poll_id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
       add_questionnaire_to_group if in_group
     end
