@@ -1919,6 +1919,14 @@
 	            [0, 'desc']
 	        ]
 	    });
+	    $('#collection_questionnaire').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        responsive: true,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
 	    $('#list_branch').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,

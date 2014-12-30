@@ -1,19 +1,12 @@
-<!-- row -->
-<div class="row">
-  
-  <!-- col -->
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <h1 class="page-title txt-color-blueDark">
-      
-      <!-- PAGE HEADER -->
-      <i class="fa-fw fa fa-home"></i> 
-        <%= @questionnaire.description %> 
-    </h1>
-  </div>
-  <!-- end col -->
-  
+
+<div class="well">
+  <h1>
+    <strong>[<%= @branch.name %>]</strong> <%= @questionnaire.description %>
+  </h1>
+
 </div>
-<!-- end row -->
+
+
 
 <!-- widget grid -->
 <section id="widget-grid" class="">
@@ -25,7 +18,7 @@
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       
       <!-- Widget ID (each widget will need unique ID)-->
-      <div class="jarviswidget" id="wid-feedback-collection-#{@questionnaire.id}">
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-collection-#{@questionnaire.id}" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
 
         <header>
           <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
