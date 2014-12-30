@@ -43,7 +43,6 @@ class PollSeries < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      puts "poll_series => #{self.qr_only}"
       self.in_group_ids.split(",").each do |group_id|
         ApnQuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
       end

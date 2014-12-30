@@ -1,9 +1,9 @@
 class Group < ActiveRecord::Base
-  extend FriendlyId
+  # extend FriendlyId
   resourcify
   include GroupHelper
 
-  friendly_id :slug_candidates, use: [:slugged, :finders]
+  # friendly_id :slug_candidates, use: [:slugged, :finders]
 
   has_many :group_members, dependent: :destroy
   has_many :members, through: :group_members, source: :member
@@ -41,16 +41,16 @@ class Group < ActiveRecord::Base
   mount_uploader :photo_group, PhotoGroupUploader
   mount_uploader :cover, PhotoGroupUploader
 
-  def slug_candidates
-    [
-      :name,
-      [:id, :name]
-    ]
-  end
+  # def slug_candidates
+  #   [
+  #     :name,
+  #     [:id, :name]
+  #   ]
+  # end
 
-  def should_generate_new_friendly_id?
-    name_changed? || super
-  end
+  # def should_generate_new_friendly_id?
+  #   name_changed? || super
+  # end
 
   def cached_created_by
     Rails.cache.fetch([ self, 'created_by' ]) do

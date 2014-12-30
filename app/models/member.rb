@@ -1,10 +1,10 @@
 class Member < ActiveRecord::Base
-  extend FriendlyId
+  # extend FriendlyId
   include PgSearch
   include MemberHelper
 
   rolify
-  friendly_id :slug_candidates, use: [:slugged, :finders]
+  # friendly_id :slug_candidates, use: [:slugged, :finders]
   # has_paper_trail
   
   # multisearchable :against => [:fullname, :username, :email]
@@ -230,16 +230,16 @@ class Member < ActiveRecord::Base
 
   end
 
-  def slug_candidates
-    [
-      :fullname,
-      [:id, :fullname]
-    ]
-  end
+  # def slug_candidates
+  #   [
+  #     :fullname,
+  #     [:id, :fullname]
+  #   ]
+  # end
 
-  def should_generate_new_friendly_id?
-    fullname_changed? || super
-  end
+  # def should_generate_new_friendly_id?
+  #   fullname_changed? || super
+  # end
 
   def get_company
     company || company_member.company
