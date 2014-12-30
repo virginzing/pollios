@@ -31,7 +31,7 @@ class PollSeries < ActiveRecord::Base
 
   after_create :set_poll_series
   after_create :generate_qrcode_key
-  after_commit :send_notification, on: :create
+  after_create :send_notification
 
   def get_description
     if branch_poll_series.present?

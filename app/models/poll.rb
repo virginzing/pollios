@@ -3,7 +3,9 @@ class Poll < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders]
 
-  after_commit :send_notification, on: :create
+  # after_commit :send_notification, on: :create
+
+  after_save :send_notification
 
   mount_uploader :photo_poll, PhotoPollUploader
   
@@ -571,6 +573,7 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
+      puts "self.qr_only => #{self.qr_only}"
       unless self.qr_only
         if self.in_group
           self.in_group_ids.split(",").each do |group_id|
