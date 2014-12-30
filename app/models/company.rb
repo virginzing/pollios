@@ -15,6 +15,8 @@ class Company < ActiveRecord::Base
 
   has_many :collection_polls, dependent: :destroy
 
+  has_many :recurrings, dependent: :destroy
+
   has_many :main_groups, -> { where("group_companies.main_group = 't' ") }, through: :group_companies, source: :group
   # validates :amount_code, :prefix_name, presence: true
   

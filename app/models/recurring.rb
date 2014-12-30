@@ -3,6 +3,8 @@ class Recurring < ActiveRecord::Base
   validates :description, :period, :end_recur, presence: true
 
   belongs_to :member
+  belongs_to :company
+  
   has_many :polls
 
   def self.re_create_poll(recurring_list)

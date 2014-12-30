@@ -2,7 +2,7 @@ module MemberHelper
   extend Enumerize
   extend ActiveModel::Naming
 
-  enumerize :gender, :in => { :male => 1, :female => 2, :custom => 3 }, scope: :true, predicates: true
+  enumerize :gender, :in => { :male => 1, :female => 2, :other => 3 }, scope: :true, predicates: true
   enumerize :interests, :in => {
     :anime => 1,
     :manga => 2,

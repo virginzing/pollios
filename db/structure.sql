@@ -1795,7 +1795,8 @@ CREATE TABLE poll_series (
     qr_only boolean,
     qrcode_key character varying(255),
     require_info boolean,
-    in_group boolean DEFAULT false
+    in_group boolean DEFAULT false,
+    recurring_id integer
 );
 
 
@@ -2063,7 +2064,8 @@ CREATE TABLE recurrings (
     end_recur timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    description character varying(255)
+    description character varying(255),
+    company_id integer
 );
 
 
@@ -4859,4 +4861,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141230043246');
 INSERT INTO schema_migrations (version) VALUES ('20141230053055');
 
 INSERT INTO schema_migrations (version) VALUES ('20141230053324');
+
+INSERT INTO schema_migrations (version) VALUES ('20141230083207');
 

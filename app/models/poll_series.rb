@@ -99,15 +99,15 @@ class PollSeries < ActiveRecord::Base
         else
           choices_count = poll.choices.count
         end
-        poll.update!(order_poll: order_poll, expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text, qrcode_key: poll.generate_qrcode_key)
+        poll.update!(order_poll: order_poll, qr_only: qr_only, require_info: require_info, expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text, qrcode_key: poll.generate_qrcode_key)
         order_poll += 1
       end
     end
 
-    unless self.qr_only
+    unless qr_only
       @min_poll_id = polls.reload.select {|poll| poll if poll.order_poll }.min.id
 
-      puts "poll min => #{polls.select{|poll| poll if poll.order_poll }}"
+      # puts "poll min => #{polls.select{|poll| poll if poll.order_poll }}"
       
       PollMember.create!(member_id: self.member_id, poll_id: @min_poll_id, share_poll_of_id: 0, public: self.public, series: true, expire_date: expire_date, in_group: self.in_group, poll_series_id: self.id)
       add_questionnaire_to_group if in_group
