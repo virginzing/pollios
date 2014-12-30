@@ -3,8 +3,12 @@
     <a href="<%= feedback_dashboard_path %>" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
   </li>
 
-  <li class="<%= is_active_2nd_level('feedback', 'polls') %>">
-    <a href="<%= feedback_polls_path %>" title="Poll"><i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent"> List Polls</span></a>
+  <li class="<%= is_active?('feedback_poll') %>">
+    <a href="<%= feedback_polls_path %>" title="Poll"><i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Polls</span></a>
+  </li>
+
+  <li class="<%= is_active?('feedback_questionnaire') %>">
+    <a href="<%= feedback_questionnaires_path %>" title="Poll"><i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent"> Questionnaires</span></a>
   </li>
 
   <li class="<%= is_active?('branches') %>">

@@ -1,0 +1,51 @@
+<div class="well">
+  <h1 class="">
+    <i class="fa fa-edit fa-fw"></i> 
+      <%= @collection.title %>
+  </h1>
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-questionnaire-branch" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>Questionnaire of each branch</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_questionnaire" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="20">#</th>
+                <th>Branch</th>
+                <th>Vote</th>
+                <th>View</th>
+                <th width="100">Last updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @questionnaires.each do |questionnaire| %>
+                <tr>
+                  <td><%= questionnaire.id %></td>
+                  <td><%= questionnaire.branch.name %></td>
+                  <td><%= questionnaire.vote_all %></td>
+                  <td><%= questionnaire.view_all %></td>
+                  <td><span data-livestamp="<%= questionnaire.updated_at.to_i %>"></span></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

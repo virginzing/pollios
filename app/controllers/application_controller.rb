@@ -21,6 +21,10 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_member, :signed_in?, :render_to_string, :only_company, :redirect_back_or, :redirect_back
 
+  def load_company
+    @company = current_member.get_company
+  end
+
   def history_voted_viewed
     # @history_voted  = @current_member.history_votes.includes(:choice).collect!  { |voted| [voted.poll_id, voted.choice_id, voted.choice.answer, voted.poll_series_id, voted.choice.vote] }
     @history_voted = HistoryVote.joins(:member, :choice, :poll)

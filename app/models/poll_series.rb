@@ -20,6 +20,9 @@ class PollSeries < ActiveRecord::Base
   has_many :un_see_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
 
+  has_one :branch_poll_series, dependent: :destroy
+  has_one :branch, through: :branch_poll_series, source: :branch
+
   validates :description, presence: true
 
   accepts_nested_attributes_for :polls, :allow_destroy => true

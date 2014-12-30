@@ -2,6 +2,8 @@ class Company < ActiveRecord::Base
 
   belongs_to :member
 
+  has_many :collection_polls, dependent: :destroy
+
   has_many :company_members, dependent: :destroy
   has_many :members, through: :company_members, source: :member
 
@@ -10,6 +12,8 @@ class Company < ActiveRecord::Base
   
   has_many :group_companies, dependent: :destroy
   has_many :groups, through: :group_companies , source: :group
+
+  has_many :collection_polls, dependent: :destroy
 
   has_many :main_groups, -> { where("group_companies.main_group = 't' ") }, through: :group_companies, source: :group
   # validates :amount_code, :prefix_name, presence: true

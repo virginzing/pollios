@@ -1,2 +1,57 @@
-<h1>Branches#index</h1>
-<p>Find me in app/views/branches/index.html.erb</p>
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-share-alt fa-fw"></i> 
+      List Branch
+  </h1>
+
+    <a href="<%= new_branch_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Branch</div>
+  </a>
+
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-branch" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-share-alt"></i> </span>
+      <h2><strong>Branch</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_branch" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Created_at</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @branches.each do |branch| %>
+                <tr>
+                  <td><%= branch.id %></td>
+                  <td><%= branch.name %></td>
+                  <td><%= branch.address %></td>
+                  <td><span data-livestamp="<%= branch.created_at.to_i %>"></span></td>
+                  <td><%= link_to 'Edit', edit_branch_path(branch) %> | <%= link_to 'Remove', branch_path(branch), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

@@ -51,6 +51,9 @@ class Poll < ActiveRecord::Base
 
   has_many :un_see_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
+
+  has_many :branch_polls, dependent: :destroy
+  has_many :branches, through: :branch_polls, source: :branch
   
   belongs_to :member
   belongs_to :poll_series

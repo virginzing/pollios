@@ -1,0 +1,66 @@
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feeback-new-branch" data-widget-colorbutton="false" data-widget-editbutton="false">
+
+      <header>
+        <span class="widget-icon"> <i class="fa fa-share-alt"></i> </span>
+        <h2><strong>Branch</strong></h2>       
+        
+      </header>
+      <!-- widget div-->
+      <div>
+    
+        <!-- widget content -->
+        <div class="widget-body">
+          <%= simple_form_for @branch, :html => { :multipart => true, class: "smart-form", id: 'new-branch' } do |f| %>
+
+          <fieldset>
+            
+            <section>
+              <div class="row">
+                <section class="col-md-12">
+
+                  <section>
+                    <label class="label">Name</label>
+                    <label class="input">
+                      <%= f.input :name, label: false, input_html: { :"data-parsley-required" => "true" }  %>
+                    </label>
+                  </section>
+
+                  <section>
+                    <label class="label">Address</label>
+                    <label class="textarea">
+                      <%= f.input :address, label: false  %>
+                    </label>
+                  </section>
+
+                </section>
+
+              </div>
+            </section>
+
+          </fieldset>
+
+          <footer>
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+            <button type="button" class="btn btn-default" onclick="window.history.back();">
+              Back
+            </button>
+          </footer>
+          <% end %>
+
+    
+        </div>
+      <!-- end widget div -->
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  $("#new-branch").parsley();
+</script>

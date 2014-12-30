@@ -1,0 +1,2 @@
+module FeedbackPollHelper
+end

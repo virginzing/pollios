@@ -1,0 +1,53 @@
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-edit fa-fw"></i> 
+      List Collection of Questionnaire
+  </h1>
+
+    <a href="<%= new_feedback_questionnaire_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Questionnaire</div>
+  </a>
+
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-questionnaire" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>Questionnnaire</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_questionnaire" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="20">#</th>
+                <th>Description</th>
+                <th>Create Since</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @collections.each do |collection| %>
+                <tr>
+                  <td><%= collection.id %></td>
+                  <td><%= link_to collection.title, collection_feedback_questionnaire_path(collection) %></td>
+                  <td><span data-livestamp="<%= collection.created_at.to_i %>"></span></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

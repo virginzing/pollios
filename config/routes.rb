@@ -2,7 +2,6 @@ require 'sidekiq/web'
 require 'api_constraints'
 
 Pollios::Application.routes.draw do
-
   get 'list_members', to: 'members#list_members'
   
   mount ApiTaster::Engine => "/api_taster"
@@ -149,7 +148,21 @@ Pollios::Application.routes.draw do
   scope 'feedback' do
     resources :branches
     get 'dashboard',  to: 'feedback#dashboard', as: :feedback_dashboard
-    get 'polls',      to: 'feedback#polls',     as: :feedback_polls
+    get 'polls',      to: 'feedback_poll#index',     as: :feedback_polls
+
+    get 'polls/new',  to: 'feedback_poll#new',  as: :new_feedback_poll
+
+
+    get 'questionnaires', to: 'feedback_questionnaire#index', as: :feedback_questionnaires
+    
+    scope 'questionnaire' do
+      get 'new',      to: 'feedback_questionnaire#new',  as: :new_feedback_questionnaire
+      post 'create',  to: 'feedback_questionnaire#create',  as: :create_feedback_questionnaire
+    end
+
+    scope 'collection' do
+      get ':id',      to: 'feedback_questionnaire#collection', as: :collection_feedback_questionnaire
+    end
   end
 
   scope 'member' do

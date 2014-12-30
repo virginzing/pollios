@@ -1862,6 +1862,13 @@
 	            [0, 'desc']
 	        ]
 	    });
+	    $('#list_questionnaire').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
 	    $('#list_member_vote_poll').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,
@@ -1905,6 +1912,14 @@
 	        ]
 	    });
 	    $('#list_polls').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        responsive: true,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
+	    $('#list_branch').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,
 	        responsive: true,

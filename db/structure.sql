@@ -419,6 +419,38 @@ ALTER SEQUENCE apn_pull_notifications_id_seq OWNED BY apn_pull_notifications.id;
 
 
 --
+-- Name: branch_poll_series; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE branch_poll_series (
+    id integer NOT NULL,
+    branch_id integer,
+    poll_series_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: branch_poll_series_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE branch_poll_series_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: branch_poll_series_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE branch_poll_series_id_seq OWNED BY branch_poll_series.id;
+
+
+--
 -- Name: branch_polls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -460,7 +492,8 @@ CREATE TABLE branches (
     address text,
     company_id integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    slug character varying(255)
 );
 
 
@@ -628,6 +661,38 @@ CREATE SEQUENCE choices_id_seq
 --
 
 ALTER SEQUENCE choices_id_seq OWNED BY choices.id;
+
+
+--
+-- Name: collection_polls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE collection_polls (
+    id integer NOT NULL,
+    title character varying(255),
+    company_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: collection_polls_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE collection_polls_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: collection_polls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE collection_polls_id_seq OWNED BY collection_polls.id;
 
 
 --
@@ -938,6 +1003,39 @@ CREATE SEQUENCE group_surveyors_id_seq
 --
 
 ALTER SEQUENCE group_surveyors_id_seq OWNED BY group_surveyors.id;
+
+
+--
+-- Name: grouppings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE grouppings (
+    id integer NOT NULL,
+    collection_poll_id integer,
+    groupable_id integer,
+    groupable_type character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: grouppings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE grouppings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: grouppings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE grouppings_id_seq OWNED BY grouppings.id;
 
 
 --
@@ -2433,6 +2531,13 @@ ALTER TABLE ONLY apn_pull_notifications ALTER COLUMN id SET DEFAULT nextval('apn
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY branch_poll_series ALTER COLUMN id SET DEFAULT nextval('branch_poll_series_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY branch_polls ALTER COLUMN id SET DEFAULT nextval('branch_polls_id_seq'::regclass);
 
 
@@ -2469,6 +2574,13 @@ ALTER TABLE ONLY campaigns ALTER COLUMN id SET DEFAULT nextval('campaigns_id_seq
 --
 
 ALTER TABLE ONLY choices ALTER COLUMN id SET DEFAULT nextval('choices_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY collection_polls ALTER COLUMN id SET DEFAULT nextval('collection_polls_id_seq'::regclass);
 
 
 --
@@ -2532,6 +2644,13 @@ ALTER TABLE ONLY group_members ALTER COLUMN id SET DEFAULT nextval('group_member
 --
 
 ALTER TABLE ONLY group_surveyors ALTER COLUMN id SET DEFAULT nextval('group_surveyors_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY grouppings ALTER COLUMN id SET DEFAULT nextval('grouppings_id_seq'::regclass);
 
 
 --
@@ -2888,6 +3007,14 @@ ALTER TABLE ONLY apn_pull_notifications
 
 
 --
+-- Name: branch_poll_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY branch_poll_series
+    ADD CONSTRAINT branch_poll_series_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: branch_polls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2933,6 +3060,14 @@ ALTER TABLE ONLY campaigns
 
 ALTER TABLE ONLY choices
     ADD CONSTRAINT choices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: collection_polls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY collection_polls
+    ADD CONSTRAINT collection_polls_pkey PRIMARY KEY (id);
 
 
 --
@@ -3005,6 +3140,14 @@ ALTER TABLE ONLY group_members
 
 ALTER TABLE ONLY group_surveyors
     ADD CONSTRAINT group_surveyors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: grouppings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY grouppings
+    ADD CONSTRAINT grouppings_pkey PRIMARY KEY (id);
 
 
 --
@@ -3432,6 +3575,20 @@ CREATE INDEX index_apn_notifications_on_device_id ON apn_notifications USING btr
 
 
 --
+-- Name: index_branch_poll_series_on_branch_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_branch_poll_series_on_branch_id ON branch_poll_series USING btree (branch_id);
+
+
+--
+-- Name: index_branch_poll_series_on_poll_series_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_branch_poll_series_on_poll_series_id ON branch_poll_series USING btree (poll_series_id);
+
+
+--
 -- Name: index_branch_polls_on_branch_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3450,6 +3607,13 @@ CREATE INDEX index_branch_polls_on_poll_id ON branch_polls USING btree (poll_id)
 --
 
 CREATE INDEX index_branches_on_company_id ON branches USING btree (company_id);
+
+
+--
+-- Name: index_branches_on_slug; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_branches_on_slug ON branches USING btree (slug);
 
 
 --
@@ -3499,6 +3663,13 @@ CREATE INDEX index_campaigns_on_member_id ON campaigns USING btree (member_id);
 --
 
 CREATE INDEX index_choices_on_poll_id ON choices USING btree (poll_id);
+
+
+--
+-- Name: index_collection_polls_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_polls_on_company_id ON collection_polls USING btree (company_id);
 
 
 --
@@ -3646,6 +3817,20 @@ CREATE INDEX index_group_surveyors_on_group_id ON group_surveyors USING btree (g
 --
 
 CREATE INDEX index_group_surveyors_on_member_id ON group_surveyors USING btree (member_id);
+
+
+--
+-- Name: index_grouppings_on_collection_poll_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_grouppings_on_collection_poll_id ON grouppings USING btree (collection_poll_id);
+
+
+--
+-- Name: index_grouppings_on_groupable_id_and_groupable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_grouppings_on_groupable_id_and_groupable_type ON grouppings USING btree (groupable_id, groupable_type);
 
 
 --
@@ -4666,4 +4851,12 @@ INSERT INTO schema_migrations (version) VALUES ('20141228105648');
 INSERT INTO schema_migrations (version) VALUES ('20141229081535');
 
 INSERT INTO schema_migrations (version) VALUES ('20141229122846');
+
+INSERT INTO schema_migrations (version) VALUES ('20141230034312');
+
+INSERT INTO schema_migrations (version) VALUES ('20141230043246');
+
+INSERT INTO schema_migrations (version) VALUES ('20141230053055');
+
+INSERT INTO schema_migrations (version) VALUES ('20141230053324');
 

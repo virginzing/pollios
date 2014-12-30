@@ -1,0 +1,63 @@
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-edit fa-fw"></i> 
+      List Poll
+  </h1>
+
+    <a href="<%= new_feedback_poll_path %>" class="icon-btn">
+    <i class="fa fa-edit"></i>
+    <div>Poll</div>
+  </a>
+
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>Poll</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_polls" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="200">Title</th>
+                <th width="150">In Branch</th>
+                <th>Vote</th>
+                <th>View</th>
+                <th width="150">Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @polls.each do |poll| %>
+                <tr>
+                  <td><%= link_to poll.title, '#' %></td>
+                  <td>
+                    <ol>
+                    <% poll.branches.each do |branch| %>
+                      <li><%= link_to branch.name, '#' %></li>
+                    <% end %>
+                    </ol>
+                  </td>
+                  <td><%= poll.get_vote_count %></td>
+                  <td><%= poll.get_view_count %></td>
+                  <td><%= poll.create_since %></td>                
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

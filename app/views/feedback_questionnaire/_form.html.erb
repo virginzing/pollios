@@ -1,0 +1,175 @@
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
+
+      <header>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2><strong>Quesitonnaire Form</strong></h2>       
+        
+      </header>
+      <!-- widget div-->
+      <div>
+    
+        <!-- widget content -->
+        <div class="widget-body">
+          <%= simple_nested_form_for @questionnaire, url: create_feedback_questionnaire_path, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 1 }, as: :hidden %>
+          <header>
+            Questionnaire Detail 
+          </header>
+
+          <fieldset>
+            
+            <section class="col col-9">
+              <label class="label">Description</label>
+              <label class="textarea">
+                <%= f.input :description, label: false, input_html: { autofocus: "autofocus", rows: "5" }, required: false %>
+              </label>
+            </section>
+
+            <section class="col col-3">
+              <label class="label">Expire within (day)</label>
+                <label class="select">
+                  <select name="poll_series[expire_date]">
+                    <option value="0" selected="">Unexpired</option>
+                    <% (1..30).each do |e| %>
+                      <option value="<%= e %>"><%= e %></option>
+                    <% end %>
+                  </select> <i></i> 
+                </label>
+
+              <div class="option_config">
+                <label class="toggle">
+                  <input type="checkbox" name="poll_series[allow_comment]" checked="checked">
+                <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Suggest</label>
+                
+                <label class="toggle">
+                  <input type="checkbox" name="poll_series[qr_only]" checked="checked">
+                <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
+                
+                <label class="toggle">
+                  <input type="checkbox" name="poll_series[require_info]" checked="checked">
+                <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
+              </div>
+            </section>
+
+          </fieldset>
+
+          <fieldset>
+            <section class="col col-8">
+            <div class="panel panel-blue">
+              <div class="panel-heading">
+                <h4 class="panel-title">List of question</h4>
+              </div>
+
+              <div class="panel-body">
+
+                <div class="panel-body-row">
+                <%= f.fields_for :polls do |poll_form| %>
+                  <%= render 'poll_series/poll_fields',  :f => poll_form %>     
+                <% end %>
+                <%= f.link_to_add "More Poll", :polls, class: 'btn btn-primary add_new_poll' %>
+                </div>
+              </div>
+            </div>
+            </section>
+
+            <section class="col col-4">
+              <div class="panel panel-blue">
+                <div class="panel-heading">
+                  <h4 class="panel-title">Choices</h4>
+                </div>
+
+                <div class="panel-body">
+                  <div class="panel-body-row">
+                  <fieldset>
+                    <% 5.times do |i| %>
+                      <section>
+                        <label class="input"> <i class="icon-append fa fa-pencil"></i>
+                          <input type="text" name="same_choices[]" placeholder="" value="<%= i+1 %>">
+                        </label>
+                      </section>
+                    <% end %>
+                  </fieldset>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </fieldset>
+
+          <header>
+            Config
+          </header>
+          
+          <fieldset>
+          
+            <section> 
+                <label class="label">In Branch</label>
+                <label class="select">
+                  <input type="text" name="poll_series[branch_list]" id="branch_list">
+                </label>
+            </section>  
+
+
+<!--             <section>
+              <label class="label">Campaign</label>
+              <label class="select">
+                <%= f.select :campaign_id, @current_member.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+              </label>
+            </section>
+ -->          
+          </fieldset>
+        
+
+          <footer>
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+            <button type="button" class="btn btn-default" onclick="window.history.back();">
+              Back
+            </button>
+          </footer>
+            <% end %>
+
+        </div>
+        <!-- end widget content -->
+        
+      </div>
+      <!-- end widget div -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script type="text/javascript">
+
+  $(".remove_nested_fields")[0].style.visibility='hidden';
+  $(".remove_nested_fields")[1].style.visibility='hidden';
+
+</script>
+<% if current_member.get_company.present? %>
+  <script type="text/javascript">
+  $( document ).ready(function() {
+    $("#branch_list").select2({
+        width: "100%",
+        multiple: true,
+        placeholder: "Select a group",
+        query: function (query){
+          var data = {results: []};
+
+            $.each(<%= raw ActiveModel::ArraySerializer.new(@branch_list, each_serializer: GroupListSerializer).to_json %>, function(){
+                if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                    data.results.push({id: this.id, text: this.text });
+                }
+            });
+
+            query.callback(data);
+        }
+    });
+    $('#branch_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@branch_list, each_serializer: GroupListSerializer).to_json %> );
+  });
+  </script>
+<% end %>
