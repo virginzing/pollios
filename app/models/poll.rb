@@ -571,12 +571,14 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      if self.in_group
-        self.in_group_ids.split(",").each do |group_id|
-          GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id)
+      unless self.qr_only
+        if self.in_group
+          self.in_group_ids.split(",").each do |group_id|
+            GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id)
+          end
+        else
+          ApnPollWorker.perform_async(self.member_id, self.id)
         end
-      else
-        ApnPollWorker.perform_async(self.member_id, self.id)
       end
     end
   end
