@@ -11,5 +11,9 @@ class Branch < ActiveRecord::Base
     [:name,
      :id, :name]
   end
+
+  def should_generate_new_friendly_id?
+    name_changed? || super
+  end
   
 end
