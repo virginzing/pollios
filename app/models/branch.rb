@@ -4,6 +4,8 @@ class Branch < ActiveRecord::Base
 
   belongs_to :company
 
+  has_many :branch_poll_series, dependent: :destroy
+  
 
   def slug_candidates
     [:name,

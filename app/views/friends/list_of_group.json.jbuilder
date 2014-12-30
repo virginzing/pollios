@@ -3,7 +3,11 @@ if @groups
   json.groups @groups do |group|
     json.partial! 'response_helper/group/full_info', group: group
     json.poll_count group.get_poll_not_vote_count   ## amount total of member don't vote poll in group
-    json.as_admin group.check_as_admin?(@current_member)
+    if params[:member_id] == params[:friend_id]
+      json.as_admin group.check_as_admin?(@current_member)
+    else
+      json.as_admin group.check_as_admin?(Member.find(params[:friend_id]))
+    end
   end
 else
   json.response_status "ERROR"

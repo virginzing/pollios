@@ -25,10 +25,12 @@ class FeedbackQuestionnaireController < ApplicationController
     @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
     @questionnaires = PollSeries.joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
+  
   end
 
   def create
     PollSeries.transaction do
+
       @success = true
 
       @collection = @company.collection_polls.create!(title: params[:poll_series][:description])
