@@ -1,6 +1,6 @@
 class Poll < ActiveRecord::Base
-  extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders]
+  # extend FriendlyId
+  # friendly_id :slug_candidates, use: [:slugged, :finders]
 
   after_commit :send_notification, on: :create
 
@@ -118,12 +118,12 @@ class Poll < ActiveRecord::Base
     include_field :choices
   end
 
-  def slug_candidates
-    [
-      :title,
-      [:id, :title]
-    ]
-  end
+  # def slug_candidates
+  #   [
+  #     :title,
+  #     [:id, :title]
+  #   ]
+  # end
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) { find(id) }
