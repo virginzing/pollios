@@ -80,6 +80,8 @@ class Poll < ActiveRecord::Base
 
   scope :without_my_poll, -> (member_id) { where("polls.member_id != ?", member_id) }
 
+  scope :not_qr_only, -> { where(qr_only: false) }
+  
   scope :available, -> {
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     member_block = Member.list_friend_block.map(&:id)  ## member ids

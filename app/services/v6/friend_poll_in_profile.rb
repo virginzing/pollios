@@ -144,7 +144,7 @@ class V6::FriendPollInProfile
   end
 
   def poll_voted
-    query = Poll.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.not_qr_only.available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group = 'f') " \
                 "OR (history_votes.member_id = #{friend_id} AND polls.public = 't') " \
                 "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
