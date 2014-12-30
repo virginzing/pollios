@@ -570,7 +570,6 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      puts "poll normal => #{self.as_json()}"
       if in_group
         in_group_ids.split(",").each do |group_id|
           GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
@@ -581,6 +580,10 @@ class Poll < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def should_generate_new_friendly_id?
+    title_changed? || super
   end
 
   def self.check_type_of_choice(choices)
