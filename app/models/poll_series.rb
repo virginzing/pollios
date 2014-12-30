@@ -33,6 +33,14 @@ class PollSeries < ActiveRecord::Base
   after_create :generate_qrcode_key
   after_commit :send_notification, on: :create
 
+  def get_description
+    if branch_poll_series.present?
+      "[" << branch_poll_series.branch.name << "]" << " " << description
+    else
+      description
+    end
+  end
+
   def send_notification
     unless Rails.env.test?
       if self.in_group

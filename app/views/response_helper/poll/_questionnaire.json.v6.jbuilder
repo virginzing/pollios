@@ -4,7 +4,7 @@ json.vote_count poll.poll_series.vote_all
 json.view_count poll.poll_series.view_all
 json.expire_date poll.poll_series.expire_date.to_i
 json.created_at poll.poll_series.created_at.to_i
-json.title poll.poll_series.description
+json.title poll.poll_series.get_description
 json.series poll.series
 json.tags poll.poll_series.cached_tags
 json.is_public poll.poll_series.public
