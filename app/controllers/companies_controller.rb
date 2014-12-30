@@ -249,7 +249,7 @@ class CompaniesController < ApplicationController
 
     @list_surveyor = @group.surveyor
 
-    @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: params[:group_id]).order("created_at desc").paginate(page: params[:page], per_page: 10) 
+    @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: @group.id).order("created_at desc").paginate(page: params[:page], per_page: 10) 
   end
 
   def create_group
@@ -456,7 +456,7 @@ class CompaniesController < ApplicationController
   end
 
   def find_group
-    @find_group = Group.joins(:group_company).where("group_companies.company_id = #{@find_company.id}").first
+    @find_group = Group.joins(:group_company).where("group_companies.company_id = #{set_company.id}").first
   end
 
   def set_company
