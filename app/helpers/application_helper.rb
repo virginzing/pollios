@@ -405,6 +405,15 @@ end
 # }' -X POST http://localhost:3000/group/13/leave.json -i
 
 
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 93
+# }' -X POST http://localhost:3000/poll/1648/bookmark.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 93
+# }' -X POST http://localhost:3000/poll/16/un_bookmark.json -i
+
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 
 # }' -X POST http://localhost:3000/group/51/accept.json -i

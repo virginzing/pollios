@@ -115,7 +115,7 @@ RSpec.describe "Friend" do
   end
 
   describe "GET /friend/bookmarks" do
-    let!(:poll) { create(:poll, member: member, bookmarkable: poll) }
+    let!(:poll) { create(:poll, member: member) }
 
     context "of mine" do
       it "return list my bookmark" do
