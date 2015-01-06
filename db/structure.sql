@@ -419,6 +419,39 @@ ALTER SEQUENCE apn_pull_notifications_id_seq OWNED BY apn_pull_notifications.id;
 
 
 --
+-- Name: bookmarks; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE bookmarks (
+    id integer NOT NULL,
+    member_id integer,
+    bookmarkable_id integer,
+    bookmarkable_type character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: bookmarks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE bookmarks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bookmarks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE bookmarks_id_seq OWNED BY bookmarks.id;
+
+
+--
 -- Name: branch_poll_series; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2533,6 +2566,13 @@ ALTER TABLE ONLY apn_pull_notifications ALTER COLUMN id SET DEFAULT nextval('apn
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY bookmarks ALTER COLUMN id SET DEFAULT nextval('bookmarks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY branch_poll_series ALTER COLUMN id SET DEFAULT nextval('branch_poll_series_id_seq'::regclass);
 
 
@@ -3006,6 +3046,14 @@ ALTER TABLE ONLY apn_notifications
 
 ALTER TABLE ONLY apn_pull_notifications
     ADD CONSTRAINT apn_pull_notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bookmarks_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY bookmarks
+    ADD CONSTRAINT bookmarks_pkey PRIMARY KEY (id);
 
 
 --
@@ -3574,6 +3622,20 @@ CREATE INDEX index_apn_group_notifications_on_group_id ON apn_group_notification
 --
 
 CREATE INDEX index_apn_notifications_on_device_id ON apn_notifications USING btree (device_id);
+
+
+--
+-- Name: index_bookmarks_on_bookmarkable_id_and_bookmarkable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_bookmarks_on_bookmarkable_id_and_bookmarkable_type ON bookmarks USING btree (bookmarkable_id, bookmarkable_type);
+
+
+--
+-- Name: index_bookmarks_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_bookmarks_on_member_id ON bookmarks USING btree (member_id);
 
 
 --
@@ -4863,4 +4925,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141230053055');
 INSERT INTO schema_migrations (version) VALUES ('20141230053324');
 
 INSERT INTO schema_migrations (version) VALUES ('20141230083207');
+
+INSERT INTO schema_migrations (version) VALUES ('20150106060416');
 

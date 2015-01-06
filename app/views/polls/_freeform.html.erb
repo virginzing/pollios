@@ -1,14 +1,14 @@
 <input class="hidden" id="poll_type_poll" name="poll[type_poll]" type="hidden" value="freeform">
 
 <section>
-  <label class="label">Choice</label>
+  <label class="label">Answer</label>
   <label class="input">
     <div class="form-group string optional poll_choice_one"><input class="string optional form-control" data-parsley-required="true" id="poll_choice_one" name="poll[choice_one]" type="text"></div>
   </label>
 </section>
 <div id="InputsWrapper">
   <section>
-    <label class="label">Choice</label>
+    <label class="label">Answer</label>
     <label class="input">
       <input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" required>
       <a href="#" class="removeclass"></a>
@@ -16,7 +16,7 @@
   </section>
 </div>
 
-<button type="button" class="add-field btn btn-sm btn-default" id="AddMoreFileBox" style="margin-bottom: 10px;">More choice</button>
+<button type="button" class="add-field btn btn-sm btn-default btn-pill" id="AddMoreFileBox" style="margin-bottom: 10px;"><i class="fa fa-plus txt-color-red "></i> Add New Answer</button>
 
 <script>
 $(document).ready(function() {
@@ -33,7 +33,7 @@ $(document).ready(function() {
     if(x <= MaxInputs) {
         FieldCount++; //text box added ncrement
         //add input box
-        $(InputsWrapper).append('<section><label class="label">Choice</label><label class="input"><input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" value="" required><a href="#" class="removeclass"><i class="fa fa-trash-o"></i> Remove</a></label></section>');
+        $(InputsWrapper).append('<section><label class="label">Answer</label><label class="input"><input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" value="" required><a href="#" class="removeclass"><i class="fa fa-trash-o"></i> Delete</a></label></section>');
         x++; //text box increment
         
         $("#AddMoreFileId").show();

@@ -25,37 +25,16 @@
         <div class="widget-body">
           <%= simple_form_for @poll, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
           <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
-          <header>
-            Poll Detail 
-          </header>
 
           <fieldset>
               
             <section>
               <div class="row">
                 <section class="col col-9">
-                  <label class="label">Question</label>
+                  <label class="label">Poll Question</label>
                   <label class="textarea">
                     <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,255]" style="display: block; width: 100%;"></textarea>
                   </label>
-                  <div class="option_config">
-                    <label class="toggle">
-                      <input type="checkbox" name="poll[allow_comment]" checked="checked">
-                    <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Comment</label>
-                    
-                    <label class="toggle">
-                      <input type="checkbox" name="poll[qr_only]">
-                    <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
-                    
-                    <label class="toggle">
-                      <input type="checkbox" name="poll[require_info]" checked="checked">
-                    <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
-
-                    
-                    <label class="toggle">
-                      <input type="checkbox" name="poll[show_result]" checked="checked">
-                    <i data-swchon-text="on" data-swchoff-text="off"></i>Show Result Vote.</label>
-                  </div>
                 </section>
 
                 <section class="col col-3">
@@ -71,13 +50,13 @@
                   <div class="inline-group" id="template">
                       <label class="radio">
                           <input type="radio" name="radio-inline" checked="checked" id="freeform-template">
-                          <i></i>Freeform</label>
+                          <i></i>Freeform Poll</label>
                       <label class="radio">
                           <input type="radio" name="radio-inline" id="yesno-template">
-                          <i></i>Yes/No</label>
+                          <i></i>Yes/No Poll</label>
                       <label class="radio">
                           <input type="radio" name="radio-inline" id="star-template">
-                          <i></i>Star Rating</label>
+                          <i></i>Star Rating Poll</label>
                   </div>
               </section>
 
@@ -108,7 +87,7 @@
 
                 <section class="col col-5"> 
                   <div class="form-group">
-                    <label class="label">In Group</label>
+                    <label class="label">Show In Group</label>
                       <input type="text" name="poll[group_id]" id="group_list">
                   </div>
                 </section>  
