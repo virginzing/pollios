@@ -8,23 +8,23 @@ if @poll.present?
   end
   
   json.member_voted @member_voted_poll do |member|
-    json.partial! 'response_helper/member/short_info', member: member
+    json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 
   json.member_viewed @member_viewed_poll do |member|
-    json.partial! 'response_helper/member/short_info', member: member
+    json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 
   json.member_not_vote @member_novoted_poll do |member|
-    json.partial! 'response_helper/member/short_info', member: member
+    json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 
   json.member_not_view @member_noviewed_poll do |member|
-    json.partial! 'response_helper/member/short_info', member: member
+    json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 
   json.member_view_not_vote @member_view_not_vote do |member|
-    json.partial! 'response_helper/member/short_info', member: member
+    json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 else
   json.response_status "ERROR"
