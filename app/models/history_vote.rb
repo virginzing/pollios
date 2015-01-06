@@ -1,4 +1,5 @@
 class HistoryVote < ActiveRecord::Base
+
   belongs_to :member, touch: true
   belongs_to :poll
   belongs_to :poll_series
@@ -36,14 +37,30 @@ class HistoryVote < ActiveRecord::Base
   end
 
   rails_admin do
-      list do
+    list do
+      filters [:member, :poll, :choice]
       field :id
-      field :member
+
+      field :member do
+        searchable :fullname
+        pretty_value do
+          %{<a href="/admin/member/#{value.id}">#{value.fullname}</a>}.html_safe
+        end
+      end
+
       field :poll
-      field :choice
-      field :data_analysis
-      field :created_at
-      field :updated_at
+
+      field :choice do
+        searchable :answer
+        pretty_value do
+          %{<a href="/admin/choice/#{value.id}">#{value.answer}</a>}.html_safe
+        end
+      end
+      field :created_at do
+        pretty_value do
+          ActionController::Base.helpers.time_ago_in_words(bindings[:object].created_at) + ' ago'
+        end
+      end
     end
   end
 

@@ -120,6 +120,32 @@ class Poll < ActiveRecord::Base
     include_field :choices
   end
 
+  rails_admin do
+    list do
+      filters [:member, :title]
+      field :id
+
+      field :member do
+        searchable :fullname
+        pretty_value do
+          %{<a href="/admin/member/#{value.id}">#{value.fullname}</a>}.html_safe
+        end
+      end
+
+      field :title
+      field :public
+      field :photo_poll
+      field :vote_all
+      field :view_all
+      field :created_at do
+        pretty_value do
+          ActionController::Base.helpers.time_ago_in_words(bindings[:object].created_at) + ' ago'
+        end
+      end
+
+    end
+  end
+
   # def slug_candidates
   #   [
   #     :title,
