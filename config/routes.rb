@@ -198,6 +198,8 @@ Pollios::Application.routes.draw do
   end
 
   scope 'poll' do
+    post ':id/bookmark',  to: 'polls#bookmark'
+    post ':id/un_bookmark', to: 'polls#un_bookmark'
     post ':id/un_see',  to: 'polls#un_see'
     post ':id/save_later',  to: 'polls#save_later'
     post ':id/un_save_later', to: 'polls#un_save_later'

@@ -65,7 +65,7 @@ RSpec.describe "Poll" do
 
     it "save poll later" do
 
-      post "/poll/#{poll.id}/save_later", { member_id: member.id }, { "Accept" => "application/json" }
+      post "/poll/#{poll.id}/save_later.json", { member_id: member.id }, { "Accept" => "application/json" }
 
       expect(response.status).to eq(201)
 
@@ -82,11 +82,38 @@ RSpec.describe "Poll" do
 
       expect(SavePollLater.count).to eq(1)
 
-      post "/poll/#{poll.id}/un_save_later", { member_id: member.id }, { "Accept" => "application/json" }
+      post "/poll/#{poll.id}/un_save_later.json", { member_id: member.id }, { "Accept" => "application/json" }
 
       expect(json["response_status"]).to eq("OK")
 
       expect(SavePollLater.count).to eq(0)
+    end
+  end
+
+  describe "POST /poll/:id/bookmark" do
+    it "can bookmark" do
+
+      post "/poll/#{poll.id}/bookmark.json", { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(response.status).to eq(201)
+      
+      expect(json["response_status"]).to eq("OK")
+
+      expect(Bookmark.count).to eq(1)
+    end
+  end
+
+  describe "POST /poll/:id/un_bookmark" do
+    it "unbookmark" do
+      create(:bookmark, member: member, bookmarkable: poll)
+
+      expect(Bookmark.count).to eq(1)
+
+      post "/poll/#{poll.id}/un_bookmark.json",  { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("OK")
+
+      expect(Bookmark.count).to eq(0)
     end
   end
 
