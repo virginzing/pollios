@@ -7,8 +7,9 @@ class V6::MyPollInProfile
   def initialize(member, options = nil)
     @member = member
     @options = options
-    @init_unsee_poll ||= UnseePoll.new({ member_id: member.id})
+    @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
     @init_save_poll ||= SavePoll.new( { member_id: member.id} )
+    @init_bookmark_poll ||= BookmarkPoll.new( { member_id: member.id } )
   end
 
   def member_id
@@ -33,6 +34,14 @@ class V6::MyPollInProfile
 
   def saved_questionnaire_ids_later
     @init_save_poll.get_list_questionnaire_id
+  end
+
+  def bookmarked_poll_ids
+    @init_bookmark_poll.get_list_poll_id
+  end
+
+  def bookmarked_questionnaire_ids
+    @init_bookmark_poll.get_list_questionnaire_id
   end
 
   def my_vote_questionnaire_ids
@@ -75,6 +84,10 @@ class V6::MyPollInProfile
 
   def get_my_save_later
     split_poll_and_filter("poll_saved")
+  end
+
+  def get_my_bookmark
+    split_poll_and_filter("poll_bookmarked")
   end
 
   ## create ##
@@ -176,6 +189,17 @@ class V6::MyPollInProfile
     query
   end
 
+  def poll_bookmarked(next_cursor = nil, limit_poll = LIMIT_POLL)
+    query = Poll.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+                .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
+                  "OR (polls.id IN (?) AND polls.series = 'f')", bookmarked_questionnaire_ids, bookmarked_poll_ids)
+
+    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.limit(limit_poll)
+    query
+  end
+
   def poll_expire_have_vote
     "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
   end
@@ -195,6 +219,8 @@ class V6::MyPollInProfile
       poll_voted(original_next_cursor)
     elsif @type_feed == "poll_saved"
       poll_saved(original_next_cursor)
+    elsif @type_feed == "poll_bookmarked"
+      poll_bookmarked(original_next_cursor)
     else
       poll_watched(original_next_cursor)
     end
@@ -239,6 +265,7 @@ class V6::MyPollInProfile
       when "poll_voted" then poll_with_my_voted
       when "poll_watched" then poll_with_my_watched
       when "poll_saved" then poll_with_my_saved
+      when "poll_bookmarked" then poll_with_my_bookmarked
     end
   end
 
@@ -258,12 +285,17 @@ class V6::MyPollInProfile
     MemberPollFeed.where(member_id: member_id).first.poll_saved_feed.lazy
   end
 
+  def poll_with_my_bookmarked
+    MemberPollFeed.where(member_id: member_id).first.poll_bookmarked_feed.lazy
+  end
+
   def update_type_of_poll_feed
     case @type_feed
       when "poll_created" then poll_created_update_feed
       when "poll_voted" then poll_voted_update_feed
       when "poll_watched" then poll_watched_update_feed
       when "poll_saved" then poll_saved_update_feed
+      when "poll_bookmarked" then poll_bookmarked_update_feed
     end
   end
 
@@ -289,6 +321,12 @@ class V6::MyPollInProfile
     check_new_record_feed
     @member_poll_feed.update!(poll_saved_feed: poll_saved(nil, 1000).to_a.map(&:id))
     @member_poll_feed.poll_saved_feed.lazy
+  end
+
+  def poll_bookmarked_update_feed
+    check_new_record_feed
+    @member_poll_feed.update!(poll_bookmarked_feed: poll_bookmarked(nil, 1000).to_a.map(&:id))
+    @member_poll_feed.poll_bookmarked_feed.lazy
   end
 
   def check_new_record_feed

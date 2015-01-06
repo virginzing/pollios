@@ -114,4 +114,18 @@ RSpec.describe "Friend" do
     end
   end
 
+  describe "GET /friend/bookmarks" do
+    let!(:poll) { create(:poll, member: member, bookmarkable: poll) }
+
+    context "of mine" do
+      it "return list my bookmark" do
+        create(:bookmark, member: member, bookmarkable: poll)
+
+        get "/friend/bookmarks.json", { member_id: member.id, friend_id: member.id, api_version: 6 }, { "Accept" => "application/json" }
+        expect(response).to be_success
+        expect(json["response_status"]).to eq("OK")
+      end
+    end
+  end
+
 end

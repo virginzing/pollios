@@ -6,7 +6,7 @@ class FriendsController < ApplicationController
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]
   # before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote, :list_of_watched]
 
-  before_action :load_resource_poll_feed, only: [:list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend, :list_of_group]
+  before_action :load_resource_poll_feed, only: [:list_of_bookmark, :list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend, :list_of_group]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -158,6 +158,12 @@ class FriendsController < ApplicationController
   def list_of_save_poll_later
     @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
     @list_polls, @next_cursor = @init_poll.get_my_save_later
+    @group_by_name = @init_poll.group_by_name
+  end
+
+  def list_of_bookmark
+    @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+    @list_polls, @next_cursor = @init_poll.get_my_bookmark
     @group_by_name = @init_poll.group_by_name
   end
 

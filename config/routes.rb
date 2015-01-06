@@ -117,6 +117,7 @@ Pollios::Application.routes.draw do
     get 'watched',          to: 'friends#list_of_watched'
     get 'save_poll_later',  to: 'friends#list_of_save_poll_later'
     get 'groups',           to: 'friends#list_of_group'
+    get 'bookmarks',        to: 'friends#list_of_bookmark'
     get 'friend_of_friend', to: 'friends#friend_of_friend'
     get 'following_of_friend', to: 'friends#following_of_friend'
     get 'follower_of_friend',  to: 'friends#follower_of_friend'
