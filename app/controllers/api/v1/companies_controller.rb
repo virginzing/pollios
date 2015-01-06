@@ -27,8 +27,6 @@ module Api
       def poll_detail
         @poll = Poll.cached_find(params[:id])
         @group_by_name ||= @init_poll.group_by_name
-        @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-        @total_entries = @polls.total_entries
         init_company = PollDetailCompany.new(@poll.groups, @poll)
         @member_group = init_company.get_member_in_group
         @member_voted_poll = init_company.get_member_voted_poll

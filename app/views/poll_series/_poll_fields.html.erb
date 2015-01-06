@@ -1,9 +1,9 @@
 
 <section>
-  <label class="label">Question</label>
+  <label class="label">Poll Question</label>
   <label class="textarea">
     <%= f.input :title , label: false, as: :text %>
     <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
-    <%= f.link_to_remove "Remove", class: "removeclass" %>
+    <%= f.link_to_remove "Delete", class: "removeclass" %>
   </label>
 </section>

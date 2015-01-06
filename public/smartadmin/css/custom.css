@@ -93,11 +93,6 @@ div.panel {
   margin-bottom: 30px;
 }
 
-a.btn.btn-primary.add_nested_fields {
-  padding: 0px 12px;
-  font: 200 13px/29px 'Open Sans',Helvetica,Arial,sans-serif;
-}
-
 .panel-body > section {
   padding: 15px 25px;
 }

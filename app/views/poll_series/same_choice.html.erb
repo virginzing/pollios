@@ -16,7 +16,7 @@
           <%= simple_nested_form_for @poll_series, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
           <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 1 }, as: :hidden %>
           <header>
-            Questionnaire Detail 
+            Survey 
           </header>
 
           <fieldset>
@@ -57,10 +57,10 @@
           </fieldset>
 
           <fieldset>
-            <section class="col col-8">
-            <div class="panel panel-blue">
+            <section class="col col-10">
+            <div class="panel panel-darken">
               <div class="panel-heading">
-                <h4 class="panel-title">List of question</h4>
+                <h4 class="panel-title">List of Question Poll</h4>
               </div>
 
               <div class="panel-body">
@@ -69,16 +69,16 @@
                 <%= f.fields_for :polls do |poll_form| %>
                   <%= render 'poll_fields',  :f => poll_form %>     
                 <% end %>
-                <%= f.link_to_add "More Poll", :polls, class: 'btn btn-primary add_new_poll' %>
+                <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> Add New Poll Question".html_safe, :polls, class: 'btn btn-default btn-sm add_new_poll btn-pill' %>
                 </div>
               </div>
             </div>
             </section>
 
-            <section class="col col-4">
-              <div class="panel panel-blue">
+            <section class="col col-2">
+              <div class="panel panel-darken">
                 <div class="panel-heading">
-                  <h4 class="panel-title">Choices</h4>
+                  <h4 class="panel-title">Answer</h4>
                 </div>
 
                 <div class="panel-body">
@@ -87,7 +87,7 @@
                     <% 5.times do |i| %>
                       <section>
                         <label class="input"> <i class="icon-append fa fa-pencil"></i>
-                          <input type="text" name="same_choices[]" placeholder="" value="<%= i+1 %>">
+                          <input type="text" name="same_choices[]" placeholder="" value="<%= i+1 %>" disabled>
                         </label>
                       </section>
                     <% end %>
@@ -114,7 +114,7 @@
             
             <% if current_member.get_company.present? %>
             <section> 
-                <label class="label">In Group</label>
+                <label class="label">Show In Group</label>
                 <label class="select">
                   <input type="text" name="poll_series[group_id]" id="group_list">
                 </label>
