@@ -2,7 +2,7 @@ class FeedbackQuestionnaireController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :signed_user
   before_action :load_company
-  before_action :set_questionnaire, only: [:show , :destroy]
+  before_action :set_questionnaire, only: [:show]
 
   def reports
     
@@ -95,7 +95,20 @@ class FeedbackQuestionnaireController < ApplicationController
 
 
   def destroy
-    
+  @collection_poll = CollectionPoll.find(params[:id])
+
+    if @collection_poll
+      @collection_poll = CollectionPoll.find(params[:id])
+      Groupping.where("collection_poll_id = ?", params[:id]).each do |group|
+        group.groupable.destroy
+      end
+      @collection_poll.destroy
+      flash[:success] = "Delete success"
+      redirect_to feedback_questionnaires_path
+    else
+      flash[:error] = "Delete fail"
+      render 'index'
+    end
   end
 
 

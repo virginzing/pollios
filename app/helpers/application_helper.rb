@@ -14,6 +14,20 @@ module ApplicationHelper
     params[:controller] == @controller.controller_name
   end
 
+  def sum_average(list, number, index)
+    new_list = list.each_slice(number).to_a
+    (new_list.collect{|e| e[index] }.reduce(:+) / number).round(2)
+  end
+
+  def percent_average(list, number, index)
+    new_list = list.each_slice(number).to_a
+    (((new_list.collect{|e| e[index] }.reduce(:+) / number) * 100 ) / 5.to_f).round(2)
+  end
+
+  def rating_average(list, number, index)
+    0
+  end
+
   def filter_helper(filter_by, options = nil)
     if filter_by == params[:filter_by]
       'active'
@@ -501,9 +515,9 @@ end
 # where("(polls.public = ?) OR (poll_members.member_id = ? AND poll_members.in_group = ? AND poll_members.share_poll_of_id = 0)", true, 11, false)
 
 # curl -H "Content-Type: application/json" -d '{
-#   "member_id": 163,
-#   "answer": [{"id": 1443, "choice_id": 5216}, {"id": 1442, "choice_id": 5211}]
-# }' -X POST http://localhost:3000/questionnaire/69/vote.json -i
+#   "member_id": 93,
+#   "answer": [{"id": 1780, "choice_id": 6654}, {"id": 1779, "choice_id": 6649}, {"id": 1778, "choice_id": 6644}]
+# }' -X POST http://localhost:3000/questionnaire/122/vote.json -i
 
 
 # # http://localhost:3000/new_public_timeline.json?member_id=3

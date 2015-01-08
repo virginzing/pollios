@@ -153,7 +153,7 @@
             <% if poll.rating? %>
               <div class="tab-pane fade in active" id="star_rating">
                 <div class="text-center">
-                  <input id="input-id" type="number" class="rating" data-size="lg" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-star-captions="{}" value="<%= poll.get_rating_score %>">
+                  <input type="number" class="rating input-id" data-size="lg" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-star-captions="{}" value="<%= poll.get_rating_score %>">
                 </div> 
               </div>
             <% end %>

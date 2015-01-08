@@ -372,9 +372,9 @@
       });
   }
   $(document).ready(function() {
-      $('.progress .progress-bar').progressbar({
-          display_text: 'center'
-      });
+    $('.progress .progress-bar').progressbar({
+        display_text: 'center'
+    });
   });
   $(document).on('page:change', function() {
       // DO NOT REMOVE : GLOBAL FUNCTIONS!
@@ -383,7 +383,7 @@
       dataTable();
       validateMemberProfile();
 
-      $("#input-id").rating();
+      $(".input-id").rating();
       $("[data-toggle=tooltip]").tooltip();;
 
       var searchFunc = function(term, callback) {

@@ -28,7 +28,7 @@
             <%= poll.search_poll_image %>
             <% if poll.rating? %>
               <div class="rating" style="width: 100%">
-                <input id="input-id" type="number" class="rating" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-star-captions="{}" value="<%= poll.get_rating_score %>"> 
+                <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-star-captions="{}" value="<%= poll.get_rating_score %>"> 
               </div>
             <% end %>
             <div>

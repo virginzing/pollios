@@ -45,7 +45,7 @@
                   <td><%= collection.sum_view_all %></td>
                   <td><span data-livestamp="<%= collection.created_at.to_i %>"></span></td>
                   <td><span data-livestamp="<%= collection.updated_at.to_i %>"></span></td>
-                  <td><%= link_to 'View Report', collection_feedback_report_path(collection), class: 'btn btn-default btn-pill' %></td>
+                  <td width="160"><%= link_to 'View Report', collection_feedback_report_path(collection), class: 'btn btn-default btn-pill' %> <%= link_to 'Delete', delete_collection_feedback_path(collection), data: { confirm: 'Are you sure?'}, method: :delete, class: 'btn btn-default btn-pill' %></td>
                 </tr>
               <% end %>
             </tbody>

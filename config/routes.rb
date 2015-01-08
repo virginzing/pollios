@@ -163,6 +163,8 @@ Pollios::Application.routes.draw do
       get ':id/reports',      to: 'feedback_reports#collection',  as: :collection_feedback_report
 
       get 'reports',  to: 'feedback_questionnaire#reports', as: :all_feedback_report
+
+      delete ':id/delete',  to: 'feedback_questionnaire#destroy', as: :delete_collection_feedback
     end
 
     scope 'poll' do
