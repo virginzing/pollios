@@ -15,6 +15,7 @@
         <div class="widget-body">
           <%= simple_nested_form_for @questionnaire, url: create_feedback_questionnaire_path, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
           <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 1 }, as: :hidden %>
+          <%= f.input :feedback, wrapper: :horizontal, input_html: { value: true }, as: :hidden %>
           <header>
             Questionnaire Detail 
           </header>
@@ -57,28 +58,28 @@
           </fieldset>
 
           <fieldset>
-            <section class="col col-8">
-            <div class="panel panel-blue">
+            <section class="col col-10">
+            <div class="panel panel-darken">
               <div class="panel-heading">
-                <h4 class="panel-title">List of question</h4>
+                <h4 class="panel-title">List of Question Poll</h4>
               </div>
 
               <div class="panel-body">
 
                 <div class="panel-body-row">
                 <%= f.fields_for :polls do |poll_form| %>
-                  <%= render 'poll_series/poll_fields',  :f => poll_form %>     
+                  <%= render '/poll_series/poll_fields',  :f => poll_form %>     
                 <% end %>
-                <%= f.link_to_add "More Poll", :polls, class: 'btn btn-primary add_new_poll' %>
+                <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> Add New Poll Question".html_safe, :polls, class: 'btn btn-default btn-sm add_new_poll btn-pill' %>
                 </div>
               </div>
             </div>
             </section>
 
-            <section class="col col-4">
-              <div class="panel panel-blue">
+            <section class="col col-2">
+              <div class="panel panel-darken">
                 <div class="panel-heading">
-                  <h4 class="panel-title">Choices</h4>
+                  <h4 class="panel-title">Answer</h4>
                 </div>
 
                 <div class="panel-body">

@@ -2,6 +2,20 @@
   <h1 class="page-header-all">
     <i class="fa fa-share-alt fa-fw"></i> 
       List Branch
+
+    <div class="pull-right">
+      <ul id="sparks" class="">
+        <li class="sparks-info">
+          <h5> Total Branch <span class="txt-color-red"><%= @branches.to_a.count %></span></h5>
+        </li>
+<!--         <li class="sparks-info">
+          <h5>Poll in Branch <span class="txt-color-purple">10</span></h5>
+        </li>
+        <li class="sparks-info">
+          <h5>Questionnaire in Branch<span class="txt-color-greenDark">12</span></h5>
+        </li> -->
+        </ul>
+    </div>
   </h1>
 
     <a href="<%= new_branch_path %>" class="icon-btn">
@@ -10,6 +24,10 @@
   </a>
 
 </div>
+
+
+
+
 
 <section id="widget-grid" class="">
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-branch" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
@@ -29,7 +47,10 @@
               <tr>
                 <th width="50">#</th>
                 <th>Name</th>
+                <th>Total Feedback</th>
+                <th>Total Poll</th>
                 <th>Address</th>
+                <th>Note</th>
                 <th>Created_at</th>
                 <th>Action</th>
               </tr>
@@ -39,7 +60,10 @@
                 <tr>
                   <td><%= branch.id %></td>
                   <td><%= branch.name %></td>
+                  <td><%= branch.get_total_feedback %></td>
+                  <td><%= branch.get_total_poll %></td>
                   <td><%= branch.address %></td>
+                  <td><%= branch.note %></td>
                   <td><span data-livestamp="<%= branch.created_at.to_i %>"></span></td>
                   <td><%= link_to 'Edit', edit_branch_path(branch) %> | <%= link_to 'Remove', branch_path(branch), method: :delete, data: { confirm: 'Are you sure?' } %></td>
                 </tr>

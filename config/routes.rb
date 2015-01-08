@@ -159,6 +159,15 @@ Pollios::Application.routes.draw do
     scope 'questionnaire' do
       get 'new',      to: 'feedback_questionnaire#new',  as: :new_feedback_questionnaire
       post 'create',  to: 'feedback_questionnaire#create',  as: :create_feedback_questionnaire
+
+      get ':id/reports',      to: 'feedback_reports#collection',  as: :collection_feedback_report
+
+      get 'reports',  to: 'feedback_questionnaire#reports', as: :all_feedback_report
+    end
+
+    scope 'poll' do
+      get ':id/reports',  to: 'feedback_reports#polls', as: :poll_feedback_report
+      get 'reports',      to: 'feedback_poll#reports',  as: :all_poll_report
     end
 
     scope 'collection' do

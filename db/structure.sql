@@ -526,7 +526,8 @@ CREATE TABLE branches (
     company_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    slug character varying(255)
+    slug character varying(255),
+    note text
 );
 
 
@@ -705,7 +706,9 @@ CREATE TABLE collection_polls (
     title character varying(255),
     company_id integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    sum_view_all integer DEFAULT 0,
+    sum_vote_all integer DEFAULT 0
 );
 
 
@@ -1829,7 +1832,8 @@ CREATE TABLE poll_series (
     qrcode_key character varying(255),
     require_info boolean,
     in_group boolean DEFAULT false,
-    recurring_id integer
+    recurring_id integer,
+    feedback boolean DEFAULT false
 );
 
 
@@ -4927,4 +4931,10 @@ INSERT INTO schema_migrations (version) VALUES ('20141230053324');
 INSERT INTO schema_migrations (version) VALUES ('20141230083207');
 
 INSERT INTO schema_migrations (version) VALUES ('20150106060416');
+
+INSERT INTO schema_migrations (version) VALUES ('20150107081906');
+
+INSERT INTO schema_migrations (version) VALUES ('20150107100111');
+
+INSERT INTO schema_migrations (version) VALUES ('20150107100824');
 

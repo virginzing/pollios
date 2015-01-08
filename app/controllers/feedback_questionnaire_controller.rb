@@ -4,6 +4,10 @@ class FeedbackQuestionnaireController < ApplicationController
   before_action :load_company
   before_action :set_questionnaire, only: [:show , :destroy]
 
+  def reports
+    
+  end
+
   def index
     # @questionnaires = PollSeries.joins(:branch).where("branch_poll_series.branch_id IN (?)", @company.branches.map(&:id))
     @collections = CollectionPoll.joins(:grouppings).where("groupable_type = 'PollSeries' AND company_id = ?", @company.id).uniq
@@ -71,11 +75,7 @@ class FeedbackQuestionnaireController < ApplicationController
         redirect_to feedback_questionnaires_path
       else
         flash[:error] = @poll_series.errors.full_messages
-        if poll_series_params["type_series"] == "0"
-          render action: 'normal'
-        else
-          render action: 'same_choice'
-        end
+        render action: 'new'
       end
     end
     
@@ -106,7 +106,7 @@ class FeedbackQuestionnaireController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :qr_only, :require_info, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:allow_comment, :expire_within, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_series, :qr_only, :require_info, :feedback, :same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 
 end

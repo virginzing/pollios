@@ -23,6 +23,8 @@ class PollSeries < ActiveRecord::Base
   has_one :branch_poll_series, dependent: :destroy
   has_one :branch, through: :branch_poll_series, source: :branch
 
+  has_one :groupping, as: :groupable
+
   validates :description, presence: true
 
   accepts_nested_attributes_for :polls, :allow_destroy => true
@@ -131,11 +133,12 @@ class PollSeries < ActiveRecord::Base
       hqn.poll_series_id = poll_series_id
       hqn.save!
       poll_series.update_columns(view_all: poll_series.view_all + 1)
+      CollectionPoll.update_sum_view(poll_series)
     end
   end
 
   def vote_questionnaire(params, member, poll_series)
-    surveyed_id = params[:surveyed_id]
+    surveyed_id = params[:surveyed_id] || params[:member_id]
     member_id = params[:member_id]
 
     PollSeries.transaction do
@@ -147,6 +150,7 @@ class PollSeries < ActiveRecord::Base
       if @votes.present?
         self.increment!(:vote_all)
         poll_series.suggests.create!(member_id: surveyed_id, message: params[:suggest])
+        CollectionPoll.update_sum_vote(poll_series)
         SavePollLater.delete_save_later(member_id, poll_series)
         member.flush_cache_my_vote
         member.flush_cache_my_vote_all

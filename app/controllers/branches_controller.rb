@@ -14,7 +14,7 @@ class BranchesController < ApplicationController
   end
 
   def index
-    @branches = @company.branches.order("branches.created_at DESC")
+    @branches = @company.branches.includes(:branch_poll_series, :branch_polls).order("branches.created_at DESC").decorate
   end
 
   def new
@@ -62,7 +62,7 @@ class BranchesController < ApplicationController
   end
 
   def branch_params
-    params.require(:branch).permit(:name, :address)
+    params.require(:branch).permit(:name, :address, :note)
   end
 
 end

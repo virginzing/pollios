@@ -4,9 +4,11 @@ class Branch < ActiveRecord::Base
 
   belongs_to :company
 
+  has_many :branch_polls, dependent: :destroy
+  
   has_many :branch_poll_series, dependent: :destroy
   
-
+  has_many :questionnaires, through: :branch_poll_series, source: :poll_series
   # def slug_candidates
   #   [:name,
   #    :id, :name]
@@ -16,4 +18,11 @@ class Branch < ActiveRecord::Base
   #   name_changed? || super
   # end
   
+  def get_questionnaire_count
+    branch_poll_series.uniq.count
+  end
+
+  def get_poll_count
+    branch_polls.uniq.count
+  end
 end

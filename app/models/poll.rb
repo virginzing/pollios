@@ -20,7 +20,7 @@ class Poll < ActiveRecord::Base
     using: { tsearch: {dictionary: "english", prefix: true, :any_word => true }, :trigram => { :threshold => 0.1 } },
     associated_against: { choices: [:answer] }
 
-  has_many :choices, inverse_of: :poll, dependent: :destroy
+  has_many :choices, dependent: :destroy
   has_many :taggings, dependent: :destroy
 
   has_many :tags, through: :taggings, source: :tag
@@ -652,7 +652,7 @@ class Poll < ActiveRecord::Base
     Poll.transaction do
       begin
         ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
-
+        # puts "ever_vote => #{ever_vote}"
         unless ever_vote
           find_poll = Poll.find_by(id: poll_id)
           find_choice = find_poll.choices.find_by(id: choice_id)

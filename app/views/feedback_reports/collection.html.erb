@@ -1,0 +1,103 @@
+<div class="filter-panel">
+  <div class="well">
+    <section id="filter">
+    <h4>Filter Panel</h4>
+      <br>
+      <div class="filter">
+        <div class="btn-group btn-group-justified">
+          <a href="<%= collection_feedback_report_path(filter_by: 'today') %>" class="btn btn-default <%= filter_helper('today', 'default') %>">Today</a>
+          <a href="<%= collection_feedback_report_path(filter_by: 'yesterday') %>" class="btn btn-default <%= filter_helper('yesterday') %>">Yesterday</a>
+          <a href="<%= collection_feedback_report_path(filter_by: 'week') %>" class="btn btn-default <%= filter_helper('week') %>">This Week</a>
+          <a href="<%= collection_feedback_report_path(filter_by: 'month') %>" class="btn btn-default <%= filter_helper('month') %>">This Month</a>
+        </div>
+      </div>
+
+      <div class="filter-other">
+        <form action="<%= collection_feedback_report_path %>" method="GET" role="form" class="smart-form">
+          <div class="row">
+            <label class="label col col-1">Filter Range</label>
+            <section class="col col-2">
+              <label class="input"> <i class="icon-append fa fa-calendar"></i>
+                <input type="text" name="startdate" id="startdate" placeholder="start date">
+              </label>
+            </section>
+            <section class="col col-2">
+              <label class="input"> <i class="icon-append fa fa-calendar"></i>
+                <input type="text" name="finishdate" id="finishdate" placeholder="finish date">
+              </label>
+            </section>
+
+            <section class="col col-2">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </section>
+
+          </div>
+        </form>
+      </div>          
+    </section>
+  </div>
+</div>
+
+<div class="well">
+  <h1 class="text-center">
+    <%= @collection.title %>
+  </h1>
+
+  <div class="row">
+    <div class="col-md-8">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Average</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Nuttapon</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Nuttapon</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+
+    <div class="col-md-4">
+      <div class="well well-light">
+        <h4>Lastest Comment</h4>
+
+        <div class="row">
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $('#startdate').datepicker({
+    dateFormat : 'dd-mm-yy',
+    prevText : '<i class="fa fa-chevron-left"></i>',
+    nextText : '<i class="fa fa-chevron-right"></i>',
+    onSelect : function(selectedDate) {
+      $('#finishdate').datepicker('option', 'minDate', selectedDate);
+    }
+  });
+
+  $('#finishdate').datepicker({
+    dateFormat : 'dd-mm-yy',
+    prevText : '<i class="fa fa-chevron-left"></i>',
+    nextText : '<i class="fa fa-chevron-right"></i>',
+    onSelect : function(selectedDate) {
+      $('#startdate').datepicker('option', 'maxDate', selectedDate);
+    }
+  });
+</script>

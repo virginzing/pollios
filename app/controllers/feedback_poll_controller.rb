@@ -10,4 +10,8 @@ class FeedbackPollController < ApplicationController
   def new
 
   end
+
+  def reports
+    
+  end
 end

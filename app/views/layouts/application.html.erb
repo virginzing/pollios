@@ -152,7 +152,7 @@
     -->
     <nav>
       <% if current_member.get_company.present? %>
-        <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' %>
+        <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' %>
           <%= render partial: 'sherd/nav_feedback' %>
         <% else %>
           <%= render partial: 'sherd/nav_company' %>

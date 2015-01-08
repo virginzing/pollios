@@ -60,12 +60,6 @@ class PollDecorator < ApplicationDecorator
     end
   end
   
-  private
-
-  def span_badge(amount)
-    content_tag(:span, amount, class: 'badge bg-color-blueLight')
-  end
-
 
 end
 

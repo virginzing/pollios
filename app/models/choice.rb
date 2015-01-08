@@ -1,7 +1,7 @@
 include GzipWithZlib
 class Choice < ActiveRecord::Base
   
-  belongs_to :poll, inverse_of: :choices, touch: true
+  belongs_to :poll
   
   validates :answer, presence: true
   validates :poll_id, presence: true
