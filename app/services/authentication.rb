@@ -186,7 +186,7 @@ class Authentication
       follow_pollios
       UserStats.create_user_stats(@member, @params["provider"])
     else
-      find_provider.update_columns(token: generate_token)
+      find_provider.update_columns(token: generate_token, updated_at: Time.zone.now)
     end
     @member
   end
