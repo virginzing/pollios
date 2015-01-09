@@ -14,14 +14,14 @@ module ApplicationHelper
     params[:controller] == @controller.controller_name
   end
 
-  def sum_average(list, number, index)
-    new_list = list.each_slice(number).to_a
-    (new_list.collect{|e| e[index] }.reduce(:+) / number).round(2)
+  def sum_average(list, number_branch, vote_count, index)
+    new_list = list.each_slice(number_branch).to_a
+    (new_list.collect{|e| e[index] }.reduce(:+) / vote_count).round(2)
   end
 
-  def percent_average(list, number, index)
-    new_list = list.each_slice(number).to_a
-    (((new_list.collect{|e| e[index] }.reduce(:+) / number) * 100 ) / 5.to_f).round(2)
+  def percent_average(list, number_branch, vote_count, index)
+    new_list = list.each_slice(number_branch).to_a
+    (((new_list.collect{|e| e[index] }.reduce(:+) / vote_count) * 100 ) / 5.to_f).round(2)
   end
 
   def rating_average(list, number, index)

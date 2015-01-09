@@ -49,6 +49,7 @@
   <% number_people_vote += questionnaire.vote_all %>
 <% end %>
 
+<% p array_list %>
 <div class="well">
   <h1 class="text-center">
     <%= @collection.title %>
@@ -79,15 +80,15 @@
               </h4>
             </td>
             <td class="text-center">
-              <a href="javascript:void(0);"><%= sum_average(array_list, @questionnaire.polls.to_a.count, index) %></a>
+              <a href="javascript:void(0);"><%= sum_average(array_list, @questionnaire.polls.to_a.count, number_people_vote, index) %></a>
             </td>
             <td class="text-center">
-              <a href="javascript:void(0);"><%= percent_average(array_list, @questionnaire.polls.to_a.count, index) %> %</a>
+              <a href="javascript:void(0);"><%= percent_average(array_list, @questionnaire.polls.to_a.count, number_people_vote, index) %> %</a>
             </td>
             <td class="text-center">
               <a href="javascript:void(0);">
                 <div class="rating" style="width: 100%; font-size: 10px;">
-                  <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= sum_average(array_list, @questionnaire.polls.to_a.count, index) %>"> 
+                  <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= sum_average(array_list, @questionnaire.polls.to_a.count, number_people_vote, index) %>"> 
                 </div>
               </a>
             </td>

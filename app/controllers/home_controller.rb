@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   before_action :signed_user, only: [:dashboard]
   
-  # before_action :only_brand_or_company_account, only: [:dashboard]
+  before_action :only_brand_or_company_account, only: [:dashboard]
 
   def dashboard    
     if current_member.brand?

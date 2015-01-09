@@ -114,7 +114,7 @@ class CompaniesController < ApplicationController
   end
 
   def list_questionnaires
-    @list_questionnaires = current_member.poll_series
+    @list_questionnaires = current_member.poll_series.where(feedback: false)
   end
 
   def list_campaigns
