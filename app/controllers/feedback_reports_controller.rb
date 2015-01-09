@@ -10,10 +10,11 @@ class FeedbackReportsController < ApplicationController
     @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
     @questionnaires ||= PollSeries.includes(:polls).joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
-
+                               
     @questionnaire = @questionnaires.first
 
-    @branches = Branch.joins(:branch_poll_series).where("branch_poll_series.poll_series_id IN (?)", @questionnaire_ids)
+    @branches = Branch.joins(:branch_poll_series => [:poll_series => [:polls => :choices]]).where("branch_poll_series.poll_series_id IN (?)", @questionnaire_ids).uniq
+
   end
 
   def polls

@@ -41,10 +41,26 @@ class PollSeries < ActiveRecord::Base
     set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 } ]
 
     include_association [:polls, :branch_poll_series, :groupping]
-
-
   end
 
+  def self.get_sum_each_poll_in_branch(branch_id, poll_count, index)
+    array_list = []
+    vote_all = 0
+
+    PollSeries.joins(:branch, :polls => :choices).where("branch_poll_series.branch_id = ?", branch_id).uniq.each do |q|
+      q.polls.each do |p|
+        array_list << p.decorate.get_rating_score
+      end
+      vote_all += q.vote_all
+    end
+
+    if vote_all == 0
+      sum = 0
+    else
+      sum = (array_list.each_slice(poll_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
+    end
+
+  end
 
   def get_description
     if branch_poll_series.present?

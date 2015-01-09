@@ -175,7 +175,7 @@ Pollios::Application.routes.draw do
     scope 'collection' do
       get ':id',      to: 'feedback_questionnaire#collection', as: :collection_feedback_questionnaire
 
-      get ':id/:branch_id',    to: 'branches#detail',  as: :collection_feedback_branch_detail
+      get ':id/:branch_id/:questionnaire_id',    to: 'branches#detail',  as: :collection_feedback_branch_detail
 
 
     end

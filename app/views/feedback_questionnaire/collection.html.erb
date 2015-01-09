@@ -32,7 +32,7 @@
               <% @questionnaires.each do |questionnaire| %>
                 <tr>
                   <td><%= questionnaire.id %></td>
-                  <td><%= link_to questionnaire.branch.name, collection_feedback_branch_detail_path(@collection, questionnaire.branch) %></td>
+                  <td><%= link_to questionnaire.branch.name, collection_feedback_branch_detail_path(@collection, questionnaire.branch, questionnaire.id) %></td>
                   <td><%= questionnaire.vote_all %></td>
                   <td><%= questionnaire.view_all %></td>
                   <td><span data-livestamp="<%= questionnaire.updated_at.to_i %>"></span></td>

@@ -4,7 +4,6 @@ class Choice < ActiveRecord::Base
   belongs_to :poll
   
   validates :answer, presence: true
-  validates :poll_id, presence: true
   
   default_scope { order("id asc") }
 
