@@ -99,7 +99,7 @@ gem 'mini_magick', '~> 3.5.0'
 
 gem 'randumb'
 gem 'figaro'
-gem 'amoeba'
+gem 'amoeba', github: 'amoeba-rb/amoeba'
 
 gem 'rails_admin'
 gem 'devise'

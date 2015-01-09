@@ -9,7 +9,7 @@ module Api
 
       before_action :load_resource_poll_feed, only: [:polls, :poll_detail, :company_polls]
       
-      before_action :get_your_group, only: [:poll_detail]
+      before_action :get_your_group, only: [:poll_detail, :polls]
       before_action :set_group, only: [:polls, :poll_detail]
 
       before_action :compress_gzip
@@ -37,6 +37,9 @@ module Api
 
       def poll_helper
         @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+        @group_by_name ||= @init_poll.group_by_name
+        @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+        @total_entries = @polls.total_entries
       end
 
       ## main of company ##

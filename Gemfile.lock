@@ -9,6 +9,13 @@ GIT
       configatron
 
 GIT
+  remote: git://github.com/amoeba-rb/amoeba.git
+  revision: b9022700af5e092cf917823a07b8c79af6f3285e
+  specs:
+    amoeba (3.0.0)
+      activerecord (>= 3.2.6)
+
+GIT
   remote: git://github.com/bwillis/versioncake.git
   revision: 4d2fc85bb520e5f227fe5fc247f279eb01708754
   specs:
@@ -102,8 +109,6 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.6)
-    amoeba (2.1.0)
-      activerecord (>= 3.2.6, < 5)
     api_taster (0.8.4)
       jquery-rails
       rails (~> 4.1.0)
@@ -484,7 +489,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   activerecord-postgres-hstore
-  amoeba
+  amoeba!
   api_taster (~> 0.8)
   apn_on_rails!
   apns

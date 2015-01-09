@@ -35,6 +35,17 @@ class PollSeries < ActiveRecord::Base
   after_create :generate_qrcode_key
   after_commit :send_notification
 
+  amoeba do 
+    enable
+
+    set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 } ]
+
+    include_association [:polls, :branch_poll_series, :groupping]
+
+
+  end
+
+
   def get_description
     if branch_poll_series.present?
       "[" << branch_poll_series.branch.name << "]" << " " << description

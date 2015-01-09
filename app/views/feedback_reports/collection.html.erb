@@ -44,7 +44,7 @@
 
 <% @questionnaires.each do |questionnaire| %>
   <% questionnaire.polls.includes(:choices).decorate.each do |poll| %>
-    <% array_list << poll.get_rating_score %>
+    <% array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).to_f %>
   <% end %>
   <% number_people_vote += questionnaire.vote_all %>
 <% end %>

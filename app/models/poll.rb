@@ -117,7 +117,7 @@ class Poll < ActiveRecord::Base
                 new_poll.created_at = Time.now
     })
 
-    include_field :choices
+    include_association [:choices]
   end
 
   rails_admin do
