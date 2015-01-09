@@ -113,6 +113,12 @@ namespace :poll do
     PollSeries.delete_all
   end
 
+  # Poll.all.each do |p|
+  #   if p.comments.present?
+  #     p.update_columns(comment_count: p.comments.to_a.count)
+  #   end
+  # end
+
   # desc "update member type to poll"
 
   # Poll.includes(:member).each do |p|
