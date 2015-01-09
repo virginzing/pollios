@@ -35,6 +35,24 @@
                   <label class="textarea">
                     <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" maxlength="250" required data-parsley-range="[5,255]" style="display: block; width: 100%;"></textarea>
                   </label>
+              <div class="option_config">
+               <label class="toggle">
+                 <input type="checkbox" name="poll[allow_comment]" checked="checked">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Comment</label>
+               
+               <label class="toggle">
+                 <input type="checkbox" name="poll[qr_only]">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
+               
+               <label class="toggle">
+                 <input type="checkbox" name="poll[require_info]" checked="checked">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
+
+               
+               <label class="toggle">
+                 <input type="checkbox" name="poll[show_result]" checked="checked">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Show Result Vote.</label>
+             </div>
                 </section>
 
                 <section class="col col-3">
