@@ -21,6 +21,4 @@ json.poll_within poll.poll_groups do |pg|
 end
 
 
-json.status_survey poll.poll_series.check_status_survey
-
 

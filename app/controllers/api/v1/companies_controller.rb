@@ -36,8 +36,6 @@ module Api
       end
 
       def poll_helper
-        @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-        @group_by_name ||= @init_poll.group_by_name
         @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
         @total_entries = @polls.total_entries
       end

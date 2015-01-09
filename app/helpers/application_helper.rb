@@ -16,12 +16,16 @@ module ApplicationHelper
 
   def sum_average(list, number_branch, vote_count, index)
     new_list = list.each_slice(number_branch).to_a
-    (new_list.collect{|e| e[index] }.reduce(:+) / vote_count).round(2)
+    sum = (new_list.collect{|e| e[index] }.reduce(:+) / vote_count).round(2)
+    sum = 0 if sum.nan?
+    return sum
   end
 
   def percent_average(list, number_branch, vote_count, index)
     new_list = list.each_slice(number_branch).to_a
-    (((new_list.collect{|e| e[index] }.reduce(:+) / vote_count) * 100 ) / 5.to_f).round(2)
+    sum = (((new_list.collect{|e| e[index] }.reduce(:+) / vote_count) * 100 ) / 5.to_f).round(2)
+    sum = 0 if sum.nan?
+    return sum
   end
 
   def rating_average(list, number, index)

@@ -43,9 +43,10 @@ class PollOfGroup
 
   def poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    @query = Poll.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
+    @query = Poll.joins(:poll_groups).includes(:groups, :choices, :history_votes, :member, :poll_series)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
-                  .where("#{poll_group_query}").uniq
+                  .where("#{poll_group_query}")
+                  .order("polls.updated_at DESC, polls.created_at DESC").uniq
     @query
   end
 
@@ -61,10 +62,9 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.unscoped.select('polls.*')
-                  .eager_load(:groups, :member)
+    @query = Poll.joins(:poll_groups).includes(:groups, :choices, :history_votes, :member)
+                  .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("poll_groups.group_id IN (?)", @group.map(&:id)).uniq
-                  .includes(:history_votes)
                   .order("polls.created_at DESC")
     @query = @query.where("polls.series = 'f'") if @web == true
     @query
