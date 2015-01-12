@@ -36,7 +36,7 @@ module ApplicationHelper
     if filter_by == params[:filter_by]
       'active'
     elsif params[:filter_by].nil? && options.present?
-      'active'
+      'active' unless params[:startdate].present?
     end
   end
 

@@ -43,13 +43,12 @@
 <% number_people_vote = 0 %>
 
 <% @questionnaires.each do |questionnaire| %>
-  <% questionnaire.polls.includes(:choices).decorate.each do |poll| %>
+  <% Poll.unscoped.where("poll_series_id = ?", questionnaire.id).order("polls.order_poll asc").includes(:choices).each do |poll| %>
     <% array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).to_f %>
   <% end %>
   <% number_people_vote += questionnaire.vote_all %>
 <% end %>
 
-<% p array_list %>
 <div class="well">
   <h1 class="text-center">
     <%= @collection.title %>
@@ -70,29 +69,33 @@
         </tr>
       </thead>
       <tbody>
-        <% @questionnaire.polls.decorate.each_with_index do |poll, index| %>
-          <tr>
-            <td>
-              <h4><a href="#">
-                <%= poll.title %>
-              </a>
-                <small>......</small>
-              </h4>
-            </td>
-            <td class="text-center">
-              <a href="javascript:void(0);"><%= sum_average(array_list, @questionnaire.polls.to_a.count, number_people_vote, index) %></a>
-            </td>
-            <td class="text-center">
-              <a href="javascript:void(0);"><%= percent_average(array_list, @questionnaire.polls.to_a.count, number_people_vote, index) %> %</a>
-            </td>
-            <td class="text-center">
-              <a href="javascript:void(0);">
-                <div class="rating" style="width: 100%; font-size: 10px;">
-                  <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= sum_average(array_list, @questionnaire.polls.to_a.count, number_people_vote, index) %>"> 
-                </div>
-              </a>
-            </td>
-          </tr>
+        <% if @questionnaires.present? %>
+          <% @collection.questions.each_with_index do |question, index| %>
+            <tr>
+              <td>
+                <h4><a href="#">
+                  <%= question.last %>
+                </a>
+                  <small>......</small>
+                </h4>
+              </td>
+              <td class="text-center">
+                <a href="javascript:void(0);"><%= sum_average(array_list, @collection.questions.count, number_people_vote, index) %></a>
+              </td>
+              <td class="text-center">
+                <a href="javascript:void(0);"><%= percent_average(array_list, @collection.questions.count, number_people_vote, index) %> %</a>
+              </td>
+              <td class="text-center">
+                <a href="javascript:void(0);">
+                  <div class="rating" style="width: 100%; font-size: 10px;">
+                    <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= sum_average(array_list, @collection.questions.count, number_people_vote, index) %>"> 
+                  </div>
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <td><h2>Empty</h2></td>
         <% end %>
 
       </tbody>
@@ -114,39 +117,46 @@
             <th>Branch</th>
             <th>Feedback</th>
             <th>Votes</th>
-            <% @questionnaire.polls.each do |poll| %>
-              <th class="text-center" style="width: 100px;"><%= poll.title %></th>
+            <% @collection.questions.each do |question| %>
+              <th class="text-center" style="width: 100px;"><%= question.last %></th>
             <% end %>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <% @branches.each do |branch| %>
-            <tr>
-              <td>
-                <h4><a href="#">
-                  <%= branch.name %>
-                </a>
-                  <small><%= branch.note %></small>
-                </h4>
-              </td>
-              <td>
-                <%= branch.questionnaires.count %>
-              </td>
-
-              <td><%= branch.questionnaires.pluck(:vote_all).sum %></td>
-              
-              <% @questionnaire.polls.each_with_index do |poll, index| %>
-
-                <td class="text-center">
-                  <div class="rating" style="width: 100%; font-size: 10px;">
-                    <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= PollSeries.get_sum_each_poll_in_branch(branch.id, @questionnaire.polls.to_a.count, index) %>"> 
-                  </div>
+          <% if @questionnaires.present? %>
+            <% @branches.each do |branch| %>
+              <tr>
+                <td>
+                  <h4><a href="#">
+                    <%= branch.name %>
+                  </a>
+                    <small><%= branch.note %></small>
+                  </h4>
                 </td>
-              <% end %>
+                <td>
+                  <%= branch.questionnaire_count %>
+                </td>
 
-              <td width="20px;"><%= link_to "View More", '#', class: 'btn btn-default btn-pill'%></td>
-            </tr>
+                <td><%= branch.questionnaire_vote_all %></td>
+
+                <% @collection.questions.each_with_index do |question, index| %>
+
+<!--                   <td class="text-center">
+                    <div class="rating" style="width: 100%; font-size: 10px;">
+                      <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value=""> 
+                    </div>
+                  </td> -->
+                  <td class="text-center">
+                    <%= PollSeries.get_sum_poll_branch(branch.id, branch.questionnaire_vote_all, @collection.questions.to_a.count, @questionnaires.map(&:id), index) %>
+                  </td>
+                <% end %>
+
+                <td width="20px;"><%= link_to "View More", '#', class: 'btn btn-default btn-pill'%></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <td><h2>Empty</h2></td>
           <% end %>
 
         </tbody>

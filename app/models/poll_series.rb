@@ -39,19 +39,30 @@ class PollSeries < ActiveRecord::Base
   amoeba do 
     enable
 
-    set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 } ]
+    set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 }, { :created_at => Time.zone.now + 1.days } ]
 
     include_association [:polls, :branch_poll_series, :groupping]
   end
 
   def self.filter_by(startdate, finishdate, options)
+    startdate = startdate || Date.current
+    finishdate = finishdate || Date.current
+    
     if options.present?
       startdate = Date.current
 
       if options == 'today'
-        end_date = Date.current
+        finishdate = Date.current
+      end
+
+    else
+      if startdate && finishdate
+        startdate = startdate.to_date
+        finishdate = finishdate.to_date
       end
     end
+
+    where("date(poll_series.created_at + interval '7 hour') BETWEEN ? AND ?", startdate, finishdate)
   end
 
 
@@ -59,23 +70,38 @@ class PollSeries < ActiveRecord::Base
     Poll.find_by(poll_series_id: id, order_poll: 1)  
   end
 
-  def self.get_sum_each_poll_in_branch(branch_id, poll_count, index)
-    array_list = []
-    vote_all = 0
+  # def self.get_sum_each_poll_in_branch(branch_id, question_count, index, startdate, finishdate, filter_by)
 
-    PollSeries.joins(:branch, :polls => :choices).where("branch_poll_series.branch_id = ?", branch_id).uniq.each do |q|
-      q.polls.each do |p|
-        array_list << p.decorate.get_rating_score
-      end
-      vote_all += q.vote_all
-    end
+  #   array_list = []
+  #   vote_all = 0
+
+  #   BranchPollSeries.where("branch_id = #{branch_id} AND ")
+  #   # if vote_all == 0
+  #   #   sum = 0
+  #   # else
+  #   #   p (array_list.each_slice(question_count).to_a.collect{ |e| e[index] })
+  #   #   sum = (array_list.each_slice(question_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
+  #   # end
+
+  # end
+
+  def self.get_sum_poll_branch(branch_id, vote_all, question_count, questionnaires_ids, index)
+    array_list = []
+    number_people_vote = 0
 
     if vote_all == 0
       sum = 0
     else
-      sum = (array_list.each_slice(poll_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
-    end
+      PollSeries.where("id IN (?)", questionnaires_ids).each do |questionnaire|
+        Poll.unscoped.where("poll_series_id = ?", questionnaire.id).order("polls.order_poll asc").includes(:choices).each do |poll|
+          array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).to_f
+        end
+        number_people_vote += questionnaire.vote_all
+      end
 
+      sum = (array_list.each_slice(question_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
+    end
+    sum
   end
 
   def get_description

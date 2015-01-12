@@ -25,4 +25,28 @@ class Branch < ActiveRecord::Base
   def get_poll_count
     branch_polls.uniq.count
   end
+
+  def self.filter_by(startdate, finishdate, options)
+    startdate = startdate || Date.current
+    finishdate = finishdate || Date.current
+    
+    if options.present?
+      startdate = Date.current
+
+      if options == 'today'
+        finishdate = Date.current
+      end
+
+    else
+      if startdate && finishdate
+        puts "in branch"
+        puts startdate.to_date
+        puts finishdate.to_date
+        startdate = startdate.to_date
+        finishdate = finishdate.to_date
+      end
+    end
+
+    where("date(poll_series.created_at + interval '7 hour') BETWEEN ? AND ?", startdate, finishdate)
+  end
 end

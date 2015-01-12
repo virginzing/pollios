@@ -63,7 +63,9 @@ class FeedbackQuestionnaireController < ApplicationController
 
         if @poll_series.save
           @collection.grouppings.create!(groupable: @poll_series)
-          BranchPollSeries.create!(poll_series_id: @poll_series.id, branch_id: branch_id.to_i)  
+          BranchPollSeries.create!(poll_series_id: @poll_series.id, branch_id: branch_id.to_i)
+          list_question = @poll_series.polls.map {|e| [e.order_poll, e.title] }.sort {|x,y| x[0] <=> y[0]}
+          @collection.update(questions: list_question)  
         else
           @success = false
         end

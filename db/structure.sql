@@ -708,7 +708,8 @@ CREATE TABLE collection_polls (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     sum_view_all integer DEFAULT 0,
-    sum_vote_all integer DEFAULT 0
+    sum_vote_all integer DEFAULT 0,
+    questions character varying(255)[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -4937,4 +4938,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150107081906');
 INSERT INTO schema_migrations (version) VALUES ('20150107100111');
 
 INSERT INTO schema_migrations (version) VALUES ('20150107100824');
+
+INSERT INTO schema_migrations (version) VALUES ('20150112073146');
 
