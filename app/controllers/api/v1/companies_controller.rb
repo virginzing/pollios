@@ -15,6 +15,8 @@ module Api
       before_action :compress_gzip
       before_action :set_company
 
+      before_action :set_poll_series, only: [:questionnaire_detail, :load_suggest]
+
       expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
       expose(:group_company) { @current_member.get_company.groups if @current_member }
 
@@ -33,6 +35,22 @@ module Api
         @member_viewed_poll = init_company.get_member_viewed_poll
         @member_noviewed_poll = init_company.get_member_not_viewed_poll
         @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
+      end
+
+      def questionnaire_detail
+        # init_company = QuestionnaireDetailCompany
+      end
+
+      def load_suggest
+        @suggests = Suggest.joins(:member)
+                          .select("suggests.*, members.fullname as member_fullname, members.avatar as member_avatar")
+                          .where(poll_series_id: suggest_params[:id]).order("suggests.created_at desc")
+                          .paginate(page: suggest_params[:next_cursor])
+                          
+        @new_suggest_sort = @suggests.sort { |x,y| x.created_at <=> y.created_at }
+        @suggests_as_json = ActiveModel::ArraySerializer.new(@new_suggest_sort, each_serializer: SuggestSerializer).as_json()
+        @next_cursor = @suggests.next_page.nil? ? 0 : @suggests.next_page
+        @total_entries = @suggests.total_entries
       end
 
       def poll_helper
@@ -65,6 +83,20 @@ module Api
 
       def set_company
         @company = @current_member.get_company
+      end
+
+      def suggest_params
+        params.permit(:next_cursor, :member_id, :id, :group_id)
+      end
+
+      def set_poll_series
+        begin
+        @poll_series = PollSeries.find(params[:id])
+        rescue => e
+          respond_to do |wants|
+            wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Questionnaire not found"], status: 404 }
+          end
+        end
       end
 
       def set_group

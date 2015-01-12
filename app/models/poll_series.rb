@@ -43,6 +43,21 @@ class PollSeries < ActiveRecord::Base
     include_association [:polls, :branch_poll_series, :groupping]
   end
 
+  def self.filter_by(startdate, finishdate, options)
+    if options.present?
+      startdate = Date.current
+
+      if options == 'today'
+        end_date = Date.current
+      end
+    end
+  end
+
+
+  def poll_first
+    Poll.find_by(poll_series_id: id, order_poll: 1)  
+  end
+
   def self.get_sum_each_poll_in_branch(branch_id, poll_count, index)
     array_list = []
     vote_all = 0

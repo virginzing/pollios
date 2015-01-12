@@ -13,6 +13,8 @@ Pollios::Application.routes.draw do
       scope 'group/:group_id' do
         get 'polls',  to: 'companies#polls'
         get 'polls/:id/detail', to: 'companies#poll_detail'
+        get 'questionnaires/:id/detail',  to: 'companies#questionnaire_detail'
+        get 'questionnaires/:id/suggests',  to: 'companies#load_suggest'
       end
 
       scope 'company' do

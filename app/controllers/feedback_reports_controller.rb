@@ -8,7 +8,7 @@ class FeedbackReportsController < ApplicationController
   def collection
     @collection = CollectionPoll.find(params[:id])
     @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
-    @questionnaires ||= PollSeries.includes(:polls).joins(:branch)
+    @questionnaires ||= PollSeries.filter_by(params[:startdate], params[:finishdate], params[:filter_by]).includes(:polls).joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
                                
     @questionnaire = @questionnaires.first
