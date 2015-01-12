@@ -16,6 +16,7 @@ class PollSeries < ActiveRecord::Base
   has_many :who_voted,  through: :history_votes, source: :member
 
   has_many :poll_series_groups, dependent: :destroy
+  has_many :groups, through: :poll_series_groups, source: :group
 
   has_many :un_see_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable

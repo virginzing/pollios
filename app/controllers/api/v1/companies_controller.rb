@@ -29,6 +29,7 @@ module Api
       def poll_detail
         @poll = Poll.cached_find(params[:id])
         init_company = PollDetailCompany.new(@poll.groups, @poll)
+
         @member_group = init_company.get_member_in_group
         @member_voted_poll = init_company.get_member_voted_poll
         @member_novoted_poll = init_company.get_member_not_voted_poll
@@ -38,7 +39,14 @@ module Api
       end
 
       def questionnaire_detail
-        # init_company = QuestionnaireDetailCompany
+        init_company = QuestionnaireDetailCompany.new(@poll_series, options_params)
+
+        @member_group = init_company.get_member_in_group
+        @member_voted_questionnaire = init_company.get_member_voted_questionnaire
+        @member_novoted_questionnaire = init_company.get_member_not_voted_questionnaire
+        @member_viewed_questionnaire = init_company.get_member_viewed_questionnaire
+        @member_noviewed_questionnaire = init_company.get_member_not_viewed_questionnaire
+        @member_viewed_no_vote_questionnaire = init_company.get_member_viewed_not_vote_questionnaire
       end
 
       def load_suggest

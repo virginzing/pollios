@@ -23,7 +23,7 @@ if @poll.present?
     json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 
-  json.member_view_not_vote @member_view_not_vote do |member|
+  json.member_view_not_vote @member_viewed_no_vote_poll do |member|
     json.partial! 'response_helper/member/short_info_admin_panel', member: member
   end
 else
