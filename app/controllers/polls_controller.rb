@@ -6,7 +6,7 @@ class PollsController < ApplicationController
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
 
 
-  before_action :set_current_member, only: [:bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+  before_action :set_current_member, only: [:random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
@@ -23,7 +23,7 @@ class PollsController < ApplicationController
   
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
-  before_action :load_resource_poll_feed, only: [:overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
+  before_action :load_resource_poll_feed, only: [:random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   expose(:list_recurring) { current_member.get_recurring_available }
@@ -407,19 +407,18 @@ class PollsController < ApplicationController
 
   def detail
     begin
-      if params[:random_poll].present?
-        # @poll = Poll.public_poll.active_poll.offset(rand(Poll.count)).first
-        @poll = Poll.unscoped.public_poll.active_poll.order("RANDOM()").first
-        Poll.view_poll(@poll, @current_member)
-        @expired = @poll.expire_date < Time.now
-        @voted = @current_member.list_voted?(@poll)
-      else
-        raise_exception_without_group
-        Poll.view_poll(@poll, @current_member)
-        @expired = @poll.expire_date < Time.now
-        @voted = @current_member.list_voted?(@poll)
-      end
+      raise_exception_without_group
+      Poll.view_poll(@poll, @current_member)
+      @expired = @poll.expire_date < Time.now
+      @voted = @current_member.list_voted?(@poll)
     end
+  end
+
+  def random_poll
+    @poll = Poll.unscoped.public_poll.active_poll.order("RANDOM()").first
+    Poll.view_poll(@poll, @current_member)
+    @expired = @poll.expire_date < Time.now
+    @voted = @current_member.list_voted?(@poll)
   end
 
   def friend_following_poll

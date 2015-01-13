@@ -213,6 +213,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'poll' do
+    get 'random_poll',  to: 'polls#random_poll'
     post ':id/bookmark',  to: 'polls#bookmark'
     post ':id/un_bookmark', to: 'polls#un_bookmark'
     post ':id/un_see',  to: 'polls#un_see'
