@@ -37,3 +37,12 @@ img.img-surveyor {
     font-size: 14px !important;
   } 
 }
+
+.breadcrumb {
+  background-color: #FBFBFB;
+  border-radius: 5px;
+}
+
+.breadcrumb > li {
+  display: inline;
+}

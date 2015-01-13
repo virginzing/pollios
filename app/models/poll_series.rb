@@ -26,6 +26,9 @@ class PollSeries < ActiveRecord::Base
 
   has_one :groupping, as: :groupable
 
+  has_one :collection_poll_branch, dependent: :destroy
+  has_one :collection_poll, through: :collection_poll_branch, source: :collection_poll
+
   validates :description, presence: true
 
   accepts_nested_attributes_for :polls, :allow_destroy => true
@@ -41,7 +44,7 @@ class PollSeries < ActiveRecord::Base
 
     set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 }, { :created_at => Time.zone.now + 1.days } ]
 
-    include_association [:polls, :branch_poll_series, :groupping]
+    include_association [:polls, :branch_poll_series, :groupping, :collection_poll_branch]
   end
 
   def self.filter_by(startdate, finishdate, options)

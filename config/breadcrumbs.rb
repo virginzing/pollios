@@ -1,61 +1,17 @@
-crumb :root do
-  link "Home", root_path
+crumb :collections do
+  link "All questionnnaires", feedback_questionnaires_path
 end
 
-crumb :new_poll do
-  link "New Poll", new_poll_path
+crumb :collection do |collection|
+  link collection.title, collection_feedback_questionnaire_path(collection)
+  parent :collections
 end
 
-crumb :binary_poll do
-  link "Binary Poll"
-  parent :new_poll
+crumb :questionnaire do |questionnaire|
+  link questionnaire.branch.name, collection_feedback_branch_detail_path(questionnaire.collection_poll, questionnaire.branch, questionnaire)
+  parent :collection, questionnaire.collection_poll
 end
 
-crumb :freeform_poll do
-  link "Freeform Poll"
-  parent :new_poll
-end
-
-crumb :rating_poll do
-  link "Rating Poll"
-  parent :new_poll
-end
-
-crumb :polls do
-  link "All Poll",  polls_path
-end
-
-crumb :poll do |poll|
-  link poll.title , poll
-  parent :polls
-end
-
-crumb :questionnaire do |poll_series|
-  link "New Questionnaire"
-end
-
-crumb :normal_quesitonnaire do |normal_series|
-  link "Normal"
-  parent :questionnaire
-end
-
-crumb :same_choice_questionnaire do |same_choice_series|
-  link "Same choice"
-  parent :questionnaire
-end
-
-
-crumb :new_recurring do |new_recurring|
-  link "New Recurring"
-end
-
-crumb :edit_recurring do |edit_recurring|
-  link "Edit Recurring"
-end
-
-crumb :new_campaign do |new_campaign|
-  link "New Campaign"
-end
 # crumb :project do |project|
 #   link project.name, project_path(project)
 #   parent :projects

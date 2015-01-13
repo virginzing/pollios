@@ -177,6 +177,8 @@
     <!-- END RIBBON -->
     <!-- MAIN CONTENT -->
     <div id="content">
+      <%= breadcrumbs pretext: "You are here: ", display_single_fragment: true, style: :bootstrap %>
+
       <% flash.each do |key, value| %>
       <div data-alert class="<%= flash_class(key) %> fade in">
         <%= get_icon_from_value(key) %>

@@ -9,6 +9,9 @@ class Branch < ActiveRecord::Base
   has_many :branch_poll_series, dependent: :destroy
   
   has_many :questionnaires, through: :branch_poll_series, source: :poll_series
+
+  has_many :collection_poll_branches, dependent: :destroy
+  has_many :collection_polls, through: :collection_poll_branches, source: :collection_poll
   # def slug_candidates
   #   [:name,
   #    :id, :name]

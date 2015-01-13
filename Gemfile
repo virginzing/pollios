@@ -113,7 +113,7 @@ gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 # gem 'houston'
 gem 'htmlentities'
-gem 'breadcrumbs_on_rails'
+# gem 'breadcrumbs_on_rails'
 gem 'nprogress-rails'
 gem 'yajl-ruby'
 gem 'jbuilder_cache_multi'

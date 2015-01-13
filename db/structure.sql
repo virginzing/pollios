@@ -698,6 +698,39 @@ ALTER SEQUENCE choices_id_seq OWNED BY choices.id;
 
 
 --
+-- Name: collection_poll_branches; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE collection_poll_branches (
+    id integer NOT NULL,
+    branch_id integer,
+    collection_poll_id integer,
+    poll_series_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: collection_poll_branches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE collection_poll_branches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: collection_poll_branches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE collection_poll_branches_id_seq OWNED BY collection_poll_branches.id;
+
+
+--
 -- Name: collection_polls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2627,6 +2660,13 @@ ALTER TABLE ONLY choices ALTER COLUMN id SET DEFAULT nextval('choices_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY collection_poll_branches ALTER COLUMN id SET DEFAULT nextval('collection_poll_branches_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY collection_polls ALTER COLUMN id SET DEFAULT nextval('collection_polls_id_seq'::regclass);
 
 
@@ -3115,6 +3155,14 @@ ALTER TABLE ONLY campaigns
 
 ALTER TABLE ONLY choices
     ADD CONSTRAINT choices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: collection_poll_branches_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY collection_poll_branches
+    ADD CONSTRAINT collection_poll_branches_pkey PRIMARY KEY (id);
 
 
 --
@@ -3732,6 +3780,27 @@ CREATE INDEX index_campaigns_on_member_id ON campaigns USING btree (member_id);
 --
 
 CREATE INDEX index_choices_on_poll_id ON choices USING btree (poll_id);
+
+
+--
+-- Name: index_collection_poll_branches_on_branch_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_branches_on_branch_id ON collection_poll_branches USING btree (branch_id);
+
+
+--
+-- Name: index_collection_poll_branches_on_collection_poll_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_branches_on_collection_poll_id ON collection_poll_branches USING btree (collection_poll_id);
+
+
+--
+-- Name: index_collection_poll_branches_on_poll_series_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_branches_on_poll_series_id ON collection_poll_branches USING btree (poll_series_id);
 
 
 --
@@ -4940,4 +5009,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150107100111');
 INSERT INTO schema_migrations (version) VALUES ('20150107100824');
 
 INSERT INTO schema_migrations (version) VALUES ('20150112073146');
+
+INSERT INTO schema_migrations (version) VALUES ('20150113083959');
 
