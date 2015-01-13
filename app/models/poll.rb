@@ -103,7 +103,7 @@ class Poll < ActiveRecord::Base
     where("polls.expire_status = 'f'")
   }
 
-  LIMIT_POLL = 20
+  LIMIT_POLL = 30
   LIMIT_TIMELINE = 3000
 
   self.per_page = 20

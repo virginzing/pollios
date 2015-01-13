@@ -11,12 +11,20 @@ class FeedbackReportsController < ApplicationController
     @questionnaires ||= PollSeries.filter_by(params[:startdate], params[:finishdate], params[:filter_by]).includes(:polls).joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
                                
-    puts "map => #{@questionnaires.map(&:id)}"
     @branches = Branch.joins(:branch_poll_series => :poll_series)
                       .select("branches.*, count(branch_poll_series.poll_series_id) as questionnaire_count, sum(poll_series.vote_all) as questionnaire_vote_all")
                       .where("branch_poll_series.poll_series_id IN (?)", @questionnaires.map(&:id))
                       .filter_by(params[:startdate], params[:finishdate], params[:filter_by]).group('branches.id').order("branches.name asc").uniq
 
+  end
+
+  def each_branch
+    @branch = Branch.find(params[:branch_id])
+    @collection = CollectionPoll.find(params[:id])
+
+    @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
+    @questionnaires ||= PollSeries.filter_by(params[:startdate], params[:finishdate], params[:filter_by]).includes(:polls).joins(:branch)
+                                .where("branch_poll_series.branch_id = ? AND poll_series.id IN (?)", @branch.id, @questionnaire_ids)
   end
 
   def polls

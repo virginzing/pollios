@@ -163,6 +163,7 @@ Pollios::Application.routes.draw do
       post 'create',  to: 'feedback_questionnaire#create',  as: :create_feedback_questionnaire
 
       get ':id/reports',      to: 'feedback_reports#collection',  as: :collection_feedback_report
+      get ':id/reports/branch/:branch_id',  to: 'feedback_reports#each_branch', as: :each_branch_feedback_report
 
       get 'reports',  to: 'feedback_questionnaire#reports', as: :all_feedback_report
 

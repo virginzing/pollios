@@ -14,6 +14,10 @@ module ApplicationHelper
     params[:controller] == @controller.controller_name
   end
 
+  def get_params_url(url)
+    '?' << url.split("?").last
+  end
+
   def sum_average(list, number_branch, vote_count, index)
     new_list = list.each_slice(number_branch).to_a
     sum = (new_list.collect{|e| e[index] }.reduce(:+) / vote_count).round(2)

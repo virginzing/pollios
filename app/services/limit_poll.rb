@@ -1,6 +1,6 @@
 module LimitPoll
   LIMIT_TIMELINE = 1000
-  LIMIT_POLL = 20
+  LIMIT_POLL = 30
 
   module ClassMethods
     

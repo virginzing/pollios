@@ -16,7 +16,7 @@ class FeedbackQuestionnaireController < ApplicationController
   def new
     @questionnaire = PollSeries.new
 
-    1.times do
+    2.times do
       poll = @questionnaire.polls.build
       2.times { poll.choices.build }
     end

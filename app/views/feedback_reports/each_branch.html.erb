@@ -5,15 +5,15 @@
       <br>
       <div class="filter">
         <div class="btn-group btn-group-justified">
-          <a href="<%= collection_feedback_report_path(filter_by: 'today') %>" class="btn btn-default <%= filter_helper('today', 'default') %>">Today</a>
-          <a href="<%= collection_feedback_report_path(filter_by: 'yesterday') %>" class="btn btn-default <%= filter_helper('yesterday') %>">Yesterday</a>
-          <a href="<%= collection_feedback_report_path(filter_by: 'week') %>" class="btn btn-default <%= filter_helper('week') %>">This Week</a>
-          <a href="<%= collection_feedback_report_path(filter_by: 'month') %>" class="btn btn-default <%= filter_helper('month') %>">This Month</a>
+          <a href="<%= each_branch_feedback_report_path(filter_by: 'today') %>" class="btn btn-default <%= filter_helper('today', 'default') %>">Today</a>
+          <a href="<%= each_branch_feedback_report_path(filter_by: 'yesterday') %>" class="btn btn-default <%= filter_helper('yesterday') %>">Yesterday</a>
+          <a href="<%= each_branch_feedback_report_path(filter_by: 'week') %>" class="btn btn-default <%= filter_helper('week') %>">This Week</a>
+          <a href="<%= each_branch_feedback_report_path(filter_by: 'month') %>" class="btn btn-default <%= filter_helper('month') %>">This Month</a>
         </div>
       </div>
 
       <div class="filter-other">
-        <form action="<%= collection_feedback_report_path %>" method="GET" role="form" class="smart-form">
+        <form action="<%= each_branch_feedback_report_path %>" method="GET" role="form" class="smart-form">
           <div class="row">
             <label class="label col col-1">Filter Range</label>
             <section class="col col-2">
@@ -39,7 +39,6 @@
 </div>
 
 <% array_list = [] %>
-<% collection = [] %>
 <% number_people_vote = 0 %>
 
 <% @questionnaires.each do |questionnaire| %>
@@ -51,14 +50,11 @@
 <% end %>
 
 <div class="well">
-  <h1 class="text-center">
-    <%= @collection.title %>
-  </h1>
-  
+  <h1 class="text-center"><%= @collection.title %> (<%= @branch.name %>)</h1>
+
   <% if @questionnaires.present? %>
     <div class="summary-questionnaire">
       <h5>Feedback count : <%= number_people_vote %></h5>
-      <h5>Last updated : <span data-livestamp="<%= @collection.updated_at.to_i %>"></span></h5>
     </div>
     <br>
   <% end %>
@@ -107,80 +103,5 @@
     </table>
 
   </div>
-</div>
-
-<div class="well">
-  <h1 class="text-center">
-    แยกตามสาขา
-  </h1>
-
-  <div class="row">
-    <div class="table-responsive">
-      <table class="table table-striped table-forum">
-        <thead>
-          <tr>
-            <th>Branch</th>
-            <th>Feedback</th>
-            <% @collection.questions.each do |question| %>
-              <th class="text-center" style="width: 100px;"><%= question.last %></th>
-            <% end %>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if @questionnaires.present? %>
-            <% @branches.each do |branch| %>
-              <tr>
-                <td>
-                  <h4><a href="#">
-                    <%= branch.name %>
-                  </a>
-                    <small><%= branch.note %></small>
-                  </h4>
-                </td>
-                <td><%= branch.questionnaire_vote_all %></td>
-
-                <% @collection.questions.each_with_index do |question, index| %>
-
-                  <td class="text-center">
-                    <div class="rating" style="width: 100%; font-size: 10px;">
-                      <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= PollSeries.get_sum_poll_branch(branch.questionnaire_vote_all, @collection.questions.to_a.count, (branch.questionnaires.pluck(:id) & @questionnaires.map(&:id)), index) %>"> 
-                    </div>
-                  </td>
-                <% end %>
-
-                <td width="20px;"><%= link_to "View More", each_branch_feedback_report_path(@collection.id, branch.id) + get_params_url(request.original_url) , class: 'btn btn-default btn-pill'%></td>
-              </tr>
-            <% end %>
-          <% else %>
-            <td colspan="<%= 3 + @collection.questions.count %>" class="text-center">There is no data to display</td>
-          <% end %>
-
-        </tbody>
-      </table>
-    </div>
-
-  </div>
 
 </div>
-
-
-<script>
-  $('#startdate').datepicker({
-    dateFormat : 'dd-mm-yy',
-    prevText : '<i class="fa fa-chevron-left"></i>',
-    nextText : '<i class="fa fa-chevron-right"></i>',
-    onSelect : function(selectedDate) {
-      $('#finishdate').datepicker('option', 'minDate', selectedDate);
-    }
-  });
-
-  $('#finishdate').datepicker({
-    dateFormat : 'dd-mm-yy',
-    prevText : '<i class="fa fa-chevron-left"></i>',
-    nextText : '<i class="fa fa-chevron-right"></i>',
-    onSelect : function(selectedDate) {
-      $('#startdate').datepicker('option', 'maxDate', selectedDate);
-    }
-  });
-</script>

@@ -79,13 +79,25 @@ class PollSeries < ActiveRecord::Base
     Poll.find_by(poll_series_id: id, order_poll: 1)  
   end
 
-  def self.get_sum_poll_branch(vote_all, question_count, array_list, index)
+  def self.get_sum_poll_branch(vote_all, question_count, questionnaire_ids, index)
+    array_list = []
+
     if vote_all == 0
       sum = 0
     else
+      PollSeries.where("id IN (?)", questionnaire_ids).each do |ps|
+        Poll.unscoped.where("poll_series_id = ?", ps.id).order("polls.order_poll asc").includes(:choices).each do |poll|    
+          array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).to_f
+        end
+      end
+
       sum = (array_list.each_slice(question_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
     end
     sum
+  end
+
+  def get_branch
+    branch.present? ? 'สาขา ' + branch.name : nil
   end
 
   def get_description

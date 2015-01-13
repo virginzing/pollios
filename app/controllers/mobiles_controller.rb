@@ -46,7 +46,7 @@ class MobilesController < ApplicationController
       
       PollSeries.view_poll(@current_member, @questionnaire) unless @history_votes
 
-      @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("order_poll asc")
+      @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("polls.order_poll asc")
 
       @list_poll_first = @list_poll.first.id
 
