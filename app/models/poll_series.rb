@@ -53,6 +53,15 @@ class PollSeries < ActiveRecord::Base
 
       if options == 'today'
         finishdate = Date.current
+      elsif options == 'yesterday'
+        startdate = Date.current - 1.day
+        finishdate = startdate
+      elsif options == 'week'
+        startdate = Date.current.at_beginning_of_week
+        finishdate = Date.current.at_end_of_week
+      elsif options == 'month'
+        startdate = Date.current.at_beginning_of_month
+        finishdate = Date.current.at_end_of_month
       end
 
     else
@@ -70,35 +79,10 @@ class PollSeries < ActiveRecord::Base
     Poll.find_by(poll_series_id: id, order_poll: 1)  
   end
 
-  # def self.get_sum_each_poll_in_branch(branch_id, question_count, index, startdate, finishdate, filter_by)
-
-  #   array_list = []
-  #   vote_all = 0
-
-  #   BranchPollSeries.where("branch_id = #{branch_id} AND ")
-  #   # if vote_all == 0
-  #   #   sum = 0
-  #   # else
-  #   #   p (array_list.each_slice(question_count).to_a.collect{ |e| e[index] })
-  #   #   sum = (array_list.each_slice(question_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
-  #   # end
-
-  # end
-
-  def self.get_sum_poll_branch(branch_id, vote_all, question_count, questionnaires_ids, index)
-    array_list = []
-    number_people_vote = 0
-
+  def self.get_sum_poll_branch(vote_all, question_count, array_list, index)
     if vote_all == 0
       sum = 0
     else
-      PollSeries.where("id IN (?)", questionnaires_ids).each do |questionnaire|
-        Poll.unscoped.where("poll_series_id = ?", questionnaire.id).order("polls.order_poll asc").includes(:choices).each do |poll|
-          array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).to_f
-        end
-        number_people_vote += questionnaire.vote_all
-      end
-
       sum = (array_list.each_slice(question_count).to_a.collect{ |e| e[index] }.reduce(:+) / vote_all).round(2)
     end
     sum

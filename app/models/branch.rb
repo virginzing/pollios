@@ -35,13 +35,19 @@ class Branch < ActiveRecord::Base
 
       if options == 'today'
         finishdate = Date.current
+      elsif options == 'yesterday'
+        startdate = Date.current - 1.day
+        finishdate = startdate
+      elsif options == 'week'
+        startdate = Date.current.at_beginning_of_week
+        finishdate = Date.current.at_end_of_week
+      elsif options == 'month'
+        startdate = Date.current.at_beginning_of_month
+        finishdate = Date.current.at_end_of_month
       end
-
+      
     else
       if startdate && finishdate
-        puts "in branch"
-        puts startdate.to_date
-        puts finishdate.to_date
         startdate = startdate.to_date
         finishdate = finishdate.to_date
       end
