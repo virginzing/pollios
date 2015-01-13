@@ -1,7 +1,7 @@
 module Timelinable
 
   LIMIT_TIMELINE = 1000
-  LIMIT_POLL = 20
+  LIMIT_POLL = 30
 
   def member_id
     @member.id
