@@ -130,27 +130,6 @@
           <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
         </form>
         <!-- end input: search field -->
-
-        <!-- multiple lang dropdown : find all flags in the image folder -->
-        <!--
-        <ul class="header-dropdown-list hidden-xs">
-          <li>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img alt="" src="/smartadmin/img/flags/us.png"> <span> US </span> <i class="fa fa-angle-down"></i> </a>
-            <ul class="dropdown-menu pull-right">
-              <li class="active">
-                <a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/us.png"> US</a>
-              </li>
-              <li>
-                <a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/es.png"> Spanish</a>
-              </li>
-              <li>
-                <a href="javascript:void(0);"><img alt="" src="/smartadmin/img/flags/de.png"> German</a>
-              </li>
-            </ul>
-          </li>
-        </ul> -->
-        <!-- end multiple lang -->
-
       </div>
       <!-- end pulled right: nav area -->
 
@@ -223,6 +202,10 @@
 
           <li class="">
             <a href="<%= stats_dashboard_path %>" title="Stats"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Stats Dashboard</span></a>
+          </li>
+
+          <li class="<%= is_active_2nd_level('system_setting', 'index') %>">
+            <a href="<%= system_setting_path %>" title="System Setting"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">System Setting</span></a>
           </li>
 
         </ul>

@@ -24,10 +24,9 @@ class PollSeries < ActiveRecord::Base
   has_one :branch_poll_series, dependent: :destroy
   has_one :branch, through: :branch_poll_series, source: :branch
 
-  has_one :groupping, as: :groupable
+  has_one :collection_poll_series_branch, dependent: :destroy
+  has_one :collection_poll_series, through: :collection_poll_series_branch, source: :collection_poll_series
 
-  has_one :collection_poll_branch, dependent: :destroy
-  has_one :collection_poll, through: :collection_poll_branch, source: :collection_poll
 
   validates :description, presence: true
 
@@ -44,7 +43,7 @@ class PollSeries < ActiveRecord::Base
 
     set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 }, { :created_at => Time.zone.now + 1.days } ]
 
-    include_association [:polls, :branch_poll_series, :groupping, :collection_poll_branch]
+    include_association [:polls, :branch_poll_series, :collection_poll_series_branch]
   end
 
   def self.filter_by(startdate, finishdate, options)
@@ -201,7 +200,7 @@ class PollSeries < ActiveRecord::Base
       hqn.poll_series_id = poll_series_id
       hqn.save!
       poll_series.update_columns(view_all: poll_series.view_all + 1)
-      CollectionPoll.update_sum_view(poll_series)
+      CollectionPollSeries.update_sum_view(poll_series)
     end
   end
 
@@ -218,7 +217,7 @@ class PollSeries < ActiveRecord::Base
       if @votes.present?
         self.increment!(:vote_all)
         poll_series.suggests.create!(member_id: surveyed_id, message: params[:suggest])
-        CollectionPoll.update_sum_vote(poll_series)
+        CollectionPollSeries.update_sum_vote(poll_series)
         SavePollLater.delete_save_later(member_id, poll_series)
         member.flush_cache_my_vote
         member.flush_cache_my_vote_all

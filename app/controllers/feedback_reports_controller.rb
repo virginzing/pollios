@@ -6,8 +6,9 @@ class FeedbackReportsController < ApplicationController
   # before_action :set_questionnaire, only: [:show , :destroy]
 
   def collection
-    @collection = CollectionPoll.find(params[:id])
-    @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
+    @collection = CollectionPollSeries.find(params[:id])
+    @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
+
     @questionnaires ||= PollSeries.filter_by(params[:startdate], params[:finishdate], params[:filter_by]).includes(:polls).joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
                                
@@ -20,9 +21,9 @@ class FeedbackReportsController < ApplicationController
 
   def each_branch
     @branch = Branch.find(params[:branch_id])
-    @collection = CollectionPoll.find(params[:id])
+    @collection = CollectionPollSeries.find(params[:id])
 
-    @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
+    @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
     @questionnaires ||= PollSeries.filter_by(params[:startdate], params[:finishdate], params[:filter_by]).includes(:polls).joins(:branch)
                                 .where("branch_poll_series.branch_id = ? AND poll_series.id IN (?)", @branch.id, @questionnaire_ids)
   end

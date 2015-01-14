@@ -2,8 +2,6 @@ class Company < ActiveRecord::Base
 
   belongs_to :member
 
-  has_many :collection_polls, dependent: :destroy
-
   has_many :company_members, dependent: :destroy
   has_many :members, through: :company_members, source: :member
 
@@ -14,6 +12,8 @@ class Company < ActiveRecord::Base
   has_many :groups, through: :group_companies , source: :group
 
   has_many :collection_polls, dependent: :destroy
+
+  has_many :collection_poll_series, dependent: :destroy
 
   has_many :recurrings, dependent: :destroy
 

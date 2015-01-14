@@ -15,6 +15,8 @@
 
 # after rollback must create pollios account first
 
+# after rollback must create system setting
+
 
 
 # PollMember.select("poll_id").where("member_id = ? OR member_id IN (?)", 1, [2, 3]).group.order("poll_id asc")

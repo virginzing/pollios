@@ -731,6 +731,74 @@ ALTER SEQUENCE collection_poll_branches_id_seq OWNED BY collection_poll_branches
 
 
 --
+-- Name: collection_poll_series; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE collection_poll_series (
+    id integer NOT NULL,
+    title character varying(255),
+    company_id integer,
+    sum_view_all integer DEFAULT 0,
+    sum_vote_all integer DEFAULT 0,
+    questions character varying(255)[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: collection_poll_series_branches; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE collection_poll_series_branches (
+    id integer NOT NULL,
+    collection_poll_series_id integer,
+    branch_id integer,
+    poll_series_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: collection_poll_series_branches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE collection_poll_series_branches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: collection_poll_series_branches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE collection_poll_series_branches_id_seq OWNED BY collection_poll_series_branches.id;
+
+
+--
+-- Name: collection_poll_series_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE collection_poll_series_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: collection_poll_series_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE collection_poll_series_id_seq OWNED BY collection_poll_series.id;
+
+
+--
 -- Name: collection_polls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1073,39 +1141,6 @@ CREATE SEQUENCE group_surveyors_id_seq
 --
 
 ALTER SEQUENCE group_surveyors_id_seq OWNED BY group_surveyors.id;
-
-
---
--- Name: grouppings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE grouppings (
-    id integer NOT NULL,
-    collection_poll_id integer,
-    groupable_id integer,
-    groupable_type character varying(255),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: grouppings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE grouppings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: grouppings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE grouppings_id_seq OWNED BY grouppings.id;
 
 
 --
@@ -2667,6 +2702,20 @@ ALTER TABLE ONLY collection_poll_branches ALTER COLUMN id SET DEFAULT nextval('c
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY collection_poll_series ALTER COLUMN id SET DEFAULT nextval('collection_poll_series_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY collection_poll_series_branches ALTER COLUMN id SET DEFAULT nextval('collection_poll_series_branches_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY collection_polls ALTER COLUMN id SET DEFAULT nextval('collection_polls_id_seq'::regclass);
 
 
@@ -2731,13 +2780,6 @@ ALTER TABLE ONLY group_members ALTER COLUMN id SET DEFAULT nextval('group_member
 --
 
 ALTER TABLE ONLY group_surveyors ALTER COLUMN id SET DEFAULT nextval('group_surveyors_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY grouppings ALTER COLUMN id SET DEFAULT nextval('grouppings_id_seq'::regclass);
 
 
 --
@@ -3166,6 +3208,22 @@ ALTER TABLE ONLY collection_poll_branches
 
 
 --
+-- Name: collection_poll_series_branches_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY collection_poll_series_branches
+    ADD CONSTRAINT collection_poll_series_branches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: collection_poll_series_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY collection_poll_series
+    ADD CONSTRAINT collection_poll_series_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: collection_polls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3243,14 +3301,6 @@ ALTER TABLE ONLY group_members
 
 ALTER TABLE ONLY group_surveyors
     ADD CONSTRAINT group_surveyors_pkey PRIMARY KEY (id);
-
-
---
--- Name: grouppings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY grouppings
-    ADD CONSTRAINT grouppings_pkey PRIMARY KEY (id);
 
 
 --
@@ -3573,6 +3623,13 @@ CREATE UNIQUE INDEX by_member_and_poll_series ON history_view_questionnaires USI
 
 
 --
+-- Name: by_series_and_branch; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX by_series_and_branch ON collection_poll_series_branches USING btree (collection_poll_series_id);
+
+
+--
 -- Name: index_access_webs_on_accessable_id_and_accessable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3804,6 +3861,27 @@ CREATE INDEX index_collection_poll_branches_on_poll_series_id ON collection_poll
 
 
 --
+-- Name: index_collection_poll_series_branches_on_branch_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_series_branches_on_branch_id ON collection_poll_series_branches USING btree (branch_id);
+
+
+--
+-- Name: index_collection_poll_series_branches_on_poll_series_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_series_branches_on_poll_series_id ON collection_poll_series_branches USING btree (poll_series_id);
+
+
+--
+-- Name: index_collection_poll_series_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_series_on_company_id ON collection_poll_series USING btree (company_id);
+
+
+--
 -- Name: index_collection_polls_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3955,20 +4033,6 @@ CREATE INDEX index_group_surveyors_on_group_id ON group_surveyors USING btree (g
 --
 
 CREATE INDEX index_group_surveyors_on_member_id ON group_surveyors USING btree (member_id);
-
-
---
--- Name: index_grouppings_on_collection_poll_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_grouppings_on_collection_poll_id ON grouppings USING btree (collection_poll_id);
-
-
---
--- Name: index_grouppings_on_groupable_id_and_groupable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_grouppings_on_groupable_id_and_groupable_type ON grouppings USING btree (groupable_id, groupable_type);
 
 
 --
@@ -5011,4 +5075,10 @@ INSERT INTO schema_migrations (version) VALUES ('20150107100824');
 INSERT INTO schema_migrations (version) VALUES ('20150112073146');
 
 INSERT INTO schema_migrations (version) VALUES ('20150113083959');
+
+INSERT INTO schema_migrations (version) VALUES ('20150113102529');
+
+INSERT INTO schema_migrations (version) VALUES ('20150113103600');
+
+INSERT INTO schema_migrations (version) VALUES ('20150113104253');
 

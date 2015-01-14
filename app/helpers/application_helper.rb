@@ -15,7 +15,12 @@ module ApplicationHelper
   end
 
   def get_params_url(url)
-    '?' << url.split("?").last
+    params = ""
+    split_url = url.split("?")
+    if split_url.count > 1
+      params = '?' << url.split("?").last
+    end
+    params
   end
 
   def sum_average(list, number_branch, vote_count, index)
@@ -628,10 +633,10 @@ end
 # }' -X POST http://localhost:3000/poll/group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "email": "test_001@gmail.com",
-#     "password": "mefuwfhfu",
-#     "fullname": "test_001"
-# }' -X POST http://localhost:3000/authen/signup_sentai.json -i
+#     "email": "white@pollios.com",
+#     "password": "123456",
+#     "fullname": "White"
+# }' -X POST http://pollios.com/authen/signup_sentai.json -i
 
 
 
@@ -651,7 +656,7 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"test001@gmail.com","password":"mefuwfhfu", "device_token": "85e017fc e80ff87b 31fdbcec 2e74a6fe 7f9b8184 29257e66 3f7743ac 4f1c6f33" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"funnysmart_online@hotmail.com","password":"123456" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=krikri@gmail.com" -F "password=mefuwfhfu" -F "fullname=Kri Kri" -F "device_token=78916fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
@@ -680,7 +685,7 @@ end
 #     "gender": 1
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
-# curl "http://localhost:3000/poll/19/overall_timeline.json" -H 'Authorization: Token token="c209eb68b90ce508b0eb3be8e7b9f7cd"' -i
+# curl "http://localhost:3000/poll/93/overall_timeline.json?api_version=6" -H 'Authorization: Token token="44e029fd41cb01dd8a502bd359934eed"' -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "name": "1234567890",

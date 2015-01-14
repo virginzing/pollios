@@ -8,8 +8,8 @@ crumb :collection do |collection|
 end
 
 crumb :questionnaire do |questionnaire|
-  link questionnaire.branch.name, collection_feedback_branch_detail_path(questionnaire.collection_poll, questionnaire.branch, questionnaire)
-  parent :collection, questionnaire.collection_poll
+  link questionnaire.branch.name, collection_feedback_branch_detail_path(questionnaire.collection_poll_series, questionnaire.branch, questionnaire)
+  parent :collection, questionnaire.collection_poll_series
 end
 
 # crumb :project do |project|

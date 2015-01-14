@@ -1,0 +1,2 @@
+module SystemSettingHelper
+end

@@ -9,8 +9,7 @@ class FeedbackQuestionnaireController < ApplicationController
   end
 
   def index
-    # @questionnaires = PollSeries.joins(:branch).where("branch_poll_series.branch_id IN (?)", @company.branches.map(&:id))
-    @collections = CollectionPoll.joins(:grouppings).where("groupable_type = 'PollSeries' AND company_id = ?", @company.id).uniq
+    @collections = CollectionPollSeries.where("company_id = ?", @company.id)
   end
 
   def new
@@ -25,8 +24,8 @@ class FeedbackQuestionnaireController < ApplicationController
   end
 
   def collection
-    @collection = CollectionPoll.find(params[:id])
-    @questionnaire_ids = Groupping.where("collection_poll_id = ?", params[:id]).pluck(:groupable_id)
+    @collection = CollectionPollSeries.find(params[:id])
+    @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
     @questionnaires = PollSeries.joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
   
@@ -36,7 +35,7 @@ class FeedbackQuestionnaireController < ApplicationController
     PollSeries.transaction do
       @success = true
 
-      @collection = @company.collection_polls.create!(title: params[:poll_series][:description])
+      @collection = @company.collection_poll_series.create!(title: params[:poll_series][:description])
 
       params[:poll_series][:branch_list].split(",").each do |branch_id|
         @expire_date = poll_series_params["expire_date"].to_i
@@ -61,8 +60,7 @@ class FeedbackQuestionnaireController < ApplicationController
         end
 
         if @poll_series.save
-          @collection.grouppings.create!(groupable: @poll_series)
-          @collection.collection_poll_branches.create!(branch_id: branch_id, poll_series_id: @poll_series.id)
+          @collection.collection_poll_series_branches.create!(branch_id: branch_id, poll_series_id: @poll_series.id)
           BranchPollSeries.create!(poll_series_id: @poll_series.id, branch_id: branch_id.to_i)
           list_question = @poll_series.polls.map {|e| [e.order_poll, e.title] }.sort {|x,y| x[0] <=> y[0]}
           @collection.update(questions: list_question)  
@@ -97,13 +95,14 @@ class FeedbackQuestionnaireController < ApplicationController
 
 
   def destroy
-  @collection_poll = CollectionPoll.find(params[:id])
+  @collection_poll = CollectionPollSeries.find(params[:id])
 
     if @collection_poll
-      @collection_poll = CollectionPoll.find(params[:id])
-      Groupping.where("collection_poll_id = ?", params[:id]).each do |group|
-        group.groupable.destroy
+      
+      @collection_poll.collection_poll_series_branches.each do |cp|
+        cp.poll_series.destroy
       end
+
       @collection_poll.destroy
       flash[:success] = "Delete success"
       redirect_to feedback_questionnaires_path

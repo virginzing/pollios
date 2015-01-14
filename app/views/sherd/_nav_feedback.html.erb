@@ -26,7 +26,7 @@
         <a href="<%= all_poll_report_path %>" title="Poll"><i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent">Polls</span></a>
       </li>
 
-      <li class="<%= is_active_2nd_level('feedback_reports', 'collection') || is_active_2nd_level('feedback_questionnaire', 'reports')    %>">
+      <li class="<%= is_active_2nd_level('feedback_reports', 'collection') || is_active_2nd_level('feedback_questionnaire', 'reports') || is_active_2nd_level('feedback_reports', 'each_branch')    %>">
         <a href="<%= all_feedback_report_path %>" title="Poll"><i class="fa fa-lg fa-fw fa-edit"></i> <span class="menu-item-parent"> Questionnaires</span></a>
       </li>
     </ul>

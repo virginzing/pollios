@@ -19,7 +19,26 @@ class ApplicationController < ActionController::Base
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
+  before_filter :check_token, :if => Proc.new { |c| c.request.format.json? }
+
   helper_method :current_member, :signed_in?, :render_to_string, :only_company, :redirect_back_or, :redirect_back
+
+  def check_token
+    token = request.headers['Authorization']
+
+    if params[:member_id] && token.present?
+      authenticate_or_request_with_http_token do |token, options|
+        access_token = set_current_member.providers.where("token = ?", token)
+        unless access_token.present?
+          respond_to do |format|
+            format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"], status: :unauthorized }
+          end
+        else
+          true
+        end
+      end
+    end
+  end
 
   def load_company
     @company = current_member.get_company
@@ -83,17 +102,13 @@ class ApplicationController < ActionController::Base
 
   def restrict_access
     authenticate_or_request_with_http_token do |token, options|
-      puts "token => #{token}"
       access_token = set_current_member.providers.where("token = ?", token)
       unless access_token.present?
-        respond_to do |format|
-          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"]}
-        end
+
       else
         true
       end
     end
-
   end
 
   def restrict_only_admin
@@ -232,6 +247,13 @@ class ApplicationController < ActionController::Base
     if devise_controller?
       "admin"
     end
+  end
+
+  protected
+
+  def request_http_token_authentication(realm = "Application")
+    self.headers["WWW-Authenticate"] = %(Token realm="#{realm.gsub(/"/, "")}")
+    render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"], :status => :unauthorized
   end
 
 end
