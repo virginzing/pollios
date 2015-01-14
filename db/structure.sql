@@ -742,7 +742,10 @@ CREATE TABLE collection_poll_series (
     sum_vote_all integer DEFAULT 0,
     questions character varying(255)[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    feedback_recurring_id integer,
+    recurring_status boolean DEFAULT true,
+    recurring_poll_series_set character varying(255)[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -968,6 +971,39 @@ CREATE SEQUENCE devices_id_seq
 --
 
 ALTER SEQUENCE devices_id_seq OWNED BY devices.id;
+
+
+--
+-- Name: feedback_recurrings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE feedback_recurrings (
+    id integer NOT NULL,
+    company_id integer,
+    period time without time zone,
+    status boolean,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: feedback_recurrings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE feedback_recurrings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: feedback_recurrings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE feedback_recurrings_id_seq OWNED BY feedback_recurrings.id;
 
 
 --
@@ -2751,6 +2787,13 @@ ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY feedback_recurrings ALTER COLUMN id SET DEFAULT nextval('feedback_recurrings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('friendly_id_slugs_id_seq'::regclass);
 
 
@@ -3261,6 +3304,14 @@ ALTER TABLE ONLY company_members
 
 ALTER TABLE ONLY devices
     ADD CONSTRAINT devices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: feedback_recurrings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY feedback_recurrings
+    ADD CONSTRAINT feedback_recurrings_pkey PRIMARY KEY (id);
 
 
 --
@@ -3882,6 +3933,13 @@ CREATE INDEX index_collection_poll_series_on_company_id ON collection_poll_serie
 
 
 --
+-- Name: index_collection_poll_series_on_feedback_recurring_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_series_on_feedback_recurring_id ON collection_poll_series USING btree (feedback_recurring_id);
+
+
+--
 -- Name: index_collection_polls_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3935,6 +3993,13 @@ CREATE UNIQUE INDEX index_company_members_on_member_id ON company_members USING 
 --
 
 CREATE INDEX index_devices_on_member_id ON devices USING btree (member_id);
+
+
+--
+-- Name: index_feedback_recurrings_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_feedback_recurrings_on_company_id ON feedback_recurrings USING btree (company_id);
 
 
 --
@@ -5081,4 +5146,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150113102529');
 INSERT INTO schema_migrations (version) VALUES ('20150113103600');
 
 INSERT INTO schema_migrations (version) VALUES ('20150113104253');
+
+INSERT INTO schema_migrations (version) VALUES ('20150114151607');
+
+INSERT INTO schema_migrations (version) VALUES ('20150114152011');
 

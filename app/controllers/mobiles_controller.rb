@@ -10,7 +10,7 @@ class MobilesController < ApplicationController
   before_action :set_series, only: [:vote_questionnaire]
   before_action :set_current_member, only: [:vote_questionnaire, :vote_poll]
   before_action :set_poll, only: [:vote_poll]
-  after_action :delete_cookie, only: [:authen, :authen_facebook]
+  after_action :delete_cookie, only: [:authen_facebook]
   def home
     
   end
@@ -59,6 +59,8 @@ class MobilesController < ApplicationController
       Poll.view_poll(@poll, current_member) unless @history_votes
       render 'poll'
     end
+
+    cookies.delete(:return_to)
   end
 
   def vote_poll
@@ -180,7 +182,6 @@ class MobilesController < ApplicationController
           cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
         end
         cookies[:login] = 'sentai'
-
         flash[:success] = "Login Success"
         wants.js
       else

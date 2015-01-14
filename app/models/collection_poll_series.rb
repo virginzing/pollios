@@ -1,5 +1,7 @@
 class CollectionPollSeries < ActiveRecord::Base
   belongs_to :company
+  belongs_to :feedback_recurring
+  
   has_many :collection_poll_series_branches, dependent: :destroy
   has_many :branches, through: :collection_poll_series_branches, source: :branch
 
