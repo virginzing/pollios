@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :if => Proc.new{ |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
+  before_filter :check_maintenance
 
   before_filter :check_token, :if => Proc.new { |c| c.request.format.json? }
 
@@ -36,6 +37,17 @@ class ApplicationController < ActionController::Base
         else
           true
         end
+      end
+    end
+  end
+
+  def check_maintenance
+    maintenance_mode = Figaro.env.maintenance_mode
+
+    if maintenance_mode == "true"
+      respond_to do |wants|
+        wants.html { }
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Maintenance Mode"], status: :service_unavailable }
       end
     end
   end

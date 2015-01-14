@@ -17,7 +17,7 @@ FACEBOOK_APP_ID: "220478884808513"
 FACEBOOK_SECRET: "d319d5bd8b154df78811dc70aa33fe54"
 
 MAINTENANCE_MODE: "false"
-MAINTENANCE_MESSAGE: "Maintenance mode"
+MAINTENANCE_MESSAGE: "Maintenance mode (around 23:00 - 6:00)"
 
 development:
   PUBLIC_POLL: "public_poll"

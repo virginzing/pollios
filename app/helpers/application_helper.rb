@@ -41,6 +41,18 @@ module ApplicationHelper
     0
   end
 
+  def maintenance_text(text)
+    if text == "false"
+      content_tag 'div', class: 'label label-danger' do
+        "OFF"
+      end
+    else
+      content_tag 'div', class: 'label label-success' do
+        "ON"
+      end
+    end
+  end
+
   def filter_helper(filter_by, options = nil)
     if filter_by == params[:filter_by]
       'active'
@@ -685,7 +697,7 @@ end
 #     "gender": 1
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
-# curl "http://localhost:3000/poll/93/overall_timeline.json?api_version=6" -H 'Authorization: Token token="44e029fd41cb01dd8a502bd359934eed"' -i
+# curl "http://localhost:3000/poll/93/overall_timeline.json?api_version=6" -H 'Authorization: Token token="4e029fd41cb01dd8a502bd359934eed"' -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "name": "1234567890",

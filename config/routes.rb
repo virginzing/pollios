@@ -305,8 +305,6 @@ Pollios::Application.routes.draw do
 
     get 'system_setting', to: 'system_setting#index', as: :system_setting
 
-    get 'update_system',  to: 'system_setting#update_system', as: :update_system
-
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
 
     post 'login_as',  to: 'admin#login_as', as: :login_as

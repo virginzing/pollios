@@ -578,6 +578,12 @@ class PollsController < ApplicationController
 
   def create_poll
     @poll, @error_message = Poll.create_poll(poll_params, @current_member)
+
+    unless @poll.present?
+      render status: :unprocessable_entity
+    else
+      render status: :created  
+    end
   end
 
   def share

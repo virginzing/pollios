@@ -1,6 +1,6 @@
 class PollSeries < ActiveRecord::Base
   include PollSeriesHelper
-  attr_accessor :tag_tokens, :same_choices, :expire_within, :group_id
+  attr_accessor :tag_tokens, :same_choices, :expire_within, :group_id, :branch_list
 
   belongs_to :member
   belongs_to :campaign

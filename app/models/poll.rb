@@ -517,6 +517,9 @@ class Poll < ActiveRecord::Base
         in_group_ids = group_id.presence || "0"
         in_group = group_id.present? ? true : false
 
+        # unless Rails.env.test?
+        #   raise ArgumentError, "Something went wrong" if true
+        # end
         # time_have_photo = photo_poll.present? ? 15.second.from_now : 5.second.from_now
 
         if expire_date.present?
@@ -589,7 +592,7 @@ class Poll < ActiveRecord::Base
         end
 
       rescue ArgumentError => detail
-        [@poll = nil, detail.message]
+        [@poll = nil, detail.message ]
       end ## begin
 
     end ## transaction

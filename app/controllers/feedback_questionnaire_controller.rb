@@ -37,7 +37,7 @@ class FeedbackQuestionnaireController < ApplicationController
 
       @collection = @company.collection_poll_series.create!(title: params[:poll_series][:description])
 
-      params[:poll_series][:branch_list].split(",").each do |branch_id|
+      params[:poll_series][:branch_list].select{|e| e if e.present? }.each do |branch_id|
         @expire_date = poll_series_params["expire_date"].to_i
         @poll_series = current_member.poll_series.new(poll_series_params)
         @poll_series.expire_date = set_expire_date

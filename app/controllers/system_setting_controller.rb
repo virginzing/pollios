@@ -11,8 +11,4 @@ class SystemSettingController < ApplicationController
     @maintenance_message = Figaro.env.maintenance_message
   end
 
-  def update_system
-    system 'heroku config:set maintenance_mode="false"'
-  end
-
 end
