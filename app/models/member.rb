@@ -822,7 +822,7 @@ class Member < ActiveRecord::Base
       member_id: id,
       type: member_type_text,
       name: fullname,
-      username: username,
+      public_id: public_id,
       email: email,
       avatar: avatar.present? ? resize_avatar(avatar.url) : "",
       key_color: get_key_color,

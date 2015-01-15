@@ -75,7 +75,7 @@ class FeedbackQuestionnaireController < ApplicationController
       if @success
         poll_series_ids =  @collection.collection_poll_series_branches.pluck(:poll_series_id)
 
-        @collection.update(feedback_recurring_id: FeedbackRecurring.first.id, recurring_poll_series_set: poll_series_ids)
+        @collection.update(feedback_recurring_id: FeedbackRecurring.first.id, recurring_poll_series_set: poll_series_ids, main_poll_series: poll_series_ids)
 
         flash[:success] = "Successfully created questionnaires."
         redirect_to feedback_questionnaires_path

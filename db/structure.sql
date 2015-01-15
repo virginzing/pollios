@@ -745,7 +745,9 @@ CREATE TABLE collection_poll_series (
     updated_at timestamp without time zone,
     feedback_recurring_id integer,
     recurring_status boolean DEFAULT true,
-    recurring_poll_series_set character varying(255)[] DEFAULT '{}'::character varying[]
+    recurring_poll_series_set character varying(255)[] DEFAULT '{}'::character varying[],
+    main_poll_series character varying(255)[] DEFAULT '{}'::character varying[],
+    feedback_status boolean DEFAULT true
 );
 
 
@@ -5153,4 +5155,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150114151607');
 INSERT INTO schema_migrations (version) VALUES ('20150114152011');
 
 INSERT INTO schema_migrations (version) VALUES ('20150115042224');
+
+INSERT INTO schema_migrations (version) VALUES ('20150115075653');
+
+INSERT INTO schema_migrations (version) VALUES ('20150115080430');
 
