@@ -180,6 +180,39 @@ ALTER SEQUENCE admins_id_seq OWNED BY admins.id;
 
 
 --
+-- Name: api_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE api_tokens (
+    id integer NOT NULL,
+    member_id integer,
+    uuid character varying(255),
+    token character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: api_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE api_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: api_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE api_tokens_id_seq OWNED BY api_tokens.id;
+
+
+--
 -- Name: apn_apps; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2661,6 +2694,13 @@ ALTER TABLE ONLY admins ALTER COLUMN id SET DEFAULT nextval('admins_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY api_tokens ALTER COLUMN id SET DEFAULT nextval('api_tokens_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY apn_apps ALTER COLUMN id SET DEFAULT nextval('apn_apps_id_seq'::regclass);
 
 
@@ -3162,6 +3202,14 @@ ALTER TABLE ONLY activity_feeds
 
 ALTER TABLE ONLY admins
     ADD CONSTRAINT admins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: api_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY api_tokens
+    ADD CONSTRAINT api_tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -3777,6 +3825,13 @@ CREATE UNIQUE INDEX index_admins_on_email ON admins USING btree (email);
 --
 
 CREATE UNIQUE INDEX index_admins_on_reset_password_token ON admins USING btree (reset_password_token);
+
+
+--
+-- Name: index_api_tokens_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_api_tokens_on_member_id ON api_tokens USING btree (member_id);
 
 
 --
@@ -5208,4 +5263,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150115075653');
 INSERT INTO schema_migrations (version) VALUES ('20150115080430');
 
 INSERT INTO schema_migrations (version) VALUES ('20150115085327');
+
+INSERT INTO schema_migrations (version) VALUES ('20150115145426');
 

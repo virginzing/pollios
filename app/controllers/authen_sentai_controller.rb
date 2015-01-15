@@ -80,14 +80,13 @@ class AuthenSentaiController < ApplicationController
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response => #{@response}"
 		respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app, "uuid" => params[:uuid]]))
 			if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
         # puts "@auth.activate_account? => #{@auth.activate_account?}"
         # puts "member => #{member}"
         if @auth.activate_account?
           @login = true
-
           if params[:web_login].present?
             if sessions_params[:remember_me]
               # puts "this case 1"
@@ -136,7 +135,7 @@ class AuthenSentaiController < ApplicationController
   	respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], 
         "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"], 
-        "company_id" => signup_params["company_id"], "select_service" => signup_params["select_service"], "register" => :in_app ])
+        "company_id" => signup_params["company_id"], "select_service" => signup_params["select_service"], "register" => :in_app, "uuid" => signup_params[:uuid] ])
       )
 
   		if @response["response_status"] == "OK"
@@ -270,7 +269,7 @@ class AuthenSentaiController < ApplicationController
   private
 
 	  def sessions_params
-	  	params.permit(:authen, :password, :device_token, :remember_me, :web_login)
+	  	params.permit(:authen, :password, :device_token, :remember_me, :web_login, :uuid)
 	  end
 
     def forgotpassword_params
@@ -286,11 +285,11 @@ class AuthenSentaiController < ApplicationController
     end
 
 	  def signup_params
-	    params.permit(:approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
+	    params.permit(:uuid, :approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
 	  end
 
 	  def update_profile_params
-	    params.permit(:name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday, :gender, :member_type)
+	    params.permit(:uuid, :name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday, :gender, :member_type)
 	  end
 
 end

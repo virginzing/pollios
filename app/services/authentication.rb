@@ -4,6 +4,7 @@ class Authentication
     @params = params
     @new_member = false
     @new_member_provider = false
+    @new_member_api_token = false
     @default_member_type = :citizen
   end
 
@@ -63,12 +64,24 @@ class Authentication
     @params["avatar_thumbnail"] || @params[:user_photo]
   end
 
+  def uuid
+    @params["uuid"]
+  end
+
   def generate_token
     Authentication.generate_api_token
   end
 
   def generate_auth_token
     Authentication.generate_auth_token
+  end
+
+  def generate_api_token
+    Authentication.new_generate_api_token
+  end
+
+  def get_api_token
+    @member_api_token.token
   end
 
   def province
@@ -146,12 +159,19 @@ class Authentication
         update_new_token unless @member.auth_token.present?
       end
 
-      @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
-        provider.name = @params["provider"]
-        provider.pid = pid
-        provider.token = generate_token
-        provider.save
-        @new_member_provider = true
+      # @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
+      #   provider.name = @params["provider"]
+      #   provider.pid = pid
+      #   provider.token = generate_token
+      #   provider.save
+      #   @new_member_provider = true
+      # end
+
+      @member_api_token = @member.api_tokens.where("uuid = ?", uuid).first_or_initialize do |api_token|
+        api_token.uuid = uuid
+        api_token.token = generate_api_token
+        api_token.save
+        @new_member_api_token = true
       end
 
       if @new_member
@@ -165,9 +185,9 @@ class Authentication
 
     end
 
-    update_member(@member) unless @new_member
-    update_member_provider(@member_provider) unless @new_member_provider
-
+    # update_member(@member) unless @new_member
+    # update_member_provider(@member_provider) unless @new_member_provider
+    update_new_api_token(@member_api_token) unless @new_member_api_token
     @member
   end
 
@@ -194,6 +214,7 @@ class Authentication
   def update_new_token
     @member.update!(auth_token: generate_auth_token)
   end
+
 
   def join_group_automatic
     find_main_group = Company.find(company_id.to_i).main_groups.first
@@ -228,6 +249,10 @@ class Authentication
     member_provider.update_attributes!(token: generate_token)
   end
 
+  def update_new_api_token(member_api_token)
+    member_api_token.update_attributes!(token: generate_api_token)
+  end
+
   # def check_username
   #   find_username = Member.where(username: username).first
   #   if find_username.present?
@@ -254,6 +279,13 @@ class Authentication
     begin
       token = SecureRandom.hex
     end while Provider.exists?(token: token)
+    return token
+  end
+
+  def self.new_generate_api_token
+    begin
+      token = SecureRandom.hex
+    end while ApiToken.exists?(token: token)
     return token
   end
 

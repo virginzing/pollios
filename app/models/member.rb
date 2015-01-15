@@ -130,6 +130,8 @@ class Member < ActiveRecord::Base
 
   has_many :un_see_polls
 
+  has_many :api_tokens, dependent: :destroy
+
   before_create :set_friend_limit
 
   scope :citizen,   -> { where(member_type: 0) }

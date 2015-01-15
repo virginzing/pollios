@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
 
     if params[:member_id] && token.present?
       authenticate_or_request_with_http_token do |token, options|
-        access_token = set_current_member.providers.where("token = ?", token)
+        access_token = set_current_member.api_tokens.where("token = ?", token)
         unless access_token.present?
           respond_to do |format|
             format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"], status: :unauthorized }
