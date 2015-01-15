@@ -1,4 +1,5 @@
 class GenerateSpecialQrcodeLink
+  
   def initialize(code, type)
     @code = code
     @type = type

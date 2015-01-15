@@ -6,9 +6,10 @@
 </head>
 <body>
 <script src="/mobile/js/browser-deeplink.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-  var env = '<%= raw Rails.env.development? %>';
 
+<script type="text/javascript">
+  var env = <%= raw Rails.env.development? %>;
+  
   var mobile_url = "http://pollios.com/m/members?key=" + '<%= params[:key] %>';
   var app_url = "Pollios://pollios.com/m/members?key=" + '<%= params[:key] %>';
 
