@@ -184,6 +184,10 @@
             <a href="<%= admin_certification_path %>" title="Certification"><i class="fa fa-lg fa-fw fa-file-text"></i> <span class="menu-item-parent">Certification</span></a>
           </li>
 
+          <li class="<%= is_active?('special_qrcodes')  %>">
+            <a href="<%= admin_special_qrcode_path %>" title="Special Qrcode"><i class="fa fa-lg fa-fw fa-qrcode"></i> <span class="menu-item-parent">Special Qrcode</span></a>
+          </li>
+
 <!--           <li class="<%= is_active?('invites') %>">
             <a href="/manage/dashboard/invites" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invite</span></a>
           </li>

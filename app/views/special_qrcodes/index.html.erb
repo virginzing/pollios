@@ -1,0 +1,50 @@
+<div class="well">
+  <a href="<%= admin_new_special_qrcode_path %>" class="icon-btn">
+      <i class="fa fa-plus"></i>
+      <div>Qrcode</div>
+  </a>
+</div>
+
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-special-qrcode" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-building"></i> </span>
+      <h2><strong>List of Special Qrcode</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="commercials" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Info</th>
+                <th>More</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @special_qrcode.each do |sq| %>
+                <tr>
+                  <td><%= sq.id %></td>
+                  <td><%= sq.code %></td>
+                  <td><%= sq.info %></td>
+                  <td><%= link_to 'More', special_qrcode_path(sq), class: 'btn btn-default btn-pill' %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

@@ -2,6 +2,7 @@ require 'sidekiq/web'
 require 'api_constraints'
 
 Pollios::Application.routes.draw do
+
   get 'list_members', to: 'members#list_members'
   
   mount ApiTaster::Engine => "/api_taster"
@@ -51,7 +52,6 @@ Pollios::Application.routes.draw do
   resources :recurrings
   resources :comments
   resources :campaigns
-
   resources :polls do
     resources :choices
   end
@@ -187,6 +187,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'member' do
+    get 'special_code', to: 'members#special_code'
     get 'recommendations',    to: 'members#recommendations'
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
@@ -309,6 +310,14 @@ Pollios::Application.routes.draw do
     get 'admin_signout',  to: 'admin#signout',    as: :admin_signout
 
     post 'login_as',  to: 'admin#login_as', as: :login_as
+
+
+    get 'special_qrcodes',   to: 'special_qrcodes#index', as: :admin_special_qrcode
+
+    get 'special_qrcodes/new', to: 'special_qrcodes#new', as: :admin_new_special_qrcode
+
+    resources :special_qrcodes
+
     resources :invites
     resources :commercials
   end
@@ -391,9 +400,11 @@ Pollios::Application.routes.draw do
     get 'polls/:id/detail',  to: 'companies#poll_detail'
   end
 
+
   scope 'm' do
     get 'home', to: 'mobiles#home', as: :mobile_home
     get 'polls',  to: 'mobiles#polls'
+    get 'members',  to: 'mobiles#members'
     post 'vote_questionnaire',  to: 'mobiles#vote_questionnaire', as: :mobile_vote_questionnaire
     post 'vote_poll', to: 'mobiles#vote_poll',  as: :mobile_vote_poll
 
@@ -410,6 +421,7 @@ Pollios::Application.routes.draw do
   end
 
   get '/qrcode',  to: 'mobiles#check_qrcode'
+  get '/qrcode_member', to: 'mobiles#check_qrcode_member'
 
   get '/profile', to: 'members#profile',  as: :my_profile
   delete 'delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar

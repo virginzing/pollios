@@ -1,0 +1,9 @@
+<div class="well">
+  <div class="text-center">
+    <h2><%= @special_qrcode.code %></h2>
+
+    <%= image_tag @qr, class: "img-responsive center-block" %>
+
+    <%= link_to 'Permanent Link', GenerateSpecialQrcodeLink.new(@special_qrcode.code, @special_qrcode.info["type"]).get_redirect_link %>
+  </div>
+</div>

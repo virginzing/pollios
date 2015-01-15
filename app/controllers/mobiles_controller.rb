@@ -24,6 +24,11 @@ class MobilesController < ApplicationController
     @key = params[:key]
   end
 
+  def check_qrcode_member
+    render layout: false
+    @key = params[:key]
+  end
+
   def recent_view
     @recent_view_questionnaire = PollSeries.joins(:history_view_questionnaires).select('poll_series.*, history_view_questionnaires.created_at as h_created_at')
                                             .where("history_view_questionnaires.member_id = ?", current_member.id).order("h_created_at desc")
@@ -61,6 +66,14 @@ class MobilesController < ApplicationController
     end
 
     cookies.delete(:return_to)
+  end
+
+  def members
+    @code, @type = get_member_from_key(params[:key])
+
+    @special_qrcode = SpecialQrcode.find_by(code: @code)
+
+    @member = Member.find_by(id: @special_qrcode.info["member_id"])
   end
 
   def vote_poll
@@ -261,6 +274,10 @@ class MobilesController < ApplicationController
     [@poll, qrcode_key, series]
   end
 
+  def get_member_from_key(key)
+    decode64_key_member(key)  
+  end
+
   def decode64_key(key)
     begin
       decode64 = Base64.urlsafe_decode64(key).split("&")
@@ -268,6 +285,17 @@ class MobilesController < ApplicationController
       qrcode_key = decode64[1].split("=").last
       series = decode64.last.split("=").last
       [id, qrcode_key, series]
+    rescue => e
+      cookies.delete(:return_to)
+    end
+  end
+
+  def decode64_key_member(key)
+    begin
+      decode64 = Base64.urlsafe_decode64(key).split("&")
+      code = decode64.first.split("=").last
+      type = decode64.last.split("=").last
+      [code, type]
     rescue => e
       cookies.delete(:return_to)
     end

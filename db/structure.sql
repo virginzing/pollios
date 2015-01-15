@@ -2408,6 +2408,38 @@ ALTER SEQUENCE share_polls_id_seq OWNED BY share_polls.id;
 
 
 --
+-- Name: special_qrcodes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE special_qrcodes (
+    id integer NOT NULL,
+    code character varying(255),
+    info hstore,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: special_qrcodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE special_qrcodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: special_qrcodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE special_qrcodes_id_seq OWNED BY special_qrcodes.id;
+
+
+--
 -- Name: suggests; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3063,6 +3095,13 @@ ALTER TABLE ONLY share_polls ALTER COLUMN id SET DEFAULT nextval('share_polls_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY special_qrcodes ALTER COLUMN id SET DEFAULT nextval('special_qrcodes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY suggests ALTER COLUMN id SET DEFAULT nextval('suggests_id_seq'::regclass);
 
 
@@ -3619,6 +3658,14 @@ ALTER TABLE ONLY save_poll_laters
 
 ALTER TABLE ONLY share_polls
     ADD CONSTRAINT share_polls_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: special_qrcodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY special_qrcodes
+    ADD CONSTRAINT special_qrcodes_pkey PRIMARY KEY (id);
 
 
 --
@@ -5159,4 +5206,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150115042224');
 INSERT INTO schema_migrations (version) VALUES ('20150115075653');
 
 INSERT INTO schema_migrations (version) VALUES ('20150115080430');
+
+INSERT INTO schema_migrations (version) VALUES ('20150115085327');
 

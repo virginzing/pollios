@@ -93,47 +93,31 @@
     </div>
     <!-- pulled right: nav area -->
     <div class="pull-right">
-      <% if current_member %>
-        <div id="toggle-menu" class="pull-right">
-          <span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
-        </div>
-        <div class="pull-right" style="margin-top: 5px;color: white;">
-        You log-in as: <br>
-        <strong><%= member_decorate.show_name %></strong>
-        </div>
-        <div class="pull-right">
-          <img src="<%= member_decorate.show_image %>" class="img-circle" id="image-navbar" width="40" height="40">
-        </div>
+      <% unless @code.present? %>
+        <% if current_member %>
+          <div id="toggle-menu" class="pull-right">
+            <span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
+          </div>
+          <div class="pull-right" style="margin-top: 5px;color: white;">
+          You log-in as: <br>
+          <strong><%= member_decorate.show_name %></strong>
+          </div>
+          <div class="pull-right">
+            <img src="<%= member_decorate.show_image %>" class="img-circle" id="image-navbar" width="40" height="40">
+          </div>
+        <% end %>
       <% end %>
-      <!-- collapse menu button -->
-<!--       <div id="hide-menu" class="btn-header pull-right">
-        <span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
-      </div> -->
-      <!-- end collapse menu -->      
-      <!-- search mobile button (this is hidden till mobile view port) -->
-<!--       <div id="search-mobile" class="btn-header transparent pull-right">
-        <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
-      </div> -->
-      <!-- end search mobile button -->
-      <!-- input: search field -->
-<!--       <form action="#search.html" class="header-search pull-right">
-        <input type="text" placeholder="Find polls and more" id="search-fld">
-        <button type="submit">
-        <i class="fa fa-search"></i>
-        </button>
-        <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
-      </form> -->
-      <!-- end input: search field -->
     </div>
     <!-- end pulled right: nav area -->
   </header>
 
-
-  <aside id="left-panel">
-    <nav>
-      <%= render partial: 'sherd/nav_mobile' %>
-    </nav>
-  </aside>
+  <% unless @code.present? %>
+    <aside id="left-panel">
+      <nav>
+        <%= render partial: 'sherd/nav_mobile' %>
+      </nav>
+    </aside>
+  <% end %>
 
   <!-- END HEADER -->
   <!-- Left panel : Navigation area -->

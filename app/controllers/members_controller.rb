@@ -32,6 +32,19 @@ class MembersController < ApplicationController
     # puts "#{@mutual_friend.map(&:id)}"
   end
 
+  def special_code
+    @special_code = true
+    code = params[:code]
+    @special_code = SpecialQrcode.find_by(code: code)
+
+    unless @special_code.present?
+      @special_code = false
+      render status: :not_found
+    else
+      @current_member = Member.find_by(id: @special_code.info["member_id"])
+    end
+  end
+
   def list_members
     respond_with Member.limit(2), root: false
   end
