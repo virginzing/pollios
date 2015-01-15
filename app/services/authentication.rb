@@ -167,11 +167,13 @@ class Authentication
       #   @new_member_provider = true
       # end
 
-      @member_api_token = @member.api_tokens.where("uuid = ?", uuid).first_or_initialize do |api_token|
-        api_token.uuid = uuid
-        api_token.token = generate_api_token
-        api_token.save
-        @new_member_api_token = true
+      if uuid.present?
+        @member_api_token = @member.api_tokens.where("uuid = ?", uuid).first_or_initialize do |api_token|
+          api_token.uuid = uuid
+          api_token.token = generate_api_token
+          api_token.save
+          @new_member_api_token = true
+        end
       end
 
       if @new_member
@@ -187,7 +189,11 @@ class Authentication
 
     # update_member(@member) unless @new_member
     # update_member_provider(@member_provider) unless @new_member_provider
-    update_new_api_token(@member_api_token) unless @new_member_api_token
+    
+    if uuid.present?
+      update_new_api_token(@member_api_token) unless @new_member_api_token
+    end
+
     @member
   end
 
