@@ -41,7 +41,7 @@ class PollSeries < ActiveRecord::Base
   amoeba do 
     enable
 
-    set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 }, { :created_at => Time.zone.now + 1.days } ]
+    set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 } ]
 
     include_association [:polls, :branch_poll_series, :collection_poll_series_branch]
   end
