@@ -1701,7 +1701,8 @@ CREATE TABLE members (
     request_count integer DEFAULT 0,
     cover_preset character varying(255) DEFAULT '0'::character varying,
     register integer DEFAULT 0,
-    slug character varying(255)
+    slug character varying(255),
+    public_id character varying(255)
 );
 
 
@@ -5150,4 +5151,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150113104253');
 INSERT INTO schema_migrations (version) VALUES ('20150114151607');
 
 INSERT INTO schema_migrations (version) VALUES ('20150114152011');
+
+INSERT INTO schema_migrations (version) VALUES ('20150115042224');
 

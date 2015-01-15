@@ -7,6 +7,11 @@ crumb :collection do |collection|
   parent :collections
 end
 
+crumb :edit_collection do |ec|
+  link 'Edit', edit_collection_feedback_path(ec)
+  parent :collection, ec
+end
+
 crumb :questionnaire do |questionnaire|
   link questionnaire.branch.name, collection_feedback_branch_detail_path(questionnaire.collection_poll_series, questionnaire.branch, questionnaire)
   parent :collection, questionnaire.collection_poll_series

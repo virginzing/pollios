@@ -81,10 +81,11 @@ class MembersController < ApplicationController
 
   def public_id
     begin
-      @current_member = @current_member.update!(username: params[:username])
+      @current_member = @current_member.update!(public_id: params[:public_id])
     rescue ActiveRecord::RecordInvalid => invalid
       @current_member = nil
-      @error_message = invalid.record.errors.full_messages
+      @error_message = invalid.record.errors.messages[:public_id]
+      render status: :unprocessable_entity
     end
   end
 

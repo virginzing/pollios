@@ -33,6 +33,7 @@
                 <th>Description</th>
                 <th>Total Vote</th>
                 <th>Total View</th>
+                <th>Recurring</th>
                 <th>Create Since</th>
                 <th>Last update</th>
                 <th></th>
@@ -45,9 +46,10 @@
                   <td><%= link_to collection.title, collection_feedback_questionnaire_path(collection) %></td>
                   <td><%= collection.sum_vote_all %></td>
                   <td><%= collection.sum_view_all %></td>
+                  <td><%= collection.get_recurring_status %></td>
                   <td><span data-livestamp="<%= collection.created_at.to_i %>"></span></td>
                   <td><span data-livestamp="<%= collection.updated_at.to_i %>"></span></td>
-                  <td width="160"><%= link_to 'View Report', collection_feedback_report_path(collection), class: 'btn btn-default btn-pill' %> <%= link_to 'Delete', delete_collection_feedback_path(collection), data: { confirm: 'Are you sure?'}, method: :delete, class: 'btn btn-default btn-pill' %></td>
+                  <td width="160"><%= link_to 'View Report', collection_feedback_report_path(collection), class: 'btn btn-default btn-pill' %> <%= link_to 'Edit', edit_collection_feedback_path(collection), class: 'btn btn-default btn-pill' %> <%= link_to 'Delete', delete_collection_feedback_path(collection), data: { confirm: 'Are you sure?'}, method: :delete, class: 'btn btn-default btn-pill' %></td>
                 </tr>
               <% end %>
             </tbody>

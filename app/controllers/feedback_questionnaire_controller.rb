@@ -1,4 +1,6 @@
 class FeedbackQuestionnaireController < ApplicationController
+  decorates_assigned :collections
+
   skip_before_action :verify_authenticity_token
   before_action :signed_user
   before_action :load_company
@@ -9,7 +11,7 @@ class FeedbackQuestionnaireController < ApplicationController
   end
 
   def index
-    @collections = CollectionPollSeries.where("company_id = ?", @company.id)
+    @collections = CollectionPollSeries.where("company_id = ?", @company.id).decorate
   end
 
   def new
@@ -29,6 +31,10 @@ class FeedbackQuestionnaireController < ApplicationController
     @questionnaires = PollSeries.joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
   
+  end
+
+  def edit_collection
+    @collection = CollectionPollSeries.find(params[:id])
   end
 
   def create
