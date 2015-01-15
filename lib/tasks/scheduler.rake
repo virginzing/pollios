@@ -3,6 +3,14 @@ namespace :scheduler do
   task recurring: :environment do
     puts "poll recurring test run"
     poll = Poll.get_poll_hourly
+
+    feedback = PollSeries.get_feedback_hourly
+  end
+
+  desc "Recurring Feedback"
+
+  task recurring_feedback: :environment do
+    PollSeries.get_feedback_hourly
   end
 
   desc "alert notification for save poll"

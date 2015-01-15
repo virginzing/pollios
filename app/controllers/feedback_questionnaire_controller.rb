@@ -33,10 +33,6 @@ class FeedbackQuestionnaireController < ApplicationController
   
   end
 
-  def edit_collection
-    @collection = CollectionPollSeries.find(params[:id])
-  end
-
   def create
     PollSeries.transaction do
       @success = true

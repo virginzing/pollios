@@ -139,6 +139,24 @@ class PollSeries < ActiveRecord::Base
     GenerateQrcodeLink.new(self).get_link
   end
 
+  def self.get_feedback_hourly
+    recurring_poll_series_ids = []
+    hour = Time.zone.now.hour
+
+    FeedbackRecurring.where("EXTRACT (HOUR from period) = ?", hour).each do |rf|
+      rf.collection_poll_series.where(recurring_status: true).each do |cps|
+        recurring_poll_series_ids << cps.recurring_poll_series_set
+      end
+    end
+
+    poll_series_ids = recurring_poll_series_ids.flatten
+
+    where("id IN (?)", poll_series_ids).each do |ps|
+      old_feedback = ps.amoeba_dup
+      new_feedback = old_feedback.save!
+    end      
+  end
+
   # def get_link_for_qr_code_series
   #   if Rails.env.production?
   #     "http://pollios.com/m/polls?key=" << secret_qrcode_key

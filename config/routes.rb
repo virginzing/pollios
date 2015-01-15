@@ -177,7 +177,8 @@ Pollios::Application.routes.draw do
 
     scope 'collection' do
       get ':id',      to: 'feedback_questionnaire#collection', as: :collection_feedback_questionnaire
-      get ':id/edit', to: 'feedback_questionnaire#edit_collection', as: :edit_collection_feedback  
+      get ':id/edit', to: 'collection_poll_series#edit', as: :edit_collection_feedback 
+      put ':id',      to: 'collection_poll_series#update',   as: :update_collection_feedback 
       get ':id/:branch_id/:questionnaire_id',    to: 'branches#detail',  as: :collection_feedback_branch_detail
 
 

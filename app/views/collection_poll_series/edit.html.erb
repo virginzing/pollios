@@ -1,0 +1,12 @@
+<% breadcrumb :edit_collection, @collection %>
+
+<div class="well">
+  <%= simple_form_for @collection, url: update_collection_feedback_path, method: :put do |f| %>
+    <%= f.input :recurring_status %>
+    <p class="note"><strong>Note:</strong> It build this questionnaire all branch (Location) on everyday at Midnight.</p>
+
+    <div class="update-button">
+      <%= f.submit "Update", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
