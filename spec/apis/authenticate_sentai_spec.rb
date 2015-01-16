@@ -11,7 +11,7 @@ describe "POST /authen/sentai", type: :api do
 
     expect(ApiToken.count).to eq(1)
 
-    expect(ApiToken.first.uuid).to eq("123")
+    expect(ApiToken.first.app_id).to eq("123")
 
     expect(last_response.status).to eq(200)
 

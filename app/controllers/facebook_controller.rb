@@ -18,6 +18,6 @@ class FacebookController < ApplicationController
   private
 
   def fb_params
-    params.permit(:id, :name, :email, :user_photo, :username, :device_token, :birthday, :gender)
+    params.permit(:id, :name, :email, :user_photo, :username, :device_token, :birthday, :gender, :app_id)
   end
 end

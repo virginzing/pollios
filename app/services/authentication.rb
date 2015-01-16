@@ -64,8 +64,8 @@ class Authentication
     @params["avatar_thumbnail"] || @params[:user_photo]
   end
 
-  def uuid
-    @params["uuid"]
+  def app_id
+    @params["app_id"]
   end
 
   def generate_token
@@ -167,12 +167,12 @@ class Authentication
       #   @new_member_provider = true
       # end
 
-      if uuid.present?
-        @member_api_token = @member.api_tokens.where("uuid = ?", uuid).first_or_initialize do |api_token|
-          api_token.uuid = uuid
+      if app_id.present?
+        puts "take this here"
+        @member_api_token = @member.api_tokens.where("app_id = ?", app_id).first_or_initialize do |api_token|
+          api_token.app_id = app_id
           api_token.token = generate_api_token
           api_token.save
-          @new_member_api_token = true
         end
       end
 
@@ -189,10 +189,10 @@ class Authentication
 
     # update_member(@member) unless @new_member
     # update_member_provider(@member_provider) unless @new_member_provider
-    
-    if uuid.present?
-      update_new_api_token(@member_api_token) unless @new_member_api_token
-    end
+
+    # if uuid.present?
+    #   update_new_api_token(@member_api_token) unless @new_member_api_token
+    # end
 
     @member
   end

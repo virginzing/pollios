@@ -18,12 +18,13 @@ FactoryGirl.define do
   factory :facebook, class: Member do
     id "123456"
     name "Nutty Nuttapon Achachotipong"
+    app_id "123"
   end
 
   factory :sentai, class: Member do
     authen "nuttapon@code-app.com"
     password "1234567"
-    uuid "123"
+    app_id "123"
   end
 
 end

@@ -186,10 +186,10 @@ ALTER SEQUENCE admins_id_seq OWNED BY admins.id;
 CREATE TABLE api_tokens (
     id integer NOT NULL,
     member_id integer,
-    uuid character varying(255),
     token character varying(255),
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    app_id character varying(255)
 );
 
 
@@ -5265,4 +5265,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150115080430');
 INSERT INTO schema_migrations (version) VALUES ('20150115085327');
 
 INSERT INTO schema_migrations (version) VALUES ('20150115145426');
+
+INSERT INTO schema_migrations (version) VALUES ('20150116033326');
 
