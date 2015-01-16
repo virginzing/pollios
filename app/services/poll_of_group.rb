@@ -62,9 +62,10 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.joins(:poll_groups).includes(:groups, :choices, :history_votes, :member)
-                  .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
-                  .where("poll_groups.group_id IN (?)", @group.map(&:id)).uniq
+    @group = @company.groups
+    @query = Poll.joins(:poll_groups).includes(:groups, :choices, :history_votes, :member) \
+                  .select("polls.*, poll_groups.share_poll_of_id as share_poll") \
+                  .group('poll_groups.poll_id, polls.id, share_poll').where("poll_groups.group_id IN (?)", @group.map(&:id)) \
                   .order("polls.created_at DESC")
     @query = @query.where("polls.series = 'f'") if @web == true
     @query
