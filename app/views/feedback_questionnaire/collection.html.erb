@@ -1,10 +1,45 @@
 <% breadcrumb :collection, @collection %>
 
 <div class="well">
-  <h1 class="">
-    <i class="fa fa-edit fa-fw"></i> 
-      <%= @collection.title %>
-  </h1>
+  <h1 class="text-center"><strong><%= @collection.title %></strong></h1>
+
+  <section>
+    <div class="section-title">List Question</div>
+    <br>
+
+    <ul class="list_question">
+      <% @collection.questions.each do |question| %>
+        <li><%= question.first %>) <%= question.last %></li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+    <div class="section-title">In Branch</div>   
+    <br>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Branch</th>
+            <th width="100" class="text-center">Qrcode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @list_questionnaire.each do |poll_series| %>
+          <tr>
+            <td><%= poll_series.branch.name %></td>
+            <td><%= link_to 'Get Qrcdoe', qrcode_feedback_questionnaire_path(@collection, poll_series.branch), class: 'btn btn-default btn-pill' %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+
+
 </div>
 
 <section id="widget-grid" class="">

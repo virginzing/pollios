@@ -39,26 +39,30 @@ class MobilesController < ApplicationController
   def polls
     # cookies.delete(:return_to)
 
-    @poll, @qr_key, @series = get_questionnaire_from_key(params[:key])
+    @poll, @qr_key, @series, @feedback_status = get_questionnaire_from_key(params[:key])
     # puts "qr key => #{@qr_key}"
     # puts "poll => #{@poll}"
     # puts "series => #{@series}"
     if @series == "t"
-      @questionnaire = @poll
 
-      # raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
-      @history_votes = HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
-      
-      PollSeries.view_poll(@current_member, @questionnaire) unless @history_votes
+      if @feedback_status
+        @questionnaire = @poll
+        # raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
+        @history_votes = HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
+        
+        PollSeries.view_poll(@current_member, @questionnaire) unless @history_votes
 
-      @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("polls.order_poll asc")
+        @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("polls.order_poll asc")
 
-      @list_poll_first = @list_poll.first.id
+        @list_poll_first = @list_poll.first.id
 
-      @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_id = ?", current_member.id, @list_poll_first).first
-      # puts "#{@reward}"
-      # puts "#{@list_poll_first}"
-      render 'questionnaire'
+        @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_id = ?", current_member.id, @list_poll_first).first
+        # puts "#{@reward}"
+        # puts "#{@list_poll_first}"
+        render 'questionnaire'
+      else
+        render 'close_questionnaire'
+      end
     else
       @history_votes = HistoryVote.exists?(member_id: current_member.id, poll_id: @poll.id)
       Poll.view_poll(@poll, current_member) unless @history_votes
@@ -260,18 +264,29 @@ class MobilesController < ApplicationController
     raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
   end
 
+  def close_questionnaire
+    render layout: false
+  end
+
   def get_questionnaire_from_key(key)
     id, qrcode_key, series = decode64_key(key)
 
     if series == "t"
       @poll = PollSeries.find_by(id: id)
+
+      if @poll.feedback
+        @collection_poll_series_branch = CollectionPollSeriesBranch.where(collection_poll_series_id: @poll.collection_poll_series.id, branch_id: @poll.branch.id).order("created_at desc").first
+        @poll = @collection_poll_series_branch.poll_series
+        @feedback_status = @collection_poll_series_branch.collection_poll_series.feedback_status
+      end
+      
     else
       @poll = Poll.find_by(id: id, series: series)
     end
 
     raise ExceptionHandler::MobileNotFound unless @poll.present?
 
-    [@poll, qrcode_key, series]
+    [@poll, qrcode_key, series, @feedback_status]
   end
 
   def get_member_from_key(key)

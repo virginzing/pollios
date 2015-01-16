@@ -31,6 +31,7 @@
               <tr>
                 <th width="20">#</th>
                 <th>Description</th>
+                <th>Status</th>
                 <th>Total Vote</th>
                 <th>Total View</th>
                 <th>Recurring</th>
@@ -44,6 +45,7 @@
                 <tr>
                   <td><%= collection.id %></td>
                   <td><%= link_to collection.title, collection_feedback_questionnaire_path(collection) %></td>
+                  <td><%= collection.get_feedback_status %></td>
                   <td><%= collection.sum_vote_all %></td>
                   <td><%= collection.sum_view_all %></td>
                   <td><%= collection.get_recurring_status %></td>

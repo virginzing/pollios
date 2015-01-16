@@ -26,7 +26,7 @@ class CollectionPollSeriesController < ApplicationController
   private
 
   def collection_poll_series_params
-    params.require(:collection_poll_series).permit(:id, :recurring_status)
+    params.require(:collection_poll_series).permit(:id, :recurring_status, :feedback_status)
   end
 
 end

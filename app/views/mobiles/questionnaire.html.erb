@@ -1,7 +1,7 @@
 <div class="well sub-header">
   <div class="text-center">
     <h2><strong><%= @questionnaire.description %></strong></h2>
-    <h3><strong>(<%= @questionnaire.get_branch %>)</strong></h3>
+    <h3 style="font-size: 14px;"><%= @questionnaire.created_at.strftime("%d %B %Y") %> (<%= @questionnaire.get_branch %>)</h3>
   </div>
 </div>
 <div class="row">

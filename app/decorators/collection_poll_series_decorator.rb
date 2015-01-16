@@ -11,4 +11,11 @@ class CollectionPollSeriesDecorator < ApplicationDecorator
     end
   end
 
+  def get_feedback_status
+    if object.feedback_status
+      content_tag(:label, "Active", class: 'label label-success')
+    else
+      content_tag(:label, "Disable", class: 'label label-default')
+    end
+  end
 end

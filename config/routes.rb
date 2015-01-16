@@ -165,6 +165,8 @@ Pollios::Application.routes.draw do
       get ':id/reports',      to: 'feedback_reports#collection',  as: :collection_feedback_report
       get ':id/reports/branch/:branch_id',  to: 'feedback_reports#each_branch', as: :each_branch_feedback_report
 
+      get ':id/qrcode/:branch_id',  to: 'feedback_questionnaire#qrcode',  as: :qrcode_feedback_questionnaire
+
       get 'reports',  to: 'feedback_questionnaire#reports', as: :all_feedback_report
 
       delete ':id/delete',  to: 'feedback_questionnaire#destroy', as: :delete_collection_feedback
@@ -418,6 +420,8 @@ Pollios::Application.routes.draw do
     post 'authen',  to: 'mobiles#authen'
     get 'dashboard',  to: 'mobiles#dashboard',  as: :mobile_dashboard
     get 'recent_view',  to: 'mobiles#recent_view',  as: :mobile_recent_view
+
+    get 'close_questionnaire',  to: 'mobiles#close_questionnaire'
   end
 
   get '/qrcode',  to: 'mobiles#check_qrcode'

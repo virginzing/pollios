@@ -30,7 +30,14 @@ class FeedbackQuestionnaireController < ApplicationController
     @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
     @questionnaires = PollSeries.joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
-  
+
+    @list_questionnaire = PollSeries.where("id IN (?)", @collection.main_poll_series)
+  end
+
+  def qrcode
+    @collection_poll_series_branch = CollectionPollSeriesBranch.find_by(collection_poll_series_id: params[:id], branch_id: params[:branch_id])
+    @questionnaire = @collection_poll_series_branch.poll_series
+    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@questionnaire).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
   end
 
   def create

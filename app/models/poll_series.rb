@@ -5,7 +5,8 @@ class PollSeries < ActiveRecord::Base
   belongs_to :member
   belongs_to :campaign
 
-  has_many :polls, dependent: :destroy
+  has_many :polls, -> { unscope(:order).order('polls.order_poll asc') }, dependent: :destroy
+
   has_many :suggests, dependent: :destroy
 
   has_many :history_view_questionnaires, dependent: :destroy

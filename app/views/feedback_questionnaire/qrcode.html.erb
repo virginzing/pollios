@@ -1,0 +1,17 @@
+<% breadcrumb :qrcode, @questionnaire %>
+<div class="well">
+  <div class="text-center">
+    <h2><%= @questionnaire.branch.name %></h2>
+
+    <%= image_tag @qr, class: "img-responsive center-block" %>
+    <br>
+
+    <%= image_tag @qr, class: "img-responsive center-block" %>
+    <img src="/qrcode/pollios_for_qrcode.png" class="img-responsive center-block" width="172" height="172" style="opacity: 0.3; margin-top: -186px;">
+
+    <br>
+    <br>
+    
+    <%= link_to 'Permanent Link', GenerateQrcodeLink.new(@questionnaire).get_redirect_link, class: 'btn btn-primary btn-pill' %>
+  </div>
+</div>

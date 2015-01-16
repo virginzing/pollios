@@ -152,3 +152,5 @@ gem 'batch_api', :git => 'git://github.com/easyPEP/batch_api.git'
 
 gem 'api_taster', '~> 0.8'
 gem 'friendly_id', '5.0.4'
+
+gem 'unscoped_associations'
