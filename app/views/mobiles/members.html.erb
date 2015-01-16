@@ -1,8 +1,7 @@
 <div class="text-center">
   <br>
 
-  <%= image_tag(@member.avatar.url(:thumbnail)) %>
-
+  <%= image_tag(@member.avatar.url(:thumbnail), class: "img-circle") %>
   <h1><strong><%= @member.fullname %></strong></h1>
 
   <h3><strong><%= @member.email %></strong></h3>

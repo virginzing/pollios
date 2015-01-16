@@ -3,7 +3,14 @@
     <h2><%= @special_qrcode.code %></h2>
 
     <%= image_tag @qr, class: "img-responsive center-block" %>
+    <br>
 
+    <%= image_tag @qr, class: "img-responsive center-block" %>
+    <img src="/qrcode/pollios_for_qrcode.png" class="img-responsive center-block" width="172" height="172" style="opacity: 0.3; margin-top: -186px;">
+
+    <br>
+    <br>
+    
     <%= link_to 'Permanent Link', GenerateSpecialQrcodeLink.new(@special_qrcode.code, @special_qrcode.info["type"]).get_redirect_link %>
   </div>
 </div>
