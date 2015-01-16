@@ -530,16 +530,18 @@ class Poll < ActiveRecord::Base
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
 
-        unless member.company?
 
-          if in_group
+
+        if in_group
+          if member.company?
+            list_group_id = in_group_ids.split(",").collect{|e| e.to_i }
+          else
             if (member.post_poll_in_group(in_group_ids).count > 0)
               list_group_id = member.post_poll_in_group(in_group_ids)
             else
               raise ExceptionHandler::Forbidden, "You are not a member of this group" 
             end
           end
-
         end
 
         if group_id.present?
