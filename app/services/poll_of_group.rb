@@ -44,7 +44,7 @@ class PollOfGroup
   def poll_of_group
     poll_group_query = "poll_groups.group_id = #{@group.id}"
     @query = Poll.joins(:poll_groups).includes(:groups, :choices, :history_votes, :member, :poll_series)
-                  .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
+                  .select("polls.*, poll_groups.share_poll_of_id as share_poll")
                   .where("#{poll_group_query}")
                   .order("polls.updated_at DESC, polls.created_at DESC").uniq
     @query
