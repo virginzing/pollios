@@ -89,13 +89,13 @@ class ApplicationController < ActionController::Base
     @current_member = Member.find_by(id: params[:member_id])
     unless @current_member.present?
       respond_to do |format|
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."], status: 404 }
         format.html
       end
     else
       if @current_member.blacklist?
         respond_to do |format|
-          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "This account is blacklist."]}
+          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "This account is blacklist."], status: 403 }
         end
       end
     end
