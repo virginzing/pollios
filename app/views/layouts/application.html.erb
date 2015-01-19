@@ -253,7 +253,7 @@
 
       <% if current_member.get_company.using_service.include?("Survey") %>
         <li>
-          <a href="<%= dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-greenDark"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal Survey</span> </span> </a>
+          <a href="<%= company_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-greenDark"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal Survey</span> </span> </a>
         </li>
       <% end %>
       <% if current_member.get_company.using_service.include?("Feedback") %>
@@ -339,7 +339,8 @@
           });
       }
       // /\B#([a-zA-Z0-9ก-๙_]+)/
-  $('#textarea3').textcomplete([{ // mention strategy
+  if ($("#textarea3").length > 0) {
+    $('#textarea3').textcomplete([{ // mention strategy
       match: /(^|\s)#([a-zA-Z0-9ก-๙_぀-ゟ゠-ヿ]{1,})$/,
       search: function(term, callback) {
           $.getJSON('/search_autocmp_tags.json', {
@@ -355,12 +356,14 @@
       replace: function(value) {
           return ' #' + value + " ";
       }
-  }]).overlay([{
-      match: /(^|\s)#([a-zA-Z0-9ก-๙_぀-ゟ゠-ヿ]+)/g,
-      css: {
-          'background-color': '#d8dfea'
-      }
-  }]);
+    }]).overlay([{
+        match: /(^|\s)#([a-zA-Z0-9ก-๙_぀-ゟ゠-ヿ]+)/g,
+        css: {
+            'background-color': '#d8dfea'
+        }
+    }]);
+  }
+  
 
   function smoothScroll() {
       $(function() {
