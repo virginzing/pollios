@@ -780,7 +780,8 @@ CREATE TABLE collection_poll_series (
     recurring_status boolean DEFAULT true,
     recurring_poll_series_set character varying(255)[] DEFAULT '{}'::character varying[],
     main_poll_series character varying(255)[] DEFAULT '{}'::character varying[],
-    feedback_status boolean DEFAULT true
+    feedback_status boolean DEFAULT true,
+    campaign_id integer
 );
 
 
@@ -1737,7 +1738,9 @@ CREATE TABLE members (
     cover_preset character varying(255) DEFAULT '0'::character varying,
     register integer DEFAULT 0,
     slug character varying(255),
-    public_id character varying(255)
+    public_id character varying(255),
+    waiting boolean DEFAULT false,
+    created_company boolean DEFAULT false
 );
 
 
@@ -4031,6 +4034,13 @@ CREATE INDEX index_collection_poll_series_branches_on_poll_series_id ON collecti
 
 
 --
+-- Name: index_collection_poll_series_on_campaign_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_collection_poll_series_on_campaign_id ON collection_poll_series USING btree (campaign_id);
+
+
+--
 -- Name: index_collection_poll_series_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5267,4 +5277,10 @@ INSERT INTO schema_migrations (version) VALUES ('20150115085327');
 INSERT INTO schema_migrations (version) VALUES ('20150115145426');
 
 INSERT INTO schema_migrations (version) VALUES ('20150116033326');
+
+INSERT INTO schema_migrations (version) VALUES ('20150119093656');
+
+INSERT INTO schema_migrations (version) VALUES ('20150119100921');
+
+INSERT INTO schema_migrations (version) VALUES ('20150119102553');
 

@@ -141,6 +141,7 @@ class Authentication
 
   def member_from_authen
     @member = Member.where(email: email).first_or_create do |member|
+      member.waiting = check_waiting
       member.fullname = name
       member.email = email
       member.member_type = member_type
@@ -149,7 +150,9 @@ class Authentication
       if web_login.present?
         member.auth_token = generate_auth_token
       end
+      member.created_company = true if create_member_via_company? || select_service.present?
       member.setting = member_setting
+
       member.save!
       @new_member = true
     end
@@ -168,7 +171,6 @@ class Authentication
       # end
 
       if app_id.present?
-        puts "take this here"
         @member_api_token = @member.api_tokens.where("app_id = ?", app_id).first_or_initialize do |api_token|
           api_token.app_id = app_id
           api_token.token = generate_api_token
@@ -215,6 +217,21 @@ class Authentication
       find_provider.update_columns(token: generate_token, updated_at: Time.zone.now)
     end
     @member
+  end
+
+  def check_waiting
+    waiting = false
+    limit_member = Figaro.env.limit_member.to_i
+
+    if create_member_via_company? || select_service.present?
+      waiting = false
+    else
+      unless limit_member > Member.unscoped.where(created_company: false).count
+        waiting = true     
+      end
+    end
+    
+    waiting
   end
 
   def update_new_token

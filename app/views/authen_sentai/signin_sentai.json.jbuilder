@@ -19,5 +19,5 @@ if @response["response_status"] == "OK"
   end
 else
   json.response_status "ERROR"
-  json.response_message @response["response_message"]
+  json.response_message "Invalid email or password" || @response["response_message"]
 end

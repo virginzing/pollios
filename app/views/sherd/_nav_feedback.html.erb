@@ -16,6 +16,10 @@
       <li class="<%= is_active_2nd_level('branches', 'index') || is_active_2nd_level('branches', 'new') || is_active_2nd_level('branches', 'edit')   %>">
         <a href="<%= branches_path %>" title="Branch"><i class="fa fa-lg fa-fw fa-share-alt"></i> <span class="menu-item-parent">Branch</span></a>
       </li>
+
+      <li class="<%= is_active?('feedback_campaigns') %>">
+        <a href="<%= feedback_campaigns_path %>" title="Campaign"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaign</span></a>
+      </li>
     </ul>
   </li>
 

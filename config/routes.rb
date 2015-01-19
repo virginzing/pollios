@@ -3,6 +3,9 @@ require 'api_constraints'
 
 Pollios::Application.routes.draw do
 
+
+  get 'services', to: 'select_services#index',  as: :select_services
+
   get 'list_members', to: 'members#list_members'
   
   mount ApiTaster::Engine => "/api_taster"
@@ -150,6 +153,8 @@ Pollios::Application.routes.draw do
 
   scope 'feedback' do
     resources :branches
+
+    
     get 'dashboard',  to: 'feedback#dashboard', as: :feedback_dashboard
     get 'polls',      to: 'feedback_poll#index',     as: :feedback_polls
 
@@ -182,10 +187,12 @@ Pollios::Application.routes.draw do
       get ':id/edit', to: 'collection_poll_series#edit', as: :edit_collection_feedback 
       put ':id',      to: 'collection_poll_series#update',   as: :update_collection_feedback 
       get ':id/:branch_id/:questionnaire_id',    to: 'branches#detail',  as: :collection_feedback_branch_detail
-
-
     end
 
+    scope 'campaigns' do
+      get '',       to: 'feedback_campaigns#index', as: :feedback_campaigns
+      get 'new',    to: 'feedback_campaigns#new', as: :new_feedback_campaign
+    end
   end
 
   scope 'member' do

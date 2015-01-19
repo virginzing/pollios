@@ -1,9 +1,12 @@
 $.login = <%= raw @login || false %>;
 $.only_access_web = <%= raw @access_web || false %>;
 
+$.feedback_access = <%= raw @feedback %>;
+$.internal_survey = <%= raw @internal_survey %>;
+
 if ($.login) {
   if ($.only_access_web) {
-    handleLoginSuccess();
+    handleLoginSuccess($.feedback_access, $.internal_survey);
   } else {
     handleOnlyAccessWeb();
   }
@@ -25,8 +28,18 @@ function handleLoginError() {
   });
 }
 
-function handleLoginSuccess() {
-  window.location.href = "<%= redirect_back dashboard_url %>";
+function handleLoginSuccess(feedback, internal_survey) {
+  console.log(feedback);
+  console.log(internal_survey);
+  
+  if (feedback && internal_survey) {
+    window.location.href = "<%= redirect_back select_services_url %>";
+  } else if (feedback) {
+    window.location.href = "<%= redirect_back feedback_dashboard_url %>";
+  } else {
+    window.location.href = "<%= redirect_back dashboard_url %>";
+  };
+    
 }
 
 function handleOnlyAccessWeb() {

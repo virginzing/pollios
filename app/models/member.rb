@@ -249,6 +249,10 @@ class Member < ActiveRecord::Base
     company || company_member.company
   end
 
+  def get_public_id
+    public_id || ""
+  end
+
   def self.alert_save_poll
     ApnSavePollWorker.perform_async({})
   end

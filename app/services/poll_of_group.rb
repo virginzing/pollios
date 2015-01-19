@@ -62,7 +62,7 @@ class PollOfGroup
   end
 
   def poll_of_group_company
-    @query = Poll.joins(:poll_groups).includes(:choices, :history_votes, :member) \
+    @query = Poll.joins(:poll_groups).includes(:groups, :choices, :history_votes, :member) \
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll") \
                   .group('poll_groups.poll_id, polls.id, poll_groups.share_poll_of_id').where("poll_groups.group_id IN (?)", @group.map(&:id)) \
                   .order("polls.created_at DESC")

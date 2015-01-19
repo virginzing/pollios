@@ -183,7 +183,7 @@ class PollSeriesController < ApplicationController
           PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    
         end
         flash[:success] = "Successfully created poll series."
-        redirect_to poll_series_index_path
+        redirect_to company_questionnaires_path
       else
         flash[:error] = @poll_series.errors.full_messages
         if poll_series_params["type_series"] == "0"

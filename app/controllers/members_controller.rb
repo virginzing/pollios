@@ -269,6 +269,7 @@ class MembersController < ApplicationController
   end
 
   def my_profile
+    @waiting_info = WaitingList.new(@current_member).get_info
   end
 
   def check_valid_email

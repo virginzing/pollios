@@ -74,3 +74,28 @@ label.collection_radio_buttons {
   font-size: 16px;
   font-weight: 700;
 }
+
+.dropdown-custom {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 6px -4px 0px;
+  list-style: none;
+  font-size: 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 2px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  background-clip: padding-box;
+}
+
+a.text-mute {
+  color: rgb(179, 179, 179) !important;
+}

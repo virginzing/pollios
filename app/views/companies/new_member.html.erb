@@ -1,53 +1,46 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-    <h1 class="page-title txt-color-blueDark">
-      <i class="fa fa-plus fa-fw "></i> 
-        Member
-    </h1>
-  </div>
-</div>
+<div class="well">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well no-padding">
+        <form action="<%= authen_signup_via_company_path %>" method="post" id="smart-form-register" class="smart-form client-form" data-remote="true" enctype="multipart/form-data">
+          <header>
+            Registration To Company
+          </header>
+            <input type="input" name="member_type" value="0" class="hidden">
+            <input type="input" name="company_id" value="<%= @find_company.id %>" class="hidden">
+          <fieldset>
+            <section>
+              <label class="input"> <i class="icon-append fa fa-user"></i>
+                <input type="text" name="fullname" placeholder="Fullname">
+                <b class="tooltip tooltip-bottom-right">Needed to show on app</b> </label>
+            </section>
 
-<div class="row">
-  <div class="col-lg-offset-3 col-md-offset-3 col-xs-12 col-sm-12 col-md-5 col-lg-5">
-    <div class="well no-padding">
-      <form action="<%= authen_signup_via_company_path %>" method="post" id="smart-form-register" class="smart-form client-form" data-remote="true" enctype="multipart/form-data">
-        <header>
-          Registration
-        </header>
-          <input type="input" name="member_type" value="0" class="hidden">
-          <input type="input" name="company_id" value="<%= @find_company.id %>" class="hidden">
-        <fieldset>
-          <section>
-            <label class="input"> <i class="icon-append fa fa-user"></i>
-              <input type="text" name="fullname" placeholder="Fullname">
-              <b class="tooltip tooltip-bottom-right">Needed to show on app</b> </label>
-          </section>
+            <section>
+              <label class="input"> <i class="icon-append fa fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email address">
+                <b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
+            </section>
 
-          <section>
-            <label class="input"> <i class="icon-append fa fa-envelope"></i>
-              <input type="email" name="email" placeholder="Email address">
-              <b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
-          </section>
+            <section>
+              <label class="input"> <i class="icon-append fa fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" id="password">
+                <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
+            </section>
 
-          <section>
-            <label class="input"> <i class="icon-append fa fa-lock"></i>
-              <input type="password" name="password" placeholder="Password" id="password">
-              <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-          </section>
+            <section>
+              <label class="input"> <i class="icon-append fa fa-lock"></i>
+                <input type="password" name="passwordConfirm" placeholder="Confirm password">
+                <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
+            </section>
+          </fieldset>
 
-          <section>
-            <label class="input"> <i class="icon-append fa fa-lock"></i>
-              <input type="password" name="passwordConfirm" placeholder="Confirm password">
-              <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-          </section>
-        </fieldset>
-
-        <footer>
-          <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
-            Create
-          </button>
-        </footer>
-      </form>
+          <footer>
+            <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
+              Create
+            </button>
+          </footer>
+        </form>
+      </div>
     </div>
   </div>
 </div>

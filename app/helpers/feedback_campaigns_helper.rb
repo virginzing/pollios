@@ -1,0 +1,2 @@
+module FeedbackCampaignsHelper
+end

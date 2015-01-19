@@ -19,7 +19,7 @@ class CommercialsController < ApplicationController
   end
 
   def update
-    if set_member.get_company.update(company_params)
+    if set_member.get_company.update(company_params.except(:id))
       flash[:success] = "Update Successfully"
       redirect_to commercials_path
     else

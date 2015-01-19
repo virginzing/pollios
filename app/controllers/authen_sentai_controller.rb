@@ -53,6 +53,10 @@ class AuthenSentaiController < ApplicationController
          @login = true
         if @auth.member.company? || AccessWeb.with_company(member.id).present?
           @access_web = true
+
+          @feedback = @auth.member.get_company.using_service.include?("Feedback")
+          @internal_survey = @auth.member.get_company.using_service.include?("Survey")
+
           if sessions_params[:remember_me]
             cookies.permanent[:auth_token] = member.auth_token
           else
@@ -122,7 +126,7 @@ class AuthenSentaiController < ApplicationController
         @login = false
 				flash[:warning] = "Invalid email or password."
 				wants.html { redirect_to(:back) }
-				wants.json
+				wants.json { render status: 403 }
         wants.js
 			end
 		end
@@ -147,6 +151,8 @@ class AuthenSentaiController < ApplicationController
           flash[:success] = "Sign up sucessfully."
           @signup = true
           
+          @waiting_info = WaitingList.new(member).get_info
+
           wants.html { redirect_to dashboard_path }
           wants.json
           wants.js
@@ -170,12 +176,11 @@ class AuthenSentaiController < ApplicationController
         end
   		else
         @signup = false
-  			flash[:error] = @response["response_message"]
-        # puts "#{flash[:error].class}"
-        @flash_error = flash[:error]
 
+  			flash[:error] = @response["response_message"]
+        @flash_error = flash[:error]
   			wants.html { redirect_to(:back) }
-  			wants.json
+  			wants.json { render status: 422 }
         wants.js
   		end
   	end
@@ -285,7 +290,7 @@ class AuthenSentaiController < ApplicationController
     end
 
 	  def signup_params
-	    params.permit(:app_id, :approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
+	    params.permit(:format, :authen_sentai, :app_id, :approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
 	  end
 
 	  def update_profile_params
