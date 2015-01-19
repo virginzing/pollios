@@ -179,7 +179,14 @@
         }
     });
     $('#branch_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@branch_list, each_serializer: GroupListSerializer).to_json %> );
-    $('input:checkbox.check_box_branch').prop("checked", true); 
+    $('input:checkbox.check_box_branch').prop("checked", true);
+
+    $(".add_new_poll").click(function (event) {
+       window.setTimeout(function(){
+         $('textarea[name^=poll_series]').last().focus();
+       }, 200);
+    });
+    
   });
   </script>
 <% end %>
