@@ -1,16 +1,18 @@
-$.login = <%= raw @login || false %>;
+$.login = <%= raw @login %>;
 $.only_access_web = <%= raw @access_web || false %>;
 
 $.feedback_access = <%= raw @feedback %>;
 $.internal_survey = <%= raw @internal_survey %>;
 
 if ($.login) {
+  console.log("eiei1");
   if ($.only_access_web) {
     handleLoginSuccess($.feedback_access, $.internal_survey);
   } else {
     handleOnlyAccessWeb();
   }
 } else {
+  console.log("eiei");
   handleLoginError();
 }
 
@@ -29,9 +31,7 @@ function handleLoginError() {
 }
 
 function handleLoginSuccess(feedback, internal_survey) {
-  console.log(feedback);
-  console.log(internal_survey);
-  
+
   if (feedback && internal_survey) {
     window.location.href = "<%= redirect_back select_services_url %>";
   } else if (feedback) {
