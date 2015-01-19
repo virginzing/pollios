@@ -52,6 +52,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def check_using_service
+    if controller_name == "companies"
+      check_service = 'Survey'
+    else
+      check_service = 'Feedback'
+    end
+
+    unless current_member.get_company.using_service.include?(check_service)
+      respond_to do |format|
+        flash[:warning] = 'Permission Deny'
+        format.html { redirect_to authen_signin_path }
+      end
+    end
+  end
+
   def load_company
     @company = current_member.get_company
   end

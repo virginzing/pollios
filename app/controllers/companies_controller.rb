@@ -2,14 +2,23 @@ class CompaniesController < ApplicationController
   decorates_assigned :poll, :member
 
   skip_before_action :verify_authenticity_token
-  # before_action :only_company_account
+
   before_action :signed_user
   before_action :set_company
+  before_action :check_using_service
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail]
   before_action :set_group, only: [:remove_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :edit_group, :update_group, :group_poll_detail]
 
   expose(:group_company) { current_member.get_company.groups if current_member }
+
+  def dashboard
+    @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
+    @poll_latest_list = @init_poll.get_poll_of_group_company.limit(5)
+
+    @poll_popular_list = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5)
+    render 'home/dashboard_company'
+  end
 
   def new
     @invite = InviteCode.new

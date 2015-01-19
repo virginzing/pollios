@@ -1,6 +1,6 @@
 <ul>
-  <li class="<%= is_active?('home') %>">
-    <a href="/dashboard" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+  <li class="<%= is_active_2nd_level('companies', 'dashboard') %>">
+    <a href="<%= company_dashboard_path %>" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
   </li>
 
   <li class="<%= is_active?('polls') %>">

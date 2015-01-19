@@ -343,6 +343,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
+    get 'dashboard',  to: 'companies#dashboard', as: :company_dashboard
     get 'load_surveyor',  to: 'surveyor#load_surveyor'
     get 'list_group', to: 'companies#list_group'
     get 'groups',   to: 'companies#company_groups',    as: :company_groups
