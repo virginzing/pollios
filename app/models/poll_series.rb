@@ -37,7 +37,7 @@ class PollSeries < ActiveRecord::Base
 
   after_create :set_poll_series
   after_create :generate_qrcode_key
-  after_commit :send_notification
+  after_commit :send_notification, on: :create
 
   amoeba do 
     enable
