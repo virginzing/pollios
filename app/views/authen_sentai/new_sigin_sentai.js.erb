@@ -1,18 +1,14 @@
 $.login = <%= raw @login %>;
+
 $.only_access_web = <%= raw @access_web || false %>;
 
-$.feedback_access = <%= raw @feedback %>;
-$.internal_survey = <%= raw @internal_survey %>;
-
 if ($.login) {
-  console.log("eiei1");
   if ($.only_access_web) {
-    handleLoginSuccess($.feedback_access, $.internal_survey);
+    handleLoginSuccess();
   } else {
     handleOnlyAccessWeb();
   }
 } else {
-  console.log("eiei");
   handleLoginError();
 }
 
@@ -23,14 +19,16 @@ function handleLoginError() {
 
   $.smallBox({
     title : "Warning",
-    content: "Invalid username or password.",
+    content: "Invalid email or password.",
     color: "#C46A69",
     icon: "fa fa-warning",
     timeout: 6000
   });
 }
 
-function handleLoginSuccess(feedback, internal_survey) {
+function handleLoginSuccess() {
+  var feedback = '<%= raw @feedback %>';
+  var internal_survey = '<%= raw @internal_survey %>';
 
   if (feedback && internal_survey) {
     window.location.href = "<%= redirect_back select_services_url %>";

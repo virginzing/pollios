@@ -49,6 +49,7 @@ class AuthenSentaiController < ApplicationController
     @response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app]))
+
       if @response["response_status"] == "OK"
          @login = true
         if @auth.member.company? || AccessWeb.with_company(member.id).present?
@@ -62,7 +63,7 @@ class AuthenSentaiController < ApplicationController
 
           @feedback = @auth.member.get_company.using_service.include?("Feedback")
           @internal_survey = @auth.member.get_company.using_service.include?("Survey")
-          
+
           wants.html
           wants.json
           wants.js
@@ -73,7 +74,6 @@ class AuthenSentaiController < ApplicationController
       else
         @login = false
         flash[:warning] = "Invalid email or password."
-        wants.html { redirect_to(:back) }
         wants.json
         wants.js
       end
