@@ -176,7 +176,7 @@
                             <form action="/authen/change_password" method="POST" id="change_password" class="smart-form client-form" data-remote="true">
                               <fieldset>
                                 <section>
-                                  <input type="hidden" name="sentai_id" value="<%= current_member.get_sentai_id %>">
+                                  <input type="hidden" name="email" value="<%= current_member.email %>">
                                   <label class="label">Current Password</label>
                                   <label class="input"> <i class="icon-append fa fa-lock"></i>
                                     <input type="password" name="old_password">

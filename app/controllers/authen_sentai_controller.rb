@@ -54,14 +54,15 @@ class AuthenSentaiController < ApplicationController
         if @auth.member.company? || AccessWeb.with_company(member.id).present?
           @access_web = true
 
-          @feedback = @auth.member.get_company.using_service.include?("Feedback")
-          @internal_survey = @auth.member.get_company.using_service.include?("Survey")
-
           if sessions_params[:remember_me]
             cookies.permanent[:auth_token] = member.auth_token
           else
             cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
           end
+
+          @feedback = @auth.member.get_company.using_service.include?("Feedback")
+          @internal_survey = @auth.member.get_company.using_service.include?("Survey")
+          puts "hereh"
           wants.html
           wants.json
           wants.js
@@ -70,6 +71,7 @@ class AuthenSentaiController < ApplicationController
           wants.js
         end
       else
+        puts "212"
         @login = false
         flash[:warning] = "Invalid email or password."
         wants.html { redirect_to(:back) }
@@ -282,7 +284,7 @@ class AuthenSentaiController < ApplicationController
     end
 
     def changepassword_params
-      params.permit(:sentai_id, :old_password, :new_password, :re_new_password)
+      params.permit(:email, :old_password, :new_password, :re_new_password)
     end
 
     def resetpassword_params

@@ -207,9 +207,12 @@ class Member < ActiveRecord::Base
       field :status_account
       field :point
       field :subscription
+      field :subscribe_last
+      field :subscribe_expire
       field :bypass_invite
       field :approve_brand
       field :approve_company
+      field :waiting
     end
 
     edit do
