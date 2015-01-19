@@ -26,17 +26,22 @@ class ApplicationController < ActionController::Base
 
   def check_token
     token = request.headers['Authorization']
-
-    if params[:member_id] && token.present?
-      authenticate_or_request_with_http_token do |token, options|
-        access_token = set_current_member.api_tokens.where("token = ?", token)
-        unless access_token.present?
-          respond_to do |format|
-            format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"], status: :unauthorized }
+    if Member.find_by(id: params[:member_id]).present?
+      if params[:member_id] && token.present?
+        authenticate_or_request_with_http_token do |token, options|
+          access_token = current_member.api_tokens.where("token = ?", token)
+          unless access_token.present?
+            respond_to do |format|
+              format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"], status: :unauthorized }
+            end
+          else
+            true
           end
-        else
-          true
         end
+      end
+    else
+      respond_to do |format|
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."], status: 404 }
       end
     end
   end
