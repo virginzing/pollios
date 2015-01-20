@@ -6,6 +6,7 @@ if @response["response_status"] == "OK"
         json.partial! 'response_helper/authenticate/info', member: member
         json.token @auth.get_api_token
       end
+      json.waiting_info @waiting_info
     else
       json.response_status "ERROR"
       json.response_message @auth.error_message

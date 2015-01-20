@@ -92,6 +92,8 @@ class AuthenSentaiController < ApplicationController
         # puts "member => #{member}"
         if @auth.activate_account?
           @login = true
+          @waiting_info = WaitingList.new(@auth.member).get_info
+
           if params[:web_login].present?
             if sessions_params[:remember_me]
               # puts "this case 1"
