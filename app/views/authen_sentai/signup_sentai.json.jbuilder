@@ -3,10 +3,10 @@ if @response["response_status"] == "OK"
   json.response_status "OK"
     json.member_detail do
       json.partial! 'response_helper/authenticate/info', member: member
+      json.waiting_info @waiting_info
       json.token @auth.get_api_token
     end
-    
-    json.waiting_info @waiting_info
+
   # else
   #   json.member_id member.id
   #   json.request_code member.get_request_code
