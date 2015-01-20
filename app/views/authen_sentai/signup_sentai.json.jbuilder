@@ -2,11 +2,11 @@ if @response["response_status"] == "OK"
   # if @auth.activate_account?
   json.response_status "OK"
     json.member_detail do
-    json.partial! 'response_helper/authenticate/info', member: member
-    json.token @auth.get_api_token
-
+      json.partial! 'response_helper/authenticate/info', member: member
+      json.token @auth.get_api_token
+    end
+    
     json.waiting_info @waiting_info
-  end
   # else
   #   json.member_id member.id
   #   json.request_code member.get_request_code
