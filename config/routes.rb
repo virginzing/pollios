@@ -285,6 +285,7 @@ Pollios::Application.routes.draw do
     post 'signin_sentai',   to: 'authen_sentai#signin_sentai'
     post 'signup_sentai',   to: 'authen_sentai#signup_sentai'
     post 'signup_sentai_via_company', to: 'authen_sentai#signup_sentai_via_company',  as: :authen_signup_via_company
+    post 'multi_signup_via_company',  to: 'authen_sentai#multi_signup_via_company', as: :multi_signup_via_company
     post 'update_sentai',   to: 'authen_sentai#update_sentai'
     post 'change_password', to: 'authen_sentai#change_password'
     post 'facebook',        to: 'facebook#login'

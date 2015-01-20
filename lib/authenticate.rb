@@ -20,6 +20,11 @@ module Authenticate
 			response = JSON.parse(res_form_sentai.body)
 		end
 
+		def self.multi_signup(params)
+			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/multi_signup.json", params)
+			response = JSON.parse(res_form_sentai.body)
+		end
+
 		def self.update_profile(params)
 			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/update_profile.json", params)
 			response = JSON.parse(res_form_sentai.body)

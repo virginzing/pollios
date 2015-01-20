@@ -43,6 +43,44 @@
       </div>
     </div>
   </div>
+
+  <h1 class="text-center">OR</h1>
+
+  <div class="well">
+    <%= simple_form_for @multi_signup, url: multi_signup_via_company_path, method: :post, :html => { :multipart => true } do |f| %>
+        
+        <div class="col col-12">
+          <%= f.input :company_id, as: :hidden, input_html: { value: @current_member.get_company.id } %>
+          <%= f.input :list_email, as: :text, label: 'List Email', placeholder: "test1@exmaple.com", input_html: { id: "list_email_text", rows: "10", 'data-parsley-required' => true } %>
+        </div>
+
+        <div class="col col-12">
+          <%= f.input :password %>
+        </div>
+
+        <div class="col col-12">
+          <%= f.input :file, as: :file, label: 'Import (Excel, CSV, TXT)', input_html: { 'data-parsley-required' => true } %>
+          <div class="note">
+            <strong>Example File:</strong> <b><%= link_to "CSV", download_csv_url, method: "POST" %>, <%= link_to "Excel", download_excel_url, method: "POST" %>, <%= link_to "Text", download_txt_url, method: "POST" %></b>
+          </div>
+        </div>
+    
+        <br/>
+
+        <div class="col col-12">
+          <%= f.submit "Create", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
+        </div>
+    <% end %>
+
+  </div>
+
+  <style type="text/css">
+  #list_email_text::-webkit-input-placeholder::after {
+      display:block;
+      content:"test2@exmaple.com\A test3@exmaple.com\A test4@exmaple.com";
+  }
+</style>
+
 </div>
 
 <script type="text/javascript">

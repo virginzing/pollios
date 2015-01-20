@@ -3,6 +3,8 @@ class Member < ActiveRecord::Base
   include PgSearch
   include MemberHelper
 
+  attr_accessor :list_email, :file
+  
   rolify
   # friendly_id :slug_candidates, use: [:slugged, :finders]
   # has_paper_trail

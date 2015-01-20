@@ -100,7 +100,7 @@ class CompaniesController < ApplicationController
   end
 
   def new_member
-    
+    @multi_signup = Member.new
   end
   
   def remove_member

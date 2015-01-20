@@ -1,5 +1,5 @@
 class AuthenSentaiController < ApplicationController
-	protect_from_forgery :except => [:new_sigin_sentai, :signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company]
+	protect_from_forgery :except => [:new_sigin_sentai, :signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company, :multi_signup_via_company]
 	# before_action :current_login?, only: [:signin]
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
@@ -187,6 +187,33 @@ class AuthenSentaiController < ApplicationController
   	end
   end
 
+  def multi_signup_via_company
+    list_email_text = multi_signup_params[:list_email].split("\r\n")
+
+    new_multi_signup_params = {
+      "list_email" => list_email_text,
+      "password" => multi_signup_params[:password]
+    }
+
+    @response = Authenticate::Sentai.multi_signup(new_multi_signup_params.merge!(Hash["app_name" => "pollios"]))
+
+    email_signup_error = @response["signup_error"]
+    email_signup_success = @response["signup_success"]
+
+    p email_signup_success
+    p email_signup_error
+
+    email_signup_success.each do |email|
+      puts "email => #{email}"
+      @response = {
+        "email" => email
+      }
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => "0", "company_id" => multi_signup_params[:company_id], "register" => :in_app ]))
+      @auth.member
+    end
+
+  end
+
   def signup_sentai_via_company
     @response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
@@ -297,5 +324,9 @@ class AuthenSentaiController < ApplicationController
 	  def update_profile_params
 	    params.permit(:app_id, :name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday, :gender, :member_type)
 	  end
+
+    def multi_signup_params
+      params.require(:member).permit(:company_id, :password, :list_email)
+    end
 
 end
