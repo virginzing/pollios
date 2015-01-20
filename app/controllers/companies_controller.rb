@@ -187,7 +187,7 @@ class CompaniesController < ApplicationController
   end
 
   def member_detail
-    @member = Member.friendly.find(params[:id]).decorate
+    @member = Member.find(params[:id]).decorate
 
     @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params, true)
 
