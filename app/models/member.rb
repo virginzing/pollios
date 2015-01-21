@@ -205,6 +205,7 @@ class Member < ActiveRecord::Base
       field :province
       field :avatar, :carrierwave
       field :cover, :carrierwave
+      field :cover_preset
       field :description
       field :status_account
       field :point
@@ -215,6 +216,8 @@ class Member < ActiveRecord::Base
       field :approve_brand
       field :approve_company
       field :waiting
+      field :first_signup
+      field :public_id
     end
 
     edit do
