@@ -256,12 +256,13 @@ class CompaniesController < ApplicationController
 
   def member_detail
     @member = Member.find(params[:id]).decorate
-
-    @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params, true)
+    member_with_group = @member.get_group_active.with_group_type(:company)
+    
+    @init_poll = PollOfGroup.new(current_member,member_with_group, options_params, true)
 
     list_voted_poll_ids = @member.cached_my_voted_all.collect{|e| e["poll_id"] }
 
-    if @member.get_group_active.with_group_type(:company).present?
+    if member_with_group.present?
       query = @init_poll.get_poll_of_group_company
       query = query.where("polls.id NOT IN (?)", list_voted_poll_ids) if list_voted_poll_ids.count > 0
       @list_unvote_poll = query.decorate

@@ -81,7 +81,7 @@
                   <td><%= poll.get_view_count %></td>
                   <td><%= poll.expire_status %></td>
                   <td><%= poll.create_since %></td>
-                  <td><a href="<%= poke_poll_path(id: poll.id, member_id: member.id, sender_id: current_member.id) %>" class="btn btn-danger" id="poke_poll" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
+                  <td width="50"><a href="<%= poke_poll_path(id: poll.id, member_id: member.id, sender_id: current_member.id) %>" class="btn btn-danger btn-pill" id="poke_poll" rel="tooltip" title="" data-placement="top" data-original-title="Send Notification" data-remote="true" data-method="post">
             Poke</a></td>
                 </tr>
               <% end %>
