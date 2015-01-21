@@ -1,22 +1,14 @@
 if @response["response_status"] == "OK"
-  if @auth.activate_account?
-    if @auth.check_valid_member?
-      json.response_status "OK"
-      json.member_detail do
-        json.partial! 'response_helper/authenticate/info', member: member
-        json.waiting_info @waiting_info
-        json.token @auth.get_api_token
-      end
-    else
-      json.response_status "ERROR"
-      json.response_message @auth.error_message
+  if @auth.check_valid_member?
+    json.response_status "OK"
+    json.member_detail do
+      json.partial! 'response_helper/authenticate/info', member: member
+      json.waiting_info @waiting_info
+      json.token @auth.get_api_token
     end
   else
-    json.member_id member.id
-    json.request_code member.get_request_code
-    json.first_signup member.first_signup
-    json.response_status "WAITING"
-    json.response_message "Waiting activate your account."
+    json.response_status "ERROR"
+    json.response_message @auth.error_message
   end
 else
   json.response_status "ERROR"

@@ -87,42 +87,24 @@ class AuthenSentaiController < ApplicationController
 		respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app, "app_id" => params[:app_id]]))
 			if @response["response_status"] == "OK"
-        @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
-        # puts "@auth.activate_account? => #{@auth.activate_account?}"
-        # puts "member => #{member}"
-        if @auth.activate_account?
+        if @auth.check_valid_member?
+          @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
           @login = true
           @waiting_info = WaitingList.new(@auth.member).get_info
 
           if params[:web_login].present?
             if sessions_params[:remember_me]
-              # puts "this case 1"
               cookies.permanent[:auth_token] = member.auth_token
             else
-              # puts "this case 2"
               cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
             end
           end
-          
           wants.html
           wants.json
           wants.js
         else
-          @login = false
-          @waiting = true
-          session[:activate_email] = member.email
-          session[:activate_id] = member.id
-
-          if @auth.get_member_type == "Company"
-            @waiting_approve = true
-            cookies[:waiting_approve] = { value: 'waiting_approve', expires: 5.seconds.from_now }
-            flash[:warning] = "Please waiting for approve."
-          else
-            flash[:warning] = "This account is not activate yet."
-          end
-
           wants.html
-          wants.json
+          wants.json { render status: 403 }
           wants.js
         end
 			else
