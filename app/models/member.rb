@@ -667,8 +667,11 @@ class Member < ActiveRecord::Base
   ########### Search Member #############
 
   def self.search_member(params)
+    # if params[:q].present?
+    #   searchable_member(params[:q])
+    # end
     if params[:q].present?
-      searchable_member(params[:q])
+      where("fullname LIKE ? OR email LIKE ? OR public_id LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
     end
   end
 
