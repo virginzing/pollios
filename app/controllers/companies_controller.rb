@@ -102,6 +102,74 @@ class CompaniesController < ApplicationController
   def new_member
     @multi_signup = Member.new
   end
+
+  def multi_signup_via_company
+    @nothing = false
+    @multi_signup = Member.new
+
+    list_email = multi_signup_params[:list_email]
+    file = multi_signup_params[:file]
+
+    if list_email.present? && file.present?
+
+      list_email_text = multi_signup_params[:list_email].split("\r\n")
+
+      list_email_file = []
+
+      if file.present?
+        if File.extname(file.original_filename) == ".txt"
+          File.readlines(file.path).each do |line|
+            list_email_file << line.strip
+          end
+        else
+          spreadsheet = Company.open_spreadsheet(file)
+          header = spreadsheet.row(1)
+          (2..spreadsheet.last_row).each do |i|
+            list_email_file << spreadsheet.row(i).first
+          end
+        end
+      end
+      
+      total_email = ( list_email_text | list_email_file).collect{|e| e.downcase }.uniq
+
+      new_multi_signup_params = {
+        "list_email" => total_email,
+        "password" => multi_signup_params[:password]
+      }
+
+      @response = Authenticate::Sentai.multi_signup(new_multi_signup_params.merge!(Hash["app_name" => "pollios"]))
+
+      email_signup_error = @response["signup_error"]
+      email_signup_success = @response["signup_success"]
+
+      email_signup_success.each do |email|
+        @response = {
+          "email" => email
+        }
+        @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => "0", "company_id" => multi_signup_params[:company_id], "register" => :in_app ]))
+        @auth.member
+      end
+
+    else
+      @nothing = true
+    end
+
+    respond_to do |wants|
+
+      if @nothing
+        flash[:notice] = "Plese fill <u>list email</u> or <u>import file</u> such as excel, csv, txt"
+        wants.html { redirect_to new_member_to_company_path }
+      else
+        if email_signup_success.count > 0
+          flash[:success] = "Email: #{email_signup_success} created sucessfully"
+          wants.html { render 'new_member' }
+        else
+          flash[:error] = "Email: #{email_signup_error} have already taken"
+          wants.html { render 'new_member' }
+        end
+      end
+    end
+  end
   
   def remove_member
     @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
@@ -481,6 +549,10 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:invite_code).permit(:amount_code, :prefix_name)
+  end
+
+  def multi_signup_params
+    params.require(:member).permit(:company_id, :password, :list_email, :file)
   end
 
 end

@@ -62,10 +62,13 @@ module ApplicationHelper
   end
 
   def get_icon_from_value(key)
-    if key == :success
+    if key == "success"
       content_tag :i, :class => 'fa-fw fa fa-check' do
       end
-    elsif key == :error
+    elsif key == "notice"
+      content_tag :i, :class => 'fa-fw fa fa-info-circle' do
+      end
+    elsif key == "error"
       content_tag :i, :class => 'fa-fw fa fa-times' do
       end
     end
@@ -668,7 +671,7 @@ end
 
 # Poll.find(12).choices.sum(:vote)
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
-# curl -H "Content-Type: application/json" -d '{"authen":"funnysmart_online@hotmail.com","password":"123456" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"funnysmart_online@hotmail.com","password":"Nutty509", "app_id": "123" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=krikri@gmail.com" -F "password=mefuwfhfu" -F "fullname=Kri Kri" -F "device_token=78916fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 

@@ -189,37 +189,10 @@ class AuthenSentaiController < ApplicationController
   	end
   end
 
-  def multi_signup_via_company
-    list_email_text = multi_signup_params[:list_email].split("\r\n")
-
-    new_multi_signup_params = {
-      "list_email" => list_email_text,
-      "password" => multi_signup_params[:password]
-    }
-
-    @response = Authenticate::Sentai.multi_signup(new_multi_signup_params.merge!(Hash["app_name" => "pollios"]))
-
-    email_signup_error = @response["signup_error"]
-    email_signup_success = @response["signup_success"]
-
-    p email_signup_success
-    p email_signup_error
-
-    email_signup_success.each do |email|
-      puts "email => #{email}"
-      @response = {
-        "email" => email
-      }
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => "0", "company_id" => multi_signup_params[:company_id], "register" => :in_app ]))
-      @auth.member
-    end
-
-  end
-
   def signup_sentai_via_company
-    @response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
+    @response = Authenticate::Sentai.signup(signup_company_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], "company_id" => signup_params["company_id"], "register" => :in_app ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_company_params["member_type"], "company_id" => signup_company_params["company_id"], "register" => :in_app ]))
       if @response["response_status"] == "OK"
         @auth.member
         flash[:success] = "Create sucessfully."
@@ -319,6 +292,10 @@ class AuthenSentaiController < ApplicationController
       params.permit(:new_password, :password_reset_token)
     end
 
+    def signup_company_params 
+      params.require(:member).permit(:company_id, :member_type, :email, :password, :password_confirmation)
+    end
+
 	  def signup_params
 	    params.permit(:format, :authen_sentai, :app_id, :approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
 	  end
@@ -326,9 +303,5 @@ class AuthenSentaiController < ApplicationController
 	  def update_profile_params
 	    params.permit(:app_id, :name, :email, :password, :password_confirmation, :avatar, :username, :device_token, :first_name, :last_name, :app_name, :sentai_id, :fullname, :birthday, :gender, :member_type)
 	  end
-
-    def multi_signup_params
-      params.require(:member).permit(:company_id, :password, :list_email)
-    end
 
 end
