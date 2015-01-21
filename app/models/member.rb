@@ -671,7 +671,7 @@ class Member < ActiveRecord::Base
     #   searchable_member(params[:q])
     # end
     if params[:q].present?
-      where("fullname LIKE ? OR email LIKE ? OR public_id LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
+      where("fullname LIKE ? OR email LIKE ? OR public_id LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%").without_member_type(:company)
     end
   end
 
