@@ -74,6 +74,16 @@ module ApplicationHelper
     end
   end
 
+  def convert_error_format(value)
+    if value.class == Hash
+      if value["email"].present?
+        value["email"].first
+      end
+    else
+      value
+    end
+  end
+
   def is_active_new_poll(c_name, a_name)
     if controller_name == c_name 
       if action_name == a_name

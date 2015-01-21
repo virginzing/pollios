@@ -1,109 +1,57 @@
-<div class="well">
-  <div class="row">
-
-    <div class="col-md-12">
-
-        <form action="<%= authen_signup_via_company_path %>" method="post" id="smart-form-register" class="smart-form client-form" data-remote="true" enctype="multipart/form-data">
-            <input type="input" name="member_type" value="0" class="hidden">
-            <input type="input" name="company_id" value="<%= @find_company.id %>" class="hidden">
-          <fieldset>
-            <section>
-              <label class="input"> <i class="icon-append fa fa-user"></i>
-                <input type="text" name="fullname" placeholder="Fullname">
-                <b class="tooltip tooltip-bottom-right">Needed to show on app</b> </label>
-            </section>
-
-            <section>
-              <label class="input"> <i class="icon-append fa fa-envelope"></i>
-                <input type="email" name="email" placeholder="Email address">
-                <b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
-            </section>
-
-            <section>
-              <label class="input"> <i class="icon-append fa fa-lock"></i>
-                <input type="password" name="password" placeholder="Password" id="password">
-                <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-            </section>
-
-            <section>
-              <label class="input"> <i class="icon-append fa fa-lock"></i>
-                <input type="password" name="passwordConfirm" placeholder="Confirm password">
-                <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
-            </section>
-          </fieldset>
-
-          <footer>
-            <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
-              Create
-            </button>
-          </footer>
-        </form>
-
-    </div>
-  </div>
-
+<div class="well well-lg">
   <div class="well well-lg">
-    <div class="well well-lg">
-      <%= simple_form_for Member.new, url: authen_signup_via_company_path, method: :post, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
-          <div class="row">
-              <%= f.input :company_id, as: :hidden, input_html: { value: @find_company.id } %>
-              <%= f.input :member_type, as: :hidden, input_html: { value: "0" } %>
-            <div class="col col-md-12">
-              <%= f.input :email, as: :email, placeholder: "test1@exmaple.com" %>
-            </div>
-            
-            <div class="col col-md-12">
-              <%= f.input :password, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-length' => '[6,255]' } %>
-            </div>
-
-            <div class="col col-md-12">
-              <%= f.input :password_confirmation, as: :password, input_html: { 'data-parsley-equalto' => '#member_password' } %>
-            </div>
-
-            <div class="col col-md-offset-5 col-md-2">
-              <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
-            </div>
-
-          </div>
-      
-      <% end %>
-    </div>
-  </div>
-
-
-  <h1 class="text-center">OR</h1>
-  <div class="well well-lg">
-    <%= simple_form_for @multi_signup, url: multi_signup_via_company_path, method: :post, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
+    <%= simple_form_for Member.new, url: authen_signup_via_company_path, method: :post, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
         <div class="row">
-          <div class="col col-md-9">
-            <%= f.input :company_id, as: :hidden, input_html: { value: @current_member.get_company.id } %>
-            <%= f.input :list_email, as: :text, label: 'List Email', placeholder: "test1@exmaple.com", input_html: { id: "list_email_text", rows: "10" } %>
+            <%= f.input :company_id, as: :hidden, input_html: { value: @find_company.id } %>
+            <%= f.input :member_type, as: :hidden, input_html: { value: "0" } %>
+          <div class="col col-md-12">
+            <%= f.input :email, as: :email, placeholder: "test1@exmaple.com" %>
           </div>
-
-          <div class="col col-md-3">
-            <%= f.input :file, as: :file, label: 'Import (Excel, CSV, TXT)' %>
-            <div class="note">
-              <strong>Example File:</strong> <b><%= link_to "CSV", download_csv_url, method: "POST" %>, <%= link_to "Excel", download_excel_url, method: "POST" %>, <%= link_to "Text", download_txt_url, method: "POST" %></b>
-            </div>
-
+          
+          <div class="col col-md-12">
             <%= f.input :password, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-length' => '[6,255]' } %>
           </div>
-        
-        <div class="col col-md-offset-5 col-md-2">
-          <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
-        </div>
+
+          <div class="col col-md-12">
+            <%= f.input :password_confirmation, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-equalto' => '#member_password' } %>
+          </div>
+
+          <div class="col col-md-offset-5 col-md-2">
+            <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
+          </div>
 
         </div>
     
     <% end %>
   </div>
-  <style type="text/css">
-  #list_email_text::-webkit-input-placeholder::after {
-      display:block;
-      content:"test2@exmaple.com\A test3@exmaple.com\A test4@exmaple.com";
-  }
-</style>
+</div>
 
+
+<h1 class="text-center">OR</h1>
+<div class="well well-lg">
+  <%= simple_form_for @multi_signup, url: multi_signup_via_company_path, method: :post, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
+      <div class="row">
+        <div class="col col-md-9">
+          <%= f.input :company_id, as: :hidden, input_html: { value: @current_member.get_company.id } %>
+          <%= f.input :list_email, as: :text, label: 'List Email', placeholder: "test1@exmaple.com", input_html: { id: "list_email_text", rows: "10" } %>
+        </div>
+
+        <div class="col col-md-3">
+          <%= f.input :file, as: :file, label: 'Import (Excel, CSV, TXT)' %>
+          <div class="note">
+            <strong>Example File:</strong> <b><%= link_to "CSV", download_csv_url, method: "POST" %>, <%= link_to "Excel", download_excel_url, method: "POST" %>, <%= link_to "Text", download_txt_url, method: "POST" %></b>
+          </div>
+
+          <%= f.input :password, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-length' => '[6,255]' } %>
+        </div>
+      
+      <div class="col col-md-offset-5 col-md-2">
+        <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
+      </div>
+
+      </div>
+  
+  <% end %>
 </div>
 
 <script type="text/javascript">
@@ -115,56 +63,11 @@
     NProgress.done();
   });
 
-  // Validation
-  $(function() {
-    // Validation
-    $("#smart-form-register").validate({
-
-      // Rules for form validation
-      rules : {
-        fullname : {
-          required : true
-        },
-        email : {
-          required : true,
-          email : true
-        },
-        password : {
-          required : true,
-          minlength : 3,
-          maxlength : 20
-        },
-        passwordConfirm : {
-          required : true,
-          minlength : 3,
-          maxlength : 20,
-          equalTo : '#password'
-        }
-      },
-
-      // Messages for form validation
-      messages : {
-        fullname : {
-          required : 'Please enter your fullname'
-        },
-        email : {
-          required : 'Please enter your email address',
-          email : 'Please enter a VALID email address'
-        },
-        password : {
-          required : 'Please enter your password'
-        },
-        passwordConfirm : {
-          required : 'Please enter your password one more time',
-          equalTo : 'Please enter the same password as above'
-        }
-      },
-
-      // Do not change code below
-      errorPlacement : function(error, element) {
-        error.insertAfter(element.parent());
-      }
-    });
-
-  });
 </script>
+
+<style type="text/css">
+  #list_email_text::-webkit-input-placeholder::after {
+      display:block;
+      content:"test2@exmaple.com\A test3@exmaple.com\A test4@exmaple.com";
+  }
+</style>
