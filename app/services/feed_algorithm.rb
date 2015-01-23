@@ -19,7 +19,7 @@ class FeedAlgorithm
 
   def merge_poll_member_with_poll_id # poll_id, poll_member_id, priority 
     @poll_ids.each_with_index do |poll_id, index|
-      @filter_timeline_ids << { poll_id: poll_id, poll_member_id: @poll_member_ids[index], priority: @priority_poll_member_ids[index], created_at: @created_time[index] }
+      @filter_timeline_ids << { poll_id: poll_id, poll_member_id: @poll_member_ids[index], priority: @priority_poll_member_ids[index], created_at: @created_time[index], updated_at: @updated_time[index] }
     end
     # puts "filter timtline ids => #{@filter_timeline_ids}"
     @filter_timeline_ids
@@ -30,7 +30,7 @@ class FeedAlgorithm
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
       if @vote_poll_ids.include?(e[:poll_id])
-        if e[:updated_time] > 10.minutes.ago
+        if e[:updated_at] > 10.minutes.ago
           e[:priority] = HIGH_VOTE_PRIORITY
         else
           e[:priority] = (e[:priority] - VALUE_POLL_VOTED) * time_ago_value(e[:created_at])
