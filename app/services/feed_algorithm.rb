@@ -25,8 +25,8 @@ class FeedAlgorithm
     new_check_with_voted = []
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
-      if @vote_poll_ids.include?(e["poll_id"])
-        e["priority"] = (e["priority"] - VALUE_POLL_VOTED)
+      if @vote_poll_ids.include?(e[:poll_id])
+        e[:priority] = (e[:priority] - VALUE_POLL_VOTED)
         new_check_with_voted << e
       else
         new_check_with_voted << e 
@@ -38,8 +38,8 @@ class FeedAlgorithm
 
   def sort_by_priority
     # check_with_voted.sort {|x,y| [y[:priority] <=> x[:priority]] }
-    sort_by_and_reverse = check_with_voted.sort_by {|x| [x["priority"], x["created_at"]] }.reverse!
-    sort_by_and_reverse.collect{|e| e["poll_member_id"] }
+    sort_by_and_reverse = check_with_voted.sort_by {|x| [x[:priority], x[:created_at]] }.reverse!
+    sort_by_and_reverse.collect{|e| e[:poll_member_id] }
   end
 
 end
