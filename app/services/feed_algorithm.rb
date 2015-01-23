@@ -1,5 +1,7 @@
 class FeedAlgorithm
-
+  include ActionView::Helpers::DateHelper
+  
+  DAY_COMPARE = 100
   VALUE_POLL_VOTED = 50
   VALUE_POLL_NOT_VOTE = 0
 
@@ -26,14 +28,19 @@ class FeedAlgorithm
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
       if @vote_poll_ids.include?(e[:poll_id])
-        e[:priority] = (e[:priority] - VALUE_POLL_VOTED)
+        e[:priority] = (e[:priority] - VALUE_POLL_VOTED) * time_ago_value(e[:created_at])
         new_check_with_voted << e
       else
+        e[:priority] = (e[:priority]) * time_ago_value(e[:created_at])
         new_check_with_voted << e 
       end    
     end
 
     new_check_with_voted
+  end
+
+  def time_ago_value(created_at)
+    (DAY_COMPARE - time_ago_in_words(created_at).to_i) / 100.00
   end
 
   def sort_by_priority
