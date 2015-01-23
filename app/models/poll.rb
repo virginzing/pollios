@@ -695,7 +695,7 @@ class Poll < ActiveRecord::Base
 
           Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
-          @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
+          # @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
 
           get_anonymous = member.get_anonymous_with_poll(find_poll)
 

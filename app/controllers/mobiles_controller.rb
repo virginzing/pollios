@@ -56,7 +56,7 @@ class MobilesController < ApplicationController
 
         @list_poll_first = @list_poll.first.id
 
-        @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_id = ?", current_member.id, @list_poll_first).first
+        # @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_id = ?", current_member.id, @list_poll_first).first
         # puts "#{@reward}"
         # puts "#{@list_poll_first}"
         render 'questionnaire'
