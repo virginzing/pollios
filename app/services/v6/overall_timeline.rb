@@ -61,7 +61,7 @@ class V6::OverallTimeline
     poll_priority = []
     created_time = []
     updated_time = []
-    
+
     poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
@@ -150,7 +150,7 @@ class V6::OverallTimeline
     # p "priority => #{priority}"
     # p "poll_ids => #{poll_ids}"
 
-    ids = FeedAlgorithm.new(ids, poll_ids, priority, created_time).sort_by_priority
+    ids = FeedAlgorithm.new(ids, poll_ids, priority, created_time, updated_time).sort_by_priority
 
     ids
     # ids.sort!{|x,y| y <=> x }
