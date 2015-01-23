@@ -2,7 +2,7 @@ class FeedAlgorithm
   include ActionView::Helpers::DateHelper
 
   DAY_COMPARE = 100
-  HIGH_VOTE_PRIORITY = 100
+  HIGH_VOTE_PRIORITY = 40
   VALUE_POLL_VOTED = 50
   VALUE_POLL_NOT_VOTE = 0
 
