@@ -561,8 +561,8 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "choice_id": "3370"
-# }' -X POST http://localhost:3000/poll/940/vote.json -i
+#     "choice_id": "7758"
+# }' -X POST http://localhost:3000/poll/2027/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
