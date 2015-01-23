@@ -60,7 +60,8 @@ class V6::OverallTimeline
   def find_poll_me_and_friend_and_group_and_public
     poll_priority = []
     created_time = []
-
+    updated_time = []
+    
     poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
@@ -102,9 +103,10 @@ class V6::OverallTimeline
     query.each do |q|
       poll_priority << q.poll.priority
       created_time << q.poll.created_at
+      updated_time << q.poll.updated_at
     end
 
-    ids, poll_ids, priority, created_time = query.map(&:id), query.map(&:poll_id), poll_priority, created_time
+    ids, poll_ids, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), poll_priority, created_time, updated_time
   end
 
   def poll_non_share_non_in_group

@@ -2,16 +2,18 @@ class FeedAlgorithm
   include ActionView::Helpers::DateHelper
 
   DAY_COMPARE = 100
+  HIGH_VOTE_PRIORITY = 100
   VALUE_POLL_VOTED = 50
   VALUE_POLL_NOT_VOTE = 0
 
 
-  def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time)
+  def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time, updated_time)
     @poll_member_ids = poll_member_ids
     @poll_ids = poll_ids
     @priority_poll_member_ids = priority_poll_member_ids
     @vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
     @created_time = created_time
+    @updated_time = updated_time
     @filter_timeline_ids = []
   end
 
@@ -28,7 +30,12 @@ class FeedAlgorithm
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
       if @vote_poll_ids.include?(e[:poll_id])
-        e[:priority] = (e[:priority] - VALUE_POLL_VOTED) * time_ago_value(e[:created_at])
+        if e[:updated_time] > 10.minutes.ago
+          e[:priority] = HIGH_VOTE_PRIORITY
+        else
+          e[:priority] = (e[:priority] - VALUE_POLL_VOTED) * time_ago_value(e[:created_at])
+        end
+
         new_check_with_voted << e
       else
         e[:priority] = (e[:priority]) * time_ago_value(e[:created_at])
