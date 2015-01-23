@@ -40,7 +40,7 @@ class FeedAlgorithm
   end
 
   def time_ago_value(created_at)
-    (DAY_COMPARE - (Time.now.zone.to_date - created_at.to_date).to_i) / 100.00
+    (DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i) / 100.00
   end
 
   def sort_by_priority
