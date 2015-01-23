@@ -1,5 +1,5 @@
 <div class="well"> 
-  <%= simple_form_for @campaign, url: create_feedback_campaign_path, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
+  <%= simple_form_for @campaign, url: update_feedback_campaign_path, method: :put, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
     <%= f.input :member_id, as: :hidden, input_html: { value: current_member.id } %>
     <h2><strong>Campaign detail</strong></h2>
     <div class="row">

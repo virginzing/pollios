@@ -4,8 +4,9 @@ class Campaign < ActiveRecord::Base
 
   attr_accessor :poll_ids, :poll_id
 
-  validates :name, :begin_sample, :end_sample, presence: true
-  validates :limit, presence: true, numericality: { greater_than: 0 }
+  # validates :name, :begin_sample, :end_sample, presence: true
+  # validates :limit, presence: true, numericality: { greater_than: 0 }
+  validates :name, :limit, presence: true
 
   # has_one :poll
   # has_one :poll_series

@@ -3,8 +3,8 @@ module ExceptionHandler
 
   included do
     include ActiveSupport::Rescuable
-    rescue_from NotFound, :with => :known_error
-    rescue_from Forbidden, :with => :known_error
+    rescue_from NotFound, :with => :not_found
+    rescue_from Forbidden, :with => :forbdden
     rescue_from MemberNotFoundHtml, :with => :known_error_html
     rescue_from MobileNotFound, :with => :mobile_not_found
     rescue_from MobileForbidden, :with => :mobile_forbidden
@@ -20,9 +20,13 @@ module ExceptionHandler
   class MobileSignInAlready < StandardError; end
   class MobileVoteQuestionnaireAlready < StandardError; end
 
-  def known_error(ex)
-    Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
-    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: 200
+  def not_found(ex)
+    # Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :not_found
+  end
+
+  def forbdden(ex)
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbdden
   end
 
   def known_error_html(ex)

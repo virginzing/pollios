@@ -182,7 +182,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 21, "friend_id": 50 }' -X POST http://localhost:3000/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 6 }' -X POST http://localhost:3000/friend/unfollow.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 93 , "friend_id": 85 }' -X POST http://localhost:3000/friend/add_friend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 93 , "friend_id": 123 }' -X POST http://localhost:3000/friend/add_friend.json -i
 
  # curl -H "Content-Type: application/json" -d '{"member_id": 21, "friend_id": 30}' -X POST http://localhost:3000/friend/block.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/add_close_friend.json -i
@@ -497,9 +497,8 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id":133,
-#     "title": "​ทดสอบๆๆๆ",
-#     "expire_within": "2",
+#     "member_id": 93,
+#     "title": "​ทดสอบๆๆๆ Friend",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
@@ -561,9 +560,9 @@ end
 # # http://localhost:3000/new_public_timeline.json?member_id=3
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 113,
-#     "choice_id": "4922"
-# }' -X POST http://localhost:3000/poll/1370/vote.json -i
+#     "member_id": 93,
+#     "choice_id": "3370"
+# }' -X POST http://localhost:3000/poll/940/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{

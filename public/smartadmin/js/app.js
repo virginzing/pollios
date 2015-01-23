@@ -1821,6 +1821,13 @@
 	            [0, 'desc']
 	        ]
 	    });
+	    $('#list_feedback_campagin').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
 	    $('#company_groups').dataTable({
 	        retrieve: true,
 	        order: [
