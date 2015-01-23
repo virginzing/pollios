@@ -13,8 +13,6 @@ class Poll < ActiveRecord::Base
 
   cattr_accessor :custom_error_message
 
-  store_accessor :priority, :weight
-
   pg_search_scope :search_with_tag, against: [:title],
     using: { tsearch: {dictionary: "english", prefix: true} },
     associated_against: {tags: [:name] }
@@ -195,12 +193,12 @@ class Poll < ActiveRecord::Base
 
   def set_priority
     if public
-      update(weight: 100)
+      update(priority: 50)
     else
       if in_group
-        update(weight: 80)
+        update(priority: 30)
       else
-        update(weight: 60)
+        update(priority: 10)
       end
     end
   end

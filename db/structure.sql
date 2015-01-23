@@ -2111,7 +2111,7 @@ CREATE TABLE polls (
     notify_state integer DEFAULT 0,
     notify_state_at timestamp without time zone,
     slug character varying(255),
-    priority hstore
+    priority integer
 );
 
 

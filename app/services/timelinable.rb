@@ -97,7 +97,11 @@ module Timelinable
   end
 
   def filter_overall_timeline(next_cursor)
-    poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
+    # puts "@poll_ids => #{@poll_ids}"
+    # poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
+    poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).sort_by { |p| @poll_ids.index(p.id) }
+
+    # puts "poll_member => #{poll_member.map(&:id)}"
 
     poll_member.each do |poll_member|
       if poll_member.share_poll_of_id == 0

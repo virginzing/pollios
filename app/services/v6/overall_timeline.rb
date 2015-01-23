@@ -58,6 +58,9 @@ class V6::OverallTimeline
   private
 
   def find_poll_me_and_friend_and_group_and_public
+    poll_priority = []
+    created_time = []
+
     poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
@@ -96,7 +99,12 @@ class V6::OverallTimeline
 
     query = query.limit(LIMIT_TIMELINE)
 
-    ids, poll_ids = query.map(&:id), query.map(&:poll_id)
+    query.each do |q|
+      poll_priority << q.poll.priority
+      created_time << q.poll.created_at.to_i
+    end
+
+    ids, poll_ids, priority, created_time = query.map(&:id), query.map(&:poll_id), poll_priority, created_time
   end
 
   def poll_non_share_non_in_group
@@ -129,17 +137,21 @@ class V6::OverallTimeline
   end
 
   def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
-    ids, poll_ids = find_poll_me_and_friend_and_group_and_public
+    ids, poll_ids, priority, created_time = find_poll_me_and_friend_and_group_and_public
 
 
     # shared = find_poll_share
     # poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
     # poll_member_ids_sort
 
-    p "ids => #{ids}"
-    p "poll_ids => #{poll_ids}"
+    # p "ids => #{ids}"
+    # p "priority => #{priority}"
+    # p "poll_ids => #{poll_ids}"
 
-    ids.sort!{|x,y| y <=> x }
+    ids = FeedAlgorithm.new(ids, poll_ids, priority, created_time).sort_by_priority
+
+    ids
+    # ids.sort!{|x,y| y <=> x }
   end
 
   def poll_shared_at(poll_member)
