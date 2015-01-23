@@ -10,7 +10,10 @@ class Poll < ActiveRecord::Base
   include PollsHelper
 
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
+
   cattr_accessor :custom_error_message
+
+  store_accessor :priority, :weight
 
   pg_search_scope :search_with_tag, against: [:title],
     using: { tsearch: {dictionary: "english", prefix: true} },
@@ -62,6 +65,7 @@ class Poll < ActiveRecord::Base
   belongs_to :recurring
 
   before_save :set_default_value
+  after_create :set_priority
   # before_create :generate_qrcode_key
 
   # after_create :set_new_title_with_tag
@@ -189,11 +193,27 @@ class Poll < ActiveRecord::Base
   #   update_attributes!(title: poll_title)
   # end
 
+  def set_priority
+    if public
+      update(weight: 100)
+    else
+      if in_group
+        update(weight: 80)
+      else
+        update(weight: 60)
+      end
+    end
+  end
+
   def generate_qrcode_key
     begin
       self.qrcode_key = SecureRandom.hex(4)
     end while self.class.exists?(qrcode_key: qrcode_key)
     qrcode_key
+  end
+
+  def get_creator_must_vote
+    creator_must_vote.present? ? true : false
   end
 
   def get_vote_max

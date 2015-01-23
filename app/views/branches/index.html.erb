@@ -47,7 +47,6 @@
                 <th width="50">#</th>
                 <th>Name</th>
                 <th>Total Feedback</th>
-                <th>Total Poll</th>
                 <th>Address</th>
                 <th>Note</th>
                 <th>Created_at</th>
@@ -60,7 +59,6 @@
                   <td><%= branch.id %></td>
                   <td><%= branch.name %></td>
                   <td><%= branch.get_total_feedback %></td>
-                  <td><%= branch.get_total_poll %></td>
                   <td><%= branch.address %></td>
                   <td><%= branch.note %></td>
                   <td><span data-livestamp="<%= branch.created_at.to_i %>"></span></td>

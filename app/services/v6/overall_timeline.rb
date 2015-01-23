@@ -128,11 +128,17 @@ class V6::OverallTimeline
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 
-  def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)
+  def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public
+
+
     # shared = find_poll_share
     # poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
     # poll_member_ids_sort
+
+    p "ids => #{ids}"
+    p "poll_ids => #{poll_ids}"
+
     ids.sort!{|x,y| y <=> x }
   end
 

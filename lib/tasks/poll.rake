@@ -113,6 +113,23 @@ namespace :poll do
     PollSeries.delete_all
   end
 
+  desc "update priority of polls"
+
+  task :update_priority => :environment do
+    Poll.all.each do |p|
+      if p.public
+        p.update(weight: 100)
+      else
+        if p.in_group
+          p.update(weight: 80)
+        else
+          p.update(weight: 60)
+        end
+      end
+
+    end
+  end
+
   # Poll.all.each do |p|
   #   if p.comments.present?
   #     p.update_columns(comment_count: p.comments.to_a.count)

@@ -631,7 +631,8 @@ CREATE TABLE campaign_members (
     updated_at timestamp without time zone,
     redeem boolean DEFAULT false,
     redeem_at timestamp without time zone,
-    poll_id integer
+    poll_id integer,
+    poll_series_id integer
 );
 
 
@@ -2109,7 +2110,8 @@ CREATE TABLE polls (
     quiz boolean DEFAULT false,
     notify_state integer DEFAULT 0,
     notify_state_at timestamp without time zone,
-    slug character varying(255)
+    slug character varying(255),
+    priority hstore
 );
 
 
@@ -3978,6 +3980,13 @@ CREATE INDEX index_campaign_members_on_member_id ON campaign_members USING btree
 
 
 --
+-- Name: index_campaign_members_on_poll_series_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_campaign_members_on_poll_series_id ON campaign_members USING btree (poll_series_id);
+
+
+--
 -- Name: index_campaigns_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5283,4 +5292,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150119093656');
 INSERT INTO schema_migrations (version) VALUES ('20150119100921');
 
 INSERT INTO schema_migrations (version) VALUES ('20150119102553');
+
+INSERT INTO schema_migrations (version) VALUES ('20150122032612');
+
+INSERT INTO schema_migrations (version) VALUES ('20150123031654');
 

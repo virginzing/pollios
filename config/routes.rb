@@ -442,7 +442,7 @@ Pollios::Application.routes.draw do
   delete 'delete_photo_group',  to: 'members#delete_photo_group', as: :delete_photo_group
   get '/qrcode',  to: 'polls#generate_qrcode'
 
-  get '/dashboard',  to: 'home#dashboard', as: :dashboard
+  # get '/dashboard',  to: 'home#dashboard', as: :dashboard
   post '/invites',    to: 'companies#create'
 
   get '/campaigns_polls',  to: 'campaigns#polls'
