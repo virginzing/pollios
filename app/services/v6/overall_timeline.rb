@@ -139,7 +139,7 @@ class V6::OverallTimeline
   end
 
   def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
-    ids, poll_ids, priority, created_time = find_poll_me_and_friend_and_group_and_public
+    ids, poll_ids, priority, created_time, updated_time = find_poll_me_and_friend_and_group_and_public
 
 
     # shared = find_poll_share
