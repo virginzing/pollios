@@ -101,7 +101,7 @@ class V6::OverallTimeline
 
     query.each do |q|
       poll_priority << q.poll.priority
-      created_time << q.poll.created_at.to_i
+      created_time << q.poll.created_at
     end
 
     ids, poll_ids, priority, created_time = query.map(&:id), query.map(&:poll_id), poll_priority, created_time
