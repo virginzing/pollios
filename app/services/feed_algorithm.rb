@@ -1,6 +1,6 @@
 class FeedAlgorithm
   include ActionView::Helpers::DateHelper
-  
+
   DAY_COMPARE = 100
   VALUE_POLL_VOTED = 50
   VALUE_POLL_NOT_VOTE = 0
@@ -40,7 +40,7 @@ class FeedAlgorithm
   end
 
   def time_ago_value(created_at)
-    (DAY_COMPARE - time_ago_in_words(created_at).to_i) / 100.00
+    (DAY_COMPARE - (Time.now.zone.to_date - created_at.to_date).to_i) / 100.00
   end
 
   def sort_by_priority
