@@ -1,10 +1,10 @@
 class FeedAlgorithm
   include ActionView::Helpers::DateHelper
 
-  DAY_COMPARE = 100
-  HIGH_VOTE_PRIORITY = 40
-  VALUE_POLL_VOTED = 50
-  VALUE_POLL_NOT_VOTE = 0
+  DAY_COMPARE = 30
+  UPDATED_POLL = 2
+  VOTED = 2
+  NOT_YET_VOTE = 5
 
 
   def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time, updated_time)
@@ -29,29 +29,31 @@ class FeedAlgorithm
     new_check_with_voted = []
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
-      if @vote_poll_ids.include?(e[:poll_id])
-        if e[:updated_at] > 10.minutes.ago
-          e[:priority] = HIGH_VOTE_PRIORITY
-        else
-          e[:priority] = (e[:priority] - VALUE_POLL_VOTED) * time_ago_value(e[:created_at])
-        end
+      feed = e[:priority].to_i
 
-        new_check_with_voted << e
+      if @vote_poll_ids.include?(e[:poll_id]) ## voted
+        
+        if e[:updated_at] > 3.days.ago
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + VOTED + UPDATED_POLL)
+        else
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + VOTED)
+        end
       else
-        e[:priority] = (e[:priority]) * time_ago_value(e[:created_at])
-        new_check_with_voted << e 
-      end    
+        e[:priority] = time_ago_value(e[:created_at]) * (feed + NOT_YET_VOTE)      
+      end
+
+      new_check_with_voted << e     
     end
 
     new_check_with_voted
   end
 
   def time_ago_value(created_at)
-    (DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i) / 100.00
+    time_compare = DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i
+    time_compare <= 0 ? 0 : time_compare    
   end
 
   def sort_by_priority
-    # check_with_voted.sort {|x,y| [y[:priority] <=> x[:priority]] }
     sort_by_and_reverse = check_with_voted.sort_by {|x| [x[:priority], x[:created_at]] }.reverse!
     sort_by_and_reverse.collect{|e| e[:poll_member_id] }
   end
