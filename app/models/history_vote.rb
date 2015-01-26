@@ -56,6 +56,10 @@ class HistoryVote < ActiveRecord::Base
           %{<a href="/admin/choice/#{value.id}">#{value.answer}</a>}.html_safe
         end
       end
+      field :data_analysis
+      field :surveyor_id
+      field :show_result
+      
       field :created_at do
         pretty_value do
           ActionController::Base.helpers.time_ago_in_words(bindings[:object].created_at) + ' ago'
