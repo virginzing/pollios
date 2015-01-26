@@ -1,4 +1,4 @@
-json.creator poll.serializer_member_detail
+json.creator poll.member.serializer_member_detail
 json.id poll.poll_series_id
 json.vote_count poll.poll_series.vote_all
 json.view_count poll.poll_series.view_all
