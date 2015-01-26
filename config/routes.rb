@@ -70,7 +70,6 @@ Pollios::Application.routes.draw do
     get 'binary',   to: 'polls#binary', as: :binary_poll
     get 'rating',   to: 'polls#rating', as: :rating_poll
     get 'freeform', to: 'polls#freeform', as: :freeform_poll
-    get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
   end
 
   scope 'build_questionnaire' do
@@ -350,6 +349,8 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
+    get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
+    
     get 'dashboard',  to: 'companies#dashboard', as: :company_dashboard
     get 'load_surveyor',  to: 'surveyor#load_surveyor'
     get 'list_group', to: 'companies#list_group'
