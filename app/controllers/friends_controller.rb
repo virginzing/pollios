@@ -48,6 +48,8 @@ class FriendsController < ApplicationController
 
   def block_friend
     @friend = Friend.block_or_unblock_friend(friend_params, true)
+
+    render status: 422 if @friend.nil?
   end
 
   def unblock_friend

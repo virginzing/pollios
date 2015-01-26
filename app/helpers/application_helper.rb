@@ -553,16 +553,17 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #   "member_id": 93,
-#   "answer": [{"id": 1780, "choice_id": 6654}, {"id": 1779, "choice_id": 6649}, {"id": 1778, "choice_id": 6644}]
-# }' -X POST http://localhost:3000/questionnaire/122/vote.json -i
+#   "answer": [{"id": 1780, "choice_id": 6654}, {"id": 1779, "choice_id": 6649}, {"id": 1778, "choice_id": 6644}],
+#   "data_options": {"member_id" => "123"}
+# }' -X POST http://localhost:3000/questionnaire/194/vote.json -i
 
 
 # # http://localhost:3000/new_public_timeline.json?member_id=3
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "choice_id": "7758"
-# }' -X POST http://localhost:3000/poll/2027/vote.json -i
+#     "choice_id": "7714"
+# }' -X POST http://localhost:3000/poll/2015/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -700,7 +701,7 @@ end
 
 # http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
-# curl -F "member_id=179" -F "fullname=WelbackCome" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=93" -F "anonymous_public=true" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "696969",

@@ -41,7 +41,7 @@ class CompaniesController < ApplicationController
   end
 
 
-  def reports
+  def flags
     @report_polls = Company::CompanyReportPoll.new(company_groups).get_report_poll_in_company  
   end
 

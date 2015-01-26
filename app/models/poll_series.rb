@@ -225,14 +225,15 @@ class PollSeries < ActiveRecord::Base
     end
   end
 
-  def vote_questionnaire(params, member, poll_series)
+  def vote_questionnaire(params, member, poll_series, options = {})
+    
     surveyed_id = params[:surveyed_id] || params[:member_id]
     member_id = params[:member_id]
 
     PollSeries.transaction do
       list_answer = params[:answer].collect!{ |poll| poll.merge({ member_id: surveyed_id, surveyor_id: member_id }) }
       list_answer.each do |answer|
-        @votes = Poll.vote_poll(answer, member)
+        @votes = Poll.vote_poll(answer, member, options)
       end
 
       if @votes.present?

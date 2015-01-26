@@ -5,6 +5,7 @@ class FeedAlgorithm
   UPDATED_POLL = 2
   VOTED = 2
   NOT_YET_VOTE = 5
+  CREATED_RECENT = 40
 
 
   def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time, updated_time)
@@ -39,7 +40,11 @@ class FeedAlgorithm
           e[:priority] = time_ago_value(e[:created_at]) * (feed + VOTED)
         end
       else
-        e[:priority] = time_ago_value(e[:created_at]) * (feed + NOT_YET_VOTE)      
+        if e[:created_at] > 20.minutes.ago
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + NOT_YET_VOTE + CREATED_RECENT) 
+        else
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + NOT_YET_VOTE) 
+        end
       end
 
       new_check_with_voted << e     

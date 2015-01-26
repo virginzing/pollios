@@ -314,6 +314,14 @@ class Member < ActiveRecord::Base
     find_activify.present? ? find_activify.items.count : 0
   end
 
+  def get_first_signup
+    first_signup.present? ? true : false
+  end
+
+  def get_first_setting_anonymous
+    first_setting_anonymous.present? ? true : false
+  end
+
   def Member.check_image_avatar(avatar)
     for_campare_url_image = /\.(gif|jpg|png)\z/i
     if for_campare_url_image.match(avatar.model[:avatar]).present?

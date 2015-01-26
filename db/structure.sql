@@ -1499,7 +1499,8 @@ CREATE TABLE history_votes (
     updated_at timestamp without time zone,
     poll_series_id integer DEFAULT 0,
     data_analysis hstore,
-    surveyor_id integer
+    surveyor_id integer,
+    show_result boolean DEFAULT false
 );
 
 
@@ -1741,7 +1742,8 @@ CREATE TABLE members (
     slug character varying(255),
     public_id character varying(255),
     waiting boolean DEFAULT false,
-    created_company boolean DEFAULT false
+    created_company boolean DEFAULT false,
+    first_setting_anonymous boolean DEFAULT true
 );
 
 
@@ -5296,4 +5298,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150119102553');
 INSERT INTO schema_migrations (version) VALUES ('20150122032612');
 
 INSERT INTO schema_migrations (version) VALUES ('20150123031654');
+
+INSERT INTO schema_migrations (version) VALUES ('20150126031625');
+
+INSERT INTO schema_migrations (version) VALUES ('20150126031831');
 

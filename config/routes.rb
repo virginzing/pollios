@@ -392,7 +392,7 @@ Pollios::Application.routes.draw do
     get 'invites/via_email',  to: 'companies#via_email',  as: :via_email
     post 'invites/send_email', to: 'companies#send_email'
 
-    get 'reports',  to: 'companies#reports',    as: :company_reports_poll
+    get 'flags',  to: 'companies#flags',    as: :company_flags_poll
 
     post 'download_csv', to: 'companies#download_csv', as: :download_csv
     post 'download_excel', to: 'companies#download_excel', as: :download_excel

@@ -697,7 +697,7 @@ class Poll < ActiveRecord::Base
 
           # @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
 
-          get_anonymous = member.get_anonymous_with_poll(find_poll)
+          # get_anonymous = member.get_anonymous_with_poll(find_poll)
 
           UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
 
@@ -714,7 +714,9 @@ class Poll < ActiveRecord::Base
             end
           end
           
-          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds)
+          check_show_result = show_result?(member, find_poll)
+
+          history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
 
           unless find_poll.series
             VoteStats.create_vote_stats(find_poll) 
@@ -730,6 +732,22 @@ class Poll < ActiveRecord::Base
 
       end
     end
+  end
+
+  def self.show_result?(member, find_poll)
+    show_result = false
+
+    show_result = if find_poll.public
+      !member.anonymous_public
+    else
+      if find_poll.in_group
+        !member.anonymous_group  
+      else
+        !member.anonymous_friend_following
+      end
+    end
+
+    show_result
   end
 
   # {"birthday"=>"Jan 15, 1990", "gender"=>1, "salary"=>3, "interests"=>[3, 2, 1], "province"=>27}

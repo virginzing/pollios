@@ -6,6 +6,7 @@
 //= require livestamp.min
 //= require parsley.remote
 //= require parsley
+//= require form_validate
 //= require jquery.ezdz
 //= require jquery-ias
 //= require nprogress

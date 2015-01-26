@@ -241,7 +241,9 @@ class Friend < ActiveRecord::Base
     begin
       search_member(member_id, friend_id).update_attributes!(block: type_block)
       search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
+
       flush_cached_friend(member_id, friend_id)
+
       Rails.cache.delete([ member_id, 'block_friend'])
       Rails.cache.delete([ friend_id, 'block_friend'])
       true

@@ -83,7 +83,8 @@ class PollSeriesController < ApplicationController
   end
 
   def vote
-    @votes = @poll_series.vote_questionnaire(vote_params, @current_member, @poll_series)
+    options = params[:data_options]
+    @votes = @poll_series.vote_questionnaire(vote_params, @current_member, @poll_series, options)
   end
 
   def index

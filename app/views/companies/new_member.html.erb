@@ -1,6 +1,6 @@
 <div class="well well-lg">
   <div class="well well-lg">
-    <%= simple_form_for Member.new, url: authen_signup_via_company_path, method: :post, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
+    <%= simple_form_for Member.new, url: authen_signup_via_company_path, method: :post, :html => { :multipart => true } do |f| %>
         <div class="row">
             <%= f.input :company_id, as: :hidden, input_html: { value: @find_company.id } %>
             <%= f.input :member_type, as: :hidden, input_html: { value: "0" } %>
@@ -29,7 +29,7 @@
 
 <h1 class="text-center">OR</h1>
 <div class="well well-lg">
-  <%= simple_form_for @multi_signup, url: multi_signup_via_company_path, method: :post, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
+  <%= simple_form_for @multi_signup, url: multi_signup_via_company_path, method: :post, :html => { :multipart => true } do |f| %>
       <div class="row">
         <div class="col col-md-9">
           <%= f.input :company_id, as: :hidden, input_html: { value: @current_member.get_company.id } %>
@@ -53,17 +53,6 @@
   
   <% end %>
 </div>
-
-<script type="text/javascript">
-
-  $( document ).ajaxStart(function() {
-    $("em.error").remove();
-    NProgress.start();
-  }).ajaxSuccess(function() {
-    NProgress.done();
-  });
-
-</script>
 
 <style type="text/css">
   #list_email_text::-webkit-input-placeholder::after {
