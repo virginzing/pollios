@@ -110,12 +110,12 @@
 	    });
 
 	    $('#show-shortcut').click(function(e) {
-	        if ($.shortcut_dropdown.is(":visible")) {
-	            shortcut_buttons_hide();
-	        } else {
-	            shortcut_buttons_show();
-	        }
-	        e.preventDefault();
+        if ($.shortcut_dropdown.is(":visible")) {
+            shortcut_buttons_hide();
+        } else {
+            shortcut_buttons_show();
+        }
+        e.preventDefault();
 	    });
 
 	    // SHOW & HIDE MOBILE SEARCH FIELD

@@ -6,15 +6,15 @@ class PollsController < ApplicationController
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
 
 
-  before_action :set_current_member, only: [:random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+  before_action :set_current_member, only: [:member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
   before_action :history_voted_viewed_guest, only: [:guest_poll]
 
-  before_action :set_poll, only: [:bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:member_voted, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
 
-  before_action :compress_gzip, only: [:load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
+  before_action :compress_gzip, only: [:member_voted, :load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
 
   before_action :get_your_group, only: [:detail, :create_poll]
@@ -23,7 +23,7 @@ class PollsController < ApplicationController
   
   after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
-  before_action :load_resource_poll_feed, only: [:random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
+  before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   expose(:list_recurring) { current_member.get_recurring_available }
@@ -99,6 +99,22 @@ class PollsController < ApplicationController
     @poll_popular = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5).sample(5).first
     @choice_poll_popular = []
     render layout: false
+  end
+
+  def member_voted
+    begin
+      find_choice = Choice.find(params[:choice_id])
+
+      @history_votes ||= HistoryVote.includes(:member).where(poll_id: @poll.id, choice_id: find_choice.id)
+      @history_votes_show_result = @history_votes.select{|e| e if e.show_result }
+      @history_votes_not_show_result = @history_votes.select{|e| e unless e.show_result }
+
+      # puts "history vote show result => #{@history_votes_show_result}"
+
+      # puts "history votes not show result => #{@history_votes_not_show_result.count}"
+    rescue ActiveRecord::RecordNotFound => e
+      @response_message = e.message
+    end
   end
 
   def generate_qrcode
@@ -747,7 +763,7 @@ class PollsController < ApplicationController
   end
 
   def view_and_vote_params
-    params.permit(:id, :member_id, :choice_id, :guest_id)
+    params.permit(:id, :member_id, :choice_id, :guest_id, :show_result)
   end
 
   def vote_params

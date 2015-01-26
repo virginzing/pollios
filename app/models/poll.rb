@@ -675,6 +675,7 @@ class Poll < ActiveRecord::Base
     poll_id = poll[:id]
     choice_id = poll[:choice_id]
     guest_id = poll[:guest_id]
+    show_result = poll[:show_result]
 
     Poll.transaction do
       begin
@@ -714,7 +715,11 @@ class Poll < ActiveRecord::Base
             end
           end
           
-          check_show_result = show_result?(member, find_poll)
+          unless show_result.nil?
+            check_show_result = show_result
+          else
+            check_show_result = show_result?(member, find_poll)
+          end
 
           history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
 
@@ -796,7 +801,6 @@ class Poll < ActiveRecord::Base
 
       rescue => e
         true
-
       end
     end
   end
@@ -954,10 +958,5 @@ class Poll < ActiveRecord::Base
     end
     hash
   end
-
-  # def public?
-  #   true
-  # end
-
 
 end

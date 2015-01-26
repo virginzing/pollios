@@ -3,74 +3,59 @@
     <a href="<%= company_dashboard_path %>" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
   </li>
 
-  <li class="<%= is_active?('polls') %>">
-    <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Polls</span></a>
-      <ul>
-<!--         <li class="<%= is_active_3rd_level('polls', action_name) %>">
-          <a href="#"><i class="fa fa-fw fa-folder-open"></i> Creating a Poll</a>
-          <ul>
-            <li class="<%= is_active_2nd_level('polls', 'binary') %>">
-              <a href="/build_poll/binary"><i class="fa fa-fw fa-edit"></i> Yes/No</a>
-            </li>
-            <li class="<%= is_active_2nd_level('polls', 'rating') %>">
-              <a href="/build_poll/rating"><i class="fa fa-fw fa-star"></i> Star Rating</a>
-            </li>
-            <li class="<%= is_active_2nd_level('polls', 'freeform') %>">
-              <a href="/build_poll/freeform"><i class="fa fa-fw fa-th-list"></i> Simple</a>
-            </li>
-          </ul>
-        </li> -->
+  <li>
+  <a href="#"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">Management</span></a>
+    <ul>
 
-      <li class="<%= is_active_2nd_level('companies', 'list_polls') || is_active_2nd_level('companies', 'poll_detail') || is_active_2nd_level('polls', 'create_new_poll') %>">
-        <a href="<%= company_polls_url %>"> List Polls</a>
+      <li class="<%= is_active?('polls') %>">
+        <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Polls</span></a>
+          <ul>
+          <li class="<%= is_active_2nd_level('companies', 'list_polls') || is_active_2nd_level('companies', 'poll_detail') || is_active_2nd_level('polls', 'create_new_poll') %>">
+            <a href="<%= company_polls_url %>"> List Polls</a>
+          </li>
+
+        </ul>
       </li>
 
-    </ul>
-  </li>
-
-  <li class="<%= is_active?('poll_series') %>">
-    <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Questionnaires</span></a>
-      <ul>
-<!--         <li class="<%= is_active_3rd_level('poll_series', action_name) %>">
-          <a href="#"><i class="fa fa-fw fa-folder-open"></i> Create</a>
+      <li class="<%= is_active?('poll_series') %>">
+        <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Questionnaires</span></a>
           <ul>
-            <li class="<%= is_active_2nd_level('poll_series', 'normal') %>">
-              <a href="<%= normal_questionnaire_path %>"><i class="fa fa-fw fa-file-text"></i> Normal</a>
-            </li>
-            <li class="<%= is_active_2nd_level('poll_series', 'same_choice') %>">
-              <a href="<%= same_choice_questionnaire_path %>"><i class="fa fa-fw fa-file-text"></i> Same Choice</a>
-            </li>
-          </ul>
-        </li> -->
+          <li class="<%= is_active_2nd_level('companies', 'list_questionnaires') || is_active_2nd_level('poll_series', 'same_choice') %>">
+            <a href="<%= company_questionnaires_path %>"> List Questionnaires</a>
+          </li>
 
-      <li class="<%= is_active_2nd_level('companies', 'list_questionnaires') || is_active_2nd_level('poll_series', 'same_choice') %>">
-        <a href="<%= company_questionnaires_path %>"> List Questionnaires</a>
+        </ul>
       </li>
-
-    </ul>
-  </li>
   
-    <li class="<%= is_active_2nd_level('companies', 'company_members') || is_active_2nd_level('companies', 'add_member') || is_active_2nd_level('companies', 'member_detail') || is_active_2nd_level('companies', 'new_member') %>">
-      <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
-    </li>
+      <li class="<%= is_active_2nd_level('companies', 'company_members') || is_active_2nd_level('companies', 'add_member') || is_active_2nd_level('companies', 'member_detail') || is_active_2nd_level('companies', 'new_member') %>">
+        <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
+      </li>
 
-    <li class="<%= is_active_2nd_level('companies', 'company_groups') || is_active_2nd_level('companies', 'new_group') || is_active_2nd_level('companies', 'list_members_in_group') || is_active_2nd_level('companies', 'group_detail') || is_active_2nd_level('companies', 'edit_group') || is_active_2nd_level('companies', 'group_poll_detail') %>">
-      <a href="<%= company_groups_path %>" title="Group"><i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">Groups</span></a>
-    </li>
+      <li class="<%= is_active_2nd_level('companies', 'company_groups') || is_active_2nd_level('companies', 'new_group') || is_active_2nd_level('companies', 'list_members_in_group') || is_active_2nd_level('companies', 'group_detail') || is_active_2nd_level('companies', 'edit_group') || is_active_2nd_level('companies', 'group_poll_detail') %>">
+        <a href="<%= company_groups_path %>" title="Group"><i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">Groups</span></a>
+      </li>
 
-    <li class="<%= is_active_2nd_level('companies', 'list_campaigns') %>">
-      <a href="<%= company_campaigns_path %>"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaigns</span></a>
-    </li>
+      <li class="<%= is_active_2nd_level('companies', 'list_campaigns') %>">
+        <a href="<%= company_campaigns_path %>"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaigns</span></a>
+      </li>
 
-    <li class="<%= is_active_2nd_level('companies', 'invites') || is_active_2nd_level('companies', 'via_email') %>">
-      <a href="<%= company_invites_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invites</span></a>
-    </li>
+      <li class="<%= is_active_2nd_level('companies', 'invites') || is_active_2nd_level('companies', 'via_email') %>">
+        <a href="<%= company_invites_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invites</span></a>
+      </li>
+    </ul>
+  </li>
 
-    <li class="<%= is_active_2nd_level('companies', 'flags') %>">
-      <a href="<%= company_flags_poll_path %>" title="Flags"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Flags</span></a>
-    </li>
+  <li>
+    <a href="#"><i class="fa fa-lg fa-fw fa-folder-open"></i> <span class="menu-item-parent">Reports</span></a>
+    <ul>
+      <li class="<%= is_active_2nd_level('companies', 'flags') %>">
+        <a href="<%= company_flags_poll_path %>" title="Flags"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Flags</span></a>
+      </li>
+    </ul>
+  </li>
 
   <li class="<%= is_active_2nd_level('companies', 'setting') %>">
     <a href="<%= company_setting_path %>"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">Setting</span></a>
   </li>
+
 </ul>

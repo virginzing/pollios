@@ -4,6 +4,7 @@ RSpec.describe "Poll" do
 
   let!(:member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
+  let!(:second_member) { create(:member, fullname: "Nutty 2", email: "nutty_2@gmail.com") }
   let!(:poll) { create(:poll, member: member) }
   let!(:choice_one) { create(:choice, poll: poll, answer: "1", vote: 0) }
   let!(:choice_two) { create(:choice, poll: poll, answer: "2", vote: 0) }
@@ -117,5 +118,29 @@ RSpec.describe "Poll" do
     end
   end
 
+  describe "GET /poll/:id/member_voted" do
+
+    before do
+      create(:history_vote, member: member, poll: poll, choice: choice_one, show_result: true)
+      create(:history_vote, member: friend, poll: poll, choice: choice_one, show_result: false)
+      create(:history_vote, member: second_member, poll: poll, choice: choice_one, show_result: true)
+    end
+
+    it "show detail of member as un_anonymous" do
+      get "/poll/#{poll.id}/member_voted.json", { member_id: member.id, choice_id: choice_one.id }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("OK")
+
+      expect(json["member_voted_show_result"].size).to eq(2)
+    end
+
+    it "count to show result equal 2" do
+      history_vote = HistoryVote.where(poll: poll, choice: choice_one)
+
+      expect(history_vote.to_a.count).to eq(3)
+
+      expect(history_vote.select{|e| e if e.show_result }.count).to eq(2)
+    end
+  end
 
 end

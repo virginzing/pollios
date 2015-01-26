@@ -352,15 +352,6 @@ class Member < ActiveRecord::Base
   end
 
   def get_cover_image
-    # if cover.present?
-    #   cover.url(:cover)
-    # else
-    #   if cover_preset.present?
-    #     cover_preset
-    #   else
-    #     ""
-    #   end
-    # end
     cover.present? ? cover.url(:cover) : ""
   end
 
@@ -925,6 +916,38 @@ class Member < ActiveRecord::Base
 
   def self.remove_cover(current_member)
     
+  end
+
+  def serializer_member_detail
+    @find_member_cached ||= Member.cached_member(self)
+    @member_id = @find_member_cached[:member_id]
+    @member_type = @find_member_cached[:type]
+    member_hash = @find_member_cached.merge( { "status" => entity_info } )
+    member_hash
+  end
+
+  def entity_info
+    @my_friend = Member.list_friend_active.map(&:id)
+    @your_request = Member.list_your_request.map(&:id)
+    @friend_request = Member.list_friend_request.map(&:id)
+    @my_following = Member.list_friend_following.map(&:id)
+
+    if @my_friend.include?(@member_id)
+      hash = Hash["add_friend_already" => true, "status" => :friend]
+    elsif @your_request.include?(@member_id)
+      hash = Hash["add_friend_already" => true, "status" => :invite]
+    elsif @friend_request.include?(@member_id)
+      hash = Hash["add_friend_already" => true, "status" => :invitee]
+    else
+      hash = Hash["add_friend_already" => false, "status" => :nofriend]
+    end
+
+    if @member_type == "Citizen" || @member_type == "Brand"
+      @my_following.include?(@member_id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+    else
+      hash.merge!({"following" => "" })
+    end
+    hash
   end
 
 
