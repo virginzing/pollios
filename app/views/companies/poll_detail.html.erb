@@ -1,3 +1,5 @@
+<% breadcrumb :company_poll_detail, poll %>
+
 <% poll.cached_choices.each do |choice| %>
   <% @choice_data_chart << [choice.answer, choice.vote] %>
 <% end %>
