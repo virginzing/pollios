@@ -98,4 +98,5 @@ class AdminController < ApplicationController
   def notification_params
     params.permit(:env, :device_token, :alert, :sound, :badge)
   end
+
 end

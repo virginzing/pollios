@@ -1743,7 +1743,8 @@ CREATE TABLE members (
     public_id character varying(255),
     waiting boolean DEFAULT false,
     created_company boolean DEFAULT false,
-    first_setting_anonymous boolean DEFAULT true
+    first_setting_anonymous boolean DEFAULT true,
+    receive_notify boolean
 );
 
 
@@ -5302,4 +5303,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150123031654');
 INSERT INTO schema_migrations (version) VALUES ('20150126031625');
 
 INSERT INTO schema_migrations (version) VALUES ('20150126031831');
+
+INSERT INTO schema_migrations (version) VALUES ('20150127081842');
 

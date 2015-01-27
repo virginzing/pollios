@@ -44,3 +44,9 @@ class Notify::PushNotification
 
 
 end
+
+# APNS.host = "gateway.push.apple.com"
+# APNS.pem = File.join(Rails.root, 'config', 'certificates', 'pollios_notification_production.pem')
+# n = APNS::Notification.new("611a6722 ef1dbc1b 97e7e48e b91f14c5 2c1c6cdc 79241b1a f1101a17 dca4f81d", badge: 15, sound: true)
+# APNS.send_notifications([n])
+# true
