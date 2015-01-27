@@ -626,7 +626,7 @@ class Poll < ActiveRecord::Base
     unless Rails.env.test?
       if in_group
         in_group_ids.split(",").each do |group_id|
-          GroupNotificationWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
+          AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
         end
       else
         if poll_series_id == 0
