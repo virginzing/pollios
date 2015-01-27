@@ -7,7 +7,7 @@ class InviteFriendWorker
   def perform(member_id, friend_ids, group_id, custom_data = nil)
     begin
       member = Member.find(member_id)
-      group ||= Group.find(group_id)
+      group = Group.find(group_id)
 
       member_id = member.id
 

@@ -32,11 +32,11 @@ class ApnPoll
   private
 
   def following_ids
-    member.get_follower.collect {|m| m.id if m.receive_notify }.compact
+    received_notify_of_member_ids(member.get_follower)
   end
 
   def apn_friend_ids
-    member.get_friend_active.collect {|m| m.id if m.receive_notify }.compact
+    received_notify_of_member_ids(member.get_friend_active)
   end
 
 end

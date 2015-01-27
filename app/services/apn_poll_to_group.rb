@@ -29,7 +29,7 @@ class ApnPollToGroup
 
   def group_member_ids
     # @group.get_member_open_notification.collect(&:id).flatten - [@member.id]
-    @group.get_member_active.collect{|m| m.id if m.receive_notify }.compact - [@member.id]
+    received_notify_of_member_ids(@group.get_member_active) - [@member.id]
   end
 
 end

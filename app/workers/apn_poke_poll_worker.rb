@@ -6,7 +6,7 @@ class ApnPokePollWorker
   
   def perform(sender_id, list_member, poll_id, custom_data = {})
     begin
-      @poll ||= Poll.find(poll_id)
+      @poll = Poll.find(poll_id)
 
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
 

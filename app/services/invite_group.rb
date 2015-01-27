@@ -34,7 +34,8 @@ class InviteGroup
   end
 
   def apn_friend_ids
-    Member.where(id: @friend_ids, apn_invite_group: true).pluck(:id)
+    # Member.where(id: @friend_ids, apn_invite_group: true).pluck(:id)
+    Member.where(id: @friend_ids, receive_notify: true).pluck(:id).uniq
   end
 
 end

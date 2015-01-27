@@ -12,7 +12,7 @@ class Apn::ReportPoll
   end
 
   def get_member_ids_of_poll
-    GroupMember.where("group_id IN (?) AND is_master = 't' AND active = 't'", get_group_ids_of_poll).map(&:member_id).uniq
+    GroupMember.joins(:member).where("group_id IN (?) AND is_master = 't' AND active = 't' AND members.receive_notify = 't'", get_group_ids_of_poll).pluck(:member_id).uniq
   end
 
   def recipient_ids

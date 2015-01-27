@@ -50,7 +50,7 @@ class Apn::CommentPoll
   private
 
   def watched_comment
-    Watched.where(poll_id: @poll.id, comment_notify: true).pluck(:member_id)
+    Watched.joins(:member).where("poll_id = ? AND comment_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
   
 end

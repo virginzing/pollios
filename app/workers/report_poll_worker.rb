@@ -7,8 +7,8 @@ class ReportPollWorker
 
   def perform(member_id, poll_id)
     begin
-      @member ||= Member.find_by(id: member_id)
-      @poll ||= Poll.find_by(id: poll_id)
+      @member = Member.find(member_id)
+      @poll = Poll.find(poll_id)
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
 
       @report_notification = Apn::ReportPoll.new(@member, @poll)

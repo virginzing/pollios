@@ -7,7 +7,7 @@ class CommentMentionWorker
   def perform(mentioner_id, poll_id, mentionable_list)
     begin
       mentioner = Member.find(mentioner_id)
-      poll ||= Poll.find(poll_id)
+      poll = Poll.find(poll_id)
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
       @apn_comment_mention = Apn::CommentMention.new(mentioner, poll)

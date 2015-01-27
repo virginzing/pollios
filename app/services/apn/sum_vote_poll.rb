@@ -94,9 +94,10 @@ class Apn::SumVotePoll
   end
 
   def watched_poll
-    Watched.where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
+    # Watched.joins(:member).where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
+    Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
-
+  
   def voted_poll
     HistoryVote.joins(:member)
                 .select("member_id, members.fullname as new_fullname, members.anonymous_public as privacy_vote_public, members.anonymous_friend_following as privacy_vote_friend_following, members.anonymous_group as privacy_vote_group")

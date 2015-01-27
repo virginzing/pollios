@@ -8,10 +8,6 @@ class AskQuestionnaire
     @group = group
   end
 
-  def group_member_ids
-    @group.get_member_open_notification.collect(&:id).flatten - [@member.id]
-  end
-  
   def recipient_ids
     @group.present? ? group_member_ids : []
   end
@@ -27,6 +23,12 @@ class AskQuestionnaire
   def custom_message
     message = "A Questionnaire in #{group_name}: \"#{@poll_series.description}\""
     truncate_message(message)
-  end 
+  end
+
+  private
+
+  def group_member_ids
+    received_notify_of_member_ids(@group.get_member_active) - [@member.id]
+  end
 
 end

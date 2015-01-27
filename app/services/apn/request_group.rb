@@ -12,10 +12,6 @@ class Apn::RequestGroup
     @group.present? ? admin_of_group_ids : []
   end
 
-  def admin_of_group_ids
-    @group.get_admin_group.map(&:id)
-  end
-
   def member_name
     @member.fullname
   end
@@ -29,6 +25,12 @@ class Apn::RequestGroup
 
     truncate_message(message)
   end 
+
+  private
+
+  def admin_of_group_ids
+    @group.get_admin_group.where("members.receive_notify = 't'").pluck(:id).uniq
+  end
   
 end
 

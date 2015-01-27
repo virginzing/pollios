@@ -7,9 +7,9 @@ class JoinGroupWorker
   def perform(member_id, group_id, custom_data = nil)
     begin
       member = Member.find(member_id)
-      group ||= Group.find(group_id)
+      group = Group.find(group_id)
 
-      @group_nofication = AskJoinGroup.new(member, group, nil, "join")
+      @group_nofication = AskJoinGroup.new(member, group)
 
       recipient_ids = @group_nofication.recipient_ids
 

@@ -7,7 +7,7 @@ class VotePollWorker
   def perform(member_id, poll_id, anonymous_status)
     begin
       member = Member.find(member_id)
-      poll = Poll.find_by(id: poll_id)
+      poll = Poll.find(poll_id)
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 

@@ -32,4 +32,8 @@ module NotificationsHelper
     custom_message
   end
 
+  def received_notify_of_member_ids(list_member)
+    list_member.collect { |member| member.id if member.receive_notify }.compact.uniq
+  end
+
 end

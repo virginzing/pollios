@@ -53,7 +53,8 @@ class Apn::VotePoll
   private
 
   def watched_poll
-    Watched.where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
+    # Watched.where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
+    Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
   
 end

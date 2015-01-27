@@ -7,7 +7,7 @@ class SumVotePollWorker
   def perform(poll_id)
     begin
 
-      poll = Poll.find_by(id: poll_id)
+      poll = Poll.find(poll_id)
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 

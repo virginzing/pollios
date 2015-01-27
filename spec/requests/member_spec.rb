@@ -63,5 +63,13 @@ RSpec.describe "Member" do
       expect(member.reload.public_id).to eq("07510509")
     end
 
+    it "set public_id via another api" do
+      post "/member/#{member.id}/public_id.json", { public_id: "07510509" }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("OK")
+
+      expect(member.reload.public_id).to eq("07510509")
+    end
+
   end
 end

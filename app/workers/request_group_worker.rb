@@ -6,8 +6,8 @@ class RequestGroupWorker
 
   def perform(member_id, group_id, custom_data = nil)
     begin
-      member ||= Member.find_by(id: member_id)
-      group ||= Group.find_by(id: group_id)
+      member = Member.find(member_id)
+      group = Group.find(group_id)
 
       @request_group = Apn::RequestGroup.new(member, group)
 
