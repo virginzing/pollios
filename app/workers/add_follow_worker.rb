@@ -2,6 +2,10 @@ class AddFollowWorker
   include Sidekiq::Worker
   include SymbolHash
   
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, friend_id, options = {})
     begin
       member = Member.find(member_id)
@@ -13,7 +17,7 @@ class AddFollowWorker
 
       @count_notification = @following.count_notification
 
-      find_recipient ||= Member.where(id: friend_id)
+      find_recipient ||= Member.where(id: friend_id).uniq
 
       device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 

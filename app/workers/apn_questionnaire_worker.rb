@@ -2,6 +2,10 @@ class ApnQuestionnaireWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, poll_series_id, group_id, custom_data = {})
     begin
       @member = Member.find(member_id)
@@ -17,7 +21,7 @@ class ApnQuestionnaireWorker
 
       recipient_ids = @apn_questionnaire.recipient_ids
 
-      find_recipient ||= Member.where(id: recipient_ids)
+      find_recipient ||= Member.where(id: recipient_ids).uniq
 
       @count_notification = CountNotification.new(find_recipient)
 
@@ -57,7 +61,7 @@ class ApnQuestionnaireWorker
           notify: hash_list_member_badge[member.id]
         }
 
-        NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @apn_questionnaire.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+        NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_questionnaire.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
       Apn::App.first.send_notifications

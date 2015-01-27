@@ -2,6 +2,10 @@ class InviteFriendWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, friend_ids, group_id, custom_data = nil)
     begin
       member = Member.find(member_id)
@@ -55,7 +59,7 @@ class InviteFriendWorker
           request: hash_list_member_request_count[member.id]
         }
 
-        NotifyLog.create(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+        NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
       Apn::App.first.send_notifications

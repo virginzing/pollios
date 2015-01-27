@@ -2,6 +2,10 @@ class CommentPollWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, poll_id, custom_data = {})
     begin
       member = Member.find(member_id)
@@ -16,9 +20,9 @@ class CommentPollWorker
 
       recipient_ids = @apn_comment.recipient_ids
 
-      find_recipient ||= Member.where(id: recipient_ids)
+      find_recipient ||= Member.where(id: recipient_ids).uniq
 
-      find_recipient_notify ||= Member.where(id: recipient_ids - [member_id])
+      find_recipient_notify ||= Member.where(id: recipient_ids - [member_id]).uniq
 
       @count_notification = CountNotification.new(find_recipient_notify)
 

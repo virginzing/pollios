@@ -2,6 +2,10 @@ class CommentMentionWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(mentioner_id, poll_id, mentionable_list)
     begin
       mentioner = Member.find(mentioner_id)
@@ -14,7 +18,7 @@ class CommentMentionWorker
 
       find_recipient ||= Member.where(id: recipient_ids)
 
-      find_recipient_notify ||= Member.where(id: recipient_ids - [mentioner.id])
+      find_recipient_notify ||= Member.where(id: recipient_ids - [mentioner.id]).uniq
 
       @count_notification = CountNotification.new(find_recipient_notify)
 

@@ -2,6 +2,10 @@ class ApnPokePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(sender_id, list_member, poll_id, custom_data = {})
     begin
       @poll ||= Poll.find(poll_id)
@@ -10,7 +14,7 @@ class ApnPokePollWorker
 
       @apn_poke_poll = Apn::PokePoll.new(@poll)
 
-      find_recipient ||= Member.where(id: list_member)
+      find_recipient ||= Member.where(id: list_member).uniq
 
       @count_notification = CountNotification.new(find_recipient)
 
@@ -50,7 +54,7 @@ class ApnPokePollWorker
           notify: hash_list_member_badge[member.id]
         }
 
-        NotifyLog.create(sender_id: sender_id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+        NotifyLog.create!(sender_id: sender_id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
       Apn::App.first.send_notifications

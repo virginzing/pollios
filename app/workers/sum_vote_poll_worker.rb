@@ -2,6 +2,10 @@ class SumVotePollWorker
   include Sidekiq::Worker
   include SymbolHash
   
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(poll_id)
     begin
 
@@ -15,7 +19,7 @@ class SumVotePollWorker
 
       recipient_ids = @apn_sum_vote_poll.recipient_ids
 
-      find_recipient_notify ||= Member.where(id: recipient_ids)
+      find_recipient_notify ||= Member.where(id: recipient_ids).uniq
 
       @count_notification = CountNotification.new(find_recipient_notify)
 

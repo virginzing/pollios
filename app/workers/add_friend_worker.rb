@@ -2,6 +2,10 @@ class AddFriendWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, friend_id, options = {})
     begin
       member = Member.find(member_id)
@@ -19,7 +23,7 @@ class AddFriendWorker
       
       @request_count = @add_friend.count_request
 
-      find_recipient ||= Member.where(id: recipient_id)
+      find_recipient ||= Member.where(id: recipient_id).uniq
 
       device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
 

@@ -2,6 +2,10 @@ class ApnSavePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(custom_data = {})
     begin
 
@@ -11,7 +15,7 @@ class ApnSavePollWorker
 
       recipient_ids = @apn_save_poll.recipient_ids
 
-      find_recipient_notify ||= Member.where(id: recipient_ids)
+      find_recipient_notify ||= Member.where(id: recipient_ids).uniq
 
       @count_notification = CountNotification.new(find_recipient_notify)
 

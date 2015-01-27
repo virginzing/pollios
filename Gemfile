@@ -110,6 +110,8 @@ gem "gretel"
 
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
 gem 'sidekiq'
+gem 'sidekiq-middleware'
+
 gem 'sinatra', '>= 1.3.0', :require => nil
 # gem 'houston'
 gem 'htmlentities'

@@ -2,6 +2,10 @@ class VotePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, poll_id, anonymous_status)
     begin
       member = Member.find(member_id)
@@ -16,9 +20,9 @@ class VotePollWorker
 
       recipient_ids = @apn_poll.recipient_ids
 
-      find_recipient ||= Member.where(id: recipient_ids)
+      find_recipient ||= Member.where(id: recipient_ids).uniq
 
-      find_recipient_notify ||= Member.where(id: recipient_ids - [member_id])
+      find_recipient_notify ||= Member.where(id: recipient_ids - [member_id]).uniq
 
       @count_notification = CountNotification.new(find_recipient_notify)
 

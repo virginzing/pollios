@@ -3,6 +3,10 @@ class ReportPollWorker
   include Sidekiq::Worker
   include SymbolHash
 
+  sidekiq_options({
+    unique: :all
+  })
+
   def perform(member_id, poll_id)
     begin
       @member ||= Member.find_by(id: member_id)
@@ -13,7 +17,7 @@ class ReportPollWorker
 
       recipient_ids = @report_notification.recipient_ids
 
-      find_recipient ||= Member.where(id: recipient_ids)
+      find_recipient ||= Member.where(id: recipient_ids).uniq
 
       @count_notification = CountNotification.new(find_recipient)
 
@@ -53,7 +57,7 @@ class ReportPollWorker
           notify: hash_list_member_badge[member_receive.id]
         }
 
-        NotifyLog.create(sender_id: @member.id, recipient_id: member_receive.id, message: @report_notification.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+        NotifyLog.create!(sender_id: @member.id, recipient_id: member_receive.id, message: @report_notification.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
       Apn::App.first.send_notifications
