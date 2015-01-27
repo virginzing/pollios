@@ -3,9 +3,7 @@ if @history_votes_show_result
 
   json.member_voted_show_result @list_history_votes_show_result
 
-  json.count do
-    json.show_result @total_history_votes_show_result
-  end
+  json.total_show_result @total_history_votes_show_result
 
   json.next_cursor @next_cursor
 else

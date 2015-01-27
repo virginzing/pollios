@@ -79,7 +79,7 @@ class Member < ActiveRecord::Base
   has_many :get_your_request, through: :your_request, source: :followed
 
   has_many :friend_active, -> { where(status: 1, active: true, block: false) }, foreign_key: "follower_id", class_name: "Friend"
-  has_many :get_friend_active, through: :friend_active ,source: :followed
+  has_many :get_friend_active, through: :friend_active , source: :followed
 
   has_many :friend_blocked, -> { where(status: 1, active: true, block: true) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_blocked, through: :friend_blocked ,source: :followed
@@ -138,6 +138,8 @@ class Member < ActiveRecord::Base
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
+
+  scope :receive_notify, -> { where(receive_notify: true) }
 
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true 
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
