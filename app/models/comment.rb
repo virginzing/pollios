@@ -14,7 +14,9 @@ class Comment < ActiveRecord::Base
   self.per_page = 10
 
   def send_notification
-    CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message })
+    unless Rails.env.test?
+      CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message })
+    end
   end
 
   def create_mentions_list(mentioner, mentionable_list)

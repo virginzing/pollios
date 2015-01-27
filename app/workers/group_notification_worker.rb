@@ -2,9 +2,7 @@ class GroupNotificationWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  sidekiq_options({
-    unique: :all
-  })
+  sidekiq_options unique: true
 
   def perform(member_id, group_id, poll_id, custom_data = nil)
     begin

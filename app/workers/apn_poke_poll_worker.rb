@@ -2,10 +2,8 @@ class ApnPokePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  sidekiq_options({
-    unique: :all
-  })
-
+  sidekiq_options unique: true
+  
   def perform(sender_id, list_member, poll_id, custom_data = {})
     begin
       @poll ||= Poll.find(poll_id)

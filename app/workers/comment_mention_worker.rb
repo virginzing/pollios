@@ -2,9 +2,7 @@ class CommentMentionWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  sidekiq_options({
-    unique: :all
-  })
+  sidekiq_options unique: true
 
   def perform(mentioner_id, poll_id, mentionable_list)
     begin
