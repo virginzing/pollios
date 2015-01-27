@@ -9,7 +9,7 @@ class ApnPollWorker
   # end
 
   def perform(member_id, poll_id, custom_data = {})
-    # begin
+    begin
       @member = Member.find(member_id)
       @poll ||= Poll.find(poll_id)
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
@@ -20,7 +20,7 @@ class ApnPollWorker
 
       recipient_ids = @apn_poll.recipient_ids
 
-      find_recipient ||= Member.where(id: recipient_ids)
+      find_recipient ||= Member.where(id: recipient_ids).uniq
 
       @count_notification = CountNotification.new(find_recipient)
 
@@ -64,9 +64,9 @@ class ApnPollWorker
       end
 
       Apn::App.first.send_notifications
-    # rescue => e
-    #   puts "ApnPollWorker => #{e.message}"
-    # end
+    rescue => e
+      puts "ApnPollWorker => #{e.message}"
+    end
   end
 
 end
