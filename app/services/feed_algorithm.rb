@@ -5,7 +5,7 @@ class FeedAlgorithm
   UPDATED_POLL = 2
   VOTED = 2
   NOT_YET_VOTE = 5
-  CREATED_RECENT = 0
+  CREATED_RECENT = 50
 
 
   def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time, updated_time)

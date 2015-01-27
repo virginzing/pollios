@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   # before_action :restrict_only_admin
   layout :layout_by_resource
 
+
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
@@ -14,6 +15,8 @@ class ApplicationController < ActionController::Base
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
   end
+
+  # before_filter :test_maintenance
 
   before_filter :if => Proc.new{ |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
@@ -40,6 +43,10 @@ class ApplicationController < ActionController::Base
       end
     end
     
+  end
+
+  def test_maintenance
+    render '/public/503.html', :layout => false, status: 503
   end
 
   def check_maintenance
