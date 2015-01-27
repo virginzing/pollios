@@ -1,11 +1,18 @@
 <% if @poll_popular.present? %>
   <% if @poll_popular.vote_all > 0 %>
+
+
     <div id="chart_div_popular"></div>
 
     <div class="poll_header">
       Poll: <%= @poll_popular.title %>
     </div>
-    
+
+    <% if @poll_popular.have_photo? %>
+      <br>
+      <img src="<%= @poll_popular.photo_poll.url(:thumbnail) %>" class="img-responsive center-block">
+    <% end %>
+
     <br>
 
     <div class="panel-padding">
@@ -50,8 +57,7 @@
         var options = {
           'title'  : '<%= @poll_popular.title %>',
           'width'  : 500,
-          'height' : 300,
-          'is3D'   : true
+          'height' : 300
         };
 
         // Instantiate and draw our chart, passing in some options.

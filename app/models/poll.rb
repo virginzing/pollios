@@ -527,6 +527,7 @@ class Poll < ActiveRecord::Base
         creator_must_vote = poll[:creator_must_vote]
         require_info = poll[:require_info].present? ? true : false
         show_result = poll[:show_result].present? ? true : false
+        qr_only = poll[:qr_only].present? ? true : false
         quiz = poll[:quiz].present? ? true : false
 
         choices = check_type_of_choice(choices)
@@ -538,7 +539,6 @@ class Poll < ActiveRecord::Base
         # unless Rails.env.test?
         #   raise ArgumentError, "Something went wrong" if true
         # end
-        # time_have_photo = photo_poll.present? ? 15.second.from_now : 5.second.from_now
 
         if expire_date.present?
           convert_expire_date = Time.now + expire_date.to_i.day
@@ -547,7 +547,6 @@ class Poll < ActiveRecord::Base
         end
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
-
 
 
         if in_group
@@ -576,7 +575,7 @@ class Poll < ActiveRecord::Base
         end
 
         @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
-                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group)
+                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only)
 
         @poll.qrcode_key = @poll.generate_qrcode_key
 
@@ -829,6 +828,10 @@ class Poll < ActiveRecord::Base
     if @recurring.count > 0
       Recurring.re_create_poll(@recurring)
     end
+  end
+
+  def have_photo?
+    photo_poll.present?
   end
 
   def check_recurring

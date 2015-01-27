@@ -1744,7 +1744,7 @@ CREATE TABLE members (
     waiting boolean DEFAULT false,
     created_company boolean DEFAULT false,
     first_setting_anonymous boolean DEFAULT true,
-    receive_notify boolean
+    receive_notify boolean DEFAULT true
 );
 
 

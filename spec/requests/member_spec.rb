@@ -21,4 +21,47 @@ RSpec.describe "Member" do
       expect(Apn::Device.find_by_member_id_and_token(member.id, device_token).present?).to be true
     end
   end
+
+
+
+  describe "POST /member/update_profile" do
+
+    let!(:member) { create(:member, email: "faker_nut@gmail.com") }
+
+    context "update receive notify" do
+      it "set receive notify to false" do
+        post "/member/update_profile.json", { member_id: member.id, receive_notify: false }, { "Accept" => "application/json" }
+
+        expect(json["response_status"]).to eq("OK")
+
+        expect(member.reload.receive_notify).to be false
+      end
+
+      it "set receive notify to true" do
+        post "/member/update_profile.json", { member_id: member.id, receive_notify: true }, { "Accept" => "application/json" }
+
+        expect(json["response_status"]).to eq("OK")
+
+        expect(member.reload.receive_notify).to be true
+      end
+    end
+
+
+    it "update fullname & description" do
+      post "/member/update_profile.json", { member_id: member.id, fullname: "Nuttapon", description: "I'm GreanNuT" }, { "Accept" => "application/json" }
+      
+      expect(json["response_status"]).to eq("OK")
+
+      expect([member.reload.fullname, member.reload.description]).to eq(["Nuttapon", "I'm GreanNuT"])
+    end
+
+    it "set public_id" do
+      post "/member/update_profile.json", { member_id: member.id, public_id: "07510509" }, { "Accept" => "application/json" }
+      
+      expect(json["response_status"]).to eq("OK")
+
+      expect(member.reload.public_id).to eq("07510509")
+    end
+
+  end
 end

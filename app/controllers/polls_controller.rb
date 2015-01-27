@@ -109,6 +109,8 @@ class PollsController < ApplicationController
       @history_votes_show_result = @history_votes.select{|e| e if e.show_result }
       @history_votes_not_show_result = @history_votes.select{|e| e unless e.show_result }
 
+      @list_history_votes_show_result = @history_votes_show_result.collect{|e| e.member.serializer_member_detail }
+
       # puts "history vote show result => #{@history_votes_show_result}"
 
       # puts "history votes not show result => #{@history_votes_not_show_result.count}"
@@ -771,7 +773,7 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, :choices => [])
+    params.permit(:qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, :choices => [])
   end
 
   def polls_params

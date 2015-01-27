@@ -6,6 +6,11 @@
     Poll: <%= @poll_latest.title %>
   </div>
 
+  <% if @poll_latest.have_photo? %>
+    <br>
+    <img src="<%= @poll_latest.photo_poll.url(:thumbnail) %>" class="img-responsive center-block">
+  <% end %>
+
   <br>
 
   <div class="panel-padding">
