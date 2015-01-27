@@ -105,11 +105,16 @@ class PollsController < ApplicationController
     begin
       find_choice = Choice.find(params[:choice_id])
 
-      @history_votes ||= HistoryVote.includes(:member).where(poll_id: @poll.id, choice_id: find_choice.id)
-      @history_votes_show_result = @history_votes.select{|e| e if e.show_result }
-      @history_votes_not_show_result = @history_votes.select{|e| e unless e.show_result }
+      @history_votes_show_result ||= HistoryVote.includes(:member)
+                                    .where(poll_id: @poll.id, choice_id: find_choice.id, show_result: true).paginate(page: params[:next_cursor], per_page: 30)
+
+      # @history_votes_show_result = @history_votes.select{|e| e if e.show_result }
+      # @history_votes_not_show_result = @history_votes.select{|e| e unless e.show_result }
 
       @list_history_votes_show_result = @history_votes_show_result.collect{|e| e.member.serializer_member_detail }
+
+      @next_cursor = @history_votes_show_result.next_page.nil? ? 0 : @history_votes_show_result.next_page
+      @total_history_votes_show_result = @history_votes_show_result.total_entries
 
       # puts "history vote show result => #{@history_votes_show_result}"
 
