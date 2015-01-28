@@ -15,9 +15,25 @@
 
     <h2><strong>Advance campaign config</strong></h2>
 
+    <div class="well">
+      <%= f.input :type_campaign, as: :radio_buttons %>
+
+      <div class="row">
+        <div class="col-md-2">
+          <%= f.input :begin_sample %>
+        </div>
+        <div class="col-md-2">
+          <%= f.input :end_sample,  input_html: { value: 1 } %>
+        </div>
+      </div>
+
+    </div>
+
+
     <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer" } %>
     <%= f.input :expire, as: :string, input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
 
+    
     <div class="row">
 
       <div class="col col-md-offset-5 col-md-2">

@@ -5,7 +5,7 @@ class FeedbackCampaignsController < ApplicationController
   before_action :load_company
   before_action :check_using_service
 
-  before_action :set_campaign, only: [:destroy, :edit, :update]
+  before_action :set_campaign, only: [:destroy, :edit, :update, :show]
 
   def index
     @campaigns = @company.campaigns
@@ -13,6 +13,10 @@ class FeedbackCampaignsController < ApplicationController
 
   def new
     @campaign = @company.campaigns.new
+  end
+
+  def show
+    
   end
 
   def create

@@ -197,6 +197,7 @@ Pollios::Application.routes.draw do
     scope 'campaigns' do
       get '',       to: 'feedback_campaigns#index', as: :feedback_campaigns
       get 'new',    to: 'feedback_campaigns#new', as: :new_feedback_campaign
+      get ':id',    to: 'feedback_campaigns#show',  as: :feedback_campaign
       post 'create',  to: 'feedback_campaigns#create',  as: :create_feedback_campaign
       get ':id/edit', to: 'feedback_campaigns#edit', as: :edit_feedback_campaign
       put ':id',   to: 'feedback_campaigns#update',  as: :update_feedback_campaign

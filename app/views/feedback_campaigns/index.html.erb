@@ -1,3 +1,5 @@
+<% breadcrumb :feedback_campaigns %>
+
 <div class="well">
   <h1 class="page-header-all">
     <i class="fa fa-gift fa-fw"></i> 
@@ -40,7 +42,7 @@
               <% @campaigns.each do |campaign| %>
                 <tr>
                   <td><%= campaign.id %></td>
-                  <td><%= campaign.name %></td>
+                  <td><%= link_to campaign.name, feedback_campaign_path(campaign) %></td>
                   <td><%= campaign.description %></td>
                   <td><%= campaign.how_to_redeem %></td>
                   <td><%= campaign.limit %></td>

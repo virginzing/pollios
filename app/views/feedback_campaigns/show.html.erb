@@ -1,0 +1,25 @@
+<% breadcrumb :feedback_detail_campaign, @campaign %>
+
+<div class="well">
+  <div class="row">
+    <div class="col col-md-1">
+      Select Poll
+    </div>
+
+    <div class="col col-md-5">
+      <%= select_tag "campaign_poll", options_from_collection_for_select(@campaign.polls, "id", "title") %>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+$(document).ready(function () {
+  $('#campaign_poll').select2({
+      placeholder: "Select",
+      width: '100%',
+      allowClear: true
+  });
+});
+</script>

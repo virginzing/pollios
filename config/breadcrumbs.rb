@@ -22,6 +22,15 @@ crumb :questionnaire do |questionnaire|
   parent :collection, questionnaire.collection_poll_series
 end
 
+crumb :feedback_campaigns do
+  link "List campaigns", feedback_campaigns_path
+end
+
+crumb :feedback_detail_campaign do |feedback_campaign|
+  link feedback_campaign.name, feedback_campaign_path(feedback_campaign)
+  parent :feedback_campaigns
+end
+
 # crumb :project do |project|
 #   link project.name, project_path(project)
 #   parent :projects
