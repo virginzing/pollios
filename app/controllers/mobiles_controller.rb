@@ -54,9 +54,7 @@ class MobilesController < ApplicationController
 
         @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("polls.order_poll asc")
 
-        @list_poll_first = @list_poll.first.id
-
-        # @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_id = ?", current_member.id, @list_poll_first).first
+        @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_series_id = ?", current_member.id, @questionnaire.id).first
         # puts "#{@reward}"
         # puts "#{@list_poll_first}"
         render 'questionnaire'
@@ -81,7 +79,13 @@ class MobilesController < ApplicationController
   end
 
   def vote_poll
-    @poll, @history_voted, @campaign, @message = Poll.vote_poll(vote_params, current_member, params[:data_options])
+    @poll, @history_voted = Poll.vote_poll(vote_params, current_member, params[:data_options])
+
+    if @poll.campaign_id != 0
+      if @poll.campaign.random_immediately?
+        @campaign, @message = @poll.find_campaign_for_predict?(current_member, @poll)
+      end
+    end 
 
     respond_to do |wants|
       if @poll.present?
@@ -90,6 +94,7 @@ class MobilesController < ApplicationController
         wants.json { render json: { "msg" => "Vote fail" } , status: 403 }
       end
     end
+
   end
 
   def vote_questionnaire
@@ -109,8 +114,13 @@ class MobilesController < ApplicationController
     }
 
     @votes = @questionnaire.vote_questionnaire(vote_params, @current_member, @questionnaire)
-    # sleep 2
-    
+
+    if @questionnaire.campaign_id != 0
+      if @questionnaire.campaign.random_immediately?
+        @campaign, @message = @questionnaire.find_campaign_for_predict?(@current_member, @questionnaire)
+      end
+    end 
+
     @vote_status = false
 
     respond_to do |wants|

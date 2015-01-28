@@ -1828,6 +1828,13 @@
 	            [0, 'desc']
 	        ]
 	    });
+	    $('#list_company_campagin').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
 	    $('#company_groups').dataTable({
 	        retrieve: true,
 	        order: [

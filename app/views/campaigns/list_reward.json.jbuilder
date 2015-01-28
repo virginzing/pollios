@@ -11,9 +11,19 @@ json.list_reward @rewards do |reward|
     json.redeem reward.redeem
     json.redeem_at reward.redeem_at.present? ? reward.redeem_at.to_i : ""
   end
-  json.poll do
-    json.id reward.poll.id
-    json.title reward.poll.title
+
+  if reward.poll_id.present?
+    json.poll do
+      json.id reward.poll.id
+      json.title reward.poll.title
+    end
+  else
+    json.questionnaire do
+      json.id reward.poll_series.id
+      json.title reward.poll_series.description
+    end
   end
+
 end
+
 json.next_cursor @next_cursor

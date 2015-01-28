@@ -9,6 +9,8 @@ class PollSeries < ActiveRecord::Base
 
   has_many :suggests, dependent: :destroy
 
+  has_many :campaign_members, dependent: :destroy
+
   has_many :history_view_questionnaires, dependent: :destroy
   has_many :poll_series_tags, dependent: :destroy
   has_many :tags, through: :poll_series_tags, source: :tag
@@ -117,6 +119,10 @@ class PollSeries < ActiveRecord::Base
         ApnQuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
       end
     end 
+  end
+
+  def find_campaign_for_predict?(member, poll_series)
+    campaign.prediction_questionnaire(member.id, poll_series.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
   def generate_qrcode_key

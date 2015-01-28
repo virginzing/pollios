@@ -673,7 +673,8 @@ CREATE TABLE campaigns (
     expire timestamp without time zone,
     description text,
     how_to_redeem text,
-    company_id integer
+    company_id integer,
+    type_campaign integer
 );
 
 
@@ -5305,4 +5306,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150126031625');
 INSERT INTO schema_migrations (version) VALUES ('20150126031831');
 
 INSERT INTO schema_migrations (version) VALUES ('20150127081842');
+
+INSERT INTO schema_migrations (version) VALUES ('20150128033703');
 

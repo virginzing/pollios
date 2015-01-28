@@ -377,8 +377,6 @@ Pollios::Application.routes.draw do
     get 'questionnaires', to: 'companies#list_questionnaires',  as: :company_questionnaires
     delete 'polls/:id/destroy', to: 'companies#delete_poll',  as: :company_delete_poll
 
-    get 'campaigns',  to: 'companies#list_campaigns', as: :company_campaigns
-
     get 'members',  to: 'companies#company_members',   as: :company_members
 
     get 'member/:id',  to: 'companies#member_detail',  as: :company_member_detail
@@ -409,6 +407,15 @@ Pollios::Application.routes.draw do
 
     scope 'feedback' do
       get 'branch', to: 'companies#feedback_branch',  as: :feedback_branch
+    end
+
+    scope 'campaigns' do
+      get '',       to: 'company_campaigns#index', as: :company_campaigns
+      get 'new',    to: 'company_campaigns#new', as: :new_company_campaign
+      post 'create',  to: 'company_campaigns#create',  as: :create_company_campaign
+      get ':id/edit', to: 'company_campaigns#edit', as: :edit_company_campaign
+      put ':id',   to: 'company_campaigns#update',  as: :update_company_campaign
+      delete ':id', to: 'company_campaigns#destroy'
     end
     
   end

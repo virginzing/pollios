@@ -1,8 +1,10 @@
 class Campaign < ActiveRecord::Base
+  include CampaignsHelper
   # has_paper_trail
   mount_uploader :photo_campaign, PhotoCampaignUploader
 
   attr_accessor :poll_ids, :poll_id
+
 
   # validates :name, :begin_sample, :end_sample, presence: true
   # validates :limit, presence: true, numericality: { greater_than: 0 }
@@ -64,7 +66,7 @@ class Campaign < ActiveRecord::Base
       elsif used >= limit
         puts "This campaign is limit."
         message = "Limited"
-      elsif campaign_members.find_by_member_id(member_id)
+      elsif campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
         puts "used to redeem."
         message = "Used"
       else
@@ -75,6 +77,34 @@ class Campaign < ActiveRecord::Base
           message = "Lucky"
         else
           @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_id: poll_id)
+          message = "Fail"
+        end
+      end
+      [@campaign, message]
+    end
+  end
+
+  def prediction_questionnaire(member_id, poll_series_id)
+    CampaignMember.transaction do 
+      sample = (begin_sample..end_sample).to_a.sample
+      puts "your lucky : #{sample}"
+      if expire < Time.now
+        puts "Campaign was expired"
+        message = "Expired"
+      elsif used >= limit
+        puts "This campaign is limit."
+        message = "Limited"
+      elsif campaign_members.find_by(member_id: member_id, poll_series_id: poll_series_id).present?
+        puts "used to redeem."
+        message = "Used"
+      else
+        if sample % end_sample == 0
+          @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_series_id: poll_series_id)
+          increment!(:used)
+          Rails.cache.delete([member_id, 'reward'])
+          message = "Lucky"
+        else
+          @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_series_id: poll_series_id)
           message = "Fail"
         end
       end

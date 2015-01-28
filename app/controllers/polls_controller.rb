@@ -26,6 +26,8 @@ class PollsController < ApplicationController
   before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
+  before_action :set_company, only: [:create_new_poll]
+
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
@@ -591,7 +593,14 @@ class PollsController < ApplicationController
   end
 
   def vote
-    @poll, @history_voted, @campaign, @message = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
+    @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
+
+    if @poll.campaign_id != 0
+      if @poll.campaign.random_immediately?
+        @campaign, @message = @poll.find_campaign_for_predict?(@current_member, @poll)
+      end
+    end 
+
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
   end
 
@@ -729,6 +738,10 @@ class PollsController < ApplicationController
   def set_group
     @group = Group.find_by(id: params[:group_id])
     raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+  end
+
+  def set_company
+    @find_company = current_member.company || current_member.company_member.company
   end
 
   def raise_exception_without_group

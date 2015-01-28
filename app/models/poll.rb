@@ -695,8 +695,6 @@ class Poll < ActiveRecord::Base
 
           Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
-          # @campaign, @message = find_poll.find_campaign_for_predict?(member_id, poll_id) if find_poll.campaign_id != 0
-
           # get_anonymous = member.get_anonymous_with_poll(find_poll)
 
           UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
@@ -731,7 +729,7 @@ class Poll < ActiveRecord::Base
           member.flush_cache_my_vote_all
 
           Rails.cache.delete([find_poll.class.name, find_poll.id])
-          [find_poll, history_voted, @campaign, @message]
+          [find_poll, history_voted]
         end
 
       end
@@ -782,8 +780,8 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def find_campaign_for_predict?(member_id, poll_id)
-    campaign.prediction(member_id, poll_id) if campaign.expire > Time.now && campaign.used <= campaign.limit
+  def find_campaign_for_predict?(member, poll)
+    campaign.prediction(member.id, poll.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
   def self.view_poll(poll, member)
