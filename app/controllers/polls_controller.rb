@@ -741,7 +741,7 @@ class PollsController < ApplicationController
   end
 
   def set_company
-    @find_company = current_member.company || current_member.company_member.company
+    @company = current_member.company || current_member.company_member.company
   end
 
   def raise_exception_without_group

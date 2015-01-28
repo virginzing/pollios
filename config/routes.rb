@@ -38,6 +38,10 @@ Pollios::Application.routes.draw do
         post 'questionnaires/survey', to: 'surveyors#survey_questionnaire'
       end
 
+      scope 'campaign' do
+        post 'redeem_code',  to: 'campaigns#redeem_code'
+      end
+
     end
 
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
@@ -54,7 +58,9 @@ Pollios::Application.routes.draw do
   
   resources :recurrings
   resources :comments
+
   resources :campaigns
+
   resources :polls do
     resources :choices
   end

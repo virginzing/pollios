@@ -7,6 +7,7 @@ class PollSeriesController < ApplicationController
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
 
+  before_action :set_company, only: [:same_choice]
   def generate_qrcode
 
     # @qr = QrcodeSerializer.new(PollSeries.find(params[:id])).as_json.to_json
@@ -234,6 +235,10 @@ class PollSeriesController < ApplicationController
         wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Questionnaire not found"], status: 404 }
       end
     end
+  end
+
+  def set_company
+    @company = current_member.company || current_member.company_member.company
   end
 
   def vote_params
