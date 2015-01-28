@@ -632,7 +632,8 @@ CREATE TABLE campaign_members (
     redeem boolean DEFAULT false,
     redeem_at timestamp without time zone,
     poll_id integer,
-    poll_series_id integer
+    poll_series_id integer,
+    redeemer_id integer
 );
 
 
@@ -3991,6 +3992,13 @@ CREATE INDEX index_campaign_members_on_poll_series_id ON campaign_members USING 
 
 
 --
+-- Name: index_campaign_members_on_redeemer_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_campaign_members_on_redeemer_id ON campaign_members USING btree (redeemer_id);
+
+
+--
 -- Name: index_campaigns_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5308,4 +5316,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150126031831');
 INSERT INTO schema_migrations (version) VALUES ('20150127081842');
 
 INSERT INTO schema_migrations (version) VALUES ('20150128033703');
+
+INSERT INTO schema_migrations (version) VALUES ('20150128084525');
 
