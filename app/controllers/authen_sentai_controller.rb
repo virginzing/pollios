@@ -138,7 +138,7 @@ class AuthenSentaiController < ApplicationController
           
           @waiting_info = WaitingList.new(member).get_info
 
-          wants.html { redirect_to dashboard_path }
+          wants.html { redirect_to admin_management_dashboard_path }
           wants.json
           wants.js
         else
