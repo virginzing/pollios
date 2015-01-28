@@ -2,7 +2,7 @@ class MemberInfoFeedSerializer < ActiveModel::Serializer
 
   self.root false
 
-  attributes :member_id, :type, :name, :avatar
+  attributes :member_id, :type, :name, :avatar, :description
 
   def member_id
     object.id
@@ -14,6 +14,10 @@ class MemberInfoFeedSerializer < ActiveModel::Serializer
 
   def name
     object.fullname
+  end
+
+  def description
+    object.description || ""
   end
 
   def avatar

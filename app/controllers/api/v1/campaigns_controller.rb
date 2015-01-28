@@ -17,8 +17,10 @@ module Api
           else
             @redeem.update!(redeem: true, redeem_at: Time.zone.now, redeemer_id: redeem_code_params[:redeemer_id])
 
-            Rails.cache.delete([@redeem.member_id, 'reward'])
-            wants.json { render json: Hash["response_status" => "OK", "response_message" => "Redeem sucessfully"] }
+            @campaign_detail = @redeem.campaign.as_json()
+            @member_detail = @redeem.member.as_json()
+
+            wants.json { render json: Hash["response_status" => "OK", "campaign" => @campaign_detail, "member_detail" =>  @member_detail, "response_message" => "Redeem sucessfully"] }
           end
         else  
           wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Serial code not found"], status: 404 }

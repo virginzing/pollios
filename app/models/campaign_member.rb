@@ -7,6 +7,6 @@ class CampaignMember < ActiveRecord::Base
   self.per_page = 10
 
   def self.list_reward(member_id)
-    where("member_id = ? AND luck = ? AND redeem = ?", member_id, true, false).order('created_at desc').includes(:member, :campaign)
+    where("member_id = ? AND luck = ?", member_id, true).order('created_at desc').includes(:member, :campaign)
   end
 end

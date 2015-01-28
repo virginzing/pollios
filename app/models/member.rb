@@ -797,7 +797,6 @@ class Member < ActiveRecord::Base
 
   def self.cached_member(member)
     Rails.cache.fetch(member) do
-      # member.as_json
       MemberInfoFeedSerializer.new(member).as_json()
     end
   end
@@ -839,11 +838,10 @@ class Member < ActiveRecord::Base
    {
       member_id: id,
       type: member_type_text,
-      name: fullname,
-      public_id: public_id,
-      email: email,
+      name: get_name,
+      public_id: get_public_id,
+      email: get_email,
       avatar: avatar.present? ? resize_avatar(avatar.url) : "",
-      key_color: get_key_color,
       cover: cover.present? ? resize_cover(cover.url) : "",
       description: get_description,
    }
