@@ -82,7 +82,12 @@ $(document).ready(function () {
       allowClear: true
   });
 
-  $(".date-today").datepicker({dateFormat: 'dd-mm-yy'}).datepicker("setDate", new Date());
+  $('.date-today').datepicker({
+    dateFormat : 'dd-mm-yy',
+    prevText : '<i class="fa fa-chevron-left"></i>',
+    nextText : '<i class="fa fa-chevron-right"></i>'
+  }).datepicker("setDate", new Date());;
+
 
   $(".load_ajax_form").on('ajax:send', function(xhr) {
     $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
