@@ -19,7 +19,14 @@ class CampaignsController < ApplicationController
 
   def load_poll
     @campaign = Campaign.find(params[:id])
-    @campaign_members = @campaign.campaign_members.where(poll_id: params[:poll_id])
+
+    @poll = Poll.where("campaign_id = ? AND title = ? AND date(polls.created_at + interval '7 hour') BETWEEN ? AND ?", @campaign.id, params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date).first
+
+    if @poll.present?
+      @campaign_members = @campaign.campaign_members.where(poll_id: @poll.id)
+    else
+      @campaign_members = []
+    end
 
     respond_to do |wants|
       wants.js
@@ -29,7 +36,14 @@ class CampaignsController < ApplicationController
 
   def load_questionnaire
     @campaign = Campaign.find(params[:id])
-    @campaign_members = @campaign.campaign_members.where(poll_series_id: params[:poll_series_id])
+
+    @questionnaire = PollSeries.where("campaign_id = ? AND description = ? AND date(poll_series.created_at + interval '7 hour') BETWEEN ? AND ?", @campaign.id, params[:campaign_questionnaire], params[:date_questionnaire].to_date, params[:date_questionnaire].to_date).first
+
+    if @questionnaire.present?
+      @campaign_members = @campaign.campaign_members.where(poll_series_id: @questionnaire.id)
+    else
+      @campaign_members = []
+    end
 
     respond_to do |wants|
       wants.js
