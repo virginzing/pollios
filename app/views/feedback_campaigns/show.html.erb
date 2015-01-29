@@ -7,19 +7,56 @@
     </div>
 
     <div class="col col-md-5">
-      <%= select_tag "campaign_poll", options_from_collection_for_select(@campaign.polls, "id", "title") %>
+      <%= select_tag "campaign_poll", options_from_collection_for_select(@campaign.polls, "id", "title"), :include_blank => "Select poll" %>
     </div>
 
   </div>
+
+  <div class="row">
+    <div class="col col-md-1">
+      Select Questionnaire
+    </div>
+
+    <div class="col col-md-5">
+      <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@campaign.poll_series, "id", "description"), :include_blank => "Select questionnaire" %>
+    </div>
+
+  </div>
+
+  <div id="campaign_with_poll">
+
+  </div>
+
 </div>
 
 
 <script>
 $(document).ready(function () {
+
   $('#campaign_poll').select2({
-      placeholder: "Select",
+      placeholder: "Select poll",
       width: '100%',
       allowClear: true
+  }).on("change", function (e) {
+    $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    $.get("/feedback/campaigns/<%= @campaign.id %>/load_poll", { poll_id: e.val } ).done(function () {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    })
   });
+
+  $('#campaign_questionnaire').select2({
+      placeholder: "Select questionnaire",
+      width: '100%',
+      allowClear: true
+  }).on("change", function (e) {
+    $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    $.get("/feedback/campaigns/<%= @campaign.id %>/load_questionnaire", { poll_series_id: e.val } ).done(function () {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    })
+  });
+
 });
 </script>
+
+
+

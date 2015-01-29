@@ -71,12 +71,12 @@ class Campaign < ActiveRecord::Base
         message = "Used"
       else
         if sample % end_sample == 0
-          @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_id: poll_id)
+          @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
           increment!(:used)
           Rails.cache.delete([member_id, 'reward'])
           message = "Lucky"
         else
-          @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_id: poll_id)
+          @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_id: poll_id, ref_no: generate_ref_no)
           message = "Fail"
         end
       end
@@ -113,7 +113,11 @@ class Campaign < ActiveRecord::Base
   end
 
   def generate_serial_code
-    return id.to_s + Time.now.to_i.to_s
+    return id.to_s + Time.zone.now.to_i.to_s
+  end
+
+  def generate_ref_no
+    return "P" + Time.zone.now.to_i.to_s
   end
 
   def get_photo_campaign

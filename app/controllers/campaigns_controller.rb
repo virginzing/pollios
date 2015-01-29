@@ -17,6 +17,26 @@ class CampaignsController < ApplicationController
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page
   end
 
+  def load_poll
+    @campaign = Campaign.find(params[:id])
+    @campaign_members = @campaign.campaign_members.where(poll_id: params[:poll_id])
+
+    respond_to do |wants|
+      wants.js
+    end
+
+  end
+
+  def load_questionnaire
+    @campaign = Campaign.find(params[:id])
+    @campaign_members = @campaign.campaign_members.where(poll_series_id: params[:poll_series_id])
+
+    respond_to do |wants|
+      wants.js
+    end
+  end
+
+
   def check_redeem
     
     ## don't forget clear cache reward ##

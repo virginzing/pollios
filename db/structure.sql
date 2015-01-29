@@ -633,7 +633,8 @@ CREATE TABLE campaign_members (
     redeem_at timestamp without time zone,
     poll_id integer,
     poll_series_id integer,
-    redeemer_id integer
+    redeemer_id integer,
+    ref_no character varying(255)
 );
 
 
@@ -5318,4 +5319,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150127081842');
 INSERT INTO schema_migrations (version) VALUES ('20150128033703');
 
 INSERT INTO schema_migrations (version) VALUES ('20150128084525');
+
+INSERT INTO schema_migrations (version) VALUES ('20150129035739');
 

@@ -49,8 +49,6 @@ class FeedbackCampaignsController < ApplicationController
     
   end
 
-
-
   private
 
   def set_campaign

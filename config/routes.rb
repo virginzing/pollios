@@ -202,6 +202,9 @@ Pollios::Application.routes.draw do
       get ':id/edit', to: 'feedback_campaigns#edit', as: :edit_feedback_campaign
       put ':id',   to: 'feedback_campaigns#update',  as: :update_feedback_campaign
       delete ':id', to: 'feedback_campaigns#destroy'
+
+      get ':id/load_poll',  to: 'campaigns#load_poll'
+      get ':id/load_questionnaire', to: 'campaigns#load_questionnaire'
     end
   end
 
