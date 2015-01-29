@@ -21,8 +21,6 @@ class CollectionPollSeriesController < ApplicationController
   end
 
 
-
-
   private
 
   def collection_poll_series_params

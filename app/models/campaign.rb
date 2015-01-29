@@ -10,6 +10,8 @@ class Campaign < ActiveRecord::Base
   # validates :limit, presence: true, numericality: { greater_than: 0 }
   validates :name, :limit, presence: true
 
+  validates_uniqueness_of :name, :on => :create, scoped: :company_id
+
   # has_one :poll
   # has_one :poll_series
 

@@ -7,6 +7,11 @@ crumb :collection do |collection|
   parent :collections
 end
 
+crumb :collection_campaign do |collection|
+  link "Campaign", collection_campaign_feedback_path(collection)
+  parent :collection, collection
+end
+
 crumb :qrcode do |questionnaire|
   link "(Qrcode) #{questionnaire.branch.name}", qrcode_feedback_questionnaire_path(questionnaire.collection_poll_series, questionnaire.branch)
   parent :collection, questionnaire.collection_poll_series

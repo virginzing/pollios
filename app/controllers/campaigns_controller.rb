@@ -20,10 +20,10 @@ class CampaignsController < ApplicationController
   def load_poll
     @campaign = Campaign.find(params[:id])
 
-    @poll = Poll.where("campaign_id = ? AND title = ? AND date(polls.created_at + interval '7 hour') BETWEEN ? AND ?", @campaign.id, params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date).first
+    @campaign_members = @campaign.campaign_members.where("poll_id = ? AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date)
 
-    if @poll.present?
-      @campaign_members = @campaign.campaign_members.where(poll_id: @poll.id)
+    if @campaign_members.present?
+      @campaign_members = @campaign_members
     else
       @campaign_members = []
     end
@@ -37,10 +37,13 @@ class CampaignsController < ApplicationController
   def load_questionnaire
     @campaign = Campaign.find(params[:id])
 
-    @questionnaire = PollSeries.where("campaign_id = ? AND description = ? AND date(poll_series.created_at + interval '7 hour') BETWEEN ? AND ?", @campaign.id, params[:campaign_questionnaire], params[:date_questionnaire].to_date, params[:date_questionnaire].to_date).first
+    @collection = CollectionPollSeries.find(params[:campaign_questionnaire])
+    @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
 
-    if @questionnaire.present?
-      @campaign_members = @campaign.campaign_members.where(poll_series_id: @questionnaire.id)
+    @campaign_members = CampaignMember.where("campaign_id = #{@campaign.id} AND poll_series_id IN (?) AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", @questionnaire_ids, params[:date_questionnaire].to_date, params[:date_questionnaire].to_date)
+
+    if @campaign_members.present?
+      @campaign_members = @campaign_members
     else
       @campaign_members = []
     end

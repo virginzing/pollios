@@ -35,6 +35,13 @@ class FeedbackQuestionnaireController < ApplicationController
     @list_questionnaire = PollSeries.where("id IN (?)", @collection.main_poll_series)
   end
 
+  def collection_campaign
+    @collection = CollectionPollSeries.find(params[:id])
+    @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
+
+    @campaign_members = CampaignMember.where(poll_series_id: @questionnaire_ids)
+  end
+
   def qrcode
     @collection_poll_series_branch = CollectionPollSeriesBranch.find_by(collection_poll_series_id: params[:id], branch_id: params[:branch_id])
     @questionnaire = @collection_poll_series_branch.poll_series

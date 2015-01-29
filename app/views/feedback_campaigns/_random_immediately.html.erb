@@ -7,7 +7,7 @@
       </div>
     
       <div class="col col-md-4">
-        <%= select_tag "campaign_poll", options_from_collection_for_select(@list_poll, "title", "title"), :include_blank => "Select poll" %>
+        <%= select_tag "campaign_poll", options_from_collection_for_select(@list_poll, "id", "title"), :include_blank => "Select poll" %>
       </div>
 
       <div class="col col-md-2">
@@ -21,7 +21,7 @@
   </div>
   <br>
 
-  <div class="row">
+<div class="row">
     <%= form_tag "/feedback/campaigns/#{@campaign.id}/load_questionnaire", method: :get, remote: true, class: "load_ajax_form" do %>
       <% utf8_enforcer_tag() %>
       <div class="col col-md-1">
@@ -29,7 +29,7 @@
       </div>
     
       <div class="col col-md-4">
-        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_questionnaires, "description", "description"), :include_blank => "Select questionnaire" %>
+        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_collection, "id", "title"), :include_blank => "Select questionnaire" %>
       </div>
 
       <div class="col col-md-2">

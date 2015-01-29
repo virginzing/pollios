@@ -192,6 +192,8 @@ Pollios::Application.routes.draw do
       get ':id/edit', to: 'collection_poll_series#edit', as: :edit_collection_feedback 
       put ':id',      to: 'collection_poll_series#update',   as: :update_collection_feedback 
       get ':id/:branch_id/:questionnaire_id',    to: 'branches#detail',  as: :collection_feedback_branch_detail
+
+      get ':id/campaigns',  to: 'feedback_questionnaire#collection_campaign', as: :collection_campaign_feedback
     end
 
     scope 'campaigns' do

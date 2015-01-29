@@ -1807,6 +1807,15 @@
 	            [0, 'desc']
 	        ]
 	    });
+
+			$('#collection_voter_with_campaign').dataTable({
+					retrieve: true,
+		      iDisplayLength: 50,
+		      responsive: true,
+		      order: [
+		          [0, 'desc']
+		      ]
+		  });
 	    $('#invite_codes').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 25,
