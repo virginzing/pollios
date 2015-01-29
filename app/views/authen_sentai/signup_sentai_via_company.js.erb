@@ -1,7 +1,12 @@
 $.signup = <%= raw @signup %>;
+$.feedback_redeemer = <%= raw @feedback_redeemer %>;
 
 if ($.signup) {
-  handleSignupSuccess();
+  if ($.feedback_redeemer) {
+    handleSignupSuccessRedeemer();
+  } else{
+    handleSignupSuccess();
+  }
 } else {
   handleSignupError();
 }
@@ -25,4 +30,8 @@ function handleSignupError() {
 
 function handleSignupSuccess() {
   window.location.href="/company/members"
+}
+
+function handleSignupSuccessRedeemer () {
+  window.location.href="/feedback/redeemers"
 }

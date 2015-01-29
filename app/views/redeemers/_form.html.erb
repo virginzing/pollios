@@ -1,0 +1,34 @@
+
+<div class="well well-lg">
+  <%= simple_form_for Member.new, url: authen_signup_via_company_path, method: :post, :html => { :multipart => true } do |f| %>
+      <div class="row">
+          <%= f.input :company_id, as: :hidden, input_html: { value: @company.id } %>
+          <%= f.input :redeemer, as: :hidden, input_html: { value: true } %>
+          <%= f.input :feedback, as: :hidden, input_html: { value: true } %>
+          <%= f.input :member_type, as: :hidden, input_html: { value: "0" } %>
+
+        <div class="col col-md-12">
+          <%= f.input :fullname %>
+        </div>
+
+        <div class="col col-md-12">
+          <%= f.input :email, as: :email, placeholder: "test1@exmaple.com" %>
+        </div>
+        
+        <div class="col col-md-12">
+          <%= f.input :password, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-length' => '[6,255]' } %>
+        </div>
+
+        <div class="col col-md-12">
+          <%= f.input :password_confirmation, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-equalto' => '#member_password' } %>
+        </div>
+
+        <div class="col col-md-offset-5 col-md-2">
+          <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
+        </div>
+
+      </div>
+  
+  <% end %>
+</div>
+

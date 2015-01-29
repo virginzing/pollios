@@ -159,6 +159,7 @@ Pollios::Application.routes.draw do
   scope 'feedback' do
     resources :branches
 
+    resources :redeemers
     
     get 'dashboard',  to: 'feedback#dashboard', as: :feedback_dashboard
     get 'polls',      to: 'feedback_poll#index',     as: :feedback_polls

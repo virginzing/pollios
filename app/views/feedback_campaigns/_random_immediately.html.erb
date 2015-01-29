@@ -7,11 +7,11 @@
       </div>
     
       <div class="col col-md-4">
-        <%= select_tag "campaign_poll", options_from_collection_for_select(@list_poll, "id", "title"), :include_blank => "Select poll" %>
+        <%= select_tag "campaign_poll", options_from_collection_for_select(@list_poll, "id", "title"), :include_blank => "Select poll", "data-parsley-required" => "true" %>
       </div>
 
       <div class="col col-md-2">
-        <%= text_field_tag 'date_poll', nil , class: 'form-control date datepicker date-today', placeholder: "Select date", 'data-dateformat' => 'dd-mm-yy' %>
+        <%= text_field_tag 'date_poll', nil , class: 'form-control date datepicker date-today', placeholder: "Select date", 'data-dateformat' => 'dd-mm-yy', "data-parsley-required" => "true" %>
       </div>
 
       <div class="col col-md-1">
@@ -29,11 +29,11 @@
       </div>
     
       <div class="col col-md-4">
-        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_collection, "id", "title"), :include_blank => "Select questionnaire" %>
+        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_collection, "id", "title"), :include_blank => "Select questionnaire", "data-parsley-required" => "true" %>
       </div>
 
       <div class="col col-md-2">
-        <%= text_field_tag 'date_questionnaire', nil , class: 'form-control date datepicker date-today', placeholder: "Select date", 'data-dateformat' => 'dd-mm-yy' %>
+        <%= text_field_tag 'date_questionnaire', nil , class: 'form-control date datepicker date-today', placeholder: "Select date", 'data-dateformat' => 'dd-mm-yy', "data-parsley-required" => "true" %>
       </div>
 
       <div class="col col-md-1">
@@ -51,6 +51,8 @@
 
 <script>
 $(document).ready(function () {
+
+  $(".load_ajax_form").parsley();
 
   $.campaign_poll = $("#campaign_poll");
   $.campaign_questionnaire = $("#campaign_questionnaire");

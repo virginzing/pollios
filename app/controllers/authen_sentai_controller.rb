@@ -174,12 +174,19 @@ class AuthenSentaiController < ApplicationController
   def signup_sentai_via_company
     @response = Authenticate::Sentai.signup(signup_company_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_company_params["member_type"], "company_id" => signup_company_params["company_id"], "register" => :in_app ]))
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_company_params["member_type"], "redeemer" => signup_company_params["redeemer"] ,"company_id" => signup_company_params["company_id"], "fullname" => signup_company_params["fullname"], "register" => :in_app ]))
       if @response["response_status"] == "OK"
         @auth.member
         flash[:success] = "Create sucessfully."
         @signup = true
-        wants.html { redirect_to company_members_path }
+        @feedback_redeemer = false
+
+        if signup_company_params["feedback"].present? && signup_company_params["company_id"].present?
+          puts "here"
+          @feedback_redeemer = true
+          wants.html { redirect_to redeemers_path }
+        end
+        wants.html {}
         wants.json
         wants.js
       else
@@ -275,7 +282,7 @@ class AuthenSentaiController < ApplicationController
     end
 
     def signup_company_params 
-      params.require(:member).permit(:company_id, :member_type, :email, :password, :password_confirmation)
+      params.require(:member).permit(:company_id, :member_type, :email, :password, :password_confirmation, :redeemer, :feedback, :fullname)
     end
 
 	  def signup_params

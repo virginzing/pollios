@@ -36,6 +36,10 @@ crumb :feedback_detail_campaign do |feedback_campaign|
   parent :feedback_campaigns
 end
 
+
+crumb :redeemers do
+  link "All redeemers", redeemers_path
+end
 # crumb :project do |project|
 #   link project.name, project_path(project)
 #   parent :projects

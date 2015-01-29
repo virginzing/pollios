@@ -2278,6 +2278,38 @@ ALTER SEQUENCE recurrings_id_seq OWNED BY recurrings.id;
 
 
 --
+-- Name: redeemers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE redeemers (
+    id integer NOT NULL,
+    company_id integer,
+    member_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: redeemers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE redeemers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: redeemers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE redeemers_id_seq OWNED BY redeemers.id;
+
+
+--
 -- Name: request_codes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3111,6 +3143,13 @@ ALTER TABLE ONLY recurrings ALTER COLUMN id SET DEFAULT nextval('recurrings_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY redeemers ALTER COLUMN id SET DEFAULT nextval('redeemers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY request_codes ALTER COLUMN id SET DEFAULT nextval('request_codes_id_seq'::regclass);
 
 
@@ -3677,6 +3716,14 @@ ALTER TABLE ONLY provinces
 
 ALTER TABLE ONLY recurrings
     ADD CONSTRAINT recurrings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: redeemers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY redeemers
+    ADD CONSTRAINT redeemers_pkey PRIMARY KEY (id);
 
 
 --
@@ -4637,6 +4684,20 @@ CREATE INDEX index_recurrings_on_member_id ON recurrings USING btree (member_id)
 
 
 --
+-- Name: index_redeemers_on_company_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_redeemers_on_company_id ON redeemers USING btree (company_id);
+
+
+--
+-- Name: index_redeemers_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_redeemers_on_member_id ON redeemers USING btree (member_id);
+
+
+--
 -- Name: index_request_codes_on_member_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5321,4 +5382,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150128033703');
 INSERT INTO schema_migrations (version) VALUES ('20150128084525');
 
 INSERT INTO schema_migrations (version) VALUES ('20150129035739');
+
+INSERT INTO schema_migrations (version) VALUES ('20150129095303');
 

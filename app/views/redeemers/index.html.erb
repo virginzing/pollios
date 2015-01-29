@@ -1,0 +1,60 @@
+<% breadcrumb :redeemers %>
+
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-user fa-fw"></i> 
+      List Redeemer
+  </h1>
+
+  <a href="<%= new_redeemer_path %>" class="btn btn-primary">
+    <i class="fa fa-plus"></i> Redeemer
+  </a>
+
+</div>
+
+
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-redeemers" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-user"></i> </span>
+      <h2><strong>Redeemers</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_redeemers" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th width="50">Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @redeemers.each do |member| %>
+                <tr>
+                  <td><%= member.id %></td>
+                  <td><img src="<%= member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= member.fullname %>"></td>
+                  <td><%= member.get_name %></td>
+                  <td><%= member.email %></td>
+                  <td></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+    <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

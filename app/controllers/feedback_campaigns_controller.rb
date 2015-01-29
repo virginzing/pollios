@@ -16,7 +16,7 @@ class FeedbackCampaignsController < ApplicationController
   end
 
   def show
-    @list_poll = Poll.unscoped.where(campaign_id: @campaign.id)
+    @list_poll = Poll.unscoped.where(campaign_id: @campaign.id, series: false)
     @list_collection = CollectionPollSeries.where("company_id = ?", @company.id).decorate
   end
 

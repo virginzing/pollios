@@ -3,7 +3,7 @@ class Member < ActiveRecord::Base
   include PgSearch
   include MemberHelper
 
-  attr_accessor :list_email, :file, :company_id
+  attr_accessor :list_email, :file, :company_id, :redeemer, :feedback
   
   rolify
   # friendly_id :slug_candidates, use: [:slugged, :finders]
@@ -133,6 +133,9 @@ class Member < ActiveRecord::Base
   has_many :un_see_polls
 
   has_many :api_tokens, dependent: :destroy
+
+
+  has_one :redeemer
 
   before_create :set_friend_limit
 

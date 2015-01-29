@@ -48,6 +48,10 @@ class Authentication
     @params["company_id"]
   end
 
+  def redeemer
+    @params["redeemer"]
+  end
+
   def select_service
     @params["select_service"]
   end
@@ -183,6 +187,7 @@ class Authentication
         add_new_group_company if member_type == "3"
         join_group_automatic if create_member_via_company?
         join_company_member if create_member_via_company?
+        add_redeemer_to_company if create_member_via_company? && redeemer.present?
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
       end
@@ -241,12 +246,20 @@ class Authentication
 
   def join_group_automatic
     find_main_group = Company.find(company_id.to_i).main_groups.first
-    find_main_group.group_members.create!(member_id: @member.id, active: true, is_master: false)
-    find_main_group.increment!(:member_count)
+    if find_main_group.present?
+      find_main_group.group_members.create!(member_id: @member.id, active: true, is_master: false)
+      find_main_group.increment!(:member_count)
+    end
   end
 
   def join_company_member
     CompanyMember.add_member_to_company(@member, Company.find(company_id.to_i))
+  end
+
+  def add_redeemer_to_company
+    Redeemer.create!(member_id: @member.id, company_id: company_id)
+    # add role 
+    @member.add_role :redeemer, Company.find(company_id.to_i)
   end
 
   def follow_pollios
