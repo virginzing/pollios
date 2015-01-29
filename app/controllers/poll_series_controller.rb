@@ -71,16 +71,21 @@ class PollSeriesController < ApplicationController
 
   def detail
     PollSeries.view_poll(@current_member, @poll_series)
-    respond_to do |format|
-      key = params[:qr_key]
 
-      if key.present?
-        unless @poll_series.qrcode_key == key
-          format.json { render json: { response_status: "ERROR", response_message: "Key is invalid" }, status: 403 }
-        end
-      end
-      format.json
+    if @poll_series.feedback
+      @collection_poll_series_branch = CollectionPollSeriesBranch.where(collection_poll_series_id: @poll_series.collection_poll_series.id, branch_id: @poll_series.branch.id).order("created_at desc").first
+      @poll_series = @collection_poll_series_branch.poll_series
     end
+    # respond_to do |format|
+    #   key = params[:qr_key]
+
+    #   if key.present?
+    #     unless @poll_series.qrcode_key == key
+    #       format.json { render json: { response_status: "ERROR", response_message: "Key is invalid" }, status: 403 }
+    #     end
+    #   end
+    #   format.json
+    # end
   end
 
   def vote

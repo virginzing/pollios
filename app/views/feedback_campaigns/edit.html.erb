@@ -44,3 +44,21 @@
 
   <% end %>
 </div>
+
+<script>
+  $.input_begin_sample = $("input#campaign_begin_sample");
+  $.input_end_sample = $("input#campaign_end_sample");
+
+  $.radio_random_immediately = $("#campaign_type_campaign_random_immediately");
+  $.radio_random_later = $("#campaign_type_campaign_random_later");
+
+  $.radio_random_later.click(function () {
+    $.input_begin_sample.attr("disabled", true);
+    $.input_end_sample.attr("disabled", true);
+  });
+
+  $.radio_random_immediately.click(function () {
+    $.input_begin_sample.attr("disabled", false);
+    $.input_end_sample.attr("disabled", false);
+  });
+</script>
