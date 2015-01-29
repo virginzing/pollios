@@ -39,7 +39,7 @@
                 data-widget-fullscreenbutton="false" 
                 data-widget-custombutton="false">
       <header>
-        <h2><strong>Campagin</strong></h2> 
+        <h2><strong>Campaign</strong></h2> 
       </header>
 
       <!-- widget div-->
@@ -56,7 +56,7 @@
       <!-- widget content -->
         <div class="widget-body no-padding">
 
-          <table id="member_campagin" class="table table-striped table-bordered table-hover" width="100%">
+          <table id="member_campaign" class="table table-striped table-bordered table-hover" width="100%">
             <thead>
               <tr>
                 <th>ID</th>
@@ -68,7 +68,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @member_campagin.each do |cm| %>
+              <% @member_campaign.each do |cm| %>
                 <tr>
                   <td><%= cm.id %></td>
                   <td><%= cm.member.get_name %></td>

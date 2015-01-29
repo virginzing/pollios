@@ -1821,14 +1821,14 @@
 	            [0, 'desc']
 	        ]
 	    });
-	    $('#list_feedback_campagin').dataTable({
+	    $('#list_feedback_campaign').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,
 	        order: [
 	            [0, 'desc']
 	        ]
 	    });
-	    $('#list_company_campagin').dataTable({
+	    $('#list_company_campaign').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,
 	        order: [
@@ -1841,7 +1841,7 @@
 	            [0, 'desc']
 	        ]
 	    });
-	    $('#member_campagin').dataTable({
+	    $('#member_campaign').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 25,
 	        order: [
