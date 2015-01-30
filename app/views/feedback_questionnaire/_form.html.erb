@@ -162,6 +162,7 @@
 <% if current_member.get_company.present? %>
   <script type="text/javascript">
   $( document ).ready(function() {
+
     $("#branch_list").select2({
         width: "100%",
         multiple: true,
@@ -184,6 +185,7 @@
     $(".add_new_poll").click(function (event) {
        window.setTimeout(function(){
          $('textarea[name^=poll_series]').last().focus();
+         $('textarea[name^=poll_series]').last().removeClass('required');
        }, 200);
     });
     

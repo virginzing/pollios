@@ -33,7 +33,7 @@ class PollSeries < ActiveRecord::Base
 
   validates :description, presence: true
 
-  accepts_nested_attributes_for :polls, :allow_destroy => true
+  accepts_nested_attributes_for :polls, :reject_if => lambda { |a| a[:title].blank? }, :allow_destroy => true
 
   self.per_page = 10
 
