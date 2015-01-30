@@ -1,5 +1,18 @@
 <% breadcrumb :collection_campaign, @collection %>
 
+<% if @collection.campaign.present? %>
+  <div class="well">
+    <h2><strong>Campaign Detail</strong></h2>
+
+    <p><b>Name: </b><%= @collection.campaign.name %></p>
+    <p><b>Description: </b><%= @collection.campaign.description %></p>
+    <p><b>How to redeem: </b><%= @collection.campaign.how_to_redeem %></p>
+    <p><b>used: </b><%= @collection.campaign.used %></p>
+    <p><b>limit: </b><%= @collection.campaign.limit %></p>
+    <p><b>Expire: </b><%= @collection.campaign.expire.strftime("%d %B %Y") %></p>
+  </div>
+<% end %>
+
 <% if @collection.campaign_id.present? %>
   <% if @collection.campaign.random_later? %>
     <%= render 'campaign_random_later', campaign: @collection.campaign %>

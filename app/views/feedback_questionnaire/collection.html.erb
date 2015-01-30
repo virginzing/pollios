@@ -37,9 +37,11 @@
     </div>
   </section>
 
-  <section>
-    Go to: <%= link_to 'Campaign Management', collection_campaign_feedback_path, class: 'btn btn-pill btn-success' %>
-  </section>
+  <% if @collection.campaign_id.present? %>
+    <section>
+      Go to: <%= link_to 'Campaign Management', collection_campaign_feedback_path, class: 'btn btn-pill btn-success' %>
+    </section>
+  <% end %>
 
 
 

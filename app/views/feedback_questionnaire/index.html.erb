@@ -33,6 +33,7 @@
                 <th>Status</th>
                 <th>Total Vote</th>
                 <th>Total View</th>
+                <th>Campaign</th>
                 <th>Recurring</th>
                 <th>Create Since</th>
                 <th>Last update</th>
@@ -47,6 +48,7 @@
                   <td><%= collection.get_feedback_status %></td>
                   <td><%= collection.sum_vote_all %></td>
                   <td><%= collection.sum_view_all %></td>
+                  <td><%= collection.campaign_id.present? ? collection.campaign.name : "-" %></td>
                   <td><%= collection.get_recurring_status %></td>
                   <td><span data-livestamp="<%= collection.created_at.to_i %>"></span></td>
                   <td><span data-livestamp="<%= collection.updated_at.to_i %>"></span></td>

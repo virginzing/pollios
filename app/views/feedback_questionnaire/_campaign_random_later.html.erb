@@ -1,15 +1,4 @@
 <div class="well">
-  <h2><strong>Campaign Detail</strong></h2>
-
-  <p><b>Name: </b><%= campaign.name %></p>
-  <p><b>Description: </b><%= campaign.description %></p>
-  <p><b>How to redeem: </b><%= campaign.how_to_redeem %></p>
-  <p><b>used: </b><%= campaign.used %></p>
-  <p><b>limit: </b><%= campaign.limit %></p>
-  <p><b>Expire: </b><%= campaign.expire.strftime("%d %B %Y") %></p>
-</div>
-
-<div class="well">
   <h2><strong>Random Lucky</strong></h2>
 
   <%= form_tag "/campaign/#{campaign.id}/random_later", method: :post, remote: true, class: 'random_later' do %>
