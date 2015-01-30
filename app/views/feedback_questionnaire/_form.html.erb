@@ -1,3 +1,5 @@
+<% breadcrumb :new_feedback %>
+
 <section id="widget-grid" class="">
   <div class="row">
     <div class="col-md-12">
@@ -13,7 +15,7 @@
     
         <!-- widget content -->
         <div class="widget-body">
-          <%= simple_nested_form_for @questionnaire, url: create_feedback_questionnaire_path, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= simple_nested_form_for @questionnaire, url: create_feedback_questionnaire_path, :html => { :multipart => true, class: "smart-form new_feedback" } do |f| %>
           <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 1 }, as: :hidden %>
           <%= f.input :feedback, wrapper: :horizontal, input_html: { value: true }, as: :hidden %>
           <header>
@@ -25,7 +27,7 @@
             <section class="col col-9">
               <label class="label">Description</label>
               <label class="textarea">
-                <%= f.input :description, label: false, input_html: { autofocus: "autofocus", rows: "5" }, required: false %>
+                <%= f.input :description, label: false, input_html: { autofocus: "autofocus", rows: "5", :"data-parsley-required" => "true" } %>
               </label>
             </section>
 
@@ -116,8 +118,8 @@
             <section class="branch_list">
               <label class="label">Show In Branch</label>
               <div class="row">
-                <%= f.collection_check_boxes(:branch_list, @branch_list, :id, :name ) do |b| %>
-                  <%= b.label(class: "label_branch col col-2") { b.check_box(class: "check_box_branch") + b.text } %>
+                <%= f.collection_check_boxes(:branch_list, @branch_list, :id, :name) do |b| %>
+                  <%= b.label(class: "label_branch col col-2") { b.check_box(class: "check_box_branch", :"data-parsley-mincheck" => "1", :"data-parsley-required" => true) + b.text } %>
                 <% end %>
               </div>
             </section>
@@ -133,9 +135,7 @@
         
 
           <footer>
-            <button type="submit" class="btn btn-primary">
-              Submit
-            </button>
+            <%= f.submit "Create", class: 'btn btn-primary', "data-disable-with" => "Loading..." %>
             <button type="button" class="btn btn-default" onclick="window.history.back();">
               Back
             </button>

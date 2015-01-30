@@ -17,7 +17,7 @@ class FeedbackCampaignsController < ApplicationController
 
   def show
     @list_poll = Poll.unscoped.where(campaign_id: @campaign.id, series: false)
-    @list_collection = CollectionPollSeries.where("company_id = ?", @company.id).decorate
+    @list_collection = CollectionPollSeries.where("company_id = ? AND campaign_id != 0", @company.id)
   end
 
   def create

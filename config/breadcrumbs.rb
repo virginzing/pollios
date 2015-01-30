@@ -2,6 +2,11 @@ crumb :collections do
   link "All questionnnaires", feedback_questionnaires_path
 end
 
+crumb :new_feedback do
+  link "New", new_feedback_questionnaire_path
+  parent :collections
+end
+
 crumb :collection do |collection|
   link collection.title, collection_feedback_questionnaire_path(collection)
   parent :collections
