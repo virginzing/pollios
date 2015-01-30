@@ -1,4 +1,5 @@
 class CollectionPollSeries < ActiveRecord::Base
+
   belongs_to :company
   belongs_to :feedback_recurring
   belongs_to :campaign

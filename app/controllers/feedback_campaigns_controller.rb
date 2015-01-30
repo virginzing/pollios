@@ -24,7 +24,7 @@ class FeedbackCampaignsController < ApplicationController
     @campaign = @company.campaigns.new(campaign_params)
 
     if @campaign.save
-      flash[:notice] = "Successfully created..."
+      flash[:success] = "Successfully created..."
       redirect_to feedback_campaigns_path
     else
       flash[:error] = "Fail"
@@ -38,7 +38,7 @@ class FeedbackCampaignsController < ApplicationController
 
   def update
     if @campaign.update(campaign_params)
-      flash[:notice] = "Successfully updated..."
+      flash[:success] = "Successfully updated..."
       redirect_to feedback_campaigns_path
     else
       flash[:error] = "Fail"

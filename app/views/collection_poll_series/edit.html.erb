@@ -4,6 +4,19 @@
   <%= simple_form_for @collection, url: update_collection_feedback_path, method: :put do |f| %>
 
     <fieldset>
+        <div class="row">
+          <div class="col-md-1">
+            <%= f.label "Campaign" %>
+          </div>
+          <div class="col-md-7">
+            <%= f.select :campaign_id, @company.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'feedback_campaigns', placeholder: "Select a campaign"} %>
+          </div>
+        </div>
+    </fieldset>
+    <br>
+
+      <%= f.input :company_id, input_html: { value: @company.id }, as: :hidden %>
+    <fieldset>
       <%= f.input :recurring_status %>
       <p class="note"><strong>Note:</strong> It build this questionnaire all branch (Location) on everyday at Midnight.</p>
     </fieldset>
@@ -14,7 +27,16 @@
     </fieldset>
     
     <div class="update-button">
-      <%= f.submit "Update", class: 'btn btn-primary' %>
+      <%= f.submit "Update", class: 'btn btn-primary', data: { disable_with: "Please wait..." } %>
     </div>
   <% end %>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $(".feedback_campaigns").select2({
+        width: "100%",
+        placeholder: "Select a campaign",
+    });
+  });
+</script>
