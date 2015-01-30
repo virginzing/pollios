@@ -45,7 +45,8 @@
 
       <% else %>
         <% if @questionnaire.campaign_id != 0 %>
-          <% if @reward.luck %>
+          <% if @questionnaire.campaign.random_immediately? %>
+            <% if @reward.luck %>
               <div class="content">
                 <div class="row text-center">
                   <h2><strong>Lucky</strong></h2>
@@ -64,6 +65,7 @@
               </div>
 
             <% end %>
+          <% end %>
         <% else %>
           <div class="alert alert-warning alert-block">
             <a class="close" data-dismiss="alert" href="#">Ã—</a>

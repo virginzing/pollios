@@ -1,0 +1,54 @@
+<div class="well">
+  <h2><strong>Campaign Detail</strong></h2>
+
+  <p><b>Name: </b><%= campaign.name %></p>
+  <p><b>Description: </b><%= campaign.description %></p>
+  <p><b>How to redeem: </b><%= campaign.how_to_redeem %></p>
+  <p><b>used: </b><%= campaign.used %></p>
+  <p><b>limit: </b><%= campaign.limit %></p>
+  <p><b>Expire: </b><%= campaign.expire.strftime("%d %B %Y") %></p>
+</div>
+
+<div class="well">
+  <h2><strong>Random Lucky</strong></h2>
+
+  <%= form_tag "/campaign/#{campaign.id}/random_later", method: :post, remote: true, class: 'random_later' do %>
+    <%= hidden_field_tag 'company_id', @company.id %>
+    <%= hidden_field_tag 'collection_id', @collection.id %>
+    <div class="row">
+      <div class="col col-md-12">
+        <p>Voter Count: <span class="label label-success"><%= @collection.sum_vote_all %></span></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-md-2">
+        Number of lucky 
+      </div>
+      <div class="col col-md-2">
+        <%= number_field_tag "number_luck", 0,class: 'form-control' %>
+      </div>
+    </div>
+
+    <br>
+
+    <%= submit_tag 'Random', class: 'btn btn-primary', data: { disable_with: "Please wait.." } %>
+  <% end %>
+
+
+  <div class="list_lucky_random">
+
+  </div>
+
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".random_later").on('ajax:send', function(xhr) {
+      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    }).on('ajax:success', function (data, status, xhr) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    });
+  });
+</script>

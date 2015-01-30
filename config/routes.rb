@@ -90,6 +90,8 @@ Pollios::Application.routes.draw do
   scope 'campaign' do
     # post ':id/predict',        to: 'campaigns#predict'
     get 'check_redeem',     to: 'campaigns#check_redeem'
+    post ':id/random_later',  to: 'campaigns#random_later'
+    post 'confirm_lucky',   to: 'campaigns#confirm_lucky'
   end
 
   scope 'questionnaire' do

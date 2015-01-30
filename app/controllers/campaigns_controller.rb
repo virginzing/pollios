@@ -53,6 +53,38 @@ class CampaignsController < ApplicationController
     end
   end
 
+  def random_later
+    number_luck = params[:number_luck].to_i
+
+    @collection = CollectionPollSeries.find(params[:collection_id])
+
+    @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
+
+    @history_votes = HistoryVote.joins(:member).where("poll_series_id IN (?)", @questionnaire_ids).sample(number_luck)
+
+    puts "history_votes begin => #{@history_votes.map(&:member_id)}"
+
+    @uniq_history_votes = @history_votes.uniq{|e| e.member_id }
+
+    puts "history_votes => #{@uniq_history_votes}"
+    respond_to do |wants|
+      wants.js
+    end
+  end
+
+  def confirm_lucky
+    
+    if params[:member_id].present?
+      member_id = params[:member_id].split(" ")
+
+      
+    end
+
+    respond_to do |wants|
+      wants.js
+    end
+  end
+
 
   def check_redeem
     

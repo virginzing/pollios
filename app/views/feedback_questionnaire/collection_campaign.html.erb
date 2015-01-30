@@ -1,5 +1,11 @@
 <% breadcrumb :collection_campaign, @collection %>
 
+<% if @collection.campaign_id.present? %>
+  <% if @collection.campaign.random_later? %>
+    <%= render 'campaign_random_later', campaign: @collection.campaign %>
+  <% end %>
+<% end %>
+
 <section id="widget-grid" class="" style="margin-top: 30px;">
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-voter-with-campaign-<%= @collection.id %>" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
