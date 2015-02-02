@@ -29,6 +29,7 @@ class CreateGroupCompany
         if new_list_members_count > 0
           add_member_to_group
         end
+        AddMemberToGroupWorker.perform_async(new_list_member_ids, @group.id, @member.id)
       end
       @group
     end
