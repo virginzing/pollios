@@ -13,5 +13,7 @@
 //= require nprogress-turbolinks
 //= require chartkick
 //= require facebook
+//= require readmore
 //= require star-rating
+//= require custom
 //= require turbolinks
