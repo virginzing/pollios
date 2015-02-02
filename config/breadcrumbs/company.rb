@@ -8,7 +8,7 @@ crumb :company_new_poll do
 end
 
 crumb :company_poll_detail do |poll|
-  link poll.title, company_polls_detail_path(poll)
+  link truncate(poll.title), company_polls_detail_path(poll)
   parent :company_polls
 end
 

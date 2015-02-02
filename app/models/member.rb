@@ -528,7 +528,7 @@ class Member < ActiveRecord::Base
 
   def cached_get_my_reward
     Rails.cache.fetch([self.id, 'reward']) do
-      CampaignMember.where("member_id = #{id} AND luck = 't' AND redeem = 'f'").to_a
+      CampaignMember.list_reward(self.id).to_a
     end
   end
 
