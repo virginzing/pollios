@@ -2079,7 +2079,7 @@ ALTER SEQUENCE poll_series_tags_id_seq OWNED BY poll_series_tags.id;
 CREATE TABLE polls (
     id integer NOT NULL,
     member_id integer,
-    title character varying(255),
+    title text,
     public boolean DEFAULT false,
     vote_all integer DEFAULT 0,
     created_at timestamp without time zone,
@@ -5384,4 +5384,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150128084525');
 INSERT INTO schema_migrations (version) VALUES ('20150129035739');
 
 INSERT INTO schema_migrations (version) VALUES ('20150129095303');
+
+INSERT INTO schema_migrations (version) VALUES ('20150202062317');
 
