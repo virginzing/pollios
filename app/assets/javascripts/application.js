@@ -1,4 +1,5 @@
 //= require jquery_ujs
+//= require is
 //= require nested_form
 //= require bootbox
 //= require data-confirm

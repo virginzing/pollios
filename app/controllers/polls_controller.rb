@@ -374,7 +374,7 @@ class PollsController < ApplicationController
 
         format.json { render json: [], status: 200 }
       else
-        format.json { render json: { error_message: "No" }, status: 403 }
+        format.json { render json: { error_message: "Don't have a data" }, status: 403 }
       end
     end
   end

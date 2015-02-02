@@ -24,7 +24,7 @@ class PollDecorator < ApplicationDecorator
   end
 
   def header_title
-    content_tag(:h1, object.title)
+    content_tag(:h1, object.title, class: 'poll-title')
   end
 
   def created_at
