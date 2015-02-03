@@ -4,7 +4,7 @@ class SumVotePollWorker
 
   sidekiq_options unique: true
   
-  def perform(poll_id)
+  def perform(poll_id, show_result)
     begin
 
       poll = Poll.find(poll_id)

@@ -58,36 +58,41 @@ class Apn::SumVotePoll
   private
 
   def check_privacy_vote
-    if @poll.public
-      load_privacy_vote(PUBLIC)
-    else
-      if @poll.in_group
-        load_privacy_vote(GROUP)
-      else
-        load_privacy_vote(FRIEND)
-      end
-    end
+    # if @poll.public
+    #   load_privacy_vote(PUBLIC)
+    # else
+    #   if @poll.in_group
+    #     load_privacy_vote(GROUP)
+    #   else
+    #     load_privacy_vote(FRIEND)
+    #   end
+    # end
+    load_privacy_vote
     convert_list_fullname
   end
 
-  def load_privacy_vote(type)
-    case type
-      when PUBLIC
-        @load_privacy_vote = get_voted_poll.map(&:privacy_vote_public)
-      when GROUP
-        @load_privacy_vote = get_voted_poll.map(&:privacy_vote_group)
-      when
-        @load_privacy_vote = get_voted_poll.map(&:privacy_vote_friend_following)
-    end
+  # def load_privacy_vote(type)
+  #   case type
+  #     when PUBLIC
+  #       @load_privacy_vote = get_voted_poll.map(&:privacy_vote_public)
+  #     when GROUP
+  #       @load_privacy_vote = get_voted_poll.map(&:privacy_vote_group)
+  #     when
+  #       @load_privacy_vote = get_voted_poll.map(&:privacy_vote_friend_following)
+  #   end
+  # end
+
+  def load_privacy_vote
+    @load_privacy_vote = get_voted_poll.map(&:show_voter)
   end
 
   def convert_list_fullname
     new_fullname = []
     @list_fullname.each_with_index do |fullname, index|
       if @load_privacy_vote[index]
-        new_fullname << SOMEONE
-      else
         new_fullname << fullname
+      else
+        new_fullname << SOMEONE
       end
     end
     new_fullname
@@ -98,10 +103,15 @@ class Apn::SumVotePoll
     Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
   
+  # def voted_poll
+  #   HistoryVote.joins(:member)
+  #               .select("member_id, members.fullname as new_fullname, members.anonymous_public as privacy_vote_public, members.anonymous_friend_following as privacy_vote_friend_following, members.anonymous_group as privacy_vote_group")
+  #               .where("(poll_id = ? AND poll_series_id = 0 AND history_votes.created_at >= ?)", @poll.id, last_notify_at)
+  # end
+  
   def voted_poll
     HistoryVote.joins(:member)
-                .select("member_id, members.fullname as new_fullname, members.anonymous_public as privacy_vote_public, members.anonymous_friend_following as privacy_vote_friend_following, members.anonymous_group as privacy_vote_group")
-                .where("(poll_id = ? AND poll_series_id = 0 AND history_votes.created_at >= ?)", @poll.id, last_notify_at)
+                .select("member_id, members.fullname as new_fullname, history_votes.show_result as show_voter")
+                .where("poll_id = ? AND poll_series_id = 0 AND history_votes.created_at >= ?", @poll.id, last_notify_at)
   end
-  
 end

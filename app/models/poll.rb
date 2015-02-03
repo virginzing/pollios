@@ -707,7 +707,7 @@ class Poll < ActiveRecord::Base
               find_poll.update_column(:notify_state, 1)
               find_poll.update_column(:notify_state_at, Time.zone.now)
               unless find_poll.series
-                SumVotePollWorker.perform_in(1.minutes, poll_id) unless Rails.env.test?
+                SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
               end
             end
           end
