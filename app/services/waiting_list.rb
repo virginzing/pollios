@@ -41,7 +41,11 @@ class WaitingList
   end
 
   def your_waiting
-    remain_waiting_list.index(member_id) + 1
+    if remain_waiting_list.count == 0
+      0
+    else
+      remain_waiting_list.index(member_id) + 1
+    end
   end
   
   def behind_waiting

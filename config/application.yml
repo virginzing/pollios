@@ -19,7 +19,7 @@ FACEBOOK_SECRET: "d319d5bd8b154df78811dc70aa33fe54"
 MAINTENANCE_MODE: "false"
 MAINTENANCE_MESSAGE: "Maintenance mode (around 23:00 - 6:00)"
 
-LIMIT_MEMBER: "100"
+LIMIT_MEMBER: "200"
 
 development:
   PUBLIC_POLL: "public_poll"
@@ -34,3 +34,12 @@ production:
   FRIEND_FOLLOWING_POLL: "friend_following_poll"
   OVERALL_TIMELINE: "overall_timeline"
   MONGOHQ_URL: "mongodb://heroku:4yQKjnuIGIE0aVKblyGzCJdvfsvkz6xJIyH7sCkaFmVyXi986iZXgdHIp_UNbU1_PStUaNntUo10rOfEdbg0Fw@oceanic.mongohq.com:10082/app21881982"
+
+
+
+# set Env to heroku
+# heroku config:set LIMIT_MEMBER=200
+# or
+# figaro heroku:set -e production -a codeapp-pollios
+# update limit of member
+# Member.unscoped.where(created_company: false).order("id asc").limit(200).update_all(waiting: false)
