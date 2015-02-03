@@ -36,7 +36,7 @@ class VotePollWorker
         series: poll.series
       }
 
-      find_recipient_notify.each_with_index do |member, index|
+      find_recipient_notify.each do |member|
         member.apn_devices.each do |device|
           apn_custom_properties = {
             type: TYPE[:poll],

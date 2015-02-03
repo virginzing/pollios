@@ -595,11 +595,13 @@ class PollsController < ApplicationController
   def vote
     @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
 
-    if @poll.campaign_id != 0
-      if @poll.campaign.random_immediately?
-        @campaign, @message = @poll.find_campaign_for_predict?(@current_member, @poll)
-      end
-    end 
+    if @history_voted
+      if @poll.campaign_id != 0
+        if @poll.campaign.random_immediately?
+          @campaign, @message = @poll.find_campaign_for_predict?(@current_member, @poll)
+        end
+      end 
+    end
 
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
   end

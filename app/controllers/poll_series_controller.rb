@@ -92,11 +92,13 @@ class PollSeriesController < ApplicationController
     options = params[:data_options]
     @votes = @poll_series.vote_questionnaire(vote_params, @current_member, @poll_series, options)
 
-    if @poll_series.campaign_id != 0
-      if @poll_series.campaign.random_immediately?
-        @campaign, @message = @poll_series.find_campaign_for_predict?(@current_member, @poll_series)
-      end
-    end 
+    if @votes.present?
+      if @poll_series.campaign_id != 0
+        if @poll_series.campaign.random_immediately?
+          @campaign, @message = @poll_series.find_campaign_for_predict?(@current_member, @poll_series)
+        end
+      end 
+    end
 
     puts "@campaign => #{@campaign}"
     puts "@message => #{@message}"

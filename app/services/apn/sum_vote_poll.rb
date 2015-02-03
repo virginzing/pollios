@@ -23,12 +23,16 @@ class Apn::SumVotePoll
     @get_voted_poll ||= voted_poll
   end
 
-  def get_load_privacy
-    @get_load_privacy ||= check_privacy_vote
+  def convert_list_fullname
+    @convert_list_fullname ||= check_privacy_with_fullname
   end
 
+  # def get_load_privacy
+  #   @get_load_privacy ||= check_privacy_vote
+  # end
+
   def anonymous
-    if get_load_privacy.first == SOMEONE
+    if convert_list_fullname.first == SOMEONE
       true
     else
       false
@@ -38,9 +42,7 @@ class Apn::SumVotePoll
   def custom_message
     count = get_voted_poll.map(&:member_id).count
 
-    @list_fullname = get_voted_poll.map(&:new_fullname)
-
-    new_fullname = get_load_privacy
+    new_fullname ||= convert_list_fullname
 
     if count == 1
       message = "#{new_fullname[0]} voted a poll: \"#{@poll.title}\""
@@ -57,19 +59,17 @@ class Apn::SumVotePoll
 
   private
 
-  def check_privacy_vote
-    # if @poll.public
-    #   load_privacy_vote(PUBLIC)
-    # else
-    #   if @poll.in_group
-    #     load_privacy_vote(GROUP)
-    #   else
-    #     load_privacy_vote(FRIEND)
-    #   end
-    # end
-    load_privacy_vote
-    convert_list_fullname
-  end
+  # def check_privacy_vote
+  #   if @poll.public
+  #     load_privacy_vote(PUBLIC)
+  #   else
+  #     if @poll.in_group
+  #       load_privacy_vote(GROUP)
+  #     else
+  #       load_privacy_vote(FRIEND)
+  #     end
+  #   end
+  # end
 
   # def load_privacy_vote(type)
   #   case type
@@ -82,12 +82,27 @@ class Apn::SumVotePoll
   #   end
   # end
 
-  def load_privacy_vote
-    @load_privacy_vote = get_voted_poll.map(&:show_voter)
-  end
 
-  def convert_list_fullname
+
+  def check_privacy_with_fullname
+    @list_fullname = []
+
+    get_voted_poll.each do |m|
+      if m.member_fullname.present?
+        @list_fullname << m.member_fullname
+      else
+        @list_fullname << "No name"
+      end
+    end
+
+    @load_privacy_vote = get_voted_poll.map(&:show_voter)
+
+    puts "@list_fullname => #{@list_fullname}"
+
+    puts "@load_privacy_vote => #{@load_privacy_vote}"
+
     new_fullname = []
+
     @list_fullname.each_with_index do |fullname, index|
       if @load_privacy_vote[index]
         new_fullname << fullname
@@ -115,7 +130,7 @@ class Apn::SumVotePoll
   
   def voted_poll
     HistoryVote.joins(:member)
-                .select("member_id, members.fullname as new_fullname, history_votes.show_result as show_voter")
+                .select("member_id, members.fullname as member_fullname, history_votes.show_result as show_voter")
                 .where("poll_id = ? AND poll_series_id = 0 AND history_votes.created_at >= ?", @poll.id, last_notify_at)
   end
 end

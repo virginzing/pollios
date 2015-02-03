@@ -17,7 +17,7 @@ class SumVotePollWorker
 
       recipient_ids = @apn_sum_vote_poll.recipient_ids
 
-      find_recipient_notify = Member.where("id IN (?)", recipient_ids).uniq
+      find_recipient_notify ||= Member.unscoped.where(id: recipient_ids)
 
       @count_notification = CountNotification.new(find_recipient_notify)
 

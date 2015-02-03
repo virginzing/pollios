@@ -38,8 +38,8 @@ production:
 
 
 # set Env to heroku
-# heroku config:set LIMIT_MEMBER=140
+# heroku config:set LIMIT_MEMBER=190
 # or
 # figaro heroku:set -e production -a codeapp-pollios
 # update limit of member
-# Member.unscoped.where(created_company: false).order("id asc").limit(200).update_all(waiting: false)
+# Member.unscoped.where(created_company: false).order("id asc").limit(190).update_all(waiting: false)
