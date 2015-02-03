@@ -42,7 +42,7 @@ class WaitingList
 
   def your_waiting
     if remain_waiting_list.nil?
-      0
+      1
     else
       remain_waiting_list.index(member_id) + 1
     end
