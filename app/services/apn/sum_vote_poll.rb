@@ -98,9 +98,13 @@ class Apn::SumVotePoll
     new_fullname
   end
 
+  # def watched_poll
+  #   # Watched.joins(:member).where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
+  #   Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
+  # end
+
   def watched_poll
-    # Watched.joins(:member).where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
-    Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
+    @watched_poll = Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
   
   # def voted_poll
