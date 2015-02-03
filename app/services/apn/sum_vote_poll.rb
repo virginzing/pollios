@@ -97,9 +97,9 @@ class Apn::SumVotePoll
 
     @load_privacy_vote = get_voted_poll.map(&:show_voter)
 
-    puts "@list_fullname => #{@list_fullname}"
+    # puts "@list_fullname => #{@list_fullname}"
 
-    puts "@load_privacy_vote => #{@load_privacy_vote}"
+    # puts "@load_privacy_vote => #{@load_privacy_vote}"
 
     new_fullname = []
 
