@@ -745,11 +745,9 @@ class PollsController < ApplicationController
   end
 
   def raise_exception_without_group
-    unless @current_member.get_company.present?
-      if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group_ids.to_i != 0
-        if @poll.member_id != @current_member.id
-          raise ExceptionHandler::NotFound, "You've leave this group already"
-        end
+    if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & @current_member.cached_get_group_active.map(&:id)).count == 0) && @poll.in_group
+      if @poll.member_id != @current_member.id
+        raise ExceptionHandler::NotFound, "You've leave this group already"
       end
     end
   end
