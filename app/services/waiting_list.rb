@@ -49,7 +49,11 @@ class WaitingList
   end
   
   def behind_waiting
-    remain_waiting_list.count { |e| e > member_id }
+    if remain_waiting_list.nil?
+      0
+    else
+      remain_waiting_list.count { |e| e > member_id }
+    end
   end
   
 end
