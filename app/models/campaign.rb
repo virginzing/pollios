@@ -101,12 +101,12 @@ class Campaign < ActiveRecord::Base
         message = "Used"
       else
         if sample % end_sample == 0
-          @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_series_id: poll_series_id)
+          @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
           increment!(:used)
           Rails.cache.delete([member_id, 'reward'])
           message = "Lucky"
         else
-          @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_series_id: poll_series_id)
+          @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_series_id: poll_series_id, ref_no: generate_ref_no)
           message = "Fail"
         end
       end
