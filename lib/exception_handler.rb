@@ -26,7 +26,7 @@ module ExceptionHandler
   end
 
   def forbdden(ex)
-    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbdden
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbidden
   end
 
   def known_error_html(ex)

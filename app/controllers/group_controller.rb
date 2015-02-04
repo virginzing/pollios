@@ -5,7 +5,7 @@ class GroupController < ApplicationController
   before_action :set_group, only: [:members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group, :members]
   
-  before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group, :members]
+  before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -50,8 +50,9 @@ class GroupController < ApplicationController
   end
 
   def members
-    @member_active = Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 't' AND group_members.group_id = ?", @group.id)
-    @member_pendding = Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 'f' AND group_members.group_id = ?", @group.id)
+    @group_members ||= @group.cached_members
+    @member_active = @group_members.select{|member| member if member.is_active }
+    @member_pending = @group_members.select{|member| member unless member.is_active }
     @member_request = @group.members_request
   end
 
@@ -92,8 +93,9 @@ class GroupController < ApplicationController
   end
 
   def detail_group
-    @member_active ||= Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 't' AND group_members.group_id = ?", @group.id)
-    @member_pendding ||= Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 'f' AND group_members.group_id = ?", @group.id)
+    @group_members ||= @group.cached_members
+    @member_active = @group_members.select{|member| member if member.is_active }
+    @member_pending = @group_members.select{|member| member unless member.is_active }
     @member_request ||= @group.members_request
     # @is_admin = @member_active.collect {|e| [e.id, e.admin] }.collect{|e| e.last if e.first == @current_member.id }.compact.first
   end

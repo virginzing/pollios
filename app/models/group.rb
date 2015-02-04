@@ -106,7 +106,7 @@ class Group < ActiveRecord::Base
       JoinGroupWorker.perform_async(member_id, group_id)
 
       Rails.cache.delete([member_id, 'group_active'])
-      Group.flush_cached_member_active(group_id)
+      # Group.flush_cached_member_active(group_id)
 
       if @group
         Activity.create_activity_group(member, @group, 'Join')
@@ -146,7 +146,7 @@ class Group < ActiveRecord::Base
 
         @friend.flush_cache_my_group
         @friend.flush_cache_ask_join_groups
-        Group.flush_cached_member_active(@group.id)
+        # Group.flush_cached_member_active(@group.id)
        
         @group
       end
@@ -213,7 +213,7 @@ class Group < ActiveRecord::Base
         InviteFriendWorker.perform_async(member_id, list_friend, group_id)
         group
       end
-      Group.flush_cached_member_active(group_id)
+      # Group.flush_cached_member_active(group_id)
       group
     else
       raise ExceptionHandler::Forbidden, "You are not admin of group"
@@ -249,7 +249,7 @@ class Group < ActiveRecord::Base
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
         Member.find(friend_id).remove_role :group_admin, find_member_in_group.group
-        Group.flush_cached_member_active(find_member_in_group.group.id)
+        # Group.flush_cached_member_active(find_member_in_group.group.id)
       else
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end
@@ -344,6 +344,12 @@ class Group < ActiveRecord::Base
 
   def self.flush_cached_member_active(group_id)
     Rails.cache.delete([ 'group', group_id, 'member_active' ])
+  end
+
+  def cached_members
+    Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/members", :expires_in => 12.hours) do
+      GroupMembers.new(self).list_members.to_a
+    end
   end
 
   def get_admin_post_only

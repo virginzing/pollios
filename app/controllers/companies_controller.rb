@@ -175,7 +175,7 @@ class CompaniesController < ApplicationController
     @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
     respond_to do |format|
       if @group
-        Group.flush_cached_member_active(@group.id)
+        # Group.flush_cached_member_active(@group.id)
         flash[:success] = "Remove successfully."
         format.html { redirect_to company_groups_members_path(params[:group_id]) }
       else
@@ -474,7 +474,7 @@ class CompaniesController < ApplicationController
 
       params[:group_id].each do |group_id|
         @group = find_member.cancel_or_leave_group(group_id, "L")
-        Group.flush_cached_member_active(group_id)
+        # Group.flush_cached_member_active(group_id)
       end
 
       CompanyMember.remove_member_to_company(find_member, Company.find(params[:company_id]))

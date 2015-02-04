@@ -7,7 +7,7 @@ if @group.present?
 
   json.member_group do
     json.active @member_active, partial: 'response_helper/group/member_group', as: :member
-    json.pending @member_pendding, partial: 'response_helper/group/member_group', as: :member
+    json.pending @member_pending, partial: 'response_helper/group/member_group', as: :member
     json.request @member_request do |member|
       json.member_id member.id
       json.name member.get_name

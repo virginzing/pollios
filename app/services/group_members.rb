@@ -1,0 +1,27 @@
+class GroupMembers
+  def initialize(group)
+    @group = group
+  end
+
+  def list_members
+    @list_members ||= members
+  end
+
+  def members_as_member
+    list_members.select{ |member| member unless member.is_admin }
+  end
+
+  def members_as_admin
+    list_members.select{ |member| member if member.is_admin }
+  end
+
+
+  private
+
+  def members
+    Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
+          .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active").order("members.fullname asc")
+  end
+  
+  
+end
