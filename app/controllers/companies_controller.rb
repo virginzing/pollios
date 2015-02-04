@@ -327,7 +327,8 @@ class CompaniesController < ApplicationController
 
     @list_surveyor = @group.surveyor
 
-    @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: @group.id).order("created_at desc").paginate(page: params[:page], per_page: 10) 
+    @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: @group.id).order("created_at desc").paginate(page: params[:page], per_page: 10)
+    # sleep 100 
   end
 
   def create_group

@@ -22,7 +22,7 @@
           <tr>
             <td><%= poll.id %></td>
             <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
-            <td><%= link_to poll.title, company_group_poll_detail_path(@group, poll) %></td>
+            <td><%= link_to poll.title, company_group_poll_detail_path(@group, poll), class: 'poll-title' %></td>
             <td><%= poll.vote_all %></td>
             <td><%= poll.view_all %></td>
             <td><%= poll.created_at.strftime("%B %d, %Y") %></td>

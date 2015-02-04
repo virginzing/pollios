@@ -52,11 +52,11 @@ class Group < ActiveRecord::Base
   #   name_changed? || super
   # end
 
-  def cached_created_by
-    Rails.cache.fetch([ self, 'created_by' ]) do
-      group_members.where(is_master: true).first.member.fullname
-    end
-  end
+  # def cached_created_by
+  #   Rails.cache.fetch([ self, 'created_by' ]) do
+  #     group_members.where(is_master: true).first.member.fullname
+  #   end
+  # end
 
   def self.cached_find(id)
     Rails.cache.fetch([ name, id]) { find(id) }
