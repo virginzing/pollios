@@ -9,6 +9,31 @@ RSpec.describe "Poll" do
   let!(:choice_one) { create(:choice, poll: poll, answer: "1", vote: 0) }
   let!(:choice_two) { create(:choice, poll: poll, answer: "2", vote: 0) }
 
+  describe "POST /poll/create" do
+    context "friend & following" do
+      
+      before do
+        post "/poll/create.json", { member_id: member.id, title: "test title", choices: ["1", "2", "3"], type_poll: "binary", creator_must_vote: false }, { "Accept" => "application/json"}
+        @poll_last = Poll.unscoped.last
+      end
+
+      it "created" do
+        expect(response.status).to eq(201)
+      end
+
+      it "have value default" do
+        expect(@poll_last.qrcode_key.present?).to be true
+        expect(@poll_last.member_id).to eq(member.id)
+      end
+
+      it "add to member poll" do
+        poll_member = PollMember.find_by(member: member, poll: @poll_last, share_poll_of_id: 0, public: false, series: false, expire_date: @poll_last.expire_date, in_group: false, poll_series_id: 0)
+        expect(poll_member.present?).to be true
+      end
+
+    end
+  end
+
   describe "POST /poll/:id/un_see" do
     it "creates unsee" do
 

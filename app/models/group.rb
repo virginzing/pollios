@@ -103,7 +103,7 @@ class Group < ActiveRecord::Base
 
 
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
-      JoinGroupWorker.perform_async(member_id, group_id)
+      JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
 
       Rails.cache.delete([member_id, 'group_active'])
       # Group.flush_cached_member_active(group_id)
@@ -140,7 +140,7 @@ class Group < ActiveRecord::Base
 
         clear_request_group(@member, @friend)
 
-        JoinGroupWorker.perform_async(@friend.id, @group.id)
+        JoinGroupWorker.perform_async(@friend.id, @group.id) unless Rails.env.test?
 
         Activity.create_activity_group(@friend, @group, 'Join')
 
@@ -210,7 +210,7 @@ class Group < ActiveRecord::Base
         Member.where(id: check_valid_friend).each do |friend|
           GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         end
-        InviteFriendWorker.perform_async(member_id, list_friend, group_id)
+        InviteFriendWorker.perform_async(member_id, list_friend, group_id) unless Rails.env.test?
         group
       end
       # Group.flush_cached_member_active(group_id)

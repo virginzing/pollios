@@ -9,7 +9,7 @@ if @poll.present?
     elsif @voted["voted"] || (!@poll.creator_must_vote && (@poll.member_id  == @current_member.id))
       json.vote choice.vote
     else
-    # json.vote choice.vote
+      
     end
   end
 else

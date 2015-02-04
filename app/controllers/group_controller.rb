@@ -119,7 +119,7 @@ class GroupController < ApplicationController
           request_group.save!
           @new_request = true
           @current_member.flush_cache_ask_join_groups
-          RequestGroupWorker.perform_async(member_id, @group.id)
+          RequestGroupWorker.perform_async(member_id, @group.id) unless Rails.env.test?
         end
       end
     
