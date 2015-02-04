@@ -3,7 +3,6 @@ if @group.present?
   
   json.group do
     json.partial! 'response_helper/group/full_info', group: @group
-    # json.as_admin @is_admin
   end
 
   json.member_group do

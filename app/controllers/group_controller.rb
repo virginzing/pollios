@@ -1,11 +1,11 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
-  before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group]
+  before_action :set_current_member, only: [:members, :cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_group, only: [:members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
+  before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group, :members]
   
-  before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
+  before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group, :members]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -49,6 +49,12 @@ class GroupController < ApplicationController
     poll_helper
   end
 
+  def members
+    @member_active = Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 't' AND group_members.group_id = ?", @group.id)
+    @member_pendding = Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 'f' AND group_members.group_id = ?", @group.id)
+    @member_request = @group.members_request
+  end
+
   def poll_available_group
     if derived_version == 6
       @init_poll = V6::PollOfGroup.new(@current_member, @group, options_params)
@@ -89,7 +95,7 @@ class GroupController < ApplicationController
     @member_active ||= Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 't' AND group_members.group_id = ?", @group.id)
     @member_pendding ||= Member.joins(:group_members).select("members.*, group_members.is_master as admin").where("group_members.active = 'f' AND group_members.group_id = ?", @group.id)
     @member_request ||= @group.members_request
-    @is_admin = @member_active.collect {|e| [e.id, e.admin] }.collect{|e| e.last if e.first == @current_member.id }.compact.first
+    # @is_admin = @member_active.collect {|e| [e.id, e.admin] }.collect{|e| e.last if e.first == @current_member.id }.compact.first
   end
 
   def request_group

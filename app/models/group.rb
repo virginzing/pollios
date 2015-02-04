@@ -67,14 +67,13 @@ class Group < ActiveRecord::Base
     photo_group.present? ? resize_photo_group(photo_group.url) : ""
   end
 
-  def api_get_photo_group
-    photo_group.present? ? resize_photo_group(photo_group.url) : ""
-  end
-
   def resize_photo_group(photo_group_url)
     photo_group_url.split("upload").insert(1, "upload/c_fill,h_200,w_200").sum
   end
 
+  # def api_get_photo_group
+  #   photo_group.present? ? resize_photo_group(photo_group.url) : ""
+  # end
 
   def get_cover_group
     cover.present? ? cover.url(:cover) : ""

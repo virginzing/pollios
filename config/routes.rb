@@ -148,6 +148,7 @@ Pollios::Application.routes.draw do
     get 'all',                to: 'group#my_group'
     get ':id/detail',         to: 'group#detail_group'
     get ':id/polls',          to: 'group#poll_available_group'
+    get ':id/members',        to: 'group#members'
     post ':id/delete_poll',   to: 'group#delete_poll'
     post ':id/notification',  to: 'group#notification'
     post ':id/group_update',  to: 'group#group_update'
