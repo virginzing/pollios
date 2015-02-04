@@ -12,7 +12,6 @@ class Member < ActiveRecord::Base
   # multisearchable :against => [:fullname, :username, :email]
   pg_search_scope :searchable_member, :against => [:fullname, :email],
                   :using => { 
-                    :tsearch => { :prefix => true, :dictionary => "english" },
                     :trigram => { :threshold => 0.1 }
                   }
 

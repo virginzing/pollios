@@ -156,3 +156,5 @@ gem 'api_taster', '~> 0.8'
 gem 'friendly_id', '5.0.4'
 
 gem 'unscoped_associations'
+
+gem 'textacular', '~> 3.0'

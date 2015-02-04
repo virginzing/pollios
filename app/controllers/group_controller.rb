@@ -106,7 +106,11 @@ class GroupController < ApplicationController
     @new_request = false
 
     begin
-      find_member_in_group = @group.get_member_active.map(&:id)
+      @group_members ||= @group.cached_members
+      @member_active = @group_members.select{|member| member if member.is_active }
+
+      find_member_in_group = @member_active.map(&:id)
+
       raise ExceptionHandler::Forbidden, "You have joined in #{@group.name} already" if find_member_in_group.include?(member_id)
       
       if GroupMember.have_request_group?(@group, @current_member)
@@ -226,6 +230,6 @@ class GroupController < ApplicationController
   end
 
   def edit_group_params
-    params.permit(:name, :description, :photo_group, :cover, :admin_post_only)
+    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve)
   end
 end
