@@ -70,4 +70,9 @@ RSpec.describe "Group" do
     end
   end
 
+
+  describe "description" do
+    
+  end
+
 end
