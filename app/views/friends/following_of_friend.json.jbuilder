@@ -1,7 +1,7 @@
-if @friend
+if @list_following
   count = 0
   json.response_status "OK"
-  json.following @friend do |member|
+  json.following @list_following do |member|
     json.partial! 'response_helper/member/short_info_feed', member: member
     json.status @is_friend[count]
     count += 1

@@ -79,8 +79,16 @@ class FriendsController < ApplicationController
   end
 
   def following_of_friend
-    @friend = Friend.following_of_friend(friend_params)
-    is_friend(@friend) if @friend.present?
+    find_user = Member.cached_find(friend_params[:friend_id])
+    init_list_friend ||= ListFriend.new(find_user)
+    member_active = init_list_friend.active.map(&:id)
+    member_block = init_list_friend.block.map(&:id)
+    your_request = init_list_friend.your_request.map(&:id)
+    friend_request = init_list_friend.friend_request.map(&:id)
+    following = init_list_friend.following.map(&:id)
+
+    @list_following = init_list_friend.following
+    @is_friend = Friend.check_add_friend?(find_user, @list_following, member_active, member_block, your_request, friend_request, following) if @list_following.present?
   end
 
   def follower_of_friend
