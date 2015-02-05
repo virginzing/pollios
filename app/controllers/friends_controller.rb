@@ -245,6 +245,7 @@ class FriendsController < ApplicationController
 
     if friend_params[:member_id] == friend_params[:friend_id]
       @list_block = init_list_friend.block
+      @list_block_is_friend = Friend.check_add_friend?(find_user, @list_block, member_active, member_block, your_request, friend_request, following) if @list_block.present?
     end
 
   end

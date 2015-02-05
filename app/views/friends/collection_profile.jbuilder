@@ -1,6 +1,7 @@
 count_friend = 0
 count_following = 0
 count_follower = 0
+count_block = 0
 
 json.response_status "OK"
 
@@ -24,4 +25,6 @@ end
 
 json.list_block @list_block do |member|
   json.partial! 'response_helper/member/short_info_feed', member: member
+  json.status @list_block_is_friend[count_block]
+  count_block += 1
 end
