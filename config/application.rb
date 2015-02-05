@@ -73,7 +73,7 @@ module Pollios
       config.page_method_name = :per_page_kaminari
     end
 
-    config.active_record.schema_format = :sql
+    # config.active_record.schema_format = :sql
 
     # config.action_dispatch.rescue_responses["MobilesController::Forbidden"] = :forbidden
     config.exceptions_app = self.routes
