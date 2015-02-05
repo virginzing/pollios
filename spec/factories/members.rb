@@ -27,4 +27,10 @@ FactoryGirl.define do
     app_id "123"
   end
 
+  factory :celebrity, class: Member do
+    fullname "celebrity"
+    email "celebrity@gmail.com"
+    member_type 1
+  end
+
 end

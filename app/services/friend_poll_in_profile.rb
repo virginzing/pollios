@@ -159,6 +159,8 @@ class FriendPollInProfile
   end
 
   def my_group
+    # puts "my group => #{@my_group}"
+    
     query = Group.joins(:group_members_active).where("groups.id IN (?)", my_group_id)
                 .includes(:polls_active)
                 .select("groups.*, count(group_members.group_id) as member_in_group")

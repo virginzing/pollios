@@ -1,4 +1,4 @@
-if @friend.present?
+if @detail_friend.present?
   json.response_status "OK"
   json.status @status
   json.partial! 'response_helper/member/short_info_feed', member: @detail_friend

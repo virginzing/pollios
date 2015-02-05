@@ -4,6 +4,7 @@ RSpec.describe "Friend" do
 
   let!(:member) { create(:member, fullname: "Nutkub", email: "nutkub@gmail.com") }
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
+  let!(:celebrity) { create(:celebrity) }
 
   describe "GET /friend/votes" do
     context 'of mine' do
@@ -125,6 +126,170 @@ RSpec.describe "Friend" do
         expect(response).to be_success
         expect(json["response_status"]).to eq("OK")
       end
+    end
+  end
+
+
+  describe "POST /friend/add_friend" do
+    before do
+      post "/friend/add_friend.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "return response_status is OK" do
+      expect(json["response_status"]).to eq("OK")
+    end
+
+    it "create to friend record by invite member" do
+      find_member = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
+      expect(find_member.present?).to be true
+    end
+
+    it "create to friend recond by invitee friend" do
+      find_friend = Friend.find_by(follower: friend, followed: member, active: true, status: 2)
+      expect(find_friend.present?).to be true
+    end
+
+    it "return status is invite" do
+      expect(json["status"]).to eq("invite")
+    end
+  end
+
+  describe "POST /friend/accept" do
+    before do
+      @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
+
+      @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
+
+      post "/friend/accept", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "be friend together" do
+      expect(@user_one.reload.status).to eq("friend")
+      expect(@user_two.reload.status).to eq("friend")
+    end
+  end
+
+  describe "POST /friend/deny" do
+    before do
+      @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
+
+      @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
+
+      post "/friend/deny", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "cancel to add friend" do
+      find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
+      find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: 2)
+
+      expect(find_user_one.nil?).to be true
+      expect(find_user_two.nil?).to be true
+    end
+  end
+
+  describe "POST /friend/unfriend" do
+    before do
+      @user_one = create(:friend, follower: member, followed: friend, active: true, status: 1)
+      @user_two = create(:friend, follower: friend, followed: member, active: true, status: 1)
+
+      post "/friend/unfriend", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "remove friend" do
+      find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 1)
+      find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: 1)
+
+      expect(find_user_one.nil?).to be true
+      expect(find_user_two.nil?).to be true
+    end
+
+  end
+
+  describe "POST /friend/block" do
+    before do
+      @user_one = create(:friend, follower: member, followed: friend, status: 1, active: true)
+      @user_two = create(:friend, follower: friend, followed: member, status: 1, active: true)
+
+      post "/friend/block", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "block friend" do
+      expect(@user_one.reload.block).to be true
+      expect(@user_two.reload.visible_poll).to be false
+    end
+  end
+
+  describe "POST /friend/unblock" do
+    before do
+      @user_one = create(:friend, follower: member, followed: friend, status: 1, active: true, block: true)
+      @user_two = create(:friend, follower: friend, followed: member, status: 1, active: true, visible_poll: false)
+
+      post "/friend/unblock", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "unblock friend" do
+      find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 1, block: false)
+      find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: 1, visible_poll: true)
+
+      expect(find_user_one.reload.present?).to be true
+      expect(find_user_two.reload.present?).to be true
+
+    end
+  end
+
+  describe "POST /friend/following" do
+    before do
+      post "/friend/following", { member_id: member.id, friend_id: celebrity.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "can following celebrity" do
+      find_following = Friend.find_by(follower: member, followed: celebrity, following: true, status: -1)
+      expect(find_following.present?).to be true
+    end
+  end
+
+  describe "POST /friend/unfollow" do
+    before do
+      create(:friend, follower: member, followed: celebrity, following: true, status: -1)
+      post "/friend/unfollow", { member_id: member.id, friend_id: celebrity.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "can unfollow" do
+      find_following = Friend.find_by(follower: member, followed: celebrity, following: true, status: -1)
+
+      expect(find_following.nil?).to be true
     end
   end
 

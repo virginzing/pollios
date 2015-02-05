@@ -12,8 +12,8 @@ class FriendsController < ApplicationController
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
 
   def add_friend
-    @friend = Friend.add_friend(friend_params)
-    @detail_friend, @status = @friend
+    @detail_friend, @status = Friend.add_friend(friend_params)
+    render status: :created if @detail_friend
   end
 
   def add_close_friend
@@ -26,34 +26,38 @@ class FriendsController < ApplicationController
 
   def following
     @friend = Friend.add_following(@current_member, friend_params)
+    render status: :created if @friend
   end
 
   def unfollow
     @friend = Friend.unfollow(friend_params)
+    render status: :created if @friend
   end
 
   def unfriend
     @friend = Friend.unfriend(friend_params)
+    render status: :created if @friend
   end
 
   def accept_friend
-    @friend = Friend.accept_or_deny_freind(friend_params, true)
-    @detail_friend, @status, @active = @friend
+    @detail_friend, @status, @active = Friend.accept_or_deny_freind(friend_params, true)
+    render status: :created if @detail_friend
   end
 
   def deny_friend
     @friend = Friend.accept_or_deny_freind(friend_params, false)
+    render status: :created if @friend
   end
 
 
   def block_friend
     @friend = Friend.block_or_unblock_friend(friend_params, true)
-
-    render status: 422 if @friend.nil?
+    render status: :created if @friend
   end
 
   def unblock_friend
     @friend = Friend.block_or_unblock_friend(friend_params, false)
+    render status: :created if @friend
   end
 
   def mute_friend
@@ -212,17 +216,27 @@ class FriendsController < ApplicationController
   end
 
   def collection_profile
-    @list_friend = Friend.friend_of_friend(friend_params)
-    @list_friend_is_friend = is_friend(@list_friend) if @list_friend.present?
+    find_user = Member.cached_find(friend_params[:friend_id])
+    init_list_friend ||= ListFriend.new(find_user)
 
-    @list_following = Friend.following_of_friend(friend_params)
-    @list_following_is_friend = is_friend(@list_following) if @list_following.present?
+    member_active = init_list_friend.active.map(&:id)
+    member_block = init_list_friend.block.map(&:id)
+    your_request = init_list_friend.your_request.map(&:id)
+    friend_request = init_list_friend.friend_request.map(&:id)
+    following = init_list_friend.following.map(&:id)
 
-    @list_follower = Friend.follower_of_friend(friend_params)
-    @list_follower_is_friend = is_friend(@list_follower) if @list_follower.present?
+
+    @list_friend = init_list_friend.active
+    @list_friend_is_friend = Friend.check_add_friend?(find_user, @list_friend, member_active, member_block, your_request, friend_request, following) if @list_friend.present?
+
+    @list_following = init_list_friend.following
+    @list_following_is_friend = Friend.check_add_friend?(find_user, @list_following, member_active, member_block, your_request, friend_request, following) if @list_following.present?
+
+    @list_follower = init_list_friend.follower
+    @list_follower_is_friend = Friend.check_add_friend?(find_user, @list_follower, member_active, member_block, your_request, friend_request, following) if @list_follower.present?
 
     if friend_params[:member_id] == friend_params[:friend_id]
-      @list_block = set_friend.cached_block_friend
+      @list_block = init_list_friend.block
     end
 
   end

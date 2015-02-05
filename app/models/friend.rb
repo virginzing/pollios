@@ -2,10 +2,8 @@ class Friend < ActiveRecord::Base
   include FriendsHelper
   include SymbolHash
 
-  belongs_to :follower, class_name: "Member"
-  belongs_to :followed, class_name: "Member"
-
-  after_commit :flush_cached
+  belongs_to :follower, class_name: "Member", touch: true
+  belongs_to :followed, class_name: "Member", touch: true
 
   validates :follower_id, presence: true
   validates :followed_id, presence: true
@@ -13,46 +11,37 @@ class Friend < ActiveRecord::Base
   scope :search_member, -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).first }
   scope :search_friend, -> (friend_id, member_id) { where(follower_id: friend_id, followed_id: member_id).first }
 
-  def flush_cached
-    # puts "clear cached #{self.follower.id}"
-    # Rails.cache.delete([ self.follower, 'friend_count'])
-    # Rails.cache.delete([ self.follower , 'following' ])
-    # Rails.cache.delete([ self.follower.id, 'friend_active'])
-    # Rails.cache.delete([ self.follower.id, 'your_request'])
-    # Rails.cache.delete([ self.follower.id, 'friend_request'])
-  end
+  # def self.friend_of_friend(friend)
+  #   friend_id = friend[:friend_id]
 
-  def self.friend_of_friend(friend)
-    friend_id = friend[:friend_id]
+  #   begin
+  #     find_friend = Member.find(friend_id)
+  #     friend_from_cached = find_friend.cached_get_friend_active
+  #   rescue => e
+  #     []
+  #   end
+  # end
 
-    begin
-      find_friend = Member.find(friend_id)
-      friend_from_cached = find_friend.cached_get_friend_active
-    rescue => e
-      []
-    end
-  end
+  # def self.following_of_friend(friend)
+  #   friend_id = friend[:friend_id]
+  #   begin
+  #     find_friend = Member.find(friend_id)
+  #     following_from_cached = find_friend.cached_get_following
+  #   rescue => e
+  #     []
+  #   end
+  # end
 
-  def self.following_of_friend(friend)
-    friend_id = friend[:friend_id]
-    begin
-      find_friend = Member.find(friend_id)
-      following_from_cached = find_friend.cached_get_following
-    rescue => e
-      []
-    end
-  end
+  # def self.follower_of_friend(friend)
+  #   friend_id = friend[:friend_id]
 
-  def self.follower_of_friend(friend)
-    friend_id = friend[:friend_id]
-
-    begin
-      find_friend = Member.find(friend_id)
-      following_from_cached = find_friend.cached_get_follower
-    rescue => e
-      []
-    end
-  end
+  #   begin
+  #     find_friend = Member.find(friend_id)
+  #     following_from_cached = find_friend.cached_get_follower
+  #   rescue => e
+  #     []
+  #   end
+  # end
 
 
   def self.add_friend(friend)
@@ -60,8 +49,9 @@ class Friend < ActiveRecord::Base
     member_id = friend[:member_id]
 
     begin
-      find_member = Member.find(member_id)
-      find_friend = Member.find(friend_id)
+      find_member = Member.cached_find(member_id)
+      find_friend = Member.cached_find(friend_id)
+
       find_invitee = where(follower_id: member_id, followed_id: friend_id).having_status(:invitee).first
       find_used_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
 
@@ -72,14 +62,6 @@ class Friend < ActiveRecord::Base
         Activity.create_activity_friend( find_member, find_friend , ACTION[:become_friend])
         Activity.create_activity_friend( find_friend, find_member , ACTION[:become_friend])
       elsif find_used_friend
-        # is_friend = false
-
-        # if find_used_friend.following
-        #   find_used_friend.update(status: :friend)
-        #   is_friend = true
-        # else
-        #   find_used_friend.update(status: :invitee)
-        # end
         find_used_friend.update(status: :invitee)
         create!(follower_id: member_id, followed_id: friend_id, status: :invite)
         status = :invite
@@ -88,12 +70,14 @@ class Friend < ActiveRecord::Base
         create!(follower_id: friend_id, followed_id: member_id, status: :invitee)
         status = :invite
       end
-      flush_cached_friend(member_id, friend_id)
-      # AddFriendWorker.perform_async(member_id, friend_id)
+      # flush_cached_friend(member_id, friend_id)
+      FlushCached::Member.new(find_member).clear_one_friend
+      FlushCached::Member.new(find_friend).clear_one_friend
+
       AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: ACTION[:request_friend]} ) if Rails.env.production?
       [find_friend, status]
     rescue  => e
-      puts "error => #{e}"
+      
     end
   end
 
@@ -103,7 +87,6 @@ class Friend < ActiveRecord::Base
 
     begin
       search_member(member_id, friend_id).update_attributes!(close_friend: status)
-      # flush_cached_friend_entity(member_id, friend_id)
     rescue => e
       nil
     end
@@ -133,7 +116,8 @@ class Friend < ActiveRecord::Base
     member_id = friend[:member_id]
 
     begin
-      find_friend = Member.find(friend_id)
+      friend = Member.cached_find(friend_id)
+      
       find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).having_status(:friend).first
 
       if find_is_friend.present?
@@ -142,12 +126,15 @@ class Friend < ActiveRecord::Base
         create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
       end
 
-      Activity.create_activity_friend( member, find_friend ,'Follow')
-      AddFollowWorker.perform_async(member.id, find_friend.id, { action: 'Follow' } )
+      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(friend).clear_one_follower
 
-      flush_cached_friend(member_id, friend_id)
+      Activity.create_activity_friend( member, friend ,'Follow')
+      AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } )
 
-      find_friend
+      # flush_cached_friend(member_id, friend_id)
+
+      friend
     rescue => e
       puts "error => #{e}"
     end
@@ -158,10 +145,17 @@ class Friend < ActiveRecord::Base
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
+    member = Member.cached_find(member_id)
+    friend = Member.cached_find(friend_id)
+
     find_following = where(follower_id: member_id, followed_id: friend_id, status: -1).first
+
     if find_following.present?
-      Rails.cache.delete([ friend_id , 'follower' ])
-      Rails.cache.delete([ member_id , 'following' ])
+
+      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(friend).clear_one_follower
+      # Rails.cache.delete([ friend_id , 'follower' ])
+      # Rails.cache.delete([ member_id , 'following' ])
       # flush_cached_friend(member_id, friend_id)
       find_following.destroy
     else
@@ -173,15 +167,19 @@ class Friend < ActiveRecord::Base
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
-    # check_celebrity = Member.where("id IN (?)", [member_id, friend_id]).pluck(:member_type)
-
     @find_member = search_member(member_id, friend_id)
     @find_friend = search_friend(friend_id, member_id)
 
+    member = Member.cached_find(member_id)
+    friend = Member.cached_find(friend_id)
+
     if @find_member && @find_friend
       check_that_follow
-      flush_cached_friend(member_id, friend_id)
+      # flush_cached_friend(member_id, friend_id)
+
       # Rails.cache.delete([ member_id, 'block_friend'])
+      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(friend).clear_one_friend
     end
     [@find_member, @find_friend]
   end
@@ -192,9 +190,6 @@ class Friend < ActiveRecord::Base
       @find_member.destroy
       # puts "kept following"
     else
-      Rails.cache.delete([ @find_friend.id, 'block_friend'])
-      Rails.cache.delete([ @find_member.id, 'block_friend'])
-
       @find_member.destroy
       @find_friend.destroy
       # puts "clear all"
@@ -208,8 +203,8 @@ class Friend < ActiveRecord::Base
     find_member = search_member(member_id, friend_id)
     find_friend = search_friend(friend_id, member_id)
 
-    member = Member.find(member_id)
-    friend = Member.find(friend_id)
+    member = Member.cached_find(member_id)
+    friend = Member.cached_find(friend_id)
 
     begin
       if accept
@@ -227,7 +222,11 @@ class Friend < ActiveRecord::Base
         find_member.destroy
         find_friend.destroy
       end
-      flush_cached_friend(member_id, friend_id)
+      # flush_cached_friend(member_id, friend_id)
+
+      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(friend).clear_one_friend
+
       [friend, :friend, active_status]
     rescue => e
       puts "error => #{e}"
@@ -238,14 +237,22 @@ class Friend < ActiveRecord::Base
   def self.block_or_unblock_friend(friend, type_block)
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
+
+    member = Member.cached_find(member_id)
+    friend = Member.cached_find(friend_id)
+
     begin
+
       search_member(member_id, friend_id).update_attributes!(block: type_block)
       search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
 
-      flush_cached_friend(member_id, friend_id)
+      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(friend).clear_one_friend
 
-      Rails.cache.delete([ member_id, 'block_friend'])
-      Rails.cache.delete([ friend_id, 'block_friend'])
+      # flush_cached_friend(member_id, friend_id)
+
+      # Rails.cache.delete([ member_id, 'block_friend'])
+      # Rails.cache.delete([ friend_id, 'block_friend'])
       true
       # flush_cached_friend_entity(member_id, friend_id)
     rescue => e
@@ -286,6 +293,35 @@ class Friend < ActiveRecord::Base
 
     return check_my_friend
   end
+
+  def self.check_add_friend?(member, list_members, member_active, member_block, your_request, friend_request, following)
+    check_my_friend = []
+
+    list_members.each do |member|
+      if member_active.include?(member.id)
+        hash = Hash["add_friend_already" => true, "status" => :friend]
+      elsif your_request.include?(member.id)
+        hash = Hash["add_friend_already" => true, "status" => :invite]
+      elsif friend_request.include?(member.id)
+        hash = Hash["add_friend_already" => true, "status" => :invitee]
+      elsif member_block.include?(member.id)
+        hash = Hash["add_friend_already" => true, "status" => :block]
+      else
+        hash = Hash["add_friend_already" => false, "status" => :nofriend]
+      end
+
+      if member.celebrity? || member.brand?
+        following.include?(member.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+      else
+        hash.merge!({"following" => "" })
+      end
+      check_my_friend << hash
+    end
+
+    return check_my_friend
+  end
+
+
 
   def self.flush_cached_friend(member_id, friend_id)
     Rails.cache.delete([ member_id, 'friend_active'])

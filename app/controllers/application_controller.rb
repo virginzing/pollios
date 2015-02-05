@@ -109,7 +109,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_member
-    @current_member = Member.find_by(id: params[:member_id])
+    # @current_member = Member.find_by(id: params[:member_id])
+    @current_member = Member.cached_find(params[:member_id])
+    
     unless @current_member.present?
       respond_to do |format|
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."], status: 404 }
@@ -219,13 +221,21 @@ class ApplicationController < ActionController::Base
     if params[:member_id]
       # p "=== Load Resource Poll Feed ==="
       # Member.current_member = Member.find(93)
-      Member.list_friend_block      = Member.current_member.cached_block_friend
-      Member.list_friend_active     = Member.current_member.cached_get_friend_active
-      Member.list_friend_request    = Member.current_member.cached_get_friend_request
-      Member.list_friend_following  = Member.current_member.cached_get_following
-      Member.list_your_request      = Member.current_member.cached_get_your_request
-      Member.list_group_active      = Member.current_member.cached_get_group_active
+      list_friend = ListFriend.new(Member.current_member)
 
+      Member.list_friend_active = list_friend.active
+      Member.list_friend_block = list_friend.block
+      Member.list_friend_request = list_friend.friend_request
+      Member.list_your_request = list_friend.your_request
+      Member.list_friend_following = list_friend.following
+      # Member.list_friend_following = list_friend.follower
+      # Member.list_friend_block      = Member.current_member.cached_block_friend
+      # Member.list_friend_active     = Member.current_member.cached_get_friend_active
+      # Member.list_friend_request    = Member.current_member.cached_get_friend_request
+      # Member.list_friend_following  = Member.current_member.cached_get_following
+      # Member.list_your_request      = Member.current_member.cached_get_your_request
+
+      Member.list_group_active      = Member.current_member.cached_get_group_active
       Member.reported_polls = Member.current_member.cached_report_poll
       Member.shared_polls   = Member.current_member.cached_shared_poll
       Member.viewed_polls   = Member.current_member.get_history_viewed

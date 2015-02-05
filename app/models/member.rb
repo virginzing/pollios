@@ -141,14 +141,10 @@ class Member < ActiveRecord::Base
 
   before_create :set_friend_limit
 
+  after_commit :flush_cache
+
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
-  scope :friends, -> (member_id) { 
-    Member.joins("inner join friends on members.id = friends.followed_id")
-          .where("friends.follower_id = #{member_id}")
-          .select("members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following")
-  }
-
   scope :receive_notify, -> { where(receive_notify: true) }
 
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true 
@@ -264,6 +260,14 @@ class Member < ActiveRecord::Base
   # def should_generate_new_friendly_id?
   #   fullname_changed? || super
   # end
+
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id]) { find(id) }
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
+  end
 
   def get_company
     company || company_member.company
