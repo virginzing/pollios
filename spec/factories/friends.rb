@@ -3,7 +3,6 @@ FactoryGirl.define do
     follower nil
     followed nil
     active true
-    status :nofriend
   end
 
 end
