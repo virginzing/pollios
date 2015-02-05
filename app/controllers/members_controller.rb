@@ -9,7 +9,7 @@ class MembersController < ApplicationController
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
   before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
-  before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile, :update_profile]
+  before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile]
 
   before_action :set_company, only: [:profile, :delete_photo_group], :if => :only_company
   before_action :find_group, only: [:profile, :delete_photo_group], :if => :only_company
@@ -154,16 +154,15 @@ class MembersController < ApplicationController
       cover_preset = update_profile_params[:cover_preset]
       avatar = update_profile_params[:avatar]
       cover = update_profile_params[:cover]
-      
-      if cover_preset
-        # @current_member.cover_preset = MemberCoverPreset.get_cover_preset(cover_preset)
-        CoverPreset.count_number_preset(cover_preset)
-      end
+      description = update_profile_params[:description]
+      fullname = update_profile_params[:fullname]
+
+      CoverPreset.count_number_preset(cover_preset) if cover_preset
 
       @current_member.cover_preset = "0" if cover
 
       if @current_member.update(update_profile_params.except(:member_id))
-        if update_profile_params[:fullname]
+        if fullname
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
         end
 
@@ -172,8 +171,11 @@ class MembersController < ApplicationController
         end
 
         if avatar
-          # Member.update_avatar(@current_member, update_profile_params[:avatar])
-          Activity.create_activity_my_self(Member.find_by(id: update_profile_params[:member_id]), ACTION[:change_avatar])
+          Activity.create_activity_my_self(@current_member, ACTION[:change_avatar])
+        end
+
+        if fullname || description || avatar
+          FlushCached::Group.new(@current_member).clear_list_members  
         end
 
         if cover_preset.present? && @current_member.cover.present?
@@ -182,13 +184,13 @@ class MembersController < ApplicationController
 
         @current_member.cached_flush_active_group
 
-        @member = Member.find(@current_member.id)
+        @member = @current_member.reload
 
         flash[:success] = "Update profile successfully."
         format.html { redirect_to my_profile_path }
         format.json
       else
-        puts "have error"
+        # puts "have error"
         @error_message = @current_member.errors.messages
 
         format.json

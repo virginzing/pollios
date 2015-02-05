@@ -88,7 +88,8 @@ Pollios::Application.configure do
                      :failover => true,
                      :socket_timeout => 1.5,
                      :socket_failure_delay => 0.2,
-                     :compress => true
+                     :compress => true,
+                     :expires_in => 1.day
                     }
   # if ENV["MEMCACHEDCLOUD_SERVERS"]
   #   config.cache_store = :dalli_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { :username => ENV["MEMCACHEDCLOUD_USERNAME"], :password => ENV["MEMCACHEDCLOUD_PASSWORD"] }
