@@ -74,7 +74,7 @@ class Friend < ActiveRecord::Base
       FlushCached::Member.new(find_member).clear_one_friend
       FlushCached::Member.new(find_friend).clear_one_friend
 
-      AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: ACTION[:request_friend]} ) if Rails.env.production?
+      AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test?
       [find_friend, status]
     rescue  => e
       
@@ -117,7 +117,7 @@ class Friend < ActiveRecord::Base
 
     begin
       friend = Member.cached_find(friend_id)
-      
+
       find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).having_status(:friend).first
 
       if find_is_friend.present?
@@ -130,7 +130,7 @@ class Friend < ActiveRecord::Base
       FlushCached::Member.new(friend).clear_one_follower
 
       Activity.create_activity_friend( member, friend ,'Follow')
-      AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } )
+      AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } ) unless Rails.env.test?
 
       # flush_cached_friend(member_id, friend_id)
 
