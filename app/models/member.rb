@@ -77,6 +77,12 @@ class Member < ActiveRecord::Base
   has_many :your_request, -> { where(status: 0, active: true) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_your_request, through: :your_request, source: :followed
 
+  has_many :friend_request, -> { where(status: 2, active: true) }, foreign_key: "follower_id", class_name: "Friend"
+  has_many :get_friend_request, through: :friend_request, source: :followed
+
+  has_many :friends, foreign_key: "follower_id", class_name: "Friend"
+  has_many :get_friends,  through: :friends, source: :followed
+
   has_many :friend_active, -> { where(status: 1, active: true, block: false) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_active, through: :friend_active , source: :followed
 
@@ -88,9 +94,6 @@ class Member < ActiveRecord::Base
 
   has_many :friend_inactive, -> { where(status: 1, active: false) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_inactive, through: :friend_inactive, source: :followed
-
-  has_many :friend_request, -> { where(status: 2, active: true) }, foreign_key: "follower_id", class_name: "Friend"
-  has_many :get_friend_request, through: :friend_request, source: :followed
 
   has_many :whitish_friend, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
   
@@ -140,6 +143,11 @@ class Member < ActiveRecord::Base
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
+  scope :friends, -> (member_id) { 
+    Member.joins("inner join friends on members.id = friends.followed_id")
+          .where("friends.follower_id = #{member_id}")
+          .select("members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following")
+  }
 
   scope :receive_notify, -> { where(receive_notify: true) }
 

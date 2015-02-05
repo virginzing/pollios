@@ -38,6 +38,8 @@ class Group < ActiveRecord::Base
 
   validates :name, presence: true
 
+  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" }, :allow_blank => true , on: :update
+
   mount_uploader :photo_group, PhotoGroupUploader
   mount_uploader :cover, PhotoGroupUploader
 
@@ -367,7 +369,10 @@ class Group < ActiveRecord::Base
       photo: get_photo_group,
       public: public,
       description: get_description,
-      leave_group: leave_group
+      leave_group: leave_group,
+      created_at: created_at.to_i,
+      admin_post_only: get_admin_post_only,
+      need_approve: need_approve
     }
   end
 

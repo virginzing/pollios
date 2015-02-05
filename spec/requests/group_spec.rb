@@ -219,4 +219,26 @@ RSpec.describe "Group" do
       expect(find_request_group.nil?).to be true
     end
   end
+
+  describe "POST /group/:id/public_id" do
+    let!(:second_group) { create(:group, name: "Second group" ) }
+
+    before do
+      post "/group/#{group.id}/public_id.json", { member_id: member.id, public_id: "123" }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(json["response_status"]).to eq("OK")
+    end
+
+    it "set new public_id" do
+      expect(group.reload.public_id).to eq("123")
+    end
+
+    it "validate uniqueness of public_id" do
+      post "/group/#{second_group.id}/public_id.json", { member_id: member.id, public_id: "123" }, { "Accept" => "application/json" }
+      expect(json["response_status"]).to eq("ERROR")
+      expect(json["response_message"]).to eq("Public ID has already been taken")
+    end
+  end
 end

@@ -156,6 +156,7 @@ Pollios::Application.routes.draw do
     post ':id/promote_admin', to: 'group#promote_admin'
     post ':id/edit_group',    to: 'group#edit_group'
     post ':id/request_group', to: 'group#request_group'
+    post ':id/public_id',     to: 'group#public_id'
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
@@ -240,6 +241,10 @@ Pollios::Application.routes.draw do
     post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'
     post ':member_id/unrecomment',  to: 'members#unrecomment'
     post ':member_id/device_token', to: 'members#device_token'
+  end
+
+  scope 'search' do
+    get 'user_and_group', to: 'searches#user_and_group'
   end
 
   scope 'poll' do

@@ -27,6 +27,7 @@ RSpec.describe "Member" do
   describe "POST /member/update_profile" do
 
     let!(:member) { create(:member, email: "faker_nut@gmail.com") }
+    let!(:friend) { create(:member, fullname: "friend", email: "friend@gmail.com") }
 
     context "update receive notify" do
       it "set receive notify to false" do
@@ -69,6 +70,14 @@ RSpec.describe "Member" do
       expect(json["response_status"]).to eq("OK")
 
       expect(member.reload.public_id).to eq("07510509")
+    end
+
+    it "validate uniqueness of public_id" do
+      post "/member/#{member.id}/public_id.json", { public_id: "07510509" }, { "Accept" => "application/json" }
+      post "/member/#{friend.id}/public_id.json", { public_id: "07510509" }, { "Accept" => "application/json" }
+      
+      expect(json["response_status"]).to eq("ERROR")
+      expect(json["response_message"]).to eq("Public ID has already been taken")
     end
 
   end

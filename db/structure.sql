@@ -1240,7 +1240,8 @@ CREATE TABLE groups (
     cover character varying(255),
     admin_post_only boolean DEFAULT false,
     slug character varying(255),
-    need_approve boolean DEFAULT true
+    need_approve boolean DEFAULT true,
+    public_id character varying(255)
 );
 
 
@@ -4285,10 +4286,24 @@ CREATE INDEX index_group_surveyors_on_member_id ON group_surveyors USING btree (
 
 
 --
+-- Name: index_groups_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_groups_on_name ON groups USING btree (name);
+
+
+--
 -- Name: index_groups_on_properties; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_groups_on_properties ON groups USING gist (properties);
+
+
+--
+-- Name: index_groups_on_public_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_groups_on_public_id ON groups USING btree (public_id);
 
 
 --
@@ -4474,6 +4489,13 @@ CREATE INDEX index_member_un_recomments_on_member_id ON member_un_recomments USI
 
 
 --
+-- Name: index_members_on_fullname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_members_on_fullname ON members USING btree (fullname);
+
+
+--
 -- Name: index_members_on_poll_overall_req_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4485,6 +4507,13 @@ CREATE INDEX index_members_on_poll_overall_req_at ON members USING btree (poll_o
 --
 
 CREATE INDEX index_members_on_poll_public_req_at ON members USING btree (poll_public_req_at);
+
+
+--
+-- Name: index_members_on_public_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_members_on_public_id ON members USING btree (public_id);
 
 
 --
@@ -5386,4 +5415,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150129035739');
 INSERT INTO schema_migrations (version) VALUES ('20150129095303');
 
 INSERT INTO schema_migrations (version) VALUES ('20150202062317');
+
+INSERT INTO schema_migrations (version) VALUES ('20150205071800');
+
+INSERT INTO schema_migrations (version) VALUES ('20150205080932');
 
