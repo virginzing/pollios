@@ -239,7 +239,7 @@ class ApplicationController < ActionController::Base
       Member.list_friend_following = init_list_friend.following
 
       init_list_group = Member::ListGroup.new(Member.current_member)
-      Member.list_group_active      = init_list_group.active
+      Member.list_group_active = init_list_group.active
 
       Member.reported_polls = Member.current_member.cached_report_poll
       Member.shared_polls   = Member.current_member.cached_shared_poll

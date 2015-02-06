@@ -735,8 +735,9 @@ class PollsController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.find_by(id: params[:id])
-    raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+    # @poll = Poll.find_by(id: params[:id])
+    @poll = Poll.cached_find(params[:id])
+    # raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
   end
 
   def set_group
