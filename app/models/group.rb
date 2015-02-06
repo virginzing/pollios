@@ -333,7 +333,9 @@ class Group < ActiveRecord::Base
   # end
 
   def get_member_count
-    cached_members.select {|group| group if group.is_active }.size
+    # GroupMembers.new(self).active.count
+    # GroupMembers.new(self).list_members.select{|e| e if e.is_active }.count
+    group_members_active.map(&:id).count
   end
 
   def get_all_member_count
@@ -364,12 +366,6 @@ class Group < ActiveRecord::Base
 
   def self.flush_cached_member_active(group_id)
     Rails.cache.delete([ 'group', group_id, 'member_active' ])
-  end
-
-  def cached_members
-    Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/members", :expires_in => 12.hours) do
-      GroupMembers.new(self).list_members.to_a
-    end
   end
 
   def get_admin_post_only

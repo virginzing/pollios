@@ -94,7 +94,9 @@ class ApplicationController < ActionController::Base
   end
 
   def get_your_group
-    your_group = @current_member.cached_get_group_active
+    init_list_group = Member::ListGroup.new(@current_member)
+    your_group = init_list_group.active
+
     @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
@@ -238,7 +240,7 @@ class ApplicationController < ActionController::Base
 
       init_list_group = Member::ListGroup.new(Member.current_member)
       Member.list_group_active      = init_list_group.active
-      
+
       Member.reported_polls = Member.current_member.cached_report_poll
       Member.shared_polls   = Member.current_member.cached_shared_poll
       Member.viewed_polls   = Member.current_member.get_history_viewed

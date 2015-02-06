@@ -1,7 +1,7 @@
 if @groups
   json.response_status "OK"
   json.groups @groups do |group|
-    json.partial! 'response_helper/group/full_info', group: group
+    json.partial! 'response_helper/group/full_info', group: group.reload
     # json.poll_count group.get_poll_not_vote_count   ## amount total of member don't vote poll in group
 
     if params[:member_id] == params[:friend_id]

@@ -4,10 +4,14 @@ class FriendPollInProfile
     @member = member
     @friend = friend
     @options = options
-    @friend_group = @friend.cached_get_group_active
     @my_group = Member.list_group_active
   end
   
+  def friend_group
+    init_list_group ||= Member::ListGroup.new(@friend)
+    init_list_group.active  
+  end
+
   def friend_id
     @friend.id
   end
@@ -17,7 +21,7 @@ class FriendPollInProfile
   end
 
   def friend_group_id
-    @friend_group_ids ||= @friend_group.map(&:id)
+    @friend_group_ids ||= friend_group.map(&:id)
   end
 
   def my_and_friend_group
@@ -37,7 +41,7 @@ class FriendPollInProfile
   end
 
   def group_by_name
-    Hash[@friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    Hash[friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
   end
 
   def get_poll_friend

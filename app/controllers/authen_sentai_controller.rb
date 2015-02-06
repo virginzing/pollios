@@ -6,7 +6,6 @@ class AuthenSentaiController < ApplicationController
 
   expose(:current_member_id) { session[:member_id] }
   expose(:member) { @auth.member }
-  expose(:get_stats_all) { member.get_stats_all }
 
 	include Authenticate
 

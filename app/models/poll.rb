@@ -2,8 +2,6 @@ class Poll < ActiveRecord::Base
   # extend FriendlyId
   # friendly_id :slug_candidates, use: [:slugged, :finders]
 
-  after_commit :send_notification, on: :create
-
   mount_uploader :photo_poll, PhotoPollUploader
   
   include PgSearch
@@ -67,11 +65,13 @@ class Poll < ActiveRecord::Base
   # before_create :generate_qrcode_key
 
   # after_create :set_new_title_with_tag
-  # after_commit :flush_cache
-
+  
   validates_presence_of :title, :on => :create
   validates_presence_of :member_id, :on => :create
   
+  after_commit :send_notification, on: :create
+  after_commit :flush_cache
+
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
   default_scope { order("#{table_name}.created_at desc") }
@@ -161,10 +161,6 @@ class Poll < ActiveRecord::Base
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
-    self.member.flush_cache_my_poll
-    self.member.flush_cache_my_watch
-    self.member.flush_cache_my_vote
-    self.member.flush_cache_my_vote_all
   end
 
   def cached_choices

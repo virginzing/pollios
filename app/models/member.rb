@@ -398,19 +398,19 @@ class Member < ActiveRecord::Base
     list_recurring
   end
 
-  def get_stats_all
-    {
-      "my_poll" => cached_my_poll.count,
-      "my_vote" => cached_my_voted.count,
-      "my_watched" => cached_watched.count,
-      "friend" => cached_get_friend_active.count,
-      "group" => cached_get_group_active.count,
-      "activity" => get_activity_count,
-      "following" => cached_get_following.count,
-      "direct_msg" => 0,
-      "status" => 0
-    }
-  end
+  # def get_stats_all
+  #   {
+  #     "my_poll" => cached_my_poll.count,
+  #     "my_vote" => cached_my_voted.count,
+  #     "my_watched" => cached_watched.count,
+  #     "friend" => cached_get_friend_active.count,
+  #     "group" => cached_get_group_active.count,
+  #     "activity" => get_activity_count,
+  #     "following" => cached_get_following.count,
+  #     "direct_msg" => 0,
+  #     "status" => 0
+  #   }
+  # end
 
   def cached_poll_friend_count(member)
     Rails.cache.fetch([ self.id, 'friend_poll_count']) do
@@ -995,7 +995,9 @@ class Member < ActiveRecord::Base
   end
 
   def post_poll_in_group(in_group_ids)
-    get_list_group_ids = cached_get_group_active.collect{|e| e.id }
+    init_list_group = Member::ListGroup.new(self)
+
+    get_list_group_ids = init_list_group.active.map(&:id)
     split_group_ids = in_group_ids.split(",").collect{|e| e.to_i }
 
     return split_group_ids & get_list_group_ids

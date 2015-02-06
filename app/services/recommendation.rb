@@ -1,11 +1,15 @@
 class Recommendation
   def initialize(member)
     @member = member
-    @list_member_block = member.cached_block_friend
+    @init_list_friend = ListFriend.new(@member)
+    @list_member_active = @init_list_friend.active
+    @list_member_block = @init_list_friend.block
+    @list_member_follower = @init_list_friend.follower
   end
 
+
   def get_friend_active
-    @get_friend_active ||= @member.cached_get_friend_active.map(&:id)
+    @get_friend_active ||= @list_member_active.map(&:id)
   end
 
   def unrecommented
@@ -17,7 +21,7 @@ class Recommendation
   end
 
   def get_follower_recommendations
-    @follower_recommendations ||= @member.cached_get_follower
+    @follower_recommendations ||= @list_member_follower
   end
 
   def mutual_friend_recommendations
@@ -46,11 +50,11 @@ class Recommendation
   private
 
   def find_list_friend_ids
-    @list_friend = @member.get_friend_active.map(&:id) << @member.id
+    @list_member_active.map(&:id) << @member.id
   end
 
   def list_block_friend_ids
-    @list_block_friend_ids = @list_member_block.map(&:id)
+    @list_member_block.map(&:id)
   end
 
   def find_brand
@@ -73,9 +77,11 @@ class Recommendation
   end
 
   def find_non_friend_in_group
+
+
     find_friend_ids = find_list_friend_ids
     # puts "find_friend_ids => #{find_friend_ids}"
-    find_group_and_return_member_ids = @member.cached_get_group_active.collect{|g| g.member_active.map(&:member_id) }.flatten.uniq
+    find_group_and_return_member_ids = @list_member_active.collect{|group| GroupMembers.new(group).active.map(&:id) }.flatten.uniq
     # puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
     list_non_friend_ids = find_group_and_return_member_ids - find_friend_ids
     # puts "list_non_friend_ids => #{list_non_friend_ids}"

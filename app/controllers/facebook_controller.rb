@@ -3,7 +3,6 @@ class FacebookController < ApplicationController
   # before_action :compress_gzip, only: [:login]
 
   expose(:member) { @auth.member }
-  expose(:get_stats_all) { member.get_stats_all }
 
   def login
     @auth = Authentication.new(fb_params.merge(Hash["provider" => "facebook", "register" => :in_app]))

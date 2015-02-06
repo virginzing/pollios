@@ -234,9 +234,11 @@ class CompaniesController < ApplicationController
   ### Group ###
 
   def list_group
-    @member = Member.find(params[:member_id])
+    @member = Member.cached_find(params[:member_id])
+    init_list_group = Member::ListGroup.new(@member)
+
     @company = Company.find(params[:company_id])
-    @member_group_active = @member.cached_get_group_active.map(&:id)
+    @member_group_active = init_list_group.active.map(&:id)
     render layout: false
   end
 
@@ -440,17 +442,23 @@ class CompaniesController < ApplicationController
 
     find_user = Member.cached_find(params[:member_id])   
 
+    init_list_group = Member::ListGroup.new(find_user)
+
     respond_to do |format| 
       if find_user.present?
         Group.transaction do
-          find_user_group = find_user.cached_get_group_active.map(&:id)
+          find_user_group = init_list_group.active.map(&:id)
+
           this_group = Group.find(params[:group_id])
 
           unless find_user_group.include?(this_group.id)
             begin
               this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
+
               CompanyMember.add_member_to_company(find_user, @find_company)
+
               Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
+              
               this_group.increment!(:member_count)
               # find_user.cached_flush_active_group
               FlushCached::Member.new(find_user).clear_list_groups

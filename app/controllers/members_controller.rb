@@ -183,8 +183,6 @@ class MembersController < ApplicationController
           @current_member.remove_old_cover
         end
 
-        @current_member.cached_flush_active_group
-
         @member = @current_member.reload
 
         flash[:success] = "Update profile successfully."
@@ -253,9 +251,9 @@ class MembersController < ApplicationController
     @current_member.update_columns(notification_count: 0)
   end
 
-  def stats
-    @stats_all = @current_member.get_stats_all
-  end
+  # def stats
+  #   @stats_all = @current_member.get_stats_all
+  # end
 
   def report
     begin

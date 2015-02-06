@@ -7,14 +7,25 @@ class GroupMembers
     @list_members ||= members
   end
 
+  def cached_all_members
+    @cached_all_members ||= cached_members
+  end
+
+  def active
+    cached_all_members.select{|member| member if member.is_active }
+  end
+
+  def pending
+    cached_all_members.select{|member| member unless member.is_active }
+  end
+
   def members_as_member
-    list_members.select{ |member| member unless member.is_admin }
+    cached_all_members.select{ |member| member unless member.is_admin }
   end
 
   def members_as_admin
-    list_members.select{ |member| member if member.is_admin }
+    cached_all_members.select{ |member| member if member.is_admin }
   end
-
 
   private
 
@@ -23,5 +34,10 @@ class GroupMembers
           .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active").order("members.fullname asc")
   end
   
+  def cached_members
+    Rails.cache.fetch("/group/#{@group.id}-#{@group.updated_at.to_i}/members", :expires_in => 12.hours) do
+      members.to_a
+    end
+  end
   
 end

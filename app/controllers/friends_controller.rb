@@ -194,8 +194,8 @@ class FriendsController < ApplicationController
   def list_of_group
 
     if params[:member_id] == params[:friend_id]
-      init_list_friend = Member::ListGroup.new(@current_member)
-      @groups = init_list_friend.active
+      init_list_group = Member::ListGroup.new(@current_member)
+      @groups = init_list_group.active
     else
       @groups = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params).groups
     end

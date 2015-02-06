@@ -5,9 +5,12 @@ class FlushCached::Group
 
 
   def clear_list_members
-    @member.cached_get_group_active.each do |group|
+    init_list_group = Member::ListGroup.new(@member)
+
+    init_list_group.active.each do |group|
       group.touch
     end
+    
   end
 
   

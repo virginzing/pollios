@@ -27,7 +27,8 @@ class GroupController < ApplicationController
   def edit_group
     @group.update!(edit_group_params)
     Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking
-    @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+    # @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+    GroupMembers.new(@group).cached_all_members.collect{|member| FlushCached::Member.new(member).clear_list_groups }
   end
 
   def add_friend_to_group
@@ -54,9 +55,9 @@ class GroupController < ApplicationController
   end
 
   def members
-    @group_members ||= @group.cached_members
-    @member_active = @group_members.select{|member| member if member.is_active }
-    @member_pending = @group_members.select{|member| member unless member.is_active }
+    @group_members ||= GroupMembers.new(@group)
+    @member_active = @group_members.active
+    @member_pending = @group_members.pending
     @member_request = @group.members_request
   end
 
@@ -97,10 +98,10 @@ class GroupController < ApplicationController
   end
 
   def detail_group
-    @group_members ||= @group.cached_members
-    @member_active = @group_members.select{|member| member if member.is_active }
-    @member_pending = @group_members.select{|member| member unless member.is_active }
-    @member_request ||= @group.members_request
+    @group_members ||= GroupMembers.new(@group)
+    @member_active = @group_members.active
+    @member_pending = @group_members.pending
+    @member_request = @group.members_request
     # @is_admin = @member_active.collect {|e| [e.id, e.admin] }.collect{|e| e.last if e.first == @current_member.id }.compact.first
   end
 
@@ -110,8 +111,9 @@ class GroupController < ApplicationController
     @new_request = false
 
     begin
-      @group_members ||= @group.cached_members
-      @member_active = @group_members.select{|member| member if member.is_active }
+
+    @group_members ||= GroupMembers.new(@group)
+    @member_active = @group_members.active
 
       find_member_in_group = @member_active.map(&:id)
 
