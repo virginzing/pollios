@@ -178,13 +178,13 @@ class GroupController < ApplicationController
     #"value"=>"2" is admin
 
     find_member_in_group = GroupMember.where("member_id = ? AND group_id = ?", member_id, group_id).first
+    find_member = find_member_in_group.member
 
     respond_to do |format|
       if find_member_in_group.present?
         find_group = find_member_in_group.group
 
         if find_group.is_company? ## Is it group of company?
-          find_member = find_member_in_group.member
 
           find_role_member = find_member.roles.first
 
@@ -208,6 +208,8 @@ class GroupController < ApplicationController
         else
           find_member_in_group.update!(is_master: @admin_status)
         end
+
+        FlushCached::Member.new(find_member).clear_list_groups
 
         format.json { render json: [
               {value: 1, text: 'Member'},

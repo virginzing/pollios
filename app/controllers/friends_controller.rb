@@ -70,7 +70,8 @@ class FriendsController < ApplicationController
 
   def search_friend
     @search = Member.search_member(friend_params)
-    is_friend(@search) if @search.present?
+    init_list_friend ||= ListFriend.new(@current_member)
+    @is_friend = Friend.check_add_friend?(@current_member, @search, init_list_friend.check_is_friend)
   end
 
   def friend_of_friend
@@ -221,7 +222,8 @@ class FriendsController < ApplicationController
   end
 
   def profile
-    @is_friend = Friend.add_friend?(@current_member, [@find_friend]) if @find_friend.present?
+    init_list_friend ||= ListFriend.new(@current_member)
+    @is_friend = Friend.check_add_friend?(@current_member, [@find_friend], init_list_friend.check_is_friend)
   end
 
   def collection_profile
