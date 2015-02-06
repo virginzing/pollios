@@ -735,7 +735,7 @@ class Member < ActiveRecord::Base
   end
 
   def cached_flush_active_group
-    Rails.cache.delete("/member/#{@member.id}/groups")
+    Rails.cache.delete("/member/#{id}/groups")
     Rails.cache.delete([id, 'group_active'])
   end
 

@@ -357,12 +357,15 @@ class MembersController < ApplicationController
 
   def add_to_group_at_invite
     if @group
-      find_my_group = @current_member.get_group_active.map(&:id)
+      init_list_group = Member::ListGroup.new(@current_member)
+
+      find_my_group = init_list_group.active.map(&:id)
       unless find_my_group.include?(@group.id)
         @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
         Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
         @group.increment!(:member_count)
-        @current_member.cached_flush_active_group
+        # @current_member.cached_flush_active_group
+        FlushCached::Member.new(@current_member).clear_list_groups
         true
       else
         nil

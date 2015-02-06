@@ -7,6 +7,9 @@ class HashtagTimeline
     @hidden_poll = HiddenPoll.my_hidden_poll(member_obj.id)
     @report_poll = Member.current_member.cached_report_poll
     @block_member = Member.list_friend_block
+
+    @init_list_friend = ListFriend.new(@member)
+    @init_list_group = Member::ListGroup.new(@member)
   end
 
   def member_id
@@ -18,11 +21,11 @@ class HashtagTimeline
   end
 
   def your_friend_ids
-    @friend_ids ||= @member.cached_get_friend_active.map(&:id) << member_id
+    @friend_ids ||= @init_list_friend.active.map(&:id) << member_id
   end
 
   def your_group
-    @member.get_group_active
+    @init_list_group.active
   end
 
   def your_group_ids

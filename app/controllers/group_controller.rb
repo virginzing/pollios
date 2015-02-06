@@ -37,7 +37,6 @@ class GroupController < ApplicationController
 
   def accept_group
     @group = Group.accept_group(@current_member, group_params)
-    # @group_active = @current_member.get_group_active
   end
 
   def accept_request_group
