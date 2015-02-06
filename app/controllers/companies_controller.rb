@@ -381,7 +381,12 @@ class CompaniesController < ApplicationController
 
       if group.update(group_params)
         Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
-        group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+
+        group.members.each do |member|
+          FlushCached::Member.new(member).clear_list_groups
+        end
+        # group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
+
         flash[:success] = "Update group profile successfully."
         format.html { redirect_to company_group_detail_path(@group) }
         format.json
@@ -423,7 +428,7 @@ class CompaniesController < ApplicationController
     @members = query
 
     # @member_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
-      @member_company = Member.joins(:company_member).includes(:groups).where("company_members.company_id = ?", set_company.id).uniq.references(:groups)
+    @member_company = Member.joins(:company_member).includes(:groups).where("company_members.company_id = ?", set_company.id).uniq.references(:groups)
   end
 
   def search_member
@@ -433,7 +438,8 @@ class CompaniesController < ApplicationController
 
   def add_user_to_group
 
-    find_user = Member.find_by(id: params[:member_id])     
+    find_user = Member.cached_find(params[:member_id])   
+
     respond_to do |format| 
       if find_user.present?
         Group.transaction do
@@ -446,8 +452,10 @@ class CompaniesController < ApplicationController
               CompanyMember.add_member_to_company(find_user, @find_company)
               Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
               this_group.increment!(:member_count)
-              find_user.cached_flush_active_group
-              Group.flush_cached_member_active(this_group.id)
+              # find_user.cached_flush_active_group
+              FlushCached::Member.new(find_user).clear_list_groups
+              # Group.flush_cached_member_active(this_group.id)
+
               format.json { render json: { error_message: nil }, status: 200 }
             rescue ActiveRecord::RecordNotUnique
               @error_message = "This member join another company already"

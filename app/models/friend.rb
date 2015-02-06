@@ -254,7 +254,6 @@ class Friend < ActiveRecord::Base
       # Rails.cache.delete([ member_id, 'block_friend'])
       # Rails.cache.delete([ friend_id, 'block_friend'])
       true
-      # flush_cached_friend_entity(member_id, friend_id)
     rescue => e
       puts "error => #{e}"
       nil
@@ -294,24 +293,24 @@ class Friend < ActiveRecord::Base
     return check_my_friend
   end
 
-  def self.check_add_friend?(member, list_members, member_active, member_block, your_request, friend_request, following)
+  def self.check_add_friend?(member, list_members, check_is_friend)
     check_my_friend = []
 
     list_members.each do |member|
-      if member_active.include?(member.id)
+      if check_is_friend[:active].include?(member.id)
         hash = Hash["add_friend_already" => true, "status" => :friend]
-      elsif your_request.include?(member.id)
+      elsif check_is_friend[:your_request].include?(member.id)
         hash = Hash["add_friend_already" => true, "status" => :invite]
-      elsif friend_request.include?(member.id)
+      elsif check_is_friend[:friend_request].include?(member.id)
         hash = Hash["add_friend_already" => true, "status" => :invitee]
-      elsif member_block.include?(member.id)
+      elsif check_is_friend[:block].include?(member.id)
         hash = Hash["add_friend_already" => true, "status" => :block]
       else
         hash = Hash["add_friend_already" => false, "status" => :nofriend]
       end
 
       if member.celebrity? || member.brand?
-        following.include?(member.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+        check_is_friend[:following].include?(member.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
       else
         hash.merge!({"following" => "" })
       end
@@ -335,13 +334,6 @@ class Friend < ActiveRecord::Base
     Rails.cache.delete([ friend_id, 'friend_request'])
     Rails.cache.delete([ friend_id, 'following'])
     Rails.cache.delete([ friend_id, 'follower'])
-
-    # Rails.cache.delete(['user', member_id, 'relate', 'member', friend_id])
-    # Rails.cache.delete(['user', friend_id, 'relate', 'member', member_id])
-  end
-
-  def self.flush_cached_friend_entity(member_id, friend_id)
-    Rails.cache.delete(['user', member_id, 'friend_entity_with', friend_id])
   end
 
 end

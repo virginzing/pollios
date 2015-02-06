@@ -107,7 +107,8 @@ class Group < ActiveRecord::Base
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
 
-      Rails.cache.delete([member_id, 'group_active'])
+      # Rails.cache.delete([member_id, 'group_active'])
+      FlushCached::Member.new(@member).clear_list_groups
       # Group.flush_cached_member_active(group_id)
 
       if @group
@@ -146,7 +147,10 @@ class Group < ActiveRecord::Base
 
         Activity.create_activity_group(@friend, @group, 'Join')
 
-        @friend.flush_cache_my_group
+        # @friend.flush_cache_my_group
+
+        FlushCached::Member.new(@friend).clear_list_groups
+
         @friend.flush_cache_ask_join_groups
         # Group.flush_cached_member_active(@group.id)
        
@@ -191,7 +195,8 @@ class Group < ActiveRecord::Base
         Activity.create_activity_group(member, @group, 'Create')
       end
 
-      Rails.cache.delete([member_id, 'group_active'])
+      # Rails.cache.delete([member_id, 'group_active'])
+      FlushCached::Member.new(member).clear_list_groups
 
       add_friend_to_group(@group, member, friend_id) if friend_id
     end
@@ -248,15 +253,20 @@ class Group < ActiveRecord::Base
   def kick_member_out_group(kicker, friend_id)
     begin
       raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
+
+      member = Member.cached_find(friend_id)
+
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
-        Member.find(friend_id).remove_role :group_admin, find_member_in_group.group
+
+        member.remove_role :group_admin, find_member_in_group.group
         # Group.flush_cached_member_active(find_member_in_group.group.id)
       else
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end
 
-      Rails.cache.delete([friend_id, 'group_active'])
+      # Rails.cache.delete([friend_id, 'group_active'])
+      FlushCached::Member.new(member).clear_list_groups
       self
     end
   end
@@ -264,6 +274,9 @@ class Group < ActiveRecord::Base
   def promote_admin(promoter, friend_id, admin_status = true)
     begin
       raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
+
+      member = Member.cached_find(friend_id)
+      
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_group = find_member_in_group.group
 
@@ -296,7 +309,8 @@ class Group < ActiveRecord::Base
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end
 
-      Rails.cache.delete([friend_id, 'group_active'])
+      # Rails.cache.delete([friend_id, 'group_active'])
+      FlushCached::Member.new(member).clear_list_groups
       self
     end
   end
@@ -314,8 +328,12 @@ class Group < ActiveRecord::Base
   end
 
 
+  # def get_member_count
+  #   group_members_active.map(&:id).count
+  # end
+
   def get_member_count
-    group_members_active.map(&:id).count
+    cached_members.select {|group| group if group.is_active }.size
   end
 
   def get_all_member_count

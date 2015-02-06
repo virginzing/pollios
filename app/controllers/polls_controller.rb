@@ -723,11 +723,13 @@ class PollsController < ApplicationController
   end
 
   def open_comment
-    @poll = @poll.update!(allow_comment: true)
+    @poll = @poll.update(allow_comment: true)
+    render status: :created if @poll
   end
 
   def close_comment
-    @poll = @poll.update!(allow_comment: false)
+    @poll = @poll.update(allow_comment: false)
+    render status: :created if @poll
   end
 
   private

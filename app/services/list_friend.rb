@@ -39,6 +39,16 @@ class ListFriend
     cached_follower.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
+  def check_is_friend
+    {
+      active: active.map(&:id),
+      block: block.map(&:id),
+      friend_request: friend_request.map(&:id),
+      your_request: your_request.map(&:id),
+      following: following.map(&:id)
+    }
+  end
+
   private
 
   def all_friend

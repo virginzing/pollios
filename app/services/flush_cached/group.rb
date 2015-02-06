@@ -9,5 +9,6 @@ class FlushCached::Group
       group.touch
     end
   end
+
   
 end

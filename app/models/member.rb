@@ -716,19 +716,26 @@ class Member < ActiveRecord::Base
         self.remove_role :group_admin, find_group_member.group
       end
     end
-    cached_flush_active_group
+    FlushCached::Member.new(self).clear_list_groups
+    # cached_flush_active_group
     find_group_member.group
   end
 
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first
     if find_group_member
+
+      find_group_member.group.members.each do |member|
+        FlushCached::Member.new(member).clear_list_groups
+      end
+
       find_group_member.group.destroy if find_group_member.is_master
     end
-    cached_flush_active_group
+    # cached_flush_active_group
   end
 
   def cached_flush_active_group
+    Rails.cache.delete("/member/#{@member.id}/groups")
     Rails.cache.delete([id, 'group_active'])
   end
 

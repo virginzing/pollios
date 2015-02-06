@@ -168,4 +168,35 @@ RSpec.describe "Poll" do
     end
   end
 
+
+  describe "POST /poll/:id/close_comment" do
+    before do
+      @poll_last = create(:poll, title: "eiei", member: member, allow_comment: true)
+      post "/poll/#{@poll_last.id}/close_comment.json", { member_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "close comment of poll" do
+      expect(@poll_last.reload.allow_comment).to be false
+    end
+  end
+
+  describe "POST /poll/:id/open_comment" do
+    before do
+      @poll_last = create(:poll, title: "eiei", member: member, allow_comment: false)
+      post "/poll/#{@poll_last.id}/open_comment.json", { member_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "close comment of poll" do
+      expect(@poll_last.reload.allow_comment).to be true
+    end
+  end
+
 end

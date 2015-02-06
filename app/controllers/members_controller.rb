@@ -211,25 +211,20 @@ class MembersController < ApplicationController
   end
 
   def all_request
-
     init_list_friend = ListFriend.new(@current_member)
-    member_active = init_list_friend.active.map(&:id)
-    member_block = init_list_friend.block.map(&:id)
-    your_request = init_list_friend.your_request.map(&:id)
-    friend_request = init_list_friend.friend_request.map(&:id)
-    following = init_list_friend.following.map(&:id)
 
     @your_request = init_list_friend.your_request
     @friend_request = init_list_friend.friend_request
 
-    @group_inactive = Group.joins(:group_members).where("group_members.member_id = ? AND group_members.active = 'f'", @current_member.id).
-                      select("groups.*, group_members.invite_id as invite_id")
+    @group_inactive = Group.joins(:group_members)
+                            .where("group_members.member_id = ? AND group_members.active = 'f'", @current_member.id)
+                            .select("groups.*, group_members.invite_id as invite_id")
 
     @ask_join_group = @current_member.cached_ask_join_groups
 
-    @is_your_request = Friend.check_add_friend?(@current_member, @your_request, member_active, member_block, your_request, friend_request, following) if @your_request.present?
+    @is_your_request = Friend.check_add_friend?(@current_member, @your_request, init_list_friend.check_is_friend) if @your_request.present?
 
-    @is_friend_request = Friend.check_add_friend?(@current_member, @friend_request, member_active, member_block, your_request, friend_request, following) if @friend_request.present?
+    @is_friend_request = Friend.check_add_friend?(@current_member, @friend_request, init_list_friend.check_is_friend) if @friend_request.present?
 
     clear_request_count if params[:clear_request]
   end
