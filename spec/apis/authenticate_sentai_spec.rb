@@ -7,7 +7,7 @@ describe "POST /authen/sentai", type: :api do
   end
   
   it "authenticate with authen and right password" do
-    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:sentai).merge(password: "1234567"), format: :json
+    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:sentai).merge(password: "Nutty509"), format: :json
 
     expect(ApiToken.count).to eq(1)
 
