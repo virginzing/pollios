@@ -1,6 +1,7 @@
 class V6::OverallTimeline
   include GroupApi
   include Timelinable
+  include FeedSetting
 
   TYPE_TIMELINE = 'overall_timeline'
 
@@ -62,7 +63,7 @@ class V6::OverallTimeline
   def friend_group_public
     @friend_group_public ||= find_poll_me_and_friend_and_group_and_public
   end
-  
+
   private
 
   def find_poll_me_and_friend_and_group_and_public
@@ -109,12 +110,25 @@ class V6::OverallTimeline
     query = query.limit(LIMIT_TIMELINE)
 
     query.each do |q|
-      poll_priority << q.poll.priority
+      # poll_priority << q.poll.priority
+      poll_priority << check_priority(q.poll)
       created_time << q.poll.created_at
       updated_time << q.poll.updated_at
     end
 
     ids, poll_ids, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), poll_priority, created_time, updated_time
+  end
+
+  def check_priority(poll)
+    if poll.public
+      FeedSetting::PUBLIC_FEED
+    else
+      if poll.in_group
+        FeedSetting::GROUP_FEED   
+      else
+        FeedSetting::FRIEND_FOLLOWING_FEED
+      end
+    end
   end
 
   def poll_non_share_non_in_group

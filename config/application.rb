@@ -31,6 +31,7 @@ Bundler.require(:default, Rails.env)
 
 ENV['RAILS_ADMIN_THEME'] = 'flatly_theme'
 
+
 module Pollios
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

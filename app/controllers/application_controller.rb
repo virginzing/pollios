@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   # before_action :restrict_only_admin
   layout :layout_by_resource
 
-
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper

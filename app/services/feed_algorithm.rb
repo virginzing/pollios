@@ -1,12 +1,6 @@
 class FeedAlgorithm
   include ActionView::Helpers::DateHelper
-
-  DAY_COMPARE = 30
-  UPDATED_POLL = 2
-  VOTED = 2
-  NOT_YET_VOTE = 5
-  CREATED_RECENT = 30
-
+  include FeedSetting
 
   def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time, updated_time)
     @poll_member_ids = poll_member_ids
@@ -45,20 +39,20 @@ class FeedAlgorithm
     new_check_with_voted = []
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
-      feed = e[:priority].to_i
+      feed = e[:priority]
 
       if @vote_poll_ids.include?(e[:poll_id]) ## voted
         
         if e[:updated_at] > 3.days.ago
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + VOTED + UPDATED_POLL)
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED + FeedSetting::UPDATED_POLL)
         else
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + VOTED)
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED)
         end
       else
         if e[:created_at] > 20.minutes.ago
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + NOT_YET_VOTE + CREATED_RECENT) 
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE + FeedSetting::CREATED_RECENT) 
         else
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + NOT_YET_VOTE) 
+          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE) 
         end
       end
 
@@ -68,8 +62,9 @@ class FeedAlgorithm
     new_check_with_voted
   end
 
+
   def time_ago_value(created_at)
-    time_compare = DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i
+    time_compare = FeedSetting::DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i
     time_compare <= 0 ? 0 : time_compare    
   end
 

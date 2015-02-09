@@ -38,7 +38,7 @@ production:
 
 
 # set Env to heroku
-# heroku config:set LIMIT_MEMBER=190
+# heroku config:set LIMIT_MEMBER=200
 # or
 # figaro heroku:set -e production -a codeapp-pollios
 # update limit of member
