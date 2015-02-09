@@ -43,7 +43,7 @@ class FeedAlgorithm
 
       if @vote_poll_ids.include?(e[:poll_id]) ## voted
         
-        if e[:updated_at] > 3.days.ago
+        if e[:updated_at] > 2.days.ago
           e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED + FeedSetting::UPDATED_POLL)
         else
           e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED)
