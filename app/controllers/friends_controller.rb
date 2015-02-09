@@ -4,12 +4,11 @@ class FriendsController < ApplicationController
   before_action :compress_gzip, only: [:list_of_group, :collection_profile, :follower_of_friend, :following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_of_watched,  :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
   before_action :set_current_member
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]
-  # before_action :history_voted_viewed, only: [:list_of_poll, :list_of_vote, :list_of_watched]
-
-  before_action :load_resource_poll_feed, only: [:list_of_bookmark, :list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend, :list_of_group]
+  before_action :load_resource_poll_feed, only: [:list_of_bookmark, :list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
+  expose(:hash_member_count) { @hash_member_count }
 
   def add_friend
     @detail_friend, @status = Friend.add_friend(friend_params)
@@ -197,8 +196,11 @@ class FriendsController < ApplicationController
     if params[:member_id] == params[:friend_id]
       init_list_group = Member::ListGroup.new(@current_member)
       @groups = init_list_group.active
+      @hash_member_count = init_list_group.hash_member_count
     else
-      @groups = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params).groups
+      init_list_group = Friend::ListGroup.new(@current_member, @find_friend)
+      @groups = init_list_group.together_group
+      @hash_member_count = init_list_group.hash_member_count
     end
     
   end
@@ -267,13 +269,7 @@ class FriendsController < ApplicationController
   private
 
   def set_friend
-    @find_friend = Member.find_by(id: params[:friend_id])
-    unless @find_friend.present?
-      respond_to do |format|
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Don't have this id of friend"]}
-      end
-    end
-    @find_friend
+    @find_friend = Member.cached_find(params[:friend_id])
   end
 
   def poll_friend_params

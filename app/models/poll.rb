@@ -787,7 +787,7 @@ class Poll < ActiveRecord::Base
   def self.view_poll(poll, member)
     HistoryView.transaction do
       begin
-      @poll = poll
+      @poll = poll.reload
       @member = member
 
       unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)

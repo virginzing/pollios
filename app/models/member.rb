@@ -440,11 +440,11 @@ class Member < ActiveRecord::Base
   end
 
   def cached_shared_poll
-    Rails.cache.fetch([ self, "shared"]) { share_polls.to_a }
+    Rails.cache.fetch("member/#{id}-#{updated_at.to_i}/shared") { share_polls.to_a }
   end
 
   def cached_report_poll
-    Rails.cache.fetch([ self, 'report']) { poll_reports.to_a }
+    Rails.cache.fetch("member/#{id}-#{updated_at.to_i}/reports") { poll_reports.to_a }
   end
 
   def cached_block_friend

@@ -111,7 +111,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_member
-    # @current_member = Member.find_by(id: params[:member_id])
     @current_member = Member.cached_find(params[:member_id])
     
     unless @current_member.present?

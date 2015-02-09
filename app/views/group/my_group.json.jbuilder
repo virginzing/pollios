@@ -5,7 +5,7 @@ if @group_active || @group_inactive
     json.name group.name
     json.photo group.get_photo_group
     json.cover group.get_cover_group
-    json.member_count hash_member_count[group.id]
+    json.member_count hash_member_count[group.id] || 0
     json.description group.get_description
     json.public group.public
     json.leave_group group.leave_group

@@ -36,12 +36,20 @@ class FriendPollInProfile
     @groups ||= @member.id == friend_id ? my_group : mutual_or_public_group
   end
 
+  def together_group
+    @together_group ||= mutual_or_public_group
+  end
+
+  def hash_as_admin
+    
+  end
+
   def is_friend
     list_my_friend_ids.include?(friend_id) ? friend_id : 0
   end
 
   def group_by_name
-    Hash[friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    Hash[friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group]] }]
   end
 
   def get_poll_friend
@@ -154,17 +162,13 @@ class FriendPollInProfile
 
   def mutual_or_public_group
     query = Group.joins(:group_members_active).where("(groups.id IN (?)) OR (group_members.active = 't' AND groups.public = 't' AND group_members.member_id = #{friend_id})", my_and_friend_group)
-                .includes(:polls_active)
-                .select("groups.*")
-                .group("groups.id, polls.id, members.id")
+                .select("groups.*, count(group_members) as all_member_count")
+                .group("groups.id")
                 .order("groups.name asc")
-                .references(:polls_active)
     query
   end
 
   def my_group
-    # puts "my group => #{@my_group}"
-    
     query = Group.joins(:group_members_active).where("groups.id IN (?)", my_group_id)
                 .includes(:polls_active)
                 .select("groups.*, count(group_members.group_id) as member_in_group")
