@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150106060416) do
+ActiveRecord::Schema.define(version: 20150209035746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,16 @@ ActiveRecord::Schema.define(version: 20150106060416) do
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
   add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+
+  create_table "api_tokens", force: true do |t|
+    t.integer  "member_id"
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "app_id"
+  end
+
+  add_index "api_tokens", ["member_id"], name: "index_api_tokens_on_member_id", using: :btree
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -176,6 +186,7 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
+    t.text     "note"
   end
 
   add_index "branches", ["company_id"], name: "index_branches_on_company_id", using: :btree
@@ -200,13 +211,18 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.string   "serial_code"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "redeem",      default: false
+    t.boolean  "redeem",         default: false
     t.datetime "redeem_at"
     t.integer  "poll_id"
+    t.integer  "poll_series_id"
+    t.integer  "redeemer_id"
+    t.string   "ref_no"
   end
 
   add_index "campaign_members", ["campaign_id"], name: "index_campaign_members_on_campaign_id", using: :btree
   add_index "campaign_members", ["member_id"], name: "index_campaign_members_on_member_id", using: :btree
+  add_index "campaign_members", ["poll_series_id"], name: "index_campaign_members_on_poll_series_id", using: :btree
+  add_index "campaign_members", ["redeemer_id"], name: "index_campaign_members_on_redeemer_id", using: :btree
 
   create_table "campaigns", force: true do |t|
     t.string   "name"
@@ -222,6 +238,7 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.text     "description"
     t.text     "how_to_redeem"
     t.integer  "company_id"
+    t.integer  "type_campaign"
   end
 
   add_index "campaigns", ["company_id"], name: "index_campaigns_on_company_id", using: :btree
@@ -239,11 +256,58 @@ ActiveRecord::Schema.define(version: 20150106060416) do
 
   add_index "choices", ["poll_id"], name: "index_choices_on_poll_id", using: :btree
 
+  create_table "collection_poll_branches", force: true do |t|
+    t.integer  "branch_id"
+    t.integer  "collection_poll_id"
+    t.integer  "poll_series_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "collection_poll_branches", ["branch_id"], name: "index_collection_poll_branches_on_branch_id", using: :btree
+  add_index "collection_poll_branches", ["collection_poll_id"], name: "index_collection_poll_branches_on_collection_poll_id", using: :btree
+  add_index "collection_poll_branches", ["poll_series_id"], name: "index_collection_poll_branches_on_poll_series_id", using: :btree
+
+  create_table "collection_poll_series", force: true do |t|
+    t.string   "title"
+    t.integer  "company_id"
+    t.integer  "sum_view_all",              default: 0
+    t.integer  "sum_vote_all",              default: 0
+    t.string   "questions",                 default: [],   array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "feedback_recurring_id"
+    t.boolean  "recurring_status",          default: true
+    t.string   "recurring_poll_series_set", default: [],   array: true
+    t.string   "main_poll_series",          default: [],   array: true
+    t.boolean  "feedback_status",           default: true
+    t.integer  "campaign_id"
+  end
+
+  add_index "collection_poll_series", ["campaign_id"], name: "index_collection_poll_series_on_campaign_id", using: :btree
+  add_index "collection_poll_series", ["company_id"], name: "index_collection_poll_series_on_company_id", using: :btree
+  add_index "collection_poll_series", ["feedback_recurring_id"], name: "index_collection_poll_series_on_feedback_recurring_id", using: :btree
+
+  create_table "collection_poll_series_branches", force: true do |t|
+    t.integer  "collection_poll_series_id"
+    t.integer  "branch_id"
+    t.integer  "poll_series_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "collection_poll_series_branches", ["branch_id"], name: "index_collection_poll_series_branches_on_branch_id", using: :btree
+  add_index "collection_poll_series_branches", ["collection_poll_series_id"], name: "by_series_and_branch", using: :btree
+  add_index "collection_poll_series_branches", ["poll_series_id"], name: "index_collection_poll_series_branches_on_poll_series_id", using: :btree
+
   create_table "collection_polls", force: true do |t|
     t.string   "title"
     t.integer  "company_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sum_view_all", default: 0
+    t.integer  "sum_vote_all", default: 0
+    t.string   "questions",    default: [], array: true
   end
 
   add_index "collection_polls", ["company_id"], name: "index_collection_polls_on_company_id", using: :btree
@@ -295,6 +359,16 @@ ActiveRecord::Schema.define(version: 20150106060416) do
   end
 
   add_index "devices", ["member_id"], name: "index_devices_on_member_id", using: :btree
+
+  create_table "feedback_recurrings", force: true do |t|
+    t.integer  "company_id"
+    t.time     "period"
+    t.boolean  "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "feedback_recurrings", ["company_id"], name: "index_feedback_recurrings_on_company_id", using: :btree
 
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
@@ -363,17 +437,6 @@ ActiveRecord::Schema.define(version: 20150106060416) do
   add_index "group_surveyors", ["group_id"], name: "index_group_surveyors_on_group_id", using: :btree
   add_index "group_surveyors", ["member_id"], name: "index_group_surveyors_on_member_id", using: :btree
 
-  create_table "grouppings", force: true do |t|
-    t.integer  "collection_poll_id"
-    t.integer  "groupable_id"
-    t.string   "groupable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "grouppings", ["collection_poll_id"], name: "index_grouppings_on_collection_poll_id", using: :btree
-  add_index "grouppings", ["groupable_id", "groupable_type"], name: "index_grouppings_on_groupable_id_and_groupable_type", using: :btree
-
   create_table "groups", force: true do |t|
     t.string   "name"
     t.boolean  "public",           default: false
@@ -391,9 +454,12 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.boolean  "admin_post_only",  default: false
     t.string   "slug"
     t.boolean  "need_approve",     default: true
+    t.string   "public_id"
   end
 
+  add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
   add_index "groups", ["properties"], name: "index_groups_on_properties", using: :gist
+  add_index "groups", ["public_id"], name: "index_groups_on_public_id", unique: true, using: :btree
   add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
 
   create_table "guests", force: true do |t|
@@ -476,6 +542,7 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.integer  "poll_series_id", default: 0
     t.hstore   "data_analysis"
     t.integer  "surveyor_id"
+    t.boolean  "show_result",    default: false
   end
 
   add_index "history_votes", ["data_analysis"], name: "index_history_votes_on_data_analysis", using: :gist
@@ -583,10 +650,18 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.string   "cover_preset",               default: "0"
     t.integer  "register",                   default: 0
     t.string   "slug"
+    t.string   "public_id"
+    t.boolean  "waiting",                    default: false
+    t.boolean  "created_company",            default: false
+    t.boolean  "first_setting_anonymous",    default: true
+    t.boolean  "receive_notify",             default: true
+    t.string   "fb_id"
   end
 
+  add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
   add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at", using: :btree
+  add_index "members", ["public_id"], name: "index_members_on_public_id", using: :btree
   add_index "members", ["setting"], name: "index_members_on_setting", using: :gist
   add_index "members", ["slug"], name: "index_members_on_slug", unique: true, using: :btree
   add_index "members", ["username"], name: "index_members_on_username", using: :btree
@@ -686,6 +761,7 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.boolean  "require_info"
     t.boolean  "in_group",       default: false
     t.integer  "recurring_id"
+    t.boolean  "feedback",       default: false
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree
@@ -714,7 +790,7 @@ ActiveRecord::Schema.define(version: 20150106060416) do
 
   create_table "polls", force: true do |t|
     t.integer  "member_id"
-    t.string   "title"
+    t.text     "title"
     t.boolean  "public",            default: false
     t.integer  "vote_all",          default: 0
     t.datetime "created_at"
@@ -752,6 +828,7 @@ ActiveRecord::Schema.define(version: 20150106060416) do
     t.integer  "notify_state",      default: 0
     t.datetime "notify_state_at"
     t.string   "slug"
+    t.integer  "priority"
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
@@ -802,6 +879,16 @@ ActiveRecord::Schema.define(version: 20150106060416) do
   end
 
   add_index "recurrings", ["member_id"], name: "index_recurrings_on_member_id", using: :btree
+
+  create_table "redeemers", force: true do |t|
+    t.integer  "company_id"
+    t.integer  "member_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "redeemers", ["company_id"], name: "index_redeemers_on_company_id", using: :btree
+  add_index "redeemers", ["member_id"], name: "index_redeemers_on_member_id", using: :btree
 
   create_table "request_codes", force: true do |t|
     t.integer  "member_id"
@@ -859,6 +946,13 @@ ActiveRecord::Schema.define(version: 20150106060416) do
   add_index "share_polls", ["member_id"], name: "index_share_polls_on_member_id", using: :btree
   add_index "share_polls", ["poll_id"], name: "index_share_polls_on_poll_id", using: :btree
   add_index "share_polls", ["shared_group_id"], name: "index_share_polls_on_shared_group_id", using: :btree
+
+  create_table "special_qrcodes", force: true do |t|
+    t.string   "code"
+    t.hstore   "info"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "suggests", force: true do |t|
     t.integer  "poll_series_id"

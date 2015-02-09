@@ -28,7 +28,7 @@ class GroupController < ApplicationController
     @group.update!(edit_group_params)
     Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking
     # @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
-    GroupMembers.new(@group).cached_all_members.collect{|member| FlushCached::Member.new(member).clear_list_groups }
+    Group::ListMember.new(@group).cached_all_members.collect{|member| FlushCached::Member.new(member).clear_list_groups }
   end
 
   def add_friend_to_group
@@ -54,7 +54,7 @@ class GroupController < ApplicationController
   end
 
   def members
-    @group_members ||= GroupMembers.new(@group)
+    @group_members ||= Group::ListMember.new(@group)
     @member_active = @group_members.active
     @member_pending = @group_members.pending
     @member_request = @group.members_request
@@ -97,7 +97,7 @@ class GroupController < ApplicationController
   end
 
   def detail_group
-    @group_members ||= GroupMembers.new(@group)
+    @group_members ||= Group::ListMember.new(@group)
     @member_active = @group_members.active
     @member_pending = @group_members.pending
     @member_request = @group.members_request
@@ -111,7 +111,7 @@ class GroupController < ApplicationController
 
     begin
 
-    @group_members ||= GroupMembers.new(@group)
+    @group_members ||= Group::ListMember.new(@group)
     @member_active = @group_members.active
 
       find_member_in_group = @member_active.map(&:id)
@@ -224,10 +224,7 @@ class GroupController < ApplicationController
   private
 
   def set_group
-    begin
-      @group = Group.find_by(id: params[:id])
-      raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
-    end
+    @group = Group.cached_find(params[:id])
   end
 
   def group_update_params

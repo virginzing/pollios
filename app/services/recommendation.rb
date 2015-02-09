@@ -1,7 +1,7 @@
 class Recommendation
   def initialize(member)
     @member = member
-    @init_list_friend = ListFriend.new(@member)
+    @init_list_friend = Member::ListFriend.new(@member)
     @list_member_active = @init_list_friend.active
     @list_member_block = @init_list_friend.block
     @list_member_follower = @init_list_friend.follower
@@ -81,7 +81,7 @@ class Recommendation
 
     find_friend_ids = find_list_friend_ids
     # puts "find_friend_ids => #{find_friend_ids}"
-    find_group_and_return_member_ids = @list_member_active.collect{|group| GroupMembers.new(group).active.map(&:id) }.flatten.uniq
+    find_group_and_return_member_ids = @list_member_active.collect{|group| Group::ListMember.new(group).active.map(&:id) }.flatten.uniq
     # puts "find_group_and_return_member_ids => #{find_group_and_return_member_ids}"
     list_non_friend_ids = find_group_and_return_member_ids - find_friend_ids
     # puts "list_non_friend_ids => #{list_non_friend_ids}"

@@ -230,7 +230,7 @@ class ApplicationController < ActionController::Base
       # Member.list_friend_following  = Member.current_member.cached_get_following
       # Member.list_your_request      = Member.current_member.cached_get_your_request
 
-      init_list_friend = ListFriend.new(Member.current_member)
+      init_list_friend = Member::ListFriend.new(Member.current_member)
 
       Member.list_friend_active = init_list_friend.active
       Member.list_friend_block = init_list_friend.block

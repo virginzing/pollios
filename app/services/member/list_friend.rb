@@ -1,4 +1,4 @@
-class ListFriend
+class Member::ListFriend
   def initialize(member)
     @member = member
   end

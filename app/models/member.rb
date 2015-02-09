@@ -2,7 +2,6 @@ class Member < ActiveRecord::Base
   # extend FriendlyId
   include PgSearch
   include MemberHelper
-
   attr_accessor :list_email, :file, :company_id, :redeemer, :feedback
   
   rolify

@@ -70,7 +70,7 @@ class FriendsController < ApplicationController
 
   def search_friend
     @search = Member.search_member(friend_params)
-    init_list_friend ||= ListFriend.new(@current_member)
+    init_list_friend ||= Member::ListFriend.new(@current_member)
     @is_friend = Friend.check_add_friend?(@current_member, @search, init_list_friend.check_is_friend)
   end
 
@@ -81,7 +81,7 @@ class FriendsController < ApplicationController
 
   def following_of_friend
     find_user = Member.cached_find(friend_params[:friend_id])
-    init_list_friend ||= ListFriend.new(find_user)
+    init_list_friend ||= Member::ListFriend.new(find_user)
     @list_following = init_list_friend.following
     @is_friend = Friend.check_add_friend?(find_user, @list_following, init_list_friend.check_is_friend) if @list_following.present?
   end
@@ -222,13 +222,13 @@ class FriendsController < ApplicationController
   end
 
   def profile
-    init_list_friend ||= ListFriend.new(@current_member)
+    init_list_friend ||= Member::ListFriend.new(@current_member)
     @is_friend = Friend.check_add_friend?(@current_member, [@find_friend], init_list_friend.check_is_friend)
   end
 
   def collection_profile
     find_user = Member.cached_find(friend_params[:friend_id])
-    init_list_friend ||= ListFriend.new(find_user)
+    init_list_friend ||= Member::ListFriend.new(find_user)
 
     @list_friend = init_list_friend.active
     @list_friend_is_friend = Friend.check_add_friend?(find_user, @list_friend, init_list_friend.check_is_friend) if @list_friend.present?

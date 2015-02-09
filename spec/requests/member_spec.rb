@@ -78,6 +78,11 @@ RSpec.describe "Member" do
       expect(json["response_message"]).to eq("Public ID has already been taken")
     end
 
+    it "update fb_id when sync with facebook" do
+      post "/member/update_profile.json", { member_id: member.id, fb_id: "12345678" }, { "Accept" => "application/json" }
+      expect(member.reload.fb_id).to eq("12345678")
+    end
+
   end
 
   describe "GET /member/:id/all_request" do

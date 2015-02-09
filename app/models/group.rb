@@ -43,6 +43,8 @@ class Group < ActiveRecord::Base
   mount_uploader :photo_group, PhotoGroupUploader
   mount_uploader :cover, PhotoGroupUploader
 
+  after_commit :flush_cache
+
   # def slug_candidates
   #   [
   #     :name,
@@ -61,7 +63,15 @@ class Group < ActiveRecord::Base
   # end
 
   def self.cached_find(id)
-    Rails.cache.fetch([ name, id]) { find(id) }
+    Rails.cache.fetch([name, id]) do
+      @group = Group.find_by(id: id)
+      raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+      @group
+    end
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
   end
 
   def get_photo_group
