@@ -18,6 +18,21 @@ class FeedAlgorithm
     @filter_timeline_ids = []
   end
 
+  def check_voted
+    @check_voted ||= check_with_voted
+  end
+
+  def sort_by_priority
+    sort_by_and_reverse = check_voted.sort_by {|x| [x[:priority], x[:created_at]] }.reverse!
+    sort_by_and_reverse.collect{|e| e[:poll_member_id] }
+  end
+
+  def hash_priority
+    check_voted.inject({}) {|h, v| h[ v[:poll_member_id] ] = v[:priority]; h}
+  end
+
+  private
+
   def merge_poll_member_with_poll_id # poll_id, poll_member_id, priority 
     @poll_ids.each_with_index do |poll_id, index|
       @filter_timeline_ids << { poll_id: poll_id, poll_member_id: @poll_member_ids[index], priority: @priority_poll_member_ids[index], created_at: @created_time[index], updated_at: @updated_time[index] }
@@ -49,18 +64,13 @@ class FeedAlgorithm
 
       new_check_with_voted << e     
     end
-
+    # puts "new_check_with_voted => #{new_check_with_voted}"
     new_check_with_voted
   end
 
   def time_ago_value(created_at)
     time_compare = DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i
     time_compare <= 0 ? 0 : time_compare    
-  end
-
-  def sort_by_priority
-    sort_by_and_reverse = check_with_voted.sort_by {|x| [x[:priority], x[:created_at]] }.reverse!
-    sort_by_and_reverse.collect{|e| e[:poll_member_id] }
   end
 
 end

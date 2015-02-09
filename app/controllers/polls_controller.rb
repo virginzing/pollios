@@ -31,6 +31,7 @@ class PollsController < ApplicationController
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
+  expose(:hash_priority) { @hash_priority }
 
   respond_to :json
 
@@ -472,6 +473,9 @@ class PollsController < ApplicationController
       @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.get_timeline
       @group_by_name = overall_timeline.group_by_name
       @total_entries = overall_timeline.total_entries
+      @hash_priority = overall_timeline.get_hash_priority
+
+      # puts "@hash_priority => #{@hash_priority}"
     end
   end
 

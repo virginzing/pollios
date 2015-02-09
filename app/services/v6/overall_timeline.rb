@@ -55,6 +55,14 @@ class V6::OverallTimeline
     cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
   end
 
+  def get_hash_priority
+    @get_hash_priority ||= hash_priority
+  end
+
+  def friend_group_public
+    @friend_group_public ||= find_poll_me_and_friend_and_group_and_public
+  end
+  
   private
 
   def find_poll_me_and_friend_and_group_and_public
@@ -139,7 +147,7 @@ class V6::OverallTimeline
   end
 
   def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
-    ids, poll_ids, priority, created_time, updated_time = find_poll_me_and_friend_and_group_and_public
+    ids, poll_ids, priority, created_time, updated_time = friend_group_public
 
 
     # shared = find_poll_share
@@ -155,6 +163,12 @@ class V6::OverallTimeline
     ids
     # ids.sort!{|x,y| y <=> x }
   end
+
+  def hash_priority
+    ids, poll_ids, priority, created_time, updated_time = friend_group_public
+    FeedAlgorithm.new(ids, poll_ids, priority, created_time, updated_time).hash_priority
+  end
+
 
   def poll_shared_at(poll_member)
     if poll_member.in_group
