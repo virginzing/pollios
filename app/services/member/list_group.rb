@@ -15,11 +15,20 @@ class Member::ListGroup
     cached_all_groups.select{|group| group unless group.member_active }
   end
 
+  def hash_member_count
+    @group_member_count ||= group_member_count.inject({}) { |h,v| h[v.id] = v.member_count; h }
+  end
+
   private
 
   def groups
     Group.joins(:group_members).select("groups.*, group_members.is_master as member_admin, group_members.active as member_active, group_members.invite_id as member_invite_id") \
           .where("group_members.member_id = #{@member.id}").group("groups.id, member_admin, member_active, member_invite_id")
+  end
+
+  def group_member_count
+    Group.joins(:group_members).select("groups.*, count(group_members) as member_count").group("groups.id") \
+          .where("groups.id IN (?)", cached_all_groups.map(&:id))
   end
   
   def cached_groups

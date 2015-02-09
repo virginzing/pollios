@@ -343,8 +343,6 @@ class Group < ActiveRecord::Base
   # end
 
   def get_member_count
-    # GroupMembers.new(self).active.count
-    # GroupMembers.new(self).list_members.select{|e| e if e.is_active }.count
     group_members_active.map(&:id).count
   end
 

@@ -9,15 +9,13 @@ class GroupController < ApplicationController
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
+  expose(:hash_member_count) { @hash_member_count }
 
   def my_group
     init_list_group = Member::ListGroup.new(@current_member)
-
-    # @group_active = @current_member.get_group_active
-    # @group_inactive = Group.joins(:group_members).includes(:members).where("group_members.member_id = ? AND group_members.active = 'f'", @current_member.id).
-    #                   select("groups.*, group_members.invite_id as invite_id")
     @group_active = init_list_group.active
     @group_inactive = init_list_group.inactive
+    @hash_member_count = init_list_group.hash_member_count
   end
 
   def build_group
@@ -27,7 +25,6 @@ class GroupController < ApplicationController
   def edit_group
     @group.update!(edit_group_params)
     Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking
-    # @group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
     Group::ListMember.new(@group).cached_all_members.collect{|member| FlushCached::Member.new(member).clear_list_groups }
   end
 
