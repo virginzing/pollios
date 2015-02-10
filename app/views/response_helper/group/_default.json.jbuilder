@@ -2,10 +2,10 @@ json.id group.id
 json.name group.name
 json.photo group.get_photo_group
 json.cover group.get_cover_group
-json.member_count group.member_count
-json.public group.public
+json.member_count group.amount_member
 json.description group.get_description
+json.public group.public
+json.leave_group group.leave_group
 json.created_at group.created_at.to_i
-json.invite_by Member.find(group.invite_id)
 json.admin_post_only group.get_admin_post_only
 json.need_approve group.need_approve

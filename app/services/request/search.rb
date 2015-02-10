@@ -14,8 +14,12 @@ class Request::Search
     @params[:search]
   end
 
-  def next_cursor
-    @params[:next_cursor] || 0
+  def next_member
+    @params[:next_cursor_member] || 1
+  end
+
+  def next_group
+    @params[:next_cursor_group] || 1
   end
 
   def my_group_active
@@ -30,12 +34,36 @@ class Request::Search
     @my_friend_block ||= @init_list_friend.block
   end
 
+  def check_is_friend
+    @init_list_friend.check_is_friend
+  end
+
+  # groups #
+
   def list_groups
     @list_groups ||= groups
   end
 
+  def next_cursor_group
+    list_groups.next_page.nil? ? 0 : list_groups.next_page
+  end
+
+  def total_list_groups
+    list_groups.total_entries
+  end
+
+  # members #
+
   def list_members
     @list_members ||= members
+  end
+
+  def next_cursor_member
+    list_members.next_page.nil? ? 0 : list_members.next_page
+  end
+
+  def total_list_members
+    list_members.total_entries
   end
   
   
@@ -43,8 +71,12 @@ class Request::Search
 
 
   def groups
-    groups = Group.where("groups.name LIKE ? OR groups.public_id LIKE ?", "%#{search}%", "%#{search}%").order("name asc")
-    groups = groups.paginate(per_page: PER_PAGE, page: next_cursor)
+    groups = Group.joins(:group_members_active).select("groups.*, count(group_members.member_id) as amount_member")
+                  .group("groups.id")
+                  .where("(groups.name LIKE ? AND groups.public = 't') OR (groups.public_id LIKE ? AND groups.public = 't')", "%#{search}%", "%#{search}%")
+                  .order("name asc")
+
+    groups = groups.paginate(per_page: PER_PAGE, page: next_group)
   end
 
   def members
@@ -52,7 +84,7 @@ class Request::Search
 
     members = Member.unscoped.where("members.fullname LIKE ? OR members.public_id LIKE ?", "%#{search}%", "%#{search}%").order("fullname asc")
     members = members.where("members.id NOT IN (?)", block_friend) if block_friend.count > 0
-    members = members.paginate(per_page: PER_PAGE, page: next_cursor)
+    members = members.paginate(per_page: PER_PAGE, page: next_member)
   end
 
 end
