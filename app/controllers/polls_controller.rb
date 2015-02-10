@@ -106,10 +106,10 @@ class PollsController < ApplicationController
 
   def member_voted
     begin
-      find_choice = Choice.find(params[:choice_id])
+      @find_choice = Choice.cached_find(params[:choice_id])
 
       @history_votes_show_result ||= HistoryVote.includes(:member)
-                                    .where(poll_id: @poll.id, choice_id: find_choice.id, show_result: true).paginate(page: params[:next_cursor], per_page: 30)
+                                    .where(poll_id: @poll.id, choice_id: @find_choice.id, show_result: true).paginate(page: params[:next_cursor], per_page: 30)
 
       # @history_votes_show_result = @history_votes.select{|e| e if e.show_result }
       # @history_votes_not_show_result = @history_votes.select{|e| e unless e.show_result }

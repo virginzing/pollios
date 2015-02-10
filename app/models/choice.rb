@@ -2,6 +2,8 @@ include GzipWithZlib
 class Choice < ActiveRecord::Base
   
   belongs_to :poll
+
+  after_commit :flush_cache
   
   validates :answer, presence: true
   
@@ -12,6 +14,17 @@ class Choice < ActiveRecord::Base
     set [{:vote => 0}, {:vote_guest => 0}]
   end
 
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id]) do
+      @choice = Choice.unscoped.find_by(id: id)
+      raise ExceptionHandler::NotFound, "Choice not found" unless @choice.present?
+      @choice
+    end
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
+  end
 
   def self.create_choices(poll_id ,choices)
     # choices = decompress_zlib(choices)

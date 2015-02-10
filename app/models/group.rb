@@ -91,6 +91,10 @@ class Group < ActiveRecord::Base
     cover.present? ? cover.url(:cover) : ""
   end
 
+  def get_public_id
+    public_id.present? ? public_id : ""
+  end
+
   def set_notification(member_id)
     group_member = group_members.where("member_id = ?", member_id)
   end
@@ -394,7 +398,8 @@ class Group < ActiveRecord::Base
       leave_group: leave_group,
       created_at: created_at.to_i,
       admin_post_only: get_admin_post_only,
-      need_approve: need_approve
+      need_approve: need_approve,
+      public_id: get_public_id
     }
   end
 

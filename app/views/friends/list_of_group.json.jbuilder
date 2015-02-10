@@ -13,6 +13,7 @@ if @groups
     json.admin_post_only group.get_admin_post_only
     json.need_approve group.need_approve
     json.as_admin group.member_admin
+    json.public_id group.get_public_id
   end
 else
   json.response_status "ERROR"

@@ -6,6 +6,8 @@ if @history_votes_show_result
   json.total_show_result @total_history_votes_show_result
 
   json.next_cursor @next_cursor
+
+  json.total_vote_choice @find_choice.vote
 else
   json.response_status "ERROR"
   json.response_message @response_message
