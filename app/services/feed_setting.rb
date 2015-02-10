@@ -1,5 +1,5 @@
 module FeedSetting
-  DAY_COMPARE = 15
+  DAY_COMPARE = 30
   UPDATED_POLL = 2
   VOTED = 2
   NOT_YET_VOTE = 5
