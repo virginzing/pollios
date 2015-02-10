@@ -82,7 +82,7 @@ class Request::Search
   def members
     block_friend = my_friend_block.map(&:id)
 
-    members = Member.unscoped.where("members.fullname LIKE ? OR members.public_id LIKE ?", "%#{search}%", "%#{search}%").order("fullname asc")
+    members = Member.unscoped.without_member_type(:company).where("members.fullname LIKE ? OR members.public_id LIKE ?", "%#{search}%", "%#{search}%").order("fullname asc")
     members = members.where("members.id NOT IN (?)", block_friend) if block_friend.count > 0
     members = members.paginate(per_page: PER_PAGE, page: next_member)
   end
