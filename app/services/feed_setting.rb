@@ -3,7 +3,7 @@ module FeedSetting
   UPDATED_POLL = 2
   VOTED = 2
   NOT_YET_VOTE = 5
-  CREATED_RECENT = 30
+  CREATED_RECENT = 10
 
   PUBLIC_FEED = 10
   GROUP_FEED = 8
