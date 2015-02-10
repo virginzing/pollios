@@ -118,15 +118,14 @@ namespace :poll do
   task :update_priority => :environment do
     Poll.all.each do |p|
       if p.public
-        p.update(priority: 10)
+        p.update(priority: 0)
       else
         if p.in_group
-          p.update(priority: 8)
+          p.update(priority: 0)
         else
-          p.update(priority: 5)
+          p.update(priority: 0)
         end
       end
-
     end
   end
 

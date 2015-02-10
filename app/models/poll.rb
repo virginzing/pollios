@@ -193,12 +193,12 @@ class Poll < ActiveRecord::Base
 
   def set_priority
     if public
-      update(priority: 10)
+      update(priority: 0)
     else
       if in_group
-        update(priority: 8)
+        update(priority: 0)
       else
-        update(priority: 5)
+        update(priority: 0)
       end
     end
   end

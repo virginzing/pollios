@@ -2,10 +2,11 @@ class FeedAlgorithm
   include ActionView::Helpers::DateHelper
   include FeedSetting
 
-  def initialize(poll_member_ids, poll_ids, priority_poll_member_ids, created_time, updated_time)
+  def initialize(poll_member_ids, poll_ids, feed, priority, created_time, updated_time)
     @poll_member_ids = poll_member_ids
     @poll_ids = poll_ids
-    @priority_poll_member_ids = priority_poll_member_ids
+    @feed = feed
+    @priority = priority
     @vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
     @created_time = created_time
     @updated_time = updated_time
@@ -29,7 +30,7 @@ class FeedAlgorithm
 
   def merge_poll_member_with_poll_id # poll_id, poll_member_id, priority 
     @poll_ids.each_with_index do |poll_id, index|
-      @filter_timeline_ids << { poll_id: poll_id, poll_member_id: @poll_member_ids[index], priority: @priority_poll_member_ids[index], created_at: @created_time[index], updated_at: @updated_time[index] }
+      @filter_timeline_ids << { poll_id: poll_id, poll_member_id: @poll_member_ids[index], feed: @feed[index], priority: @priority[index], created_at: @created_time[index], updated_at: @updated_time[index] }
     end
     # puts "filter timtline ids => #{@filter_timeline_ids}"
     @filter_timeline_ids
@@ -39,20 +40,20 @@ class FeedAlgorithm
     new_check_with_voted = []
 
     merge_poll_member_with_poll_id.each_with_index do |e, index|
-      feed = e[:priority]
+      feed = e[:feed]
 
       if @vote_poll_ids.include?(e[:poll_id]) ## voted
         
         if e[:updated_at] > 2.days.ago
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED + FeedSetting::UPDATED_POLL)
+          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED + FeedSetting::UPDATED_POLL))
         else
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED)
+          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED))
         end
       else
         if e[:created_at] > 20.minutes.ago
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE + FeedSetting::CREATED_RECENT) 
+          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE + FeedSetting::CREATED_RECENT)) 
         else
-          e[:priority] = time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE) 
+          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE)) 
         end
       end
 

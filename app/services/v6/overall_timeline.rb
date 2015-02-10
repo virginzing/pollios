@@ -68,6 +68,7 @@ class V6::OverallTimeline
 
   def find_poll_me_and_friend_and_group_and_public
     feed = []
+    priority = []
     created_time = []
     updated_time = []
 
@@ -110,13 +111,13 @@ class V6::OverallTimeline
     query = query.limit(LIMIT_TIMELINE)
 
     query.each do |q|
-      # poll_priority << q.poll.priority
+      priority << check_poll_priority(q.poll)
       feed << check_feed_type(q.poll)
       created_time << q.poll.created_at
       updated_time << q.poll.updated_at
     end
 
-    ids, poll_ids, feed, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, created_time, updated_time
+    ids, poll_ids, feed, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, priority, created_time, updated_time
   end
 
   def check_feed_type(poll)
@@ -129,6 +130,10 @@ class V6::OverallTimeline
         FeedSetting::FRIEND_FOLLOWING_FEED
       end
     end
+  end
+
+  def check_poll_priority(poll)
+    poll.priority
   end
 
   def poll_non_share_non_in_group
@@ -161,7 +166,7 @@ class V6::OverallTimeline
   end
 
   def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
-    ids, poll_ids, feed, created_time, updated_time = friend_group_public
+    ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
 
 
     # shared = find_poll_share
@@ -172,15 +177,15 @@ class V6::OverallTimeline
     # p "priority => #{priority}"
     # p "poll_ids => #{poll_ids}"
 
-    ids = FeedAlgorithm.new(ids, poll_ids, feed, created_time, updated_time).sort_by_priority
+    ids = FeedAlgorithm.new(ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
 
     ids
     # ids.sort!{|x,y| y <=> x }
   end
 
   def hash_priority
-    ids, poll_ids, feed, created_time, updated_time = friend_group_public
-    FeedAlgorithm.new(ids, poll_ids, feed, created_time, updated_time).hash_priority
+    ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
+    FeedAlgorithm.new(ids, poll_ids, feed, priority, created_time, updated_time).hash_priority
   end
 
 

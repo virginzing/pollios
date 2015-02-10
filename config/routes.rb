@@ -12,6 +12,12 @@ Pollios::Application.routes.draw do
   
   resources :activity_feeds
 
+  resources :searches do
+    collection do
+      get 'users_and_groups'
+    end
+  end
+
   namespace :api, defaults: {format: 'json'} do
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true) do
       scope 'group/:group_id' do
