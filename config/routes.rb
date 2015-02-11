@@ -248,6 +248,7 @@ Pollios::Application.routes.draw do
     post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'
     post ':member_id/unrecomment',  to: 'members#unrecomment'
     post ':member_id/device_token', to: 'members#device_token'
+    post ':member_id/invite_user',  to: 'members#invite_user'
   end
 
   scope 'search' do

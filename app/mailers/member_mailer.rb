@@ -1,5 +1,5 @@
 class MemberMailer < ActionMailer::Base
-  default from: "nuttapon@code-app.com"
+  default from: "polliosadmin@code-app.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:

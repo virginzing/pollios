@@ -46,14 +46,8 @@
       <table>
         <tr>
           <td>
-            <h3>Hi, <%= @member.fullname %></h3>
-            <p>To reset your password click the URL below.</p>
-            <!-- Callout Panel -->
-            <p class="callout">
-              Reset password: <a href="<%= users_resetpassword_url(@password_reset_token) %>">Click it! &raquo;</a>
-            </p><!-- /Callout Panel -->         
+            <h3><%= @member.fullname %> invite you to join Pollios</h3>
             
-            <p>If you did not request your password to be reset please ignore this email and your password will stay as it is.</p>
             <!-- social & contact -->
             <table class="social" width="100%">
               <tr>

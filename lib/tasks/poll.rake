@@ -152,3 +152,6 @@ namespace :poll do
   # end
 
 end
+
+
+# PollMember.where("share_poll_of_id != 0")

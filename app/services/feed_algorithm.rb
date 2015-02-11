@@ -59,7 +59,7 @@ class FeedAlgorithm
 
       new_check_with_voted << e     
     end
-    # puts "new_check_with_voted => #{new_check_with_voted}"
+
     new_check_with_voted
   end
 

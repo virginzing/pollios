@@ -135,6 +135,9 @@ class Member < ActiveRecord::Base
 
   has_many :api_tokens, dependent: :destroy
 
+  has_many :invites, dependent: :destroy
+  has_many :members_invites, through: :invites, source: :invitee
+
 
   has_one :redeemer
 

@@ -130,4 +130,56 @@ RSpec.describe "Member" do
     end
 
   end
+
+  describe "POST /member/:id/invite_user" do
+    list_email = []
+    5.times { list_email << Faker::Internet.email }
+
+    before do
+      puts "list_email => #{list_email}"
+      post "/member/#{member.id}/invite_user", { list_email: list_email }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+    end
+
+    it "create invite" do
+      expect(member.invites.count).to eq(5)
+    end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
