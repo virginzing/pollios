@@ -42,20 +42,14 @@ class FeedAlgorithm
     merge_poll_member_with_poll_id.each_with_index do |e, index|
       feed = e[:feed]
 
-      if @vote_poll_ids.include?(e[:poll_id]) ## voted
-        
-        if e[:updated_at] > 2.days.ago
-          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED + FeedSetting::UPDATED_POLL))
-        else
-          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::VOTED))
-        end
-      else
-        if e[:created_at] > 20.minutes.ago
-          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE + FeedSetting::CREATED_RECENT)) 
-        else
-          e[:priority] = e[:priority] + (time_ago_value(e[:created_at]) * (feed + FeedSetting::NOT_YET_VOTE)) 
-        end
-      end
+      vote_status = @vote_poll_ids.include?(e[:poll_id]) ? FeedSetting::VOTED : FeedSetting::NOT_YET_VOTE
+      updated_2_days = (e[:updated_at] > 2.days.ago) ? FeedSetting::UPDATED_POLL : 0
+      created_20_min = (e[:created_at] > 20.minutes.ago) ? FeedSetting::CREATED_RECENT : 0
+
+      poll_metadata_score = time_ago_value(e[:created_at]) * (feed + vote_status + updated_2_days + created_20_min)
+      poll_value_score = e[:priority]
+
+      e[:priority] = poll_value_score + poll_metadata_score
 
       new_check_with_voted << e     
     end
