@@ -259,7 +259,7 @@ RSpec.describe "Group" do
 
     it "set public to false" do
       expect(second_group.public).to eq(true)
-      post "/group/#{group.id}/set_public.json", { member_id: member.id, public: false }, { "Accept" => "application/json" }
+      post "/group/#{second_group.id}/set_public.json", { member_id: member.id, public: false }, { "Accept" => "application/json" }
       expect(second_group.reload.public).to be false
     end
   end
