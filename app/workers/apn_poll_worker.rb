@@ -1,7 +1,7 @@
 class ApnPollWorker
   include Sidekiq::Worker
   include SymbolHash
-
+  
   sidekiq_options unique: true
 
   # sidekiq_options :retry => 2

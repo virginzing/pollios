@@ -1,7 +1,7 @@
 class AddFollowWorker
   include Sidekiq::Worker
   include SymbolHash
-  
+
   sidekiq_options unique: true
 
   def perform(member_id, friend_id, options = {})

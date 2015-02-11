@@ -404,7 +404,7 @@ class Group < ActiveRecord::Base
       admin_post_only: get_admin_post_only,
       need_approve: need_approve,
       public_id: get_public_id,
-      group_type: group_type
+      group_type: group_type_text.downcase
     }
   end
 

@@ -1,5 +1,4 @@
 module SymbolHash
-
   TYPE = {
     :poll => 'Poll',
     :poll_series => 'PollSeries',
