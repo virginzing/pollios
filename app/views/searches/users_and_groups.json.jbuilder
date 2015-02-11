@@ -4,6 +4,7 @@ json.response_status "OK"
 
 json.list_groups @groups do |group|
   json.partial! 'response_helper/group/default', group: group
+  json.member_count group.amount_member
 end
 
 json.next_cursor_group @next_cursor_group

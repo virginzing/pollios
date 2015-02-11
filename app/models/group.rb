@@ -349,7 +349,9 @@ class Group < ActiveRecord::Base
   # end
 
   def get_member_count
-    group_members_active.map(&:id).count
+    Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/member_count") do
+      group_members_active.map(&:id).count
+    end
   end
 
   def get_all_member_count

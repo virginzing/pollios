@@ -19,6 +19,7 @@ class MembersController < ApplicationController
   expose(:members) { |default| default.paginate(page: params[:page]) }
   expose(:member) { @current_member }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
+  expose(:hash_member_count) { @hash_member_count }
 
   respond_to :json
 
@@ -29,7 +30,6 @@ class MembersController < ApplicationController
     @mutual_friends = @init_recommendation.get_member_ids_from_mutual_and_group
 
     @recommendations_follower = @init_recommendation.get_follower_recommendations if @current_member.celebrity?
-    # puts "#{@mutual_friend.map(&:id)}"
   end
 
   def special_code
@@ -237,9 +237,11 @@ class MembersController < ApplicationController
     @your_request = init_list_friend.your_request
     @friend_request = init_list_friend.friend_request
 
-    @group_inactive = Group.joins(:group_members)
-                            .where("group_members.member_id = ? AND group_members.active = 'f'", @current_member.id)
-                            .select("groups.*, group_members.invite_id as invite_id")
+    init_list_group = Member::ListGroup.new(@current_member)
+
+    @group_inactive = init_list_group.inactive
+
+    @hash_member_count = init_list_group.hash_member_count
 
     @ask_join_group = @current_member.cached_ask_join_groups
 
