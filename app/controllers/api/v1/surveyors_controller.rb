@@ -25,7 +25,7 @@ module Api
       end
 
       def members_surveyable_questionnaire
-        @init_member_suveyable = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire)
+        @init_member_suveyable = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire, @current_member)
         @members_surveyable = @init_member_suveyable.get_members_in_group
 
         @members_voted = @init_member_suveyable.get_members_voted
@@ -42,7 +42,7 @@ module Api
       end
 
       def survey_questionnaire
-        @init_survey_questionnaire = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire, params)
+        @init_survey_questionnaire = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire, @current_member, params)
         @survey_questionnaire = @init_survey_questionnaire.survey
       end
       
@@ -65,11 +65,11 @@ module Api
       end
 
       def set_poll
-        @poll = Poll.cached_find(id: params[:id])
+        @poll = Poll.cached_find(params[:id])
       end
 
       def set_quesitonnaire
-        @questionnaire = PollSeries.cached_find(id: params[:id])
+        @questionnaire = PollSeries.cached_find(params[:id])
       end
 
       def request_json

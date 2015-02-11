@@ -123,7 +123,7 @@ class Member < ActiveRecord::Base
 
   has_many :group_surveyors, dependent: :destroy
 
-  has_many :surveyor_in_group, through: :group_surveyor, source: :group
+  has_many :surveyor_in_group, through: :group_surveyors, source: :group
   # after_create :set_follow_pollios
 
   has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
@@ -261,7 +261,11 @@ class Member < ActiveRecord::Base
   # end
 
   def self.cached_find(id)
-    Rails.cache.fetch([name, id]) { find(id) }
+    Rails.cache.fetch([name, id]) do
+      @poll = find_by(id: id)
+      raise ExceptionHandler::NotFound, "Member not found" unless @poll.present?
+      @poll
+    end
   end
 
   def flush_cache

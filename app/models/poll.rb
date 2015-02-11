@@ -884,7 +884,7 @@ class Poll < ActiveRecord::Base
 
   end
 
-  def check_status_survey
+  def check_status_survey(member)
 
     @init_member_suveyable = Surveyor::MembersSurveyable.new(self, member)
 

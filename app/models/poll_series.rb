@@ -283,9 +283,9 @@ class PollSeries < ActiveRecord::Base
     end
   end
 
-  def check_status_survey
+  def check_status_survey(member)
 
-    @init_member_suveyable = Surveyor::MembersSurveyableQuestionnaire.new(self)
+    @init_member_suveyable = Surveyor::MembersSurveyableQuestionnaire.new(self, member)
 
     @members_surveyable = @init_member_suveyable.get_members_in_group.to_a.map(&:id)
 

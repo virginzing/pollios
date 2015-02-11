@@ -1,15 +1,16 @@
 class Surveyor::MembersSurveyableQuestionnaire
-  def initialize(questionnaire, params = {})
+  def initialize(questionnaire, member = nil, params = {})
     @questionnaire = questionnaire
+    @member = member
     @params = params
   end
 
   def surveyed
-    Member.cached_find(id: @params[:surveyed_id])
+    Member.cached_find(@params[:surveyed_id])
   end
 
   def surveyor_groups
-    surveyed.group_surveyors
+    @member.group_surveyors
   end
 
   def get_members_in_group
