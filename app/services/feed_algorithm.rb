@@ -46,7 +46,9 @@ class FeedAlgorithm
       updated_2_days = (e[:updated_at] > 2.days.ago) ? FeedSetting::UPDATED_POLL : 0
       created_20_min = (e[:created_at] > 20.minutes.ago) ? FeedSetting::CREATED_RECENT : 0
 
-      poll_metadata_score = time_ago_value(e[:created_at]) * (feed + vote_status + updated_2_days + created_20_min)
+      range_created_at = check_range_create_at(e[:created_at])
+
+      poll_metadata_score = time_ago_value(e[:created_at]) * (feed + vote_status + updated_2_days + range_created_at)
       poll_value_score = e[:priority]
 
       e[:priority] = poll_value_score + poll_metadata_score
@@ -61,6 +63,16 @@ class FeedAlgorithm
   def time_ago_value(created_at)
     time_compare = FeedSetting::DAY_COMPARE - (Time.zone.now.to_date - created_at.to_date).to_i
     time_compare <= 0 ? 0 : time_compare    
+  end
+
+  def check_range_create_at(created_at)
+    time_ago_minutes = ((Time.zone.now - created_at)/60.00).round
+
+    if time_ago_minutes >= FeedSetting::RANGE_TIME_COMPARE
+      0
+    else
+      ((FeedSetting::RANGE_TIME_COMPARE - time_ago_minutes) / 30.00).round
+    end
   end
 
 end

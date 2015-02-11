@@ -8,4 +8,6 @@ module FeedSetting
   PUBLIC_FEED = 5
   GROUP_FEED = 4
   FRIEND_FOLLOWING_FEED = 3
+
+  RANGE_TIME_COMPARE = 300
 end
