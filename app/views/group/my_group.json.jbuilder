@@ -14,6 +14,7 @@ if @group_active || @group_inactive
     json.need_approve group.need_approve
     json.as_admin group.member_admin
     json.public_id group.get_public_id
+    json.group_type group.group_type
   end
   json.group_request @group_inactive, partial: 'response_helper/group/request', as: :group
 else

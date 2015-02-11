@@ -53,7 +53,7 @@ class MembersController < ApplicationController
     init_invite_user = InviteUser.new(@current_member, params[:list_email])
     @invite_user = init_invite_user.create_list_invite
 
-    render json: {}, status: :ok
+    render json: {}, status: :created
   end
 
   def unrecomment
@@ -163,6 +163,7 @@ class MembersController < ApplicationController
       cover = update_profile_params[:cover]
       description = update_profile_params[:description]
       fullname = update_profile_params[:fullname]
+      first_signup = update_profile_params[:first_signup]
 
       CoverPreset.count_number_preset(cover_preset) if cover_preset
 
@@ -192,6 +193,10 @@ class MembersController < ApplicationController
 
         @member = @current_member.reload
 
+        unless first_signup.nil?
+          check_invited
+        end
+
         flash[:success] = "Update profile successfully."
         format.html { redirect_to my_profile_path }
         format.json
@@ -202,6 +207,17 @@ class MembersController < ApplicationController
         format.json
         format.html { render 'profile' ,errors: @error_message }
       end
+    end
+  end
+
+  def check_invited
+    @list_invite = Invite.where(email: @member.email)
+    @list_invite.update_all(invitee_id: @member.id)
+
+    puts "@list_invite.map(&:member_id).uniq => #{@list_invite.map(&:member_id).uniq}"
+    
+    @list_invite.map(&:member_id).uniq.each do |friend_id|
+      Friend.add_friend({ member_id: @member.id, friend_id: friend_id})
     end
   end
 

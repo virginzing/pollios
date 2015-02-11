@@ -194,7 +194,7 @@ class Group < ActiveRecord::Base
     photo_group = group[:photo_group]
     description = group[:description]
     cover = group[:cover]
-    set_privacy = group[:public] || true
+    set_privacy = group[:public] || false
     set_admin_post_only = group[:admin_post_only] || false
 
     name = group[:name]
@@ -401,7 +401,8 @@ class Group < ActiveRecord::Base
       created_at: created_at.to_i,
       admin_post_only: get_admin_post_only,
       need_approve: need_approve,
-      public_id: get_public_id
+      public_id: get_public_id,
+      group_type: group_type
     }
   end
 

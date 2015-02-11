@@ -79,7 +79,7 @@ class Member < ActiveRecord::Base
   has_many :friend_request, -> { where(status: 2, active: true) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_request, through: :friend_request, source: :followed
 
-  has_many :friends, foreign_key: "follower_id", class_name: "Friend"
+  has_many :friends, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
   has_many :get_friends,  through: :friends, source: :followed
 
   has_many :friend_active, -> { where(status: 1, active: true, block: false) }, foreign_key: "follower_id", class_name: "Friend"

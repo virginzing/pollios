@@ -14,6 +14,7 @@ if @groups
     json.need_approve group.need_approve
     json.as_admin group.member_admin
     json.public_id group.get_public_id
+    json.group_type group.group_type
   end
 else
   json.response_status "ERROR"

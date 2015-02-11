@@ -220,27 +220,27 @@ RSpec.describe "Group" do
     end
   end
 
-  describe "POST /group/:id/public_id" do
-    let!(:second_group) { create(:group, name: "Second group" ) }
+  # describe "POST /group/:id/public_id" do
+  #   let!(:second_group) { create(:group, name: "Second group" ) }
 
-    before do
-      post "/group/#{group.id}/public_id.json", { member_id: member.id, public_id: "123" }, { "Accept" => "application/json" }
-    end
+  #   before do
+  #     post "/group/#{group.id}/public_id.json", { member_id: member.id, public_id: "123" }, { "Accept" => "application/json" }
+  #   end
 
-    it "success" do
-      expect(json["response_status"]).to eq("OK")
-    end
+  #   it "success" do
+  #     expect(json["response_status"]).to eq("OK")
+  #   end
 
-    it "set new public_id" do
-      expect(group.reload.public_id).to eq("123")
-    end
+  #   it "set new public_id" do
+  #     expect(group.reload.public_id).to eq("123")
+  #   end
 
-    it "validate uniqueness of public_id" do
-      post "/group/#{second_group.id}/public_id.json", { member_id: member.id, public_id: "123" }, { "Accept" => "application/json" }
-      expect(json["response_status"]).to eq("ERROR")
-      expect(json["response_message"]).to eq("Public ID has already been taken")
-    end
-  end
+  #   it "validate uniqueness of public_id" do
+  #     post "/group/#{second_group.id}/public_id.json", { member_id: member.id, public_id: "123" }, { "Accept" => "application/json" }
+  #     expect(json["response_status"]).to eq("ERROR")
+  #     expect(json["response_message"]).to eq("Public ID has already been taken")
+  #   end
+  # end
 
   describe "POST /group/:id/set_public" do
     let!(:group) {  create(:group, name: "Wow Group", public: false) }
@@ -261,6 +261,12 @@ RSpec.describe "Group" do
       expect(second_group.public).to eq(true)
       post "/group/#{second_group.id}/set_public.json", { member_id: member.id, public: false }, { "Accept" => "application/json" }
       expect(second_group.reload.public).to be false
+    end
+
+    it "set public_id" do
+      post "/group/#{second_group.id}/set_public.json", { member_id: member.id, public: true, public_id: "1234567" }, { "Accept" => "application/json" }
+      expect(second_group.reload.public).to be true
+      expect(second_group.reload.public_id).to eq("1234567")
     end
   end
 

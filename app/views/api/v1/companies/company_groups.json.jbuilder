@@ -11,6 +11,7 @@ if @groups
     json.created_at group.created_at.to_i
     json.leave_group group.leave_group
     json.public_id group.get_public_id
+    json.group_type group.group_type
   end
 else
   json.response_status "ERROR"

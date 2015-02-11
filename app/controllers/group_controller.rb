@@ -157,22 +157,22 @@ class GroupController < ApplicationController
     @notification = @group.set_notification(group_params[:member_id]) 
   end
 
-  def public_id
-    begin
-      @group = @group.update!(public_id: group_params[:public_id])
-    rescue ActiveRecord::RecordInvalid => invalid
-      @group = nil
-      @error_message = invalid.record.errors.messages[:public_id][0]
-      render status: :unprocessable_entity
-    end
-  end
+  # def public_id
+  #   begin
+  #     @group = @group.update!(public_id: group_params[:public_id])
+  #   rescue ActiveRecord::RecordInvalid => invalid
+  #     @group = nil
+  #     @error_message = invalid.record.errors.messages[:public_id][0]
+  #     render status: :unprocessable_entity
+  #   end
+  # end
 
   def set_public
     begin
-      @group = @group.update!(public: edit_group_params[:public])
+      @group = @group.update!(public: edit_group_params[:public], public_id: edit_group_params[:public_id])
     rescue ActiveRecord::RecordInvalid => invalid
       @group = nil
-      @error_message = invalid.record.errors.messages[:public][0]
+      @error_message = invalid.record.errors.messages[:public_id][0]
       render status: :unprocessable_entity
     end
   end
@@ -251,6 +251,6 @@ class GroupController < ApplicationController
   end
 
   def edit_group_params
-    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public)
+    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public, :public_id)
   end
 end
