@@ -45,6 +45,8 @@ class Group < ActiveRecord::Base
 
   after_commit :flush_cache
 
+  default_scope { where(visible: true) }
+
   # def slug_candidates
   #   [
   #     :name,

@@ -241,4 +241,28 @@ RSpec.describe "Group" do
       expect(json["response_message"]).to eq("Public ID has already been taken")
     end
   end
+
+  describe "POST /group/:id/set_public" do
+    let!(:group) {  create(:group, name: "Wow Group", public: false) }
+    let!(:second_group) {  create(:group, name: "second group", public: true) }
+
+    it "success" do
+      post "/group/#{group.id}/set_public.json", { member_id: member.id, public: true }, { "Accept" => "application/json" }
+      expect(json["response_status"]).to eq("OK")
+    end
+
+    it "set public to true" do
+      expect(group.public).to be false
+      post "/group/#{group.id}/set_public.json", { member_id: member.id, public: true }, { "Accept" => "application/json" }
+      expect(group.reload.public).to be true
+    end
+
+    it "set public to false" do
+      expect(group.public).to eq(true)
+      post "/group/#{group.id}/set_public.json", { member_id: member.id, public: false }, { "Accept" => "application/json" }
+      expect(group.reload.public).to be false
+    end
+  end
+
+
 end

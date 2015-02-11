@@ -163,6 +163,7 @@ Pollios::Application.routes.draw do
     post ':id/edit_group',    to: 'group#edit_group'
     post ':id/request_group', to: 'group#request_group'
     post ':id/public_id',     to: 'group#public_id'
+    post ':id/set_public',    to: 'group#set_public'
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 

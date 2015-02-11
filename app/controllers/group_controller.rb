@@ -1,8 +1,8 @@
 class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:public_id, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:public_id, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
+  before_action :set_current_member, only: [:set_public, :public_id, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
+  before_action :set_group, only: [:set_public, :public_id, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group, :members]
   
   before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
@@ -167,6 +167,16 @@ class GroupController < ApplicationController
     end
   end
 
+  def set_public
+    begin
+      @group = @group.update!(public: edit_group_params[:public])
+    rescue ActiveRecord::RecordInvalid => invalid
+      @group = nil
+      @error_message = invalid.record.errors.messages[:public][0]
+      render status: :unprocessable_entity
+    end
+  end
+
   def group_update
     group_id = group_update_params[:id]
     member_id = group_update_params[:pk]
@@ -241,6 +251,6 @@ class GroupController < ApplicationController
   end
 
   def edit_group_params
-    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public_id)
+    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public)
   end
 end
