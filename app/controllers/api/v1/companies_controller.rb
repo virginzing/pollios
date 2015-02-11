@@ -98,20 +98,11 @@ module Api
       end
 
       def set_poll_series
-        begin
-        @poll_series = PollSeries.find(params[:id])
-        rescue => e
-          respond_to do |wants|
-            wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Questionnaire not found"], status: 404 }
-          end
-        end
+        @poll_series = PollSeries.cached_find(params[:id])
       end
 
       def set_group
-        begin
-          @group = Group.find(params[:group_id])
-          raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
-        end
+        @group = Group.cached_find(params[:group_id])
       end
 
     end

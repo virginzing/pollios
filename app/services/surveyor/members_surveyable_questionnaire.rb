@@ -5,7 +5,11 @@ class Surveyor::MembersSurveyableQuestionnaire
   end
 
   def surveyed
-    Member.find_by(id: @params[:surveyed_id])
+    Member.cached_find(id: @params[:surveyed_id])
+  end
+
+  def surveyor_groups
+    surveyed.group_surveyors
   end
 
   def get_members_in_group
@@ -29,11 +33,13 @@ class Surveyor::MembersSurveyableQuestionnaire
   private
 
   def members_in_group
-    Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", questionnaire_in_group).uniq.references(:groups)
+    join_together_group = surveyor_groups.map(&:group_id) & questionnaire_in_group
+
+    Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", join_together_group).uniq.references(:groups)
   end
 
   def questionnaire_in_group
-    @questionnaire.in_group_ids.split(",")
+    @questionnaire.in_group_ids.split(",").collect{|e| e.to_i }
   end
 
   def members_voted

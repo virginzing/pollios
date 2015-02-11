@@ -40,6 +40,7 @@ class PollSeries < ActiveRecord::Base
   after_create :set_poll_series
   after_create :generate_qrcode_key
   after_commit :send_notification, on: :create
+  after_commit :flush_cache
 
   amoeba do 
     enable
@@ -48,6 +49,19 @@ class PollSeries < ActiveRecord::Base
 
     include_association [:polls, :branch_poll_series, :collection_poll_series_branch]
   end
+
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id]) do
+      @poll_series = find_by(id: id)
+      raise ExceptionHandler::NotFound, "Questionnaire not found" unless @poll_series.present?
+      @poll_series
+    end
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
+  end
+
 
   def self.filter_by(startdate, finishdate, options)
     startdate = startdate || Date.current

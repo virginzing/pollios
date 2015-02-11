@@ -155,9 +155,9 @@ class Poll < ActiveRecord::Base
   #   ]
   # end
 
-  def Poll.cached_find(id)
+  def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
-      @poll = Poll.find_by(id: id)
+      @poll = find_by(id: id)
       raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
       @poll
     end
@@ -168,7 +168,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_choices
-    Rails.cache.fetch([self, 'choices']) { choices.to_a }
+    Rails.cache.fetch("poll/#{id}-#{updated_at.to_i}/choices") { choices.to_a }
   end
 
   # def flush_cache_relate_with_vote

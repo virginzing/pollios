@@ -65,15 +65,11 @@ module Api
       end
 
       def set_poll
-        @poll = Poll.find_by(id: params[:id])
-        raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
-        @poll
+        @poll = Poll.cached_find(id: params[:id])
       end
 
       def set_quesitonnaire
-        @questionnaire = PollSeries.find_by(id: params[:id])
-        raise ExceptionHandler::NotFound, "Questionnaire not found" unless @questionnaire.present?
-        @questionnaire
+        @questionnaire = PollSeries.cached_find(id: params[:id])
       end
 
       def request_json

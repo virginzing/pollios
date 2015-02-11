@@ -5,6 +5,10 @@ class Surveyor::MembersSurveyable
     @params = params
   end
 
+  def surveyor_groups
+    @surveyor.group_surveyors
+  end
+
   def get_members_in_group
     @get_member_in_group ||= members_in_group
   end
@@ -65,7 +69,9 @@ class Surveyor::MembersSurveyable
   private
 
   def members_in_group
-    Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", poll_in_group).uniq.references(:groups)
+    join_together_group = surveyor_groups.map(&:group_id) & poll_in_group
+
+    Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", join_together_group).uniq.references(:groups)
   end
 
   def members_voted
@@ -73,7 +79,7 @@ class Surveyor::MembersSurveyable
   end
 
   def poll_in_group
-    @poll.in_group_ids.split(",")
+    @poll.in_group_ids.split(",").collect{|e| e.to_i }
   end
 
 
