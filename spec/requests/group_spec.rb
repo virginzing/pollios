@@ -59,15 +59,15 @@ RSpec.describe "Group" do
     end
 
     it "return key of active" do
-      expect(json["member_group"]["active"].nil?).to be false
+      expect(json["active"].nil?).to be false
     end
 
     it "return key of pending" do
-      expect(json["member_group"]["pending"].nil?).to be false
+      expect(json["pending"].nil?).to be false
     end
 
     it "return key of request" do
-      expect(json["member_group"]["request"].nil?).to be false
+      expect(json["request"].nil?).to be false
     end
   end
 
