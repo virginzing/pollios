@@ -1,14 +1,14 @@
 class AddPollToGroupWorker
   include Sidekiq::Worker
   include SymbolHash
-  
+
   sidekiq_options unique: true
 
   def perform(member_id, group_id, poll_id, custom_data = nil)
     begin
-      member  = Member.find(member_id)
-      group   = Group.find(group_id)
-      poll    = Poll.find(poll_id)
+      member  = Member.cached_find(member_id)
+      group   = Group.cached_find(group_id)
+      poll    = Poll.cached_find(poll_id)
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
@@ -51,7 +51,7 @@ class AddPollToGroupWorker
 
       find_recipient.each do |member_receive|
         hash_custom = {
-          group: group.as_json(),
+          group: GroupNotifySerializer.new(group).as_json(),
           action: ACTION[:create],
           poll: @poll_serializer_json,
           notify: hash_list_member_badge[member_receive.id]

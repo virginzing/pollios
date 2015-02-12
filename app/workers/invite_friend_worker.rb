@@ -6,8 +6,8 @@ class InviteFriendWorker
 
   def perform(member_id, friend_ids, group_id, custom_data = nil)
     begin
-      member = Member.find(member_id)
-      group = Group.find(group_id)
+      member = Member.cached_find(member_id)
+      group = Group.cached_find(group_id)
 
       member_id = member.id
 
@@ -52,7 +52,7 @@ class InviteFriendWorker
       find_recipient.each do |member|
         hash_custom = {
           action: ACTION[:invite],
-          group: group.as_json(),
+          group: GroupNotifySerializer.new(group).as_json(),
           notify: hash_list_member_badge[member.id],
           request: hash_list_member_request_count[member.id]
         }

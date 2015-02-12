@@ -947,19 +947,19 @@ class Member < ActiveRecord::Base
 
   def serializer_member_detail
     find_member_cached ||= Member.cached_find(self.id)
+
+    @member_id = find_member_cached.id
+    @member_type = find_member_cached.member_type
     serailizer_member_feed_info = MemberInfoFeedSerializer.new(find_member_cached).as_json()
-
-    @member_id = find_member_cached[:member_id]
-    @member_type = find_member_cached[:type]
-
+    
     serailizer_member_feed_info = serailizer_member_feed_info.merge( { "status" => entity_info } )
   end
 
   def entity_info
-    @my_friend ||= Member.list_friend_active.map(&:id)
-    @your_request ||= Member.list_your_request.map(&:id)
-    @friend_request ||= Member.list_friend_request.map(&:id)
-    @my_following ||= Member.list_friend_following.map(&:id)
+    @my_friend = Member.list_friend_active.map(&:id)
+    @your_request = Member.list_your_request.map(&:id)
+    @friend_request = Member.list_friend_request.map(&:id)
+    @my_following = Member.list_friend_following.map(&:id)
 
     if @my_friend.include?(@member_id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
@@ -971,7 +971,7 @@ class Member < ActiveRecord::Base
       hash = Hash["add_friend_already" => false, "status" => :nofriend]
     end
 
-    if @member_type == "Citizen" || @member_type == "Brand"
+    if @member_type == "citizen" || @member_type == "brand"
       @my_following.include?(@member_id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
     else
       hash.merge!({"following" => "" })

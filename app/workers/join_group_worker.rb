@@ -6,8 +6,8 @@ class JoinGroupWorker
 
   def perform(member_id, group_id, custom_data = nil)
     begin
-      member = Member.find(member_id)
-      group = Group.find(group_id)
+      member = Member.cached_find(member_id)
+      group = Group.cached_find(group_id)
 
       @group_nofication = AskJoinGroup.new(member, group)
 
@@ -47,7 +47,7 @@ class JoinGroupWorker
       find_recipient.each do |member_receive|
         hash_custom = {
           action: ACTION[:join],
-          group: group.as_json(),
+          group: GroupNotifySerializer.new(group).as_json(),
           notify: hash_list_member_badge[member_receive.id]
         }
 

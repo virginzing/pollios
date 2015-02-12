@@ -6,8 +6,8 @@ class AddFollowWorker
 
   def perform(member_id, friend_id, options = {})
     begin
-      member = Member.find(member_id)
-      friend = Member.find(friend_id)
+      member = Member.cached_find(member_id)
+      friend = Member.cached_find(friend_id)
 
       action = options["action"]
 

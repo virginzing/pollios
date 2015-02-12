@@ -136,7 +136,7 @@ RSpec.describe "Member" do
     5.times { list_email << Faker::Internet.email }
 
     before do
-      puts "list_email => #{list_email}"
+      # puts "list_email => #{list_email}"
       post "/member/#{member.id}/invite_user", { list_email: list_email }, { "Accept" => "application/json" }
     end
 

@@ -6,8 +6,8 @@ class ApnQuestionnaireWorker
 
   def perform(member_id, poll_series_id, group_id, custom_data = {})
     begin
-      @member = Member.find(member_id)
-      @poll_series ||= PollSeries.find(poll_series_id)
+      @member = Member.cached_find(member_id)
+      @poll_series = PollSeries.cached_find(poll_series_id)
       @poll_series_serializer_json ||= QuestionnaireSerializer.new(@poll_series).as_json()
 
       @group = Group.find(group_id)
