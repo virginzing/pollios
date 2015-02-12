@@ -285,7 +285,7 @@ class Poll < ActiveRecord::Base
   end
 
   def cached_tags
-    Rails.cache.fetch([self, 'tags']) do
+    Rails.cache.fetch("/poll/#{id}/tags") do
       tags.pluck(:name)
     end
   end

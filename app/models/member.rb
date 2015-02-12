@@ -265,9 +265,9 @@ class Member < ActiveRecord::Base
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
-      @poll = find_by(id: id)
-      raise ExceptionHandler::NotFound, "Member not found" unless @poll.present?
-      @poll
+      @member = find_by(id: id)
+      raise ExceptionHandler::NotFound, "Member not found" unless @member.present?
+      @member
     end
   end
 
@@ -946,18 +946,20 @@ class Member < ActiveRecord::Base
   end
 
   def serializer_member_detail
-    @find_member_cached ||= Member.cached_member(self)
-    @member_id = @find_member_cached[:member_id]
-    @member_type = @find_member_cached[:type]
-    member_hash = @find_member_cached.merge( { "status" => entity_info } )
-    member_hash
+    find_member_cached ||= Member.cached_find(self.id)
+    serailizer_member_feed_info = MemberInfoFeedSerializer.new(find_member_cached).as_json()
+
+    @member_id = find_member_cached[:member_id]
+    @member_type = find_member_cached[:type]
+
+    serailizer_member_feed_info = serailizer_member_feed_info.merge( { "status" => entity_info } )
   end
 
   def entity_info
-    @my_friend = Member.list_friend_active.map(&:id)
-    @your_request = Member.list_your_request.map(&:id)
-    @friend_request = Member.list_friend_request.map(&:id)
-    @my_following = Member.list_friend_following.map(&:id)
+    @my_friend ||= Member.list_friend_active.map(&:id)
+    @your_request ||= Member.list_your_request.map(&:id)
+    @friend_request ||= Member.list_friend_request.map(&:id)
+    @my_following ||= Member.list_friend_following.map(&:id)
 
     if @my_friend.include?(@member_id)
       hash = Hash["add_friend_already" => true, "status" => :friend]
