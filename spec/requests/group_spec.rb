@@ -179,6 +179,26 @@ RSpec.describe "Group" do
 
     it "have friend in record of request group" do
       expect(RequestGroup.find_by(member: friend, group: group, accepted: false).present?).to be true
+
+      expect(json["waitting_approve"]).to be true
+      expect(json["join_success"]).to be false
+    end
+
+    context "when group set need_approve is false" do
+
+      let!(:group) { create(:group, name: "Thailand", need_approve: false, public: true) }
+
+      it "join group immediately" do
+        post "/group/#{group.id}/request_group.json", { member_id: friend.id }, { "Accept" => "application/json" }
+
+        expect(json["response_status"]).to eq("OK")
+
+        expect(RequestGroup.count).to eq(0)
+
+        expect(json["waitting_approve"]).to be false
+        expect(json["join_success"]).to be true
+      end
+    
     end
   end
 

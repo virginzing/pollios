@@ -37,7 +37,7 @@ class GroupController < ApplicationController
   end
 
   def accept_request_group
-    @group = Group.accept_request_group(@current_member, Member.find(params[:friend_id]), @group)
+    @group = Group.accept_request_group(@current_member, Member.cached_find(params[:friend_id]), @group)
   end
 
   def cancel_ask_join_group
@@ -106,7 +106,9 @@ class GroupController < ApplicationController
     unless @group.need_approve
       Group.accept_request_group(@current_member, @current_member, @group)
       @new_request = true
+      @joined = true
     else
+      @joined = false
       member_id = params[:member_id]
       @member 
       @new_request = false
@@ -122,6 +124,7 @@ class GroupController < ApplicationController
         if GroupMember.have_request_group?(@group, @current_member)
           Group.accept_group(@current_member, { id: @group.id, member_id: @current_member.id } )
           @new_request = true
+          @joined = true
         else
           @request_group = @group.request_groups.where(member_id: member_id).first_or_create do |request_group|
             request_group.member_id = member_id
