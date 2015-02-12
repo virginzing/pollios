@@ -1,6 +1,5 @@
 json.id group.id
 json.name group.name
-json.photo group.get_photo_group
 json.cover group.get_cover_group
 json.member_count group.get_member_count
 json.description group.get_description

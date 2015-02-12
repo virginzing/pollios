@@ -90,7 +90,12 @@ class Group < ActiveRecord::Base
   # end
 
   def get_cover_group
-    cover.present? ? cover.url(:cover) : ""
+    # cover.present? ? cover.url(:cover) : ""
+    cover.present? ? resize_cover_group(cover.url) : ""
+  end
+
+  def resize_cover_group(cover_url)
+    cover_url.split("upload").insert(1, "upload/c_fit,w_640").sum
   end
 
   def get_public_id
@@ -114,22 +119,16 @@ class Group < ActiveRecord::Base
       find_group_member.update_attributes!(active: true)
 
       if @group.group_type_company?
-        CompanyMember.add_member_to_company(@member, @group.get_company)  
+        CompanyMember.add_member_to_company(@member, @group.get_company) 
+        Activity.create_activity_group(@member, @group, 'Join') 
       end
 
       clear_request_group(@member, @member)
 
-
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
 
-      # Rails.cache.delete([member_id, 'group_active'])
       FlushCached::Member.new(@member).clear_list_groups
-      # Group.flush_cached_member_active(group_id)
-
-      if @group
-        Activity.create_activity_group(member, @group, 'Join')
-      end
     end
     @group
   end
@@ -396,7 +395,8 @@ class Group < ActiveRecord::Base
     {
       id: id,
       name: name,
-      photo: get_photo_group,
+      # photo: get_photo_group,
+      cover: get_cover_group,
       public: public,
       description: get_description,
       leave_group: leave_group,

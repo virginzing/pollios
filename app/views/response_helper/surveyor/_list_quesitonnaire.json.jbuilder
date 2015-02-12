@@ -17,6 +17,7 @@ json.poll_within poll.poll_groups do |pg|
   json.id pg.group.id
   json.name pg.group.name
   json.photo pg.group.get_photo_group
+  json.cover pg.group.get_cover_group
   json.description pg.group.get_description
 end
 

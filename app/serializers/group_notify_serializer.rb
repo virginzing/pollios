@@ -2,10 +2,10 @@ class GroupNotifySerializer < ActiveModel::Serializer
 
   self.root false
 
-  attributes :id, :name, :photo, :description
+  attributes :id, :name, :cover, :description
 
-  def photo
-    object.get_photo_group
+  def cover
+    object.get_cover_group
   end
 
   def description
