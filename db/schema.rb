@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150211064356) do
+ActiveRecord::Schema.define(version: 20150212094132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -452,7 +452,6 @@ ActiveRecord::Schema.define(version: 20150211064356) do
     t.hstore   "properties"
     t.string   "cover"
     t.boolean  "admin_post_only",  default: false
-    t.string   "slug"
     t.boolean  "need_approve",     default: true
     t.string   "public_id"
     t.boolean  "visible",          default: true
@@ -461,7 +460,6 @@ ActiveRecord::Schema.define(version: 20150211064356) do
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
   add_index "groups", ["properties"], name: "index_groups_on_properties", using: :gist
   add_index "groups", ["public_id"], name: "index_groups_on_public_id", unique: true, using: :btree
-  add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
 
   create_table "guests", force: true do |t|
     t.string   "udid"
