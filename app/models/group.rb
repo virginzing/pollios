@@ -162,12 +162,9 @@ class Group < ActiveRecord::Base
 
         Activity.create_activity_group(@friend, @group, 'Join')
 
-        # @friend.flush_cache_my_group
-
         FlushCached::Member.new(@friend).clear_list_groups
 
         @friend.flush_cache_ask_join_groups
-        # Group.flush_cached_member_active(@group.id)
        
         @group
       end

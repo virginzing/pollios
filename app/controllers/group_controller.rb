@@ -104,7 +104,7 @@ class GroupController < ApplicationController
   def request_group
 
     unless @group.need_approve
-      Group.accept_group(@current_member, { id: @group.id, member_id: @current_member.id})
+      Group.accept_request_group(@current_member, @current_member, @group)
       @new_request = true
     else
       member_id = params[:member_id]
