@@ -226,10 +226,12 @@ class AuthenSentaiController < ApplicationController
         @change_password = true
         @response_message = @response["response_message"]
         format.js
+        format.json { render status: 201 }
       else
         @change_password = false
         @response_message = @response["response_message"]
         format.js
+        format.json { render status: 403 }
       end
     end
     

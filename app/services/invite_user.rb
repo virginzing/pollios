@@ -19,7 +19,9 @@ class InviteUser
   end
 
   def send_email_list
-    InviteFriendMailer.delay.invite_list_email(@member, @new_list_member) if @new_list_member.count > 0
+    unless Rails.env.test?
+      InviteFriendMailer.delay.invite_list_email(@member, @new_list_member) if @new_list_member.count > 0
+    end
   end
   
   

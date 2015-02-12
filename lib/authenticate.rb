@@ -48,7 +48,7 @@ module Authenticate
 		end
 
 		def self.change_password(params)
-			res_form_sentai = RestClient.post("http://codeapp-user.herokuapp.com/codeapp/change_password.json", params)
+			res_form_sentai = RestClient.post("http://192.168.1.13:3001/codeapp/change_password.json", params)
 			response = JSON.parse(res_form_sentai.body)
 		end
 

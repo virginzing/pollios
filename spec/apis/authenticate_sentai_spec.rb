@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe "POST /authen/sentai", type: :api do
 
+  let!(:member) { member }
   before do
     generate_certification
   end
@@ -27,4 +28,5 @@ describe "POST /authen/sentai", type: :api do
 
     expect(json["response_message"]).to eq("Invalid email or password")
   end
+
 end
