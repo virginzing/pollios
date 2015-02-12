@@ -62,7 +62,7 @@ class VotePollWorker
       }
 
       if @poll_within_group.present?
-        group_options = Hash["group" => @poll_within_group.first.as_json()]
+        group_options = Hash["group" => GroupNotifySerializer.new(@poll_within_group.first).as_json()]
         @new_hash_options = @custom_properties.merge!(hash_custom).merge!(group_options)
       else
         @new_hash_options = @custom_properties.merge!(hash_custom)
