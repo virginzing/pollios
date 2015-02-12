@@ -4,7 +4,7 @@ FactoryGirl.define do
 
   factory :member do
     fullname "Nuttapon"
-    email "nutkub@gmail.com"  
+    email Faker::Internet.email
   end
 
   factory :one, class: Member do

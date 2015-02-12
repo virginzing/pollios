@@ -136,7 +136,6 @@ RSpec.describe "Member" do
     5.times { list_email << Faker::Internet.email }
 
     before do
-      # puts "list_email => #{list_email}"
       post "/member/#{member.id}/invite_user", { list_email: list_email }, { "Accept" => "application/json" }
     end
 
@@ -150,35 +149,35 @@ RSpec.describe "Member" do
   end
 
 
+  describe "POST /member/:id/invite_fb_user" do
+    list_fb_id = ["1111", "2222"]
 
+    let!(:member_sync_one) { create(:member, fullname: "Nutty Sync Facebook", email: Faker::Internet.email, fb_id: "1111") }
+    let!(:member_sync_two) { create(:member, fullname: "Mekumi Sync Facebook", email: Faker::Internet.email, fb_id: "2222") }
 
+    it "is not yet invite friend" do
+      find_friend_one = Friend.find_by(follower: member, followed: member_sync_one)
+      find_friend_two = Friend.find_by(follower: member, followed: member_sync_two)
 
+      expect(find_friend_one.nil?).to be true
+      expect(find_friend_two.nil?).to be true
+    end
 
+    it "success" do
+      post "/member/#{member.id}/invite_fb_user.json", { list_fb_id: list_fb_id }, { "Accept" => "application/json" }
+      expect(response.status).to eq(201)
+    end
 
+    it "invite friend by fb_id" do
+      post "/member/#{member.id}/invite_fb_user.json", { list_fb_id: list_fb_id }, { "Accept" => "application/json" }
 
+      find_friend_one = Friend.find_by(follower: member, followed: member_sync_one)
+      find_friend_two = Friend.find_by(follower: member, followed: member_sync_two)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      expect(find_friend_one.nil?).to be false
+      expect(find_friend_two.nil?).to be false
+    end
+  end
 
 
 

@@ -50,4 +50,31 @@ RSpec.describe Member, :type => :model do
     end
   end
 
+
+  describe "InviteFbUser" do
+    let!(:member) {  create(:member, fullname: "Nutty", email: Faker::Internet.email) }
+    let!(:member_sync_one) { create(:member, fullname: "Nutty Sync Facebook", email: Faker::Internet.email, fb_id: "1111") }
+    let!(:member_sync_two) { create(:member, fullname: "Mekumi Sync Facebook", email: Faker::Internet.email, fb_id: "2222") }
+
+    it "have 3 membes" do
+      expect(Member.count).to eq(3)
+    end
+
+    it "can invite friends" do
+      init_invite_fb_user = InviteFbUser.new(member, ["1111", "2222"])
+
+      expect(init_invite_fb_user.list_fb_id).to eq(["1111", "2222"])
+
+      expect(init_invite_fb_user.member_fb_id).to eq([member_sync_one.id, member_sync_two.id])
+
+      init_invite_fb_user.invite_all
+      
+      expect(Friend.count).to eq(4)
+
+      find_member_with_member_sync_one = Friend.find_by(follower: member, followed: member_sync_one, status: 0)
+
+      expect(find_member_with_member_sync_one.present?).to be true
+    end
+  end
+
 end

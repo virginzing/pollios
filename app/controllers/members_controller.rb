@@ -56,6 +56,10 @@ class MembersController < ApplicationController
     render json: {}, status: :created
   end
 
+  def invite_fb_user
+    render json: {}, status: :created
+  end
+
   def unrecomment
     friend_id = params[:friend_id]
     respond_to do |format|
