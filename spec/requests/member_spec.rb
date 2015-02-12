@@ -140,7 +140,7 @@ RSpec.describe "Member" do
     end
 
     it "success" do
-      expect(response.status).to eq(201)
+      expect(response.status).to eq(200)
     end
 
     it "create invite" do
@@ -165,7 +165,7 @@ RSpec.describe "Member" do
 
     it "success" do
       post "/member/#{member.id}/invite_fb_user.json", { list_fb_id: list_fb_id }, { "Accept" => "application/json" }
-      expect(response.status).to eq(201)
+      expect(response.status).to eq(200)
     end
 
     it "invite friend by fb_id" do

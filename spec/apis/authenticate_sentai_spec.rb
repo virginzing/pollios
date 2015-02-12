@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe "POST /authen/sentai", type: :api do
 
-  let!(:member) { member }
   before do
     generate_certification
   end
