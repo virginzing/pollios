@@ -1,11 +1,12 @@
 <% if @poll_latest.present? %>
 
-  <div id="chart_div"></div>
+  <!-- <div id="chart_div"></div> -->
+  <div id="chart_poll_lastest" style="height: 300px"></div>
   
-  <div class="poll_header">
+<!--   <div class="poll_header">
     Poll: <%= @poll_latest.title %>
   </div>
-
+ -->
   <% if @poll_latest.have_photo? %>
     <br>
     <img src="<%= @poll_latest.photo_poll.url(:thumbnail) %>" class="img-responsive center-block">
@@ -15,9 +16,14 @@
 
   <div class="panel-padding">
     <ul class="list-group">
+      <% @poll_latest_data = [] %>
       <% @choice_poll_latest = @poll_latest.cached_choices.collect{|e| [e.answer, e.vote] } %>
       <% @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max %>
       
+      <% @choice_poll_latest.each do |choice| %>
+        <% @poll_latest_data << { name: choice.first, value: choice.last } %>
+      <% end %>
+
       <% @poll_latest.cached_choices.each do |choice| %>
       <li class="list-group-item">
         <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_latest_max) %>"><%= choice.vote %></span>
@@ -27,10 +33,9 @@
     </ul>
   </div>
 
+  <!--<%= content_tag :div, "", id: 'choice_poll_latest', data: { polls: @choice_poll_latest } %>-->
 
-  <%= content_tag :div, "", id: 'choice_poll_latest', data: { polls: @choice_poll_latest } %>
-
-  <script type="text/javascript">
+  <!--<script type="text/javascript">
     var vote_all = <%= @poll_latest.vote_all %>;
       if (vote_all > 0) {      
       // Load the Visualization API and the piechart package.
@@ -72,8 +77,60 @@
     } else {
       $('#chart_div').replaceWith("<h3>No vote result.</h2>");
     }
-  </script>
+  </script>-->
 
 <% else %>
   <p>Don't have any poll.</p>
 <% end %>
+
+<script type="text/javascript">
+// configure for module loader
+require.config({
+    paths: {
+        echarts: '/echarts'
+    }
+});
+
+// use
+require(
+    [
+        'echarts',
+        'echarts/chart/pie'
+    ],
+    function(ec) {
+        // Initialize after dom ready
+        var myChart = ec.init(document.getElementById('chart_poll_lastest'), "macarons");
+
+        option = {
+            title : {
+                text: "<%= @poll_latest.truncate_title %>",
+                subtext: "<%= @poll_latest.member.fullname %>",
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data: <%= raw @choice_poll_latest.collect{|e| e.first } %>
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'Result',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data: <%= raw @poll_latest_data.to_json %>
+                }
+            ]
+        };
+
+        // Load data into the ECharts instance 
+        myChart.setOption(option);
+    }
+);
+</script>
+

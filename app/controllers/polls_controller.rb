@@ -92,14 +92,15 @@ class PollsController < ApplicationController
 
   def poll_latest
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
-    @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
+    # @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
+    @poll_latest = Poll.where("id = ?", 2258).decorate.first
     @choice_poll_latest = []
     render layout: false
   end
 
   def poll_popular
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
-    @poll_popular = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5).sample(5).first
+    @poll_popular = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5).decorate.sample(5).first
     @choice_poll_popular = []
     render layout: false
   end

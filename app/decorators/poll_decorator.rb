@@ -3,6 +3,7 @@ class PollDecorator < ApplicationDecorator
 
   delegate_all
 
+
   def get_vote_count
     span_badge(object.vote_all)
   end
@@ -13,6 +14,10 @@ class PollDecorator < ApplicationDecorator
 
   def get_report_count
     span_badge(object.report_count)
+  end
+
+  def truncate_title
+    truncate(object.title, length: 40)
   end
 
   def expire_status

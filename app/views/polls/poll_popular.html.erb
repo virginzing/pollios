@@ -2,11 +2,12 @@
   <% if @poll_popular.vote_all > 0 %>
 
 
-    <div id="chart_div_popular"></div>
+    <!--<div id="chart_div_popular"></div>-->
+    <div id="chart_poll_popular" style="height: 300px"></div>
 
-    <div class="poll_header">
+    <!-- <div class="poll_header">
       Poll: <%= @poll_popular.title %>
-    </div>
+    </div> -->
 
     <% if @poll_popular.have_photo? %>
       <br>
@@ -17,8 +18,13 @@
 
     <div class="panel-padding">
       <ul class="list-group">
+      <% @poll_popular_data = [ ] %>
       <% @choice_poll_popular = @poll_popular.cached_choices.collect{|e| [e.answer, e.vote] } %>
       <% @choice_poll_popular_max = @choice_poll_popular.collect{|e| e.last }.max %>
+
+      <% @choice_poll_popular.each do |choice| %>
+        <% @poll_popular_data << { name: choice.first, value: choice.last } %>
+      <% end %>
 
         <% @poll_popular.cached_choices.each do |choice| %>
         <li class="list-group-item">
@@ -30,9 +36,9 @@
     </div>
 
 
-    <%= content_tag :div, "", id: 'choice_poll_popular', data: { polls: @choice_poll_popular } %>
+    <!--<%= content_tag :div, "", id: 'choice_poll_popular', data: { polls: @choice_poll_popular } %>-->
 
-    <script type="text/javascript">
+    <!--<script type="text/javascript">
 
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
@@ -82,4 +88,55 @@
   <% end %>
 <% else %>
   <p>Don't have any poll popular.</p>
-<% end %>
+<% end %>-->
+
+<script type="text/javascript">
+// configure for module loader
+require.config({
+    paths: {
+        echarts: '/echarts'
+    }
+});
+
+// use
+require(
+    [
+        'echarts',
+        'echarts/chart/pie'
+    ],
+    function(ec) {
+        // Initialize after dom ready
+        var myChart = ec.init(document.getElementById('chart_poll_popular'), "macarons");
+
+        option = {
+            title : {
+                text: "<%= @poll_popular.truncate_title %>",
+                subtext: "<%= @poll_popular.member.fullname %>",
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data: <%= raw @choice_poll_popular.collect{|e| e.first } %>
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'Result',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data: <%= raw @poll_popular_data.to_json %>
+                }
+            ]
+        };
+
+        // Load data into the ECharts instance 
+        myChart.setOption(option);
+    }
+);
+</script>

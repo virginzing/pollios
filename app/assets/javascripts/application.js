@@ -16,6 +16,5 @@
 //= require facebook
 //= require readmore
 //= require star-rating
-//= require echarts
 //= require custom
 //= require turbolinks
