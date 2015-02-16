@@ -7,7 +7,7 @@ class Tag < ActiveRecord::Base
                     :trigram => { :threshold => 0.1 }
                   }
 
-  has_many :taggings
+  has_many :taggings, dependent: :destroy
   has_many :polls, through: :taggings, source: :poll
 
   has_many :poll_series_tags

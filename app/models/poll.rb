@@ -69,6 +69,8 @@ class Poll < ActiveRecord::Base
   validates_presence_of :title, :on => :create
   validates_presence_of :member_id, :on => :create
   
+  delegate :creator_name, :to => :'member.fullname'
+
   after_commit :send_notification, on: :create
   after_commit :flush_cache
 

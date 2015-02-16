@@ -511,6 +511,7 @@ Pollios::Application.routes.draw do
   get 'users_signup/company', to: 'authen_sentai#signup_company', as: :users_signup_company
 
   get 'users_signout',     to: 'authen_sentai#signout', as: :users_signout
+  delete 'signout_all_device',  to: 'authen_sentai#signout_all_device'
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
 

@@ -4,6 +4,8 @@ class AuthenSentaiController < ApplicationController
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
   # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
 
+  before_action :set_current_member,  only: [:signout_all_device]
+
   expose(:current_member_id) { session[:member_id] }
   expose(:member) { @auth.member }
 
@@ -43,6 +45,13 @@ class AuthenSentaiController < ApplicationController
 		flash[:success] = "Signout sucessfully."
 		redirect_to users_signin_url
 	end
+
+  def signout_all_device
+    @current_member.api_tokens.delete_all
+    @no_content = Hash["response_status" => "OK"]
+
+    render json: @no_content, status: :ok
+  end
 
   def new_sigin_sentai
     @response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
