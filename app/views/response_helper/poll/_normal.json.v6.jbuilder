@@ -1,4 +1,3 @@
-# json.creator Member.serializer_member_detail(@current_member, poll.member)
 json.creator poll.member.serializer_member_detail
 json.id poll.id
 json.title poll.title
@@ -6,9 +5,7 @@ json.vote_count poll.vote_all
 json.view_count poll.view_all
 json.expire_date poll.expire_date.to_i
 json.created_at poll.created_at.to_i
-# if poll.show_result
-  json.vote_max poll.get_vote_max
-# end
+json.vote_max poll.get_vote_max
 json.choices poll.get_choice_detail if poll.rating?
 json.voted_detail @current_member.list_voted?(poll)
 json.viewed @current_member.list_viewed?(poll.id)
