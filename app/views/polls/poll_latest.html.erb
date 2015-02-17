@@ -1,36 +1,8 @@
 <% if @poll_latest.present? %>
 
   <!-- <div id="chart_div"></div> -->
-  <div class="tabs-left">
-      <ul class="nav nav-tabs tabs-left">
-          <li class="active">
-              <a href="#pie_chart" data-toggle="tab"><i class="fa fa-pie-chart"></i></a>
-          </li>
-          <li>
-              <a href="#bar_chart" data-toggle="tab"><i class="fa fa-bar-chart"</a>
-          </li>
-      </ul>
-      <div class="tab-content">
-          <div class="tab-pane active" id="pie_chart">
-              <p>
-                  Dear Math, please grow up and solve your own problems, I'm tired of solving them for you.
-              </p>
 
-              <p>
-                  They say that love is more important than money, but have you ever tried to pay your bills with a hug?
-              </p>
-          </div>
-          <div class="tab-pane" id="bar_chart">
-              <p>
-                  Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony.
-              </p>
-          </div>
-      </div>
-  </div>
-
-
-  <div id="pie_chart_poll_lastest" style="height: 300px"></div>
-  <div id="bar_chart_poll_lastest" style="height: 300px"></div>
+  <div id="chart_poll_lastest" style="height: 300px"></div>
   
 <!--   <div class="poll_header">
     Poll: <%= @poll_latest.title %>
@@ -121,7 +93,7 @@ require(
     ],
     function(ec) {
         // Initialize after dom ready
-        var myChart = ec.init(document.getElementById('pie_chart_poll_lastest'), "macarons");
+        var myChart = ec.init(document.getElementById('chart_poll_lastest'), "macarons");
 
         option = {
             title : {
