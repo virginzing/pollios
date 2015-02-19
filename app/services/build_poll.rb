@@ -54,7 +54,7 @@ class BuildPoll
 
   def in_group_ids
     if @member.company?
-      @params["group_id"]
+      @params["group_id"].select{|e| e if e.present? }.join(",")
     else
       "0"
     end

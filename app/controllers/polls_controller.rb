@@ -218,6 +218,7 @@ class PollsController < ApplicationController
       @poll = Poll.new(new_poll_binary_params)
       @poll.choice_count = @build_poll.list_of_choice.count
       @poll.qrcode_key = @poll.generate_qrcode_key
+      
       if @poll.save
         @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
@@ -811,7 +812,7 @@ class PollsController < ApplicationController
   end
 
   def polls_params
-    params.require(:poll).permit(:show_result, :creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :group_id, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:show_result, :creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, group_id: [], choices_attributes: [:id, :answer, :_destroy])
   end
 
   protected

@@ -66,7 +66,7 @@
                       <img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>">
                       </div>
                   </td>
-                  <td><%= link_to poll.title, company_polls_detail_path(poll), class: 'poll-title' %></td>
+                  <td><%= link_to poll.title, company_polls_detail_path(poll) %></td>
                   <td>
                     <ol>
                     <% poll.groups.each do |group| %>

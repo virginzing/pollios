@@ -25,7 +25,7 @@
                 <section class="col col-9">
                   <label class="label">Poll Question</label>
                   <label class="textarea">
-                    <textarea class="maxlength_textarea" id="textarea3" rows="5" name="poll[title_with_tag]" required style="display: block; width: 100%;"></textarea>
+                    <textarea class="maxlength_textarea poll_question" id="textarea3" rows="5" name="poll[title_with_tag]" style="display: block; width: 100%;" required></textarea>
                   </label>
               <div class="option_config">
                <label class="toggle">
@@ -75,9 +75,19 @@
           </fieldset>
 
           <header>
-            Config
+            Advance Poll Config
           </header>
             <fieldset>
+
+              <section class="branch_list">
+                <label class="label">Show in group</label>
+                <div class="row">
+                  <%= f.collection_check_boxes(:group_id, @group_list, :id, :name) do |b| %>
+                    <%= b.label(class: "label_branch col col-2") { b.check_box(class: "check_box_branch", :"data-parsley-mincheck" => "1", :"data-parsley-required" => true) + b.text } %>
+                  <% end %>
+                </div>
+              </section>  
+
               <div class="row">
                 <section class="col col-2">
 
@@ -94,13 +104,13 @@
                 </section>
 
                 <% if current_member.get_company.present? %>
-
+<!-- 
                 <section class="col col-5"> 
                   <div class="form-group">
                     <label class="label">Show In Group</label>
                       <input type="text" name="poll[group_id]" id="group_list" required>
                   </div>
-                </section>  
+                </section> -->
 
                 <section class="col col-5">
                     <label class="label">Campaign</label>
@@ -163,7 +173,6 @@
       $('#select_form_template').html('<%= j render "rating" %>');
     };  
   });
-
 </script>
 
 <% if current_member.get_company.present? %>
@@ -186,6 +195,16 @@
         }
     });
     $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
+
+    $(".add-field").click(function (event) {
+       window.setTimeout(function(){
+         $('input[name^=choices]').last().focus();
+       }, 200);
+    });
+
+    window.setTimeout(function () {
+      $(".poll_question").focus();
+    }, 0);
   });
   </script>
 <% end %>
