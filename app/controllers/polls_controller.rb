@@ -484,9 +484,7 @@ class PollsController < ApplicationController
       @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.get_timeline
       @group_by_name = overall_timeline.group_by_name
       @total_entries = overall_timeline.total_entries
-      @hash_priority = overall_timeline.get_hash_priority
-
-      # puts "@hash_priority => #{@hash_priority}"
+      # @hash_priority = overall_timeline.get_hash_priority
     end
   end
 

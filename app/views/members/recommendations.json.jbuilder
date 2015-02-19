@@ -8,6 +8,10 @@ if @recommendations || @mutual_friends
     json.partial! 'response_helper/member/short_info_feed', member: member
   end
 
+  json.recommendations_group @group_recomment do |group|
+    json.partial! 'response_helper/group/default', group: group
+  end
+
   if @current_member.celebrity?
     json.recommendations_follower @recommendations_follower do |member|
       json.partial! 'response_helper/member/short_info_feed', member: member

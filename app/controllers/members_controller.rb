@@ -29,6 +29,8 @@ class MembersController < ApplicationController
 
     @mutual_friends = @init_recommendation.get_member_ids_from_mutual_and_group
 
+    @group_recomment = @init_recommendation.get_group
+
     @recommendations_follower = @init_recommendation.get_follower_recommendations if @current_member.celebrity?
   end
 

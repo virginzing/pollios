@@ -361,6 +361,10 @@ Pollios::Application.routes.draw do
 
     get 'special_qrcodes/new', to: 'special_qrcodes#new', as: :admin_new_special_qrcode
 
+
+    get 'manage_groups', to: 'suggest_groups#manage_groups', as: :admin_suggest_groups
+    post 'manage_groups', to: 'suggest_groups#create',  as: :suggest_groups
+
     resources :special_qrcodes
 
     resources :invites

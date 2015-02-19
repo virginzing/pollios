@@ -176,6 +176,10 @@
             <a href="<%= commercials_path %>" title="Commercials"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Commercial</span></a>
           </li>
 
+          <li class="<%= is_active?('suggest_groups') %>">
+            <a href="<%= admin_suggest_groups_path %>" title="Suggest Groups"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Suggest Group</span></a>
+          </li>
+
           <li class="<%= is_active_2nd_level('admin', 'notification') %>">
             <a href="<%= admin_notification_path %>" title="Notification"><i class="fa fa-lg fa-fw fa-bullhorn"></i> <span class="menu-item-parent">Notification</span></a>
           </li>

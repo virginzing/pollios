@@ -16,5 +16,7 @@
 //= require facebook
 //= require readmore
 //= require star-rating
+//= require jquery.multi-select
+//= require jquery.quicksearch
 //= require custom
 //= require turbolinks

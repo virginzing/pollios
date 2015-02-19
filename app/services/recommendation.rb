@@ -8,6 +8,10 @@ class Recommendation
   end
 
 
+  def get_group
+    @get_group ||= SuggestGroup.cached_all  
+  end
+
   def get_friend_active
     @get_friend_active ||= @list_member_active.map(&:id)
   end

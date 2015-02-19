@@ -1,0 +1,2 @@
+module SuggestGroupsHelper
+end
