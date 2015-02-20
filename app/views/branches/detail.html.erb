@@ -4,13 +4,9 @@
   <h1>
     <strong>[<%= @branch.name %>]</strong> <%= @questionnaire.description %>
   </h1>
-
 </div>
 
-
-
-<!-- widget grid -->
-<section id="widget-grid" class="">
+<section id="widget-branch-questionnaire-detail" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
 
   <!-- row -->
   <div class="row">
@@ -19,10 +15,10 @@
     <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       
       <!-- Widget ID (each widget will need unique ID)-->
-      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-collection-<%= @questionnaire.id %>" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+      <div class="jarviswidget" id="wid-certification">
 
         <header>
-          <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+          <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
           <h2>Questionnaire</h2>        
           
         </header>
@@ -40,15 +36,21 @@
           <!-- widget content -->
           <div class="widget-body">
             <div class="row">
-              <div class="col-md-9"><h3><b>Detail</b></h3>
-                
+              <div class="col-md-9">
+                <div class="summary-questionnaire">
+                  <h5>Creator : <%= @questionnaire.member.fullname %></h5>
+                  <h5>Vote all : <%= @questionnaire.vote_all %></h5>
+                  <h5>View all : <%= @questionnaire.view_all %></h5>
+                  <h5>Campaign : <%= @questionnaire.campaign.present? ? @questionnaire.campaign.name : "-" %></h5>
+                  <h5>Last updated : <span data-livestamp="<%= @questionnaire.updated_at.to_i %>"></span></h5>
+                </div>
               </div>
               
               <div class="col-md-3">
                 <div class="box">
                   <%= image_tag @qr, class: "img-responsive center-block" %>
                 </div>
-                <%= link_to 'Link', GenerateQrcodeLink.new(@questionnaire).get_redirect_link %>
+                <%= link_to 'Link', GenerateQrcodeLink.new(@questionnaire).get_redirect_link, class: 'btn btn-default btn-pill' %>
               </div>
             </div>
           </div>
@@ -81,4 +83,47 @@
   <!-- end row -->
 
 </section>
-<!-- end widget grid -->
+
+<div class="well">
+  <div class="row">
+    <table class="table table-striped table-forum">
+      <thead>
+        <tr>
+          <th colspan="1">Question</th>
+          <th class="text-center" style="width: 150px;">Average (5)</th>
+          <th class="text-center" style="width: 150px;">Percent (100%)</th>
+          <th class="text-center" style="width: 150px;">Rating (5)</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <% @questionnaire.polls.each_with_index do |poll, index| %>
+          <tr>
+            <td>
+              <h4><a href="#">
+                <%= poll.title %>
+              </a>
+                <small>......</small>
+              </h4>
+            </td>
+            <td class="text-center">
+              <a href="javascript:void(0);"><%= @questionnaire.sum_average(@array_list[index]) %></a>
+            </td>
+            <td class="text-center">
+              <a href="javascript:void(0);"><%= @questionnaire.percent_average(@array_list[index]) %></a>
+            </td>
+            <td class="text-center">
+              <a href="javascript:void(0);">
+                <div class="rating" style="width: 100%; font-size: 10px;">
+                  <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= @questionnaire.sum_average(@array_list[index]) %>"> 
+                </div>
+              </a>
+            </td>
+          </tr>
+        <% end %>
+
+      </tbody>
+    </table>
+
+  </div>
+</div>

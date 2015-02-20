@@ -1,13 +1,93 @@
 <div class="well">
-  <h1 class="text-center">
+  <h1>
     <%= @questionnaire.description %>
   </h1>
-  
-  <div class="summary-questionnaire">
-    <h5>Feedback count : <%= @questionnaire.vote_all %></h5>
-    <h5>Last updated : <span data-livestamp="<%= @questionnaire.updated_at.to_i %>"></span></h5>
+</div>
+<!-- widget grid -->
+<section id="widget-questionnaire-detail" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+
+  <!-- row -->
+  <div class="row">
+    
+    <!-- NEW WIDGET START -->
+    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      
+      <!-- Widget ID (each widget will need unique ID)-->
+      <div class="jarviswidget" id="wid-certification">
+
+        <header>
+          <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+          <h2>Questionnaire</h2>        
+          
+        </header>
+
+        <!-- widget div-->
+        <div>
+          
+          <!-- widget edit box -->
+          <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+            <input class="form-control" type="text">  
+          </div>
+          <!-- end widget edit box -->
+          
+          <!-- widget content -->
+          <div class="widget-body">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="summary-questionnaire">
+                  <h5>Creator : <%= @questionnaire.member.fullname %></h5>
+                  <h5>Vote all : <%= @questionnaire.vote_all %></h5>
+                  <h5>View all : <%= @questionnaire.view_all %></h5>
+                  <h5>Campaign : <%= @questionnaire.campaign.present? ? @questionnaire.campaign.name : "-" %></h5>
+                  <h5>Last updated : <span data-livestamp="<%= @questionnaire.updated_at.to_i %>"></span></h5>
+                </div>
+              </div>
+              
+              <div class="col-md-3">
+                <div class="box">
+                  <%= image_tag @qr, class: "img-responsive center-block" %>
+                </div>
+                <%= link_to 'Link', GenerateQrcodeLink.new(@questionnaire).get_redirect_link, class: 'btn btn-default btn-pill' %>
+              </div>
+            </div>
+          </div>
+          <!-- end widget content -->
+          
+        </div>
+        <!-- end widget div -->
+        
+      </div>
+      <!-- end widget -->
+
+    </article>
+    <!-- WIDGET END -->
+    
   </div>
 
+  <!-- end row -->
+
+  <!-- row -->
+
+  <div class="row">
+
+    <!-- a blank row to get started -->
+    <div class="col-sm-12">
+      
+    </div>
+      
+  </div>
+
+  <!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+<div class="well">
+  <h1 class="text-center">
+    Summary
+  </h1>
+  
   <br>
 
   <div class="row">

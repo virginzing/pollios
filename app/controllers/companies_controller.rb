@@ -252,6 +252,8 @@ class CompaniesController < ApplicationController
       @array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).round(2)
     end
 
+    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@questionnaire).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
+
   end
 
 
