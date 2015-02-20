@@ -37,7 +37,7 @@
               <% @list_questionnaires.each do |series| %>
                 <tr>
                   <td><%= series.id %></td>
-                  <td><%= link_to series.description, poll_series_path(series) %></td>
+                  <td><%= link_to series.description, company_questionnaire_detail_path(series) %></td>
                   <td><%= series.vote_all %></td>
                   <td><%= series.view_all %></td>
                   <td><%= series.expire_date.strftime("%B %d, %Y") %></td>

@@ -479,9 +479,6 @@
           <%= image_tag(@qr) %>
         </div>
       </div>
-<!--       <div class="modal-footer">
-
-      </div> -->
     </div>
   </div>
 </div>
@@ -528,16 +525,8 @@
 </script>
 
 <script type="text/javascript">
-  var vote_all = <%= poll.vote_all %>;
-  if (vote_all <= 0) {
-    $('#pie_chart_div').hide();
-    $('#bar_chart_div').hide();
-  };   
-</script>
-
-<script type="text/javascript">
   // Load the Visualization API and the piechart package.
-  google.load("visualization", "1", {packages: ["bar"]});
+  google.load("visualization", "1", {packages: ["corechart"]});
 
   // Set a callback to run when the Google Visualization API is loaded.
   // google.setOnLoadCallback(drawBarChart);
@@ -552,15 +541,15 @@
     var data = google.visualization.arrayToDataTable(chart_data);
     // Set chart options
     var options = {
-    'width': 800
+      'width': 800
     };
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.charts.Bar(document.getElementById('bar_chart_div'));
+    var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
     chart.draw(data, options);
   }
 
-  $(document).ready(function () {
+  $(document).on('page:change', function () {
     $('#widget-tab-chart a[href$="#bar_chart"]').click(function () {
       window.setTimeout(function () {
         drawBarChart();
@@ -568,4 +557,12 @@
     });
   });
 
+</script>
+
+<script type="text/javascript">
+  var vote_all = <%= poll.vote_all %>;
+  if (vote_all <= 0) {
+    $('#pie_chart_div').hide();
+    $('#bar_chart_div').hide();
+  };   
 </script>

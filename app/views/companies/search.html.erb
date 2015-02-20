@@ -24,7 +24,7 @@
         <% @search.each do |poll| %>
 
           <div class="search-results clearfix">
-            <h4><%= link_to poll.title, company_polls_detail_path(poll) %></h4>
+            <h4><%= link_to poll.title, company_poll_detail_path(poll) %></h4>
             <%= poll.search_poll_image %>
             <% if poll.rating? %>
               <div class="rating" style="width: 100%">

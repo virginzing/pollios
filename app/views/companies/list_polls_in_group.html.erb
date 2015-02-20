@@ -59,7 +59,7 @@
             <tbody>
               <% @polls.each do |poll| %>
                 <tr>
-                  <td><%= link_to poll.id, company_polls_detail_path(poll), method: :get %></td>
+                  <td><%= link_to poll.id, company_poll_detail_path(poll), method: :get %></td>
                   <td><%= poll.title %></td>
                   <td><%= poll.vote_all %></td>
                   <td><%= poll.view_all %></td>

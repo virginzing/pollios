@@ -405,7 +405,9 @@ Pollios::Application.routes.draw do
     post 'create_group',  to: 'companies#create_group', as: :company_create_group
 
     get 'polls',    to: 'companies#list_polls',     as: :company_polls
-    get 'polls/:id',to: 'companies#poll_detail',    as: :company_polls_detail
+    get 'poll/:id',to: 'companies#poll_detail',    as: :company_poll_detail
+
+    get 'questionnaire/:id',  to: 'companies#questionnaire_detail', as: :company_questionnaire_detail
 
     get 'search',   to: 'companies#search',  as: :company_search
     get 'questionnaires', to: 'companies#list_questionnaires',  as: :company_questionnaires
