@@ -8,7 +8,7 @@ class FeedbackQuestionnaireController < ApplicationController
   before_action :set_questionnaire, only: [:show]
 
   def reports
-    
+    @collections = CollectionPollSeries.where("company_id = ?", @company.id).decorate
   end
 
   def index
@@ -29,7 +29,7 @@ class FeedbackQuestionnaireController < ApplicationController
   def collection
     @collection = CollectionPollSeries.find(params[:id])
     @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
-    @questionnaires = PollSeries.joins(:branch)
+    @questionnaires = PollSeries.joins(:branch_poll_series).includes(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
 
     @list_questionnaire = PollSeries.where("id IN (?)", @collection.main_poll_series)

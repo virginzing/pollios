@@ -1,1 +1,56 @@
-<h1>Under Construction</h1>
+<% breadcrumb :collections %>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-feedback-list-questionnaire" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>Questionnnaire</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_questionnaire" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="20">#</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Total Vote</th>
+                <th>Total View</th>
+                <th>Campaign</th>
+                <th>Recurring</th>
+                <th>Create Since</th>
+                <th>Last update</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @collections.each do |collection| %>
+                <tr>
+                  <td><%= collection.id %></td>
+                  <td><%= link_to collection.title, collection_feedback_questionnaire_path(collection) %></td>
+                  <td><%= collection.get_feedback_status %></td>
+                  <td><%= collection.sum_vote_all %></td>
+                  <td><%= collection.sum_view_all %></td>
+                  <td><%= collection.campaign_id.present? ? collection.campaign.name : "-" %></td>
+                  <td><%= collection.get_recurring_status %></td>
+                  <td><span data-livestamp="<%= collection.created_at.to_i %>"></span></td>
+                  <td><span data-livestamp="<%= collection.updated_at.to_i %>"></span></td>
+                  <td width="100"><%= link_to 'View Report', collection_feedback_report_path(collection), class: 'btn btn-default btn-pill' %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

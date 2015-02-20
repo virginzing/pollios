@@ -204,7 +204,17 @@ class CompaniesController < ApplicationController
 
   def poll_detail
     @member = @poll.member
+    @poll = @poll.decorate
     @choice_data_chart = []
+    @poll_data = []
+
+    @choice_poll = @poll.cached_choices.collect{|e| [e.answer, e.vote] }
+    @choice_poll_latest_max = @choice_poll.collect{|e| e.last }.max
+      
+    @choice_poll.each do |choice|
+      @poll_data << { "name" => choice.first, "value" => choice.last }
+    end
+
     if current_member.get_company.present?
       init_company = PollDetailCompany.new(@poll.groups, @poll)
       @member_group = init_company.get_member_in_group
@@ -535,7 +545,7 @@ class CompaniesController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.find(params[:id])
+    @poll = Poll.cached_find(params[:id])
   end
 
   def group_params

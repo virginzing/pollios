@@ -102,7 +102,7 @@ class PollsController < ApplicationController
     @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max
       
     @choice_poll_latest.each do |choice|
-      @poll_latest_data << { name: choice.first, value: choice.last }
+      @poll_latest_data << { "name" => choice.first, "value" => choice.last }
     end
 
     render layout: false

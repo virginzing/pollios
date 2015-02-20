@@ -76,7 +76,7 @@
         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
         <h2><strong>Result</strong></h2>  
         
-        <ul id="widget-tab-1" class="nav nav-tabs pull-right">
+        <ul id="widget-tab-chart" class="nav nav-tabs pull-right">
 
           <% if poll.rating? %>
             <li class="active">
@@ -86,11 +86,11 @@
           <% end %>
 
           <li class="<%= 'active' unless poll.rating? %>">
-            <a data-toggle="tab" href="#bar_chart"><i class="fa fa-lg fa-bar-chart"></i><span class="hidden-mobile hidden-tablet"> Bar Chart</span> </a>
+            <a data-toggle="tab" href="#pie_chart"><i class="fa fa-lg fa-pie-chart"></i><span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
             </li>
           <li>
     
-            <a data-toggle="tab" href="#pie_chart"><i class="fa fa-lg fa-pie-chart"></i><span class="hidden-mobile hidden-tablet"> Pie Chart</span> </a>
+            <a data-toggle="tab" href="#bar_chart"><i class="fa fa-lg fa-bar-chart"></i><span class="hidden-mobile hidden-tablet"> Bar Chart</span> </a>
 
           </li>
 
@@ -126,8 +126,8 @@
               </div>
             </div>
             
-            <div class="tab-pane fade" id="pie_chart">
-              <div id="chart_div"></div>
+            <div class="tab-pane fade in <%= 'active' unless poll.rating? %>" id="pie_chart">
+              <div id="pie_chart_div" align="center"></div>
               <% if poll.vote_all < 1 %>
                 <div class="alert alert-info fade in">
                   <button class="close" data-dismiss="alert">
@@ -139,8 +139,8 @@
               <% end %>
             </div>
 
-            <div class="tab-pane fade in <%= 'active' unless poll.rating? %>" id="bar_chart">
-              <div id="bar_chart_div"></div>
+            <div class="tab-pane fade" id="bar_chart">
+              <div id="bar_chart_div" align="center"></div>
                 <% if poll.vote_all < 1 %>
                 <div class="alert alert-info fade in">
                   <button class="close" data-dismiss="alert">
@@ -489,7 +489,7 @@
 <script type="text/javascript">
 
   // Load the Visualization API and the piechart package.
-  google.load('visualization', '1.0', {'packages':['corechart']});
+  google.load("visualization", "1", {packages:["corechart"]});
 
   // Set a callback to run when the Google Visualization API is loaded.
   google.setOnLoadCallback(drawPieChart);
@@ -510,12 +510,13 @@
     // Set chart options
     var options = {
       'title'  : '<%= poll.title %>',
-      'width'  : '1000',
-      'height' : 300
+      'height' : 300,
+      'width': 1000,
+      'is3D': true
     };
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+    var chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
     chart.draw(data, options);
   }
 
@@ -529,17 +530,17 @@
 <script type="text/javascript">
   var vote_all = <%= poll.vote_all %>;
   if (vote_all <= 0) {
-    $('#chart_div').hide();
+    $('#pie_chart_div').hide();
     $('#bar_chart_div').hide();
   };   
 </script>
 
 <script type="text/javascript">
   // Load the Visualization API and the piechart package.
-  google.load('visualization', '1.0', {'packages':['corechart']});
+  google.load("visualization", "1", {packages: ["bar"]});
 
   // Set a callback to run when the Google Visualization API is loaded.
-  google.setOnLoadCallback(drawBarChart);
+  // google.setOnLoadCallback(drawBarChart);
 
   // Callback that creates and populates a data table,
   // instantiates the pie chart, passes in the data and
@@ -551,20 +552,20 @@
     var data = google.visualization.arrayToDataTable(chart_data);
     // Set chart options
     var options = {
-      'title'  : '<%= poll.title %>',
-      'width'  : '1000'
+    'width': 800
     };
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
+    var chart = new google.charts.Bar(document.getElementById('bar_chart_div'));
     chart.draw(data, options);
   }
 
-  $.ajax({
-    complete: function(){
-      drawBarChart();
-    }
- });
-</script>
+  $(document).ready(function () {
+    $('#widget-tab-chart a[href$="#bar_chart"]').click(function () {
+      window.setTimeout(function () {
+        drawBarChart();
+      }, 100)
+    });
+  });
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+</script>

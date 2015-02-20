@@ -16,10 +16,6 @@ class PollDecorator < ApplicationDecorator
     span_badge(object.report_count)
   end
 
-  def truncate_title
-    truncate(object.title, length: 40)
-  end
-
   def expire_status
     object.expire_date > Time.zone.now ? content_tag(:span, "yet", class: 'label label-success') : content_tag(:span, 'expired', class: 'label label-danger')
   end
@@ -29,7 +25,11 @@ class PollDecorator < ApplicationDecorator
   end
 
   def header_title
-    content_tag(:h1, object.title, class: 'poll-title')
+    content_tag(:h1, object.title, class: 'poll_title')
+  end
+
+  def truncate_title(default = 40)
+    truncate(object.title, length: default)
   end
 
   def created_at
