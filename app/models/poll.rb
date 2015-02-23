@@ -55,6 +55,7 @@ class Poll < ActiveRecord::Base
   has_many :branch_polls, dependent: :destroy
   has_many :branches, through: :branch_polls, source: :branch
   
+
   belongs_to :member
   belongs_to :poll_series
   belongs_to :campaign
@@ -69,6 +70,9 @@ class Poll < ActiveRecord::Base
   validates_presence_of :title, :on => :create
   validates_presence_of :member_id, :on => :create
   
+  validates_numericality_of :view_all, :greater_than_or_equal_to => 0
+  validates_numericality_of :vote_all, :greater_than_or_equal_to => 0
+
   delegate :creator_name, :to => :'member.fullname'
 
   after_commit :send_notification, on: :create

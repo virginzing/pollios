@@ -1,8 +1,8 @@
 <% if @poll_latest.present? %>
 
-  <!-- <div id="chart_div"></div> -->
+  <div id="pie_chart_div" align="center"></div>
 
-  <div id="chart_poll_lastest" style="height: 300px"></div>
+  <!-- <div id="chart_poll_lastest" style="height: 300px"></div> -->
   
 <!--   <div class="poll_header">
     Poll: <%= @poll_latest.title %>
@@ -27,9 +27,9 @@
     </ul>
   </div>
 
-  <!--<%= content_tag :div, "", id: 'choice_poll_latest', data: { polls: @choice_poll_latest } %>-->
+  <%= content_tag :div, "", id: 'choice_poll_latest', data: { polls: @choice_poll_latest } %>
 
-  <!--<script type="text/javascript">
+  <script type="text/javascript">
     var vote_all = <%= @poll_latest.vote_all %>;
       if (vote_all > 0) {      
       // Load the Visualization API and the piechart package.
@@ -54,12 +54,12 @@
         // Set chart options
         var options = {
           'title'  : '<%= @poll_latest.title %>',
-          'width'  : 500,
-          'height' : 300
+          'height' : 300,
+          'is3D': true
         };
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
         chart.draw(data, options);
       }
 
@@ -69,15 +69,15 @@
         }
       });
     } else {
-      $('#chart_div').replaceWith("<h3>No vote result.</h2>");
+      $('#pie_chart_div').replaceWith("<div class='alert alert-info'>No vote result.</div>");
     }
-  </script>-->
+  </script>
 
 <% else %>
   <p>Don't have any poll.</p>
 <% end %>
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
 // configure for module loader
 require.config({
     paths: {
@@ -126,5 +126,5 @@ require(
         myChart.setOption(option);
     }
 );
-</script>
+</script>-->
 

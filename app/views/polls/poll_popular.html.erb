@@ -2,8 +2,8 @@
   <% if @poll_popular.vote_all > 0 %>
 
 
-    <!--<div id="chart_div_popular"></div>-->
-    <div id="chart_poll_popular" style="height: 300px"></div>
+    <div id="chart_div_popular" align="center"></div>
+    <!-- <div id="chart_poll_popular" style="height: 300px"></div> -->
 
     <!-- <div class="poll_header">
       Poll: <%= @poll_popular.title %>
@@ -36,9 +36,9 @@
     </div>
 
 
-    <!--<%= content_tag :div, "", id: 'choice_poll_popular', data: { polls: @choice_poll_popular } %>-->
+    <%= content_tag :div, "", id: 'choice_poll_popular', data: { polls: @choice_poll_popular } %>
 
-    <!--<script type="text/javascript">
+    <script type="text/javascript">
 
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart']});
@@ -62,8 +62,8 @@
         // Set chart options
         var options = {
           'title'  : '<%= @poll_popular.title %>',
-          'width'  : 500,
-          'height' : 300
+          'height' : 300,
+          'is3D': true
         };
 
         // Instantiate and draw our chart, passing in some options.
@@ -87,10 +87,10 @@
 
   <% end %>
 <% else %>
-  <p>Don't have any poll popular.</p>
-<% end %>-->
+  <div class='alert alert-info'>No vote result.</div>
+<% end %>
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
 // configure for module loader
 require.config({
     paths: {
@@ -139,4 +139,4 @@ require(
         myChart.setOption(option);
     }
 );
-</script>
+</script>-->
