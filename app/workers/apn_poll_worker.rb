@@ -12,6 +12,7 @@ class ApnPollWorker
 
   def perform(member_id, poll_id, custom_data = {})
     begin
+      @list_apn_notification = []
       @member = Member.find(member_id)
       @poll = Poll.find(poll_id)
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
@@ -53,6 +54,9 @@ class ApnPollWorker
         @notf.sound = true
         @notf.custom_properties = apn_custom_properties
         @notf.save!
+
+        puts "to json => #{@notf.to_apple_json}"
+        @list_apn_notification << @notf
       end
 
       find_recipient.each do |member|
@@ -68,6 +72,7 @@ class ApnPollWorker
       Apn::App.first.send_notifications
     rescue => e
       puts "ApnPollWorker => #{e.message}"
+      @list_apn_notification.collect{|apn_notification| apn_notification.destroy }
     end
   end
 

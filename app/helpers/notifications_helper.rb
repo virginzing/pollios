@@ -15,12 +15,23 @@ module NotificationsHelper
 
 
   def truncate_message(message, truncate_default = 100, truncate_decentment = 2)
-    begin
-      custom_message = message.truncate(truncate_default)
-      truncate_default = truncate_default - truncate_decentment
-    end while custom_message.bytesize > 140
+    # begin
+    #   custom_message = message.truncate(truncate_default)
+    #   truncate_default = truncate_default - truncate_decentment
+    # end while custom_message.bytesize > 140
+    custom_message = message.mb_chars.limit(140).to_s
+    # puts "custom message => #{custom_message}"
 
-    add_double_quotation(custom_message)
+    # if custom_message != message
+    #   custom_message =  "\"" + custom_message + "...\""
+    # end
+
+    custom_message
+    # add_double_quotation(custom_message)
+  end
+
+  def limit_title(title_poll)
+    title_poll.mb_chars.limit(140).to_s
   end
 
   def add_double_quotation(custom_message)

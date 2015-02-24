@@ -7,6 +7,8 @@ class SumVotePollWorker
   def perform(poll_id, show_result)
     begin
 
+      @list_apn_notification = []
+
       poll = Poll.cached_find(poll_id)
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
@@ -49,6 +51,8 @@ class SumVotePollWorker
           @notf.sound = true
           @notf.custom_properties = apn_custom_properties
           @notf.save!
+
+          @list_apn_notification << @notf
         end
       end
 
@@ -82,6 +86,8 @@ class SumVotePollWorker
       poll.update_column(:notify_state, 0)
       
       puts "SumVotePollWorker => #{e.message}"
+
+      @list_apn_notification.collect{|apn_notification| apn_notification.destroy }
     end
   end
 
