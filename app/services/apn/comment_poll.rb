@@ -27,7 +27,7 @@ class Apn::CommentPoll
     watched_comment
   end
   
-  # allow 170 byte for custom message
+  # allow 130 byte for custom message
   def custom_message(receiver_id)
     if receiver_id == poll_creator_id
       message = "#{member_name} commented your poll: \"#{@poll.title}\""

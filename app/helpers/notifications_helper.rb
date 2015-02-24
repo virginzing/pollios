@@ -14,24 +14,32 @@ module NotificationsHelper
   FEAR = HTMLEntities.new.decode "&#128561;"
 
 
-  def truncate_message(message, truncate_default = 100, truncate_decentment = 2)
-    # begin
-    #   custom_message = message.truncate(truncate_default)
-    #   truncate_default = truncate_default - truncate_decentment
-    # end while custom_message.bytesize > 140
-    custom_message = message.mb_chars.limit(140).to_s
-    # puts "custom message => #{custom_message}"
+  # def truncate_message(message, truncate_default = 100, truncate_decentment = 2)
+  #   begin
+  #     custom_message = message.truncate(truncate_default)
+  #     truncate_default = truncate_default - truncate_decentment
+  #   end while custom_message.bytesize > 140
 
-    # if custom_message != message
-    #   custom_message =  "\"" + custom_message + "...\""
-    # end
+  #   puts "custom message => #{custom_message}"
 
-    custom_message
-    # add_double_quotation(custom_message)
-  end
+  #   if custom_message != message
+  #     custom_message =  "\"" + custom_message + "...\""
+  #   end
 
-  def limit_title(title_poll)
-    title_poll.mb_chars.limit(140).to_s
+  #   add_double_quotation(custom_message)
+  # end
+
+  def truncate_message(message, limit_message_byte = 130, decrement_byte = 8)
+    begin
+      limit_message_byte = limit_message_byte - decrement_byte
+      limit_message = message.mb_chars.limit(limit_message_byte).to_s
+    end while limit_message.to_json.bytesize > 132
+
+    if limit_message != message
+      limit_message = limit_message + "...\""
+    end
+
+    limit_message
   end
 
   def add_double_quotation(custom_message)

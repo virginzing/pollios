@@ -55,7 +55,7 @@ class ApnPollWorker
         @notf.custom_properties = apn_custom_properties
         @notf.save!
 
-        puts "to json => #{@notf.to_apple_json}"
+        # puts "to json => #{@notf.to_apple_json}"
         @list_apn_notification << @notf
       end
 
