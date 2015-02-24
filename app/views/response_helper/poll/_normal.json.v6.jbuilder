@@ -1,4 +1,4 @@
-json.creator poll.member.serializer_member_detail
+json.creator Member.cached_find(poll.member_id).serializer_member_detail
 json.id poll.id
 json.title poll.title
 json.vote_count poll.vote_all

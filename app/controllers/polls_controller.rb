@@ -620,9 +620,9 @@ class PollsController < ApplicationController
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
   end
 
-  def view
-    @poll = Poll.view_poll(view_and_vote_params)
-  end
+  # def view
+  #   @poll = Poll.view_poll(view_and_vote_params)
+  # end
 
   def create_poll
     @poll, @error_message = Poll.create_poll(poll_params, @current_member)

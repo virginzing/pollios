@@ -685,13 +685,10 @@ class Poll < ActiveRecord::Base
     Poll.transaction do
       begin
         ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
-        # puts "ever_vote => #{ever_vote}"
-        unless ever_vote
-          find_poll = Poll.find_by(id: poll_id)
-          find_choice = find_poll.choices.find_by(id: choice_id)
 
-          raise ExceptionHandler::NotFound, "Poll not found" unless find_poll.present?
-          raise ExceptionHandler::NotFound, "Choice not found" unless find_choice.present?
+        unless ever_vote
+          find_poll = Poll.cached_find(poll_id)
+          find_choice = Choice.cached_find(choice_id)
 
           poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
 
@@ -701,20 +698,15 @@ class Poll < ActiveRecord::Base
 
           Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
-          # get_anonymous = member.get_anonymous_with_poll(find_poll)
-
           UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
 
           SavePollLater.delete_save_later(member_id, find_poll)
 
-          if (member_id.to_i != find_poll.member.id) && !find_poll.series
-            # VotePollWorker.perform_async(member_id, poll_id, get_anonymous) if Rails.env.production?
+          if (member.id != find_poll.member_id) && !find_poll.series
             if find_poll.notify_state.idle?
               find_poll.update_column(:notify_state, 1)
               find_poll.update_column(:notify_state_at, Time.zone.now)
-              unless find_poll.series
-                SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
-              end
+              SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
             end
           end
           
@@ -734,7 +726,6 @@ class Poll < ActiveRecord::Base
           member.flush_cache_my_vote
           member.flush_cache_my_vote_all
 
-          Rails.cache.delete([find_poll.class.name, find_poll.id])
           [find_poll, history_voted]
         end
 
@@ -809,7 +800,7 @@ class Poll < ActiveRecord::Base
   end
 
   def get_choice_scroll
-    choices.collect! {|choice| choice.vote }
+    cached_choices.map(&:vote)
   end
 
   def get_require_info
