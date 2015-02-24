@@ -30,6 +30,8 @@ module NotificationsHelper
   # end
 
   def truncate_message(message, limit_message_byte = 130, decrement_byte = 8)
+    message = message.strip
+    
     begin
       limit_message_byte = limit_message_byte - decrement_byte
       limit_message = message.mb_chars.limit(limit_message_byte).to_s
