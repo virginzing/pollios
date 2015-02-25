@@ -228,6 +228,7 @@ class Member < ActiveRecord::Base
       field :waiting
       field :first_signup
       field :public_id
+      field :key_color
     end
 
     edit do
@@ -338,6 +339,10 @@ class Member < ActiveRecord::Base
 
   def get_first_signup
     first_signup.present? ? true : false
+  end
+
+  def get_key_color
+    key_color || ""
   end
 
   def get_first_setting_anonymous
@@ -871,6 +876,7 @@ class Member < ActiveRecord::Base
       avatar: avatar.present? ? resize_avatar(avatar.url) : "",
       cover: cover.present? ? resize_cover(cover.url) : "",
       description: get_description,
+      key_color: get_key_color
    }
   end
 
@@ -945,7 +951,7 @@ class Member < ActiveRecord::Base
     
   end
 
-  def serializer_member_detail
+  def serializer_member_detail  # for api
     find_member_cached ||= Member.cached_find(self.id)
 
     @member_id = find_member_cached.id

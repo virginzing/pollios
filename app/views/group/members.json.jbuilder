@@ -8,5 +8,6 @@ json.request @member_request do |member|
   json.email member.email
   json.type member.member_type_text
   json.description member.get_description
+  json.key_color member.get_key_color
   json.avatar member.get_avatar
 end

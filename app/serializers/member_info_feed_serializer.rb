@@ -2,7 +2,7 @@ class MemberInfoFeedSerializer < ActiveModel::Serializer
 
   self.root false
 
-  attributes :member_id, :type, :name, :avatar, :description
+  attributes :member_id, :type, :name, :avatar, :description, :key_color
 
   def member_id
     object.id
@@ -22,6 +22,10 @@ class MemberInfoFeedSerializer < ActiveModel::Serializer
 
   def avatar
     object.avatar.present? ? resize_avatar(object.avatar.url) : ""
+  end
+
+  def key_color
+    object.key_color.present? ? object.key_color : ""
   end
 
   def resize_avatar(avatar_url)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150219042925) do
+ActiveRecord::Schema.define(version: 20150225052922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -714,6 +714,16 @@ ActiveRecord::Schema.define(version: 20150219042925) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "poll_attachments", force: true do |t|
+    t.integer  "poll_id"
+    t.string   "image"
+    t.integer  "order"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_attachments", ["poll_id"], name: "index_poll_attachments_on_poll_id", using: :btree
 
   create_table "poll_groups", force: true do |t|
     t.integer  "poll_id"

@@ -4,7 +4,7 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
   # storage :file
@@ -27,6 +27,7 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
   version :medium do
     process :eager => true
     process :resize_to_fill => [588, 588]
+    process :quality => 50
   end    
 
   version :thumb_on_homepage do

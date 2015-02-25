@@ -15,6 +15,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   version :thumbnail do
     process :eager => true
     process :resize_to_fill => [180, 180]
+    # process :quality => 75
   end
 
   version :cover do
