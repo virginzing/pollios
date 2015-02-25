@@ -82,7 +82,7 @@ class Group < ActiveRecord::Base
   end
 
   def resize_photo_group(photo_group_url)
-    photo_group_url.split("upload").insert(1, "upload/c_fill,h_200,w_200").sum
+    photo_group_url.split("upload").insert(1, "upload/c_fill,h_200,w_200,q_75").sum
   end
 
   # def api_get_photo_group

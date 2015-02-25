@@ -24,7 +24,7 @@ class CommentSerializer < ActiveModel::Serializer
   end
 
   def avatar
-    object.member_avatar.to_s.present? ? "http://res.cloudinary.com/code-app/image/upload/c_fill,h_180,w_180/" + object.member_avatar.to_s : ""
+    object.member_avatar.to_s.present? ? "http://res.cloudinary.com/code-app/image/upload/c_fill,h_180,w_180,q_75/" + object.member_avatar.to_s : ""
   end
 
 end
