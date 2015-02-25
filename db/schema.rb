@@ -718,7 +718,7 @@ ActiveRecord::Schema.define(version: 20150225052922) do
   create_table "poll_attachments", force: true do |t|
     t.integer  "poll_id"
     t.string   "image"
-    t.integer  "order"
+    t.integer  "order_image"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -43,3 +43,6 @@ production:
 # figaro heroku:set -e production -a codeapp-pollios
 # update limit of member
 # Member.unscoped.where(created_company: false).order("id asc").limit(190).update_all(waiting: false)
+
+# Cloudinary email: codeapp.server@gmail.com
+# password: 9code7app9

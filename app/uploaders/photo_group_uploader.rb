@@ -18,19 +18,19 @@ class PhotoGroupUploader < CarrierWave::Uploader::Base
 
   version :thumbnail do
     process :resize_to_fill => [200, 200]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end
 
   version :cover do
     process :eager => true
     process :resize_to_fit => [640]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end
 
   version :thumbnail_small do
     process :eager => true
     process :resize_to_fill => [40, 40]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end   
 
 

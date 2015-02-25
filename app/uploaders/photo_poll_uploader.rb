@@ -20,13 +20,13 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
   version :thumbnail do
     process :eager => true
     process :resize_to_fill => [200, 200]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end    
 
   version :medium do
     process :eager => true
     process :resize_to_fill => [588, 588]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end    
 
   version :thumb_on_homepage do

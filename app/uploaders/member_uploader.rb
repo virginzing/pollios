@@ -11,19 +11,19 @@ class MemberUploader < CarrierWave::Uploader::Base
   version :thumbnail do
     process :eager => true
     process :resize_to_fill => [180, 180]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end
 
   version :cover do
     process :eager => true
     process :resize_to_fit => [640]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end
 
   version :thumbnail_small do
     process :eager => true
     process :resize_to_fill => [40, 40]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end    
 
   # Provide a default URL as a default if there hasn't been a file uploaded:

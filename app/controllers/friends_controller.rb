@@ -71,6 +71,7 @@ class FriendsController < ApplicationController
     @search = Member.search_member(friend_params)
     init_list_friend ||= Member::ListFriend.new(@current_member)
     @is_friend = Friend.check_add_friend?(@current_member, @search, init_list_friend.check_is_friend)
+    TypeSearch.create_log_search_users(@current_member, friend_params[:q])
   end
 
   def friend_of_friend

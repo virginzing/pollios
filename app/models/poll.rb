@@ -20,7 +20,8 @@ class Poll < ActiveRecord::Base
     associated_against: { choices: [:answer] }
 
   has_many :choices, dependent: :destroy
-  has_many :poll_attachments, dependent: :destroy
+
+  has_many :poll_attachments, -> { order('order_image asc') }, dependent: :destroy
   
   has_many :taggings, dependent: :destroy
 
@@ -181,6 +182,12 @@ class Poll < ActiveRecord::Base
     Rails.cache.fetch("poll/#{id}-#{updated_at.to_i}/choices") { choices.to_a }
   end
 
+  def cached_poll_attachements
+    Rails.cache.fetch("poll/#{id}/poll_attachments") do
+      poll_attachments.to_a
+    end
+  end
+
   # def flush_cache_relate_with_vote
   #   FlushCachePollVoteWorker.perform_async(history_votes.map(&:member_id).uniq)
   # end
@@ -188,6 +195,10 @@ class Poll < ActiveRecord::Base
   # def flush_cache_relate_with_watch
   #   FlushCachePollWatchWorker.perform_async(watcheds.map(&:member_id).uniq)
   # end
+
+  def get_original_polls
+    cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }  
+  end
 
   def get_poll_in_groups(group_ids)
     groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
@@ -634,8 +645,8 @@ class Poll < ActiveRecord::Base
   end
 
   def add_attachment_image(original_polls)
-    original_polls.each do |attachment|
-      poll_attachments.create!(image: attachment[:image], order: attachment[:order])
+    original_polls.each_with_index do |attachment, index|
+      poll_attachments.create!(image: attachment, order_image: index+1)
     end
   end
 

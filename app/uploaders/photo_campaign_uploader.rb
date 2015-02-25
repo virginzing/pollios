@@ -17,7 +17,7 @@ class PhotoCampaignUploader < CarrierWave::Uploader::Base
 
   version :thumbnail do
     process :resize_to_fill => [100, 100]
-    cloudinary_transformation :quality => 75
+    cloudinary_transformation :quality => 80
   end    
 
   def extension_white_list

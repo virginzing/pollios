@@ -599,6 +599,8 @@ class PollsController < ApplicationController
     @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_timeline
     @group_by_name = @init_hash_tag.group_by_name
     @total_entries = @init_hash_tag.total_entries
+
+    TypeSearch.create_log_search_tags(@current_member, hashtag_params[:name])
   end
 
   def hashtag_popular
@@ -808,7 +810,7 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, :choices => [], :original_polls => [:image, :order])
+    params.permit(:qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, :choices => [], :original_polls => [])
   end
 
   def polls_params
