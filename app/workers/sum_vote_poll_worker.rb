@@ -9,7 +9,9 @@ class SumVotePollWorker
 
       @list_apn_notification = []
 
-      poll = Poll.cached_find(poll_id)
+      poll = Poll.raw_cached_find(poll_id)
+
+      raise ArgumentError.new("Poll not found") if poll.nil?
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
@@ -82,7 +84,7 @@ class SumVotePollWorker
 
       poll.update_column(:notify_state, 0)
     rescue => e
-      poll = Poll.cached_find(poll_id)
+      poll = Poll.raw_cached_find(poll_id)
       poll.update_column(:notify_state, 0) if poll.present?
       puts "SumVotePollWorker => #{e.message}"
 

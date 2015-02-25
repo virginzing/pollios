@@ -174,6 +174,12 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def self.raw_cached_find(id)
+    Rails.cache.fetch([name, id]) do
+      find_by(id: id)
+    end
+  end
+
   def flush_cache
     Rails.cache.delete([self.class.name, id])
   end

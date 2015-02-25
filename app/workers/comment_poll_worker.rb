@@ -7,7 +7,10 @@ class CommentPollWorker
   def perform(member_id, poll_id, custom_data = {})
     begin
       member = Member.cached_find(member_id)
-      poll = Poll.cached_find(poll_id)
+      
+      poll = Poll.raw_cached_find(poll_id)
+
+      raise ArgumentError.new("Poll not found") if poll.nil?
       
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
