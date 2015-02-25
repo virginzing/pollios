@@ -2,7 +2,7 @@ class SumVotePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  sidekiq_options unique: true
+  sidekiq_options unique: true, :retry => 1
   
   def perform(poll_id, show_result)
     begin
