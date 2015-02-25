@@ -7,6 +7,8 @@ RSpec.describe Poll, :type => :model do
   it { should have_many(:un_see_polls) }
   it { should have_many(:save_poll_laters) }
 
+  it { should have_many(:poll_attachments) }
+  
   let!(:member) { create(:member, email: "test@gmail.com") }
 
   describe ".create_poll" do

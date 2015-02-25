@@ -544,10 +544,16 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "title": "​จากนัท ลง กรุ๊ป",
+#     "title": "red & blue & grean \n\n #eiei #love",
 #     "choices": ["yes", "no", "no vote"],
-#     "type_poll": "binary",
-#     "group_id": "54"
+#     "type_poll": "binary"
+# }' -X POST http://localhost:3000/poll/create.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 93,
+#     "title": "ทำดีได้ดี",
+#     "choices": ["yes", "no", "no vote"],
+#     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
@@ -609,10 +615,10 @@ end
 # NotifyLog.where("created_at > ?", 1.days.ago)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 100,
-#     "choice_id": "9029",
+#     "member_id": 203,
+#     "choice_id": "11090",
 #     "show_result": true
-# }' -X POST http://localhost:3000/poll/2300/vote.json -i
+# }' -X POST http://pollios.com/poll/2745/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{

@@ -20,6 +20,8 @@ class Poll < ActiveRecord::Base
     associated_against: { choices: [:answer] }
 
   has_many :choices, dependent: :destroy
+  has_many :poll_attachments, dependent: :destroy
+  
   has_many :taggings, dependent: :destroy
 
   has_many :tags, through: :taggings, source: :tag
@@ -79,6 +81,8 @@ class Poll < ActiveRecord::Base
   after_commit :flush_cache
 
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
+
+  accepts_nested_attributes_for :poll_attachments, :reject_if => lambda { |a| a[:image].blank? }, :allow_destroy => true
 
   default_scope { order("#{table_name}.created_at desc") }
 
@@ -518,7 +522,6 @@ class Poll < ActiveRecord::Base
   def self.create_poll(poll, member) ## create poll for API
     Poll.transaction do
       begin
-        # puts "test log allow commnet => #{poll[:allow_comment]}"
         title = poll[:title]
         expire_date = poll[:expire_within]
         choices = poll[:choices]
@@ -529,6 +532,7 @@ class Poll < ActiveRecord::Base
         type_poll = poll[:type_poll]
         is_public = poll[:is_public] || "0"
         photo_poll = poll[:photo_poll]
+        original_polls = poll[:original_polls]
         allow_comment = poll[:allow_comment] || false
         creator_must_vote = poll[:creator_must_vote]
         require_info = poll[:require_info].present? ? true : false
@@ -588,9 +592,11 @@ class Poll < ActiveRecord::Base
         if @poll.valid? && choices
           @poll.save!
 
-          @choices = Choice.create_choices(@poll.id, choices)
-          if @choices.present?
+          @poll.add_attachment_image(original_polls) if original_polls.present?
 
+          @choices = Choice.create_choices(@poll.id, choices)
+
+          if @choices.present?
             @poll.create_tag(title)
 
             @poll.create_watched(member, @poll.id)
@@ -601,7 +607,6 @@ class Poll < ActiveRecord::Base
               Company::TrackActivityFeedPoll.new(member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
             else
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-              # ApnPollWorker.perform_in(time_have_photo, member_id.to_i, @poll.id) if Rails.env.production?
             end
 
             if member.citizen? && is_public == "1"
@@ -626,6 +631,12 @@ class Poll < ActiveRecord::Base
 
     end ## transaction
     # puts "have poll #{@poll}"
+  end
+
+  def add_attachment_image(original_polls)
+    original_polls.each do |attachment|
+      poll_attachments.create!(image: attachment[:image], order: attachment[:order])
+    end
   end
 
   def send_notification
