@@ -5,7 +5,6 @@ class PollsController < ApplicationController
   
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
 
-
   before_action :set_current_member, only: [:member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
@@ -766,10 +765,13 @@ class PollsController < ApplicationController
   end
 
   def raise_exception_without_group
-    if ((@poll.in_group_ids.split(",").collect{|e| e.to_i } & Member.list_group_active.map(&:id)).count == 0) && @poll.in_group
-      if @poll.member_id != @current_member.id
-        raise ExceptionHandler::Forbidden, "Group permission denied"
-      end
+    init_list_group = Member::ListGroup.new(@current_member)
+    poll_in_group = @poll.in_group_ids.split(",").collect{|e| e.to_i }
+
+    if ((poll_in_group & init_list_group.active.map(&:id)).count == 0)
+      # if @poll.member_id != @current_member.id
+      raise ExceptionHandler::Forbidden, "Group permission denied"
+      # end
     end
   end
 
