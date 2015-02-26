@@ -10,7 +10,7 @@
       <li class="<%= is_active?('polls') %>">
         <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Polls</span></a>
           <ul>
-          <li class="<%= is_active_2nd_level('companies', 'list_polls') || is_active_2nd_level('companies', 'poll_detail') || is_active_2nd_level('polls', 'create_new_poll') %>">
+          <li class="<%= is_active_2nd_level('companies', 'list_polls') || is_active_2nd_level('companies', 'poll_detail') || is_active_2nd_level('polls', 'create_new_poll') || is_active_2nd_level('companies', 'edit_poll') %>">
             <a href="<%= company_polls_url %>"> List Polls</a>
           </li>
 
