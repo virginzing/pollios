@@ -17,7 +17,7 @@ class PollDecorator < ApplicationDecorator
   end
 
   def expire_status
-    object.expire_date > Time.zone.now ? content_tag(:span, "yet", class: 'label label-success') : content_tag(:span, 'expired', class: 'label label-danger')
+    object.expire_status == false ? content_tag(:span, "yet", class: 'label label-success') : content_tag(:span, 'expired', class: 'label label-danger')
   end
 
   def create_since
