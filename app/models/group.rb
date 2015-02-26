@@ -82,7 +82,7 @@ class Group < ActiveRecord::Base
   end
 
   def resize_photo_group(photo_group_url)
-    photo_group_url.split("upload").insert(1, "upload/c_fill,h_200,w_200,q_80").sum
+    photo_group_url.split("upload").insert(1, "upload/c_fill,h_200,w_200," + Cloudinary::QualityImage::SIZE).sum
   end
 
   # def api_get_photo_group
@@ -95,7 +95,7 @@ class Group < ActiveRecord::Base
   end
 
   def resize_cover_group(cover_url)
-    cover_url.split("upload").insert(1, "upload/c_fit,w_640,q_80").sum
+    cover_url.split("upload").insert(1, "upload/c_fit,w_640," + Cloudinary::QualityImage::SIZE).sum
   end
 
   def get_public_id

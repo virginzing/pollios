@@ -881,11 +881,11 @@ class Member < ActiveRecord::Base
   end
 
   def resize_avatar(avatar_url)
-    avatar_url.split("upload").insert(1, "upload/c_fill,h_180,w_180,q_80").sum
+    avatar_url.split("upload").insert(1, "upload/c_fill,h_180,w_180," + Cloudinary::QualityImage::SIZE).sum
   end
 
   def resize_cover(cover_url)
-    cover_url.split("upload").insert(1, "upload/c_fit,w_640,q_80").sum
+    cover_url.split("upload").insert(1, "upload/c_fit,w_640," + Cloudinary::QualityImage::SIZE).sum
   end
 
   def is_friend(user_obj)

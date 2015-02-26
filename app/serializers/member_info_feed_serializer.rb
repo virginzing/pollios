@@ -29,7 +29,7 @@ class MemberInfoFeedSerializer < ActiveModel::Serializer
   end
 
   def resize_avatar(avatar_url)
-    avatar_url.split("upload").insert(1, "upload/c_fill,h_180,w_180,q_80").sum
+    avatar_url.split("upload").insert(1, "upload/c_fill,h_180,w_180," + Cloudinary::QualityImage::SIZE).sum
   end
 
 end
