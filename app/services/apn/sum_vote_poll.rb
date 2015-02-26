@@ -5,7 +5,7 @@ class Apn::SumVotePoll
   PUBLIC = 'PUBLIC'
   GROUP = 'GROUP'
   FRIEND = 'FRIEND'
-  SOMEONE = 'Someone'
+  SOMEONE = 'Anonymous'
 
   def initialize(poll)
     @poll = poll
