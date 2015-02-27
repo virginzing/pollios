@@ -71,14 +71,14 @@ class SumVotePollWorker
         @new_hash_options = @custom_properties.merge!(hash_custom)
       end
 
-      find_recipient_notify.each do |member|
-        notify_count_json = {
-          notify: hash_list_member_badge[member.id]
-        }
-        if member_id.present?
-          NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_sum_vote_poll.custom_message, custom_properties: @new_hash_options.merge!(notify_count_json))
-        end
-      end
+      # find_recipient_notify.each do |member|
+      #   notify_count_json = {
+      #     notify: hash_list_member_badge[member.id]
+      #   }
+      #   if member_id.present?
+      #     NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_sum_vote_poll.custom_message, custom_properties: @new_hash_options.merge!(notify_count_json))
+      #   end
+      # end
 
       Apn::App.first.send_notifications
 

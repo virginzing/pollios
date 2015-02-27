@@ -735,6 +735,7 @@ class Poll < ActiveRecord::Base
               find_poll.update_column(:notify_state, 1)
               find_poll.update_column(:notify_state_at, Time.zone.now)
               SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
+              Poll::VoteNotifyLog.new(member, find_poll).create!
             end
           end
           
