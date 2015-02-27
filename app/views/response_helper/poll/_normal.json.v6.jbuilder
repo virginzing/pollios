@@ -20,6 +20,7 @@ json.type_poll poll.type_poll
 json.poll_within poll.get_within(@group_by_name, params[:action])
 json.watched poll.check_watched
 json.photo poll.get_photo
+json.thumbnail_type poll.thumbnail_type || 0
 json.allow_comment poll.allow_comment
 json.comment_count poll.comment_count
 json.require_info poll.get_require_info

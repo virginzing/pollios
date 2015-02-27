@@ -556,7 +556,7 @@ class Poll < ActiveRecord::Base
         show_result = poll[:show_result].present? ? true : false
         qr_only = poll[:qr_only].present? ? true : false
         quiz = poll[:quiz].present? ? true : false
-
+        thumbnail_type = poll[:thumbnail_type] || 0
         choices = check_type_of_choice(choices)
 
         choice_count = get_choice_count(choices)
@@ -602,7 +602,7 @@ class Poll < ActiveRecord::Base
         end
 
         @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
-                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only)
+                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
 
         @poll.qrcode_key = @poll.generate_qrcode_key
 
