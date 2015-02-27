@@ -57,6 +57,13 @@ class Apn::SumVotePoll
     truncate_message(message)
   end
 
+  def vote_notify_custom_message(sender, show_result)
+    sender_name = show_result ? sender.get_name : "Anonymous"
+    message = "#{sender_name} voted a poll: \"#{@poll.title}\""
+
+    truncate_message(message)
+  end
+
   private
 
   # def check_privacy_vote

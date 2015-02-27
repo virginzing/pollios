@@ -3,6 +3,7 @@ class CountNotification
     @list_member = list_member
     @hash_list_member_badge = {}
     @hash_list_member_request_count = {}
+    @get_hash_list_member_badge_count = {}
   end
 
   def device_ids
@@ -11,6 +12,13 @@ class CountNotification
 
   def member_ids
     @list_member.collect {|u| u.apn_devices.collect(&:member_id)}.flatten
+  end
+
+  def get_hash_list_member_badge_count
+    @list_member.each do |member|
+      @get_hash_list_member_badge_count.merge!( { member.id => member.notification_count } )
+    end
+    @get_hash_list_member_badge_count
   end
 
   def hash_list_member_badge

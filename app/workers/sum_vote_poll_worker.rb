@@ -6,10 +6,9 @@ class SumVotePollWorker
   
   def perform(poll_id, show_result)
     begin
-
       @list_apn_notification = []
 
-      poll = Poll.raw_cached_find(poll_id)
+      poll = Poll.find_by(id: poll_id)
 
       raise ArgumentError.new("Poll not found") if poll.nil?
 
@@ -25,7 +24,7 @@ class SumVotePollWorker
 
       @count_notification = CountNotification.new(find_recipient_notify)
 
-      hash_list_member_badge ||= @count_notification.hash_list_member_badge
+      get_hash_list_member_badge ||= @count_notification.get_hash_list_member_badge_count
 
       if poll.in_group_ids != "0"
         @poll_within_group ||= Group.joins(:poll_groups).where("poll_groups.poll_id = #{poll_id} AND poll_groups.share_poll_of_id = 0").uniq
@@ -43,12 +42,12 @@ class SumVotePollWorker
             type: TYPE[:poll],
             poll_id: poll.id,
             series: poll.series,
-            notify: hash_list_member_badge[member.id]
+            notify: (get_hash_list_member_badge[member.id] + 1)
           }
 
           @notf = Apn::Notification.new
           @notf.device_id = device.id
-          @notf.badge = hash_list_member_badge[member.id]
+          @notf.badge = (get_hash_list_member_badge[member.id] + 1)
           @notf.alert = @apn_sum_vote_poll.custom_message
           @notf.sound = true
           @notf.custom_properties = apn_custom_properties
@@ -56,6 +55,7 @@ class SumVotePollWorker
 
           @list_apn_notification << @notf
         end
+        member.update_columns(notification_count: (get_hash_list_member_badge[member.id] + 1))
       end
 
       hash_custom = {
@@ -82,10 +82,10 @@ class SumVotePollWorker
 
       Apn::App.first.send_notifications
 
-      poll.update_column(:notify_state, 0)
+      poll.update(notify_state: 0)
     rescue => e
-      poll = Poll.raw_cached_find(poll_id)
-      poll.update_column(:notify_state, 0) if poll.present?
+      poll = Poll.find_by(id: poll_id)
+      poll.update(:notify_state, 0) if poll.present?
       puts "SumVotePollWorker => #{e.message}"
 
       @list_apn_notification.collect{|apn_notification| apn_notification.destroy }

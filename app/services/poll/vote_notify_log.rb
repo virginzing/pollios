@@ -1,9 +1,10 @@
 class Poll::VoteNotifyLog
   include SymbolHash
 
-  def initialize(sender, poll)
+  def initialize(sender, poll, show_result)
     @poll = poll
     @sender = sender
+    @show_result = show_result
   end
 
   def create!
@@ -20,7 +21,7 @@ class Poll::VoteNotifyLog
 
       @count_notification = CountNotification.new(find_recipient_notify)
 
-      hash_list_member_badge ||= @count_notification.hash_list_member_badge
+      get_hash_list_member_badge ||= @count_notification.get_hash_list_member_badge_count
 
       if @poll.in_group_ids != "0"
         @poll_within_group ||= Group.joins(:poll_groups).where("poll_groups.poll_id = #{@poll.id} AND poll_groups.share_poll_of_id = 0").uniq
@@ -47,9 +48,9 @@ class Poll::VoteNotifyLog
 
       find_recipient_notify.each do |member|
         notify_count_json = {
-          notify: hash_list_member_badge[member.id]
+          notify: (get_hash_list_member_badge[member.id] + 1)
         }
-        NotifyLog.create!(sender_id: @sender.id, recipient_id: member.id, message: @apn_sum_vote_poll.custom_message, custom_properties: @new_hash_options.merge!(notify_count_json))
+        NotifyLog.create!(sender_id: @sender.id, recipient_id: member.id, message: @apn_sum_vote_poll.vote_notify_custom_message(@sender, @show_result), custom_properties: @new_hash_options.merge!(notify_count_json))
       end
     end
 

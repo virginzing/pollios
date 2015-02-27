@@ -730,20 +730,21 @@ class Poll < ActiveRecord::Base
 
           SavePollLater.delete_save_later(member_id, find_poll)
 
-          if (member.id != find_poll.member_id) && !find_poll.series
-            if find_poll.notify_state.idle?
-              find_poll.update_column(:notify_state, 1)
-              find_poll.update_column(:notify_state_at, Time.zone.now)
-              SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
-              Poll::VoteNotifyLog.new(member, find_poll).create!
-            end
-          end
-          
           unless show_result.nil?
             check_show_result = show_result
           else
             check_show_result = show_result?(member, find_poll)
           end
+
+          if (member.id != find_poll.member_id) && !find_poll.series
+            if find_poll.notify_state.idle?
+              find_poll.update_column(:notify_state, 1)
+              find_poll.update_column(:notify_state_at, Time.zone.now)
+              SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
+            end
+          end
+          
+          Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
 
           history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
 
