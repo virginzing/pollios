@@ -848,7 +848,7 @@ ActiveRecord::Schema.define(version: 20150227071146) do
     t.datetime "notify_state_at"
     t.string   "slug"
     t.integer  "priority"
-    t.integer  "thumbnail_type"
+    t.integer  "thumbnail_type",    default: 0
   end
 
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
