@@ -55,17 +55,17 @@ class CommentPollWorker
         end
       end
 
-      find_recipient_notify.each do |member|
+      # find_recipient_notify.each do |member|
 
-        hash_custom = {
-          action: @apn_comment.custom_action(member.id),
-          poll: @poll_serializer_json,
-          comment: comment_message,
-          notify: hash_list_member_badge[member.id]
-        }
+      #   hash_custom = {
+      #     action: @apn_comment.custom_action(member.id),
+      #     poll: @poll_serializer_json,
+      #     comment: comment_message,
+      #     notify: hash_list_member_badge[member.id]
+      #   }
 
-        NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_comment.custom_message(member.id), custom_properties: @custom_properties.merge!(hash_custom))
-      end
+      #   NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_comment.custom_message(member.id), custom_properties: @custom_properties.merge!(hash_custom))
+      # end
 
       Apn::App.first.send_notifications
     rescue => e

@@ -693,6 +693,8 @@ class PollsController < ApplicationController
         else
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
+
+        Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
 
         # CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })
