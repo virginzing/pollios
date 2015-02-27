@@ -1,11 +1,11 @@
 module ApplicationHelper
   def flash_class(level)
-      case level
-        when "notice" then "alert alert-warning"
-        when "success" then "alert alert-success"
-        when "error" then "alert alert-danger"
-        else 'alert alert-info'
-      end
+    case level
+      when "notice" then "alert alert-warning"
+      when "success" then "alert alert-success"
+      when "error" then "alert alert-danger"
+      else 'alert alert-info'
+    end
   end
 
   def current_controller?(options)
@@ -260,7 +260,7 @@ end
 # http://localhost:3000/friend/all.json?member_id=11
 # http://localhost:3000/friend/request.json?member_id=15
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
-# http://localhost:3000/friend/search.json?member_id=21&q=Nuttapon
+# http://localhost:3000/friend/search.json?member_id=93&q=Nuttapon
 
 # curl -F "member_id=93" -F "name=Nut Public" -F "public=true" http://localhost:3000/group/build.json -i
 
@@ -275,9 +275,9 @@ end
 # }' -X POST http://localhost:3000/group/add_friend.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 86,
-#     "message": "Same Same"
-# }' -X POST http://localhost:3000/poll/755/comments.json -i
+#     "member_id": 93,
+#     "message": "One Two Three Four Five"
+# }' -X POST http://localhost:3000/poll/2338/comments.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -491,8 +491,8 @@ end
 # }' -X POST http://localhost:3000/group/121/edit_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 96
-# }' -X POST http://localhost:3000/poll/785/watch.json -i
+#     "member_id": 93
+# }' -X POST http://localhost:3000/poll/2338/watch.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -544,7 +544,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "title": "red & blue & grean \n\n #eiei #love",
+#     "title": "สร้างใหม่อีกรอบ ปั้ม poll",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
@@ -558,9 +558,9 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93
-# }' -X DELETE http://localhost:3000/poll/2084/delete.json -i
+# }' -X DELETE http://localhost:3000/poll/2328/delete.json -i
 
-# curl -F "member_id=1" -F "title=test" -F "expire_within=2" -F "type_poll=binary" -F "choices[]=1" -F "choices[]=2"  -X POST http://localhost:3000/poll/create.json -i
+# curl -F "member_id=93" -F "title=ทดสอบ multiupload image" -F "type_poll=binary" -F "choices[]=1" -F "choices[]=2" -F "photo_poll=@test01.png" -F "original_polls[]=@test02.png" -F "original_polls[]=@test03.png" -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1, 
@@ -615,10 +615,10 @@ end
 # NotifyLog.where("created_at > ?", 1.days.ago)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 203,
-#     "choice_id": "11090",
-#     "show_result": true
-# }' -X POST http://pollios.com/poll/2745/vote.json -i
+#     "member_id": 150,
+#     "choice_id": "9140",
+#     "show_result": false
+# }' -X POST http://localhost:3000/poll/2338/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
