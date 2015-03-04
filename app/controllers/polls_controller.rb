@@ -681,6 +681,17 @@ class PollsController < ApplicationController
       begin
         raise ExceptionHandler::Forbidden, "This poll disallow your comment" unless @poll.allow_comment
         mentionable_list = comment_params[:mentionable_list]
+
+        # if @poll.comment_notify_state.idle?
+        #   @poll.update_column(:comment_notify_state, 1)
+        #   @poll.update_column(:comment_notify_state_at, Time.zone.now)
+        #   SumCommentPollWorker.perform_in(1.minutes, @poll.id) unless Rails.env.test?
+        # end
+
+        if (@current_member.id != @poll.member_id) && !@poll.series
+          Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
+        end
+
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
         @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
         @poll.increment!(:comment_count)
@@ -694,7 +705,6 @@ class PollsController < ApplicationController
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
 
-        Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
 
         # CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })

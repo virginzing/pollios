@@ -6,7 +6,7 @@ class WatchPoll
 
   def watching
     if find_watch_poll.present?
-      watching = find_watch_poll.update!(poll_notify: true)
+      watching = find_watch_poll.update!(poll_notify: true, comment_notify: true)
     else
       watching = @member.watcheds.create!(poll_id: @poll_id)
     end
@@ -16,7 +16,7 @@ class WatchPoll
 
   def unwatch
     if find_watch_poll
-      unwatch = find_watch_poll.update!(poll_notify: false)
+      unwatch = find_watch_poll.update!(poll_notify: false, comment_notify: false)
       @member.flush_cache_my_watch
     end
     unwatch

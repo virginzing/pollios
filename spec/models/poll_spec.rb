@@ -124,7 +124,7 @@ RSpec.describe Poll, :type => :model do
     end
 
     it "return notify_state is process" do
-      expect(poll.reload).to be_process
+      expect(poll.reload.notify_state).to be_process
     end
 
     it "return vote_all is 1" do
