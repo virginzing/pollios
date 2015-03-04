@@ -112,6 +112,7 @@ gem "gretel"
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
 gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
+gem "sidekiq-cron", "~> 0.2.0"
 
 gem 'sinatra', '>= 1.3.0', :require => nil
 # gem 'houston'
