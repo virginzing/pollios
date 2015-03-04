@@ -10,7 +10,7 @@ if @notify
       if notify.sender.nil?
         json.member_id 0
         json.name "Pollios System"
-        json.avatar "http://pollios.com/logo/pollios.png"
+        json.avatar "http://pollios.com/images/logo/pollios.png"
         json.description "Pollios Office"
       else
         json.partial! 'response_helper/member/short_info_feed', member: notify.sender
