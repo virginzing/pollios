@@ -663,7 +663,7 @@ class Poll < ActiveRecord::Base
           AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
         end
       else
-        if poll_series_id == 0
+        if (poll_series_id == 0) && (public == false)
           ApnPollWorker.perform_async(self.member_id, self.id) unless qr_only
         end
       end
