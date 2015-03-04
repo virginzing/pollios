@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'sidekiq-cron'
 require 'api_constraints'
 
 Pollios::Application.routes.draw do

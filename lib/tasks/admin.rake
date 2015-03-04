@@ -33,4 +33,11 @@ namespace :admin do
     end
   end
 
+
+  desc "Create sidekiq cron job"
+  task :create_sidekiq_cron => :environment do
+    Sidekiq::Cron::Job.create(name: "SavePollWorker - every at 18:00", cron: '0 18 * * *', klass: 'SavePollWorker')
+    Sidekiq::Cron::Job.create(name: "RecurringPollWorker - each hourly", cron: '0 * * * *', klass: 'RecurringPollWorker')
+  end
+
 end
