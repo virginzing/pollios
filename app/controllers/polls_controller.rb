@@ -3,7 +3,7 @@ class PollsController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   
-  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll]
+  before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll, :create_new_public_poll]
 
   before_action :set_current_member, only: [:member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
@@ -25,7 +25,7 @@ class PollsController < ApplicationController
   before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
-  before_action :set_company, only: [:create_new_poll]
+  before_action :set_company, only: [:create_new_poll, :create_new_public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -183,6 +183,10 @@ class PollsController < ApplicationController
   def create_new_poll
     @poll = Poll.new
     @group_list = current_member.get_company.groups if current_member.get_company.present?
+  end
+
+  def create_new_public_poll
+    @poll = Poll.new
   end
 
   def binary

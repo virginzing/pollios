@@ -1791,6 +1791,14 @@
 	            [0, 'desc']
 	        ]
 	    });
+	    $('#list_polls_public').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        responsive: true,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
 	    $('#list_surveyor').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,

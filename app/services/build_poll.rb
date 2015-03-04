@@ -44,8 +44,12 @@ class BuildPoll
     @params["show_result"]  == "on" ? true : false
   end
 
+  def check_public
+    @params["public"].present? ? true : false
+  end
+
   def set_poll_public
-    if @member.celebrity? || @params["recurring_id"].present? || @member.brand?
+    if @member.celebrity? || @params["recurring_id"].present? || check_public 
       true
     else
       false
@@ -53,7 +57,7 @@ class BuildPoll
   end
 
   def in_group_ids
-    if @member.company?
+    if @member.company? && !check_public
       @params["group_id"].select{|e| e if e.present? }.join(",")
     else
       "0"

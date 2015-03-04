@@ -385,7 +385,8 @@ Pollios::Application.routes.draw do
 
   scope 'company' do
     get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
-    
+    get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
+
     get 'dashboard',  to: 'companies#dashboard', as: :company_dashboard
     get 'load_surveyor',  to: 'surveyor#load_surveyor'
     get 'list_group', to: 'companies#list_group'

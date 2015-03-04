@@ -190,6 +190,9 @@ class CompaniesController < ApplicationController
   def list_polls  ## company polls
     @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params, true)
     @polls = @init_poll.get_poll_of_group_company.decorate
+
+    @init_poll_public = Company::PollPublic.new(@find_company)
+    @public_polls = @init_poll_public.get_list_public_poll.decorate
   end
 
   def list_questionnaires
