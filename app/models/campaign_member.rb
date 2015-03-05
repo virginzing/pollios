@@ -17,7 +17,7 @@ class CampaignMember < ActiveRecord::Base
       serial_code: serial_code,
       redeem: redeem,
       redeem_at: redeem_at.presence || "",
-      ref_no: ref_no,
+      ref_no: ref_no || "",
       created_at: created_at.to_i
     }
   end

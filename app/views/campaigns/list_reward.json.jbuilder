@@ -2,6 +2,8 @@ json.response_status "OK"
 json.list_reward @rewards do |reward|
   json.campaign reward.campaign.as_json()
 
+  json.reward_info reward.as_json()
+  
   if reward.poll_id.present?
     json.poll do
       json.id reward.poll.id

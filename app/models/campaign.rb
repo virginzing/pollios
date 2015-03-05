@@ -136,6 +136,7 @@ class Campaign < ActiveRecord::Base
       photo_campaign: get_photo_campaign,
       used: used,
       limit: limit,
+      owner_info: MemberInfoFeedSerializer.new(member).as_json().slice(:name, :avatar),
       created_at: created_at.to_i
     }
   end
