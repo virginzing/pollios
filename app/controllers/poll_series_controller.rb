@@ -205,7 +205,8 @@ class PollSeriesController < ApplicationController
         if poll_series_params["type_series"] == "0"
           render action: 'normal'
         else
-          render action: 'same_choice'
+          flash[:error] = "Something went wrong"
+          redirect_to same_choice_questionnaire_path
         end
       end
       Rails.cache.delete([current_member.id, 'my_questionnaire'])

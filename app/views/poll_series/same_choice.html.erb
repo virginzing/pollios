@@ -13,7 +13,7 @@
     
         <!-- widget content -->
         <div class="widget-body">
-          <%= simple_nested_form_for @poll_series, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= simple_nested_form_for @poll_series, :html => { :multipart => true, class: "smart-form", id: "questionnaire-form" } do |f| %>
           <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 1 }, as: :hidden %>
           <%= f.input :feedback, wrapper: :horizontal, input_html: { value: false }, as: :hidden %>
           <header>
@@ -25,7 +25,7 @@
             <section class="col col-9">
               <label class="label">Description</label>
               <label class="textarea">
-                <%= f.input :description, label: false, input_html: { autofocus: "autofocus", rows: "5" }, required: false %>
+                <%= f.input :description, label: false, input_html: { autofocus: "autofocus", rows: "5" }, required: true %>
               </label>
             </section>
 
@@ -158,6 +158,8 @@
   $(".remove_nested_fields")[0].style.visibility='hidden';
   $(".remove_nested_fields")[1].style.visibility='hidden';
 
+  $(".poll-title").attr('required', true);
+  $("#questionnaire-form").parsley();
 </script>
 <% if current_member.get_company.present? %>
   <script type="text/javascript">

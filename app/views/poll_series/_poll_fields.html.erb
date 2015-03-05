@@ -2,7 +2,7 @@
 <section>
   <label class="label">Poll Question</label>
   <label class="textarea">
-    <%= f.input :title , label: false, as: :text %>
+    <%= f.input :title , label: false, as: :text, required: false, input_html: { class: "poll-title" } %>
     <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
     <%= f.link_to_remove "Delete", class: "removeclass" %>
   </label>
