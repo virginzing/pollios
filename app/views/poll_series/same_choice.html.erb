@@ -114,12 +114,22 @@
             </section> -->
             
             <% if current_member.get_company.present? %>
-            <section> 
+<!--             <section> 
                 <label class="label">Show In Group</label>
                 <label class="select">
                   <input type="text" name="poll_series[group_id]" id="group_list">
                 </label>
+            </section>   -->
+
+            <section class="branch_list">
+              <label class="label">Show in group</label>
+              <div class="row">
+                <%= f.collection_check_boxes(:group_id, @group_list, :id, :name) do |b| %>
+                  <%= b.label(class: "label_branch col col-2") { b.check_box(class: "check_box_branch", :"data-parsley-mincheck" => "1", :"data-parsley-required" => true) + b.text } %>
+                <% end %>
+              </div>
             </section>  
+
             <% end %>
 
             <section>
