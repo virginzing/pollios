@@ -63,6 +63,12 @@ class PollDecorator < ApplicationDecorator
     end
   end
 
+  def lazy_photo_poll
+    if photo_poll.present?
+      image_tag("", data: { src: object.photo_poll.url(:thumbnail) }, class: 'lazy' )  
+    end
+  end
+
   def search_poll_image
     if photo_poll.present?
       image_tag(object.photo_poll.url(:thumbnail))  

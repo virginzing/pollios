@@ -17,7 +17,7 @@ $(document).on('page:change', function() {
       lessLink: '<a href="#" class="close-poll-title poll-title-detail">Close</a>'
     });
   };
-
+  
 });
 
 

@@ -510,7 +510,7 @@
 
     // Set chart options
     var options = {
-      'title'  : '<%= poll.title %>',
+      'title'  : '<%= poll.truncate_title(100) %>',
       'height' : 300,
       'width': 1000,
       'is3D': true
