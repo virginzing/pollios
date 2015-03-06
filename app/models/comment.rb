@@ -7,6 +7,8 @@ class Comment < ActiveRecord::Base
   has_many :member_mentionable, foreign_key: "comment_id", class_name: "Mention"
   has_many :get_member_mentionable, through: :member_mentionable, source: :mentionable
 
+  validates_presence_of :message
+
   after_commit :send_notification, on: :create
 
   scope :valid, -> { where(delete_status: false) }

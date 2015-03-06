@@ -713,9 +713,11 @@ class PollsController < ApplicationController
 
         # CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })
         # CommentMentionWorker.perform_in(5.seconds, @current_member.id, @poll.id, mentionable_list) if mentionable_list.present?
+        render status: :created
       rescue => e
         @error_message = e.message
         # puts "#{e.message}"
+        render status: :forbidden
       end
     end
   end
