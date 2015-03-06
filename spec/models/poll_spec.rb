@@ -1,13 +1,29 @@
 require 'rails_helper'
 
 RSpec.describe Poll, :type => :model do
-  it { should validate_presence_of(:member_id) }
-  it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:member_id).on(:create) }
+  it { should validate_presence_of(:title).on(:create) }
+  it { should validate_numericality_of(:view_all) }
+  it { should validate_numericality_of(:vote_all) }
+
+
   it { should have_many(:choices) }
   it { should have_many(:un_see_polls) }
   it { should have_many(:save_poll_laters) }
-
   it { should have_many(:poll_attachments) }
+  it { should have_many(:taggings) }
+  it { should have_many(:watcheds) }
+  it { should have_many(:groups) }
+  it { should have_many(:comments) }
+  it { should have_many(:history_votes) }
+  it { should have_many(:history_views) }
+  it { should have_many(:hidden_polls) }
+  it { should have_many(:branches) }
+
+  it { should belong_to(:member) }
+  it { should belong_to(:poll_series) }
+  it { should belong_to(:campaign) }
+  it { should belong_to(:recurring) }
   
   let!(:member) { create(:member, email: "test@gmail.com") }
 

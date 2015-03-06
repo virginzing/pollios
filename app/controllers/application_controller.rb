@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 
   def check_token
     token = request.headers['Authorization']
-
+    # puts "token => #{token}"
     if params[:member_id] && token.present?
       authenticate_or_request_with_http_token do |token, options|
         access_token = set_current_member.api_tokens.where("token = ?", token)
