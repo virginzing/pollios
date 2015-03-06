@@ -29,7 +29,7 @@ class PollDecorator < ApplicationDecorator
   end
 
   def truncate_title(default = 40)
-    truncate(object.title, length: default)
+    truncate(object.title.sub(/\n\n/, ' '), length: default)
   end
 
   def created_at

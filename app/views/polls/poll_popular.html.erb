@@ -61,7 +61,7 @@
 
         // Set chart options
         var options = {
-          'title'  : '<%= @poll_popular.title %>',
+          'title'  : '<%= @poll_popular.truncate_title(100) %>',
           'height' : 300,
           'is3D': true
         };
