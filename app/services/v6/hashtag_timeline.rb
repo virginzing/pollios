@@ -20,6 +20,14 @@ class V6::HashtagTimeline
     @options["name"]
   end
 
+  def your_friend_ids
+    @friend_ids ||= Member.list_friend_active.map(&:id)
+  end
+
+  def your_following_ids
+    @following_ids ||= Member.list_friend_following.map(&:id)
+  end
+
   def get_hashtag_popular
     @hashtag_popular ||= tag_popular.map(&:name)
   end
@@ -71,11 +79,20 @@ class V6::HashtagTimeline
     created_time = []
     updated_time = []
 
+    poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f'"
+    poll_group_query = "poll_groups.group_id IN (?)"
+    poll_public_query = "(poll_members.public = 't')"
+
+    new_your_friend_ids = ((your_friend_ids | your_following_ids) << member_id)
+
     query = PollMember.available.unexpire.joins(:poll => :tags).includes( :poll => [:poll_groups])
+                      .where("polls.series = 'f'")
                       .where("tags.name = ?", query_tag)
-                      .where("poll_members.share_poll_of_id = 0")
-                      .where("(polls.order_poll = 1 AND polls.series = 'f' AND polls.in_group = 'f') " \
-                      "OR (poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id = 0)", your_group_ids).references(:poll_groups)
+                      .where("(#{poll_friend_query})" \
+                               "OR (#{poll_group_query})" \
+                               "OR (#{poll_public_query})",
+                               new_your_friend_ids,
+                               your_group_ids).references(:poll_groups)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
 
