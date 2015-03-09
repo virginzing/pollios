@@ -239,7 +239,7 @@ class FriendsController < ApplicationController
     @list_following = init_list_friend.following
     @list_following_is_friend = Friend.check_add_friend?(find_user, @list_following, init_list_friend.check_is_friend) if @list_following.present?
 
-    @list_follower = init_list_friend.follower
+    @list_follower = find_user.celebrity? ? init_list_friend.follower : []
     @list_follower_is_friend = Friend.check_add_friend?(find_user, @list_follower, init_list_friend.check_is_friend) if @list_follower.present?
 
     if friend_params[:member_id] == friend_params[:friend_id]

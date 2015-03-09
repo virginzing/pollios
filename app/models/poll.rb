@@ -575,7 +575,6 @@ class Poll < ActiveRecord::Base
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
 
-
         if in_group
           if member.company?
             list_group_id = in_group_ids.split(",").collect{|e| e.to_i }
@@ -597,7 +596,7 @@ class Poll < ActiveRecord::Base
               @set_public = false
             end
           else
-            @set_public = false
+            @set_public = is_public == "1" ? true : false
           end
         end
 
@@ -663,7 +662,7 @@ class Poll < ActiveRecord::Base
           AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
         end
       else
-        if (poll_series_id == 0) && (public == false)
+        if poll_series_id == 0
           ApnPollWorker.perform_async(self.member_id, self.id) unless qr_only
         end
       end

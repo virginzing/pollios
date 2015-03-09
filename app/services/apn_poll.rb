@@ -14,7 +14,7 @@ class ApnPoll
 
   def recipient_ids
     if member.celebrity? || member.brand?
-      apn_friend_ids | following_ids
+      apn_friend_ids | follower_ids
     else
       apn_friend_ids
     end
@@ -32,6 +32,10 @@ class ApnPoll
   private
 
   def following_ids
+    received_notify_of_member_ids(member.get_follower)
+  end
+
+  def follower_ids
     received_notify_of_member_ids(member.get_follower)
   end
 
