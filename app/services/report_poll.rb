@@ -11,6 +11,7 @@ class ReportPoll
       report_increment
       send_notification if in_group?
       clear_cached
+      SavePollLater.delete_save_later(@member.id, @poll)
     end
     reporting
   end

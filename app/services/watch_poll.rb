@@ -8,7 +8,7 @@ class WatchPoll
     if find_watch_poll.present?
       watching = find_watch_poll.update!(poll_notify: true, comment_notify: true)
     else
-      watching = @member.watcheds.create!(poll_id: @poll_id)
+      watching = @member.watcheds.create!(poll_id: @poll_id, poll_notify: true, comment_notify: true)
     end
     @member.flush_cache_my_watch
     watching
