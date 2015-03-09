@@ -32,7 +32,7 @@ class Member::ListFriend
   end
 
   def following
-    cached_all_friends.select{|user| user if user.member_following == true && user.member_status != 1 }
+    cached_all_friends.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
   end
 
   def follower
