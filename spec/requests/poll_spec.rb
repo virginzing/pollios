@@ -199,4 +199,37 @@ RSpec.describe "Poll" do
     end
   end
 
+  describe "POST /poll/:id/hide" do
+    before do
+      create(:save_poll_later, member: member, savable: poll)
+    end
+
+    it "has 1 save poll later" do
+      expect(SavePollLater.count).to eq(1)
+    end
+
+    it "can hide poll" do
+      post "/poll/#{poll.id}/hide.json", { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("OK")
+    end
+
+    it "has 0 save poll when this poll was hided" do
+      post "/poll/#{poll.id}/hide.json", { member_id: member.id }, { "Accept" => "application/json" }
+      expect(HiddenPoll.count).to eq(1)
+      expect(SavePollLater.count).to eq(0)
+    end
+
+
+
+  end
+
+
+
+
+
+
+
+
+
 end

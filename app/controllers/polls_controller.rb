@@ -662,6 +662,7 @@ class PollsController < ApplicationController
 
   def hide
     @hide = @current_member.hidden_polls.create!(poll_id: params[:id])
+    SavePollLater.delete_save_later(@current_member.id, @poll)
   end
 
   def report
