@@ -151,6 +151,8 @@ class Authentication
       member.member_type = member_type
       member.register = register_status
       member.approve_brand = approved_brand
+      member.point = Member::NEW_USER_POINT
+      
       if web_login.present?
         member.auth_token = generate_auth_token
       end

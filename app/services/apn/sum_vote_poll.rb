@@ -32,11 +32,7 @@ class Apn::SumVotePoll
   # end
 
   def anonymous
-    if convert_list_fullname.first == SOMEONE
-      true
-    else
-      false
-    end
+    convert_list_fullname.first == SOMEONE ? true : false
   end
 
   def custom_message

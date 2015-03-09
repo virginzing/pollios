@@ -1,4 +1,5 @@
 class Member < ActiveRecord::Base
+  NEW_USER_POINT = 5
   # extend FriendlyId
   include PgSearch
   include MemberHelper

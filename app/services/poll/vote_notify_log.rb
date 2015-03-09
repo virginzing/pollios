@@ -7,6 +7,10 @@ class Poll::VoteNotifyLog
     @show_result = show_result
   end
 
+  def anonymous
+    !@show_result
+  end
+
   def create!
     begin
       raise ArgumentError.new("Poll not found") if @poll.nil?
@@ -34,7 +38,7 @@ class Poll::VoteNotifyLog
       }
 
       hash_custom = {
-        anonymous: @apn_sum_vote_poll.anonymous,
+        anonymous: anonymous,
         action: ACTION[:vote],
         poll: @poll_serializer_json
       }
