@@ -120,21 +120,21 @@ class V6::OverallTimeline
     ids, poll_ids, feed, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, priority, created_time, updated_time
   end
 
-  def check_feed_type(poll)
-    if poll.public
-      FeedSetting::PUBLIC_FEED
-    else
-      if poll.in_group
-        FeedSetting::GROUP_FEED   
-      else
-        FeedSetting::FRIEND_FOLLOWING_FEED
-      end
-    end
-  end
+  # def check_feed_type(poll)
+  #   if poll.public
+  #     FeedSetting::PUBLIC_FEED
+  #   else
+  #     if poll.in_group
+  #       FeedSetting::GROUP_FEED   
+  #     else
+  #       FeedSetting::FRIEND_FOLLOWING_FEED
+  #     end
+  #   end
+  # end
 
-  def check_poll_priority(poll)
-    poll.priority
-  end
+  # def check_poll_priority(poll)
+  #   poll.priority
+  # end
 
   def poll_non_share_non_in_group
     "poll_members.in_group = 'f' AND poll_members.share_poll_of_id = 0"

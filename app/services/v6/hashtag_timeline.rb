@@ -1,6 +1,7 @@
 class V6::HashtagTimeline
   include GroupApi
   include Timelinable
+  include FeedSetting
 
   TYPE_TIMELINE = 'hashtag_timeline'
 
@@ -65,7 +66,12 @@ class V6::HashtagTimeline
   end
 
   def tag_friend_group_public
-    query = PollMember.available.joins(:poll => :tags).includes([{:poll => [:choices, :campaign, :poll_series, :member, :poll_groups]}])
+    feed = []
+    priority = []
+    created_time = []
+    updated_time = []
+
+    query = PollMember.available.unexpire.joins(:poll => :tags).includes( :poll => [:poll_groups])
                       .where("tags.name = ?", query_tag)
                       .where("poll_members.share_poll_of_id = 0")
                       .where("(polls.order_poll = 1 AND polls.series = 'f' AND polls.in_group = 'f') " \
@@ -75,13 +81,24 @@ class V6::HashtagTimeline
 
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
 
-    query = query.limit(LIMIT_TIMELINE)
+    query.each do |q|
+      priority << check_poll_priority(q.poll)
+      feed << check_feed_type(q.poll)
+      created_time << q.poll.created_at
+      updated_time << q.poll.updated_at
+    end
 
-    query.map(&:id)
+    ids, poll_ids, feed, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, priority, created_time, updated_time
   end
 
   def main_timeline
-    tag_friend_group_public
+    # tag_friend_group_public
+    ids, poll_ids, feed, priority, created_time, updated_time = tag_friend_group_public
+
+    ids = FeedAlgorithm.new(ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+
+    ids
+
   end
 
 

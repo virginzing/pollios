@@ -49,6 +49,24 @@ module Timelinable
     unsee_questionnaire_ids | saved_questionnaire_ids_later
   end
 
+  # check priority #
+
+  def check_feed_type(poll)
+    if poll.public
+      FeedSetting::PUBLIC_FEED
+    else
+      if poll.in_group
+        FeedSetting::GROUP_FEED   
+      else
+        FeedSetting::FRIEND_FOLLOWING_FEED
+      end
+    end
+  end
+
+  def check_poll_priority(poll)
+    poll.priority
+  end
+
 
   # Feed #
 
