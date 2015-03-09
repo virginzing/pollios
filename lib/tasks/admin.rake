@@ -38,6 +38,7 @@ namespace :admin do
   task :create_sidekiq_cron => :environment do
     Sidekiq::Cron::Job.create(name: "SavePollWorker - every at 19:00", cron: '0 12 * * *', klass: 'SavePollWorker')
     Sidekiq::Cron::Job.create(name: "RecurringPollWorker - each hourly", cron: '0 * * * *', klass: 'RecurringPollWorker')
+    Sidekiq::Cron::Job.create(name: "Check subscribe of member - each day", cron: '1 0 * * *', klass: 'CheckSubscribeWorker')
   end
 
 end

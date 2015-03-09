@@ -35,6 +35,9 @@ class HistoryPurchase < ActiveRecord::Base
             else
               new_subscribe_expire = member.subscribe_expire + value
             end
+            Member::ListFriend.new(member).follower.each do |follower|
+              FlushCached::Member.new(follower).clear_one_friend
+            end
             member.update!(member_type: :celebrity, subscription: true, subscribe_last: Time.zone.now, subscribe_expire: new_subscribe_expire)
           end
 
