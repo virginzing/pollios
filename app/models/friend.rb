@@ -231,9 +231,10 @@ class Friend < ActiveRecord::Base
       FlushCached::Member.new(friend).clear_one_friend
 
       [friend, :friend, active_status]
-    rescue => e
-      puts "error => #{e}"
-      nil
+
+    # rescue => e
+    #   puts "error => #{e}"
+    #   nil
     end
   end
 
