@@ -103,7 +103,7 @@ div.panel {
 
 span.remove_poll {
   float: right;
-  margin: 10px;
+  margin: -10px;
 }
 
 .select2-container-multi .select2-choices {

@@ -10,7 +10,7 @@ class ApnQuestionnaireWorker
       @poll_series = PollSeries.cached_find(poll_series_id)
       @poll_series_serializer_json ||= QuestionnaireSerializer.new(@poll_series).as_json()
 
-      @group = Group.find(group_id)
+      @group = Group.find_by(id: group_id)
       member_id = @member.id
 
       @poll_id_for_questionnaire = @poll_series.polls.select{|poll| poll if poll.order_poll }.min.id

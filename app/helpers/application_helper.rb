@@ -23,6 +23,10 @@ module ApplicationHelper
     params
   end
 
+  def geneate_time
+    return Time.now.to_i
+  end
+
   def sum_average(list, number_branch, vote_count, index)
     new_list = list.each_slice(number_branch).to_a
     sum = (new_list.collect{|e| e[index] }.reduce(:+) / vote_count).round(2)
@@ -180,7 +184,7 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 101 }' -X POST http://localhost:3000/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 202, "friend_id": 93 }' -X POST http://localhost:3000/friend/following.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 101 }' -X POST http://localhost:3000/friend/unfollow.json -i
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 93 , "friend_id": 206 }' -X POST http://localhost:3000/friend/add_friend.json -i
@@ -277,7 +281,7 @@ end
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
 #     "message": "One Two Three Four Five"
-# }' -X POST http://localhost:3000/poll/2338/comments.json -i
+# }' -X POST http://localhost:3000/poll/2345/comments.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -289,6 +293,10 @@ end
 #     "member_id": 179
 # }' -X POST http://localhost:3000/poll/1284/un_see.json -i
 
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 92
+# }' -X DELETE http://localhost:3000/signout_all_device.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 86
@@ -544,7 +552,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "title": "สร้างใหม่อีกรอบ ปั้ม poll",
+#     "title": "Test Voter",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
@@ -615,10 +623,10 @@ end
 # NotifyLog.where("created_at > ?", 1.days.ago)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 150,
-#     "choice_id": "9140",
-#     "show_result": false
-# }' -X POST http://localhost:3000/poll/2338/vote.json -i
+#     "member_id": 114,
+#     "choice_id": "11656",
+#     "show_result": true
+# }' -X POST http://pollios.com/poll/2878/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -626,6 +634,7 @@ end
 #     "redeemer_id" : "89"
 # }' -X POST http://localhost:3000/api/campaign/redeem_code -i
 
+# NotifyLog.where(created_at: 3.hours.ago..4.hours.ago)
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": 72,
@@ -748,9 +757,9 @@ end
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
 # curl -H "Content-Type: application/json" -d '{"email":"funnysmart_online@hotmail.com","old_password":"123456", "new_password": "Nutty509" }' -X POST http://localhost:3000/authen/change_password.json -i
 
-# curl -H "Content-Type: application/json" -d '{"authen":"funnysmart_online@hotmail.com","password":"Nutty509", "app_id": "123" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
-# curl -F "email=krikri@gmail.com" -F "password=mefuwfhfu" -F "fullname=Kri Kri" -F "device_token=78916fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" -X POST http://localhost:3000/authen/signup_sentai.json -i
-# curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"testpollios@gmail.com","password":"mefuwfhfu", "app_id": "123", "device_token":"78916fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 11111111" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -F "email=get_point@gmail.com" -F "password=mefuwfhfu" -F "fullname=Get Point" -F "app_id=123" -X POST http://localhost:3000/authen/signup_sentai.json -i
+# # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{

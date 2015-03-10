@@ -21,29 +21,37 @@
 
           <fieldset>
             
-            <section class="col col-10">
+            <section class="col col-9">
               <label class="label">Description</label>
               <label class="textarea">
-                <%= f.input :description, label: false, input_html: { autofocus: "autofocus"}, required: false %>
+                <%= f.input :description, label: false, input_html: { autofocus: "autofocus", rows: "5" }, required: true %>
               </label>
-              <div class="onoffswitch-container" style="margin-left: 0px;">
-                <span class="onoffswitch-title">Allow Suggest</span> 
-                <span class="onoffswitch">
-                  <input type="checkbox" class="onoffswitch-checkbox" name="poll_series[allow_comment]" id="autoopen" checked>
-                  <label class="onoffswitch-label" for="autoopen"> 
-                    <span class="onoffswitch-inner" data-swchon-text="ON" data-swchoff-text="OFF"></span> 
-                    <span class="onoffswitch-switch"></span>
-                  </label> 
-                </span> 
-              </div>
             </section>
 
-            <section class="col col-2">
-              <label class="label">Expire with in</label>
-              <label class="select">
-                <%= f.input :expire_within, collection: 1..20, label: false, include_blank: false %>
-                <i></i>
-              </label>
+            <section class="col col-3">
+              <label class="label">Expire within (day)</label>
+                <label class="select">
+                  <select name="poll_series[expire_date]">
+                    <option value="0" selected="">Unexpired</option>
+                    <% (1..30).each do |e| %>
+                      <option value="<%= e %>"><%= e %></option>
+                    <% end %>
+                  </select> <i></i> 
+                </label>
+
+              <div class="option_config">
+                <label class="toggle">
+                  <input type="checkbox" name="poll_series[allow_comment]" checked="checked">
+                <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Suggest</label>
+                
+                <label class="toggle">
+                  <input type="checkbox" name="poll_series[qr_only]" checked="checked">
+                <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
+                
+                <label class="toggle">
+                  <input type="checkbox" name="poll_series[require_info]" checked="checked">
+                <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
+              </div>
             </section>
 
           </fieldset>
@@ -57,29 +65,35 @@
               <%= f.fields_for :polls do |poll_form| %>
                 <%= render 'poll_form',  :f => poll_form %>    
               <% end %>
-              <%= f.link_to_add "More Poll", :polls, class: 'btn btn-primary add_new_poll' %>
 
+              <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> Add New Poll Question".html_safe, :polls, class: 'btn btn-default btn-sm add_new_poll btn-pill' %>
             </section>
 
           </fieldset>
 
           <header>
-            Config
+            Advance Questionnaire Config
           </header>
           
           <fieldset>
-          
-            <section>
-              <label class="label">Tag</label>
-              <div class="form-group">
-              <%= f.input :tag_tokens, label: false, :input_html => { :class => "tag_token", :id => "tag_list_normal" } %>
+        
+            <% if current_member.get_company.present? %>
+
+            <section class="branch_list">
+              <label class="label">Show in group</label>
+              <div class="row">
+                <%= f.collection_check_boxes(:group_id, @group_list, :id, :name) do |b| %>
+                  <%= b.label(class: "label_branch col col-2") { b.check_box(class: "check_box_branch", :"data-parsley-mincheck" => "1", :"data-parsley-required" => true) + b.text } %>
+                <% end %>
               </div>
-            </section>
+            </section>  
+
+            <% end %>
 
             <section>
               <label class="label">Campaign</label>
               <label class="select">
-                <%= f.select :campaign_id, @current_member.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                <%= f.select :campaign_id, @company.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
               </label>
             </section>
           
@@ -109,6 +123,7 @@
 
 <script type="text/javascript">
   var times = 2;
+  var count_add_form = <%= Time.now.to_i + 1 %>;
 
   $(".remove_nested_fields")[0].style.visibility='hidden';
   $(".remove_nested_fields")[1].style.visibility='hidden';
@@ -120,8 +135,15 @@
         $(".add_new_choice").last().trigger("click");      }
       $('.remove_nested_fields').slice(-3,-2)[0].style.visibility='hidden';
       $('.remove_nested_fields').slice(-2,-1)[0].style.visibility='hidden';
-      dropZonePicture();
+
+      $("input[name=checkbox-inline]").last().attr('id', count_add_form);
+      $(".collect_choices").last().attr('id', 'collect_choices_' + count_add_form);
+      $(".poll_series_polls_type_poll:last > input").last().attr('id', 'type_poll_' + count_add_form);
+      count_add_form++;
+      // dropZonePicture();
     }, 5);
+
   });
+
 </script>
 
