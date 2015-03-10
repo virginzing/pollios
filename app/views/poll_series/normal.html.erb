@@ -15,6 +15,8 @@
         <div class="widget-body">
           <%= simple_nested_form_for @poll_series, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
           <%= f.input :type_series, wrapper: :horizontal, input_html: { value: 0 }, as: :hidden %>
+          <%= f.input :feedback, wrapper: :horizontal, input_html: { value: false }, as: :hidden %>
+          
           <header>
             Questionnaire Detail 
           </header>
