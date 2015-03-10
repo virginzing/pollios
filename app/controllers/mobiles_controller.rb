@@ -11,6 +11,15 @@ class MobilesController < ApplicationController
   before_action :set_current_member, only: [:vote_questionnaire, :vote_poll]
   before_action :set_poll, only: [:vote_poll]
   after_action :delete_cookie, only: [:authen_facebook]
+
+  def terms_of_service
+    render layout: false
+  end
+
+  def privacy_policy
+    render layout: false
+  end
+
   def home
     
   end

@@ -487,6 +487,11 @@ Pollios::Application.routes.draw do
     get 'close_questionnaire',  to: 'mobiles#close_questionnaire'
   end
 
+  scope 'app' do
+    get 'terms_of_service', to: 'mobiles#terms_of_service'
+    get 'privacy_policy',   to: 'mobiles#privacy_policy'
+  end
+
   get '/qrcode',  to: 'mobiles#check_qrcode'
   get '/qrcode_member', to: 'mobiles#check_qrcode_member'
 
