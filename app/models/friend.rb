@@ -209,15 +209,18 @@ class Friend < ActiveRecord::Base
     begin
       if accept
         active_status = true
-        active_status = false if friend.friend_count >= friend.friend_limit
 
+        raise ExceptionHandler::Forbidden, "My friend has over 500 people" if (Member::ListFriend.new(member).friend_count >= member.friend_limit)
+        raise ExceptionHandler::Forbidden, "Your friend has over 500 people" if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
+        # active_status = false if friend.friend_count >= friend.friend_limit
         search_member(member_id, friend_id).update_attributes!(active: active_status, status: :friend)
         search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
 
         Activity.create_activity_friend( member, friend , ACTION[:become_friend])
         Activity.create_activity_friend( friend, member , ACTION[:become_friend])
 
-        AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) if Rails.env.production?
+        AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
+        
       else
         find_member.destroy
         find_friend.destroy

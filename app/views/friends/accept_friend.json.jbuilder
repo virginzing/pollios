@@ -1,4 +1,4 @@
-if @friend.present?
+if @detail_friend.present?
   json.response_status "OK"
   json.status @status
   json.active @active

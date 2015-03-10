@@ -39,6 +39,10 @@ class Member::ListFriend
     cached_follower.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
+  def friend_count
+    cached_all_friends.select{|user| user if user.member_active == true && user.member_status == 1 }.to_a.count
+  end
+
   def check_is_friend
     {
       active: active.map(&:id),
