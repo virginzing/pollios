@@ -138,7 +138,8 @@ class Campaign < ActiveRecord::Base
       used: used,
       limit: limit,
       owner_info: MemberInfoFeedSerializer.new(member).as_json().slice(:name, :avatar),
-      created_at: created_at.to_i
+      created_at: created_at.to_i,
+      redeem_myself: redeem_myself
     }
   end
   
