@@ -127,6 +127,10 @@ class Campaign < ActiveRecord::Base
     photo_campaign.url(:thumbnail).presence || ""
   end
 
+  def get_original_photo_campaign
+    photo_campaign.url
+  end
+
   def as_json(options={})
     {
       id: id,
@@ -135,6 +139,7 @@ class Campaign < ActiveRecord::Base
       how_to_redeem: how_to_redeem.presence || "",
       expire: expire.to_i,
       photo_campaign: get_photo_campaign,
+      original_photo_campaign: get_original_photo_campaign,
       used: used,
       limit: limit,
       owner_info: MemberInfoFeedSerializer.new(member).as_json().slice(:name, :avatar),
