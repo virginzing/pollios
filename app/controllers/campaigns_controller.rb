@@ -1,13 +1,19 @@
 class CampaignsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict, :claim_reward]
+  before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
   before_action :set_current_member, only: [:predict, :list_reward, :claim_reward]
   before_action :signed_user, only: [:index, :new, :show, :update, :destroy]
   before_action :history_voted_viewed, only: [:list_reward]
 
+  before_action :set_reward, only: [:claim_reward]
 
   def claim_reward
-    
+    @claim = false
+    init_reward = Campaign::ClaimReward.new(@current_member, @campaign_member)
+
+    if init_reward.claim
+      @claim = true
+    end
   end
 
   def predict
@@ -181,6 +187,12 @@ class CampaignsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_campaign
       @campaign = Campaign.find(params[:id])
+    end
+
+    def set_reward
+      @campaign_member = CampaignMember.find_by(id: params[:reward_id], member_id: params[:member_id], ref_no: params[:ref_no])
+      raise ExceptionHandler::NotFound, "Reward not found" unless @campaign_member.present?
+      @campaign_member  
     end
 
     def redeem_code_params

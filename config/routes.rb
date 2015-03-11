@@ -99,6 +99,7 @@ Pollios::Application.routes.draw do
     get 'check_redeem',     to: 'campaigns#check_redeem'
     post ':id/random_later',  to: 'campaigns#random_later'
     post 'confirm_lucky',   to: 'campaigns#confirm_lucky'
+    post 'claim_reward',  to: 'campaigns#claim_reward'
   end
 
   scope 'questionnaire' do
