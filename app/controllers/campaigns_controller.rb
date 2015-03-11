@@ -162,8 +162,13 @@ class CampaignsController < ApplicationController
   # DELETE /campaigns/1.json
   def destroy
     @campaign.destroy
+    flash[:success] = "Destroy completely"
     respond_to do |format|
-      format.html { redirect_to campaigns_url }
+      if params[:type] == "feedback"
+        format.html { redirect_to feedback_campaigns_path }
+      else
+        format.html { redirect_to company_campaigns_path }
+      end
       format.json { head :no_content }
     end
   end

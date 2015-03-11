@@ -50,7 +50,7 @@
                   <td><%= campaign.used %></td>
                   <td><%= campaign.limit %></td>
                   <td><%= campaign.type_campaign_text %></td>
-                  <td width="150"><%= link_to 'Edit', edit_feedback_campaign_path(campaign), class: 'btn btn-default btn-pill' %> <%= link_to 'Remove', campaign_path(campaign), class: 'btn btn-default btn-pill', method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                  <td width="150"><%= link_to 'Edit', edit_feedback_campaign_path(campaign), class: 'btn btn-default btn-pill' %> <%= link_to 'Remove', campaign_path(campaign, type: "feedback"), class: 'btn btn-default btn-pill', method: :delete, data: { confirm: 'Are you sure?' } %></td>
                 </tr>
               <% end %>
             </tbody>

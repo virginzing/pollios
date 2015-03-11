@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150311040551) do
+ActiveRecord::Schema.define(version: 20150311061200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -240,10 +240,12 @@ ActiveRecord::Schema.define(version: 20150311040551) do
     t.integer  "company_id"
     t.integer  "type_campaign"
     t.boolean  "redeem_myself",  default: false
+    t.hstore   "reward_info"
   end
 
   add_index "campaigns", ["company_id"], name: "index_campaigns_on_company_id", using: :btree
   add_index "campaigns", ["member_id"], name: "index_campaigns_on_member_id", using: :btree
+  add_index "campaigns", ["reward_info"], name: "index_campaigns_on_reward_info", using: :gist
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"

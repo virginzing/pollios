@@ -180,6 +180,10 @@
             <a href="<%= admin_suggest_groups_path %>" title="Suggest Groups"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Suggest Group</span></a>
           </li>
 
+          <li class="<%= is_active?('gifts') %>">
+            <a href="<%= gifts_path %>" title="Gifts"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Gifts</span></a>
+          </li>
+
           <li class="<%= is_active_2nd_level('admin', 'notification') %>">
             <a href="<%= admin_notification_path %>" title="Notification"><i class="fa fa-lg fa-fw fa-bullhorn"></i> <span class="menu-item-parent">Notification</span></a>
           </li>
@@ -276,7 +280,7 @@
           <span class="txt-color-white">Pollios © 2014</span>
         </div>
 
-        <div class="col-xs-6 col-sm-6 text-right hidden-xs">
+<!--         <div class="col-xs-6 col-sm-6 text-right hidden-xs">
           <div class="txt-color-white inline-block">
 
             <div class="btn-group dropup">
@@ -319,7 +323,7 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 

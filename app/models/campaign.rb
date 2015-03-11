@@ -5,6 +5,7 @@ class Campaign < ActiveRecord::Base
 
   attr_accessor :poll_ids, :poll_id
 
+  store_accessor :reward_info
 
   # validates :name, :begin_sample, :end_sample, presence: true
   # validates :limit, presence: true, numericality: { greater_than: 0 }

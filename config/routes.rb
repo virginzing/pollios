@@ -66,7 +66,7 @@ Pollios::Application.routes.draw do
   resources :recurrings
   resources :comments
 
-  resources :campaigns
+  resources :campaigns, only: [:destroy]
 
   resources :polls do
     resources :choices
@@ -370,6 +370,7 @@ Pollios::Application.routes.draw do
 
     resources :invites
     resources :commercials
+    resources :gifts
   end
 
   get '/hashtag',  to: 'polls#hashtag'

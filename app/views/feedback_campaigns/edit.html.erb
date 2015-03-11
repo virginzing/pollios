@@ -30,8 +30,16 @@
     </div>
 
     <% if @company.company_admin %>
-    <%= f.input :redeem_myself %>
+    <div class="well">
+      <h2><strong>Gift</strong></h2>
+      <%= f.input :redeem_myself %>
+      <%= f.simple_fields_for :reward_info do |reward| %>
+        <%= reward.input :point, required: false %>
+        <!-- <%= reward.input :friend_limit, required: false %> -->
+      <% end %>
+    </div>
     <% end %>
+    
     <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer" } %>
     <%= f.input :expire, as: :string, input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
 

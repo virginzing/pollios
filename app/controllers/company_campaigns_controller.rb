@@ -22,6 +22,7 @@ class CompanyCampaignsController < ApplicationController
       flash[:notice] = "Successfully created..."
       redirect_to company_campaigns_path
     else
+      puts "error => #{@campaign.errors.full_messages}"
       flash[:error] = "Fail"
       redirect_to new_company_campaign_path
     end
@@ -54,7 +55,7 @@ class CompanyCampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself)
+    params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_info => [:point])
   end
 
 end
