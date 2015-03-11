@@ -53,7 +53,7 @@
 
         // Set chart options
         var options = {
-          'title'  : '<%= @poll_latest.title %>',
+          'title'  : '<%= @poll_latest.truncate_title %>',
           'height' : 300,
           'is3D': true
         };
@@ -73,58 +73,58 @@
     }
   </script>
 
+  <!--<script type="text/javascript">
+  // configure for module loader
+  require.config({
+      paths: {
+          echarts: '/echarts'
+      }
+  });
+
+  // use
+  require(
+      [
+          'echarts',
+          'echarts/chart/pie'
+      ],
+      function(ec) {
+          // Initialize after dom ready
+          var myChart = ec.init(document.getElementById('chart_poll_lastest'), "macarons");
+
+          option = {
+              title : {
+                  text: "<%= @poll_latest.title %>",
+                  subtext: "<%= @poll_latest.member.fullname %>",
+                  x:'center'
+              },
+              tooltip : {
+                  trigger: 'item',
+                  formatter: "{a} <br/>{b} : {c} ({d}%)"
+              },
+              legend: {
+                  orient : 'vertical',
+                  x : 'left',
+                  data: <%= raw @choice_poll_latest.collect{|e| e.first } %>
+              },
+              calculable : true,
+              series : [
+                  {
+                      name:'Result',
+                      type:'pie',
+                      radius : '55%',
+                      center: ['50%', '60%'],
+                      data: <%= raw @poll_latest_data.to_json %>
+                  }
+              ]
+          };
+
+          // Load data into the ECharts instance 
+          myChart.setOption(option);
+      }
+  );
+  </script>-->
+
 <% else %>
-  <p>Don't have any poll.</p>
+  <div class='alert alert-info'>Don't have any poll.</div>
 <% end %>
-
-<!--<script type="text/javascript">
-// configure for module loader
-require.config({
-    paths: {
-        echarts: '/echarts'
-    }
-});
-
-// use
-require(
-    [
-        'echarts',
-        'echarts/chart/pie'
-    ],
-    function(ec) {
-        // Initialize after dom ready
-        var myChart = ec.init(document.getElementById('chart_poll_lastest'), "macarons");
-
-        option = {
-            title : {
-                text: "<%= @poll_latest.truncate_title %>",
-                subtext: "<%= @poll_latest.member.fullname %>",
-                x:'center'
-            },
-            tooltip : {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            legend: {
-                orient : 'vertical',
-                x : 'left',
-                data: <%= raw @choice_poll_latest.collect{|e| e.first } %>
-            },
-            calculable : true,
-            series : [
-                {
-                    name:'Result',
-                    type:'pie',
-                    radius : '55%',
-                    center: ['50%', '60%'],
-                    data: <%= raw @poll_latest_data.to_json %>
-                }
-            ]
-        };
-
-        // Load data into the ECharts instance 
-        myChart.setOption(option);
-    }
-);
-</script>-->
 

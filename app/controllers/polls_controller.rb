@@ -95,14 +95,16 @@ class PollsController < ApplicationController
     @choice_poll_latest = []
     
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
-    # @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
-    @poll_latest = Poll.where("id = ?", 2258).decorate.first
+    @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
+    # @poll_latest = Poll.where("id = ?", 2258).decorate.first
 
-    @choice_poll_latest = @poll_latest.cached_choices.collect{|e| [e.answer, e.vote] }
-    @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max
-      
-    @choice_poll_latest.each do |choice|
-      @poll_latest_data << { "name" => choice.first, "value" => choice.last }
+    if @poll_latest.present?
+      @choice_poll_latest = @poll_latest.cached_choices.collect{|e| [e.answer, e.vote] }
+      @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max
+        
+      @choice_poll_latest.each do |choice|
+        @poll_latest_data << { "name" => choice.first, "value" => choice.last }
+      end
     end
 
     render layout: false

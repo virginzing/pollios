@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150304054726) do
+ActiveRecord::Schema.define(version: 20150311040551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(version: 20150304054726) do
     t.text     "how_to_redeem"
     t.integer  "company_id"
     t.integer  "type_campaign"
+    t.boolean  "redeem_myself",  default: false
   end
 
   add_index "campaigns", ["company_id"], name: "index_campaigns_on_company_id", using: :btree
@@ -334,7 +335,8 @@ ActiveRecord::Schema.define(version: 20150304054726) do
     t.string   "telephone_number"
     t.integer  "max_invite_code",  default: 0
     t.integer  "internal_poll",    default: 0
-    t.string   "using_service",    default: [],   array: true
+    t.string   "using_service",    default: [],    array: true
+    t.boolean  "company_admin",    default: false
   end
 
   add_index "companies", ["member_id"], name: "index_companies_on_member_id", using: :btree

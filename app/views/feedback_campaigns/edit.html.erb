@@ -29,7 +29,9 @@
 
     </div>
 
-
+    <% if @company.company_admin %>
+    <%= f.input :redeem_myself %>
+    <% end %>
     <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer" } %>
     <%= f.input :expire, as: :string, input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
 

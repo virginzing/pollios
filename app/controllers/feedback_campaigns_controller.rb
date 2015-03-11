@@ -57,7 +57,7 @@ class FeedbackCampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample)
+    params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself)
   end
   
 end

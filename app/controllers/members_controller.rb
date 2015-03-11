@@ -203,7 +203,7 @@ class MembersController < ApplicationController
         end
 
         flash[:success] = "Update profile successfully."
-        format.html { redirect_to my_profile_path }
+        format.html { redirect_to company_setting_path }
         format.json
       else
         # puts "have error"
