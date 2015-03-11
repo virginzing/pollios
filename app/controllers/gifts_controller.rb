@@ -8,5 +8,15 @@ class GiftsController < ApplicationController
     
   end
 
+  def new
+    @campaigns = Company.where(company_admin: true).first.campaigns
+    @gift = CampaignMember.new
+  end
+
+  def create
+    
+  end
+
+
 
 end

@@ -40,7 +40,7 @@
                   <%= poll.id %>
                 </td>
                 <td>
-                  <%= poll.title %>
+                  <%= poll.decorate.truncate_title(100) %>
                 </td>
                 <td>
                   <%= poll.report_count %>
