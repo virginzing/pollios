@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150312102821) do
+ActiveRecord::Schema.define(version: 20150312104801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -461,6 +461,7 @@ ActiveRecord::Schema.define(version: 20150312102821) do
     t.boolean  "need_approve",     default: true
     t.string   "public_id"
     t.boolean  "visible",          default: true
+    t.boolean  "visual_group",     default: false
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
