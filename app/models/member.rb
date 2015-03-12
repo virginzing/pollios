@@ -367,6 +367,14 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def recent_history_subscription
+    @recent_subscription ||= HistoryPurchase.where("member_id = ? AND product_id IN (?)", id, ["1month", "1year"]).order("created_at desc")
+  end
+
+  def get_recent_history_subscription
+    recent_history_subscription.present? ? recent_history_subscription.map(&:product_id).first : ""
+  end
+
   def get_sentai_id
     providers.where(name: 'sentai').first.pid    
   end

@@ -12,6 +12,7 @@ json.subscription do
   json.is_subscribe member.subscription
   json.subscribe_last member.subscribe_last.to_i
   json.subscribe_expire member.subscribe_expire.to_i
+  json.recent_subscription member.get_recent_history_subscription
 end
 
 json.count do
