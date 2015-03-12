@@ -1,9 +1,11 @@
 <section>
-  <label class="label">Poll Question</label>
-  <label class="textarea">
-    <%= f.input :title , label: false, as: :text, required: false, input_html: { class: "poll-title" } %>
+  <!-- <label class="label">Poll Question</label> -->
+  <label class="textarea input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice">
+    <%= f.input :title , label: false, as: :text, required: false, input_html: { class: "poll-title",  placeholder: "Poll title" } %>
     <%= f.input :type_poll, as: :hidden, input_html: { value: 2 } %>
     <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
-    <%= f.link_to_remove "Delete", class: "removeclass" %>
+  </label>
+  <label class="col-lg-1 col-md-1 col-sm-1 col-xs-1 remove_field_choice">
+    <%= f.link_to_remove "<i class='fa fa-times fa-2x txt-color-red'></i>".html_safe, class: "removeclass" %>
   </label>
 </section>

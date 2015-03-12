@@ -149,5 +149,22 @@
 
   });
 
+  $(document).on('nested:fieldAdded', function(event){
+    // this field was just inserted into your form
+    // var field = event.field; 
+    // console.log(field);
+    // it's a jQuery object already! Now you can find date input
+    // field.find('textarea').attr('required', true);
+    // console.log(field.find('textarea'));
+  });
+  $(document).on('nested:fieldRemoved', function(event){
+    // this field was just inserted into your form
+    var field = event.field;
+    field.remove(); 
+    // console.log(field);
+    // it's a jQuery object already! Now you can find date input
+    // field.find('textarea').attr('required', false);
+  });
+
 </script>
 

@@ -27,12 +27,12 @@
       </section>
 
       <section class="collect_choices" id="collect_choices_<%= Time.now.to_i %>">
+
         <%= f.fields_for :choices do |builder| %>
           <%= render 'choice_fields', :f => builder %>
         <% end %>
 
-
-        <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> more choice".html_safe, :choices, class: 'btn btn-sm btn-default add_new_choice btn-pill morechoice' %>
+        <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> more choice".html_safe, :choices , class: 'btn btn-sm btn-default add_new_choice btn-pill morechoice' %>
 
       </section>
       </div>
@@ -68,12 +68,14 @@ function hideCollectionChoice (id) {
 
   $collection_choice.find('input').attr('data-parsley-required', 'false');
   $collection_choice.hide();
-  console.log($collection_choice.find('input').attr('data-parsley-required', 'false'));
+  // console.log($collection_choice.find('input').attr('data-parsley-required', 'false'));
   $("#type_poll_" + id).attr('value', 2);
 }
 
 function showCollectionChoice (id) {
-  $("#collect_choices_" + id).show();
+  var $collection_choice = $("#collect_choices_" + id);
+  $collection_choice.find('input').attr('data-parsley-required', 'true');
+  $collection_choice.show();
   $("#type_poll_" + id).attr('value', 3);
 }
 </script>

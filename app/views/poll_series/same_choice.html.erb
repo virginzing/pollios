@@ -202,9 +202,10 @@
   });
   $(document).on('nested:fieldRemoved', function(event){
     // this field was just inserted into your form
-    var field = event.field; 
+    var field = event.field;
+    field.remove(); 
     // it's a jQuery object already! Now you can find date input
-    field.find('textarea').attr('required', false);
+    // field.find('textarea').attr('required', false);
   });
   </script>
 <% end %>
