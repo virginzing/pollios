@@ -161,10 +161,11 @@
     // this field was just inserted into your form
 
     var field = event.field;
-    // field.find('input').remove();
+    field.find('input').attr('data-parsley-required', 'false');
+    field.find('textarea').attr('required', false);
     // field.find('input')
 
-    console.log(field.find('input').val());
+    // console.log(field.find('input').val());
     // it's a jQuery object already! Now you can find date input
     // field.find('textarea').attr('required', false);
   });
