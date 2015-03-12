@@ -30,7 +30,10 @@
         <%= f.fields_for :choices do |builder| %>
           <%= render 'choice_fields', :f => builder %>
         <% end %>
-        <%= f.link_to_add "More Choice", :choices, class: 'btn btn-sm btn-default add_new_choice btn-pill' %>
+
+
+        <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> more choice".html_safe, :choices, class: 'btn btn-sm btn-default add_new_choice btn-pill morechoice' %>
+
       </section>
       </div>
 

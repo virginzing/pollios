@@ -103,7 +103,7 @@
         
 
           <footer>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
               Submit
             </button>
             <button type="button" class="btn btn-default" onclick="window.history.back();">
@@ -124,6 +124,8 @@
 
 
 <script type="text/javascript">
+  $("#form-input").parsley();
+
   var times = 2;
   var count_add_form = <%= Time.now.to_i + 1 %>;
 

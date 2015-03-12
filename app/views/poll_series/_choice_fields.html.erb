@@ -1,7 +1,10 @@
 <section style="margin-bottom: 0px;">
-  <label class="label">Choice</label>
-  <label class="input">
-    <%= f.input :answer, label: false %>
+  <label class="input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice">
+    <%= f.input :answer, label: false, required: false, input_html: { placeholder: "choice", id: "fill_choice" } %>
+  </label>
+
+  <label class="col-lg-1 col-md-1 col-sm-1 col-xs-1 remove_field_choice">
+    <%= f.link_to_remove "<i class='fa fa-times fa-2x txt-color-red'></i>".html_safe, class: "removeclass", id: 'remove_choice' %>
   </label>
 </section>
-<%= f.link_to_remove "Remove", class: "removeclass", id: 'remove_choice' %>
+
