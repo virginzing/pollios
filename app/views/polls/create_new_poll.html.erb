@@ -196,11 +196,11 @@
     });
     $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
 
-    $(".add-field").click(function (event) {
-       window.setTimeout(function(){
-         $('input[name^=choices]').last().focus();
-       }, 200);
-    });
+    // $(".add-field").click(function (event) {
+    //    window.setTimeout(function(){
+    //      $('input[name^=choices]').last().focus();
+    //    }, 200);
+    // });
 
     window.setTimeout(function () {
       $(".poll_question").focus();

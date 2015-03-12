@@ -1,22 +1,23 @@
 <input class="hidden" id="poll_type_poll" name="poll[type_poll]" type="hidden" value="freeform">
 
 <section>
-  <label class="label">Answer</label>
-  <label class="input">
-    <div class="form-group string optional poll_choice_one"><input class="string optional form-control" data-parsley-required="true" id="poll_choice_one" name="poll[choice_one]" type="text"></div>
+<!--   <label class="label">Choice</label> -->
+  <label class="input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice">
+    <div class="form-group string optional poll_choice_one"><input class="string optional form-control" data-parsley-required="true" placeholder="choice" id="poll_choice_one" name="poll[choice_one]" type="text"></div>
   </label>
 </section>
+
 <div id="InputsWrapper">
   <section>
-    <label class="label">Answer</label>
-    <label class="input">
-      <input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" required>
+<!--     <label class="label">Answer</label> -->
+    <label class="input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice">
+      <input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" placeholder="choice" required>
       <a href="#" class="removeclass"></a>
     </label>
   </section>
 </div>
 
-<button type="button" class="add-field btn btn-sm btn-default btn-pill" id="AddMoreFileBox" style="margin-bottom: 10px;"><i class="fa fa-plus txt-color-red "></i> Add New Answer</button>
+<a heft="#" class="add-field btn btn-sm btn-default btn-pill morechoice" id="AddMoreFileBox"><i class="fa fa-plus txt-color-red "></i> more choice</button>
 
 <script>
 $(document).ready(function() {
@@ -33,7 +34,7 @@ $(document).ready(function() {
     if(x <= MaxInputs) {
         FieldCount++; //text box added ncrement
         //add input box
-        $(InputsWrapper).append('<section><label class="label">Answer</label><label class="input"><input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" value=""><a href="#" class="removeclass"><i class="fa fa-trash-o"></i> Delete</a></label></section>');
+        $(InputsWrapper).append('<section><label class="input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice"><input type="text" name="choices[]" class="string optional form-control form-choice-list" id="field_1" value="" placeholder="choice" required></label><label class="col-lg-1 col-md-1 col-sm-1 col-xs-1 remove_field_choice"><a href="#" class="removeclass"><i class="fa fa-times fa-2x txt-color-red"></i></a></label></section>');
         x++; //text box increment
         
         $("#AddMoreFileId").show();

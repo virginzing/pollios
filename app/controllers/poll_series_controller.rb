@@ -274,7 +274,7 @@ class PollSeriesController < ApplicationController
     @poll_series = PollSeries.find(params[:id])
     @poll_series.destroy
     flash[:success] = "Successfully destroyed poll series."
-    redirect_to poll_series_index_path
+    redirect_to company_questionnaires_path
   end
 
 

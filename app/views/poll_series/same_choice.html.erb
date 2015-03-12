@@ -192,5 +192,19 @@
     });
     $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
   });
+
+  $(document).on('nested:fieldAdded', function(event){
+    // this field was just inserted into your form
+    var field = event.field; 
+    // it's a jQuery object already! Now you can find date input
+    field.find('textarea').attr('required', true);
+    // console.log(field.find('textarea'));
+  });
+  $(document).on('nested:fieldRemoved', function(event){
+    // this field was just inserted into your form
+    var field = event.field; 
+    // it's a jQuery object already! Now you can find date input
+    field.find('textarea').attr('required', false);
+  });
   </script>
 <% end %>

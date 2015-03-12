@@ -72,7 +72,7 @@ Pollios::Application.routes.draw do
     resources :choices
   end
   resources :members
-  resources :poll_series
+  resources :poll_series, except: [:index]
   resources :password_resets
   # resources :invites
   resources :companies
