@@ -131,6 +131,10 @@ class Campaign < ActiveRecord::Base
     photo_campaign.url
   end
 
+  def get_reward_expire
+    reward_expire.present? ? reward_expire.to_i : ""
+  end
+
   def as_json(options={})
     {
       id: id,
@@ -144,7 +148,8 @@ class Campaign < ActiveRecord::Base
       limit: limit,
       owner_info: MemberInfoFeedSerializer.new(member).as_json().slice(:name, :avatar),
       created_at: created_at.to_i,
-      redeem_myself: redeem_myself
+      redeem_myself: redeem_myself,
+      reward_expire: get_reward_expire
     }
   end
   

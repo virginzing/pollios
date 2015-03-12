@@ -16,7 +16,8 @@
     <h2><strong>Advance campaign config</strong></h2>
 
     <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer" } %>
-    <%= f.input :expire, as: :string, input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+    <%= f.input :expire, as: :string, label: "Campaign Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+    <%= f.input :reward_expire, as: :string, label: "Reward Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
 
     <% if @company.company_admin %>
       <div class="well">
