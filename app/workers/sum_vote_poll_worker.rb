@@ -85,7 +85,7 @@ class SumVotePollWorker
       poll.update(notify_state: 0)
     rescue => e
       poll = Poll.find_by(id: poll_id)
-      poll.update(:notify_state, 0) if poll.present?
+      poll.update!(notify_state: 0) if poll.present?
       puts "SumVotePollWorker => #{e.message}"
 
       @list_apn_notification.collect{|apn_notification| apn_notification.destroy }
