@@ -9,7 +9,9 @@
         <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
       </div>
       <div class="col col-md-4">
-        <%= f.input :photo_campaign %>
+        <div class="form-group">
+          <input type="file" class="default" name="poll[photo_campaign]" id="drop_photo_campaign" accept="image/png, image/jpeg, image/gif"/>
+        </div>
       </div>
     </div>
 
@@ -40,3 +42,4 @@
 
   <% end %>
 </div>
+

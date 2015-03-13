@@ -502,14 +502,14 @@
 	    });
 	}
 
-	function dropZonePhotoGroup(cover_url) {
-	    $('#drop_photo_group').ezdz();
-	    $('#drop_photo_group').ezdz('preview', cover_url, {
+	function dropZonePhotoGroup(photo_group_url) {
+			$('#drop_photo_group').ezdz('preview', cover_url);
+	    $('#drop_photo_group').ezdz({
 	        text: 'Drop a photo',
 	        validators: {
 	            // maxWidth:  1200,
 	            // maxHeight: 600
-	            maxSize: 2000000
+	            maxSize: 10000
 	        },
 	        reject: function(file, errors) {
 	            if (errors.mimeType) {
@@ -529,6 +529,7 @@
 	            }
 	        }
 	    });
+	    
 	}
 
 	function dropZoneCoverGroup(cover_url) {

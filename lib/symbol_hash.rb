@@ -7,7 +7,8 @@ module SymbolHash
     :member => 'Member',
     :comment => 'Comment',
     :request_group => 'RequestGroup',
-    :save_poll_later => 'SavePollLater'
+    :save_poll_later => 'SavePollLater',
+    :reward => 'Reward'
   }
 
   ACTION = {
@@ -27,7 +28,8 @@ module SymbolHash
     :also_comment => 'AlsoComment',
     :report => 'Report',
     :poke => 'Poke',
-    :request_friend => 'RequestFriend'
+    :request_friend => 'RequestFriend',
+    :receive_reward => 'ReceiveReward'
   }
 
   AUTHORITY = {
