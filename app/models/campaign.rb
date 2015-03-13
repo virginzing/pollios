@@ -146,7 +146,7 @@ class Campaign < ActiveRecord::Base
       original_photo_campaign: get_original_photo_campaign,
       used: used,
       limit: limit,
-      owner_info: MemberInfoFeedSerializer.new(member).as_json().slice(:name, :avatar),
+      owner_info: MemberInfoFeedSerializer.new(member).as_json(),
       created_at: created_at.to_i,
       redeem_myself: redeem_myself,
       reward_expire: get_reward_expire
