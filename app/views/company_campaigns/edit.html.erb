@@ -10,7 +10,7 @@
       </div>
       <div class="col col-md-4">
         <div class="form-group">
-          <input type="file" class="default" name="poll[photo_campaign]" id="drop_photo_campaign" accept="image/png, image/jpeg, image/gif"/>
+          <input type="file" class="default" name="campaign[photo_campaign]" id="drop_photo_campaign" accept="image/png, image/jpeg, image/gif"/>
         </div>
       </div>
     </div>
@@ -43,3 +43,8 @@
   <% end %>
 </div>
 
+<script>
+  $(document).ready(function() {
+     dropZoneCampaign("<%= @campaign.photo_campaign.url.presence || '' %>");
+  });
+</script>

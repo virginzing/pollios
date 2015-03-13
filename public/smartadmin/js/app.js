@@ -415,6 +415,25 @@
 	    }
 	}
 
+	function option_drop_zone(text) {
+		var default_option = {
+	        text: text,
+	        validators: {
+	            maxSize: 500000
+	        },
+	        reject: function(file, errors) {
+	            if (errors.mimeType) {
+	                handleDropZonePictureError(file.name, 'must be an image.');
+	            }
+
+	            if (errors.maxSize) {
+	                handleDropZonePictureError(file.name, 'must be less than or equal 500 kb.');
+	            }
+	        }
+	   }
+	   return default_option;
+	}
+
 
 	function dropZonePicture() {
 	    $('input[type="file"]#drop_photo_poll').ezdz({
@@ -434,67 +453,27 @@
 	    });
 	}
 
+	function dropZoneCampaign(campaign_url) {
+		// console.log(campaign_url);
+	  $('#drop_photo_campaign').ezdz(option_drop_zone("Drop Photo"));
+	  if (!!campaign_url) {
+	  	$('#drop_photo_campaign').ezdz('preview', campaign_url, option_drop_zone("Drop Photo"));
+	  }
+	}
+
 	function dropZoneAvatar(avatar_url) {
-	    $('#drop_avatar').ezdz();
-	    $('#drop_avatar').ezdz('preview', avatar_url, {
-	        text: 'Drop a avatar',
-	        validators: {
-	            // maxWidth:  1200,
-	            // maxHeight: 600
-	            maxSize: 2000000
-	        },
-	        reject: function(file, errors) {
-	            if (errors.mimeType) {
-	                handleDropZonePictureError(file.name, 'must be an image.');
-	            }
-
-	            if (errors.maxSize) {
-	                handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
-	            }
-
-	            if (errors.maxWidth) {
-	                handleDropZonePictureError(file.name, 'must be width:600px max.');
-	            }
-
-	            if (errors.maxHeight) {
-	                handleDropZonePictureError(file.name, 'must be height:400px max.');
-	            }
-	        }
-	    });
+	  $('#drop_avatar').ezdz(option_drop_zone("Drop Avatar"));
+	  $('#drop_avatar').ezdz('preview', avatar_url, option_drop_zone("Drop Avatar"));
 	}
 
 	function dropZoneCover(cover_url) {
-	    $('#drop_cover').ezdz();
-	    $('#drop_cover').ezdz('preview', cover_url, {
-	        text: 'Drop a cover',
-	        validators: {
-	            // maxWidth:  1200,
-	            // maxHeight: 600
-	            maxSize: 2000000
-	        },
-	        reject: function(file, errors) {
-	            if (errors.mimeType) {
-	                handleDropZonePictureError(file.name, 'must be an image.');
-	            }
-
-	            if (errors.maxSize) {
-	                handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
-	            }
-
-	            if (errors.maxWidth) {
-	                handleDropZonePictureError(file.name, 'must be width:600px max.');
-	            }
-
-	            if (errors.maxHeight) {
-	                handleDropZonePictureError(file.name, 'must be height:400px max.');
-	            }
-	        }
-	    });
+	  $('#drop_cover').ezdz(option_drop_zone("Drop Cover"));
+	  $('#drop_cover').ezdz('preview', cover_url, option_drop_zone("Drop Cover"));
 	}
 
 	function dropZonePhotoGroup(photo_group_url) {
-			$('#drop_photo_group').ezdz('preview', cover_url);
-	    $('#drop_photo_group').ezdz({
+			$('#drop_photo_group').ezdz();
+	    $('#drop_photo_group').ezdz('preview', photo_group_url, {
 	        text: 'Drop a photo',
 	        validators: {
 	            // maxWidth:  1200,
