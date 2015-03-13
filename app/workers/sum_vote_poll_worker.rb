@@ -4,7 +4,7 @@ class SumVotePollWorker
 
   sidekiq_options unique: true, :retry => 1
   
-  def perform(poll_id, show_result)
+  def perform(poll_id, show_result = true)
     begin
       @list_apn_notification = []
 

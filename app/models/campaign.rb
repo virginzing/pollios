@@ -78,7 +78,7 @@ class Campaign < ActiveRecord::Base
           increment!(:used)
           Rails.cache.delete([member_id, 'reward'])
           message = "Lucky"
-          ApnRewardWorker.perform_async(@campaign)
+          ApnRewardWorker.perform_in(10.seconds, @campaign.id) unless Rails.env.test?
         else
           @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_id: poll_id, ref_no: generate_ref_no)
           message = "Fail"
@@ -107,7 +107,7 @@ class Campaign < ActiveRecord::Base
           increment!(:used)
           Rails.cache.delete([member_id, 'reward'])
           message = "Lucky"
-          ApnRewardWorker.perform_async(@campaign)
+          ApnRewardWorker.perform_in(10.seconds, @campaign.id) unless Rails.env.test?
         else
           @campaign = campaign_members.create!(member_id: member_id, luck: false, poll_series_id: poll_series_id, ref_no: generate_ref_no)
           message = "Fail"
