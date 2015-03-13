@@ -417,12 +417,10 @@
 
 
 	function dropZonePicture() {
-	    $('input[type="file"]#drop_photo_poll').last().ezdz({
-	        text: 'Drop a picture',
+	    $('input[type="file"]#drop_photo_poll').ezdz({
+	        text: 'Poll Photo',
 	        validators: {
-	            // maxWidth:  1200,
-	            // maxHeight: 600
-	            maxSize: 2000000
+	            maxSize: 500000
 	        },
 	        reject: function(file, errors) {
 	            if (errors.mimeType) {
@@ -430,15 +428,7 @@
 	            }
 
 	            if (errors.maxSize) {
-	                handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
-	            }
-
-	            if (errors.maxWidth) {
-	                handleDropZonePictureError(file.name, 'must be width:600px max.');
-	            }
-
-	            if (errors.maxHeight) {
-	                handleDropZonePictureError(file.name, 'must be height:400px max.');
+	                handleDropZonePictureError(file.name, 'must be less than or equal 500 kb.');
 	            }
 	        }
 	    });
@@ -562,12 +552,12 @@
 	}
 
 	function dropZonePhotoEachGroup() {
-	    $('input[type="file"]#drop_photo_each_group').last().ezdz({
-	        text: 'Drop a photo group',
+	    $('input[type="file"]#drop_photo_each_group').ezdz({
+	        text: 'Group Photo',
 	        validators: {
 	            // maxWidth:  1200,
 	            // maxHeight: 600
-	            maxSize: 2000000
+	            maxSize: 500000
 	        },
 	        reject: function(file, errors) {
 	            if (errors.mimeType) {
@@ -575,7 +565,7 @@
 	            }
 
 	            if (errors.maxSize) {
-	                handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
+	                handleDropZonePictureError(file.name, 'must be less than or equal 500 kb.');
 	            }
 
 	            if (errors.maxWidth) {
@@ -590,12 +580,12 @@
 	}
 
 	function dropZoneCoverEachGroup() {
-	    $('input[type="file"]#drop_cover_each_group').last().ezdz({
-	        text: 'Drop a cover group',
+	    $('input[type="file"]#drop_cover_each_group').ezdz({
+	        text: 'Group Cover',
 	        validators: {
 	            // maxWidth:  1200,
 	            // maxHeight: 600
-	            maxSize: 2000000
+	            maxSize: 500000
 	        },
 	        reject: function(file, errors) {
 	            if (errors.mimeType) {
@@ -603,15 +593,7 @@
 	            }
 
 	            if (errors.maxSize) {
-	                handleDropZonePictureError(file.name, 'must be less than or equal 2 mb.');
-	            }
-
-	            if (errors.maxWidth) {
-	                handleDropZonePictureError(file.name, 'must be width:600px max.');
-	            }
-
-	            if (errors.maxHeight) {
-	                handleDropZonePictureError(file.name, 'must be height:400px max.');
+	                handleDropZonePictureError(file.name, 'must be less than or equal 500 kb.');
 	            }
 	        }
 	    });
