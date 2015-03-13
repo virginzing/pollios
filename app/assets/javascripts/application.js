@@ -1,4 +1,5 @@
 //= require jquery_ujs
+//= require cloudinary 
 //= require is
 //= require nested_form
 //= require bootbox
