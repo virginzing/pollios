@@ -48,6 +48,7 @@ group :development do
   # gem 'thin'
   gem 'quiet_assets'
   gem 'proxylocal'
+  gem 'meta_request'
   # gem 'rack-mini-profiler'
 end
 

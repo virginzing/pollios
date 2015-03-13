@@ -20,6 +20,8 @@ class CompaniesController < ApplicationController
 
     @poll_popular_list = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5)
     render 'home/dashboard_company'
+
+    # session[:name] = "NUTTY"
   end
 
   def new
