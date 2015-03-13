@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150312104801) do
+ActiveRecord::Schema.define(version: 20150313080118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -853,7 +853,6 @@ ActiveRecord::Schema.define(version: 20150312104801) do
     t.boolean  "quiz",                    default: false
     t.integer  "notify_state",            default: 0
     t.datetime "notify_state_at"
-    t.string   "slug"
     t.integer  "priority"
     t.integer  "thumbnail_type",          default: 0
     t.integer  "comment_notify_state",    default: 0
@@ -863,7 +862,6 @@ ActiveRecord::Schema.define(version: 20150312104801) do
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id", using: :btree
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
-  add_index "polls", ["slug"], name: "index_polls_on_slug", unique: true, using: :btree
 
   create_table "profiles", force: true do |t|
     t.integer  "member_id"
