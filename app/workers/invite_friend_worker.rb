@@ -9,7 +9,7 @@ class InviteFriendWorker
       member = Member.cached_find(member_id)
       group = Group.cached_find(group_id)
 
-      member_id = member.id
+      member_id = custom_data[:sender_id] || member.id
 
       @invite_group = InviteGroup.new(member_id, friend_ids, group)
 

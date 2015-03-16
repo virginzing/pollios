@@ -21,7 +21,7 @@ class Trigger::Vote
     if have_trigger? && triggerable.data["action"] == VOTE
       triggerable.data["condition"].each do |condition|
         if (condition["choice_id"] == @choice.id) && (condition["group_id"] != 0)
-          Group.add_friend_to_group(Group.find(condition["group_id"]), @member, @member.id.to_s)
+          Group.add_friend_to_group(Group.find(condition["group_id"]), @member, @member.id.to_s, { sender_id: 0 })
         end
       end
     end

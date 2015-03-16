@@ -215,7 +215,7 @@ class Group < ActiveRecord::Base
     @group
   end
 
-  def self.add_friend_to_group(group, member, friend_id)
+  def self.add_friend_to_group(group, member, friend_id, custom_data = nil)
     group_id = group.id
     member_id = member.id
 
@@ -233,7 +233,7 @@ class Group < ActiveRecord::Base
         GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         FlushCached::Member.new(friend).clear_list_groups
       end
-      InviteFriendWorker.perform_async(member_id, list_friend, group_id) unless Rails.env.test?
+      InviteFriendWorker.perform_async(member_id, list_friend, group_id, custom_data) unless Rails.env.test?
     end
 
     group
