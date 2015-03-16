@@ -12,9 +12,9 @@ class PollMember < ActiveRecord::Base
     member_block = Member.list_friend_block.map(&:id)  ## member ids
 
     if member_report_poll.present? && member_block.present?
-      query = where("#{table_name}.poll_id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block).where("polls.draft = 'f'") 
+      where("#{table_name}.poll_id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block).where("polls.draft = 'f'") 
     elsif member_report_poll.present?
-      query = where("#{table_name}.poll_id NOT IN (?)", member_report_poll).where("polls.draft = 'f'") 
+      where("#{table_name}.poll_id NOT IN (?)", member_report_poll).where("polls.draft = 'f'") 
     elsif member_block.present?
       where("#{table_name}.member_id NOT IN (?)", member_block).where("polls.draft = 'f'") 
     end
