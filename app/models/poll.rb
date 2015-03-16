@@ -753,6 +753,8 @@ class Poll < ActiveRecord::Base
             Activity.create_activity_poll(member, find_poll, 'Vote')
           end
 
+          Trigger::Vote.new(member, find_poll, find_choice).trigger!
+          
           member.flush_cache_my_vote
           member.flush_cache_my_vote_all
 

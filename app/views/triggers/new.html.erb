@@ -1,0 +1,63 @@
+<div class="well">
+  <%= simple_form_for :triggers, url: triggers_path, method: :post do |f| %>
+  
+  <label>Config</label>
+
+  <%= f.simple_fields_for :data do |data| %>
+    <%= data.input :type, collection: ["Invite Group"], include_blank: false %>
+    <%= data.input :action, collection: ["Vote", "Comment"], include_blank: false %>
+    <input type="hidden" id="remote_load_poll" name="poll_id"/>
+  <% end %>
+
+  <div class="list_choice">
+  </div>
+
+  <div class="footer" style="margin-top: 20px;">
+  <%= f.submit "Create", class: 'btn btn-primary' %>
+  </div>
+
+  <% end %>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    $("#remote_load_poll").select2({
+      width: '100%',
+      placeholder: "Select poll",
+      ajax: {
+        url: "/load_poll.json",
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params // search term
+          };
+        },
+        results: function (data, page) {
+          return {
+              results: data
+          };
+        },
+        cache: true,
+      },
+      escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+      minimumInputLength: 1,
+      formatResult: function (option) {
+            return "<div>" + option.desc + "</div>";
+        },
+      formatSelection: function (option) {
+            return option.desc;
+      }
+    });
+
+    $('#remote_load_poll').on("select2-selecting", function(e) { 
+      console.log(e.val);
+      $.get('/load_choice', { poll_id: e.val }, function (html) {
+        $(".list_choice").html(html);
+      })
+
+    });
+
+  });
+
+</script>

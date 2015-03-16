@@ -4,11 +4,13 @@ require 'api_constraints'
 
 Pollios::Application.routes.draw do
 
-
   get 'services', to: 'select_services#index',  as: :select_services
 
   get 'list_members', to: 'members#list_members'
-  
+
+  get 'load_poll',  to: 'polls#load_poll'
+  get 'load_choice',  to: 'choices#load_choice'
+
   mount ApiTaster::Engine => "/api_taster"
   
   resources :activity_feeds
@@ -372,6 +374,7 @@ Pollios::Application.routes.draw do
     resources :invites
     resources :commercials
     resources :gifts
+    resources :triggers
   end
 
   get '/hashtag',  to: 'polls#hashtag'

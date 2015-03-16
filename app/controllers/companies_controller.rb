@@ -370,8 +370,11 @@ class CompaniesController < ApplicationController
     @init_poll = PollOfGroup.new(current_member, @group, options_params)
     @polls = @init_poll.get_poll_of_group
 
-    @members = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin")
-                      .where("group_members.group_id = ? AND group_members.active = 't'", @group).uniq || []
+    @member_all = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin, group_members.active as member_is_active")
+                      .where("group_members.group_id = ?", @group).uniq || []
+
+    @members = @member_all.select {|member| member if member.member_is_active }
+    @members_inactive = @member_all.select {|member| member unless member.member_is_active }
 
     @list_surveyor = @group.surveyor
 
@@ -593,7 +596,7 @@ class CompaniesController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :photo_group, :cover, :leave_group, :admin_post_only)  
+    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve)  
   end
 
   def options_params

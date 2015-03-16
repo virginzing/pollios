@@ -3,6 +3,14 @@ class ChoicesController < ApplicationController
   before_action :set_current_poll , only: [:index]
   before_action :set_current_choice, only: [:edit, :update]
   
+  def load_choice
+    @choices = Choice.where(poll_id: params[:poll_id])
+
+    @groups_system ||= Group.where(system_group: true)
+
+    render layout: false  
+  end
+
   def index
     @choices = @poll.choices
   end

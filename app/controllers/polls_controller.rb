@@ -34,6 +34,14 @@ class PollsController < ApplicationController
 
   respond_to :json
 
+  def load_poll
+    @poll = Poll.where("title LIKE ? AND series = 'f'", "%#{params[:q]}%")
+
+    @poll_as_json = ActiveModel::ArraySerializer.new(@poll, each_serializer: LoadPollSerializer).to_json()
+
+    render json: @poll_as_json, root: false
+  end
+
   def un_see
     @un_see_poll = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
