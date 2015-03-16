@@ -18,6 +18,24 @@ class PollSeries::WebForm
     else
       @params["allow_comment"] = false
     end
+
+    if @params["public"] == "on"
+      @params["public"] = true
+    else
+      @params["public"] = false
+    end
+
+    if @params["require_info"] == "on"
+      @params["require_info"] = true
+    else
+      @params["require_info"] = false
+    end
+
+    if @params["qr_only"] == "on"
+      @params["qr_only"] = true
+    else
+      @params["qr_only"] = false
+    end
   end
 
   def new_choice_params_rating

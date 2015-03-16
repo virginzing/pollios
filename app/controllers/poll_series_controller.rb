@@ -216,24 +216,23 @@ class PollSeriesController < ApplicationController
 
   def create
     PollSeries.transaction do
-      is_public = true
-      in_group_ids = "0"
+      # is_public = true
       @expire_date = poll_series_params["expire_date"].to_i
 
       @poll_series = current_member.poll_series.new(PollSeries::WebForm.new(@current_member, poll_series_params).new_params)
+
+      puts "new params => #{PollSeries::WebForm.new(@current_member, poll_series_params).new_params}"
       @poll_series.expire_date = set_expire_date
       @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
 
-      @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
-      @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
-
-      if current_member.get_company.present?
-        is_public = false
+      unless @poll_series.public
+        # is_public = false
         @poll_series.in_group = true
+        @poll_series.in_group_ids = "0"
         @poll_series.in_group_ids = poll_series_params[:group_id].select{|e| e if e.present? }.join(",")
       end
 
-      @poll_series.public = is_public
+      # @poll_series.public = is_public
 
       type_series = poll_series_params["type_series"]
 
@@ -242,8 +241,10 @@ class PollSeriesController < ApplicationController
       end
 
       if @poll_series.save
-        @poll_series.in_group_ids.split(",").each do |group_id|
-          PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    
+        if @poll_series.in_group
+          @poll_series.in_group_ids.split(",").each do |group_id|
+            PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    
+          end
         end
         flash[:success] = "Successfully created poll series."
         redirect_to company_questionnaires_path
@@ -293,6 +294,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

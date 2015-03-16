@@ -78,6 +78,13 @@
           </header>
           
           <fieldset>
+
+          <section class="form-inline">
+            <label class="label col-md-1">Make Public</label>
+
+            <input type="checkbox" name="poll_series[public]" id="check_public_poll_series">
+
+          </section>
         
             <% if current_member.get_company.present? %>
 
@@ -170,5 +177,19 @@
     // field.find('textarea').attr('required', false);
   });
 
+</script>
+
+<script type="text/javascript">
+  $('#check_public_poll_series').click(function() {
+    var $this = $(this);
+    // $this will contain a reference to the checkbox   
+    if ($this.is(':checked')) {
+      $(".branch_list").hide();
+      $(".branch_list").find('input').attr('data-parsley-required', 'false');
+    } else {
+      $(".branch_list").show();
+      $(".branch_list").find('input').attr('data-parsley-required', 'true');
+    }
+  });
 </script>
 
