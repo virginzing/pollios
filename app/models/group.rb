@@ -224,19 +224,19 @@ class Group < ActiveRecord::Base
     # find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
     find_admin_group = group.get_admin_group.map(&:id)
 
-    if find_admin_group.include?(member_id)
-      if check_valid_friend.count > 0
-        Member.where(id: check_valid_friend).each do |friend|
-          GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
-        end
-        InviteFriendWorker.perform_async(member_id, list_friend, group_id) unless Rails.env.test?
-        group
-      end
-      # Group.flush_cached_member_active(group_id)
-      group
-    else
-      raise ExceptionHandler::Forbidden, "You are not admin of group"
+    unless group.system_group
+      raise ExceptionHandler::Forbidden, "You are not admin of group" unless find_admin_group.include?(member_id) 
     end
+
+    if check_valid_friend.count > 0
+      Member.where(id: check_valid_friend).each do |friend|
+        GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
+        FlushCached::Member.new(friend).clear_list_groups
+      end
+      InviteFriendWorker.perform_async(member_id, list_friend, group_id) unless Rails.env.test?
+    end
+
+    group
   end
 
   def self.friend_exist_group(list_friend, group)

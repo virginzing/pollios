@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150313080118) do
+ActiveRecord::Schema.define(version: 20150316041220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -462,6 +462,7 @@ ActiveRecord::Schema.define(version: 20150313080118) do
     t.string   "public_id"
     t.boolean  "visible",          default: true
     t.boolean  "visual_group",     default: false
+    t.boolean  "system_group",     default: false
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
@@ -1013,6 +1014,17 @@ ActiveRecord::Schema.define(version: 20150313080118) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "triggers", force: true do |t|
+    t.integer  "triggerable_id"
+    t.string   "triggerable_type"
+    t.hstore   "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "triggers", ["data"], name: "index_triggers_on_data", using: :gist
+  add_index "triggers", ["triggerable_id", "triggerable_type"], name: "index_triggers_on_triggerable_id_and_triggerable_type", using: :btree
 
   create_table "un_see_polls", force: true do |t|
     t.integer  "member_id"

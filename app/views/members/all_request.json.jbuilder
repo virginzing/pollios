@@ -26,8 +26,8 @@ if @current_member
 
   json.group_request @group_inactive do |group|
     json.partial! 'response_helper/group/default', group: group
-    json.invite_by Member.find(group.member_invite_id)
-    json.member_count hash_member_count[count]
+    # json.invite_by Member.find(group.member_invite_id)
+    json.member_count hash_member_count[group.id]
     count += 1
   end
 

@@ -8,15 +8,15 @@ class Member::ListGroup
   end
 
   def active
-    cached_all_groups.select{|group| group if group.member_active }
+    cached_all_groups.select{|group| group if group.member_is_active }
   end
 
   def active_with_private
-    cached_all_groups.select{|group| group if group.member_active && group.public == false }  
+    cached_all_groups.select{|group| group if group.member_is_active && group.public == false }  
   end
 
   def inactive
-    cached_all_groups.select{|group| group unless group.member_active }
+    cached_all_groups.select{|group| group unless group.member_is_active }
   end
 
   def hash_member_count
@@ -26,8 +26,8 @@ class Member::ListGroup
   private
 
   def groups
-    Group.joins(:group_members).select("groups.*, group_members.is_master as member_admin, group_members.active as member_active, group_members.invite_id as member_invite_id") \
-          .where("group_members.member_id = #{@member.id}").group("groups.id, member_admin, member_active, member_invite_id")
+    Group.joins(:group_members).select("groups.*, group_members.is_master as member_admin, group_members.active as member_is_active, group_members.invite_id as member_invite_id") \
+          .where("group_members.member_id = #{@member.id}").group("groups.id, member_admin, member_is_active, member_invite_id")
   end
 
   def group_member_count
