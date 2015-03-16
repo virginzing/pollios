@@ -44,6 +44,10 @@ class BuildPoll
     @params["show_result"]  == "on" ? true : false
   end
 
+  def check_draft
+    @params["draft"] == "on" ? true : false
+  end
+
   def check_public
     @params["public"].present? ? true : false
   end
@@ -97,7 +101,8 @@ class BuildPoll
         "qr_only" => check_qr_only,
         "require_info" => check_require_info,
         "in_group" => check_in_group,
-        "show_result" => check_show_result
+        "show_result" => check_show_result,
+        "draft" => check_draft
       }
     end
   end

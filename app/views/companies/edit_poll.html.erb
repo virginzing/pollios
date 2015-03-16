@@ -23,6 +23,7 @@
     <br>
     <div class="form-group">
       <%= f.input :expire_status, label: 'Close Poll' %>
+      <%= f.input :draft, label: "Draft" %>
     </div>
 
     <%= f.input :company_id, input_html: { value: @find_company.id }, as: :hidden %>

@@ -101,13 +101,13 @@ class Poll < ActiveRecord::Base
     member_block = Member.list_friend_block.map(&:id)  ## member ids
 
     if member_report_poll.present? && member_block.present?
-      having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block)
+      having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block)
     elsif member_report_poll.present?
-      having_status_poll(:gray, :white).where("#{table_name}.id NOT IN (?)", member_report_poll)
+      having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.id NOT IN (?)", member_report_poll)
     elsif member_block.present?
-      having_status_poll(:gray, :white).where("#{table_name}.member_id NOT IN (?)", member_block)
+      having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.member_id NOT IN (?)", member_block)
     else
-      having_status_poll(:gray, :white)
+      having_status_poll(:gray, :white).where(draft: false)
     end
     
   }
@@ -754,7 +754,7 @@ class Poll < ActiveRecord::Base
           end
 
           Trigger::Vote.new(member, find_poll, find_choice).trigger!
-          
+
           member.flush_cache_my_vote
           member.flush_cache_my_vote_all
 

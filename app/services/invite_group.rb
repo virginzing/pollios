@@ -23,7 +23,12 @@ class InviteGroup
   end
 
   def custom_message
-    message = "#{member_name} invited you in: \"#{group_name}\""
+    if @member_id == 0
+      message = "Pollios System invited you in: \"#{group_name}\""
+      else
+      message = "#{member_name} invited you in: \"#{group_name}\""
+    end
+
     truncate_message(message)
   end
   

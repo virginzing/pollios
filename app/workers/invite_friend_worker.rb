@@ -9,7 +9,7 @@ class InviteFriendWorker
       member = Member.cached_find(member_id)
       group = Group.cached_find(group_id)
 
-      member_id = custom_data[:sender_id] || member.id
+      member_id = custom_data["sender_id"] || member.id
 
       @invite_group = InviteGroup.new(member_id, friend_ids, group)
 
@@ -57,6 +57,7 @@ class InviteFriendWorker
           request: hash_list_member_request_count[member.id]
         }
 
+        puts "member_id => #{member_id}"
         NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
