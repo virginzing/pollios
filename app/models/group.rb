@@ -118,7 +118,7 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
 
-      if @group.group_type_company?
+      if @group.group_type_company? && !@group.system_group
         CompanyMember.add_member_to_company(@member, @group.get_company) 
         Activity.create_activity_group(@member, @group, 'Join') 
       end
