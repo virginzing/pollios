@@ -18,7 +18,9 @@ class CampaignMember < ActiveRecord::Base
       redeem: redeem,
       redeem_at: redeem_at.presence || "",
       ref_no: ref_no || "",
-      created_at: created_at.to_i
+      created_at: created_at.to_i,
+      title: campaign.get_reward_title,
+      detail: campaign.get_reward_detail
     }
   end
 end

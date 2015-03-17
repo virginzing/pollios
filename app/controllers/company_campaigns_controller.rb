@@ -13,6 +13,9 @@ class CompanyCampaignsController < ApplicationController
 
   def new
     @campaign = @company.campaigns.new
+    1.times do
+      @campaign.rewards.build
+    end
   end
 
   def create
@@ -54,7 +57,7 @@ class CompanyCampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point])
+    params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point], :rewards_attributes => [:id, :title, :detail, :_destroy])
   end
 
 end

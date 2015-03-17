@@ -9,7 +9,7 @@ json.list_reward @rewards do |reward|
       json.id reward.poll.id
       json.title reward.poll.title
     end
-  else
+  elsif reward.poll_series_id.present?
     json.questionnaire do
       json.id reward.poll_series.id
       json.title reward.poll_series.description

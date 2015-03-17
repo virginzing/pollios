@@ -27,10 +27,14 @@ class Campaign < ActiveRecord::Base
 
   belongs_to :member
 
+  has_many :rewards, dependent: :destroy
+
   # after_create :set_campaign_poll
   # before_update :check_campaign_poll
 
   accepts_nested_attributes_for :polls
+
+  accepts_nested_attributes_for :rewards, :reject_if => lambda { |a| a[:title].blank? }, :allow_destroy => true
 
   self.per_page = 10
   
@@ -131,6 +135,14 @@ class Campaign < ActiveRecord::Base
 
   def get_original_photo_campaign
     photo_campaign.url
+  end
+
+  def get_reward_title
+    rewards.present? ? rewards.first.title : ""
+  end
+
+  def get_reward_detail
+    rewards.present? ? rewards.first.detail : ""
   end
 
   def get_reward_expire

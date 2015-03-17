@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150317043907) do
+ActiveRecord::Schema.define(version: 20150317073207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -940,6 +940,18 @@ ActiveRecord::Schema.define(version: 20150317043907) do
 
   add_index "request_groups", ["group_id"], name: "index_request_groups_on_group_id", using: :btree
   add_index "request_groups", ["member_id"], name: "index_request_groups_on_member_id", using: :btree
+
+  create_table "rewards", force: true do |t|
+    t.integer  "campaign_id"
+    t.string   "title"
+    t.text     "detail"
+    t.string   "photo_reward"
+    t.integer  "order_reward", default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rewards", ["campaign_id"], name: "index_rewards_on_campaign_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name"
