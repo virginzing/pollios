@@ -48,22 +48,40 @@
                   </section>
 
                   <% if @find_company.company_admin %>
+                  <div class="options_group">
                     <div class="form-inline">
-                      <label>Make Public</label>
-                      <input type="checkbox" name="group[public]" value="true"/>
+                      <div class="col-md-2">
+                        <label>Make Public</label>
+                      </div>
+                      <div class="col-md-10">
+                        <input type="checkbox" name="group[public]" value="true"/>
+                      </div>
                     </div>
                     <div class="form-inline">
-                      <label>System Group</label>
-                      <input type="checkbox" name="group[system_group]" value="true"/>
+                      <div class="col-md-2">
+                        <label>System Group</label>
+                      </div>
+                      <div class="col-md-10">
+                        <input type="checkbox" name="group[system_group]" value="true"/>
+                      </div>
                     </div>
                     <div class="form-inline">
-                      <label>Don't approve</label>
-                      <input type="checkbox" name="group[need_approve]" value="false"/>
+                      <div class="col-md-2">
+                        <label>Don't approve</label>
+                      </div>
+                      <div class="col-md-10">
+                        <input type="checkbox" name="group[need_approve]" value="false"/>
+                      </div>
                     </div>
                     <div class="form-inline">
-                      <label>Can leave group</label>
-                      <input type="checkbox" name="group[leave_group]" value="true"/>
+                      <div class="col-md-2">
+                        <label>Can leave group</label>
+                      </div>
+                      <div class="col-md-10">
+                        <input type="checkbox" name="group[leave_group]" value="true"/>
+                      </div>
                     </div>
+                  </div>
                   <% end %>
 
                 </section>
