@@ -35,6 +35,10 @@ module Timelinable
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
+  def history_vote_system_poll
+    Member.voted_polls.collect{|e| e if e["system_poll"] }.collect{|e| e["poll_id"] }
+  end
+
   # def check_poll_not_show_result
   #   Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
   # end
@@ -42,7 +46,7 @@ module Timelinable
   # Filter with out poll & questionnaire
 
   def with_out_poll_ids
-    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
+    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later | history_vote_system_poll
   end
 
   def with_out_questionnaire_id

@@ -504,7 +504,7 @@ class Member < ActiveRecord::Base
         .select("polls.*, history_votes.choice_id as choice_id")
         .where("(history_votes.member_id = #{self.id} AND history_votes.poll_series_id = 0) " \
                "OR (history_votes.member_id = #{self.id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
-        .collect! { |poll| Hash["poll_id" => poll.id, "choice_id" => poll.choice_id, "poll_series_id" => poll.poll_series_id, "show_result" => poll.show_result ] }.to_a
+        .collect! { |poll| Hash["poll_id" => poll.id, "choice_id" => poll.choice_id, "poll_series_id" => poll.poll_series_id, "show_result" => poll.show_result, "system_poll" => poll.system_poll ] }.to_a
     end
   end
 
@@ -635,21 +635,12 @@ class Member < ActiveRecord::Base
 
   def list_voted?(poll)
     history_voted = Member.voted_polls
-    # puts "history_voted => #{history_voted}"
-    # history_voted.each do |poll_choice|
-    #   if poll_choice.first == poll.id
-    #     choice_list ||= poll.cached_choices
-    #     choice_voted = choice_list.select {|e| e.id == poll_choice[1] }.first.vote
-    #     return Hash["voted" => true, "choice_id" => poll_choice[1], "answer" => poll_choice[2], "vote" => choice_voted]
-    #   end
     select_poll = history_voted.select {|his_vote| his_vote["poll_id"] == poll.id }.first
     
-    # puts "select_poll => #{select_poll}"
     if select_poll.present?
       choice_list ||= poll.cached_choices
       choice_voted = choice_list.select {|e| e.id == select_poll["choice_id"] }.first.vote
       choice_answer = choice_list.select {|e| e.id == select_poll["choice_id"] }.first.answer
-
       return Hash["voted" => true, "choice_id" => select_poll["choice_id"], "answer" => choice_answer, "vote" => choice_voted]
     else
       return Hash["voted" => false]
