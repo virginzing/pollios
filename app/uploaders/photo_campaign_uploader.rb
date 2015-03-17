@@ -16,7 +16,7 @@ class PhotoCampaignUploader < CarrierWave::Uploader::Base
   # end
 
   version :thumbnail do
-    process :resize_to_fill => [100, 100]
+    process :resize_to_fill => [588, 588]
     cloudinary_transformation :quality => 80
   end    
 
