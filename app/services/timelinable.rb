@@ -36,7 +36,7 @@ module Timelinable
   end
 
   def history_vote_system_poll
-    Member.voted_polls.collect{|e| e if e["system_poll"] }.collect{|e| e["poll_id"] }
+    Member.voted_polls.select{|e| e if e["system_poll"] }.collect{|e| e["poll_id"] }
   end
 
   # def check_poll_not_show_result
