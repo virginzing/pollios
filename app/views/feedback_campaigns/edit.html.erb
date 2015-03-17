@@ -13,6 +13,15 @@
       </div>
     </div>
 
+    <h2><strong>Reward detail</strong></h2>
+    
+    <%= f.fields_for :rewards do |reward| %>
+      <%= render 'reward_form',  :f => reward %> 
+    <% end %>
+
+
+    <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> add reward".html_safe, :rewards, class: 'btn btn-default btn-sm morechoice btn-pill disabled' %>
+
     <h2><strong>Advance campaign config</strong></h2>
 
     <div class="well">
