@@ -13,6 +13,9 @@ class FeedbackCampaignsController < ApplicationController
 
   def new
     @campaign = @company.campaigns.new
+    1.times do
+      @campaign.rewards.build
+    end
   end
 
   def show
