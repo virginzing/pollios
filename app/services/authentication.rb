@@ -192,7 +192,7 @@ class Authentication
         add_redeemer_to_company if create_member_via_company? && redeemer.present?
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
-        GiftWorker.perform_in(10.seconds, @member.id, { "message" => "You got 5 public poll free" } )
+        GiftWorker.perform_in(5.seconds, @member.id, { "message" => "You got 5 public poll free" } ) unless Rails.env.test?
       end
 
     end
