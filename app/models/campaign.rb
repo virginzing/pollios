@@ -166,7 +166,7 @@ class Campaign < ActiveRecord::Base
       original_photo_campaign: get_original_photo_campaign,
       used: used,
       limit: limit,
-      owner_info: MemberInfoFeedSerializer.new(member).as_json(),
+      owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json() : System::DefaultName.new.to_json,
       created_at: created_at.to_i,
       redeem_myself: redeem_myself,
       reward_expire: get_reward_expire

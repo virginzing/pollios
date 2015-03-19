@@ -4,6 +4,8 @@ namespace :admin do
     Admin.create!(email: "admin@code-app.com", password: "mefuwfhfu", password_confirmation: "mefuwfhfu")
   end
 
+  # create pollios account celebrity #
+
   desc "update follow pollios"
   task follow_pollios: :environment do
     Member.all.each do |member|
