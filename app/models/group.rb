@@ -148,7 +148,7 @@ class Group < ActiveRecord::Base
           GroupMember.create!(member_id: @friend.id, active: true, is_master: false, group_id: @group.id)
         end
 
-        if @group.group_type_company?
+        if @group.group_type_company? && !@group.system_group
           CompanyMember.add_member_to_company(@friend, @group.get_company)  
         end
 
