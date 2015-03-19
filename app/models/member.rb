@@ -307,6 +307,11 @@ class Member < ActiveRecord::Base
     @auth.member
   end
 
+  def free_reward_first_signup
+    campaign_first_signup = Campaign.where("reward_info -> 'first_signup' = ?", "true").first
+    campaign_first_signup.free_reward(id) if campaign_first_signup
+  end
+
   def create_group_surveyor(group_id)
     GroupSurveyor.where(member_id: self.id, group_id: group_id).first_or_initialize do |group_surveyor|
       group_surveyor.member_id = self.id

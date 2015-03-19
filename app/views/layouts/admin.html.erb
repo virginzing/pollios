@@ -184,6 +184,9 @@
             <a href="<%= triggers_path %>" title="Triggers"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">Trigger</span></a>
           </li>
 
+          <li class="<%= is_active?('system_campaigns') %>">
+            <a href="<%= system_campaigns_path %>" title="System Campaign"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">System Campaign</span></a>
+          </li>
 
           <li class="<%= is_active?('gifts') %>">
             <a href="<%= gifts_path %>" title="Gifts"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Gifts</span></a>

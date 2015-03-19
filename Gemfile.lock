@@ -1,7 +1,6 @@
 GIT
   remote: git://github.com/Nuttapon/apn_on_rails.git
-  revision: 68a230c6243b388037732afad520e44cb37985b7
-  branch: change_module_name_no_test
+  revision: 0076e32f5e4794a6526780a0cbcd7f3d2801e1e7
   specs:
     apn_on_rails (0.5.1)
       actionpack
@@ -466,7 +465,7 @@ GEM
       libv8 (~> 3.11.8.12)
       ref
     thor (0.19.1)
-    thread_safe (0.3.4)
+    thread_safe (0.3.5)
     tilt (1.4.1)
     timers (1.1.0)
     treetop (1.4.15)

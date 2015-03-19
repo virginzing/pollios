@@ -375,6 +375,7 @@ Pollios::Application.routes.draw do
     resources :commercials
     resources :gifts
     resources :triggers
+    resources :system_campaigns
   end
 
   get '/hashtag',  to: 'polls#hashtag'

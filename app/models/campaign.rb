@@ -92,6 +92,12 @@ class Campaign < ActiveRecord::Base
     end
   end
 
+  def free_reward(member_id)
+    @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, ref_no: generate_ref_no)
+    increment!(:used)
+    Rails.cache.delete([member_id, 'reward'])
+  end
+
   def prediction_questionnaire(member_id, poll_series_id)
     CampaignMember.transaction do 
       sample = (begin_sample..end_sample).to_a.sample
@@ -134,7 +140,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def get_original_photo_campaign
-    photo_campaign.url
+    photo_campaign.present? ? photo_campaign.url : ""
   end
 
   def get_reward_title

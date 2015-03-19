@@ -151,7 +151,7 @@ class Authentication
       member.member_type = member_type
       member.register = register_status
       member.approve_brand = approved_brand
-      member.point = Member::NEW_USER_POINT
+      # member.point = Member::NEW_USER_POINT
       
       if web_login.present?
         member.auth_token = generate_auth_token
@@ -192,7 +192,8 @@ class Authentication
         add_redeemer_to_company if create_member_via_company? && redeemer.present?
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
-        GiftWorker.perform_in(5.seconds, @member.id, { "message" => "You got 5 public poll free" } ) unless Rails.env.test?
+        @member.free_reward_first_signup
+        GiftWorker.perform_async(@member.id, { "message" => "You got 5 public poll free" } ) unless Rails.env.test?
       end
 
     end

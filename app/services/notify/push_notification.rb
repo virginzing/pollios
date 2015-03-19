@@ -31,7 +31,7 @@ class Notify::PushNotification
   end
 
   def new_notification
-    APNS::Notification.new(device_token, alert: alert, badge: badge, sound: sound)
+    APNS::Notification.new(device_token, alert: alert, badge: badge, sound: sound, content_available: 1)
   end
 
   def send

@@ -41,4 +41,11 @@ namespace :admin do
     Sidekiq::Cron::Job.create(name: "Check subscribe of member - each day", cron: '5 17 * * *', klass: 'CheckSubscribeWorker')
   end
 
+  desc "Create Signup Campaign as free 5 public poll"
+  task :new_campaign_5_public_poll => :environment do
+    Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years,
+      description: "Gift", how_to_redeem: "กดรับเอง", redeem_myself: true, reward_info: { "point" => 5, "first_signup" => true }, reward_expire: Time.now + 100.years, system_campaign: true,
+      rewards_attributes: [{ title: "5 public poll", detail: "แจกฟรี 5 public poll free"}] )
+  end
+
 end
