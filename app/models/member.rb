@@ -515,6 +515,12 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def cached_hidden_polls
+    Rails.cache.fetch([ self.id, 'hidden_polls']) do
+      hidden_polls.to_a
+    end
+  end
+
   def cached_get_unrecomment
     Rails.cache.fetch([self.id, 'unrecomment']) do
       member_un_recomments.to_a
