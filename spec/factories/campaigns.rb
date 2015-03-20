@@ -4,8 +4,8 @@ FactoryGirl.define do
     begin_sample 1
     end_sample 1
     expire Time.now + 30.days
-    description "Null"
-    how_to_redeem "Null"
+    description "description"
+    how_to_redeem "how to redeem"
     type_campaign 1
   end
 

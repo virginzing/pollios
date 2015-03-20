@@ -23,6 +23,8 @@ class Campaign::ClaimReward
 
         raise ExceptionHandler::Forbidden, "This reward has beegn claim already" if @reward.redeem
 
+        raise ExceptionHandler::Forbidden, "Not lucky" unless @reward.luck
+
         if check_point_increment > 0
           current_point = @member.point
           @member.update!(point: current_point + check_point_increment)

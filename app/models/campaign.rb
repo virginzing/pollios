@@ -26,6 +26,7 @@ class Campaign < ActiveRecord::Base
   has_many :members, through: :campaign_members, source: :member
 
   belongs_to :member
+  belongs_to :company
 
   has_many :rewards, dependent: :destroy
 

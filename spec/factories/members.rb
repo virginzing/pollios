@@ -33,4 +33,9 @@ FactoryGirl.define do
     member_type 1
   end
 
+  factory :member_system, class: Member do
+    fullname "Pollios System"
+    email "system@pollios.com"
+  end
+
 end
