@@ -1,0 +1,48 @@
+<div class="well">
+  <a href="<%= new_gift_path %>" class="btn btn-primary btn-lg">New Gift</a>
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget" id="wid-list-gift-log" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>List Gift Log</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="gift_logs" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Admin Id</th>
+                <th>Campaign</th>
+                <th>Message</th>
+                <th>List Member</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @gift_logs.each do |gift_log| %>
+                <tr>
+                  <td><%= gift_log.id %></td>
+                  <td><%= gift_log.admin_id %></td>
+                  <td><a href="/admin/campaign/<%= gift_log.campaign_id %>"><%= gift_log.campaign.name  %></a></td>
+                  <td><%= gift_log.message %></td>
+                  <td><%= gift_log.list_member %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+      
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

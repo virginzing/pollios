@@ -5,7 +5,7 @@ class GiftsController < ApplicationController
   before_filter :authenticate_admin!
 
   def index
-    @gift = GiftLog.all
+    @gift_logs = GiftLog.includes(:campaign)
   end
 
   def new

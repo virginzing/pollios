@@ -1753,6 +1753,14 @@
 	            [0, 'desc']
 	        ]
 	    });
+	    $('#gift_logs').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 25,
+	        responsive: true,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
 	    $('#list_polls_public').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,
