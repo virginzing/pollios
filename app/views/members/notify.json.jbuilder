@@ -5,18 +5,15 @@ if @notify
 
   json.notify @notify do |notify|
     json.notify_id notify.id
-    json.sender do
 
-      if notify.sender.nil?
-        json.member_id 0
-        json.name "Pollios System"
-        json.avatar "http://pollios.com/images/logo/pollios.png"
-        json.description "Pollios Office"
-      else
+    if notify.sender.nil?
+      json.sender System::DefaultMember.new.to_json  
+    else
+      json.sender do
         json.partial! 'response_helper/member/short_info_feed', member: notify.sender
       end
-
     end
+
     json.message notify.message
     json.custom_properties notify.custom_properties
     json.created_at notify.created_at.to_i

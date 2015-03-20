@@ -1,4 +1,4 @@
-class System::DefaultName
+class System::DefaultMember
 
   def to_json
     {
