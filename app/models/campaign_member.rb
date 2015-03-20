@@ -4,6 +4,8 @@ class CampaignMember < ActiveRecord::Base
   belongs_to :poll
   belongs_to :poll_series
   
+  attr_accessor :message
+
   self.per_page = 10
 
   def self.list_reward(member_id)
@@ -16,7 +18,7 @@ class CampaignMember < ActiveRecord::Base
       luck: luck,
       serial_code: serial_code,
       redeem: redeem,
-      redeem_at: redeem_at.presence || "",
+      redeem_at: redeem_at.to_i.presence || "",
       ref_no: ref_no || "",
       created_at: created_at.to_i,
       title: campaign.get_reward_title,

@@ -10,11 +10,22 @@
   </header>
 
   <fieldset>
-    <label class="label">Campaign</label>
-      <label class="select">
-        <%= f.select :campaign_id, @campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
-    </label>
+    <section>
+      <label class="label">Campaign</label>
+        <label class="select">
+          <%= f.select :campaign_id, @campaigns.all.map {|r| [ "(" + r.id.to_s + ")" + " " + r.name, r.id ] }, { include_blank: true },  { class: 'select2 required', placeholder: "Select a campaign"} %>
+      </label>
+    </section>
+
+    <section>
+      <label class="label">Message</label>
+      <label class="input">
+        <%= f.input :message, label: false, required: true, placeholder: "Message will display on list reward" %>
+      </label>
+    </section>
   </fieldset>
+
+
 
   <header>
     Select Member
@@ -33,7 +44,7 @@
         </tr>
       </thead>
       <tbody>
-        <% Member.with_member_type(:citizen).each do |member| %>
+        <% Member.with_member_type(:citizen, :celebrity).each do |member| %>
           <tr>
             <td><%= member.id %></td>
             <td><%= image_tag(member.avatar.url(:thumbnail), size: '30x30') %></td>
@@ -88,7 +99,7 @@
       $(this).append(function () {
           return $('<input>', {
               type: 'hidden',
-              name: 'list_member',
+              name: 'campaign_member[list_member]',
               value: list_member
           })
       })

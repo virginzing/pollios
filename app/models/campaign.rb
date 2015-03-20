@@ -25,6 +25,8 @@ class Campaign < ActiveRecord::Base
   has_many :campaign_members, dependent: :destroy
   has_many :members, through: :campaign_members, source: :member
 
+  has_many :gift_logs, dependent: :destroy
+  
   belongs_to :member
   belongs_to :company
 
@@ -94,7 +96,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def free_reward(member_id)
-    @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, ref_no: generate_ref_no)
+    @campaign = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
     increment!(:used)
     Rails.cache.delete([member_id, 'reward'])
   end

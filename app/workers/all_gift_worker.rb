@@ -1,19 +1,21 @@
-class GiftWorker
+class AllGiftWorker
   include Sidekiq::Worker
   include SymbolHash
 
   sidekiq_options unique: true
 
-  def perform(receive_id, custom_data = nil)
+  def perform(gift_log_id, custom_data = nil)
     begin
 
-      @receive = Member.find_by(id: receive_id)
+      @gift_log = GiftLog.find_by(id: gift_log_id)
 
-      raise ArgumentError.new("Member not found") if @receive.nil?
+      raise ArgumentError.new("Gift not found") if @gift_log.nil?
 
       member_id = 0 # default by system account
 
-      @apn_gift = Apn::Gift.new(@receive, custom_data["message"])
+      @apn_gift = Apn::AllGift.new(@gift_log)
+
+      @apn_gift.send
 
       recipient_ids = @apn_gift.recipient_ids
 
@@ -55,7 +57,7 @@ class GiftWorker
 
       Apn::App.first.send_notifications
     rescue => e
-      puts "GiftWorker => #{e.message}"
+      puts "AllGiftWorker => #{e.message}"
     end
 
   end
