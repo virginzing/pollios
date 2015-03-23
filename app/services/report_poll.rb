@@ -7,7 +7,7 @@ class ReportPoll
 
   def reporting
     unless find_report
-      reporting = @member.member_report_polls.create!(poll_id: @poll.id, message: @options[:message])
+      reporting = @member.member_report_polls.create!(poll_id: @poll.id, message: @options[:message], message_preset: @options[:message_preset])
       report_increment
       send_notification if in_group?
       clear_cached

@@ -688,8 +688,12 @@ class PollsController < ApplicationController
   end
 
   def report
-    @init_report = ReportPoll.new(@current_member, @poll, { message: params[:message]} )
+    @init_report = ReportPoll.new(@current_member, @poll, { message: params[:message], message_preset: params[:message_preset] })
     @report = @init_report.reporting
+
+    unless @report
+      render status: 403
+    end
   end
 
   def destroy
