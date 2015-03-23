@@ -142,9 +142,9 @@ class V6::MyPollInProfile
     query_public = "polls.public = 't' AND polls.member_id = #{member_id} AND poll_members.share_poll_of_id = 0"
 
     query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
-                .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
-                       "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
-                       "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
+                .where("(#{query_poll_member} AND #{poll_expire_have_vote}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
+                       "OR (#{query_group_together} AND #{poll_expire_have_vote}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
+                       "OR (#{query_public} AND #{poll_expire_have_vote}) OR (#{query_public} AND #{poll_expire_have_vote})",
                        your_group_ids, your_group_ids).references(:poll_groups)
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
     query = query.limit(limit_poll)
@@ -201,7 +201,7 @@ class V6::MyPollInProfile
   end
 
   def poll_expire_have_vote
-    "polls.expire_date < '#{Time.now}' AND polls.vote_all <> 0"
+    "polls.expire_status = 't' AND polls.vote_all <> 0"
   end
 
   def poll_unexpire
