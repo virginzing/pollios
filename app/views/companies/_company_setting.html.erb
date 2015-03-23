@@ -130,7 +130,7 @@
                               <% if @current_member.avatar.present? %>
                               <%= link_to 'Delete', delete_avatar_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
                               <% end %>
-                              <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+                              <button type="submit" class="btn btn-primary" id="drop_avatar" data-disable-with="Loading..." onclick="" disabled='disabled'>
                                 Submit
                               </button>
                             </footer>
@@ -156,7 +156,7 @@
                                 <% if @current_member.cover.present? %>
                                 <%= link_to 'Delete', delete_cover_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
                                 <% end %>
-                                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+                                <button type="submit" class="btn btn-primary" id="drop_cover" data-disable-with="Loading..." onclick="" disabled='disabled'>
                                   Submit
                                 </button>
                               </footer>

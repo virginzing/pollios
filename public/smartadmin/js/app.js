@@ -429,6 +429,10 @@
 	            if (errors.maxSize) {
 	                handleDropZonePictureError(file.name, 'must be less than or equal 500 kb.');
 	            }
+	        },
+	        accept: function(file) {
+	        	var button_submit = this.attr('id');
+	        	$("button#" + button_submit).removeAttr('disabled');
 	        }
 	   }
 	   return default_option;
@@ -462,23 +466,23 @@
 	}
 
 	function dropZoneAvatar(avatar_url) {
-	  $('#drop_avatar').ezdz(option_drop_zone("Drop Avatar"));
-	  $('#drop_avatar').ezdz('preview', avatar_url, option_drop_zone("Drop Avatar"));
+	  $('input[type=file]#drop_avatar').ezdz(option_drop_zone("Drop Avatar"));
+	  $('input[type=file]#drop_avatar').ezdz('preview', avatar_url, option_drop_zone("Drop Avatar"));
 	}
 
 	function dropZoneCover(cover_url) {
-	  $('#drop_cover').ezdz(option_drop_zone("Drop Cover"));
-	  $('#drop_cover').ezdz('preview', cover_url, option_drop_zone("Drop Cover"));
+	  $('input[type=file]#drop_cover').ezdz(option_drop_zone("Drop Cover"));
+	  $('input[type=file]#drop_cover').ezdz('preview', cover_url, option_drop_zone("Drop Cover"));
 	}
 
 	function dropZonePhotoGroup(photo_group_url) {
-			$('#drop_photo_group').ezdz(option_drop_zone("Drop Photo"));
-	    $('#drop_photo_group').ezdz('preview', photo_group_url, option_drop_zone("Drop Photo"));   
+			$('input[type=file]#drop_photo_group').ezdz(option_drop_zone("Drop Photo"));
+	    $('input[type=file]#drop_photo_group').ezdz('preview', photo_group_url, option_drop_zone("Drop Photo"));   
 	}
 
 	function dropZoneCoverGroup(cover_url) {
-	    $('#drop_cover_group').ezdz(option_drop_zone("Drop Cover"));
-	    $('#drop_cover_group').ezdz('preview', cover_url, option_drop_zone("Drop Cover"));
+	    $("input[type=file]#drop_cover_group").ezdz(option_drop_zone("Drop Cover"));
+	    $("input[type=file]#drop_cover_group").ezdz('preview', cover_url, option_drop_zone("Drop Cover"));
 	}
 
 	function dropZonePhotoEachGroup() {
