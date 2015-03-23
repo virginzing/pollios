@@ -90,7 +90,7 @@ class V6::PollOfGroup
     poll_group_query = "poll_groups.group_id = #{@group.id}"
     query = Poll.load_more(next_cursor).available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
-                  .where("(#{poll_group_query} AND #{poll_unexpire}) OR (#{poll_group_query} AND #{poll_expire_have_vote})").uniq
+                  .where("(#{poll_group_query} AND #{poll_unexpire})").uniq
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
