@@ -2,7 +2,7 @@ class GroupController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :set_current_member, only: [:set_public, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
-  before_action :set_group, only: [:set_public, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
+  before_action :set_group, only: [:delete_photo_group, :delete_cover_group, :set_public, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
   before_action :compress_gzip, only: [:my_group, :poll_group, :detail_group, :poll_available_group, :members]
   
   before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
@@ -232,6 +232,39 @@ class GroupController < ApplicationController
       else
         format.json { render text: "Unable update record." , status: :unprocessable_entity }
       end 
+    end
+  end
+
+
+  def delete_photo_group
+    Group.transaction do
+      begin
+        @group.remove_photo_group!
+        @group.save
+        flash[:success] = "Delete photo group successfully."
+      rescue => e
+        flash[:error] = e.message
+      end
+
+      respond_to do |format|
+        format.html { redirect_to company_edit_group_path(@group) }
+      end
+    end
+  end
+
+  def delete_cover_group
+    Group.transaction do
+      begin
+        @group.remove_cover!
+        @group.save
+        flash[:success] = "Delete cover group successfully."
+      rescue => e
+        flash[:error] = e.message
+      end
+
+      respond_to do |format|
+        format.html { redirect_to company_edit_group_path(@group) }
+      end
     end
   end
 

@@ -168,6 +168,8 @@ Pollios::Application.routes.draw do
     post ':id/request_group', to: 'group#request_group'
     post ':id/public_id',     to: 'group#public_id'
     post ':id/set_public',    to: 'group#set_public'
+    delete ':id/delete_photo_group',  to: 'group#delete_photo_group', as: :delete_photo_group
+    delete ':id/delete_cover_group',  to: 'group#delete_cover_group', as: :delete_cover_group
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
@@ -504,7 +506,7 @@ Pollios::Application.routes.draw do
   get '/profile', to: 'members#profile',  as: :my_profile
   delete 'delete_avatar',  to: 'members#delete_avatar', as: :delete_avatar
   delete 'delete_cover',  to: 'members#delete_cover', as: :delete_cover
-  delete 'delete_photo_group',  to: 'members#delete_photo_group', as: :delete_photo_group
+  # delete 'delete_photo_group',  to: 'members#delete_photo_group', as: :delete_photo_group
   get '/qrcode',  to: 'polls#generate_qrcode'
 
   get '/dashboard',  to: 'home#dashboard', as: :dashboard

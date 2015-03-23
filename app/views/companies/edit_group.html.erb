@@ -107,7 +107,7 @@
             </div>
             <footer>
               <% if @group.photo_group.present? %>
-              <%= link_to 'Delete', delete_photo_group_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+              <%= link_to 'Delete', delete_photo_group_path(@group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
               <% end %>
               <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
               Submit
@@ -128,7 +128,7 @@
             </div>
             <footer>
               <% if @group.cover.present? %>
-              <%= link_to 'Delete', delete_photo_group_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+              <%= link_to 'Delete', delete_cover_group_path(@group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
               <% end %>
               <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
               Submit

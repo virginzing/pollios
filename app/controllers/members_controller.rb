@@ -124,7 +124,7 @@ class MembersController < ApplicationController
         flash[:error] = e.message
       end
       respond_to do |format|
-        format.html { redirect_to my_profile_path }
+        format.html { redirect_to company_setting_path }
       end
     end
   end
@@ -139,7 +139,7 @@ class MembersController < ApplicationController
         flash[:error] = e.message
       end
       respond_to do |format|
-        format.html { redirect_to my_profile_path }
+        format.html { redirect_to company_setting_path }
       end
     end
   end
