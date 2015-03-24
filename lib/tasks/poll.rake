@@ -102,6 +102,8 @@ namespace :poll do
     RequestCode.delete_all
     Mention.delete_all
     MemberUnRecomment.delete_all
+
+    HistoryViewQuestionnaire.delete_all
   end
 
   desc "clear some data"

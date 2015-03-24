@@ -46,7 +46,7 @@ class CompaniesController < ApplicationController
 
 
   def poll_flags
-    @report_polls = Company::CompanyReportPoll.new(company_groups).get_report_poll_in_company  
+    @report_polls = Company::CompanyReportPoll.new(company_groups, @find_company).get_report_poll_in_company  
   end
 
   def via_email
