@@ -48,3 +48,5 @@ production:
 
 # Cloudinary email: codeapp.server@gmail.com
 # password: 9code7app9
+
+# heroku maintenance:on -a codeapp-pollios
