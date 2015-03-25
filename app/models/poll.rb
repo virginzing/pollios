@@ -273,7 +273,7 @@ class Poll < ActiveRecord::Base
 
     if group.empty?
       find_group = Group.where("id IN (?)", split_group_id).first
-      group << Hash["id" => find_group.id, "name" => find_group.name, "photo" => find_group.get_photo_group, "cover" => find_group.get_cover_group]
+      group << Hash["id" => find_group.id, "name" => find_group.name, "cover" => find_group.get_cover_group, "virtual_group" => find_group.virtual_group]
     end
 
     group

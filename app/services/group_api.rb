@@ -13,7 +13,7 @@ module GroupApi
     end
 
     def group_by_name
-      Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group]] }]
+      Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "cover" => f.get_cover_group, "virtual_group" => f.virtual_group]] }]
     end
   end
   
