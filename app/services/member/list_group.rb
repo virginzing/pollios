@@ -11,7 +11,11 @@ class Member::ListGroup
     cached_all_groups.select{|group| group if group.member_is_active }
   end
 
-  def active_with_private
+  def active_non_virtual
+    cached_all_groups.select{|group| group if group.member_is_active  && !group.virtual_group }
+  end
+
+  def active_with_public
     cached_all_groups.select{|group| group if group.member_is_active && group.public == false }  
   end
 

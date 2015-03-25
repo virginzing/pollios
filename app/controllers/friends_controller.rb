@@ -196,11 +196,11 @@ class FriendsController < ApplicationController
 
     if params[:member_id] == params[:friend_id]
       init_list_group = Member::ListGroup.new(@current_member)
-      @groups = init_list_group.active
+      @groups = init_list_group.active_non_virtual
       @hash_member_count = init_list_group.hash_member_count
     else
       init_list_group = Friend::ListGroup.new(@current_member, @find_friend)
-      @groups = init_list_group.together_group
+      @groups = init_list_group.together_group_non_virtual
       @hash_member_count = init_list_group.hash_member_count
     end
     

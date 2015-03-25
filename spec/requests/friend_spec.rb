@@ -6,6 +6,16 @@ RSpec.describe "Friend" do
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
   let!(:celebrity) { create(:celebrity) }
 
+  let!(:group) { create(:group, public: true) }
+  let!(:group_member) { create(:group_member, member: member, group: group, active: true, is_master: true) }
+  let!(:group_friend) { create(:group_member, member: friend, group: group, active: true, is_master: true) }
+
+
+  let!(:group_virtual) { create(:group, public: true, virtual_group: true) }
+  let!(:group_member_virtual) { create(:group_member, member: member, group: group_virtual, active: true, is_master: true) }
+  let!(:group_friend_virtual) { create(:group_member, member: friend, group: group_virtual, active: true, is_master: true) }
+
+
   describe "GET /friend/votes" do
     context 'of mine' do
 
@@ -291,6 +301,50 @@ RSpec.describe "Friend" do
 
       expect(find_following.nil?).to be true
     end
+  end
+
+
+  describe "GET /friend/groups" do
+    context "my group" do
+      before do
+        get "/friend/groups.json", { member_id: member.id, friend_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(json["response_status"]).to eq("OK")
+      end
+
+      it "have 1 group in list group of json format (non virtual)" do
+        expect(json["groups"].size).to eq(1)
+      end
+
+      it "have 2 group of member" do
+        expect(Member::ListGroup.new(member).active.count).to eq(2)
+      end
+    end
+
+    context "friend" do
+      before do
+        get "/friend/groups.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(json["response_status"]).to eq("OK")
+      end
+
+      it "see 1 group in list group of friend (together group)" do
+        expect(json["groups"].count).to eq(1)
+      end
+
+      it "have 2 group of friend (together group)" do
+        expect(Friend::ListGroup.new(member, friend).together_group.to_a.count).to eq(2)
+      end
+
+      it "have 1 group of friend (together group with non virtual)" do
+        expect(Friend::ListGroup.new(member, friend).together_group_non_virtual.to_a.count).to eq(1)
+      end
+    end
+
   end
 
 end

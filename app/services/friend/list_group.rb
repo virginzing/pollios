@@ -20,6 +20,10 @@ class Friend::ListGroup
     @together_group ||= groups 
   end
 
+  def together_group_non_virtual
+    @together_group_non_virtual ||= groups.select{|group| group unless group.virtual_group } 
+  end
+
   def hash_member_count
     @group_member_count ||= group_member_count.inject({}) { |h,v| h[v.id] = v.member_count; h }
   end
@@ -44,7 +48,7 @@ class Friend::ListGroup
 
   def friend_group
     init_list_group = Member::ListGroup.new(@friend)
-    init_list_group.active_with_private
+    init_list_group.active_with_public
   end
   
 end
