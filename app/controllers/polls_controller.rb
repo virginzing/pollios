@@ -458,12 +458,10 @@ class PollsController < ApplicationController
   end
 
   def detail
-    begin
-      raise_exception_without_group if @poll.in_group
-      Poll.view_poll(@poll, @current_member)
-      @expired = @poll.expire_date < Time.now
-      @voted = @current_member.list_voted?(@poll)
-    end
+    raise_exception_without_group if @poll.in_group
+    Poll.view_poll(@poll, @current_member)
+    @expired = @poll.expire_date < Time.now
+    @voted = @current_member.list_voted?(@poll)
   end
 
   def random_poll
