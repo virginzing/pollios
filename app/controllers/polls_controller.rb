@@ -717,9 +717,9 @@ class PollsController < ApplicationController
         #   SumCommentPollWorker.perform_in(1.minutes, @poll.id) unless Rails.env.test?
         # end
 
-        if (@current_member.id != @poll.member_id) && !@poll.series
-          Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
-        end
+        # if (@current_member.id != @poll.member_id) && !@poll.series
+        Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
+        # end
 
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
         @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
