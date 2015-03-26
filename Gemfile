@@ -162,4 +162,4 @@ gem 'friendly_id', '5.0.4'
 gem 'settingslogic'
 gem 'unscoped_associations'
 
-gem 'oink'
+# gem 'oink'

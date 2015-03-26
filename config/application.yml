@@ -36,7 +36,7 @@ production:
   FRIEND_FOLLOWING_POLL: "friend_following_poll"
   OVERALL_TIMELINE: "overall_timeline"
   MONGOHQ_URL: "mongodb://heroku:4yQKjnuIGIE0aVKblyGzCJdvfsvkz6xJIyH7sCkaFmVyXi986iZXgdHIp_UNbU1_PStUaNntUo10rOfEdbg0Fw@oceanic.mongohq.com:10082/app21881982"
-
+  MONGOLAB_URI: "mongodb://heroku_app21881982:jfk193fhbv2dpt9r8khqovj2va@ds031651.mongolab.com:31651/heroku_app21881982"
 
 
 # set Env to heroku
