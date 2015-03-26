@@ -1,0 +1,22 @@
+<div class="well">
+  <%= simple_form_for @special_qrcode do |f| %>
+
+  <fieldset>
+    <%= f.input :code, disabled: true, hint: 'You cannot change code' %>
+  </fieldset>
+
+  <fieldset>
+    <%= f.input :member_id %>
+  </fieldset>
+
+  <fieldset>
+    <%= f.collection_radio_buttons :type, [['member', 'Member'] ,['poll', 'Poll']], :first, :last, class: "radio_special_code" %>
+  </fieldset>
+
+
+  <div class="update-button">
+    <%= f.submit "Update", class: 'btn btn-primary' %>
+  </div>
+
+  <% end %>
+</div>

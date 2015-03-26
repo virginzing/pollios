@@ -25,7 +25,7 @@
                 <th>ID</th>
                 <th>Code</th>
                 <th>Info</th>
-                <th>More</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -34,7 +34,7 @@
                   <td><%= sq.id %></td>
                   <td><%= sq.code %></td>
                   <td><%= sq.info %></td>
-                  <td><%= link_to 'More', special_qrcode_path(sq), class: 'btn btn-default btn-pill' %></td>
+                  <td><%= link_to 'More', special_qrcode_path(sq), class: 'btn btn-default btn-pill' %> <%= link_to 'edit', edit_special_qrcode_path(sq), class: 'btn btn-default btn-pill' %></td>
                 </tr>
               <% end %>
             </tbody>
