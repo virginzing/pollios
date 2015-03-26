@@ -11,6 +11,11 @@ class GroupController < ApplicationController
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:hash_member_count) { @hash_member_count }
 
+  def load_group
+    @group = Group.cached_find(params[:group_id])
+    render layout: false
+  end
+
   def my_group
     init_list_group = Member::ListGroup.new(@current_member)
     @group_active = init_list_group.active

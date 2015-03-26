@@ -10,6 +10,7 @@ Pollios::Application.routes.draw do
 
   get 'load_poll',  to: 'polls#load_poll'
   get 'load_choice',  to: 'choices#load_choice'
+  get 'load_group', to: 'group#load_group'
 
   mount ApiTaster::Engine => "/api_taster"
   

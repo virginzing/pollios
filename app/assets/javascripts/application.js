@@ -19,5 +19,6 @@
 //= require star-rating
 //= require jquery.multi-select
 //= require jquery.quicksearch
+//= require jquery.tooltipster
 //= require custom
 //= require turbolinks
