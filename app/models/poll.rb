@@ -195,14 +195,6 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  # def flush_cache_relate_with_vote
-  #   FlushCachePollVoteWorker.perform_async(history_votes.map(&:member_id).uniq)
-  # end
-
-  # def flush_cache_relate_with_watch
-  #   FlushCachePollWatchWorker.perform_async(watcheds.map(&:member_id).uniq)
-  # end
-
   def get_original_polls
     cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }  
   end
@@ -546,7 +538,6 @@ class Poll < ActiveRecord::Base
         group_id = poll[:group_id]
         member_id = poll[:member_id]
         friend_id = poll[:friend_id]
-        # buy_poll = poll[:buy_poll] || false
         type_poll = poll[:type_poll]
         is_public = poll[:is_public] || "0"
         photo_poll = poll[:photo_poll]
@@ -563,10 +554,6 @@ class Poll < ActiveRecord::Base
         choice_count = get_choice_count(choices)
         in_group_ids = group_id.presence || "0"
         in_group = group_id.present? ? true : false
-
-        # unless Rails.env.test?
-        #   raise ArgumentError, "Something went wrong" if true
-        # end
 
         if expire_date.present?
           convert_expire_date = Time.now + expire_date.to_i.day

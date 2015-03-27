@@ -4,7 +4,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
   before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
@@ -43,7 +43,9 @@ class MembersController < ApplicationController
       @special_code = false
       render status: :not_found
     else
-      @current_member = Member.find_by(id: @special_code.info["member_id"])
+      @member_from_special_qrcode = Member.cached_find(@special_code.info["member_id"])
+      init_list_friend_of_member ||= Member::ListFriend.new(@current_member)
+      @is_friend = Friend.check_add_friend?(@current_member, [@member_from_special_qrcode], init_list_friend_of_member.check_is_friend)
     end
   end
 
