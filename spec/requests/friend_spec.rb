@@ -347,4 +347,41 @@ RSpec.describe "Friend" do
 
   end
 
+  describe "GET /friend/collection_profile" do
+    context "my profile" do
+      before do
+        get "/friend/collection_profile.json", { member_id: member.id, friend_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(json["response_status"]).to eq("OK")
+      end
+
+      it "has key as friend, following, follower, block" do
+        expect(json.has_key?("friend")).to be true
+        expect(json.has_key?("following")).to be true
+        expect(json.has_key?("follower")).to be true
+        expect(json.has_key?("list_block")).to be true
+      end
+
+    end
+
+
+    context "friend" do
+      before do
+        get "/friend/collection_profile.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(json["response_status"]).to eq("OK")
+      end
+
+      it "has key as friend, following, follower, block" do
+        expect(json.has_key?("friend")).to be true
+        expect(json.has_key?("following")).to be true
+        expect(json.has_key?("follower")).to be true
+      end
+    end
+  end
+
 end

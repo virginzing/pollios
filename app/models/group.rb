@@ -36,6 +36,8 @@ class Group < ActiveRecord::Base
   has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
   has_many :members_request, through: :request_groups, source: :member
 
+  belongs_to :member
+  
   validates :name, presence: true
 
   validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" } ,:allow_blank => true , on: :update

@@ -298,8 +298,6 @@ class Friend < ActiveRecord::Base
   end
 
   def self.check_add_friend?(member, list_members, check_is_friend)
-
-    puts "check_is_friend => #{check_is_friend}"
     check_my_friend = []
 
     list_members.each do |member|
