@@ -30,14 +30,21 @@ class Friend::ListGroup
 
   private
 
+  # def groups
+  #   puts "my_and_friend_group => #{my_and_friend_group}"
+    # Group.joins(:group_members).select("groups.*, group_members.is_master as member_admin") \
+    #       .where("(groups.id IN (?) AND group_members.member_id = #{@friend.id}) OR (groups.public = 't' AND groups.member_id = #{@friend.id}) OR (groups.public = 't' AND group_members.member_id = #{@friend.id})", my_and_friend_group) \
+    #       .group("groups.id, member_admin")
+  # end
+
   def groups
-    Group.joins(:group_members_active).select("groups.*, group_members.is_master as member_admin") \
+    Group.joins("left join group_members on group_members.group_id = groups.id").select("groups.*, group_members.is_master as member_admin") \
           .where("(groups.id IN (?) AND group_members.member_id = #{@friend.id}) OR (groups.public = 't' AND groups.member_id = #{@friend.id}) OR (groups.public = 't' AND group_members.member_id = #{@friend.id})", my_and_friend_group) \
           .group("groups.id, member_admin")
   end
 
   def group_member_count
-    Group.joins(:group_members_active).select("groups.*, count(group_members) as member_count").group("groups.id") \
+    Group.joins("left join group_members on group_members.group_id = groups.id").select("groups.*, count(group_members) as member_count").group("groups.id") \
           .where("groups.id IN (?)", together_group.map(&:id))
   end
 
