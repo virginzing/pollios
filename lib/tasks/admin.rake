@@ -50,4 +50,20 @@ namespace :admin do
       rewards_attributes: [{ title: "5 public poll", detail: "แจกฟรี 5 public poll free"}] )
   end
 
+
+  desc "update member_id to group"
+  task :update_member_to_group => :environment do
+    Group.with_group_type(:company).each do |group|
+      member_id = group.group_company.company.member.id
+      group.update!(member_id: member_id)
+    end
+
+    Group.with_group_type(:normal).each do |group|
+      member = group.group_members.order("group_members.id asc").first
+      if member.present?
+        group.update!(member_id: member.member_id)
+      end
+    end
+  end
+
 end
