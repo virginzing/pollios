@@ -278,10 +278,6 @@ class FriendsController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, list_compare)
   end
 
-  # def list_request
-  #   @your_request = @current_member.get_your_request
-  #   @friend_request = @current_member.get_friend_request
-  # end
 
   private
 
