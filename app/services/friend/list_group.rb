@@ -32,7 +32,7 @@ class Friend::ListGroup
 
   def groups
     Group.joins(:group_members_active).select("groups.*, group_members.is_master as member_admin") \
-          .where("(groups.id IN (?) AND group_members.member_id = #{@friend.id}) OR (groups.public = 't' AND groups.member_id = #{@friend.id})", my_and_friend_group) \
+          .where("(groups.id IN (?) AND group_members.member_id = #{@friend.id}) OR (groups.public = 't' AND groups.member_id = #{@friend.id}) OR (groups.public = 't' AND group_members.member_id = #{@friend.id})", my_and_friend_group) \
           .group("groups.id, member_admin")
   end
 
