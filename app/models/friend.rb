@@ -54,6 +54,7 @@ class Friend < ActiveRecord::Base
 
       find_invitee = where(follower_id: member_id, followed_id: friend_id).having_status(:invitee).first
       find_used_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
+      ever_following = where(follower_id: member_id, followed_id: friend_id, following: true).having_status(:nofriend).first
 
       if find_invitee.present?
         find_invitee.update_attributes!(status: :friend)
@@ -64,6 +65,11 @@ class Friend < ActiveRecord::Base
       elsif find_used_friend
         find_used_friend.update(status: :invitee)
         create!(follower_id: member_id, followed_id: friend_id, status: :invite)
+        status = :invite
+      elsif ever_following && find_friend.citizen?
+        puts "ehere"
+        ever_following.update(status: :invite)
+        create!(follower: find_friend, followed: find_member, status: :invitee)
         status = :invite
       else
         create!(follower_id: member_id, followed_id: friend_id, status: :invite)
@@ -185,9 +191,9 @@ class Friend < ActiveRecord::Base
   end
 
   def self.check_that_follow
-    if @find_friend.following
-      @find_friend.update!(status: -1)
-      @find_member.destroy
+    if @find_member.following
+      @find_member.update!(status: -1)
+      @find_friend.destroy
       # puts "kept following"
     else
       @find_member.destroy
