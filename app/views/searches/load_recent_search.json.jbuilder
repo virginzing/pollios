@@ -1,0 +1,2 @@
+json.response_status "OK"
+json.recent_search_users_and_groups @recent_search_users_and_groups

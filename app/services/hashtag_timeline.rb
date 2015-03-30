@@ -44,16 +44,21 @@ class HashtagTimeline
     @hashtag_popular ||= tag_popular.map(&:name)
   end
 
+  def get_recent_search_tags
+    TypeSearch.find_search_tags(@member)
+  end
+
   private
 
   def tag_popular
     query = Tag.joins(:taggings => [:poll => :poll_members]).
       where("polls.in_group_ids = '0'").
       where("polls.vote_all > 0").
+      where("date(taggings.created_at + interval '7 hour') BETWEEN ? AND ?", Date.current.beginning_of_month, Date.current.end_of_month).
       where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0 AND poll_members.series = 'f')", true, your_friend_ids).
       select("tags.*, count(taggings.tag_id) as count").
       group("taggings.tag_id, tags.id").
-      order("count desc").limit(5)
+      order("count desc").limit(10)
 
     query = report_poll_filter(query)
     query = hidden_poll_filter(query)

@@ -4,7 +4,7 @@ class TypeSearch
   include Mongoid::Timestamps
 
   field :search_tags, type: Array
-  field :search_users, type: Array
+  field :search_users_and_groups, type: Array
 
   index({ member_id: 1}, { unique: true, name: "member_id_type_search_index"})
 
@@ -24,29 +24,40 @@ class TypeSearch
   end
 
 
-  def self.create_log_search_users(member, message)
+  def self.create_log_search_users_and_groups(member, message)
     @member = member
     @search_log = member_find_create_log
 
-    old_search_users = @search_log.search_users
-    hash_search_user = {
+    old_search_users_and_groups = @search_log.search_users_and_groups
+
+    hash_search_users_and_groups = {
       message: message,
       created_at: Time.zone.now
     }
     
-    new_search_user = old_search_users.insert(0, hash_search_user)
+    new_search_users_and_groups = old_search_users_and_groups.insert(0, hash_search_users_and_groups)
 
-    @search_log.update!(search_users: new_search_user)
+    @search_log.update!(search_users_and_groups: new_search_users_and_groups)
   end
 
   def self.member_find_create_log
     member_search_log = find_by(member_id: @member.id)
 
     unless member_search_log.present?
-      member_search_log = create!(member_id: @member.id, search_tags: [], search_users: [])
+      member_search_log = create!(member_id: @member.id, search_tags: [], search_users_and_groups: [])
     end
 
     member_search_log
+  end
+
+  def self.find_search_users_and_groups(member)
+    @member = member
+    member_find_create_log["search_users_and_groups"].collect{|e| e["message"] }.uniq[0..9]
+  end
+
+  def self.find_search_tags(member)
+    @member = member
+    member_find_create_log["search_tags"].collect{|e| e["message"] }.uniq[0..9]
   end
 
 end

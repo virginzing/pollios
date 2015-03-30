@@ -618,6 +618,7 @@ class PollsController < ApplicationController
   def hashtag_popular
     hashtag = HashtagTimeline.new(@current_member, hashtag_params)
     @tag_lists = hashtag.get_hashtag_popular
+    @recent_search_tags = hashtag.get_recent_search_tags
   end
 
   def vote

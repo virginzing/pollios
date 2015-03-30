@@ -19,6 +19,7 @@ Pollios::Application.routes.draw do
   resources :searches do
     collection do
       get 'users_and_groups'
+      get 'load_recent_search'
     end
   end
 
