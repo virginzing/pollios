@@ -136,7 +136,7 @@ class Friend < ActiveRecord::Base
       FlushCached::Member.new(friend).clear_one_follower
 
       Activity.create_activity_friend( member, friend ,'Follow')
-      AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } ) unless Rails.env.test?
+      # AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } ) unless Rails.env.test?
 
       # flush_cached_friend(member_id, friend_id)
 
