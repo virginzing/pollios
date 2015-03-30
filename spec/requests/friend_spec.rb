@@ -174,7 +174,7 @@ RSpec.describe "Friend" do
 
       @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
 
-      post "/friend/accept", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+      post "/friend/accept.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -193,7 +193,7 @@ RSpec.describe "Friend" do
 
       @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
 
-      post "/friend/deny", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+      post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -214,7 +214,7 @@ RSpec.describe "Friend" do
       @user_one = create(:friend, follower: member, followed: friend, active: true, status: 1)
       @user_two = create(:friend, follower: friend, followed: member, active: true, status: 1)
 
-      post "/friend/unfriend", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+      post "/friend/unfriend.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -236,7 +236,7 @@ RSpec.describe "Friend" do
       @user_one = create(:friend, follower: member, followed: friend, status: 1, active: true)
       @user_two = create(:friend, follower: friend, followed: member, status: 1, active: true)
 
-      post "/friend/block", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+      post "/friend/block.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -254,7 +254,7 @@ RSpec.describe "Friend" do
       @user_one = create(:friend, follower: member, followed: friend, status: 1, active: true, block: true)
       @user_two = create(:friend, follower: friend, followed: member, status: 1, active: true, visible_poll: false)
 
-      post "/friend/unblock", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+      post "/friend/unblock.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -273,7 +273,7 @@ RSpec.describe "Friend" do
 
   describe "POST /friend/following" do
     before do
-      post "/friend/following", { member_id: member.id, friend_id: celebrity.id }, { "Accept" => "application/json" }
+      post "/friend/following.json", { member_id: member.id, friend_id: celebrity.id }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -289,7 +289,7 @@ RSpec.describe "Friend" do
   describe "POST /friend/unfollow" do
     before do
       create(:friend, follower: member, followed: celebrity, following: true, status: -1)
-      post "/friend/unfollow", { member_id: member.id, friend_id: celebrity.id }, { "Accept" => "application/json" }
+      post "/friend/unfollow.json", { member_id: member.id, friend_id: celebrity.id }, { "Accept" => "application/json" }
     end
 
     it "success" do

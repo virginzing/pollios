@@ -228,8 +228,19 @@ class Friend < ActiveRecord::Base
         AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
         
       else
-        find_member.destroy
+        unless find_member.following
+          find_friend.update!(status: :nofriend)
+          find_member.destroy
+        end
+
+        unless find_friend.following
+          find_old_member = Friend.find_by(follower: member, followed: friend)
+          
+          if find_old_member.present?
+            find_old_member.update!(status: :nofriend)
+          end
         find_friend.destroy
+        end
       end
       # flush_cached_friend(member_id, friend_id)
 

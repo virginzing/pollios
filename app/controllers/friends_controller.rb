@@ -12,7 +12,7 @@ class FriendsController < ApplicationController
 
   def add_friend
     @detail_friend, @status = Friend.add_friend(friend_params)
-    render status: :created if @detail_friend
+    render status: @detail_friend ? :created : :unprocessable_entity
   end
 
   def add_close_friend
@@ -25,38 +25,38 @@ class FriendsController < ApplicationController
 
   def following
     @friend = Friend.add_following(@current_member, friend_params)
-    render status: :created if @friend
+    render status: @friend ? :created : :unprocessable_entity
   end
 
   def unfollow
     @friend = Friend.unfollow(friend_params)
-    render status: :created if @friend
+    render status: @friend ? :created : :unprocessable_entity
   end
 
   def unfriend
     @friend = Friend.unfriend(friend_params)
-    render status: :created if @friend
+    render status: @friend ? :created : :unprocessable_entity
   end
 
   def accept_friend
     @detail_friend, @status, @active = Friend.accept_or_deny_freind(friend_params, true)
-    render status: :created if @detail_friend
+    render status: @detail_friend ? :created : :unprocessable_entity
   end
 
   def deny_friend
-    @friend = Friend.accept_or_deny_freind(friend_params, false)
-    render status: :created if @friend
+    @friend, @status, @active = Friend.accept_or_deny_freind(friend_params, false)
+    render status: @friend ? :created : :unprocessable_entity
   end
 
 
   def block_friend
     @friend = Friend.block_or_unblock_friend(friend_params, true)
-    render status: :created if @friend
+    render status: @friend ? :created : :unprocessable_entity
   end
 
   def unblock_friend
     @friend = Friend.block_or_unblock_friend(friend_params, false)
-    render status: :created if @friend
+    render status: @friend ? :created : :unprocessable_entity
   end
 
   def mute_friend
