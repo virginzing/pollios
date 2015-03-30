@@ -200,8 +200,14 @@ class FriendsController < ApplicationController
       @hash_member_count = init_list_group.hash_member_count
     else
       init_list_group = Friend::ListGroup.new(@current_member, @find_friend)
-      @groups = init_list_group.together_group_non_virtual
-      @hash_member_count = init_list_group.hash_member_count
+
+      if @find_friend.company?
+        @groups = init_list_group.together_group_of_official_non_virtual
+        @hash_member_count = init_list_group.hash_member_count_of_official
+      else
+        @groups = init_list_group.together_group_of_friend_non_virtual
+        @hash_member_count = init_list_group.hash_member_count_of_friend
+      end
     end
     
   end
