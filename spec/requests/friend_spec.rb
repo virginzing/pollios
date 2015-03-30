@@ -337,11 +337,11 @@ RSpec.describe "Friend" do
       end
 
       it "have 2 group of friend (together group)" do
-        expect(Friend::ListGroup.new(member, friend).together_group.to_a.count).to eq(2)
+        expect(Friend::ListGroup.new(member, friend).together_group_of_friend.to_a.count).to eq(2)
       end
 
       it "have 1 group of friend (together group with non virtual)" do
-        expect(Friend::ListGroup.new(member, friend).together_group_non_virtual.to_a.count).to eq(1)
+        expect(Friend::ListGroup.new(member, friend).together_group_of_friend_non_virtual.to_a.count).to eq(1)
       end
     end
 

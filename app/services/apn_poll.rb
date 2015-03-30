@@ -6,6 +6,7 @@ class ApnPoll
     @member = member
     @member_id = member.id
     @poll = poll
+    @init_member_list_friend = Member::ListFriend.new(@member)
   end
 
   def member
@@ -13,10 +14,10 @@ class ApnPoll
   end
 
   def recipient_ids
-    if member.celebrity? || member.brand?
-      apn_friend_ids | follower_ids
-    else
+    if member.citizen?
       apn_friend_ids
+    else
+      apn_friend_ids | follower_ids
     end
   end
 
@@ -32,15 +33,15 @@ class ApnPoll
   private
 
   def following_ids
-    received_notify_of_member_ids(member.get_follower)
+    received_notify_of_member_ids(@init_member_list_friend.following)
   end
 
   def follower_ids
-    received_notify_of_member_ids(member.get_follower)
+    received_notify_of_member_ids(@init_member_list_friend.follower)
   end
 
   def apn_friend_ids
-    received_notify_of_member_ids(member.get_friend_active)
+    received_notify_of_member_ids(@init_member_list_friend.active)
   end
 
 end
