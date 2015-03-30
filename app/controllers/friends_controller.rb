@@ -102,16 +102,6 @@ class FriendsController < ApplicationController
         @list_polls, @next_cursor = @init_poll.get_friend_poll_feed
         @group_by_name = @init_poll.group_by_name
       end
-    else
-      if params[:member_id] == params[:friend_id]
-        @init_poll = MyPollInProfile.new(@current_member, options_params)
-        @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
-      else
-        @init_poll = MyPollInProfile.new(@find_friend, options_params)
-        @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-        @polls = @init_poll_friend.get_poll_friend_with_visibility.paginate(page: params[:next_cursor])
-      end
-      poll_helper
     end
   end
 
