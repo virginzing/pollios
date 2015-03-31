@@ -56,7 +56,7 @@
 
     <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
     <%= f.input :expire, as: :string, label: "Campaign Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
-    <%= f.input :reward_expire, as: :string, label: "Reward Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy' } %>
+    <%= f.input :reward_expire, as: :string, label: "Reward Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
 
     <div class="row">
 
