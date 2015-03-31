@@ -311,7 +311,7 @@ class Friend < ActiveRecord::Base
           find_member.update!(status: :nofriend)
         end
 
-        puts "find_friend.following => #{find_friend.following}"
+        # puts "find_friend.following => #{find_friend.following}"
         
         unless find_friend.following
           find_old_member = Friend.where(follower: member, followed: friend).first

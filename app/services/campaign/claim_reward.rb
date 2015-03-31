@@ -17,7 +17,7 @@ class Campaign::ClaimReward
     begin
       Member.transaction do
 
-        raise ExceptionHandler::Forbidden, "Campaign has expired" if get_campaign.expire < Time.zone.now
+        raise ExceptionHandler::Forbidden, "Campaign has expired" if get_campaign.reward_expire < Time.zone.now
 
         raise ExceptionHandler::Forbidden, "Campaign be finished" if get_campaign.used >= get_campaign.limit
 
