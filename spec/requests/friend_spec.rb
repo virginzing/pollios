@@ -188,24 +188,101 @@ RSpec.describe "Friend" do
   end
 
   describe "POST /friend/deny" do
-    before do
-      @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
+    context "when denied by invitee" do
+      before do
+        @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
 
-      @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
+        @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
 
-      post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+        post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(response.status).to eq(201)
+      end
+
+      it "cancel to add friend" do
+        find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
+        find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: 2)
+
+        expect(find_user_one.nil?).to be true
+        expect(find_user_two.nil?).to be true
+      end
     end
 
-    it "success" do
-      expect(response.status).to eq(201)
+    context "when denied by invite" do
+      before do
+        @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
+        @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
+
+        post "/friend/deny.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(response.status).to eq(201)
+      end
+
+      it "cancel to add friend" do
+        find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
+        find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: 2)
+
+        expect(find_user_one.nil?).to be true
+        expect(find_user_two.nil?).to be true
+      end
     end
 
-    it "cancel to add friend" do
-      find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
-      find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: 2)
+    context "when denined by invitee but invitee is following" do
+      before do
+        @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0, following: false)
+        @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2, following: true)
+      end
 
-      expect(find_user_one.nil?).to be true
-      expect(find_user_two.nil?).to be true
+      it "success" do
+        post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+        expect(response.status).to eq(201)
+      end
+
+      it "remain invitee that invitee following invite but he was canceled by invitee" do
+        post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+        find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
+        find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: -1)
+
+        expect(find_user_one.nil?).to eq(true)
+        expect(find_user_two.present?).to eq(true)
+      end
+
+      it "remain invitee that invitee following invite but he was canceled by invite" do
+        post "/friend/deny.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+
+        find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
+        find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: -1)
+
+        expect(find_user_one.nil?).to eq(true)
+        expect(find_user_two.present?).to eq(true)
+      end
+    end
+
+    context "when following together" do
+      before do
+        @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0, following: true)
+        @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2, following: true)
+      end
+
+      it "does something" do
+        post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+        expect(response.status).to eq(201)
+      end
+
+      it "remain invite and invitee that following which was denied by invitee" do
+        post "/friend/deny.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
+
+        find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: -1, following: true)
+        find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: -1, following: true)
+
+        expect(find_user_one.present?).to eq(true)
+        expect(find_user_two.present?).to eq(true)
+      end
+
     end
   end
 

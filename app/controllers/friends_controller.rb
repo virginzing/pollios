@@ -11,8 +11,8 @@ class FriendsController < ApplicationController
   expose(:hash_member_count) { @hash_member_count }
 
   def add_friend
-    @detail_friend, @status = Friend.add_friend(friend_params)
-    render status: @detail_friend ? :created : :unprocessable_entity
+    @friend = Friend.add_friend(friend_params)
+    render status: @friend ? :created : :unprocessable_entity
   end
 
   def add_close_friend
