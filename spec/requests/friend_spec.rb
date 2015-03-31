@@ -163,9 +163,6 @@ RSpec.describe "Friend" do
       expect(find_friend.present?).to be true
     end
 
-    it "return status is invite" do
-      expect(json["status"]).to eq("invite")
-    end
   end
 
   describe "POST /friend/accept" do

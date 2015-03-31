@@ -3,6 +3,7 @@ FactoryGirl.define do
     follower nil
     followed nil
     active true
+    following false
   end
 
 end

@@ -111,7 +111,6 @@ class Friend < ActiveRecord::Base
         raise ExceptionHandler::Forbidden, "You and #{@friend.get_name} is friends" if member_friend_active.include?(@friend.id)
 
         find_invite = where(follower: @member, followed: @friend).first_or_initialize do |friend|
-          puts "find_invite is new record"
           friend.follower = @member
           friend.followed = @friend
           friend.status = :invite
@@ -120,7 +119,6 @@ class Friend < ActiveRecord::Base
         end
 
         find_invitee = where(follower: @friend, followed: @member).first_or_initialize do |friend|
-          puts "find_invitee is new record"
           friend.follower = @friend
           friend.followed = @member
           friend.status = :invitee
@@ -287,8 +285,6 @@ class Friend < ActiveRecord::Base
       member = Member.cached_find(member_id)
       friend = Member.cached_find(friend_id)
 
-      raise ExceptionHandler::NotFound, "Not found" unless where(follower: member, followed: friend).having_status(:invitee).first.present?
-
       init_member_list_friend ||= Member::ListFriend.new(member)
 
       if accept
@@ -297,7 +293,8 @@ class Friend < ActiveRecord::Base
         raise ExceptionHandler::Forbidden, "My friend has over 500 people" if (init_member_list_friend.friend_count >= member.friend_limit)
         raise ExceptionHandler::Forbidden, "Your friend has over 500 people" if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
         raise ExceptionHandler::Forbidden, "You and #{friend.get_name} is friends" if init_member_list_friend.active.map(&:id).include?(friend.id)
-
+        raise ExceptionHandler::NotFound, "Not found" unless where(follower: member, followed: friend).having_status(:invitee).first.present?
+        
         search_member(member_id, friend_id).update_attributes!(active: active_status, status: :friend)
         search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
 

@@ -44,7 +44,7 @@ class FriendsController < ApplicationController
   end
 
   def deny_friend
-    @friend, @status, @active = Friend.accept_or_deny_freind(friend_params, false)
+    @friend = Friend.accept_or_deny_freind(friend_params, false)
     render status: @friend ? :created : :unprocessable_entity
   end
 
