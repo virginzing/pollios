@@ -307,16 +307,24 @@ class Friend < ActiveRecord::Base
         unless find_member.following
           find_friend.update!(status: :nofriend)
           find_member.destroy
+        else
+          find_member.update!(status: :nofriend)
         end
 
+        puts "find_friend.following => #{find_friend.following}"
+        
         unless find_friend.following
-          find_old_member = Friend.find_by(follower: member, followed: friend)
+          find_old_member = Friend.where(follower: member, followed: friend).first
 
           if find_old_member.present?
             find_old_member.update!(status: :nofriend)
           end
-        find_friend.destroy
+
+          find_friend.destroy
+        else
+          find_friend.update!(status: :nofriend)
         end
+
       end
 
       FlushCached::Member.new(member).clear_one_friend

@@ -273,8 +273,8 @@ RSpec.describe "Friend" do
       it "remain invite and invitee that following which was denied by invitee" do
         post "/friend/deny.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
 
-        find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: -1, following: true)
-        find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: -1, following: true)
+        find_user_one = Friend.where(follower: member, followed: friend, active: true, status: -1, following: true).first
+        find_user_two = Friend.where(follower: friend, followed: member, active: true, status: -1, following: true).first
 
         expect(find_user_one.present?).to eq(true)
         expect(find_user_two.present?).to eq(true)
