@@ -7,6 +7,7 @@ FactoryGirl.define do
     description "description"
     how_to_redeem "how to redeem"
     type_campaign 1
+    reward_expire Time.now + 100.days
   end
 
 end
