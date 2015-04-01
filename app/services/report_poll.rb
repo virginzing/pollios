@@ -12,6 +12,7 @@ class ReportPoll
       send_notification if in_group?
       clear_cached
       SavePollLater.delete_save_later(@member.id, @poll)
+      FlushCached::Member.new(@member).clear_list_report_polls
     end
     reporting
   end

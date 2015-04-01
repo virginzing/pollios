@@ -806,14 +806,13 @@ class Poll < ActiveRecord::Base
       @poll = poll.reload
       @member = member
 
-      unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
+      unless Member.viewed_polls.include?(@poll.id)
         HistoryView.create! member_id: @member.id, poll_id: @poll.id
         Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
         @poll.update_columns(view_all: @poll.view_all + 1)
+        FlushCached::Member.new(@member).clear_list_history_viewed_polls
       end
 
-      rescue => e
-        true
       end
     end
   end
