@@ -15,7 +15,7 @@ class SearchesController < ApplicationController
 
     @is_friend = Friend.check_add_friend?(@current_member, @members, init_request_search.check_is_friend)
 
-    TypeSearch.create_log_search_users_and_groups(@current_member, users_and_groups_params[:search])
+    TypeSearch.create_log_search_users_and_groups(@current_member, users_and_groups_params[:search]) if @groups.present? || @members.present?
   end
 
   def load_recent_search
