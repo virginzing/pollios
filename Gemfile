@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby "2.2.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '4.1.4'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -31,9 +31,9 @@ gem 'jbuilder', github: 'rails/jbuilder'
 # gem 'foundation-rails', github: 'zurb/foundation-rails'
 # gem 'foundation_rails_helper'
 
-gem 'enumerize', github: 'brainspec/enumerize'
+gem 'enumerize', '0.8.0'
 gem 'pg', '0.17.0'
-# gem 'activerecord-postgres-hstore'
+gem 'activerecord-postgres-hstore'
 gem 'nested-hstore'
 gem 'roo'
 
