@@ -262,7 +262,9 @@ class PollSeries < ActiveRecord::Base
         CollectionPollSeries.update_sum_vote(poll_series)
         SavePollLater.delete_save_later(member_id, poll_series)
         member.flush_cache_my_vote
-        member.flush_cache_my_vote_all
+        
+        FlushCached::Member.new(member).clear_list_voted_all_polls
+        true
         # Activity.create_activity_poll_series(member, poll_series, 'Vote')
       else
         return false

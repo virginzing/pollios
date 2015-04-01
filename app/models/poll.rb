@@ -743,8 +743,7 @@ class Poll < ActiveRecord::Base
           Trigger::Vote.new(member, find_poll, find_choice).trigger!
 
           member.flush_cache_my_vote
-          member.flush_cache_my_vote_all
-
+          FlushCached::Member.new(member).clear_list_voted_all_polls
           [find_poll, history_voted]
         end
 
@@ -803,16 +802,17 @@ class Poll < ActiveRecord::Base
   def self.view_poll(poll, member)
     HistoryView.transaction do
       begin
-      @poll = poll.reload
-      @member = member
+        @poll = poll.reload
+        @member = member
 
-      unless Member.viewed_polls.include?(@poll.id)
-        HistoryView.create! member_id: @member.id, poll_id: @poll.id
-        Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
-        @poll.update_columns(view_all: @poll.view_all + 1)
-        FlushCached::Member.new(@member).clear_list_history_viewed_polls
-      end
-
+        unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
+          HistoryView.create! member_id: @member.id, poll_id: @poll.id
+          Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
+          @poll.update_columns(view_all: @poll.view_all + 1)
+          FlushCached::Member.new(@member).clear_list_history_viewed_polls
+        end
+      rescue => e
+        puts "message => #{e.message}"
       end
     end
   end

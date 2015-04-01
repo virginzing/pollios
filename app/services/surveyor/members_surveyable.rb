@@ -54,7 +54,7 @@ class Surveyor::MembersSurveyable
           end
 
           find_surveyed.flush_cache_my_vote
-          find_surveyed.flush_cache_my_vote_all
+          FlushCached::Member.new(find_surveyed).clear_list_voted_all_polls
 
           Rails.cache.delete( ['Poll', poll_id ] )
           true

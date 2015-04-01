@@ -233,9 +233,8 @@ class ApplicationController < ActionController::Base
       Member.list_group_active = init_list_group.active
       Member.reported_polls = init_list_poll.reports
       Member.viewed_polls   = init_list_poll.history_viewed
-
-      Member.voted_polls    = Member.current_member.cached_my_voted_all
-      Member.watched_polls  = Member.current_member.cached_watched
+      Member.voted_polls    = init_list_poll.voted_all
+      Member.watched_polls  = init_list_poll.watches
       # p "=== End ==="
     end
   end
