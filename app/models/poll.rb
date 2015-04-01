@@ -99,17 +99,10 @@ class Poll < ActiveRecord::Base
   scope :available, -> {
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     member_block = Member.list_friend_block.map(&:id)  ## member ids
-
-    if member_report_poll.present? && member_block.present?
-      having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block)
-    elsif member_report_poll.present?
-      having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.id NOT IN (?)", member_report_poll)
-    elsif member_block.present?
-      having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.member_id NOT IN (?)", member_block)
-    else
-      having_status_poll(:gray, :white).where(draft: false)
-    end
-    
+        
+    query = having_status_poll(:gray, :white).where(draft: false).where("#{table_name}.id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
+    query = query.where("#{table_name}.member_id NOT IN (?)", member_block) if member_block.count > 0
+    query
   }
 
   scope :have_vote, -> { where("polls.vote_all > 0") }

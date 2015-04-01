@@ -10,14 +10,10 @@ class PollMember < ActiveRecord::Base
   scope :available, -> {
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     member_block = Member.list_friend_block.map(&:id)  ## member ids
-
-    if member_report_poll.present? && member_block.present?
-      where("#{table_name}.poll_id NOT IN (?) AND #{table_name}.member_id NOT IN (?)", member_report_poll, member_block).where("polls.draft = 'f'") 
-    elsif member_report_poll.present?
-      where("#{table_name}.poll_id NOT IN (?)", member_report_poll).where("polls.draft = 'f'") 
-    elsif member_block.present?
-      where("#{table_name}.member_id NOT IN (?)", member_block).where("polls.draft = 'f'") 
-    end
+    
+    query = where("polls.draft = 'f'").where("#{table_name}.poll_id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
+    query = query.where("#{table_name}.member_id NOT IN (?)", member_block) if member_block.count > 0
+    query
   }
 
   # scope :unexpire, -> {
