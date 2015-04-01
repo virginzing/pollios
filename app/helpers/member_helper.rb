@@ -1,15 +1,15 @@
 module MemberHelper
   extend Enumerize
-  extend ActiveModel::Naming
 
   enumerize :gender, :in => { :male => 1, :female => 2, :other => 3 }, scope: :true, predicates: true
   enumerize :interests, :in => {
     :anime => 1,
     :manga => 2,
     :goods => 3
-  }, scope: :true, predicates: true, multiple: true
+  }, predicates: true, multiple: true
 
   enumerize :member_type, :in => { citizen: 0, celebrity: 1, brand: 2, company: 3 }, predicates: true, default: :citizen, scope: true
+  
   enumerize :status_account, :in => { normal: 1, blacklist: -1 }, default: :normal, predicates: true, scope: :having_status_account
 
   enumerize :register, :in => { in_app: 0, web_mobile: 1 }

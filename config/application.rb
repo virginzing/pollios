@@ -64,6 +64,8 @@ module Pollios
       config.page_method_name = :per_page_kaminari
     end
 
+    config.active_record.raise_in_transactional_callbacks = true
+
     # config.active_record.schema_format = :sql
 
     # config.action_dispatch.rescue_responses["MobilesController::Forbidden"] = :forbidden

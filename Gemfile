@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-ruby "2.0.0"
+ruby "2.2.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.4'
+gem 'rails', '4.2.0'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '4.0.3'
+gem 'sass-rails'
 gem 'less-rails'
 gem 'compass-rails'
 
@@ -14,7 +14,7 @@ gem 'compass-rails'
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -31,9 +31,9 @@ gem 'jbuilder', github: 'rails/jbuilder'
 # gem 'foundation-rails', github: 'zurb/foundation-rails'
 # gem 'foundation_rails_helper'
 
-gem 'enumerize'
+gem 'enumerize', github: 'brainspec/enumerize'
 gem 'pg', '0.17.0'
-gem 'activerecord-postgres-hstore'
+# gem 'activerecord-postgres-hstore'
 gem 'nested-hstore'
 gem 'roo'
 
@@ -108,7 +108,6 @@ gem 'rails_admin'
 gem 'devise'
 # gem 'paper_trail', '~> 3.0.6'
 gem "sass", "~> 3.2.5"
-gem 'active_model_serializers'
 gem "gretel"
 
 gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
@@ -152,11 +151,12 @@ gem 'apns'
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
 
-gem 'draper', '~> 1.3'
+gem 'active_model_serializers', '0.9.2'
+gem 'draper', '1.4.0'
 
 gem 'batch_api', :git => 'git://github.com/easyPEP/batch_api.git'
 
-gem 'api_taster', '~> 0.8'
+gem 'api_taster'
 gem 'friendly_id', '5.0.4'
 
 gem 'settingslogic'
