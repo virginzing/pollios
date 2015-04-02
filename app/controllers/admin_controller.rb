@@ -73,7 +73,19 @@ class AdminController < ApplicationController
       member = Member.find_by(email: login_as_params[:email])
       cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
       flash[:success] = "Login success as #{member.email}"
-      redirect_to dashboard_path
+
+      @feedback = member.get_company.using_service.include?("Feedback")
+      @internal_survey = member.get_company.using_service.include?("Survey")
+
+      if @feedback && @internal_survey
+        redirect_to select_services_path
+      else
+        if @feedback
+          redirect_to feedback_dashboard_path
+        else
+          redirect_to company_dashboard_path
+        end
+      end
     rescue => e
       flash[:error] = "Error"
       redirect_to commercials_path
