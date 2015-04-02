@@ -749,6 +749,7 @@ class Member < ActiveRecord::Base
       end
     end
     FlushCached::Member.new(self).clear_list_groups
+    FlushCached::Group.new(find_group_member.group).clear_list_members
     # cached_flush_active_group
     find_group_member.group
   end

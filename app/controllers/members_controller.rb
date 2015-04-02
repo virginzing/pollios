@@ -190,7 +190,6 @@ class MembersController < ApplicationController
         end
 
         if fullname || description || avatar
-          FlushCached::Group.new(@current_member).clear_list_members
           FlushCached::Member.new(@current_member).clear_list_friends
         end
 

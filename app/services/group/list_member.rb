@@ -35,7 +35,7 @@ class Group::ListMember
   end
   
   def cached_members
-    Rails.cache.fetch("/group/#{@group.id}-#{@group.updated_at.to_i}/members", :expires_in => 12.hours) do
+    Rails.cache.fetch("group/#{@group.id}/members") do
       members.to_a
     end
   end

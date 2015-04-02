@@ -30,7 +30,7 @@ class GroupController < ApplicationController
   def edit_group
     @group.update!(edit_group_params)
     Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.is_company?
-    Group::ListMember.new(@group).cached_all_members.collect{|member| FlushCached::Member.new(member).clear_list_groups }
+    FlushCached::Group.new(@group).clear_list_group_all_member_in_group
   end
 
   def add_friend_to_group

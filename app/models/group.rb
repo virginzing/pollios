@@ -123,6 +123,7 @@ class Group < ActiveRecord::Base
       if @group.group_type_company? && !@group.system_group
         CompanyMember.add_member_to_company(@member, @group.get_company) 
         Activity.create_activity_group(@member, @group, 'Join') 
+        FlushCached::Group.new(@group).clear_list_members
       end
 
       clear_request_group(@member, @member)
@@ -156,7 +157,7 @@ class Group < ActiveRecord::Base
 
         Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
 
-        @group.increment!(:member_count)
+        FlushCached::Group.new(@group).clear_list_members
 
         clear_request_group(@member, @friend)
 

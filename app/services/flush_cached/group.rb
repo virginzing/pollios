@@ -1,17 +1,19 @@
 class FlushCached::Group
-  def initialize(member)
-    @member = member
+  def initialize(group)
+    @group = group
   end
 
+
+  def clear_list_group_all_member_in_group
+    list_member_in_group = Group::ListMember.new(@group)
+
+    list_member_in_group.cached_all_members.each do |member|
+      FlushCached::Member.new(member).clear_list_groups
+    end
+  end
 
   def clear_list_members
-    init_list_group = Member::ListGroup.new(@member)
-
-    init_list_group.active.each do |group|
-      group.touch
-    end
-    
+    Rails.cache.delete("group/#{@group.id}/members")
   end
-
   
 end
