@@ -251,14 +251,16 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
+    init_member_list_friend = Member::ListFriend.new(member)
+
+    raise ExceptionHandler::Forbidden, "You and #{friend.get_name} not friends" unless init_member_list_friend.active.map(&:id).include?(friend.id)
+
     if @find_member && @find_friend
       check_that_follow
-      # flush_cached_friend(member_id, friend_id)
-
-      # Rails.cache.delete([ member_id, 'block_friend'])
       FlushCached::Member.new(member).clear_one_friend
       FlushCached::Member.new(friend).clear_one_friend
     end
+
     [@find_member, @find_friend]
   end
 
