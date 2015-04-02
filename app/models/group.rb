@@ -217,13 +217,12 @@ class Group < ActiveRecord::Base
     @group
   end
 
-  def self.add_friend_to_group(group, member, friend_id, custom_data = nil)
+  def self.add_friend_to_group(group, member, friend_id, custom_data = {})
     group_id = group.id
     member_id = member.id
 
     list_friend = friend_id.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group)
-    # find_master_of_group = GroupMember.where("group_id = ? AND is_master = ?", group_id, true).first
     find_admin_group = group.get_admin_group.map(&:id)
 
     unless group.system_group

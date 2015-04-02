@@ -4,7 +4,7 @@ class InviteFriendWorker
 
   sidekiq_options unique: true
 
-  def perform(member_id, friend_ids, group_id, custom_data = nil)
+  def perform(member_id, friend_ids, group_id, custom_data = {})
     begin
       member = Member.cached_find(member_id)
       group = Group.cached_find(group_id)
@@ -56,14 +56,12 @@ class InviteFriendWorker
           notify: hash_list_member_badge[member.id],
           request: hash_list_member_request_count[member.id]
         }
-
-        puts "member_id => #{member_id}"
         NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
       Apn::App.first.send_notifications
-    rescue => e
-      puts "InviteFriendWorker => #{e.message}"
+    # rescue => e
+    #   puts "InviteFriendWorker => #{e.message}"
     end
   end
 
