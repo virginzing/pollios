@@ -20,7 +20,7 @@ class PollsController < ApplicationController
 
   # before_action :restrict_access, only: [:overall_timeline]
   
-  after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
+  # after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
 
   before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
@@ -486,19 +486,11 @@ class PollsController < ApplicationController
   end
 
   def overall_timeline
-    if params[:api_version].to_i < 6
-      overall_timeline = OverallTimeline.new(@current_member, options_params)
-      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = overall_timeline.poll_overall
-      @group_by_name = overall_timeline.group_by_name
-      @total_entries = overall_timeline.total_entries
-      @unvote_count = overall_timeline.unvote_count
-    else
-      overall_timeline = V6::OverallTimeline.new(@current_member, options_params)
-      @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.get_timeline
-      @group_by_name = overall_timeline.group_by_name
-      @total_entries = overall_timeline.total_entries
-      # @hash_priority = overall_timeline.get_hash_priority
-    end
+    overall_timeline = V6::OverallTimeline.new(@current_member, options_params)
+    @list_polls, @list_shared, @order_ids, @next_cursor = overall_timeline.get_timeline
+    @group_by_name = overall_timeline.group_by_name
+    @total_entries = overall_timeline.total_entries
+    # @hash_priority = overall_timeline.get_hash_priority
   end
 
   def group_timeline
