@@ -274,13 +274,14 @@ class Group < ActiveRecord::Base
         find_member_in_group.destroy
 
         member.remove_role :group_admin, find_member_in_group.group
-        # Group.flush_cached_member_active(find_member_in_group.group.id)
+
+        FlushCached::Group.new(self).clear_list_members
       else
         raise ExceptionHandler::NotFound, "Not found this member in group"
       end
 
-      # Rails.cache.delete([friend_id, 'group_active'])
       FlushCached::Member.new(member).clear_list_groups
+
       self
     end
   end
@@ -347,9 +348,10 @@ class Group < ActiveRecord::Base
   # end
 
   def get_member_count
-    Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/member_count") do
-      group_members_active.map(&:id).count
-    end
+    # Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/member_count") do
+    #   group_members_active.map(&:id).count
+    # end
+    Group::ListMember.new(self).active.to_a.count
   end
 
   def get_all_member_count
