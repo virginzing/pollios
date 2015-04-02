@@ -167,3 +167,7 @@ input.disabled {
 .tooltip {
   opacity: 1;
 }
+
+section.branch_list > div > span > label {
+  display: block;
+}

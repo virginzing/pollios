@@ -54,6 +54,8 @@ class CompaniesController < ApplicationController
   end
 
   def send_email
+    begin
+
     list_email_text = invite_code_params[:list_email].split("\r\n")
     list_email_file = []
     file = invite_code_params[:file]
@@ -87,6 +89,11 @@ class CompaniesController < ApplicationController
         flash[:error] = "Error"
         format.html { redirect_to via_email_path } 
       end
+    end
+
+    rescue => e
+      flash[:error] = "Something went wrong"
+      redirect_to via_email_path
     end
   end
 
