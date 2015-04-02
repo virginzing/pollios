@@ -23,7 +23,7 @@ class PollMember < ActiveRecord::Base
     where("polls.expire_status = 'f'")
   }
 
-  LIMIT_TIMELINE = 3000
+  LIMIT_TIMELINE = 500
 
   def self.find_poll_celebrity_or_public(type)
     celebrtiy = Member.having_member_type(:celebrity).pluck(:id)

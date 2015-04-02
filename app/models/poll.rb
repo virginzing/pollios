@@ -111,7 +111,7 @@ class Poll < ActiveRecord::Base
   }
 
   LIMIT_POLL = 30
-  LIMIT_TIMELINE = 3000
+  LIMIT_TIMELINE = 500
 
   self.per_page = 20
 

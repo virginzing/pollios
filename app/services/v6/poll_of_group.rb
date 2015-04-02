@@ -1,7 +1,7 @@
 class V6::PollOfGroup
   include GroupApi
 
-  LIMIT_TIMELINE = 1000
+  LIMIT_TIMELINE = 500
   LIMIT_POLL = 20
 
   attr_accessor :next_cursor
