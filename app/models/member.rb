@@ -707,7 +707,7 @@ class Member < ActiveRecord::Base
   def self.check_subscribe
     Member.where("date(subscribe_expire) = ?", (Date.today + 51.days).to_s).each do |member|
       Member::ListFriend.new(member).follower.each do |follower|
-         FlushCached::Member.new(follower).clear_one_friend
+         FlushCached::Member.new(follower).clear_list_friends
       end
       member.update!(subscription: false, member_type: :citizen)
     end

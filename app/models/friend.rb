@@ -86,8 +86,8 @@ class Friend < ActiveRecord::Base
   #       status = :invite
   #     end
   #     # flush_cached_friend(member_id, friend_id)
-  #     FlushCached::Member.new(find_member).clear_one_friend
-  #     FlushCached::Member.new(find_friend).clear_one_friend
+  #     FlushCached::Member.new(find_member).clear_list_friends
+  #     FlushCached::Member.new(find_friend).clear_list_friends
 
   #     AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test?
   #     [find_friend, status]
@@ -154,8 +154,8 @@ class Friend < ActiveRecord::Base
           AddFriendWorker.perform_async(@member.id, @friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test?
         end
 
-        FlushCached::Member.new(@member).clear_one_friend
-        FlushCached::Member.new(@friend).clear_one_friend
+        FlushCached::Member.new(@member).clear_list_friends
+        FlushCached::Member.new(@friend).clear_list_friends
 
       end
 
@@ -208,7 +208,7 @@ class Friend < ActiveRecord::Base
         create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
       end
 
-      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(member).clear_list_friends
       FlushCached::Member.new(friend).clear_list_followers
 
       Activity.create_activity_friend( member, friend ,'Follow')
@@ -232,7 +232,7 @@ class Friend < ActiveRecord::Base
 
     if find_following.present?
 
-      FlushCached::Member.new(member).clear_one_friend
+      FlushCached::Member.new(member).clear_list_friends
       FlushCached::Member.new(friend).clear_list_followers
 
       find_following.destroy
@@ -257,8 +257,8 @@ class Friend < ActiveRecord::Base
 
     if find_member && find_friend
       check_that_follow(member, find_member, friend, find_friend)
-      FlushCached::Member.new(member).clear_one_friend
-      FlushCached::Member.new(friend).clear_one_friend
+      FlushCached::Member.new(member).clear_list_friends
+      FlushCached::Member.new(friend).clear_list_friends
     end
 
     [find_member, find_friend]
@@ -293,12 +293,14 @@ class Friend < ActiveRecord::Base
 
         AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
         
+        FlushCached::Member.new(member).clear_list_followers
+        FlushCached::Member.new(friend).clear_list_followers
       else
         check_that_follow(member, find_member, friend, find_friend)
       end
 
-      FlushCached::Member.new(member).clear_one_friend
-      FlushCached::Member.new(friend).clear_one_friend
+      FlushCached::Member.new(member).clear_list_friends
+      FlushCached::Member.new(friend).clear_list_friends
 
       [friend, :friend, active_status]
 
@@ -343,8 +345,11 @@ class Friend < ActiveRecord::Base
       search_member(member_id, friend_id).update_attributes!(block: type_block)
       search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
 
-      FlushCached::Member.new(member).clear_one_friend
-      FlushCached::Member.new(friend).clear_one_friend
+      FlushCached::Member.new(member).clear_list_friends
+      FlushCached::Member.new(friend).clear_list_friends
+      
+      FlushCached::Member.new(member).clear_list_followers
+      FlushCached::Member.new(friend).clear_list_followers
 
       true
     rescue => e

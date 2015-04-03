@@ -190,7 +190,7 @@ class MembersController < ApplicationController
         end
 
         if fullname || description || avatar
-          FlushCached::Member.new(@current_member).clear_list_friends
+          FlushCached::Member.new(@current_member).clear_list_friends_all_members
         end
 
         if cover_preset.present? && @current_member.cover.present?
