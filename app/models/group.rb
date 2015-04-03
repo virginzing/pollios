@@ -123,7 +123,6 @@ class Group < ActiveRecord::Base
       if @group.group_type_company? && !@group.system_group
         CompanyMember.add_member_to_company(@member, @group.get_company) 
         Activity.create_activity_group(@member, @group, 'Join') 
-        FlushCached::Group.new(@group).clear_list_members
       end
 
       clear_request_group(@member, @member)
@@ -131,6 +130,7 @@ class Group < ActiveRecord::Base
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
 
+      FlushCached::Group.new(@group).clear_list_members
       FlushCached::Member.new(@member).clear_list_groups
     end
     @group
@@ -235,7 +235,7 @@ class Group < ActiveRecord::Base
         GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         FlushCached::Member.new(friend).clear_list_groups
       end
-      
+
       FlushCached::Group.new(group).clear_list_members
 
       InviteFriendWorker.perform_async(member_id, list_friend, group_id, custom_data) unless Rails.env.test?
