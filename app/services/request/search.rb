@@ -11,7 +11,7 @@ class Request::Search
   end
 
   def search
-    @params[:search]
+    @params[:search].downcase if @params[:search]
   end
 
   def next_member
@@ -71,9 +71,7 @@ class Request::Search
 
 
   def groups
-    groups = Group.joins(:group_members_active).select("groups.*, count(group_members.member_id) as amount_member")
-                  .group("groups.id")
-                  .where("(groups.name LIKE ? AND groups.public = 't') OR (groups.public_id LIKE ? AND groups.public = 't')", "%#{search}%", "%#{search}%")
+    groups = Group.where("(lower(groups.name) LIKE ? AND groups.public = 't') OR (groups.public_id LIKE ? AND groups.public = 't')", "%#{search}%", "%#{search}%")
                   .order("name asc")
 
     groups = groups.paginate(per_page: PER_PAGE, page: next_group)
