@@ -13,8 +13,8 @@ class FlushCached::Member
     Rails.cache.delete("member/#{@member.id}/friends")
   end
 
-  def clear_one_follower
-    Rails.cache.delete("member/#{@member.id}/follower")
+  def clear_list_followers
+    Rails.cache.delete("member/#{@member.id}/followers")
   end
 
   def clear_list_groups

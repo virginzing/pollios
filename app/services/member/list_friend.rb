@@ -11,8 +11,8 @@ class Member::ListFriend
     @cached_all_friends ||= cached_friends
   end
 
-  def cached_follower
-    @cached_follower ||= cached_follower
+  def cached_followers
+    @cached_followers ||= cached_followers
   end
 
   def active
@@ -36,7 +36,7 @@ class Member::ListFriend
   end
 
   def follower
-    cached_follower.select{|user| user if user.member_following == true && user.member_status != 1}
+    cached_followers.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
   def friend_count
@@ -62,7 +62,7 @@ class Member::ListFriend
 
   end
 
-  def all_follower
+  def all_followers
     Member.joins("inner join friends on members.id = friends.follower_id") \
           .where("friends.followed_id = #{@member.id}") \
           .select("members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following")
@@ -74,9 +74,9 @@ class Member::ListFriend
     end
   end
 
-  def cached_follower
-    Rails.cache.fetch("member/#{@member.id}/follower") do
-      all_follower.to_a
+  def cached_followers
+    Rails.cache.fetch("member/#{@member.id}/followers") do
+      all_followers.to_a
     end
   end
   

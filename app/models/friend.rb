@@ -209,7 +209,7 @@ class Friend < ActiveRecord::Base
       end
 
       FlushCached::Member.new(member).clear_one_friend
-      FlushCached::Member.new(friend).clear_one_follower
+      FlushCached::Member.new(friend).clear_list_followers
 
       Activity.create_activity_friend( member, friend ,'Follow')
       # AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } ) unless Rails.env.test?
@@ -233,7 +233,7 @@ class Friend < ActiveRecord::Base
     if find_following.present?
 
       FlushCached::Member.new(member).clear_one_friend
-      FlushCached::Member.new(friend).clear_one_follower
+      FlushCached::Member.new(friend).clear_list_followers
 
       find_following.destroy
     else
@@ -324,6 +324,11 @@ class Friend < ActiveRecord::Base
     else
       find_friend.update!(status: :nofriend)
     end
+
+    FlushCached::Member.new(member_object).clear_list_followers
+    FlushCached::Member.new(friend_object).clear_list_followers
+    
+    true
   end
 
   def self.block_or_unblock_friend(friend, type_block)
