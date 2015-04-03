@@ -235,6 +235,9 @@ class Group < ActiveRecord::Base
         GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         FlushCached::Member.new(friend).clear_list_groups
       end
+      
+      FlushCached::Group.new(group).clear_list_members
+
       InviteFriendWorker.perform_async(member_id, list_friend, group_id, custom_data) unless Rails.env.test?
     end
 
