@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Search" do
 
-  let!(:member) { create(:member) }
+  let!(:member) { create(:member, fullname: "Nutty") }
 
   let!(:group) { create(:group, name: "Nut Group", public: true) }
 
