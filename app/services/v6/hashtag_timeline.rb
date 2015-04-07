@@ -75,7 +75,9 @@ class V6::HashtagTimeline
   end
 
   def recent_tags_popular
-    Tag.joins(:taggings).select("tags.*, count(taggings.tag_id) as count") \
+    Tag.joins(:taggings => [:poll => :poll_members]).select("tags.*, count(taggings.tag_id) as count") \
+        .where("polls.series = 'f'") \
+        .where("polls.vote_all > 0 AND polls.in_group = 'f'") \
         .where("date(taggings.created_at + interval '7 hour') BETWEEN ? AND ?", Date.current, Date.current) \
         .group("taggings.tag_id, tags.id") \
         .order("count desc").limit(10)
