@@ -1,0 +1,2 @@
+module AppReportsHelper
+end
