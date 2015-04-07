@@ -44,6 +44,10 @@ class V6::HashtagTimeline
     cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
   end
 
+  def get_recent_search_tags
+    TypeSearch.find_search_tags(@member)
+  end
+
   private
 
   # def tag_popular
