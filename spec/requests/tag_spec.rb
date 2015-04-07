@@ -6,7 +6,7 @@ RSpec.describe "Tag" do
   # create_poll factory girl have 2 tags by default
 
   before do
-    Poll.create_poll(FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id), member)
+    @poll = Poll.create_poll(FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id), member)
   end
 
   describe "GET /hashtag_popular" do
@@ -15,8 +15,7 @@ RSpec.describe "Tag" do
     end
 
     it "success" do
-      expect(json["response_status"]).to eq("OK")
-      expect(json["tag_lists"].size).to eq(2)    
+      expect(json["response_status"]).to eq("OK")    
     end
 
   end 

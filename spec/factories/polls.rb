@@ -14,6 +14,7 @@ FactoryGirl.define do
   factory :create_poll, class: Poll do
     title "ทดสอบ #eiei #nut"
     expire_within 2
+    in_group false
     choices ["yes", "no"]
     type_poll "binary"
   end
