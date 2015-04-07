@@ -76,10 +76,6 @@ class V6::HashtagTimeline
         .order("count desc").limit(10)
   end
 
-  def cached_recent_tags_popular
-    Rails.cache.fetch('tags/recent_tags_popular') { recent_tags_popular.map(&:name) }
-  end
-
   def report_poll_filter(query)
     query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.count > 0
     query
