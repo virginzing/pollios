@@ -28,8 +28,12 @@ class V6::HashtagTimeline
     @following_ids ||= Member.list_friend_following.map(&:id)
   end
 
+  def get_recent_tags_popular_names
+    @recent_tags_popular_ids ||= recent_tags_popular.map(&:name)
+  end
+
   def get_hashtag_popular
-    @hashtag_popular ||= tag_popular.map(&:name)
+    @hashtag_popular ||= (get_recent_tags_popular_names | cached_tags_popular_names)
   end
 
   def get_timeline
@@ -42,20 +46,38 @@ class V6::HashtagTimeline
 
   private
 
-  def tag_popular
-    query = Tag.joins(:taggings => [:poll => :poll_members]).
-      where("polls.in_group_ids = '0'").
-      where("polls.vote_all > 0").
-      where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0 AND poll_members.series = 'f')", true, your_friend_ids).
-      select("tags.*, count(taggings.tag_id) as count").
-      group("taggings.tag_id, tags.id").
-      order("count desc").limit(5)
+  # def tag_popular
+  #   query = Tag.joins(:taggings => [:poll => :poll_members]).
+  #     where("polls.in_group_ids = '0'").
+  #     where("polls.vote_all > 0").
+  #     where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0 AND poll_members.series = 'f')", true, your_friend_ids).
+  #     select("tags.*, count(taggings.tag_id) as count").
+  #     group("taggings.tag_id, tags.id").
+  #     order("count desc").limit(5)
 
-    query = report_poll_filter(query)
-    query = hidden_poll_filter(query)
-    query = block_poll_filter(query)
+  #   query
+  # end
 
-    query
+  def tags_popular
+    Tag.joins(:taggings).select("tags.*, count(taggings.tag_id) as count") \
+        .where("date(taggings.created_at + interval '7 hour') BETWEEN ? AND ?", 60.days.ago.to_date, Date.yesterday) \
+        .group("taggings.tag_id, tags.id") \
+        .order("count desc").limit(10)
+  end
+
+  def cached_tags_popular_names
+    Rails.cache.fetch('tags_popular') { tags_popular.map(&:name) }
+  end
+
+  def recent_tags_popular
+    Tag.joins(:taggings).select("tags.*, count(taggings.tag_id) as count") \
+        .where("date(taggings.created_at + interval '7 hour') BETWEEN ? AND ?", Date.current, Date.current) \
+        .group("taggings.tag_id, tags.id") \
+        .order("count desc").limit(10)
+  end
+
+  def cached_recent_tags_popular
+    Rails.cache.fetch('tags/recent_tags_popular') { recent_tags_popular.map(&:name) }
   end
 
   def report_poll_filter(query)

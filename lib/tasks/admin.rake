@@ -43,6 +43,11 @@ namespace :admin do
     Sidekiq::Cron::Job.create(name: "Check subscribe of member - each day", cron: '5 17 * * *', klass: 'CheckSubscribeWorker')
   end
 
+  desc "Reset Popular tag worker"
+  task :reset_tags_popular_cron => :environment do
+    Sidekiq::Cron::Job.create(name: "Reset popular tags - each day", cron: "1 17 * * *", klass: 'ResetPopularTagWorker')
+  end
+
   desc "Create Signup Campaign as free 5 public poll"
   task :new_campaign_5_public_poll => :environment do
     Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years,
