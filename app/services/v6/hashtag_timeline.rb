@@ -108,14 +108,19 @@ class V6::HashtagTimeline
 
     new_your_friend_ids = ((your_friend_ids | your_following_ids) << member_id)
 
+    # query = PollMember.available.unexpire.joins(:poll => :tags).includes( :poll => [:poll_groups])
+    #                   .where("polls.series = 'f'")
+    #                   .where("tags.name = ?", query_tag)
+    #                   .where("(#{poll_friend_query})" \
+    #                            "OR (#{poll_group_query})" \
+    #                            "OR (#{poll_public_query})",
+    #                            new_your_friend_ids,
+    #                            your_group_ids).references(:poll_groups)
+
     query = PollMember.available.unexpire.joins(:poll => :tags).includes( :poll => [:poll_groups])
                       .where("polls.series = 'f'")
                       .where("tags.name = ?", query_tag)
-                      .where("(#{poll_friend_query})" \
-                               "OR (#{poll_group_query})" \
-                               "OR (#{poll_public_query})",
-                               new_your_friend_ids,
-                               your_group_ids).references(:poll_groups)
+                      .where("(polls.in_group = 'f') OR (polls.in_group = 't' AND poll_groups.group_id IN (?))", your_group_ids).references(:poll_groups)         
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
 
