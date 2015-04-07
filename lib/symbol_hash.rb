@@ -8,7 +8,8 @@ module SymbolHash
     :comment => 'Comment',
     :request_group => 'RequestGroup',
     :save_poll_later => 'SavePollLater',
-    :reward => 'Reward'
+    :reward => 'Reward',
+    :subscription => 'Subscription'
   }
 
   ACTION = {
