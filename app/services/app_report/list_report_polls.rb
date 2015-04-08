@@ -11,7 +11,7 @@ class AppReportListReportPolls
   end
 
   def get_list_report_polls
-    @get_list_report_polls ||= query_report_polls
+    @get_list_report_polls = query_report_polls
   end
 
   def get_next_cursor
@@ -22,10 +22,11 @@ class AppReportListReportPolls
     get_list_report_polls.total_entries
   end
 
+
   private
 
   def query_report_polls
-    query = Poll.having_status_poll(:gray, :white).where("report_count != 0 AND in_group = 'f'")
+    query = Poll.includes(:member).having_status_poll(:gray).where("report_count != 0 AND in_group = 'f'").order("report_count desc, created_at desc")
     query = query.paginate(per_page: PER_PAGE, page: next_cursor_report_polls)
     query
   end

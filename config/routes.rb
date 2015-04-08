@@ -4,8 +4,6 @@ require 'api_constraints'
 
 Pollios::Application.routes.draw do
 
-  get 'app_reports/list_polls'
-
   get 'services', to: 'select_services#index',  as: :select_services
 
   get 'list_members', to: 'members#list_members'
@@ -22,6 +20,17 @@ Pollios::Application.routes.draw do
     collection do
       get 'users_and_groups'
       get 'load_recent_search'
+    end
+  end
+
+  namespace :app_report, defaults: { format: :json } do
+    resources :report_polls do
+      collection do
+        get 'list_polls',     to: 'report_polls#list_polls'
+        get 'poll/:id',       to: 'report_polls#detail'
+        post 'poll/:id/ban',  to: 'report_polls#ban'
+        post 'poll/:id/no_ban', to: 'report_polls#no_ban'
+      end
     end
   end
 

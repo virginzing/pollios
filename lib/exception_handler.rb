@@ -5,6 +5,7 @@ module ExceptionHandler
     include ActiveSupport::Rescuable
     rescue_from NotFound, :with => :not_found
     rescue_from Forbidden, :with => :forbdden
+    rescue_from UnprocessableEntity, :with => :unprocessable_entity
     rescue_from MemberNotFoundHtml, :with => :known_error_html
     rescue_from MobileNotFound, :with => :mobile_not_found
     rescue_from MobileForbidden, :with => :mobile_forbidden
@@ -14,6 +15,7 @@ module ExceptionHandler
 
   class NotFound < StandardError; end
   class Forbidden < StandardError; end
+  class UnprocessableEntity < StandardError; end
   class MemberNotFoundHtml < StandardError; end
   class MobileNotFound < StandardError; end
   class MobileForbidden < StandardError; end
@@ -27,6 +29,10 @@ module ExceptionHandler
 
   def forbdden(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbidden
+  end
+
+  def unprocessable_entity(ex)
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unprocessable_entity
   end
 
   def known_error_html(ex)
