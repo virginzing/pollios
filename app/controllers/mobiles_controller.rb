@@ -11,7 +11,9 @@ class MobilesController < ApplicationController
   before_action :set_current_member, only: [:vote_questionnaire, :vote_poll]
   before_action :set_poll, only: [:vote_poll]
   after_action :delete_cookie, only: [:authen_facebook]
-
+  
+  caches_page :terms_of_service, :privacy_policy
+  
   def terms_of_service
     render layout: false
   end
@@ -21,7 +23,7 @@ class MobilesController < ApplicationController
   end
 
   def home
-    
+
   end
 
   def dashboard

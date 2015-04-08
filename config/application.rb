@@ -70,6 +70,8 @@ module Pollios
     config.exceptions_app = self.routes
     # Compass.sass_engine_options[:load_paths].collect { |path| path.try(:root) }.compact
 
+    config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
+    
     config.middleware.use BatchApi::RackMiddleware do |batch_config|
       # you can set various configuration options:
       # batch_config.verb = :post # default :post

@@ -151,6 +151,7 @@ gem 'apns'
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
 
+gem 'actionpack-page_caching'
 gem 'active_model_serializers', '0.9.2'
 gem 'draper', '1.4.0'
 
