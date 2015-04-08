@@ -38,14 +38,14 @@ namespace :admin do
 
   desc "Create sidekiq cron job"
   task :create_sidekiq_cron => :environment do
-    Sidekiq::Cron::Job.create(name: "SavePollWorker - every at 19:00", cron: '0 12 * * *', klass: 'SavePollWorker')
+    Sidekiq::Cron::Job.create(name: "SavePollWorker - every at 18:00", cron: '0 18 * * * Asia/Bangkok', klass: 'SavePollWorker')
     Sidekiq::Cron::Job.create(name: "RecurringPollWorker - each hourly", cron: '0 * * * *', klass: 'RecurringPollWorker')
-    Sidekiq::Cron::Job.create(name: "Check subscribe of member - each day at 00:10", cron: '50 13 * * * Asia/Bangkok', klass: 'CheckSubscribeWorker')
+    Sidekiq::Cron::Job.create(name: "Check subscribe of member - each day at 00:10", cron: '58 13 * * * Asia/Bangkok', klass: 'CheckSubscribeWorker')
   end
 
   desc "Reset Popular tag worker"
   task :reset_tags_popular_cron => :environment do
-    Sidekiq::Cron::Job.create(name: "Reset popular tags - each day", cron: "1 17 * * *", klass: 'ResetPopularTagWorker')
+    Sidekiq::Cron::Job.create(name: "Reset popular tags - each day", cron: "0 0 * * * Asia/Bangkok", klass: 'ResetPopularTagWorker')
   end
 
   desc "Create Signup Campaign as free 5 public poll"
