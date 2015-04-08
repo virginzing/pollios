@@ -714,7 +714,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.notify_nearly_expire_subscription
-    list_member_nearly_subscribe_expire = Member.where("date(subscribe_expire + interval '7 hour') = ?", Date.today + 3.days).map(&:id).uniq
+    list_member_nearly_subscribe_expire = Member.where("date(subscribe_expire + interval '7 hour') = ?", Time.zone.today + 3.days).map(&:id).uniq
     ApnNearlyExpireSubscriptionWorker.perform_async(0, list_member_nearly_subscribe_expire) if list_member_nearly_subscribe_expire.count > 0
   end
 
