@@ -7,6 +7,7 @@ class AppReportListReportPolls
   end
 
   def next_cursor_report_polls
+    @params[:next_cursor] = 1 if @params[:next_cursor].to_i == 0
     @params[:next_cursor] || 1
   end
 
