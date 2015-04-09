@@ -188,7 +188,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def get_original_polls
+  def get_original_images
     cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }  
   end
 
@@ -534,7 +534,7 @@ class Poll < ActiveRecord::Base
         type_poll = poll[:type_poll]
         is_public = poll[:is_public] || "0"
         photo_poll = poll[:photo_poll]
-        original_polls = poll[:original_polls]
+        original_images = poll[:original_images]
         allow_comment = poll[:allow_comment] || false
         creator_must_vote = poll[:creator_must_vote]
         require_info = poll[:require_info].present? ? true : false
@@ -552,6 +552,12 @@ class Poll < ActiveRecord::Base
           convert_expire_date = Time.now + expire_date.to_i.day
         else
           convert_expire_date = Time.now + 100.years.to_i
+        end
+
+        if photo_poll.present?
+          new_photo_poll = photo_poll.split("/upload/").last
+        else
+          new_photo_poll = nil
         end
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
@@ -582,14 +588,15 @@ class Poll < ActiveRecord::Base
         end
 
         @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
-                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
+                        type_poll: type_poll, photo_poll: new_photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
 
         @poll.qrcode_key = @poll.generate_qrcode_key
 
         if @poll.valid? && choices
           @poll.save!
 
-          @poll.add_attachment_image(original_polls) if original_polls.present?
+          @poll.update_column(:photo_poll, new_photo_poll) if new_photo_poll.present?
+          @poll.add_attachment_image(original_images) if original_images.present?
 
           @choices = Choice.create_choices(@poll.id, choices)
 
@@ -630,9 +637,13 @@ class Poll < ActiveRecord::Base
     # puts "have poll #{@poll}"
   end
 
-  def add_attachment_image(original_polls)
-    original_polls.each_with_index do |attachment, index|
-      poll_attachments.create!(image: attachment, order_image: index+1)
+  def add_attachment_image(original_images)
+    new_original_images = original_images.collect!{|e| e.split("/upload/").last }
+    puts "new_original_images => #{new_original_images}"
+    
+    new_original_images.each_with_index do |url_attachment, index|
+      poll = poll_attachments.create!(image: url_attachment, order_image: index+1)
+      poll.update_column(:image, url_attachment)
     end
   end
 

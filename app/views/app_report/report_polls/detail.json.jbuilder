@@ -11,7 +11,7 @@ json.expire_date poll.expire_date.to_i
 json.created_at poll.created_at.to_i
 json.type_poll poll.type_poll
 json.is_public poll.public
-json.original_polls poll.get_original_polls if poll.photo_poll.present?
+json.original_images poll.get_original_images if poll.photo_poll.present?
 json.choices poll.cached_choices do |choice|
   json.choice_id choice.id
   json.answer choice.answer
