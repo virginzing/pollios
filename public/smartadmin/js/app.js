@@ -419,7 +419,7 @@
 		var default_option = {
 	        text: text,
 	        validators: {
-	            maxSize: 500000
+	            maxSize: 5000000
 	        },
 	        reject: function(file, errors) {
 	            if (errors.mimeType) {

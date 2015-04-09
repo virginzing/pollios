@@ -405,6 +405,11 @@ class Member < ActiveRecord::Base
     save!
   end
 
+  def remove_old_avatar
+    remove_avatar!
+    save!
+  end
+
   def set_friend_limit
     self.friend_limit = FRIEND_LIMIT
   end

@@ -172,9 +172,22 @@ class MembersController < ApplicationController
       fullname = update_profile_params[:fullname]
       first_signup = update_profile_params[:first_signup]
 
+      init_avatar = ImageUrl.new(avatar)
+      init_cover = ImageUrl.new(cover)
+
       CoverPreset.count_number_preset(cover_preset) if cover_preset
 
       @current_member.cover_preset = "0" if cover
+
+      if cover && !init_cover.check_from_upload_file # upload via url
+        @current_member.remove_old_cover 
+        @current_member.update_column(:cover, init_cover.split_url_for_cloudinary)
+      end
+
+      if avatar && !init_avatar.check_from_upload_file # upload via url
+        @current_member.remove_old_avatar
+        @current_member.update_column(:avatar, init_avatar.split_url_for_cloudinary)
+      end
 
       if @current_member.update(update_profile_params.except(:member_id))
         if fullname

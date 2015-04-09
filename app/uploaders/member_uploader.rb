@@ -10,7 +10,7 @@ class MemberUploader < CarrierWave::Uploader::Base
   
   version :thumbnail do
     process :eager => true
-    process :resize_to_fill => [180, 180]
+    process :resize_to_fit => [180, 180]
     cloudinary_transformation :quality => 80
   end
 
@@ -22,7 +22,7 @@ class MemberUploader < CarrierWave::Uploader::Base
 
   version :thumbnail_small do
     process :eager => true
-    process :resize_to_fill => [40, 40]
+    process :resize_to_fit => [40, 40]
     cloudinary_transformation :quality => 80
   end    
 
