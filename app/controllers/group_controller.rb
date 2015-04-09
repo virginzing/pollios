@@ -29,6 +29,13 @@ class GroupController < ApplicationController
 
   def edit_group
     @group.update!(edit_group_params)
+    init_cover_group = ImageUrl.new(edit_group_params[:cover])
+
+    unless init_cover_group.check_from_upload_file?
+      @group.remove_old_cover
+      @group.update_column(:cover, init_cover_group.split_url_for_cloudinary)
+    end
+
     Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.is_company?
     FlushCached::Group.new(@group).clear_list_group_all_member_in_group
   end

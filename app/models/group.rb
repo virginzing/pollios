@@ -342,6 +342,11 @@ class Group < ActiveRecord::Base
     description.present? ? description : ""
   end
 
+  def remove_old_cover
+    remove_cover!
+    save!
+  end
+
   def get_poll_not_vote_count
     poll_groups_ids = Poll.available.joins(:groups).where("poll_groups.group_id = #{self.id}").uniq.map(&:id)
     my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
