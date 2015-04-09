@@ -548,16 +548,18 @@ class Poll < ActiveRecord::Base
         in_group_ids = group_id.presence || "0"
         in_group = group_id.present? ? true : false
 
+        init_photo_poll = ImageUrl.new(photo_poll)
+
         if expire_date.present?
           convert_expire_date = Time.now + expire_date.to_i.day
         else
           convert_expire_date = Time.now + 100.years.to_i
         end
 
-        if photo_poll.present?
-          new_photo_poll = ImageUrl.new(photo_poll).split_url_for_cloudinary
+        if photo_poll.present? && !init_photo_poll.check_from_upload_file?
+          new_photo_poll = init_photo_poll.split_url_for_cloudinary
         else
-          new_photo_poll = nil
+          new_photo_poll = photo_poll
         end
 
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
@@ -595,7 +597,7 @@ class Poll < ActiveRecord::Base
         if @poll.valid? && choices
           @poll.save!
 
-          @poll.update_column(:photo_poll, new_photo_poll) if new_photo_poll.present?
+          @poll.update_column(:photo_poll, new_photo_poll) unless init_photo_poll.check_from_upload_file?
           @poll.add_attachment_image(original_images) if original_images.present?
 
           @choices = Choice.create_choices(@poll.id, choices)

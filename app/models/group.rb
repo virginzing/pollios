@@ -189,33 +189,38 @@ class Group < ActiveRecord::Base
   end
 
   def self.build_group(member, group)
-    member_id = group[:member_id]
-    photo_group = group[:photo_group]
-    description = group[:description]
-    cover = group[:cover]
-    set_privacy = group[:public] || false
-    set_admin_post_only = group[:admin_post_only] || false
+    Group.transaction do
+      member_id = group[:member_id]
+      photo_group = group[:photo_group]
+      description = group[:description]
+      cover = group[:cover]
+      set_privacy = group[:public] || false
+      set_admin_post_only = group[:admin_post_only] || false
+      name = group[:name]
+      friend_id = group[:friend_id]
 
-    name = group[:name]
-    friend_id = group[:friend_id]
+      init_cover_group = ImageUrl.new(cover)
+      @group = new(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, group_type: :normal, admin_post_only: set_admin_post_only)
 
-    @group = create(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, group_type: :normal, admin_post_only: set_admin_post_only)
+      if @group.save!
+        unless init_cover_group.check_from_upload_file?
+          @group.update_column(:cover, init_cover_group.split_url_for_cloudinary)
+        end
+        @group.group_members.create(member_id: member_id, is_master: true, active: true)
+        Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
+        GroupStats.create_group_stats(@group)
 
-    if @group.valid?
-      @group.group_members.create(member_id: member_id, is_master: true, active: true)
-      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
-      GroupStats.create_group_stats(@group)
+        if @group.public
+          Activity.create_activity_group(member, @group, 'Create')
+        end
 
-      if @group.public
-        Activity.create_activity_group(member, @group, 'Create')
+        # Rails.cache.delete([member_id, 'group_active'])
+        FlushCached::Member.new(member).clear_list_groups
+
+        add_friend_to_group(@group, member, friend_id) if friend_id
       end
-
-      # Rails.cache.delete([member_id, 'group_active'])
-      FlushCached::Member.new(member).clear_list_groups
-
-      add_friend_to_group(@group, member, friend_id) if friend_id
+      @group
     end
-    @group
   end
 
   def self.add_friend_to_group(group, member, friend_id, custom_data = {})
