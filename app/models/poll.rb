@@ -555,7 +555,7 @@ class Poll < ActiveRecord::Base
         end
 
         if photo_poll.present?
-          new_photo_poll = photo_poll.split("/upload/").last
+          new_photo_poll = ImageUrl.new(photo_poll).split_url_for_cloudinary
         else
           new_photo_poll = nil
         end
@@ -638,9 +638,8 @@ class Poll < ActiveRecord::Base
   end
 
   def add_attachment_image(original_images)
-    new_original_images = original_images.collect!{|e| e.split("/upload/").last }
-    puts "new_original_images => #{new_original_images}"
-    
+    new_original_images = original_images.collect!{|image_url| ImageUrl.new(image_url).split_url_for_cloudinary }
+
     new_original_images.each_with_index do |url_attachment, index|
       poll = poll_attachments.create!(image: url_attachment, order_image: index+1)
       poll.update_column(:image, url_attachment)
