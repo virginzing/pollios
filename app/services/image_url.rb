@@ -7,12 +7,12 @@ class ImageUrl
     @url || ""
   end
 
-  def check_from_upload_file?
-    url.class == ActionDispatch::Http::UploadedFile ? true : false
+  def from_image_url?
+    url.class != ActionDispatch::Http::UploadedFile ? true : false
   end
   
   def split_url_for_cloudinary
-    unless check_from_upload_file?
+    if from_image_url?
       url.split("/upload/").last
     end
   end

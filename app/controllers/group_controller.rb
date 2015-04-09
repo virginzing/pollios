@@ -31,7 +31,7 @@ class GroupController < ApplicationController
     @group.update!(edit_group_params)
     init_cover_group = ImageUrl.new(edit_group_params[:cover])
 
-    unless init_cover_group.check_from_upload_file?
+    if edit_group_params[:cover] && init_cover_group.from_image_url?
       @group.remove_old_cover
       @group.update_column(:cover, init_cover_group.split_url_for_cloudinary)
     end

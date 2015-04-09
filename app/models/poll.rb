@@ -556,12 +556,6 @@ class Poll < ActiveRecord::Base
           convert_expire_date = Time.now + 100.years.to_i
         end
 
-        if photo_poll.present? && !init_photo_poll.check_from_upload_file?
-          new_photo_poll = init_photo_poll.split_url_for_cloudinary
-        else
-          new_photo_poll = photo_poll
-        end
-
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
 
         if in_group
@@ -590,14 +584,17 @@ class Poll < ActiveRecord::Base
         end
 
         @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
-                        type_poll: type_poll, photo_poll: new_photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
+                        type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
 
         @poll.qrcode_key = @poll.generate_qrcode_key
 
         if @poll.valid? && choices
           @poll.save!
+          
+          if photo_poll && init_photo_poll.from_image_url?
+            @poll.update_column(:photo_poll, init_photo_poll.split_url_for_cloudinary)
+          end
 
-          @poll.update_column(:photo_poll, new_photo_poll) unless init_photo_poll.check_from_upload_file?
           @poll.add_attachment_image(original_images) if original_images.present?
 
           @choices = Choice.create_choices(@poll.id, choices)

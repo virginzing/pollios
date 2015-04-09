@@ -203,9 +203,11 @@ class Group < ActiveRecord::Base
       @group = new(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, group_type: :normal, admin_post_only: set_admin_post_only)
 
       if @group.save!
-        unless init_cover_group.check_from_upload_file?
+
+        if cover && init_cover_group.from_image_url?
           @group.update_column(:cover, init_cover_group.split_url_for_cloudinary)
         end
+        
         @group.group_members.create(member_id: member_id, is_master: true, active: true)
         Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
         GroupStats.create_group_stats(@group)
