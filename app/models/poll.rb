@@ -636,11 +636,19 @@ class Poll < ActiveRecord::Base
   end
 
   def add_attachment_image(original_images)
-    new_original_images = original_images.collect!{|image_url| ImageUrl.new(image_url).split_url_for_cloudinary }
+    init_original_images = ImageUrl.new(original_images.first)
 
-    new_original_images.each_with_index do |url_attachment, index|
-      poll = poll_attachments.create!(image: url_attachment, order_image: index+1)
-      poll.update_column(:image, url_attachment)
+    if init_original_images.from_image_url?
+      new_original_images = original_images.collect!{|image_url| ImageUrl.new(image_url).split_url_for_cloudinary }
+
+      new_original_images.each_with_index do |url_attachment, index|
+        poll = poll_attachments.create!(image: url_attachment, order_image: index+1)
+        poll.update_column(:image, url_attachment)
+      end
+    else
+      original_images.each_with_index do |attachment, index|
+        poll_attachments.create!(image: attachment, order_image: index+1)
+      end
     end
   end
 
