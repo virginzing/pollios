@@ -631,10 +631,9 @@ class Poll < ActiveRecord::Base
 
       rescue ArgumentError => detail
         [@poll = nil, detail.message ]
-      end ## begin
+      end
 
     end ## transaction
-    # puts "have poll #{@poll}"
   end
 
   def add_attachment_image(original_images)
