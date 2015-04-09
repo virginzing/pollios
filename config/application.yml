@@ -40,11 +40,11 @@ production:
 
 
 # set Env to heroku
-# heroku config:set LIMIT_MEMBER=200
+# heroku config:set LIMIT_MEMBER=200 -a codeapp-pollios
 # or
 # figaro heroku:set -e production -a codeapp-pollios
 # update limit of member
-# Member.unscoped.where(created_company: false).order("id asc").limit(190).update_all(waiting: false)
+# Member.unscoped.where(created_company: false).order("id asc").limit(200).update_all(waiting: false)
 
 # Cloudinary email: codeapp.server@gmail.com
 # password: 9code7app9
@@ -52,4 +52,4 @@ production:
 # heroku maintenance:on -a codeapp-pollios
 # heroku maintenance:off -a codeapp-pollios
 
-# git push heroku master && heroku run rake cached:clear -a codeapp-pollios && heroku restart -a codeapp-pollios
+# git push heroku upload_direct:master && heroku run rake cached:clear -a codeapp-pollios && heroku restart -a codeapp-pollios
