@@ -710,12 +710,17 @@ class Member < ActiveRecord::Base
   end
 
   def self.check_subscribe
-    Member.where("date(subscribe_expire + interval '7 hour') = ?", Date.today).each do |member|
+    list_member_subscribe_expiration = Member.where("date(subscribe_expire + interval '7 hour') = ?", Date.today)
+
+    list_member_subscribe_expiration_member_ids = list_member_subscribe_expiration.map(&:id).uniq
+    
+    list_member_subscribe_expiration.each do |member|
       Member::ListFriend.new(member).follower.each do |follower|
          FlushCached::Member.new(follower).clear_list_friends
       end
       member.update!(subscription: false, subscribe_expire: nil, member_type: :citizen)
     end
+    ApnNotifyExpireSubscriptionWorker.perform_async(0, list_member_subscribe_expiration_member_ids) if list_member_subscribe_expiration_member_ids.count > 0
   end
 
   def self.notify_nearly_expire_subscription
