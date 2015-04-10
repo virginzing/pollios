@@ -274,7 +274,7 @@ class PollsController < ApplicationController
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
             raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
-            if @poll.in_group_ids.split(",").count > 1
+            if @poll.groups.count > 1
               delete_poll_in_more_group
             else
               delete_poll_in_one_group
