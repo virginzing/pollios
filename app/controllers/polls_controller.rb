@@ -792,8 +792,7 @@ class PollsController < ApplicationController
   end
 
   def set_group
-    @group = Group.find_by(id: params[:group_id])
-    raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+    @group = Group.cached_find(params[:group_id])
   end
 
   def set_company
