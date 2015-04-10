@@ -1,4 +1,7 @@
 class ReportPoll
+
+  NUMBER_REPORT_COUNT = 10
+
   def initialize(member, poll, options = {})
     @member = member
     @poll = poll
@@ -20,6 +23,10 @@ class ReportPoll
   def report_increment
     report_power = @member.report_power
     @poll.increment!(:report_count, report_power)
+
+    if @poll.report_count >= NUMBER_REPORT_COUNT
+      @poll.update!(status_poll: :black)
+    end
   end
 
   def clear_cached
