@@ -245,26 +245,30 @@ class Friend < ActiveRecord::Base
   end
 
   def self.unfriend(friend)
-    friend_id = friend[:friend_id]
-    member_id = friend[:member_id]
+    begin
+      friend_id = friend[:friend_id]
+      member_id = friend[:member_id]
 
-    find_member = search_member(member_id, friend_id)
-    find_friend = search_friend(friend_id, member_id)
+      find_member = search_member(member_id, friend_id)
+      find_friend = search_friend(friend_id, member_id)
 
-    member = Member.cached_find(member_id)
-    friend = Member.cached_find(friend_id)
+      member = Member.cached_find(member_id)
+      friend = Member.cached_find(friend_id)
 
-    init_member_list_friend = Member::ListFriend.new(member)
+      init_member_list_friend = Member::ListFriend.new(member)
 
-    raise ExceptionHandler::Forbidden, "You and #{friend.get_name} not friends" unless init_member_list_friend.active.map(&:id).include?(friend.id)
+      raise ExceptionHandler::Forbidden, "You and #{friend.get_name} not friends" unless init_member_list_friend.active.map(&:id).include?(friend.id)
 
-    if find_member && find_friend
-      check_that_follow(member, find_member, friend, find_friend)
-      FlushCached::Member.new(member).clear_list_friends
-      FlushCached::Member.new(friend).clear_list_friends
+      if find_member && find_friend
+        check_that_follow(member, find_member, friend, find_friend)
+        FlushCached::Member.new(member).clear_list_friends
+        FlushCached::Member.new(friend).clear_list_friends
+      end
+
+      [find_member, find_friend]
+    rescue => e
+      true
     end
-
-    [find_member, find_friend]
   end
 
   def self.accept_or_deny_freind(friend, accept)
@@ -307,27 +311,33 @@ class Friend < ActiveRecord::Base
 
       [friend, :friend, active_status]
 
+    rescue => e
+      true
     end
   end
 
   def self.check_that_follow(member_object, find_member, friend_object, find_friend)
-    unless find_member.following
-      find_friend.update!(status: :nofriend)
-      find_member.destroy
-    else
-      find_member.update!(status: :nofriend)
+    if find_member.present?
+      unless find_member.following
+        find_friend.update!(status: :nofriend)
+        find_member.destroy
+      else
+        find_member.update!(status: :nofriend)
+      end
     end
     
-    unless find_friend.following
-      find_old_member = Friend.where(follower: member_object, followed: friend_object).first
+    if find_friend.present?
+      unless find_friend.following
+        find_old_member = Friend.where(follower: member_object, followed: friend_object).first
 
-      if find_old_member.present?
-        find_old_member.update!(status: :nofriend)
+        if find_old_member.present?
+          find_old_member.update!(status: :nofriend)
+        end
+
+        find_friend.destroy
+      else
+        find_friend.update!(status: :nofriend)
       end
-
-      find_friend.destroy
-    else
-      find_friend.update!(status: :nofriend)
     end
 
     FlushCached::Member.new(member_object).clear_list_followers
