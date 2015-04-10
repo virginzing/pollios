@@ -988,11 +988,10 @@ class Member < ActiveRecord::Base
   end
 
   def serializer_member_detail  # for api
-    find_member_cached ||= Member.cached_find(self.id)
+    @find_member_cached ||= Member.cached_find(self.id)
 
-    @member_id = find_member_cached.id
-    @member_type = find_member_cached.member_type
-    serailizer_member_feed_info = MemberInfoFeedSerializer.new(find_member_cached).as_json()
+    @member_id = @find_member_cached.id
+    serailizer_member_feed_info = MemberInfoFeedSerializer.new(@find_member_cached).as_json()
     
     serailizer_member_feed_info = serailizer_member_feed_info.merge( { "status" => entity_info } )
   end
@@ -1013,7 +1012,7 @@ class Member < ActiveRecord::Base
       hash = Hash["add_friend_already" => false, "status" => :nofriend]
     end
 
-    if @member_type == "citizen" || @member_type == "brand"
+    if @find_member_cached.celebrity? || @find_member_cached.company?
       @my_following.include?(@member_id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
     else
       hash.merge!({"following" => "" })
