@@ -33,7 +33,7 @@ class GroupController < ApplicationController
 
     if edit_group_params[:cover] && init_cover_group.from_image_url?
       @group.remove_old_cover
-      @group.update_column(:cover, init_cover_group.split_url_for_cloudinary)
+      @group.update_column(:cover, init_cover_group.split_cloudinary_url)
     end
 
     Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.is_company?

@@ -181,12 +181,12 @@ class MembersController < ApplicationController
 
       if cover && init_cover.from_image_url? # upload via url
         @current_member.remove_old_cover 
-        @current_member.update_column(:cover, init_cover.split_url_for_cloudinary)
+        @current_member.update_column(:cover, init_cover.split_cloudinary_url)
       end
 
       if avatar && init_avatar.from_image_url? # upload via url
         @current_member.remove_old_avatar
-        @current_member.update_column(:avatar, init_avatar.split_url_for_cloudinary)
+        @current_member.update_column(:avatar, init_avatar.split_cloudinary_url)
       end
 
       if @current_member.update(update_profile_params.except(:member_id))

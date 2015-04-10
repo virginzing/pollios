@@ -205,7 +205,7 @@ class Group < ActiveRecord::Base
       if @group.save!
 
         if cover && init_cover_group.from_image_url?
-          @group.update_column(:cover, init_cover_group.split_url_for_cloudinary)
+          @group.update_column(:cover, init_cover_group.split_cloudinary_url)
         end
         
         @group.group_members.create(member_id: member_id, is_master: true, active: true)
@@ -216,7 +216,6 @@ class Group < ActiveRecord::Base
           Activity.create_activity_group(member, @group, 'Create')
         end
 
-        # Rails.cache.delete([member_id, 'group_active'])
         FlushCached::Member.new(member).clear_list_groups
 
         add_friend_to_group(@group, member, friend_id) if friend_id

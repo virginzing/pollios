@@ -11,7 +11,7 @@ class ImageUrl
     url.class != ActionDispatch::Http::UploadedFile ? true : false
   end
   
-  def split_url_for_cloudinary
+  def split_cloudinary_url
     if from_image_url?
       url.split("/upload/").last
     end
