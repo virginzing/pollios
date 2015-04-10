@@ -182,7 +182,7 @@ class MobilesController < ApplicationController
         else
           @poll = Poll.find_by(id: id)
           unless @poll.present?
-            flash[:notice] = "Poll not found"
+            flash[:notice] = "This poll was deleted from Pollios"
             redirect_to mobile_dashboard_path
           end
         end
@@ -282,7 +282,7 @@ class MobilesController < ApplicationController
 
   def set_poll
     @poll = Poll.find_by(id: params[:id])
-    raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+    raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
   end
 
   def close_questionnaire

@@ -458,6 +458,7 @@ class PollsController < ApplicationController
   end
 
   def detail
+    raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::UNDER_INSPECTION if @poll.black?
     raise_exception_without_group if @poll.in_group
     Poll.view_poll(@poll, @current_member)
     @expired = @poll.expire_date < Time.now
@@ -786,8 +787,6 @@ class PollsController < ApplicationController
   private
 
   def set_poll
-    # @poll = Poll.find_by(id: params[:id])
-    # raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
     @poll = Poll.cached_find(params[:id])
   end
 

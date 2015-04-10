@@ -22,6 +22,13 @@ module ExceptionHandler
   class MobileSignInAlready < StandardError; end
   class MobileVoteQuestionnaireAlready < StandardError; end
 
+  module Message
+    module Poll
+      NOT_FOUND = "This poll was deleted from Pollios."
+      UNDER_INSPECTION = "Many users had reported this poll to us. We've temporary removed it."
+    end
+  end
+
   def not_found(ex)
     # Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :not_found

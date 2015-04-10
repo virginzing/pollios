@@ -163,7 +163,7 @@ class Poll < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @poll = find_by(id: id)
-      raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
       @poll
     end
   end

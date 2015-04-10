@@ -76,7 +76,7 @@ RSpec.describe "Poll" do
       post "/poll/1/vote", { member_id: member.id, choice_id: choice_one.id }, { "Accept" => "application/json" }
 
       expect(json["response_status"]).to eq("ERROR")
-      expect(json["response_message"]).to eq("Poll not found")
+      expect(json["response_message"]).to eq(ExceptionHandler::Message::Poll::NOT_FOUND)
     end
 
     it "can not vote when not found choice" do

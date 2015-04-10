@@ -10,7 +10,7 @@ class SumVotePollWorker
 
       poll = Poll.find_by(id: poll_id)
 
-      raise ArgumentError.new("Poll not found") if poll.nil?
+      raise ArgumentError.new(ExceptionHandler::Message::Poll::NOT_FOUND) if poll.nil?
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 

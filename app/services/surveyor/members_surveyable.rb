@@ -37,7 +37,7 @@ class Surveyor::MembersSurveyable
           find_surveyed = Member.find_by(id: surveyed_id)
 
           raise ExceptionHandler::NotFound, "Surveyed not found" unless find_surveyed.present?
-          raise ExceptionHandler::NotFound, "Poll not found" unless @poll.present?
+          raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
           raise ExceptionHandler::NotFound, "Choice not found" unless find_choice.present?
 
           poll_series_id = @poll.series ? @poll.poll_series_id : 0

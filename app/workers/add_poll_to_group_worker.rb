@@ -10,7 +10,7 @@ class AddPollToGroupWorker
       group   = Group.cached_find(group_id)
       poll = Poll.raw_cached_find(poll_id)
 
-      raise ArgumentError.new("Poll not found") if poll.nil?
+      raise ArgumentError.new(ExceptionHandler::Message::Poll::NOT_FOUND) if poll.nil?
 
       @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
