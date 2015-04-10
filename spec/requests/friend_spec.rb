@@ -166,21 +166,41 @@ RSpec.describe "Friend" do
   end
 
   describe "POST /friend/accept" do
-    before do
-      @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
+    context "normal" do
+      before do
+        @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
 
-      @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
+        @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
 
-      post "/friend/accept.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+        post "/friend/accept.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(response.status).to eq(201)
+      end
+
+      it "be friend together" do
+        expect(@user_one.reload.status).to eq("friend")
+        expect(@user_two.reload.status).to eq("friend")
+      end
     end
 
-    it "success" do
-      expect(response.status).to eq(201)
-    end
+    context "it was canceling before it accepted" do
+      before do
+        @user_one = create(:friend, follower: member, followed: friend, active: true, status: 0)
 
-    it "be friend together" do
-      expect(@user_one.reload.status).to eq("friend")
-      expect(@user_two.reload.status).to eq("friend")
+        @user_two = create(:friend, follower: friend, followed: member, active: true, status: 2)
+      end
+
+      it "was canceling before accpeted" do
+        @user_one.destroy
+        @user_two.destroy
+
+        post "/friend/accept.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
+        expect(response.status).to eq(422)
+        expect(json["response_status"]).to eq("ERROR")
+      end
+
     end
   end
 

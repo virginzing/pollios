@@ -8,19 +8,8 @@ class Friend < ActiveRecord::Base
   validates :follower_id, presence: true
   validates :followed_id, presence: true
 
-  scope :search_member, -> (member_id, friend_id) { where(follower_id: member_id, followed_id: friend_id).first }
-  scope :search_friend, -> (friend_id, member_id) { where(follower_id: friend_id, followed_id: member_id).first }
-
-  # def self.friend_of_friend(friend)
-  #   friend_id = friend[:friend_id]
-
-  #   begin
-  #     find_friend = Member.find(friend_id)
-  #     friend_from_cached = find_friend.cached_get_friend_active
-  #   rescue => e
-  #     []
-  #   end
-  # end
+  # scope :search_member, -> (member_id, friend_id) { find_by(follower_id: member_id, followed_id: friend_id) }
+  # scope :search_friend, -> (friend_id, member_id) { find_by(follower_id: friend_id, followed_id: member_id) }
 
   def self.following_of_friend(friend)
     friend_id = friend[:friend_id]
@@ -31,70 +20,6 @@ class Friend < ActiveRecord::Base
       []
     end
   end
-
-  # def self.follower_of_friend(friend)
-  #   friend_id = friend[:friend_id]
-
-  #   begin
-  #     find_friend = Member.find(friend_id)
-  #     following_from_cached = find_friend.cached_get_follower
-  #   rescue => e
-  #     []
-  #   end
-  # end
-
-
-  # def self.add_friend(friend)
-  #   friend_id = friend[:friend_id]
-  #   member_id = friend[:member_id]
-
-  #   begin
-  #     create_new_record_friend = false
-  #     find_member = Member.cached_find(member_id)
-  #     find_friend = Member.cached_find(friend_id)
-
-  #     find_invitee = where(follower_id: member_id, followed_id: friend_id).having_status(:invitee).first
-  #     find_used_friend = where(follower_id: friend_id, followed_id: member_id).having_status(:nofriend).first
-  #     ever_following = where(follower_id: member_id, followed_id: friend_id, following: true).having_status(:nofriend).first
-
-  #     if find_invitee.present?
-  #       find_invitee.update_attributes!(status: :friend)
-  #       search_friend(friend_id, member_id).update_attributes!(status: :friend)
-  #       status = :friend
-  #       Activity.create_activity_friend( find_member, find_friend , ACTION[:become_friend])
-  #       Activity.create_activity_friend( find_friend, find_member , ACTION[:become_friend])
-  #     elsif find_used_friend
-  #       find_used_friend.update(status: :invitee)
-          
-  #       member = where(follower_id: find_member.id, followed_id: find_friend.id).first_or_initialize do |friend|
-  #         friend.follower_id = find_member.id
-  #         friend.followed_id = find_friend.id
-  #         friend.status = :invite
-  #         friend.save!
-  #         create_new_record_friend = true
-  #       end
-  #       member.update!(status: :invite) unless create_new_record_friend
-
-  #       status = :invite
-  #     elsif ever_following && find_friend.citizen?
-  #       ever_following.update(status: :invite)
-  #       create!(follower: find_friend, followed: find_member, status: :invitee)
-  #       status = :invite
-  #     else
-  #       create!(follower_id: member_id, followed_id: friend_id, status: :invite)
-  #       create!(follower_id: friend_id, followed_id: member_id, status: :invitee)
-  #       status = :invite
-  #     end
-  #     # flush_cached_friend(member_id, friend_id)
-  #     FlushCached::Member.new(find_member).clear_list_friends
-  #     FlushCached::Member.new(find_friend).clear_list_friends
-
-  #     AddFriendWorker.perform_async(find_member.id, find_friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test?
-  #     [find_friend, status]
-  #   rescue  => e
-      
-  #   end
-  # end
 
   def self.add_friend(friend_params)
     begin
@@ -171,7 +96,7 @@ class Friend < ActiveRecord::Base
     member_id = friend[:member_id]
 
     begin
-      search_member(member_id, friend_id).update_attributes!(close_friend: status)
+      find_by(follower_id: member_id, followed_id: friend_id).update!(close_friend: status)
     rescue => e
       nil
     end
@@ -249,8 +174,8 @@ class Friend < ActiveRecord::Base
       friend_id = friend[:friend_id]
       member_id = friend[:member_id]
 
-      find_member = search_member(member_id, friend_id)
-      find_friend = search_friend(friend_id, member_id)
+      find_member = find_by(follower_id: member_id, followed_id: friend_id)
+      find_friend = find_by(follower_id: friend_id, followed_id: member_id)
 
       member = Member.cached_find(member_id)
       friend = Member.cached_find(friend_id)
@@ -266,8 +191,6 @@ class Friend < ActiveRecord::Base
       end
 
       [find_member, find_friend]
-    rescue => e
-      true
     end
   end
 
@@ -276,8 +199,8 @@ class Friend < ActiveRecord::Base
       friend_id = friend[:friend_id]
       member_id = friend[:member_id]
 
-      find_member = search_member(member_id, friend_id)
-      find_friend = search_friend(friend_id, member_id)
+      find_member = find_by(follower_id: member_id, followed_id: friend_id)
+      find_friend = find_by(follower_id: friend_id, followed_id: member_id)
 
       member = Member.cached_find(member_id)
       friend = Member.cached_find(friend_id)
@@ -286,14 +209,13 @@ class Friend < ActiveRecord::Base
 
       if accept
         active_status = true
-
+        raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} has canceled to request friends" unless find_member.present?
         raise ExceptionHandler::Forbidden, "My friend has over 500 people" if (init_member_list_friend.friend_count >= member.friend_limit)
         raise ExceptionHandler::Forbidden, "Your friend has over 500 people" if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
         raise ExceptionHandler::Forbidden, "You and #{friend.get_name} is friends" if init_member_list_friend.active.map(&:id).include?(friend.id)
-        raise ExceptionHandler::NotFound, "Not found" unless where(follower: member, followed: friend).having_status(:invitee).first.present?
         
-        search_member(member_id, friend_id).update_attributes!(active: active_status, status: :friend)
-        search_friend(friend_id, member_id).update_attributes!(active: active_status, status: :friend)
+        find_member.update_attributes!(active: active_status, status: :friend)
+        find_friend.update_attributes!(active: active_status, status: :friend)
 
         Activity.create_activity_friend( member, friend , ACTION[:become_friend])
         Activity.create_activity_friend( friend, member , ACTION[:become_friend])
@@ -308,10 +230,7 @@ class Friend < ActiveRecord::Base
 
       FlushCached::Member.new(member).clear_list_friends
       FlushCached::Member.new(friend).clear_list_friends
-
-      [friend, :friend, active_status]
-
-    rescue => e
+      # [friend, :friend, active_status]
       true
     end
   end
@@ -350,20 +269,23 @@ class Friend < ActiveRecord::Base
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
 
+    find_member = find_by(follower_id: member_id, followed_id: friend_id)
+    find_friend = find_by(follower_id: friend_id, followed_id: member_id)
+
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
     begin
+      if find_member && find_friend
+        find_member.update_attributes!(block: type_block)
+        find_friend.update_attributes!(visible_poll: !type_block)
 
-      search_member(member_id, friend_id).update_attributes!(block: type_block)
-      search_friend(friend_id, member_id).update_attributes!(visible_poll: !type_block)
-
-      FlushCached::Member.new(member).clear_list_friends
-      FlushCached::Member.new(friend).clear_list_friends
-      
-      FlushCached::Member.new(member).clear_list_followers
-      FlushCached::Member.new(friend).clear_list_followers
-
+        FlushCached::Member.new(member).clear_list_friends
+        FlushCached::Member.new(friend).clear_list_friends
+        
+        FlushCached::Member.new(member).clear_list_followers
+        FlushCached::Member.new(friend).clear_list_followers
+      end
       true
     rescue => e
       puts "error => #{e}"
