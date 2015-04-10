@@ -210,6 +210,7 @@ class Friend < ActiveRecord::Base
       if accept
         active_status = true
         raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} has canceled to request friends" unless find_member.present?
+        raise ExceptionHandler::UnprocessableEntity, "This request was cancelled", unless find_friend.present?
         raise ExceptionHandler::Forbidden, "My friend has over 500 people" if (init_member_list_friend.friend_count >= member.friend_limit)
         raise ExceptionHandler::Forbidden, "Your friend has over 500 people" if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
         raise ExceptionHandler::Forbidden, "You and #{friend.get_name} is friends" if init_member_list_friend.active.map(&:id).include?(friend.id)
