@@ -11,14 +11,16 @@ class TypeSearch
   def self.create_log_search_tags(member, message)
     @member = member
     @search_log = member_find_create_log
-
     old_search_tag = @search_log.search_tags
+
+    delete_current_message = old_search_tag.select{|e| e if e["message"] != message }
+
     hash_search_tag = {
       message: message,
       created_at: Time.zone.now
     }
 
-    new_search_tag = old_search_tag.insert(0, hash_search_tag)
+    new_search_tag = delete_current_message.insert(0, hash_search_tag)
 
     @search_log.update!(search_tags: new_search_tag)
   end
@@ -30,12 +32,14 @@ class TypeSearch
 
     old_search_users_and_groups = @search_log.search_users_and_groups
 
+    delete_current_message = old_search_users_and_groups.select{|e| e if e["message"] != message }
+
     hash_search_users_and_groups = {
       message: message,
       created_at: Time.zone.now
     }
     
-    new_search_users_and_groups = old_search_users_and_groups.insert(0, hash_search_users_and_groups)
+    new_search_users_and_groups = delete_current_message.insert(0, hash_search_users_and_groups)
 
     @search_log.update!(search_users_and_groups: new_search_users_and_groups)
   end
