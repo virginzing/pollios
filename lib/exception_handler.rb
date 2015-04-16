@@ -6,6 +6,7 @@ module ExceptionHandler
     rescue_from NotFound, :with => :not_found
     rescue_from Forbidden, :with => :forbdden
     rescue_from UnprocessableEntity, :with => :unprocessable_entity
+    rescue_from Unauthorized, :with => :unauthorized
     rescue_from MemberNotFoundHtml, :with => :known_error_html
     rescue_from MobileNotFound, :with => :mobile_not_found
     rescue_from MobileForbidden, :with => :mobile_forbidden
@@ -16,6 +17,7 @@ module ExceptionHandler
   class NotFound < StandardError; end
   class Forbidden < StandardError; end
   class UnprocessableEntity < StandardError; end
+  class Unauthorized < StandardError; end
   class MemberNotFoundHtml < StandardError; end
   class MobileNotFound < StandardError; end
   class MobileForbidden < StandardError; end
@@ -26,6 +28,15 @@ module ExceptionHandler
     module Poll
       NOT_FOUND = "This poll was deleted from Pollios."
       UNDER_INSPECTION = "Many users had reported this poll to us. We've temporary removed it."
+    end
+
+    module Member
+      BAN = "Your account is was terminated"
+      BLACKLIST = "Your account is being suspended"
+    end
+
+    module Token
+      WRONG = "You had already signed out of Pollios. Please sign in again"
     end
   end
 
@@ -40,6 +51,10 @@ module ExceptionHandler
 
   def unprocessable_entity(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unprocessable_entity
+  end
+
+  def unauthorized(ex)
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unauthorized
   end
 
   def known_error_html(ex)

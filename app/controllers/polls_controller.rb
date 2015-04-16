@@ -458,7 +458,9 @@ class PollsController < ApplicationController
   end
 
   def detail
-    raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::UNDER_INSPECTION if @poll.black?
+    raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Poll::UNDER_INSPECTION if @poll.black?
+    raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @poll.member.ban?
+    
     raise_exception_without_group if @poll.in_group
     Poll.view_poll(@poll, @current_member)
     @expired = @poll.expire_date < Time.now

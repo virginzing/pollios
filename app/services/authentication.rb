@@ -135,9 +135,9 @@ class Authentication
 
   def error_message
     if member.blacklist?
-      "blacklist"
+      member.status_account
     elsif member.ban?
-      "ban"
+      member.status_account
     else
       "Invalid email of password"
     end
@@ -145,11 +145,11 @@ class Authentication
 
   def error_message_header
     if member.blacklist?
-      "Your account is being suspended"
+      ExceptionHandler::Message::Member::BLACKLIST
     elsif member.ban?
-      "Your account is was terminated"
+      ExceptionHandler::Message::Member::BAN
     else
-      
+      ""
     end
   end
 

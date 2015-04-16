@@ -144,6 +144,8 @@ class Member < ActiveRecord::Base
 
   before_create :set_friend_limit
 
+  before_update { |member| Admin::BanMember.flush_cached_ban_members if member.status_account_changed? }
+
   after_commit :flush_cache
 
   scope :citizen,   -> { where(member_type: 0) }
@@ -219,6 +221,9 @@ class Member < ActiveRecord::Base
       field :cover_preset
       field :description
       field :status_account
+      field :blacklist_last_at
+      field :blacklist_count
+      field :ban_last_at
       field :point
       field :subscription
       field :subscribe_last
@@ -244,6 +249,9 @@ class Member < ActiveRecord::Base
       field :cover, :carrierwave
       field :key_color
       field :status_account
+      field :blacklist_last_at
+      field :blacklist_count
+      field :ban_last_at
       field :report_count
     end
 
