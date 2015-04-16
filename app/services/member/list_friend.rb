@@ -43,6 +43,10 @@ class Member::ListFriend
     cached_all_friends.select{|user| user if user.member_active == true && user.member_status == 1 }.to_a.count
   end
 
+  def blocked_by_someone
+    Friend.where(followed_id: @member.id, block: true).map(&:follower_id)
+  end
+
   def check_is_friend
     {
       active: active.map(&:id),

@@ -15,10 +15,12 @@ class ApnPoll
 
   def recipient_ids
     if member.citizen?
-      apn_friend_ids
+      member_ids = apn_friend_ids
     else
-      apn_friend_ids | follower_ids
+      member_ids = (apn_friend_ids | follower_ids)
     end
+
+    member_ids - @init_member_list_friend.blocked_by_someone
   end
 
   def member_name
