@@ -21,7 +21,7 @@ FACEBOOK_SECRET: "d319d5bd8b154df78811dc70aa33fe54"
 MAINTENANCE_MODE: "false"
 MAINTENANCE_MESSAGE: "Maintenance mode (around 23:00 - 6:00)"
 
-LIMIT_MEMBER: "200"
+LIMIT_MEMBER: "180"
 
 development:
   PUBLIC_POLL: "public_poll"

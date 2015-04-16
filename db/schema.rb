@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331090217) do
+ActiveRecord::Schema.define(version: 20150416080856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -686,6 +686,9 @@ ActiveRecord::Schema.define(version: 20150331090217) do
     t.boolean  "first_setting_anonymous",    default: true
     t.boolean  "receive_notify",             default: true
     t.string   "fb_id"
+    t.datetime "blacklist_last_at"
+    t.integer  "blacklist_count",            default: 0
+    t.datetime "ban_last_at"
   end
 
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree

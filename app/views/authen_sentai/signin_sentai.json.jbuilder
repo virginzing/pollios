@@ -9,6 +9,8 @@ if @response["response_status"] == "OK"
   else
     json.response_status "ERROR"
     json.response_message @auth.error_message
+    json.response_message_header @auth.error_message_header
+    json.response_message_detail @auth.error_message_detail
   end
 else
   json.response_status "ERROR"

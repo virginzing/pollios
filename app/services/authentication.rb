@@ -41,7 +41,7 @@ class Authentication
   end  
 
   def check_valid_member?
-    !member.blacklist?
+    !member.blacklist? && !member.ban?
   end
 
   def company_id
@@ -135,7 +135,29 @@ class Authentication
 
   def error_message
     if member.blacklist?
-      "This account is banned"
+      "blacklist"
+    elsif member.ban?
+      "ban"
+    else
+      "Invalid email of password"
+    end
+  end
+
+  def error_message_header
+    if member.blacklist?
+      "Your account is being suspended"
+    elsif member.ban?
+      "Your account is was terminated"
+    else
+      
+    end
+  end
+
+  def error_message_detail
+    if member.blacklist?
+      "You will be able to login again in 3 days."
+    elsif member.ban?
+      "All your polls were also deleted from Pollios."
     else
       "Invalid email or password."
     end

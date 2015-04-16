@@ -112,7 +112,7 @@ class AuthenSentaiController < ApplicationController
           wants.js
         else
           wants.html
-          wants.json { render status: 401 }
+          wants.json { render status: :unauthorized }
           wants.js
         end
 			else
