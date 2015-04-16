@@ -116,12 +116,10 @@ class ApplicationController < ActionController::Base
         format.html
       end
     else
-      if @current_member.blacklist?
-        respond_to do |format|
-          format.json { render json: Hash["response_status" => "ERROR", "response_message" => "This account is blacklist"], status: 401 }
-        end
-      end
+      raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BLACKLIST if @current_member.blacklist?
+      raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @current_member.ban?
     end
+    
     Member.current_member = @current_member
     @current_member
   end
