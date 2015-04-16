@@ -50,7 +50,7 @@ class PollsController < ApplicationController
       render :status => 201
     rescue => e
       @un_see_poll = nil
-      @response_message = "You already save to unsee poll"
+      @response_message = "You have already saved to unsee poll"
       render :status => 422
     end
   end
@@ -62,7 +62,7 @@ class PollsController < ApplicationController
       render status: 201
     rescue => e
       @save_later = nil
-      @response_message = "You already save for latar"
+      @response_message = "You have already saved for latar"
       render status: 422
     end
   end
@@ -84,7 +84,7 @@ class PollsController < ApplicationController
       render status: 201
     rescue => e
       @bookmark = nil
-      @response_message = "You already bookmark this poll"
+      @response_message = "You have already bookmarked this poll"
       render status: 422
     end
   end

@@ -52,4 +52,4 @@ production:
 # heroku maintenance:on -a codeapp-pollios
 # heroku maintenance:off -a codeapp-pollios
 
-# git push heroku upload_direct:master && heroku run rake cached:clear -a codeapp-pollios && heroku restart -a codeapp-pollios
+# git push heroku master && heroku run rake cached:clear -a codeapp-pollios && heroku restart -a codeapp-pollios
