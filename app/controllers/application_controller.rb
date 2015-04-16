@@ -109,17 +109,10 @@ class ApplicationController < ActionController::Base
 
   def set_current_member
     @current_member = Member.cached_find(params[:member_id])
-    
-    unless @current_member.present?
-      respond_to do |format|
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Member not found"], status: 404 }
-        format.html
-      end
-    else
-      raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BLACKLIST if @current_member.blacklist?
-      raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @current_member.ban?
-    end
-    
+  
+    raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BLACKLIST if @current_member.blacklist?
+    raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @current_member.ban?
+
     Member.current_member = @current_member
     @current_member
   end
