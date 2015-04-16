@@ -736,6 +736,16 @@ class Member < ActiveRecord::Base
     ApnNearlyExpireSubscriptionWorker.perform_async(0, list_member_nearly_subscribe_expire) if list_member_nearly_subscribe_expire.count > 0
   end
 
+  def self.check_blacklist_members
+    three_day_ago_blacklist_members = Member.where("date(blacklist_last_at + interval '7 hour') = ?", Time.zone.today - 3.days).uniq
+
+    three_day_ago_blacklist_members.each do |member|
+      member.update(status_account: :normal)
+    end
+    
+    true
+  end
+
   ########### Search Member #############
 
   def self.search_member(params)

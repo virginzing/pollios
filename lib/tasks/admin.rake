@@ -48,6 +48,11 @@ namespace :admin do
     Sidekiq::Cron::Job.create(name: "Reset popular tags - each day", cron: "0 0 * * * Asia/Bangkok", klass: 'ResetPopularTagWorker')
   end
 
+  desc "Check blacklist members"
+  task :check_blacklist_members => :environment do
+    Sidekiq::Cron::Job.create(name: "Check blacklist members - each day", cron: "0 0 * * * Asia/Bangkok", klass: 'CheckBlacklistMemberWorker')
+  end
+
   desc "Create Signup Campaign as free 5 public poll"
   task :new_campaign_5_public_poll => :environment do
     Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years,
