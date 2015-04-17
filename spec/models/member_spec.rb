@@ -77,4 +77,13 @@ RSpec.describe Member, :type => :model do
     end
   end
 
+  describe ".get_ban_members" do
+    let!(:member_one) { create(:member, fullname: "Ban Member 1", email: "ban_member_one@pollios.com", status_account: :ban) }
+    let!(:member_two) { create(:member, fullname: "Ban Member 2", email: "ban_member_two@pollios.com", status_account: :ban) }
+
+    it "have 2 members in list ban members" do
+      expect(Admin::BanMember.get_member_ids.length).to eq(2)
+    end
+  end
+
 end

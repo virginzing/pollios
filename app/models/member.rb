@@ -286,7 +286,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_company
-    company || company_member.company
+    company ? company : company_member ? company_member.company : nil
   end
 
   def get_public_id
@@ -742,7 +742,7 @@ class Member < ActiveRecord::Base
     three_day_ago_blacklist_members.each do |member|
       member.update(status_account: :normal)
     end
-    
+
     true
   end
 
