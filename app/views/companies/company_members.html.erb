@@ -48,6 +48,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Group</th>
+                <th>Join at</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -67,7 +68,8 @@
                     <% end %>
                     </ol>
                   </td>
-                  <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= company_delete_member_path(member_id: member.id, group_id: list_group, company_id: @find_company.id) %>" rel="nofollow">Delete</a></td>
+                  <td><%= member.company_member.created_at %></td>
+                  <td><a class="btn btn-default btn-pill" data-confirm="Are you sure?" data-method="delete" href="<%= company_delete_member_path(member_id: member.id, group_id: list_group, company_id: @find_company.id) %>" rel="nofollow">Remove</a></td>
                 </tr>
               <% end %>
             </tbody>

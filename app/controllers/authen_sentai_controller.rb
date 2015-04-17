@@ -190,11 +190,11 @@ class AuthenSentaiController < ApplicationController
         @feedback_redeemer = false
 
         if signup_company_params["feedback"].present? && signup_company_params["company_id"].present?
-          puts "here"
           @feedback_redeemer = true
           wants.html { redirect_to redeemers_path }
         end
-        wants.html {}
+
+        wants.html { redirect_to company_members_path }
         wants.json
         wants.js
       else

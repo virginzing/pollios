@@ -12,7 +12,7 @@ class Company::ListMember
   private
 
   def company_members
-    @company_members = Member.joins(:company_member).includes(:groups).where("company_members.company_id = ?", @company.id).uniq.references(:groups)
+    @company_members = Member.includes(:groups, :company_member).select("members.*").where("company_members.company_id = ?", @company.id).uniq.references(:groups)
   end
   
   
