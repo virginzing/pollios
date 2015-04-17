@@ -8,7 +8,7 @@ class CompaniesController < ApplicationController
   before_action :check_using_service
   before_action :find_group
   before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail, :edit_poll]
-  before_action :set_group, only: [:remove_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :update_group, :group_poll_detail]
+  before_action :set_group, only: [:remove_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :update_group, :group_poll_detail, :edit_group]
 
   before_action :set_questionnaire, only: [:questionnaire_detail]
 
@@ -479,8 +479,7 @@ class CompaniesController < ApplicationController
   end
 
   def company_members
-    # @members = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
-    @members = Member.joins(:company_member).includes(:groups).where("company_members.company_id = ?", set_company.id).uniq.references(:groups)
+    @members = Company::ListMember.new(set_company).get_list_members
   end
 
   def add_member # wait for new imprement
@@ -622,7 +621,7 @@ class CompaniesController < ApplicationController
   end
 
   def set_company
-    @find_company = current_member.company || current_member.company_member.company
+    @find_company = current_member.get_company
   end
 
   def set_group
