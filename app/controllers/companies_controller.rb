@@ -546,20 +546,21 @@ class CompaniesController < ApplicationController
     Group.transaction do 
       find_member = Member.find(params[:member_id])
 
-      params[:group_id].each do |group_id|
-        @group = find_member.cancel_or_leave_group(group_id, "L")
-        # Group.flush_cached_member_active(group_id)
+      if params[:group_id].present?
+        params[:group_id].each do |group_id|
+          @group = find_member.cancel_or_leave_group(group_id, "L")
+        end
       end
 
-      CompanyMember.remove_member_to_company(find_member, Company.find(params[:company_id]))
+      @company_member = CompanyMember.remove_member_to_company(find_member, Company.find(params[:company_id]))
 
       respond_to do |format|
-        if @group
+        if @company_member
           flash[:success] = "Remove successfully."
           format.html { redirect_to company_members_path }
         else
           flash[:error] = "Error"
-          format.html { render 'list_members' }
+          format.html { redirect_to company_members_path }
         end
       end
     end
