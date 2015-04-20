@@ -532,7 +532,7 @@ class Poll < ActiveRecord::Base
         member_id = poll[:member_id]
         friend_id = poll[:friend_id]
         type_poll = poll[:type_poll]
-        is_public = poll[:is_public] || "0"
+        is_public = poll[:is_public] || false
         photo_poll = poll[:photo_poll]
         original_images = poll[:original_images]
         allow_comment = poll[:allow_comment] || false
@@ -556,7 +556,7 @@ class Poll < ActiveRecord::Base
           convert_expire_date = Time.now + 100.years.to_i
         end
 
-        raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == "1") && (member.point <= 0)
+        raise ArgumentError, "Point remain 0" if (member.citizen? && is_public == true) && (member.point <= 0)
 
         if in_group
           if member.company?
@@ -575,11 +575,11 @@ class Poll < ActiveRecord::Base
         else
           if (member.celebrity? || member.brand?)
             @set_public = true
-            if is_public == "0"
+            if is_public == false
               @set_public = false
             end
           else
-            @set_public = is_public == "1" ? true : false
+            @set_public = is_public
           end
         end
 
@@ -612,7 +612,7 @@ class Poll < ActiveRecord::Base
               @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
             end
 
-            if member.citizen? && is_public == "1"
+            if member.citizen? && is_public == true
               member.decrement!(:point) if member.point > 0
             end
 
