@@ -77,6 +77,7 @@ group :test do
   gem 'shoulda-matchers', require: false
 end
 
+gem 'wannabe_bool'
 gem 'versioncake', github: 'bwillis/versioncake'
 gem 'rest-client'
 gem 'mongoid', github: 'mongoid/mongoid'

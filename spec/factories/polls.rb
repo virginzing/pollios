@@ -24,7 +24,7 @@ FactoryGirl.define do
     expire_within 2
     choices ["yes", "no"]
     type_poll "binary"
-    is_public "1"
+    is_public true
   end
 
 end

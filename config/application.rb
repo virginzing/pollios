@@ -11,7 +11,7 @@ require 'csv'
 require 'spreadsheet'
 require 'zip'
 require 'rqrcode_png'
-
+require 'wannabe_bool'
 
 # MultiJson.engine = :yajl
 # Benchmark.bmbm(5) do |x|
