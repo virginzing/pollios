@@ -17,7 +17,9 @@ class MobilesController < ApplicationController
   before_action :compress_gzip, only: [:product_id]
 
   def product_id
-
+    @list_product_id = [
+      ENV["1_PUBLIC_POLL"], ENV["5_PUBLIC_POLL"], ENV["10_PUBLIC_POLL"], ENV["1_MONTH"], ENV["1_YEAR"]
+    ]
   end
   
   def terms_of_service
