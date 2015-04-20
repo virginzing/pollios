@@ -64,4 +64,25 @@ class TypeSearch
     member_find_create_log["search_tags"].collect{|e| e["message"] }.uniq[0..9]
   end
 
+
+  def self.clear_search_users_and_groups(member)
+    begin
+      @member = member
+      @search_log = member_find_create_log
+      @search_log.update!(search_users_and_groups: [])
+    rescue => e
+      false
+    end
+  end
+
+  def self.clear_search_tags(member)
+    begin
+      @member = member
+      @search_log = member_find_create_log
+      @search_log.update!(search_tags: [])
+    rescue => e
+      false
+    end
+  end
+
 end

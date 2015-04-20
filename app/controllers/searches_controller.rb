@@ -22,6 +22,16 @@ class SearchesController < ApplicationController
     @recent_search_users_and_groups = TypeSearch.find_search_users_and_groups(@current_member)
   end
 
+  def clear_search_users_and_groups
+    @clear_search_users_and_groups = TypeSearch.clear_search_users_and_groups(@current_member)
+    render status: @clear_search_users_and_groups ? :created : :unprocessable_entity
+  end
+
+  def clear_search_tags
+    @clear_search_tags = TypeSearch.clear_search_tags(@current_member)
+    render status: @clear_search_tags ? :created : :unprocessable_entity
+  end
+
   private
 
   def users_and_groups_params

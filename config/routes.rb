@@ -20,6 +20,8 @@ Pollios::Application.routes.draw do
     collection do
       get 'users_and_groups'
       get 'load_recent_search'
+      get 'clear_search_users_and_groups'
+      get 'clear_search_tags'
     end
   end
 
