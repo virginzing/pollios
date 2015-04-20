@@ -509,6 +509,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'app' do
+    get 'product_id',       to: 'mobiles#product_id'
     get 'terms_of_service', to: 'mobiles#terms_of_service'
     get 'privacy_policy',   to: 'mobiles#privacy_policy'
   end

@@ -13,6 +13,12 @@ class MobilesController < ApplicationController
   after_action :delete_cookie, only: [:authen_facebook]
   
   caches_page :terms_of_service, :privacy_policy
+
+  before_action :compress_gzip, only: [:product_id]
+
+  def product_id
+
+  end
   
   def terms_of_service
     render layout: false

@@ -7,6 +7,7 @@ module ExceptionHandler
     rescue_from Forbidden, :with => :forbdden
     rescue_from UnprocessableEntity, :with => :unprocessable_entity
     rescue_from Unauthorized, :with => :unauthorized
+    rescue_from Maintenance, :with => :maintenance
     rescue_from MemberNotFoundHtml, :with => :known_error_html
     rescue_from MobileNotFound, :with => :mobile_not_found
     rescue_from MobileForbidden, :with => :mobile_forbidden
@@ -18,6 +19,7 @@ module ExceptionHandler
   class Forbidden < StandardError; end
   class UnprocessableEntity < StandardError; end
   class Unauthorized < StandardError; end
+  class Maintenance < StandardError; end
   class MemberNotFoundHtml < StandardError; end
   class MobileNotFound < StandardError; end
   class MobileForbidden < StandardError; end
@@ -38,6 +40,10 @@ module ExceptionHandler
     module Token
       WRONG = "You had already signed out of Pollios. Please sign in again"
     end
+
+    module Maintenance
+      OPEN = "Maintenance Mode"
+    end
   end
 
   def not_found(ex)
@@ -55,6 +61,10 @@ module ExceptionHandler
 
   def unauthorized(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unauthorized
+  end
+
+  def maintenance(ex)
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :service_unavailable
   end
 
   def known_error_html(ex)

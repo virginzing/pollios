@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
     if maintenance_mode == "true"
       respond_to do |wants|
         wants.html { }
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Maintenance Mode"], status: :service_unavailable }
+        wants.json { raise ExceptionHandler::Maintenance, ExceptionHandler::Message::Maintenance::OPEN }
       end
     end
   end
@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
     @current_guest = Guest.find_by(id: params[:guest_id])
     unless @current_guest.present?
       respond_to do |format|
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Error."]}
+        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Error."] }
       end
     end
   end

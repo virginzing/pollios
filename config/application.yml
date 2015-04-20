@@ -23,6 +23,9 @@ MAINTENANCE_MESSAGE: "Maintenance mode (around 23:00 - 6:00)"
 
 LIMIT_MEMBER: "180"
 
+PRODUCT_ID_IOS_STATUS: "OPEN"
+PRODUCT_ID_IOS: "901397748"
+
 development:
   PUBLIC_POLL: "public_poll"
   MY_POLL: "my_poll"

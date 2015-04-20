@@ -46,7 +46,26 @@ RSpec.describe "Comment" do
         expect(poll.reload.comment_count).to eq(9)
       end
 
+    end
+
+
+    describe "GET /poll/:id/comments.json" do
+      before do
+        get "/poll/#{poll.id}/comments.json", { member_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "return successfully" do
+        expect(response.status).to eq(200)  
+      end
+
+      it "has 1 comment on this poll" do
+        create(:comment, poll: poll, member: member, message: "Test Comment")
+        expect(json["comments"].count).to eq(1)
+      end
+
     end 
+
+
   end
 
 
