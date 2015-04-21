@@ -246,7 +246,7 @@ Pollios::Application.routes.draw do
   scope 'member' do
     get 'special_code', to: 'members#special_code'
     get 'recommendations',    to: 'members#recommendations'
-    
+
     get 'recommended_groups', to: 'members#recommended_groups'
     get 'recommended_official', to: 'members#recommended_official'
 
@@ -275,6 +275,10 @@ Pollios::Application.routes.draw do
     post ':member_id/device_token', to: 'members#device_token'
     post ':member_id/invite_user',  to: 'members#invite_user'
     post ':member_id/invite_fb_user', to: 'members#invite_fb_user'
+  end
+
+  scope 'account' do
+    get 'setting',  to: 'members#account_setting', as: :account_setting
   end
 
   scope 'search' do

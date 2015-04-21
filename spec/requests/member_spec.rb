@@ -179,6 +179,34 @@ RSpec.describe "Member" do
     end
   end
 
+  describe "GET /member/recommended_groups" do
+    before do
+      get "/member/recommended_groups.json", { member_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "GET /member/recommended_official" do
+
+    let!(:member_one) { create(:member, email: "official_account_1@gpollios.com", member_type: :celebrity) }
+    let!(:member_two) { create(:member, email: "official_account_2@gpollios.com", member_type: :celebrity) }
+
+    before do
+      get "/member/recommended_official.json", { member_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(200)
+    end
+
+    it "has 2 recommended official accounts" do
+      expect(json["recommendations_official"].count).to eq(2)
+    end
+  end
+
 
 
 end
