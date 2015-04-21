@@ -24,7 +24,7 @@ FactoryGirl.define do
   factory :sentai, class: Member do
     authen "nuttapon@code-app.com"
     password "1234567"
-    app_id "123"
+    app_id "com.pollios.polliosapp"
   end
 
   factory :celebrity, class: Member do

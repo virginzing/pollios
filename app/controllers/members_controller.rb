@@ -4,9 +4,9 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
-  before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations]
+  before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations, :recommended_groups, :recommended_official]
   before_action :signed_user, only: [:index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
   before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile]
@@ -25,13 +25,20 @@ class MembersController < ApplicationController
 
   def recommendations
     @init_recommendation = Recommendation.new(@current_member)
-    @recommendations = @init_recommendation.get_member_recommendations
-
-    @mutual_friends = @init_recommendation.get_member_ids_from_mutual_and_group
-
-    @group_recomment = @init_recommendation.get_group
-
+    @recommendations_official = @init_recommendation.get_recommendations_official.sample(2)
+    @group_recomment = @init_recommendation.get_group.sample(2)
+    @people_you_may_know = @init_recommendation.get_people_you_may_know
     @recommendations_follower = @init_recommendation.get_follower_recommendations if @current_member.celebrity?
+  end
+
+  def recommended_groups
+    @init_recommendation = Recommendation.new(@current_member)
+    @group_recomment = @init_recommendation.get_group
+  end
+
+  def recommended_official
+    @init_recommendation = Recommendation.new(@current_member)
+    @recommendations_official = @init_recommendation.get_recommendations_official
   end
 
   def special_code

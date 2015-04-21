@@ -108,7 +108,7 @@ class AuthenSentaiController < ApplicationController
             end
           end
           wants.html
-          wants.json
+          wants.json { render status: :created }
           wants.js
         else
           wants.html
@@ -117,9 +117,9 @@ class AuthenSentaiController < ApplicationController
         end
 			else
         @login = false
-				flash[:warning] = "Invalid email or password."
+				flash[:warning] = ExceptionHandler::Message::Auth::LOGIN_FAIL
 				wants.html { redirect_to(:back) }
-				wants.json { render status: 403 }
+				wants.json { render status: :unauthorized }
         wants.js
 			end
 		end

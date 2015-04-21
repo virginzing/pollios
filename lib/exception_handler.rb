@@ -41,6 +41,10 @@ module ExceptionHandler
       WRONG = "You had already signed out of Pollios. Please sign in again"
     end
 
+    module Auth
+      LOGIN_FAIL = "Invalid email or password"
+    end
+
     module Maintenance
       OPEN = "Maintenance Mode"
     end

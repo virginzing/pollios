@@ -246,6 +246,10 @@ Pollios::Application.routes.draw do
   scope 'member' do
     get 'special_code', to: 'members#special_code'
     get 'recommendations',    to: 'members#recommendations'
+    
+    get 'recommended_groups', to: 'members#recommended_groups'
+    get 'recommended_official', to: 'members#recommended_official'
+
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile', as: :update_profile

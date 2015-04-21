@@ -60,5 +60,48 @@ RSpec.describe "Search" do
     end
   end
 
+  describe "POST /searches/clear_search_users_and_groups" do
+
+    it "success" do
+      post "/searches/clear_search_users_and_groups.json", { member_id: member.id }, { "Accept" => "application/json" }
+      expect(response.status).to eq(201)
+    end
+
+    it "clear key of users_and_groups to empty" do
+      TypeSearch.create_log_search_users_and_groups(member, "Nuttapon")
+      TypeSearch.create_log_search_users_and_groups(member, "Nutty")
+
+      expect(TypeSearch.find_search_users_and_groups(member).count).to eq(2)
+
+      post "/searches/clear_search_users_and_groups.json", { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(TypeSearch.find_search_users_and_groups(member).count).to eq(0)
+
+    end
+
+  end
+
+  describe "POST /searches/clear_search_tags" do
+
+    it "success" do
+      post "/searches/clear_search_tags.json", { member_id: member.id }, { "Accept" => "application/json" }
+      expect(response.status).to eq(201)
+    end
+
+    it "clear key of users_and_groups to empty" do
+      TypeSearch.create_log_search_tags(member, "Sport")
+      TypeSearch.create_log_search_tags(member, "KantaiCollection")
+
+      expect(TypeSearch.find_search_tags(member).count).to eq(2)
+
+      post "/searches/clear_search_tags.json", { member_id: member.id }, { "Accept" => "application/json" }
+
+      expect(TypeSearch.find_search_tags(member).count).to eq(0)
+
+    end
+
+  end
+
+
 
 end
