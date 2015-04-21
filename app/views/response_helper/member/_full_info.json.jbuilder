@@ -16,6 +16,7 @@ json.subscription do
 end
 
 json.count do
+  json.friend Member::ListFriend.new(member).active.count
   json.point member.point
   json.reward member.cached_get_my_reward.count
 end

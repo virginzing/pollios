@@ -9,14 +9,16 @@ class Recommendation
   end
 
   def get_group
-    @get_group ||= SuggestGroup.cached_all  
+    suggest_group = SuggestGroup.cached_all
+    group_recommended = suggest_group.map(&:id) - @init_list_group.cached_all_groups.map(&:id)
+    Group.where(id: group_recommended)
   end
 
   def get_friend_active
     @get_friend_active ||= @list_member_active.map(&:id)
   end
 
-  def unrecommented
+  def unrecommended
     @unrecomment_id ||= @member.cached_get_unrecomment.map(&:unrecomment_id)
   end
 
@@ -49,7 +51,7 @@ class Recommendation
 
     puts "mutual_ids => #{mutual_ids}"
     query = Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
-    query = query.where("id NOT IN (?)", unrecommented) if unrecommented.length > 0
+    query = query.where("id NOT IN (?)", unrecommended) if unrecommended.length > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.length > 0
     query
   end
@@ -68,7 +70,7 @@ class Recommendation
     following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
     query = Member.with_member_type(:brand, :celebrity).limit(500)
     query = query.where("id NOT IN (?)", following) if following.length > 0
-    query = query.where("id NOT IN (?)", unrecommented) if unrecommented.length > 0
+    query = query.where("id NOT IN (?)", unrecommended) if unrecommended.length > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.length > 0
     query = query.where("id NOT IN (?)", get_friend_active) if get_friend_active.size > 0
     query = query.where("id != ?", @member.id)
