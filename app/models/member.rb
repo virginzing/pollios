@@ -833,6 +833,10 @@ class Member < ActiveRecord::Base
     salary.present? ? salary.value : ""
   end
 
+  def get_fb_id
+    fb_id.presence || ""
+  end
+
   def get_token(provider_name)
     if provider_name.present?
       find_provider = providers.find_by(name: provider_name)
