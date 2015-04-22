@@ -123,29 +123,28 @@ class GroupController < ApplicationController
       @joined = false
       member_id = params[:member_id]
       @member 
-      @new_request = false
+      @new_req
+      uest = false
 
-      begin
-        @group_members ||= Group::ListMember.new(@group)
-        @member_active = @group_members.active
+      @group_members ||= Group::ListMember.new(@group)
+      @member_active = @group_members.active
 
-        find_member_in_group = @member_active.map(&:id)
+      find_member_in_group = @member_active.map(&:id)
 
-        raise ExceptionHandler::Forbidden, "You have joined in #{@group.name} already" if find_member_in_group.include?(member_id)
-        
-        if GroupMember.have_request_group?(@group, @current_member)
-          Group.accept_group(@current_member, { id: @group.id, member_id: @current_member.id } )
+      raise ExceptionHandler::Forbidden, "You have joined in #{@group.name} already" if find_member_in_group.include?(member_id)
+      
+      if GroupMember.have_request_group?(@group, @current_member)
+        Group.accept_group(@current_member, { id: @group.id, member_id: @current_member.id } )
+        @new_request = true
+        @joined = true
+      else
+        @request_group = @group.request_groups.where(member_id: member_id).first_or_create do |request_group|
+          request_group.member_id = member_id
+          request_group.group_id = @group.id
+          request_group.save!
           @new_request = true
-          @joined = true
-        else
-          @request_group = @group.request_groups.where(member_id: member_id).first_or_create do |request_group|
-            request_group.member_id = member_id
-            request_group.group_id = @group.id
-            request_group.save!
-            @new_request = true
-            @current_member.flush_cache_ask_join_groups
-            RequestGroupWorker.perform_async(member_id, @group.id) unless Rails.env.test?
-          end
+          @current_member.flush_cache_ask_join_groups
+          RequestGroupWorker.perform_async(member_id, @group.id) unless Rails.env.test?
         end
       end
     end

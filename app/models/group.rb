@@ -143,6 +143,12 @@ class Group < ActiveRecord::Base
         @member = member
         @group = group
 
+        if @group.need_approve
+          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has canceled to request this group" unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
+        end
+
+        raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved, You're in group" if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
+
         find_member_in_group = @group.group_members.find_by(member_id: @friend.id)
 
         if find_member_in_group.present?
@@ -154,6 +160,8 @@ class Group < ActiveRecord::Base
         if @group.group_type_company? && !@group.system_group
           CompanyMember.add_member_to_company(@friend, @group.get_company)  
         end
+
+        # ApproveRequestGroupWorker.perform_async(@member, @friend, @group) unless Rails.env.test?
 
         Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
 
