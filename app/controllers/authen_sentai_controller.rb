@@ -81,7 +81,7 @@ class AuthenSentaiController < ApplicationController
         end
       else
         @login = false
-        flash[:warning] = "Invalid email or password."
+        flash[:warning] = ExceptionHandler::Message::Auth::LOGIN_FAIL
         wants.json
         wants.js
       end

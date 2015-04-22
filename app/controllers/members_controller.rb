@@ -182,6 +182,7 @@ class MembersController < ApplicationController
       description = update_profile_params[:description]
       fullname = update_profile_params[:fullname]
       first_signup = update_profile_params[:first_signup]
+      fb_id = update_profile_params[:fb_id]
 
       init_avatar = ImageUrl.new(avatar)
       init_cover = ImageUrl.new(cover)
@@ -198,6 +199,10 @@ class MembersController < ApplicationController
       if avatar && init_avatar.from_image_url? # upload via url
         @current_member.remove_old_avatar
         @current_member.update_column(:avatar, init_avatar.split_cloudinary_url)
+      end
+
+      if fb_id
+        @current_member.sync_facebook = false unless fb_id.present?
       end
 
       if @current_member.update(update_profile_params.except(:member_id))
