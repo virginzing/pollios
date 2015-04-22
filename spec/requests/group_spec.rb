@@ -188,8 +188,10 @@ RSpec.describe "Group" do
 
       let!(:group) { create(:group, name: "Thailand", need_approve: false, public: true) }
 
+      let!(:someone) { create(:member, fullname: "test nut", email: "someone@gmail.com") }
+      
       it "join group immediately" do
-        post "/group/#{group.id}/request_group.json", { member_id: friend.id }, { "Accept" => "application/json" }
+        post "/group/#{group.id}/request_group.json", { member_id: someone.id }, { "Accept" => "application/json" }
 
         expect(json["response_status"]).to eq("OK")
 

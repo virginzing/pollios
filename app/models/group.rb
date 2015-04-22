@@ -161,7 +161,9 @@ class Group < ActiveRecord::Base
           CompanyMember.add_member_to_company(@friend, @group.get_company)  
         end
 
-        ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
+        if @group.need_approve
+          ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
+        end
 
         Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
 
