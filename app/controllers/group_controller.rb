@@ -53,7 +53,7 @@ class GroupController < ApplicationController
   end
 
   def cancel_ask_join_group
-    @group = Group.cancel_ask_join_group(@current_member, @group)
+    @group = Group.cancel_ask_join_group(@current_member, params[:friend_id], @group)
   end
 
   def poll_group

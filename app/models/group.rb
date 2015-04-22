@@ -174,12 +174,23 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.cancel_ask_join_group(member, group)
-    find_current_ask_group = group.request_groups.find_by(member_id: member.id)
-    if find_current_ask_group.present?
-      find_current_ask_group.destroy
-      member.flush_cache_ask_join_groups
-      group
+  def self.cancel_ask_join_group(member, friend_id = nil, group)
+    if friend_id.nil?
+      find_current_ask_group = group.request_groups.find_by(member_id: member.id)
+      if find_current_ask_group.present?
+        find_current_ask_group.destroy
+        member.flush_cache_ask_join_groups
+        group
+      end
+    else
+      find_friend = Member.cached_find(friend_id)
+      
+      find_current_ask_group = group.request_groups.find_by(member_id: find_friend.id)
+      if find_current_ask_group.present?
+        find_current_ask_group.destroy
+        find_friend.flush_cache_ask_join_groups
+        group
+      end
     end
   end
 
