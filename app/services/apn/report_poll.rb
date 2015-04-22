@@ -20,7 +20,7 @@ class Apn::ReportPoll
   end
 
   def member_name
-    @member.fullname
+    @member.get_name
   end
 
   def custom_message
