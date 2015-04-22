@@ -10,7 +10,9 @@ class Recommendation
 
   def get_group
     suggest_group = SuggestGroup.cached_all
-    group_recommended = suggest_group.map(&:id) - @init_list_group.cached_all_groups.map(&:id)
+    request_group = @member.cached_ask_join_groups
+    group_recommended = suggest_group.map(&:id) - @init_list_group.cached_all_groups.map(&:id) - request_group.map(&:id)
+    
     Group.where(id: group_recommended)
   end
 

@@ -145,6 +145,7 @@ class Member < ActiveRecord::Base
   before_create :set_friend_limit
 
   before_update { |member| Admin::BanMember.flush_cached_ban_members if member.status_account_changed? }
+  before_update { |member| member.sync_facebook = true if fb_id_changed? }
 
   after_commit :flush_cache
 

@@ -20,11 +20,11 @@ class GroupMembers
   end
 
   def members_as_member
-    cached_all_members.select{ |member| member unless member.is_admin }
+    cached_all_members.select{ |member| member unless member.admin }
   end
 
   def members_as_admin
-    cached_all_members.select{ |member| member if member.is_admin }
+    cached_all_members.select{ |member| member if member.admin }
   end
 
   private
