@@ -184,7 +184,7 @@ class Group < ActiveRecord::Base
       end
     else
       find_friend = Member.cached_find(friend_id)
-      
+
       find_current_ask_group = group.request_groups.find_by(member_id: find_friend.id)
       if find_current_ask_group.present?
         find_current_ask_group.destroy
@@ -345,6 +345,7 @@ class Group < ActiveRecord::Base
       end
 
       # Rails.cache.delete([friend_id, 'group_active'])
+      FlushCached::Group.new(self).clear_list_members
       FlushCached::Member.new(member).clear_list_groups
       self
     end

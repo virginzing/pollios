@@ -17,3 +17,5 @@ class FlushCached::Group
   end
   
 end
+
+# FlushCached::Group.new(Group.find(119)).clear_list_members
