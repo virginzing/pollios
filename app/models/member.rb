@@ -601,7 +601,6 @@ class Member < ActiveRecord::Base
   def flush_cache_about_poll
     flush_cache_my_poll
     flush_cache_my_vote
-    flush_cache_my_watch
     FlushCached::Member.new(self).clear_list_voted_all_polls
     true
   end

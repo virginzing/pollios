@@ -15,7 +15,7 @@ class Member::ListPoll
     @voted_all ||= cached_voted_all_polls
   end
 
-  def watches
+  def watched_poll_ids
     @watches ||= cached_watch_polls
   end
 
@@ -31,6 +31,10 @@ class Member::ListPoll
 
   def member_history_viewed_polls
     @member.history_views.map(&:poll_id)
+  end
+
+  def member_watched_polls
+    @member.watcheds
   end
 
   def cached_history_viewed_polls
@@ -51,7 +55,7 @@ class Member::ListPoll
   end
 
   def cached_watch_polls
-    Rails.cache.fetch("member/#{@member.id}/watch_polls") { V6::MyPollInProfile.new(@member).my_watched.to_a }
+    Rails.cache.fetch("member/#{@member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
   end
   
 end

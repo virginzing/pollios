@@ -10,14 +10,16 @@ class WatchPoll
     else
       watching = @member.watcheds.create!(poll_id: @poll_id, poll_notify: true, comment_notify: true)
     end
-    @member.flush_cache_my_watch
+    # @member.flush_cache_my_watch
+    FlushCached::Member.new(@member).clear_list_watched_polls
     watching
   end
 
   def unwatch
     if find_watch_poll
       unwatch = find_watch_poll.update!(poll_notify: false, comment_notify: false)
-      @member.flush_cache_my_watch
+      # @member.flush_cache_my_watch
+      FlushCached::Member.new(@member).clear_list_watched_polls
     end
     unwatch
   end
