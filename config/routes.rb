@@ -250,6 +250,7 @@ Pollios::Application.routes.draw do
 
     get 'recommended_groups', to: 'members#recommended_groups'
     get 'recommended_official', to: 'members#recommended_official'
+    get 'recommended_facebook', to: 'members#recommended_facebook'
 
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'

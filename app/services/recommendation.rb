@@ -29,7 +29,11 @@ class Recommendation
   end
 
   def get_follower_recommendations
-    @follower_recommendations ||= @list_member_follower
+    @follower_recommendations ||= follower_recommendation
+  end
+
+  def get_member_using_facebook
+    @member_using_facebook ||= member_using_facebook
   end
 
   def mutual_friend_recommendations
@@ -96,7 +100,15 @@ class Recommendation
     # puts "list_non_friend_ids => #{list_non_friend_ids}"
     return list_non_friend_ids
   end
-  
+
+  def follower_recommendation
+    follower_not_add_friend_yet = @list_member_follower.map(&:id) - @init_list_friend.cached_all_friends.map(&:id)
+    Member.having_status_account(:normal).where(id: follower_not_add_friend_yet).limit(500)
+  end
+
+  def member_using_facebook
+    Member.having_status_account(:normal).where(fb_id: @member.list_fb_id).order("fullname asc").limit(500)
+  end
   
 end
 

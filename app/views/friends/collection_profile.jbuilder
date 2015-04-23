@@ -23,8 +23,12 @@ json.follower @list_follower do |member|
   count_follower += 1
 end
 
-json.list_block @list_block do |member|
-  json.partial! 'response_helper/member/short_info_feed', member: member
-  json.status @list_block_is_friend[count_block]
-  count_block += 1
+if params[:member_id] == params[:friend_id]
+
+  json.list_block @list_block do |member|
+    json.partial! 'response_helper/member/short_info_feed', member: member
+    json.status @list_block_is_friend[count_block]
+    count_block += 1
+  end
+
 end

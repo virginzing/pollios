@@ -15,6 +15,10 @@ class Member::ListFriend
     @cached_followers ||= cached_followers
   end
 
+  def using_app_via_fb
+    @using_app_via_fb ||= query_friend_using_facebook
+  end
+
   def active
     cached_all_friends.select{|user| user if user.member_active == true && user.member_block == false && user.member_status == 1  }
   end
@@ -70,6 +74,10 @@ class Member::ListFriend
     Member.joins("inner join friends on members.id = friends.follower_id") \
           .where("friends.followed_id = #{@member.id}") \
           .select("members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following")
+  end
+
+  def query_friend_using_facebook
+    Member.having_status_account(:normal).where(fb_id: @member.list_fb_id).order("fullname asc")
   end
 
   def cached_friends

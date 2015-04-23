@@ -227,7 +227,7 @@ class FriendsController < ApplicationController
   end
 
   def collection_profile
-    if friend_params[:member] == friend_params[:friend_id]
+    if friend_params[:member] == friend_params[:friend_id]  # me
     
       init_list_friend ||= Member::ListFriend.new(@current_member)
 
@@ -242,8 +242,7 @@ class FriendsController < ApplicationController
 
       @list_block = init_list_friend.block
       @list_block_is_friend = Friend.check_add_friend?(@current_member, @list_block, init_list_friend.check_is_friend) if @list_block.present?
-
-    else
+    else # friend
 
       find_user = Member.cached_find(friend_params[:friend_id])
 
@@ -258,7 +257,6 @@ class FriendsController < ApplicationController
 
       @list_follower = (find_user.celebrity? || find_user.company?) ? init_list_friend.follower : []
       @list_follower_is_friend = Friend.check_add_friend?(@current_member, @list_follower, init_list_friend_of_member.check_is_friend) if @list_follower.present?
-
     end
   end
 

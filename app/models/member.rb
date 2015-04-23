@@ -145,7 +145,7 @@ class Member < ActiveRecord::Base
   before_create :set_friend_limit
 
   before_update { |member| Admin::BanMember.flush_cached_ban_members if status_account_changed? }
-  before_update { |member| member.sync_facebook = true if fb_id_changed? && fb_id.present? }
+  before_update :check_sync_facebook
 
   after_commit :flush_cache
 
@@ -286,6 +286,13 @@ class Member < ActiveRecord::Base
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
+  end
+
+  def check_sync_facebook
+    if fb_id_changed? && fb_id.present?
+      self.sync_facebook = true
+      self.sync_fb_last_at = Time.zone.now
+    end
   end
 
   def get_company

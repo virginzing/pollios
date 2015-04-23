@@ -4,9 +4,9 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
-  before_action :compress_gzip, only: [:activity, :detail_friend, :notify, :all_request, :recommendations, :recommended_groups, :recommended_official]
+  before_action :compress_gzip, only: [:recommended_facebook, :activity, :detail_friend, :notify, :all_request, :recommendations, :recommended_groups, :recommended_official]
   before_action :signed_user, only: [:account_setting, :index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
   before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile]
@@ -24,11 +24,16 @@ class MembersController < ApplicationController
   respond_to :json
 
   def recommendations
+    init_list_friend = Member::ListFriend.new(@current_member)
+
     @init_recommendation = Recommendation.new(@current_member)
     @recommendations_official = @init_recommendation.get_recommendations_official.sample(2)
     @group_recomment = @init_recommendation.get_group.sample(2)
     @people_you_may_know = @init_recommendation.get_people_you_may_know
-    @recommendations_follower = @init_recommendation.get_follower_recommendations if @current_member.celebrity?
+    @recommendations_follower = @init_recommendation.get_follower_recommendations.sample(2) if @current_member.celebrity?
+
+    @facebook = @init_recommendation.get_member_using_facebook.sample(2)
+    @list_facebook_is_friend = Friend.check_add_friend?(@current_member, @facebook, init_list_friend.check_is_friend) if @facebook.present?
   end
 
   def recommended_groups
@@ -39,6 +44,14 @@ class MembersController < ApplicationController
   def recommended_official
     @init_recommendation = Recommendation.new(@current_member)
     @recommendations_official = @init_recommendation.get_recommendations_official
+  end
+
+  def recommended_facebook
+    init_list_friend = Member::ListFriend.new(@current_member)
+    @init_recommendation = Recommendation.new(@current_member)
+    
+    @recommendations_facebook = @init_recommendation.get_member_using_facebook
+    @list_facebook_is_friend = Friend.check_add_friend?(@current_member, @recommendations_facebook, init_list_friend.check_is_friend) if @recommendations_facebook.present?
   end
 
   def special_code
@@ -458,7 +471,7 @@ class MembersController < ApplicationController
   end
 
   def update_profile_params
-    params.permit(:public_id, :fb_id, :cover_preset, :member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup, :first_setting_anonymous, :receive_notify)
+    params.permit(:public_id, :fb_id, :cover_preset, :member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup, :first_setting_anonymous, :receive_notify, list_fb_id: [])
   end
 
   def verify_email_params
