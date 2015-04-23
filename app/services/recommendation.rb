@@ -55,7 +55,7 @@ class Recommendation
     # puts "find_non_friend_in_group => #{find_non_friend_in_group}"
     mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"].to_i } | find_non_friend_in_group
 
-    puts "mutual_ids => #{mutual_ids}"
+    # puts "mutual_ids => #{mutual_ids}"
     query = Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
     query = query.where("id NOT IN (?)", unrecommended) if unrecommended.length > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.length > 0

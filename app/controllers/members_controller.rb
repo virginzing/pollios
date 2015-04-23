@@ -29,7 +29,7 @@ class MembersController < ApplicationController
     @init_recommendation = Recommendation.new(@current_member)
     @recommendations_official = @init_recommendation.get_recommendations_official.sample(2)
     @group_recomment = @init_recommendation.get_group.sample(2)
-    @people_you_may_know = @init_recommendation.get_people_you_may_know
+    @people_you_may_know = @init_recommendation.get_people_you_may_know.shuffle[0..19]
     @recommendations_follower = @init_recommendation.get_follower_recommendations.sample(2) if @current_member.celebrity?
 
     @facebook = @init_recommendation.get_member_using_facebook.sample(2)
@@ -49,7 +49,7 @@ class MembersController < ApplicationController
   def recommended_facebook
     init_list_friend = Member::ListFriend.new(@current_member)
     @init_recommendation = Recommendation.new(@current_member)
-    
+
     @recommendations_facebook = @init_recommendation.get_member_using_facebook
     @list_facebook_is_friend = Friend.check_add_friend?(@current_member, @recommendations_facebook, init_list_friend.check_is_friend) if @recommendations_facebook.present?
   end
