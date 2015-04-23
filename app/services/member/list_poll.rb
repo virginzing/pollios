@@ -34,7 +34,7 @@ class Member::ListPoll
   end
 
   def member_watched_polls
-    @member.watcheds
+    @member.watcheds.where(poll_notify: true, comment_notify: true)
   end
 
   def cached_history_viewed_polls
