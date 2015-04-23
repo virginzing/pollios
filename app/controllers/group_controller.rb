@@ -28,16 +28,27 @@ class GroupController < ApplicationController
   end
 
   def edit_group
-    @group.update!(edit_group_params)
-    init_cover_group = ImageUrl.new(edit_group_params[:cover])
 
-    if edit_group_params[:cover] && init_cover_group.from_image_url?
-      @group.remove_old_cover
-      @group.update_column(:cover, init_cover_group.split_cloudinary_url)
+    cover = edit_group_params[:cover]
+    cover_preset = edit_group_params[:cover_preset]
+
+    @group.cover_preset = "0" if cover
+
+    if @group.update!(edit_group_params)
+      init_cover_group = ImageUrl.new(cover)
+
+      if cover && init_cover_group.from_image_url?
+        @group.remove_old_cover
+        @group.update_column(:cover, init_cover_group.split_cloudinary_url)
+      end
+
+      if cover_preset.present? && @group.cover.present?
+        @group.remove_old_cover
+      end
+
+      Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.is_company?
+      FlushCached::Group.new(@group).clear_list_group_all_member_in_group
     end
-
-    Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.is_company?
-    FlushCached::Group.new(@group).clear_list_group_all_member_in_group
   end
 
   def add_friend_to_group
@@ -200,8 +211,6 @@ class GroupController < ApplicationController
     member_id = group_update_params[:pk]
     @admin_status = group_update_params[:value] == "1" ? false : true
 
-    #"value"=>"2" is admin
-
     find_member_in_group = GroupMember.where("member_id = ? AND group_id = ?", member_id, group_id).first
     find_member = find_member_in_group.member
 
@@ -302,6 +311,6 @@ class GroupController < ApplicationController
   end
 
   def edit_group_params
-    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public, :public_id)
+    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public, :public_id, :cover_preset)
   end
 end

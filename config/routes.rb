@@ -159,6 +159,7 @@ Pollios::Application.routes.draw do
     get 'following_of_friend', to: 'friends#following_of_friend'
     get 'follower_of_friend',  to: 'friends#follower_of_friend'
     get 'collection_profile',  to: 'friends#collection_profile'
+    get 'find_via_facebook',   to: 'friends#find_via_facebook'
   end
 
   scope 'group' do

@@ -1,6 +1,7 @@
 json.id group.id
 json.name group.name
 json.cover group.get_cover_group
+json.cover_preset group.cover_preset
 json.member_count group.get_member_count
 json.description group.get_description
 json.public group.public

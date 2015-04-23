@@ -478,4 +478,20 @@ RSpec.describe "Friend" do
     end
   end
 
+  describe "GET /friend/find_via_facebook" do
+
+    let!(:friend_facebook_1) { create(:member, email: "fb_1@gmail.com", fullname: "fb1", fb_id: "1234") }
+    let!(:friend_facebook_2) { create(:member, email: "fb_2@gmail.com", fullname: "fb2", fb_id: "5678") }
+    let!(:friend_facebook_3) { create(:member, email: "fb_3@gmail.com", fullname: "fb3", fb_id: "0123") }
+
+    it "does something" do
+      get '/friend/find_via_facebook.json', { member_id: member.id, list_fb_id: ["1234", "5678"] }, { "Accept" => "application/json" }
+
+      expect(json["response_status"]).to eq("OK")
+
+      expect(json["friend"].count).to eq(2)  
+    end
+    
+  end
+
 end

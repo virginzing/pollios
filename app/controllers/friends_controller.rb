@@ -275,6 +275,14 @@ class FriendsController < ApplicationController
     @is_friend = Friend.add_friend?(@current_member, list_compare)
   end
 
+  def find_via_facebook
+    init_list_friend ||= Member::ListFriend.new(@current_member)
+    init_find_friend_via_facebook = Friend::FindFacebook.new(@current_member, params[:list_fb_id])
+    
+    @list_friend = init_find_friend_via_facebook.get_friend_facebook
+    @list_friend_is_friend = Friend.check_add_friend?(@current_member, @list_friend, init_list_friend.check_is_friend) if @list_friend.present?
+  end
+
 
   private
 
