@@ -235,6 +235,8 @@ class Member < ActiveRecord::Base
       field :waiting
       field :first_signup
       field :public_id
+      field :fb_id
+      field :sync_facebook
       field :key_color
     end
 
