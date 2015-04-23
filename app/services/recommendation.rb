@@ -8,6 +8,10 @@ class Recommendation
     @list_member_follower = @init_list_friend.follower
   end
 
+  def list_all_friends
+    @init_list_friend.cached_all_friends.map(&:id)
+  end
+
   def get_group
     suggest_group = SuggestGroup.cached_all
     request_group = @member.cached_ask_join_groups
@@ -107,7 +111,9 @@ class Recommendation
   end
 
   def member_using_facebook
-    Member.having_status_account(:normal).where(fb_id: @member.list_fb_id).order("fullname asc").limit(500)
+    query = Member.having_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id)
+    query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.count > 0
+    query
   end
   
 end

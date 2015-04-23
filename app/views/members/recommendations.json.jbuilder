@@ -23,7 +23,5 @@ if @recommendations_official || @people_you_may_know || @group_recomment
 
   json.facebook @facebook do |member|
     json.partial! 'response_helper/member/short_info_feed', member: member
-    json.status @list_facebook_is_friend[count_facebook]
-    count_facebook += 1
   end
 end

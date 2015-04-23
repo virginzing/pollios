@@ -222,7 +222,7 @@ class AuthenSentaiController < ApplicationController
       else
         @forgot_password = false
         wants.js
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Email not found"], status: 403 }
+        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Email not found"], status: :not_found }
       end
     end
   end
