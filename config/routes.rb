@@ -275,7 +275,7 @@ Pollios::Application.routes.draw do
     post ':member_id/personal_detail',  to: 'profiles#update_personal_detail'
     post ':member_id/unrecomment',  to: 'members#unrecomment'
     post ':member_id/device_token', to: 'members#device_token'
-    post ':member_id/invite_user',  to: 'members#invite_user'
+    post ':member_id/invite_user_via_email',  to: 'members#invite_user_via_email'
     post ':member_id/invite_fb_user', to: 'members#invite_fb_user'
   end
 

@@ -4,7 +4,7 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user_via_email, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   # before_action :history_voted_viewed, only: [:detail_friend]
   before_action :compress_gzip, only: [:recommended_facebook, :activity, :detail_friend, :notify, :all_request, :recommendations, :recommended_groups, :recommended_official]
   before_action :signed_user, only: [:account_setting, :index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
@@ -68,9 +68,9 @@ class MembersController < ApplicationController
     respond_with Member.limit(2), root: false
   end
 
-  def invite_user
+  def invite_user_via_email
     init_invite_user = InviteUser.new(@current_member, params[:list_email])
-    @invite_user = init_invite_user.create_list_invite
+    @invite_user_via_email = init_invite_user.create_list_invite
   end
 
   def invite_fb_user
