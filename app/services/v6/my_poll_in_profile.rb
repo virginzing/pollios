@@ -48,6 +48,10 @@ class V6::MyPollInProfile
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
+  def my_vote_poll_ids
+    Member.voted_polls.collect{|e| e["poll_id"] }
+  end
+
   def with_out_poll_ids
     unsee_poll_ids | saved_poll_ids_later
   end
@@ -179,10 +183,11 @@ class V6::MyPollInProfile
   end
 
   def poll_saved(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.unexpire.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", saved_questionnaire_ids_later, saved_poll_ids_later)
 
+    query = query.where("polls.id NOT IN (?)", my_vote_poll_ids) if my_vote_poll_ids.count > 0
     query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.count > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
     query = query.limit(limit_poll)

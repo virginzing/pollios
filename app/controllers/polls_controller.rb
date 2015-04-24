@@ -407,9 +407,11 @@ class PollsController < ApplicationController
   end
 
   def set_close
+    raise ExceptionHandler::UnprocessableEntity, "You're not owner this poll" if @poll.member_id != @current_member.id
+
     respond_to do |format|
-      if (@poll.member_id == @current_member.id) && @poll.update_attributes!(expire_status: true, expire_date: Time.zone.now)
-        format.json { render json: Hash["response_status" => "OK", "response_message" => "Success" ] }
+      if @poll.update!(expire_status: true, expire_date: Time.zone.now)
+        format.json { render json: Hash["response_status" => "OK"] }
       else
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => @poll.errors.full_messages.presence || "ERROR" ] }
       end
