@@ -17,7 +17,7 @@ class Poll::VoteNotifyLog
 
       @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
 
-      @apn_sum_vote_poll = Apn::SumVotePoll.new(@poll)
+      @apn_sum_vote_poll = Apn::SumVotePoll.new(@poll, [@sender.id])
 
       recipient_ids = @apn_sum_vote_poll.recipient_ids
 

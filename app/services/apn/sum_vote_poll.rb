@@ -7,12 +7,17 @@ class Apn::SumVotePoll
   FRIEND = 'FRIEND'
   SOMEONE = 'Anonymous'
 
-  def initialize(poll)
+  def initialize(poll, except_member_ids_list = [])
     @poll = poll
+    @except_member_ids_list = except_member_ids_list
   end
 
   def recipient_ids
     member_receive_notification
+  end
+
+  def except_member_list
+    @except_member_ids_list || []  
   end
 
   def last_notify_at
@@ -101,7 +106,7 @@ class Apn::SumVotePoll
   end
 
   def member_receive_notification
-    watched_poll - history_vote_in_1_minute
+    watched_poll - history_vote_in_1_minute - except_member_list
   end
   
   def voted_poll
