@@ -184,8 +184,8 @@ module ApplicationHelper
 end
 
 
-# curl -H "Content-Type: application/json" -d '{"member_id": 202, "friend_id": 93 }' -X POST http://localhost:3000/friend/following.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 101 }' -X POST http://localhost:3000/friend/unfollow.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 204, "friend_id": 202 }' -X POST http://localhost:3000/friend/following.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 202, "friend_id": 93 }' -X POST http://localhost:3000/friend/unfollow.json -i
 
 # curl -H "Content-Type: application/json" -d '{"member_id": 93 , "friend_id": 206 }' -X POST http://localhost:3000/friend/add_friend.json -i
 
@@ -195,11 +195,11 @@ end
 # curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 99}' -X POST http://localhost:3000/friend/unblock.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 3}' -X POST http://localhost:3000/friend/unmute_friend.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 206 }' -X POST http://localhost:3000/friend/unfriend.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 206, "friend_id": 93 }' -X POST http://localhost:3000/friend/unfriend.json -i
 
 # # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 3}' -X POST http://localhost:3000/friend/mute_friend.json -i
 # curl -H "Content-Type: application/json" -d '{"member_id": 206, "friend_id": 93 }' -X POST http://localhost:3000/friend/accept.json -i
-# curl -H "Content-Type: application/json" -d '{"member_id": 206, "friend_id": 93 }' -X POST http://localhost:3000/friend/deny.json -i
+# curl -H "Content-Type: application/json" -d '{"member_id": 93, "friend_id": 206 }' -X POST http://localhost:3000/friend/deny.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "ops": [
@@ -266,11 +266,11 @@ end
 # http://codeapp-pollios.herokuapp.com/friends/following.json?member_id=20
 # http://localhost:3000/friend/search.json?member_id=93&q=Nuttapon
 
-# curl -F "member_id=93" -F "name=Nut Public" -F "public=true" http://localhost:3000/group/build.json -i
+# curl -F "member_id=93" -F "name=Kimochi Group" -F "public=true" http://localhost:3000/group/build.json -i
 
 # # curl -H "Content-Type: application/json" -d '{"member_id": 1, "group_id": 10 }' -X POST http://localhost:3000/group/delete_group.json -i
 # # curl -H "Content-Type: application/json" -d '{"member_id": 3, "group_id": 17 }' -X POST http://localhost:3000/group/deny_group.json -i
-# # curl -H "Content-Type: application/json" -d '{"member_id": 2, "group_id": 17 }' -X POST http://localhost:3000/group/leave_group.json -i
+ # curl -H "Content-Type: application/json" -d '{"member_id": 93, "group_id": 123 }' -X POST http://localhost:3000/group/leave_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "group_id": 33,
@@ -280,8 +280,8 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "message": "One Two Three Four Five"
-# }' -X POST http://localhost:3000/poll/2345/comments.json -i
+#     "message": "comment from 93 93"
+# }' -X POST http://localhost:3000/poll/2991/comments.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -446,13 +446,13 @@ end
 # }' -X POST http://localhost:3000/member/85/subscribe.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 118,
-#     "friend_id": "93"
-# }' -X POST http://localhost:3000/group/88/invite.json -i
+#     "member_id": 93,
+#     "friend_id": "217"
+# }' -X POST http://localhost:3000/group/54/invite.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 93
+#     "member_id": 217
 # }' -X POST http://localhost:3000/group/54/accept.json -i
 
 
@@ -463,28 +463,29 @@ end
 # }' -X POST http://localhost:3000/group/88/promote_admin.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 102,
-#     "friend_id": "93"
+#     "member_id": 93,
+#     "friend_id": "150"
 # }' -X POST http://localhost:3000/group/54/kick_member.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 93
+#     "member_id": 217
 # }' -X POST http://localhost:3000/group/54/leave.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 241
-# }' -X POST http://localhost:3000/group/121/request_group.json -i
+#     "member_id": 206
+# }' -X POST http://localhost:3000/group/54/request_group.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "friend_id": 240
-# }' -X POST http://localhost:3000/group/121/accept_request_group.json -i
+#     "friend_id": 206
+# }' -X POST http://localhost:3000/group/54/accept_request_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 93
-# }' -X POST http://localhost:3000/group/54/cancel_ask_join_group.json -i
+#     "member_id": 93,
+#     "friend_id": "202"
+# }' -X POST http://localhost:3000/group/137/cancel_ask_join_group.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -495,8 +496,8 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "need_approve": false
-# }' -X POST http://localhost:3000/group/121/edit_group.json -i
+#     "cover_preset": "4"
+# }' -X POST http://localhost:3000/group/137/edit_group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93
@@ -559,16 +560,16 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
-#     "title": "ทำดีได้ดี",
+#     "title": "post two groups",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "binary"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 93
-# }' -X DELETE http://localhost:3000/poll/2328/delete.json -i
+#     "member_id": 92
+# }' -X DELETE http://localhost:3000/poll/3028/delete.json -i
 
-# curl -F "member_id=93" -F "title=ทดสอบ multiupload image" -F "type_poll=binary" -F "choices[]=1" -F "choices[]=2" -F "photo_poll=@test01.png" -F "original_polls[]=@test02.png" -F "original_polls[]=@test03.png" -X POST http://localhost:3000/poll/create.json -i
+# curl -F "member_id=93" -F "title=ทดสอบ multiupload image" -F "type_poll=binary" -F "choices[]=1" -F "choices[]=2" -F "photo_poll=@test01.png" -F "original_images[]=@test02.png" -F "original_images[]=@test03.png" -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1, 
@@ -604,9 +605,13 @@ end
 # # Poll.joins(:poll_members).includes(:poll_series, :member).where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", 2000, [1,2,3], true).order("poll_members.created_at desc")
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 86,
-#     "message": "This is spam"
-# }' -X POST http://localhost:3000/poll/758/report.json -i
+#     "member_id": 93,
+#     "message": "เนื้อหาไม่เหมาะสมครับ",
+#     "message_preset": "Other reason"
+# }' -X POST http://pollios.com/poll/2878/report.json -i
+
+# curl -H "Content-Type: application/json" -d {} -X POST http://localhost:3000/app_report/report_polls/poll/3009/ban  -i
+
 
 # Tag.find_by_name("codeapp").polls.
 # joins(:poll_members).
@@ -623,11 +628,17 @@ end
 # NotifyLog.where("created_at > ?", 1.days.ago)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 114,
-#     "choice_id": "11656",
+#     "member_id": 93,
+#     "choice_id": "12338",
 #     "show_result": true
-# }' -X POST http://pollios.com/poll/2878/vote.json -i
+# }' -X POST http://localhost:3000/poll/3039/vote.json -i
 
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 262,
+#     "reward_id": "89",
+#     "ref_no": "P1426652874"
+# }' -X POST http://pollios.com/campaign/claim_reward.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "serial_code": "281422524443",
@@ -732,16 +743,23 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "list_email": ["greannut@gmail.com"]
-# }' -X POST http://localhost:3000/member/98/invite_user.json -i
+#     "list_email": ["nuttapon.achachotipong@gmail.com", "greannut@gmail.com"]
+# }' -X POST http://localhost:3000/member/93/invite_user_via_email.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "list_fb_id": ["11111", "22222"]
 # }' -X POST http://localhost:3000/member/196/invite_fb_user.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": "1"
-# }' -X POST http://localhost:3000/poll/163/hide.json -i
+#     "member_id": "93"
+# }' -X POST http://pollios.com/poll/2936/hide.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": "93",
+#     "fb_id": "07510509",
+#     "list_fb_id": ["1234", "4567", "0001"]
+# }' -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 1,
@@ -757,8 +775,8 @@ end
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
 # curl -H "Content-Type: application/json" -d '{"email":"funnysmart_online@hotmail.com","old_password":"123456", "new_password": "Nutty509" }' -X POST http://localhost:3000/authen/change_password.json -i
 
-# curl -H "Content-Type: application/json" -d '{"authen":"testpollios@gmail.com","password":"mefuwfhfu", "app_id": "123", "device_token":"78916fe8 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 11111111" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
-# curl -F "email=get_point@gmail.com" -F "password=mefuwfhfu" -F "fullname=Get Point" -F "app_id=123" -X POST http://localhost:3000/authen/signup_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"funnysmart_online@hotmail.com","password":"Nutty509", "app_id": "com.pollios.polliosapp", "device_token":"12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
+# curl -F "email=nuttapon.achachotipong@gmail.com" -F "password=mefuwfhfu" -F "fullname=nuttapon.achachotipong" -F "app_id=com.pollios.polliosapp" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
 
@@ -777,7 +795,9 @@ end
 
 # http://localhost:3000/campaigns/list_reward.json?member_id=1&api_version=5
 
-# curl -F "member_id=254" -F "fullname=Kaga Jung" -F "first_signup=false" -X POST http://localhost:3000/member/update_profile.json -i
+# curl -F "member_id=93" -F "cover=v1428585567/oq1tvso1eqmrrlvaqrrp.png" -X POST http://localhost:3000/group/137/edit_group.json -i
+
+# curl -F "member_id=288" -F "cover_preset=2" -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "id": "696969",
@@ -786,7 +806,7 @@ end
 #     "gender": 1
 # }' -X POST http://localhost:3000/authen/facebook.json -i
 
-# curl "http://localhost:3000/poll/93/overall_timeline.json?api_version=6" -H 'Authorization: Token token="4e029fd41cb01dd8a502bd359934eed"' -i
+# curl -X GET "http://localhost:3000/poll/93/overall_timeline.json?api_version=6" -H 'Authorization: Token token="7fa32b8b0b867a585d5d3e61ca7dcf11"' -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "name": "1234567890",
@@ -795,9 +815,21 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "email": "nuttapon@code-app.com"
+#     "email": "nuttapon111@code-app.com"
 # }' -X POST http://pollios.com/users_forgotpassword.json -i
 
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 93
+# }' -X POST http://localhost:3000/poll/3039/save_later.json -i
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 127
+# }' -X POST http://localhost:3000/poll/3039/open.json -i
+
+
+# curl -H "Content-Type: application/json" -d '{
+#     "member_id": 110
+# }' -X POST http://localhost:3000/searches/clear_search_users_and_groups.json -i
 
 # Member.all.each do |p|
 #   if p.gender.nil?
