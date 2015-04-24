@@ -12,7 +12,7 @@ class Apn::SumVotePoll
   end
 
   def recipient_ids
-    watched_poll
+    member_receive_notification
   end
 
   def last_notify_at
@@ -62,31 +62,6 @@ class Apn::SumVotePoll
 
   private
 
-  # def check_privacy_vote
-  #   if @poll.public
-  #     load_privacy_vote(PUBLIC)
-  #   else
-  #     if @poll.in_group
-  #       load_privacy_vote(GROUP)
-  #     else
-  #       load_privacy_vote(FRIEND)
-  #     end
-  #   end
-  # end
-
-  # def load_privacy_vote(type)
-  #   case type
-  #     when PUBLIC
-  #       @load_privacy_vote = get_voted_poll.map(&:privacy_vote_public)
-  #     when GROUP
-  #       @load_privacy_vote = get_voted_poll.map(&:privacy_vote_group)
-  #     when
-  #       @load_privacy_vote = get_voted_poll.map(&:privacy_vote_friend_following)
-  #   end
-  # end
-
-
-
   def check_privacy_with_fullname
     @list_fullname = []
 
@@ -116,20 +91,18 @@ class Apn::SumVotePoll
     new_fullname
   end
 
-  # def watched_poll
-  #   # Watched.joins(:member).where(poll_id: @poll.id, poll_notify: true).pluck(:member_id)
-  #   Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
-  # end
+
+  def history_vote_in_1_minute
+    HistoryVote.unscoped.where(created_at: @poll.notify_state_at..(@poll.notify_state_at + 1.minute)).pluck(:member_id).uniq
+  end
 
   def watched_poll
-    @watched_poll = Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
+    watched_poll = Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
-  
-  # def voted_poll
-  #   HistoryVote.joins(:member)
-  #               .select("member_id, members.fullname as new_fullname, members.anonymous_public as privacy_vote_public, members.anonymous_friend_following as privacy_vote_friend_following, members.anonymous_group as privacy_vote_group")
-  #               .where("(poll_id = ? AND poll_series_id = 0 AND history_votes.created_at >= ?)", @poll.id, last_notify_at)
-  # end
+
+  def member_receive_notification
+    watched_poll - history_vote_in_1_minute
+  end
   
   def voted_poll
     HistoryVote.joins(:member)
