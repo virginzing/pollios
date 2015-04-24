@@ -131,12 +131,12 @@ RSpec.describe "Member" do
 
   end
 
-  describe "POST /member/:id/invite_user" do
+  describe "POST /member/:id/invite_user_via_email" do
     list_email = []
     5.times { list_email << Faker::Internet.email }
 
     before do
-      post "/member/#{member.id}/invite_user", { list_email: list_email }, { "Accept" => "application/json" }
+      post "/member/#{member.id}/invite_user_via_email.json", { list_email: list_email }, { "Accept" => "application/json" }
     end
 
     it "success" do
