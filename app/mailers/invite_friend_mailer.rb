@@ -7,7 +7,7 @@ class InviteFriendMailer < ActionMailer::Base
     @member = sender
 
     list_email.each do |email|
-      mail(to: email, subject: "#{@member.fullname} invite you to join pollios").deliver
+      mail(to: email, subject: "#{@member.fullname} invite you to join Pollios").deliver
     end
 
   end

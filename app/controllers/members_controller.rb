@@ -213,6 +213,8 @@ class MembersController < ApplicationController
         @current_member.sync_facebook = false unless fb_id.present?
       end
 
+      check_invited if first_signup.to_s.present?
+
       if @current_member.update(update_profile_params.except(:member_id))
         if fullname
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
@@ -236,10 +238,6 @@ class MembersController < ApplicationController
 
         @member = @current_member.reload
 
-        unless first_signup.nil?
-          check_invited
-        end
-
         flash[:success] = "Update profile successfully."
         format.html { redirect_to account_setting_path }
         format.json
@@ -254,13 +252,13 @@ class MembersController < ApplicationController
   end
 
   def check_invited
-    @list_invite = Invite.where(email: @member.email)
-    @list_invite.update_all(invitee_id: @member.id)
+    @list_invite = Invite.where(email: @current_member.email)
+    @list_invite.update_all(invitee_id: @current_member.id)
 
-    puts "@list_invite.map(&:member_id).uniq => #{@list_invite.map(&:member_id).uniq}"
+    # puts "@list_invite.map(&:member_id).uniq => #{@list_invite.map(&:member_id).uniq}"
     
     @list_invite.map(&:member_id).uniq.each do |friend_id|
-      Friend.add_friend({ member_id: @member.id, friend_id: friend_id})
+      Friend.add_friend({ member_id: @current_member.id, friend_id: friend_id})
     end
   end
 
