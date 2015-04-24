@@ -222,11 +222,19 @@ RSpec.describe "Poll" do
   end
 
 
+  describe "POST /poll/:id/close" do
+    it "close poll" do
+      expect(poll.expire_status).to eq(false)
 
+      post "/poll/#{poll.id}/close.json", { member_id: member.id }, { "Accept" => "application/json" }
 
+      expect(poll.reload.expire_status).to eq(true)
 
+      expect(response.status).to eq(200)
 
-
+      expect(json["response_status"]).to eq("OK")
+    end
+  end
 
 
 end
