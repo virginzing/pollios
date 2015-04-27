@@ -172,7 +172,7 @@ class Member < ActiveRecord::Base
     end
 
     list do
-      filters [:gender, :member_type]
+      filters [:gender, :member_type, :fullname, :email]
       field :id
       field :new_avatar
       field :fullname
@@ -283,7 +283,7 @@ class Member < ActiveRecord::Base
       @member
     end
   end
-
+  
   def flush_cache
     Rails.cache.delete([self.class.name, id])
   end

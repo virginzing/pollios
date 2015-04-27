@@ -86,4 +86,31 @@ RSpec.describe Member, :type => :model do
     end
   end
 
+  describe "::cached_find" do
+    let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com" ) }
+
+    context "given that the cache is unpopulated" do
+      it "does a database lookup" do
+        expect(Member.cached_find(member.id)).to eq(member)
+      end
+    end
+
+    context "given that the cache is populated" do
+      let!(:member_cache_find_hit) { Member.cached_find(member.id) }
+
+      it "does a cache lookup" do
+        expect(Member.cached_find(member.id)).to eq(member_cache_find_hit)
+      end
+    end
+
+    context "clear cache" do
+      let!(:member_cache_find_hit) { Member.cached_find(member.id) }
+
+      it "does clear cache" do
+        member.update!(fullname: "Nutty")
+        expect(Member.cached_find(member.id).fullname).not_to eq(member_cache_find_hit.fullname)
+      end
+    end
+  end
+
 end
