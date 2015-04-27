@@ -24,7 +24,7 @@ class Apn::CommentPoll
   end
 
   def recipient_ids
-    watched_comment
+    summary_member_receive_notification
   end
   
   # allow 130 byte for custom message
@@ -51,6 +51,15 @@ class Apn::CommentPoll
 
   def watched_comment
     Watched.joins(:member).where("poll_id = ? AND comment_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
+  end
+
+  def list_mentioned
+    []
+  end
+
+
+  def summary_member_receive_notification
+    watched_comment - list_mentioned
   end
   
 end

@@ -210,7 +210,10 @@ class MembersController < ApplicationController
       end
 
       if fb_id
-        @current_member.sync_facebook = false unless fb_id.present?
+        unless fb_id.present?
+          @current_member.sync_facebook = false
+          @current_member.list_fb_id = []
+        end
       end
 
       check_invited if first_signup.to_s.present?
