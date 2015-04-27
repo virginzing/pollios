@@ -55,7 +55,7 @@ class Apn::CommentPoll
 
   def list_mentioned
     list_mentioned_member_id = []
-    @message.gsub!(/@\[\d+\]/) {|e| e.gsub(/\d+/) {|number| list_mentioned_member_id << number } }
+    @message.gsub(/@\[\d+\]/) {|e| e.gsub(/\d+/) {|number| list_mentioned_member_id << number } }
     list_mentioned_member_id.collect {|e| e.to_i }
   end
 
