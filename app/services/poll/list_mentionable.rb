@@ -14,14 +14,24 @@ class Poll::ListMentionable
   end
 
   def get_list_mentionable
-    summary_member_can_mentionable
+    if @poll.in_group
+      summary_member_can_mentionable_in_group
+    else
+      summary_member_can_mentionable_in_friend_public
+    end
   end
 
 
   private
 
   def people_see_poll_in_groups_member_ids
-    []
+    member_ids = []
+
+    @poll.groups.each do |group|
+      member_ids << Group::ListMember.new(group).active.map(&:id)
+    end
+
+    member_ids.uniq
   end
 
   def people_voted_this_poll_member_ids
@@ -36,8 +46,12 @@ class Poll::ListMentionable
     init_list_friend.active.map(&:id).uniq | []
   end
 
-  def summary_member_can_mentionable
-    merge_member_ids = friend_active_member_ids | people_see_poll_in_groups_member_ids | people_voted_this_poll_member_ids | people_commented_this_poll_member_ids
+  def summary_member_can_mentionable_in_group
+    Member.unscoped.where(id: people_see_poll_in_groups_member_ids)
+  end
+
+  def summary_member_can_mentionable_in_friend_public
+    merge_member_ids = friend_active_member_ids | people_voted_this_poll_member_ids | people_commented_this_poll_member_ids
     Member.unscoped.where(id: merge_member_ids)
   end
 
