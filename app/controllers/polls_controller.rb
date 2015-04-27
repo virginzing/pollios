@@ -5,15 +5,15 @@ class PollsController < ApplicationController
   
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll, :create_new_public_poll]
 
-  before_action :set_current_member, only: [:member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+  before_action :set_current_member, only: [:list_mentionable, :member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
   before_action :history_voted_viewed_guest, only: [:guest_poll]
 
-  before_action :set_poll, only: [:member_voted, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:list_mentionable, :member_voted, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
 
-  before_action :compress_gzip, only: [:member_voted, :load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
+  before_action :compress_gzip, only: [:list_mentionable, :member_voted, :load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
 
   before_action :get_your_group, only: [:detail, :create_poll]
@@ -707,7 +707,7 @@ class PollsController < ApplicationController
     Comment.transaction do
       begin
         raise ExceptionHandler::Forbidden, "This poll disallow your comment" unless @poll.allow_comment
-        mentionable_list = comment_params[:mentionable_list]
+        list_mentioned = comment_params[:list_mentioned]
 
         # if @poll.comment_notify_state.idle?
         #   @poll.update_column(:comment_notify_state, 1)
@@ -720,7 +720,9 @@ class PollsController < ApplicationController
         # end
 
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-        @comment.create_mentions_list(@current_member, mentionable_list) if mentionable_list.present?
+
+        @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.count > 0
+
         @poll.increment!(:comment_count)
         # @poll.increment!(comment_count: @poll.comment_count + 1)
 
@@ -735,7 +737,7 @@ class PollsController < ApplicationController
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
 
         # CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })
-        # CommentMentionWorker.perform_in(5.seconds, @current_member.id, @poll.id, mentionable_list) if mentionable_list.present?
+        # CommentMentionWorker.perform_in(5.seconds, @current_member.id, @poll.id, list_mentioned) if list_mentioned.present?
         render status: :created
       rescue => e
         @error_message = e.message
@@ -759,6 +761,11 @@ class PollsController < ApplicationController
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
     @total_entries = @comments.total_entries
+  end
+
+  def list_mentionable
+    init_list_mentionable = Poll::ListMentionable.new(@current_member, @poll)
+    @list_mentionable = ActiveModel::ArraySerializer.new(init_list_mentionable.get_list_mentionable, each_serializer: MentionSerializer).as_json()
   end
 
   def delete_comment
@@ -814,7 +821,7 @@ class PollsController < ApplicationController
   end
 
   def comment_params
-    params.permit(:id, :message, :next_cursor, :comment_id, :member_id, :mentionable_list => [])
+    params.permit(:id, :message, :next_cursor, :comment_id, :member_id, :list_mentioned => [])
   end
 
   def hashtag_params

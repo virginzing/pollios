@@ -7,7 +7,9 @@ class Mention < ActiveRecord::Base
 
 
   def send_notification
-    CommentMentionWorker.perform_async(self.mentioner_id, comment.poll.id, [self.mentionable_id])
+    unless Rails.env.test?
+      CommentMentionWorker.perform_async(self.mentioner_id, comment.poll.id, [self.mentionable_id])
+    end
   end
 
 end

@@ -111,7 +111,7 @@ class Recommendation
   end
 
   def member_using_facebook
-    query = Member.having_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id)
+    query = Member.having_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id, first_signup: false)
     query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.count > 0
     query
   end

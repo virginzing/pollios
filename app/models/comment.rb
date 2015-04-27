@@ -21,9 +21,9 @@ class Comment < ActiveRecord::Base
     end
   end
 
-  def create_mentions_list(mentioner, mentionable_list)
-    mentionable_list = Member.where(id: mentionable_list)
-    mentionable_list.collect{|e| mentions.create!(mentioner_id: mentioner.id, mentioner_name: mentioner.get_name, mentionable_id: e.id, mentionable_name: e.get_name) }
+  def create_mentions_list(mentioner, list_mentioned)
+    list_member = Member.where(id: list_mentioned)
+    list_member.collect{|e| mentions.create!(mentioner_id: mentioner.id, mentioner_name: mentioner.get_name, mentionable_id: e.id, mentionable_name: e.get_name) }
   end
   
 end

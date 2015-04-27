@@ -297,6 +297,7 @@ Pollios::Application.routes.draw do
     post ':id/save_later',  to: 'polls#save_later'
     post ':id/un_save_later', to: 'polls#un_save_later'
     get ':id/qrcode',       to: 'polls#generate_qrcode'
+    get ':id/list_mentionable',           to: 'polls#list_mentionable'
     post 'poke_poll',       to: 'polls#poke_poll',  as: :poke_poll
     post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
     post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
@@ -335,6 +336,7 @@ Pollios::Application.routes.draw do
     get ':member_id/overall_timeline',           to: 'polls#overall_timeline'
     get ':member_id/group_timeline',             to: 'polls#group_timeline'
     get ':member_id/reward_timeline',            to: 'polls#reward_poll_timeline'
+  
 
     get ':id/detail',       to: 'polls#detail'
     post ':id/close',      to: 'polls#set_close'
