@@ -816,7 +816,7 @@ class PollsController < ApplicationController
 
     if ((poll_in_group & init_list_group.active.map(&:id)).count == 0)
       # if @poll.member_id != @current_member.id
-      raise ExceptionHandler::Forbidden, "Group permission denied"
+      raise ExceptionHandler::UnprocessableEntity, "Group permission denied"
       # end
     end
   end
