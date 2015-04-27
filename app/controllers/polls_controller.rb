@@ -721,7 +721,7 @@ class PollsController < ApplicationController
 
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
 
-        @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.count > 0
+        @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
 
         @poll.increment!(:comment_count)
         # @poll.increment!(comment_count: @poll.comment_count + 1)
@@ -741,9 +741,10 @@ class PollsController < ApplicationController
         render status: :created
       rescue => e
         @error_message = e.message
-        # puts "#{e.message}"
+        puts "#{e.message}"
         render status: :forbidden
       end
+
     end
   end
 

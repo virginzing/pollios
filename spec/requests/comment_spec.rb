@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Comment" do
   let!(:member) { create(:member) }
-  let!(:poll) { create(:poll, member: member) }
+  let!(:poll) { create(:poll, member: member, allow_comment: true) }
 
   describe "POST /poll/:id/comments" do
     before do
