@@ -237,4 +237,46 @@ RSpec.describe "Poll" do
   end
 
 
+  describe "GET /poll/:id/list_mentionable" do
+    let!(:group) { create(:group, member: member, name: "my group") }
+    let!(:poll_in_group) { create(:poll, title: "post poll in group", member: member, in_group: true) }
+    let!(:poll_groups) { create(:poll_group, member: member, poll: poll_in_group, group: group) }
+
+    let!(:group_member_one) { create(:group_member, member: member, group: group, is_master: true, active: true) }
+    let!(:group_member_two) { create(:group_member, member: friend, group: group, is_master: false, active: true) }
+
+    let!(:sample_friend_1) { create(:friend, follower: member, followed: friend, active: true, status: 1) }
+    let!(:smaple_friend_2) { create(:friend, follower: friend, followed: member, active: true, status: 1) }
+
+    context "in group" do
+      before do
+        get "/poll/#{poll_in_group.id}/list_mentionable.json", { member_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(response.status).to eq(200)
+      end
+
+      it "has 2 mentionable" do
+        expect(json["list_mentionable"].size).to eq(2)
+      end
+    end
+
+
+    context "in friend and public" do
+      before do
+        get "/poll/#{poll.id}/list_mentionable.json", { member_id: member.id }, { "Accept" => "application/json" }
+      end
+
+      it "success" do
+        expect(response.status).to eq(200)
+      end
+
+      it "has 1 mentionable" do
+        expect(json["list_mentionable"].size).to eq(1)
+      end
+    end
+  end
+
+
 end
