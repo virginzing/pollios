@@ -12,11 +12,11 @@ class CommentSerializer < ActiveModel::Serializer
   end
 
   def fullname
-    object.member.fullname
+    object.member_fullname
   end
 
   def name
-    object.member.get_name
+    object.member_fullname
   end
 
   def list_mentioned
@@ -28,7 +28,7 @@ class CommentSerializer < ActiveModel::Serializer
   end
 
   def avatar
-    object.member.avatar.to_s.present? ? "http://res.cloudinary.com/code-app/image/upload/c_fit,h_180,w_180,#{Cloudinary::QualityImage::SIZE}/" + object.member.avatar.to_s : ""
+    object.member_avatar.to_s.present? ? "http://res.cloudinary.com/code-app/image/upload/c_fit,h_180,w_180,#{Cloudinary::QualityImage::SIZE}/" + object.member_avatar.to_s : ""
   end
 
 end
