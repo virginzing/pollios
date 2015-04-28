@@ -28,7 +28,7 @@ module PollHelper
 
   def show_star_answer(star_count)
     star_text = "<i class='fa fa-star'></i>"
-    case star_count.split("").count
+    case star_count.split("").size
       when 1 then star_text*1
       when 2 then star_text*2
       when 3 then star_text*3
@@ -42,10 +42,10 @@ module PollHelper
       @query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).to_a
       {
         created_at: date,
-        count: @query.count,
-        poll_of_friend: @query.select{ |e| e.public == false && e.in_group_ids == '0' }.compact.count,
-        poll_of_public: @query.select{ |e| e.public == true }.compact.count,
-        poll_of_group: @query.select{ |e| e.public == false && e.in_group_ids != '0' }.compact.count
+        count: @query.size,
+        poll_of_friend: @query.select{ |e| e.public == false && e.in_group_ids == '0' }.compact.size,
+        poll_of_public: @query.select{ |e| e.public == true }.compact.size,
+        poll_of_group: @query.select{ |e| e.public == false && e.in_group_ids != '0' }.compact.size
       }
     end
   end
@@ -56,7 +56,7 @@ module PollHelper
     else
       date = Date.current - 1.day
     end
-    query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).group("date_part('hour', created_at + interval '7 hour')").count
+    query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).group("date_part('hour', created_at + interval '7 hour')").size
     new_hash = {}
 
     list = (0..23).to_a.map do |e|

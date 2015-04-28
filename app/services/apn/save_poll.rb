@@ -23,7 +23,7 @@ class Apn::SavePoll
   private
 
   def saved_poll
-    SavePollLater.select("member_id").group("save_poll_laters.member_id").count
+    SavePollLater.select("member_id").group("save_poll_laters.member_id").size
   end
   
 end

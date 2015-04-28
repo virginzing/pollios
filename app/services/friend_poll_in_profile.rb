@@ -77,23 +77,23 @@ class FriendPollInProfile
   end
 
   def poll_friend_count
-    poll_created_with_visibility.count
+    poll_created_with_visibility.size
   end
 
   def vote_friend_count
-    poll_voted_with_visibility.count
+    poll_voted_with_visibility.size
   end
 
   def watched_friend_count
-    poll_watched_with_visibility.count
+    poll_watched_with_visibility.size
   end
 
   def group_friend_count
-    mutual_or_public_group.map(&:id).uniq.count
+    mutual_or_public_group.map(&:id).uniq.size
   end
 
   def block_friend_count
-    block_friend.count
+    block_friend.size
   end
 
   private

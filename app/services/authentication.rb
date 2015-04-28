@@ -257,7 +257,7 @@ class Authentication
     if create_member_via_company? || select_service.present?
       waiting = false
     else
-      unless limit_member > Member.unscoped.where(created_company: false).count
+      unless limit_member > Member.unscoped.where(created_company: false).size
         waiting = true     
       end
     end

@@ -38,43 +38,43 @@ class MyPollInProfile
   ## create ##
 
   def create_public_poll
-    my_poll.select{|p| p.public == true }.count
+    my_poll.select{|p| p.public == true }.size
   end
 
   def create_friend_following_poll
-    my_poll.select{|p| p.public == false && p.in_group == false }.count
+    my_poll.select{|p| p.public == false && p.in_group == false }.size
   end
 
   def create_group_poll
-    my_poll.select{|p| p.in_group == true }.count
+    my_poll.select{|p| p.in_group == true }.size
   end
 
   ## vote ##
 
   def vote_public_poll
-    my_vote.select{|p| p.public == true }.count
+    my_vote.select{|p| p.public == true }.size
   end
 
   def vote_friend_following_poll
-    my_vote.select{|p| p.public == false && p.in_group == false }.count
+    my_vote.select{|p| p.public == false && p.in_group == false }.size
   end
 
   def vote_group_poll
-    my_vote.select{|p| p.in_group == true }.count
+    my_vote.select{|p| p.in_group == true }.size
   end
 
   ## watched ##
 
   def watch_public_poll
-    my_watched.select{|p| p.public == true }.count
+    my_watched.select{|p| p.public == true }.size
   end
 
   def watch_friend_following_poll
-    my_watched.select{|p| p.public == false && p.in_group == false }.count
+    my_watched.select{|p| p.public == false && p.in_group == false }.size
   end
 
   def watch_group_poll
-    my_watched.select{|p| p.in_group == true }.count
+    my_watched.select{|p| p.in_group == true }.size
   end
 
   private

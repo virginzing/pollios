@@ -12,8 +12,8 @@ class PollMember < ActiveRecord::Base
     member_block_and_banned = Member.list_friend_block.map(&:id) | Admin::BanMember.cached_member_ids
 
     query = where("polls.draft = 'f'")
-    query = query.where("#{table_name}.poll_id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
-    query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.count > 0
+    query = query.where("#{table_name}.poll_id NOT IN (?)", member_report_poll) if member_report_poll.size > 0
+    query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.size > 0
     query
   }
 

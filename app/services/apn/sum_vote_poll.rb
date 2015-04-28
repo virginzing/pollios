@@ -41,7 +41,7 @@ class Apn::SumVotePoll
   end
 
   def custom_message
-    count = get_voted_poll.map(&:member_id).count
+    count = get_voted_poll.map(&:member_id).size
 
     new_fullname ||= convert_list_fullname
 

@@ -67,7 +67,7 @@ class GroupStats
 
   def self.split(list_of_group)
     {
-      :amount => list_of_group.count
+      :amount => list_of_group.size
     }
   end
 

@@ -11,7 +11,7 @@ class CreateGroupCompany
   end
 
   def new_list_members_count
-    new_list_member_ids.count
+    new_list_member_ids.size
   end
 
   def create_group

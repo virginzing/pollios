@@ -22,11 +22,11 @@ class Branch < ActiveRecord::Base
   # end
   
   def get_questionnaire_count
-    branch_poll_series.uniq.count
+    branch_poll_series.uniq.size
   end
 
   def get_poll_count
-    branch_polls.uniq.count
+    branch_polls.uniq.size
   end
 
   def self.filter_by(startdate, finishdate, options)

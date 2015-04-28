@@ -171,7 +171,7 @@ class CompaniesController < ApplicationController
         flash[:notice] = "Plese fill <u>list email</u> or <u>import file</u> such as excel, csv, txt"
         wants.html { redirect_to new_member_to_company_path }
       else
-        if email_signup_success.count > 0
+        if email_signup_success.size > 0
           flash[:success] = "Email: #{email_signup_success} created sucessfully"
           wants.html { render 'new_member' }
         else
@@ -240,11 +240,11 @@ class CompaniesController < ApplicationController
 
       @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@poll).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
       # puts "qr => #{GenerateQrcodeLink.new(@poll).get_redirect_link}"
-      if @member_group.count > 0
-        @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
-        @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
-        @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
-        @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
+      if @member_group.size > 0
+        @percent_vote = ((@member_voted_poll.size * 100)/@member_group.size).to_s
+        @percent_novote = ((@member_novoted_poll.size * 100)/@member_group.size).to_s
+        @percent_view = ((@member_viewed_poll.size * 100)/@member_group.size).to_s
+        @percent_noview = ((@member_noviewed_poll.size * 100)/@member_group.size).to_s
       else
         zero_percent = "0"
         @percent_vote = zero_percent
@@ -319,7 +319,7 @@ class CompaniesController < ApplicationController
 
     if member_with_group.present?
       query = @init_poll.get_poll_of_group_company
-      query = query.where("polls.id NOT IN (?)", list_voted_poll_ids) if list_voted_poll_ids.count > 0
+      query = query.where("polls.id NOT IN (?)", list_voted_poll_ids) if list_voted_poll_ids.size > 0
       @list_unvote_poll = query.decorate
     else
       @list_unvote_poll = []
@@ -416,11 +416,11 @@ class CompaniesController < ApplicationController
       @member_noviewed_poll = init_company.get_member_not_viewed_poll
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
-      if @member_group.count > 0
-        @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
-        @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
-        @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
-        @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
+      if @member_group.size > 0
+        @percent_vote = ((@member_voted_poll.size * 100)/@member_group.size).to_s
+        @percent_novote = ((@member_novoted_poll.size * 100)/@member_group.size).to_s
+        @percent_view = ((@member_viewed_poll.size * 100)/@member_group.size).to_s
+        @percent_noview = ((@member_noviewed_poll.size * 100)/@member_group.size).to_s
       else
         zero_percent = "0"
         @percent_vote = zero_percent

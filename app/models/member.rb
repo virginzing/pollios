@@ -345,11 +345,11 @@ class Member < ActiveRecord::Base
   end
 
   def get_poll_count
-    Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").count
+    Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
   end
 
   def get_questionnaire_count
-    PollSeries.where("(poll_series.member_id = #{self.id})").count
+    PollSeries.where("(poll_series.member_id = #{self.id})").size
   end
 
   def new_avatar
@@ -359,7 +359,7 @@ class Member < ActiveRecord::Base
   def get_activity_count
     find_activify = Activity.find_by(member_id: id)
 
-    find_activify.present? ? find_activify.items.count : 0
+    find_activify.present? ? find_activify.items.size : 0
   end
 
   def get_first_signup
@@ -449,13 +449,13 @@ class Member < ActiveRecord::Base
 
   # def get_stats_all
   #   {
-  #     "my_poll" => cached_my_poll.count,
-  #     "my_vote" => cached_my_voted.count,
-  #     "my_watched" => cached_watched.count,
-  #     "friend" => cached_get_friend_active.count,
-  #     "group" => cached_get_group_active.count,
+  #     "my_poll" => cached_my_poll.size,
+  #     "my_vote" => cached_my_voted.size,
+  #     "my_watched" => cached_watched.size,
+  #     "friend" => cached_get_friend_active.size,
+  #     "group" => cached_get_group_active.size,
   #     "activity" => get_activity_count,
-  #     "following" => cached_get_following.count,
+  #     "following" => cached_get_following.size,
   #     "direct_msg" => 0,
   #     "status" => 0
   #   }
@@ -738,12 +738,12 @@ class Member < ActiveRecord::Base
       end
       member.update!(subscription: false, subscribe_expire: nil, member_type: :citizen)
     end
-    ApnNotifyExpireSubscriptionWorker.perform_async(0, list_member_subscribe_expiration_member_ids) if list_member_subscribe_expiration_member_ids.count > 0
+    ApnNotifyExpireSubscriptionWorker.perform_async(0, list_member_subscribe_expiration_member_ids) if list_member_subscribe_expiration_member_ids.size > 0
   end
 
   def self.notify_nearly_expire_subscription
     list_member_nearly_subscribe_expire = Member.where("date(subscribe_expire + interval '7 hour') = ?", Time.zone.today + 3.days).map(&:id).uniq
-    ApnNearlyExpireSubscriptionWorker.perform_async(0, list_member_nearly_subscribe_expire) if list_member_nearly_subscribe_expire.count > 0
+    ApnNearlyExpireSubscriptionWorker.perform_async(0, list_member_nearly_subscribe_expire) if list_member_nearly_subscribe_expire.size > 0
   end
 
   def self.check_blacklist_members

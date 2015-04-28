@@ -106,10 +106,10 @@ class VoteStats
     vote_in_group = list_of_vote.where("polls.public = 'f' AND polls.in_group_ids != '0'")
 
     new_hash.merge!({ 
-      :amount => list_of_vote.count,
-      :public => vote_public.count,
-      :friend_following => vote_friend_following.count,
-      :group => vote_in_group.count
+      :amount => list_of_vote.size,
+      :public => vote_public.size,
+      :friend_following => vote_friend_following.size,
+      :group => vote_in_group.size
     })
 
     new_hash

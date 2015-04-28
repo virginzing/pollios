@@ -68,17 +68,17 @@ class HashtagTimeline
   end
 
   def report_poll_filter(query)
-    query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.count > 0
+    query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.size > 0
     query
   end
 
   def hidden_poll_filter(query)
-    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.count > 0
+    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.size > 0
     query
   end
 
   def block_poll_filter(query)
-    query.where("polls.member_id NOT IN (?)", @block_member.map(&:id)) if @block_member.count > 0
+    query.where("polls.member_id NOT IN (?)", @block_member.map(&:id)) if @block_member.size > 0
     query
   end
 

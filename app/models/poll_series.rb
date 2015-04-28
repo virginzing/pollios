@@ -195,7 +195,7 @@ class PollSeries < ActiveRecord::Base
 
   def set_poll_series
     begin
-      self.number_of_poll = polls.count
+      self.number_of_poll = polls.size
       self.save
       list_choice = self.same_choices
       order_poll = 1
@@ -203,9 +203,9 @@ class PollSeries < ActiveRecord::Base
       Poll.unscoped.where("polls.poll_series_id = ?", self.id).order("id asc").each do |poll|
         if list_choice.present?
           list_choice.collect{ |answer| poll.choices.create!(answer: answer) }
-          choices_count = list_choice.count
+          choices_count = list_choice.size
         else
-          choices_count = poll.choices.count
+          choices_count = poll.choices.size
         end
         poll.update!(order_poll: order_poll, qr_only: qr_only, require_info: require_info, expire_date: expire_date, series: true, choice_count: choices_count, public: self.public, in_group_ids: self.in_group_ids, campaign_id: self.campaign_id, in_group: self.in_group, member_type: Member.find(self.member_id).member_type_text, qrcode_key: poll.generate_qrcode_key)
         order_poll += 1
@@ -295,12 +295,12 @@ class PollSeries < ActiveRecord::Base
 
     remain_can_survey = @members_surveyable - @members_voted
 
-    complete_status = remain_can_survey.count > 0 ? false : true
+    complete_status = remain_can_survey.size > 0 ? false : true
 
     {
       complete: complete_status,
-      member_voted: @members_voted.count,
-      member_amount: @members_surveyable.count 
+      member_voted: @members_voted.size,
+      member_amount: @members_surveyable.size 
     }
   end
 

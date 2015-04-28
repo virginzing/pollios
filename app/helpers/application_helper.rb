@@ -17,7 +17,7 @@ module ApplicationHelper
   def get_params_url(url)
     params = ""
     split_url = url.split("?")
-    if split_url.count > 1
+    if split_url.size > 1
       params = '?' << url.split("?").last
     end
     params
@@ -160,7 +160,7 @@ module ApplicationHelper
   def tag_clound(tags, classes)
     max = tags.sort_by(&:count).last
     tags.each do |tag|
-      index = tag.count.to_f / max.count * (classes.size - 1)
+      index = tag.size.to_f / max.size * (classes.size - 1)
       yield(tag, classes[index.round])
     end
     
@@ -279,9 +279,10 @@ end
 # }' -X POST http://localhost:3000/group/add_friend.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 93,
-#     "message": "comment from 93 93"
-# }' -X POST http://localhost:3000/poll/2991/comments.json -i
+#     "member_id": 126,
+#     "message": "@[11212] test test",
+#     "list_mentioned": [110, 93, 100]
+# }' -X POST http://localhost:3000/poll/3043/comments.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -457,10 +458,10 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 118,
-#     "friend_id": "118",
+#     "member_id": 93,
+#     "friend_id": "202",
 #     "admin": true
-# }' -X POST http://localhost:3000/group/88/promote_admin.json -i
+# }' -X POST http://localhost:3000/group/137/promote_admin.json -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 93,
@@ -757,8 +758,7 @@ end
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": "93",
-#     "fb_id": "07510509",
-#     "list_fb_id": ["1234", "4567", "0001"]
+#     "fb_id": ""
 # }' -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{

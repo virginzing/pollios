@@ -44,7 +44,7 @@ class Member::ListFriend
   end
 
   def friend_count
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_status == 1 }.to_a.count
+    cached_all_friends.select{|user| user if user.member_active == true && user.member_status == 1 }.to_a.size
   end
 
   def blocked_by_someone

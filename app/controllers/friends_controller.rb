@@ -168,7 +168,7 @@ class FriendsController < ApplicationController
   end
 
   def check_my_vote_flush_cache?(member, vote_poll_count)
-    member.flush_cache_my_vote if vote_poll_count != member.cached_my_voted.count
+    member.flush_cache_my_vote if vote_poll_count != member.cached_my_voted.size
   end
 
   def check_friend_vote_flush_cache?(friend, member, vote_poll_count)

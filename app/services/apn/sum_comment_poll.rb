@@ -23,7 +23,7 @@ class Apn::SumCommentPoll
   end
 
   def comment_count
-    @comment_count ||= get_comment_poll.to_a.count
+    @comment_count ||= get_comment_poll.to_a.size
   end
 
   def custom_message

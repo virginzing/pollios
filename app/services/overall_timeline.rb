@@ -67,7 +67,7 @@ class OverallTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member.count
+    cached_poll_ids_of_poll_member.size
   end
 
   def get_poll_shared
@@ -80,7 +80,7 @@ class OverallTimeline
 
   def unvote_count
     poll_id_from_poll_member = PollMember.available.where("id IN (?)", cached_poll_ids_of_poll_member).map(&:poll_id)
-    (poll_id_from_poll_member - Member.voted_polls.collect{|e| e["poll_id"] }).count
+    (poll_id_from_poll_member - Member.voted_polls.collect{|e| e["poll_id"] }).size
   end
 
   private
@@ -113,7 +113,7 @@ class OverallTimeline
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group)
 
     # puts "my_vote_questionnaire_ids => #{my_vote_questionnaire_ids}"
-    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
+    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.size > 0
     query = query.limit(LIMIT_TIMELINE)
     # query = check_new_pull_request(query)
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
@@ -198,8 +198,8 @@ class OverallTimeline
       @poll_ids   = @cache_polls[0..(LIMIT_POLL - 1)]
     end
 
-    if @cache_polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
+    if @cache_polls.size > LIMIT_POLL
+      if @poll_ids.size == LIMIT_POLL
         if @cache_polls[-1] == @poll_ids.last
           next_cursor = 0
         else
@@ -219,7 +219,7 @@ class OverallTimeline
 
   def filter_overall_timeline(next_cursor)
     poll_member = PollMember.includes([{:poll => [:groups, :choices, :campaign, :poll_series, :member]}]).where("id IN (?)", @poll_ids).order("id desc")
-    poll_member = poll_member.where("poll_id NOT IN (?)", check_poll_not_show_result) if check_poll_not_show_result.count > 0
+    poll_member = poll_member.where("poll_id NOT IN (?)", check_poll_not_show_result) if check_poll_not_show_result.size > 0
 
     poll_member.each do |poll_member|
       if poll_member.share_poll_of_id == 0
