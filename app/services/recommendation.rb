@@ -61,8 +61,8 @@ class Recommendation
 
     # puts "mutual_ids => #{mutual_ids}"
     query = Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
-    query = query.where("id NOT IN (?)", unrecommended) if unrecommended.length > 0
-    query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.length > 0
+    query = query.where("id NOT IN (?)", unrecommended) if unrecommended.size > 0
+    query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.size > 0
     query
   end
 
@@ -79,9 +79,9 @@ class Recommendation
   def find_office_account
     following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
     query = Member.with_member_type(:brand, :celebrity).order("created_at desc").limit(500)
-    query = query.where("id NOT IN (?)", following) if following.length > 0
-    query = query.where("id NOT IN (?)", unrecommended) if unrecommended.length > 0
-    query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.length > 0
+    query = query.where("id NOT IN (?)", following) if following.size > 0
+    query = query.where("id NOT IN (?)", unrecommended) if unrecommended.size > 0
+    query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.size > 0
     query = query.where("id NOT IN (?)", get_friend_active) if get_friend_active.size > 0
     query = query.where("id != ?", @member.id)
     return query
@@ -112,7 +112,7 @@ class Recommendation
 
   def member_using_facebook
     query = Member.having_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id, first_signup: false)
-    query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.count > 0
+    query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.size > 0
     query
   end
   
