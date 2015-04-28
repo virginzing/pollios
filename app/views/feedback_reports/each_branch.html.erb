@@ -81,22 +81,22 @@
                 </h4>
               </td>
               <td class="text-center">
-                <a href="javascript:void(0);"><%= sum_average(array_list, @collection.questions.count, number_people_vote, index) %></a>
+                <a href="javascript:void(0);"><%= sum_average(array_list, @collection.questions.size, number_people_vote, index) %></a>
               </td>
               <td class="text-center">
-                <a href="javascript:void(0);"><%= percent_average(array_list, @collection.questions.count, number_people_vote, index) %> %</a>
+                <a href="javascript:void(0);"><%= percent_average(array_list, @collection.questions.size, number_people_vote, index) %> %</a>
               </td>
               <td class="text-center">
                 <a href="javascript:void(0);">
                   <div class="rating" style="width: 100%; font-size: 10px;">
-                    <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= sum_average(array_list, @collection.questions.count, number_people_vote, index) %>"> 
+                    <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= sum_average(array_list, @collection.questions.size, number_people_vote, index) %>"> 
                   </div>
                 </a>
               </td>
             </tr>
           <% end %>
         <% else %>
-          <td colspan="<%= 4 + @collection.questions.count %>" class="text-center">There is no data to display</td>
+          <td colspan="<%= 4 + @collection.questions.size %>" class="text-center">There is no data to display</td>
         <% end %>
 
       </tbody>

@@ -2,7 +2,7 @@ namespace :poll do
   desc "Choice Count"
   task choice_count: :environment do
     Poll.all.each do |poll|
-      poll.update(choice_count: poll.choices.count)
+      poll.update(choice_count: poll.choices.size)
     end
   end
 
@@ -133,7 +133,7 @@ namespace :poll do
 
   # Poll.all.each do |p|
   #   if p.comments.present?
-  #     p.update_columns(comment_count: p.comments.to_a.count)
+  #     p.update_columns(comment_count: p.comments.to_a.size)
   #   end
   # end
 

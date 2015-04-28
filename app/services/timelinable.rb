@@ -105,8 +105,8 @@ module Timelinable
       @poll_ids = @cache_polls[0..(LIMIT_POLL - 1)]
     end
 
-    if @cache_polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
+    if @cache_polls.size > LIMIT_POLL
+      if @poll_ids.size == LIMIT_POLL
         if  @cache_polls[-1] == @poll_ids.last
           next_cursor = 0
         else

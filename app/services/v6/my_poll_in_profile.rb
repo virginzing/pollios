@@ -97,43 +97,43 @@ class V6::MyPollInProfile
   ## create ##
 
   def create_public_poll
-    my_poll.select{|p| p.public == true }.count
+    my_poll.select{|p| p.public == true }.size
   end
 
   def create_friend_following_poll
-    my_poll.select{|p| p.public == false && p.in_group == false }.count
+    my_poll.select{|p| p.public == false && p.in_group == false }.size
   end
 
   def create_group_poll
-    my_poll.select{|p| p.in_group == true }.count
+    my_poll.select{|p| p.in_group == true }.size
   end
 
   ## vote ##
 
   def vote_public_poll
-    my_vote.select{|p| p.public == true }.count
+    my_vote.select{|p| p.public == true }.size
   end
 
   def vote_friend_following_poll
-    my_vote.select{|p| p.public == false && p.in_group == false }.count
+    my_vote.select{|p| p.public == false && p.in_group == false }.size
   end
 
   def vote_group_poll
-    my_vote.select{|p| p.in_group == true }.count
+    my_vote.select{|p| p.in_group == true }.size
   end
 
   ## watched ##
 
   def watch_public_poll
-    my_watched.select{|p| p.public == true }.count
+    my_watched.select{|p| p.public == true }.size
   end
 
   def watch_friend_following_poll
-    my_watched.select{|p| p.public == false && p.in_group == false }.count
+    my_watched.select{|p| p.public == false && p.in_group == false }.size
   end
 
   def watch_group_poll
-    my_watched.select{|p| p.in_group == true }.count
+    my_watched.select{|p| p.in_group == true }.size
   end
 
   private
@@ -150,7 +150,7 @@ class V6::MyPollInProfile
                        "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                        "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
                        your_group_ids, your_group_ids).references(:poll_groups)
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -162,8 +162,8 @@ class V6::MyPollInProfile
                        "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1 AND polls.qr_only = 'f')" \
                        "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
                        your_group_ids).references(:poll_groups)    
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -176,8 +176,8 @@ class V6::MyPollInProfile
                        "OR (watcheds.member_id = #{member_id} AND poll_groups.group_id IN (?))", your_group_ids)
                 .order("watcheds.created_at DESC")
                 .references(:poll_groups)
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -187,9 +187,9 @@ class V6::MyPollInProfile
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", saved_questionnaire_ids_later, saved_poll_ids_later)
 
-    query = query.where("polls.id NOT IN (?)", my_vote_poll_ids) if my_vote_poll_ids.count > 0
-    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", my_vote_poll_ids) if my_vote_poll_ids.size > 0
+    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -199,8 +199,8 @@ class V6::MyPollInProfile
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", bookmarked_questionnaire_ids, bookmarked_poll_ids)
 
-    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -247,8 +247,8 @@ class V6::MyPollInProfile
       @poll_ids = @polls[0..(LIMIT_POLL - 1)]
     end
 
-    if @polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
+    if @polls.size > LIMIT_POLL
+      if @poll_ids.size == LIMIT_POLL
         if @polls[-1] == @poll_ids.last
           next_cursor = 0
         else

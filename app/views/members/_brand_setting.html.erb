@@ -33,9 +33,9 @@
                    <div class="col-md-3">
                       <ul class="list-unstyled profile-nav">
                          <li><%= image_tag(current_member.avatar.url, class: "img-responsive") %></li>
-                         <li><a href="#">Friend <span><%= current_member.cached_get_friend_active.count %></span></a></li>
-                         <li><a href="#">Following <span><%= current_member.cached_get_following.count %></a></li>
-                         <li><a href="#">Follower <span><%= current_member.cached_get_follower.count %></a></li>
+                         <li><a href="#">Friend <span><%= current_member.cached_get_friend_active.size %></span></a></li>
+                         <li><a href="#">Following <span><%= current_member.cached_get_following.size %></a></li>
+                         <li><a href="#">Follower <span><%= current_member.cached_get_follower.size %></a></li>
                       </ul>
                    </div>
                    <div class="col-md-9">

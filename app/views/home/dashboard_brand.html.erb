@@ -9,10 +9,10 @@
           <h5>Poll<span class="txt-color-blue"><i class="fa fa-edit"></i> <%= @current_member.get_poll_count %></span></h5>
         </li>
         <li class="sparks-info">
-          <h5>Questionnaire<span class="txt-color-green"><i class="fa fa-edit"></i> <%= @current_member.cached_my_questionnaire.count %></span></h5>
+          <h5>Questionnaire<span class="txt-color-green"><i class="fa fa-edit"></i> <%= @current_member.cached_my_questionnaire.size %></span></h5>
         </li>
         <li class="sparks-info">
-          <h5>Follower<span class="txt-color-purple"><i class="fa fa-user"></i> <%= @current_member.cached_get_follower.count %></span></h5>
+          <h5>Follower<span class="txt-color-purple"><i class="fa fa-user"></i> <%= @current_member.cached_get_follower.size %></span></h5>
         </li>
       </ul>
     </div>

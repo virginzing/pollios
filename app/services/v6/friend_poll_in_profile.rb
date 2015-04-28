@@ -114,23 +114,23 @@ class V6::FriendPollInProfile
   end
 
   def poll_friend_count
-    poll_created_with_visibility.count
+    poll_created_with_visibility.size
   end
 
   def vote_friend_count
-    poll_voted_with_visibility.count
+    poll_voted_with_visibility.size
   end
 
   def watched_friend_count
-    poll_watched_with_visibility.count
+    poll_watched_with_visibility.size
   end
 
   def group_friend_count
-    mutual_or_public_group.map(&:id).uniq.count
+    mutual_or_public_group.map(&:id).uniq.size
   end
 
   def block_friend_count
-    block_friend.count
+    block_friend.size
   end
 
   private
@@ -174,8 +174,8 @@ class V6::FriendPollInProfile
                 "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
                 my_and_friend_group, my_and_friend_group).references(:poll_groups)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -187,8 +187,8 @@ class V6::FriendPollInProfile
             "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))",
             my_and_friend_group).references(:poll_groups)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -202,7 +202,7 @@ class V6::FriendPollInProfile
             .order("watcheds.created_at DESC")
             .references(:poll_groups)
             
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -267,8 +267,8 @@ class V6::FriendPollInProfile
       @poll_ids = @polls[0..(LIMIT_POLL - 1)]
     end
 
-    if @polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
+    if @polls.size > LIMIT_POLL
+      if @poll_ids.size == LIMIT_POLL
         if @polls[-1] == @poll_ids.last
           next_cursor = 0
         else

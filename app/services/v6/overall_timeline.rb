@@ -53,7 +53,7 @@ class V6::OverallTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
+    cached_poll_ids_of_poll_member(TYPE_TIMELINE).size
   end
 
   def get_hash_priority
@@ -105,8 +105,8 @@ class V6::OverallTimeline
                                                              new_your_friend_ids,
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group).references(:poll_groups)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
 
     query = query.limit(LIMIT_TIMELINE)
 
@@ -159,8 +159,8 @@ class V6::OverallTimeline
                                                     new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)
     
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end

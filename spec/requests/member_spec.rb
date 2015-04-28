@@ -111,12 +111,12 @@ RSpec.describe "Member" do
 
       it "has one your request when add friend" do
         get "/member/#{member.id}/all_request.json", { }, { "Accept" => "application/json" }
-        expect(json["your_request"].count).to eq(1)
+        expect(json["your_request"].size).to eq(1)
       end
 
       it "has one friend request when added" do
         get "/member/#{friend.id}/all_request.json", { }, { "Accept" => "application/json" }
-        expect(json["friend_request"].count).to eq(1)
+        expect(json["friend_request"].size).to eq(1)
       end
 
       it "change status of user_one to invite" do
@@ -144,7 +144,7 @@ RSpec.describe "Member" do
     end
 
     it "create invite" do
-      expect(member.invites.count).to eq(5)
+      expect(member.invites.size).to eq(5)
     end
   end
 
@@ -203,7 +203,7 @@ RSpec.describe "Member" do
     end
 
     it "has 2 recommended official accounts" do
-      expect(json["recommendations_official"].count).to eq(2)
+      expect(json["recommendations_official"].size).to eq(2)
     end
   end
 

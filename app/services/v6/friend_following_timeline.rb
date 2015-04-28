@@ -28,7 +28,7 @@ class V6::FriendFollowingTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
+    cached_poll_ids_of_poll_member(TYPE_TIMELINE).size
   end
   
   private
@@ -44,7 +44,7 @@ class V6::FriendFollowingTimeline
         your_friend_ids,
         your_following_ids)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
 
     query = query.limit(LIMIT_TIMELINE)
     
@@ -59,7 +59,7 @@ class V6::FriendFollowingTimeline
       your_friend_ids,
       your_following_ids)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids).limit(LIMIT_TIMELINE) if with_out_poll_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids).limit(LIMIT_TIMELINE) if with_out_poll_ids.size > 0
 
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end

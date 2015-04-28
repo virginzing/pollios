@@ -20,7 +20,7 @@ class V6::PublicTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
+    cached_poll_ids_of_poll_member(TYPE_TIMELINE).size
   end
 
   private
@@ -30,7 +30,7 @@ class V6::PublicTimeline
     
     query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_public})")
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
 
     query = query.limit(LIMIT_TIMELINE) 
 

@@ -12,8 +12,8 @@
       </thead>
       <tbody>
         <% @poll.cached_choices.each_with_index do |choice, index| %>
-        <% male = HistoryVote.get_gender_analysis(@poll.id, choice.id, "Male").count %>
-        <% female = HistoryVote.get_gender_analysis(@poll.id, choice.id, "Female").count %>
+        <% male = HistoryVote.get_gender_analysis(@poll.id, choice.id, "Male").size %>
+        <% female = HistoryVote.get_gender_analysis(@poll.id, choice.id, "Female").size %>
   
         <tr>
           <td class="text-center" width="250" style="font-size: 18px;"><strong><%= choice.answer %></strong></td>

@@ -42,7 +42,7 @@ class PublicTimelinable
                   where("(#{query_poll_public_with_hidden} AND #{poll_unexpire})", my_hidden)
     end
 
-    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
+    query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.size > 0
 
     if to_bool(@pull_request)
       query = query.where("polls.id > ? AND polls.updated_at > ?", since_id, @member.poll_public_req_at)

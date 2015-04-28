@@ -92,8 +92,8 @@ class V6::PollOfGroup
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("(#{poll_group_query} AND #{poll_unexpire})").uniq
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -140,8 +140,8 @@ class V6::PollOfGroup
       @poll_ids = @polls[0..(LIMIT_POLL - 1)]
     end
 
-    if @polls.count > LIMIT_POLL
-      if @poll_ids.count == LIMIT_POLL
+    if @polls.size > LIMIT_POLL
+      if @poll_ids.size == LIMIT_POLL
         if @polls[-1] == @poll_ids.last
           next_cursor = 0
         else

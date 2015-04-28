@@ -413,7 +413,7 @@ RSpec.describe "Friend" do
       end
 
       it "have 2 group of member" do
-        expect(Member::ListGroup.new(member).active.count).to eq(2)
+        expect(Member::ListGroup.new(member).active.size).to eq(2)
       end
     end
 
@@ -427,15 +427,15 @@ RSpec.describe "Friend" do
       end
 
       it "see 1 group in list group of friend (together group)" do
-        expect(json["groups"].count).to eq(1)
+        expect(json["groups"].size).to eq(1)
       end
 
       it "have 2 group of friend (together group)" do
-        expect(Friend::ListGroup.new(member, friend).together_group_of_friend.to_a.count).to eq(2)
+        expect(Friend::ListGroup.new(member, friend).together_group_of_friend.to_a.size).to eq(2)
       end
 
       it "have 1 group of friend (together group with non virtual)" do
-        expect(Friend::ListGroup.new(member, friend).together_group_of_friend_non_virtual.to_a.count).to eq(1)
+        expect(Friend::ListGroup.new(member, friend).together_group_of_friend_non_virtual.to_a.size).to eq(1)
       end
     end
 
@@ -489,7 +489,7 @@ RSpec.describe "Friend" do
 
       expect(json["response_status"]).to eq("OK")
 
-      expect(json["friend"].count).to eq(2)  
+      expect(json["friend"].size).to eq(2)  
     end
     
   end

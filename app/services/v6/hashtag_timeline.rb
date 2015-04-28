@@ -41,7 +41,7 @@ class V6::HashtagTimeline
   end
 
   def total_entries
-    cached_poll_ids_of_poll_member(TYPE_TIMELINE).count
+    cached_poll_ids_of_poll_member(TYPE_TIMELINE).size
   end
 
   def get_recent_search_tags
@@ -84,17 +84,17 @@ class V6::HashtagTimeline
   end
 
   def report_poll_filter(query)
-    query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.count > 0
+    query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.size > 0
     query
   end
 
   def hidden_poll_filter(query)
-    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.count > 0
+    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.size > 0
     query
   end
 
   def block_poll_filter(query)
-    query.where("polls.member_id NOT IN (?)", @block_member.map(&:id)) if @block_member.count > 0
+    query.where("polls.member_id NOT IN (?)", @block_member.map(&:id)) if @block_member.size > 0
     query
   end
 
@@ -124,9 +124,9 @@ class V6::HashtagTimeline
                       .where("tags.name = ?", query_tag)
                       .where("(polls.in_group = 'f') OR (polls.in_group = 't' AND poll_groups.group_id IN (?))", your_group_ids).references(:poll_groups)         
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
 
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.count > 0
+    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
 
     query.each do |q|
       priority << check_poll_priority(q.poll)

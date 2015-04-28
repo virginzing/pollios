@@ -1,4 +1,4 @@
 <div class="well">
-  <h3>Member : <%= Member.unscoped.where(created_company: false).order("id asc").count %> / <%= ENV["LIMIT_MEMBER"] %></h3>
+  <h3>Member : <%= Member.unscoped.where(created_company: false).order("id asc").size %> / <%= ENV["LIMIT_MEMBER"] %></h3>
 
 </div>

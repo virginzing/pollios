@@ -56,7 +56,7 @@ class PollOfGroup
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("#{poll_group_query}").uniq
 
-    query = query.where("polls.id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.count > 0
+    query = query.where("polls.id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.size > 0
 
     query
   end
