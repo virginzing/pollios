@@ -216,8 +216,6 @@ class MembersController < ApplicationController
         end
       end
 
-      check_invited if first_signup.to_s.present?
-
       if @current_member.update(update_profile_params.except(:member_id))
         if fullname
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
@@ -238,6 +236,8 @@ class MembersController < ApplicationController
         if cover_preset.present? && @current_member.cover.present?
           @current_member.remove_old_cover
         end
+
+        check_invited if first_signup.to_s.present?
 
         @member = @current_member.reload
 
