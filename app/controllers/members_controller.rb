@@ -258,10 +258,8 @@ class MembersController < ApplicationController
     @list_invite = Invite.where(email: @current_member.email)
     @list_invite.update_all(invitee_id: @current_member.id)
 
-    # puts "@list_invite.map(&:member_id).uniq => #{@list_invite.map(&:member_id).uniq}"
-    
     @list_invite.map(&:member_id).uniq.each do |friend_id|
-      Friend.add_friend({ member_id: @current_member.id, friend_id: friend_id})
+      Friend.add_friend({ member_id: @current_member.id, friend_id: friend_id })
     end
   end
 

@@ -5,7 +5,7 @@ class AddFriendWorker
   sidekiq_options unique: true
 
   def perform(member_id, friend_id, options = {})
-    begin
+    # begin
       member = Member.cached_find(member_id)
       friend = Member.cached_find(friend_id)
 
@@ -59,9 +59,9 @@ class AddFriendWorker
       end
 
       Apn::App.first.send_notifications
-    rescue => e
-      puts "AddFriendWorker => #{e.message}"
-    end
+    # rescue => e
+    #   puts "AddFriendWorker => #{e.message}"
+    # end
   end
 
 
