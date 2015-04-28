@@ -273,7 +273,7 @@ class PollsController < ApplicationController
 
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
-            raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
+            raise ExceptionHandler::NotAcceptable, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
             if @poll.groups.count > 1
               delete_poll_in_more_group
             else
@@ -304,7 +304,7 @@ class PollsController < ApplicationController
   end
 
   def delete_my_poll
-    raise ExceptionHandler::Forbidden, "You're not creator poll" unless @poll.member_id == @member_id
+    raise ExceptionHandler::UnprocessableEntity, "You're not creator poll" unless @poll.member_id == @member_id
     @poll.destroy
     DeletePoll.create_log(@poll)
   end
@@ -314,10 +314,10 @@ class PollsController < ApplicationController
       begin
         find_poll = PollGroup.find_by(poll_id: @poll.id, group_id: params[:group_id], share_poll_of_id: @poll.id)
         if find_poll.present?
-          raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@current_member.id) || find_poll.member_id == @current_member.id
+          raise ExceptionHandler::UnprocessableEntity, "You're not an admin of this group" unless set_group.get_admin_group.map(&:id).include?(@current_member.id) || find_poll.member_id == @current_member.id
           find_poll.destroy
         else
-          raise ExceptionHandler::NotFound, "Not found poll was shared"
+          raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND
         end
       end
     end
@@ -597,13 +597,6 @@ class PollsController < ApplicationController
 
 
   def hashtag
-    # hashtag = HashtagTimeline.new(@current_member, hashtag_params)
-    # @polls = hashtag.get_hashtag.paginate(page: params[:next_cursor])
-    # @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    # @group_by_name = hashtag.group_by_name
-    # @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    # @total_entries = @polls.total_entries
-
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
     @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_timeline
     @group_by_name = @init_hash_tag.group_by_name
@@ -706,11 +699,11 @@ class PollsController < ApplicationController
   def comment  #post comment
     Comment.transaction do
       begin
-        raise ExceptionHandler::Forbidden, "This poll disallow your comment" unless @poll.allow_comment
+        raise ExceptionHandler::NotAcceptable, "This poll disallow your comment." unless @poll.allow_comment
+
         list_mentioned = comment_params[:list_mentioned]
-        # if (@current_member.id != @poll.member_id) && !@poll.series
+
         Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
-        # end
 
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
 
@@ -806,12 +799,7 @@ class PollsController < ApplicationController
   def raise_exception_without_group
     init_list_group = Member::ListGroup.new(@current_member)
     poll_in_group = @poll.in_group_ids.split(",").collect{|e| e.to_i }
-
-    if ((poll_in_group & init_list_group.active.map(&:id)).count == 0)
-      # if @poll.member_id != @current_member.id
-      raise ExceptionHandler::UnprocessableEntity, "Group permission denied"
-      # end
-    end
+    raise ExceptionHandler::NotAcceptable, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).count == 0)
   end
 
   def comment_params

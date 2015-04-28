@@ -7,6 +7,7 @@ module ExceptionHandler
     rescue_from Forbidden, :with => :forbdden
     rescue_from UnprocessableEntity, :with => :unprocessable_entity
     rescue_from Unauthorized, :with => :unauthorized
+    rescue_from NotAcceptable, :with => :not_acceptable
     rescue_from Maintenance, :with => :maintenance
     rescue_from MemberNotFoundHtml, :with => :known_error_html
     rescue_from MobileNotFound, :with => :mobile_not_found
@@ -19,6 +20,7 @@ module ExceptionHandler
   class Forbidden < StandardError; end
   class UnprocessableEntity < StandardError; end
   class Unauthorized < StandardError; end
+  class NotAcceptable < StandardError; end
   class Maintenance < StandardError; end
   class MemberNotFoundHtml < StandardError; end
   class MobileNotFound < StandardError; end
@@ -65,6 +67,10 @@ module ExceptionHandler
 
   def unauthorized(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unauthorized
+  end
+
+  def not_acceptable(ex)
+    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :not_acceptable
   end
 
   def maintenance(ex)

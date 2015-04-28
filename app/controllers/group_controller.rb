@@ -142,7 +142,7 @@ class GroupController < ApplicationController
 
       find_member_in_group = @member_active.map(&:id)
 
-      raise ExceptionHandler::Forbidden, "You have joined in #{@group.name} already" if find_member_in_group.include?(member_id)
+      raise ExceptionHandler::UnprocessableEntity, "You have joined in #{@group.name} already" if find_member_in_group.include?(member_id)
       
       if GroupMember.have_request_group?(@group, @current_member)
         Group.accept_group(@current_member, { id: @group.id, member_id: @current_member.id } )
@@ -186,16 +186,6 @@ class GroupController < ApplicationController
     @notification = @group.set_notification(group_params[:member_id]) 
   end
 
-  # def public_id
-  #   begin
-  #     @group = @group.update!(public_id: group_params[:public_id])
-  #   rescue ActiveRecord::RecordInvalid => invalid
-  #     @group = nil
-  #     @error_message = invalid.record.errors.messages[:public_id][0]
-  #     render status: :unprocessable_entity
-  #   end
-  # end
-
   def set_public
     begin
       @group.update_attributes!(public: edit_group_params[:public], public_id: edit_group_params[:public_id])
@@ -235,7 +225,6 @@ class GroupController < ApplicationController
               find_member.remove_role :group_admin, find_group
             end
           else
-            # raise ExceptionHandler::Forbidden, "You have already exist admin of #{find_exist_role_member.name} Company"
             format.json { render text: "You have already exist admin of #{find_exist_role_member.name} Company" , status: :unprocessable_entity }
           end
 
