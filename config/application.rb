@@ -12,6 +12,7 @@ require 'spreadsheet'
 require 'zip'
 require 'rqrcode_png'
 require 'wannabe_bool'
+require 'benchmark/ips'
 
 # MultiJson.engine = :yajl
 # Benchmark.bmbm(5) do |x|

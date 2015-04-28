@@ -51,7 +51,7 @@ module Api
       def set_group
         begin
           @group = Group.find(params[:group_id])
-          raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+          raise ExceptionHandler::NotFound, ExceptionHandler::Message::Group::NOT_FOUND unless @group.present?
         end
       end
 

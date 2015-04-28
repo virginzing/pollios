@@ -142,7 +142,7 @@ class PollsController < ApplicationController
 
       # puts "history vote show result => #{@history_votes_show_result}"
 
-      # puts "history votes not show result => #{@history_votes_not_show_result.count}"
+      # puts "history votes not show result => #{@history_votes_not_show_result.size}"
     rescue ActiveRecord::RecordNotFound => e
       @response_message = e.message
     end
@@ -230,7 +230,7 @@ class PollsController < ApplicationController
       @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
       new_poll_binary_params = @build_poll.poll_binary_params
       @poll = Poll.new(new_poll_binary_params)
-      @poll.choice_count = @build_poll.list_of_choice.count
+      @poll.choice_count = @build_poll.list_of_choice.size
       @poll.qrcode_key = @poll.generate_qrcode_key
       
       if @poll.save
@@ -274,7 +274,7 @@ class PollsController < ApplicationController
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
             raise ExceptionHandler::NotAcceptable, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
-            if @poll.groups.count > 1
+            if @poll.groups.size > 1
               delete_poll_in_more_group
             else
               delete_poll_in_one_group
@@ -335,11 +335,11 @@ class PollsController < ApplicationController
       @member_noviewed_poll = init_company.get_member_not_viewed_poll
       @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
 
-      if @member_group.count > 0
-        @percent_vote = ((@member_voted_poll.count * 100)/@member_group.count).to_s
-        @percent_novote = ((@member_novoted_poll.count * 100)/@member_group.count).to_s
-        @percent_view = ((@member_viewed_poll.count * 100)/@member_group.count).to_s
-        @percent_noview = ((@member_noviewed_poll.count * 100)/@member_group.count).to_s
+      if @member_group.size > 0
+        @percent_vote = ((@member_voted_poll.size * 100)/@member_group.size).to_s
+        @percent_novote = ((@member_novoted_poll.size * 100)/@member_group.size).to_s
+        @percent_view = ((@member_viewed_poll.size * 100)/@member_group.size).to_s
+        @percent_noview = ((@member_noviewed_poll.size * 100)/@member_group.size).to_s
       else
         zero_percent = "0"
         @percent_vote = zero_percent
@@ -799,7 +799,7 @@ class PollsController < ApplicationController
   def raise_exception_without_group
     init_list_group = Member::ListGroup.new(@current_member)
     poll_in_group = @poll.in_group_ids.split(",").collect{|e| e.to_i }
-    raise ExceptionHandler::NotAcceptable, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).count == 0)
+    raise ExceptionHandler::NotAcceptable, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).size == 0)
   end
 
   def comment_params

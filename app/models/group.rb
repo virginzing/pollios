@@ -69,7 +69,7 @@ class Group < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @group = Group.find_by(id: id)
-      raise ExceptionHandler::NotFound, "Group not found" unless @group.present?
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Group::NOT_FOUND unless @group.present?
       @group
     end
   end
@@ -254,10 +254,10 @@ class Group < ActiveRecord::Base
     find_admin_group = group.get_admin_group.map(&:id)
 
     unless group.system_group
-      raise ExceptionHandler::Forbidden, "You are not admin of group" unless find_admin_group.include?(member_id) 
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP unless find_admin_group.include?(member_id) 
     end
 
-    if check_valid_friend.count > 0
+    if check_valid_friend.size > 0
       Member.where(id: check_valid_friend).each do |friend|
         GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         FlushCached::Member.new(friend).clear_list_groups
@@ -281,10 +281,6 @@ class Group < ActiveRecord::Base
     Group.transaction do
       where(id: list_group).each do |group|
         group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
-        # if group.poll_groups.create!(poll_id: poll.id, member_id: member.id)
-          # group.increment!(:poll_count)
-          # GroupNotificationWorker.perform_in(10.seconds.from_now, member.id, group.id, poll.id)
-        # end
       end
     end
   end
@@ -296,7 +292,8 @@ class Group < ActiveRecord::Base
 
   def kick_member_out_group(kicker, friend_id)
     begin
-      raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: kicker.id).is_master
+
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(kicker)
 
       member = Member.cached_find(friend_id)
 
@@ -307,7 +304,7 @@ class Group < ActiveRecord::Base
 
         FlushCached::Group.new(self).clear_list_members
       else
-        raise ExceptionHandler::NotFound, "Not found this member in group"
+        raise ExceptionHandler::NotFound, ExceptionHandler::Message::Member::NOT_FOUND
       end
 
       FlushCached::Member.new(member).clear_list_groups
@@ -318,7 +315,7 @@ class Group < ActiveRecord::Base
 
   def promote_admin(promoter, friend_id, admin_status = true)
     begin
-      raise ExceptionHandler::Forbidden, "You're not an admin of the group" unless group_members.find_by(member_id: promoter.id).is_master
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
 
       member = Member.cached_find(friend_id)
       
@@ -343,7 +340,7 @@ class Group < ActiveRecord::Base
               find_member.remove_role :group_admin, find_group
             end
           else
-            raise ExceptionHandler::Forbidden, "You have already exist admin of #{find_exist_role_member.name} Company"
+            raise ExceptionHandler::UnprocessableEntity, "You have already exist admin of #{find_exist_role_member.name} Company"
           end
 
         else
@@ -351,10 +348,9 @@ class Group < ActiveRecord::Base
         end
 
       else
-        raise ExceptionHandler::NotFound, "Not found this member in group"
+        raise ExceptionHandler::NotFound, ExceptionHandler::Message::GROUP::NOT_IN_GROUP
       end
-
-      # Rails.cache.delete([friend_id, 'group_active'])
+      
       FlushCached::Group.new(self).clear_list_members
       FlushCached::Member.new(member).clear_list_groups
       self
@@ -375,27 +371,27 @@ class Group < ActiveRecord::Base
     my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
     # puts "#{poll_groups_ids}"
     # puts "#{my_vote_poll_ids}"
-    return (poll_groups_ids - my_vote_poll_ids).count
+    return (poll_groups_ids - my_vote_poll_ids).size
   end
 
 
   # def get_member_count
-  #   group_members_active.map(&:id).count
+  #   group_members_active.map(&:id).size
   # end
 
   def get_member_count
     # Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/member_count") do
-    #   group_members_active.map(&:id).count
+    #   group_members_active.map(&:id).size
     # end
-    Group::ListMember.new(self).active.to_a.count
+    Group::ListMember.new(self).active.to_a.size
   end
 
   def get_all_member_count
-    group_members.map(&:member_id).uniq.count
+    group_members.map(&:member_id).uniq.size
   end
 
   def get_all_poll_count
-    poll_groups.map(&:poll_id).uniq.count
+    poll_groups.map(&:poll_id).uniq.size
   end
 
   def is_company?

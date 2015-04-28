@@ -101,8 +101,8 @@ class Poll < ActiveRecord::Base
     member_block_and_banned = Member.list_friend_block.map(&:id) | Admin::BanMember.cached_member_ids
         
     query = having_status_poll(:gray, :white).where(draft: false)
-    query = query.where("#{table_name}.id NOT IN (?)", member_report_poll) if member_report_poll.count > 0
-    query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.count > 0
+    query = query.where("#{table_name}.id NOT IN (?)", member_report_poll) if member_report_poll.size > 0
+    query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.size > 0
     query
   }
 
@@ -370,7 +370,7 @@ class Poll < ActiveRecord::Base
       @poll = @poll.load_more(next_cursor)
     end
 
-    if @poll.count == LIMIT_POLL
+    if @poll.size == LIMIT_POLL
       if status == ENV["MY_POLL"]
         next_cursor = @poll.to_a.last.id
       end
@@ -414,8 +414,8 @@ class Poll < ActiveRecord::Base
       poll = @cache_polls[0..(LIMIT_POLL - 1)]
     end
 
-    if @cache_polls.count > LIMIT_POLL
-      if poll.count == LIMIT_POLL
+    if @cache_polls.size > LIMIT_POLL
+      if poll.size == LIMIT_POLL
         if @cache_polls[-1] == poll.last
           next_cursor = 0
         else
@@ -563,10 +563,10 @@ class Poll < ActiveRecord::Base
           if member.company?
             list_group_id = in_group_ids.split(",").collect{|e| e.to_i }
           else
-            if (member.post_poll_in_group(in_group_ids).count > 0)
+            if (member.post_poll_in_group(in_group_ids).size > 0)
               list_group_id = member.post_poll_in_group(in_group_ids)
             else
-              raise ExceptionHandler::Forbidden, "You are not a member of this group" 
+              raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP 
             end
           end
         end
@@ -681,14 +681,13 @@ class Poll < ActiveRecord::Base
   end
 
   def self.get_choice_count(choices)
-    # choices.each_value.count
-    choices.count
+    choices.size
   end
 
   def create_tag(title)
     split_tags = []
     title.gsub(/\B#([[:word:]]+)/) { split_tags << $1 }
-    if split_tags.count > 0
+    if split_tags.size > 0
       tag_list = []
       split_tags.each do |tag_name|
         tag_list << Tag.find_or_create_by(name: tag_name).id
@@ -846,7 +845,7 @@ class Poll < ActiveRecord::Base
     start_time = Time.new(2000, 01, 01, hour, 00, 00)
     end_time = start_time.change(min: 59, sec: 59)
     @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.zone.now).having_status(:active)
-    if @recurring.count > 0
+    if @recurring.size > 0
       Recurring.re_create_poll(@recurring)
     end
   end
@@ -916,12 +915,12 @@ class Poll < ActiveRecord::Base
 
     remain_can_survey = @members_surveyable - @members_voted
 
-    complete_status = remain_can_survey.count > 0 ? false : true
+    complete_status = remain_can_survey.size > 0 ? false : true
 
     {
       complete: complete_status,
-      member_voted: @members_voted.to_a.count,
-      member_amount: @members_surveyable.count 
+      member_voted: @members_voted.to_a.size,
+      member_amount: @members_surveyable.size 
     }
   end
 

@@ -24,7 +24,7 @@ RSpec.describe "Comment" do
         post "/poll/#{poll.id}/comments.json", { member_id: member.id, message: "test title" }, { "Accept" => "application/json" }
 
         expect(json["response_status"]).to eq("ERROR")
-        expect(json["response_message"]).to eq("This poll disallow your comment")
+        expect(json["response_message"]).to eq("This poll disallow your comment.")
         expect(response.status).to eq(403)
       end
 

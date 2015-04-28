@@ -27,6 +27,14 @@ class Group::ListMember
     cached_all_members.select{ |member| member if member.admin }
   end
 
+  def is_member?(member)
+    members_as_member.map(&:id).include?(member.id) ? true : false
+  end
+
+  def is_admin?(member)
+    members_as_admin.map(&:id).include?(member.id) ? true : false  
+  end
+
   private
 
   def members

@@ -280,7 +280,7 @@ class Member < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @member = find_by(id: id)
-      raise ExceptionHandler::NotFound, "Member not found" unless @member.present?
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Member::NOT_FOUND unless @member.present?
       @member
     end
   end
@@ -309,7 +309,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    puts "auth => #{auth}"
+    # puts "auth => #{auth}"
     fb_params = {
       id: auth.uid,
       provider: 'facebook',

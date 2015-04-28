@@ -36,9 +36,9 @@ class Surveyor::MembersSurveyable
           find_choice = @poll.choices.find_by(id: choice_id)
           find_surveyed = Member.find_by(id: surveyed_id)
 
-          raise ExceptionHandler::NotFound, "Surveyed not found" unless find_surveyed.present?
+          raise ExceptionHandler::NotFound, "Survey not found." unless find_surveyed.present?
           raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
-          raise ExceptionHandler::NotFound, "Choice not found" unless find_choice.present?
+          raise ExceptionHandler::NotFound, "Choice not found." unless find_choice.present?
 
           poll_series_id = @poll.series ? @poll.poll_series_id : 0
 
@@ -59,7 +59,7 @@ class Surveyor::MembersSurveyable
           Rails.cache.delete( ['Poll', poll_id ] )
           true
         else
-          raise ExceptionHandler::Forbidden, "Voted Already"
+          raise ExceptionHandler::UnprocessableEntity, "You've voted this survey."
         end ## unless
       end
     end

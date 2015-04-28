@@ -35,20 +35,27 @@ module ExceptionHandler
     end
 
     module Member
-      BAN = "Your account is was terminated"
-      BLACKLIST = "Your account is being suspended"
+      BAN = "Your account is was terminated."
+      BLACKLIST = "Your account is being suspended."
+      NOT_FOUND = "Member not found."
     end
 
     module Token
-      WRONG = "You had already signed out of Pollios. Please sign in again"
+      WRONG = "You had already signed out of Pollios. Please sign in again."
     end
 
     module Auth
-      LOGIN_FAIL = "Invalid email or password"
+      LOGIN_FAIL = "Invalid email or password."
     end
 
     module Maintenance
-      OPEN = "Maintenance Mode"
+      OPEN = "Maintenance Mode."
+    end
+
+    module Group
+      NOT_FOUND = "Group not found."
+      NOT_IN_GROUP = "You're not in this group."
+      NOT_ADMIN = "You're not an admin of group."
     end
   end
 

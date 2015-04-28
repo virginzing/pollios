@@ -36,6 +36,7 @@ gem 'pg', '0.17.0'
 gem 'activerecord-postgres-hstore'
 gem 'nested-hstore'
 gem 'roo'
+gem 'benchmark-ips'
 
 # gem "squeel"
 
