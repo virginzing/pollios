@@ -3,6 +3,7 @@ if @comment
 
   json.comment do
     json.id @comment.id
+    json.name @comment.member.get_name
     json.fullname @comment.member.get_name
     json.avatar @comment.member.get_avatar
     json.message @comment.message

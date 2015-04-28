@@ -708,7 +708,7 @@ class PollsController < ApplicationController
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
 
         @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
-        
+
         @poll.increment!(:comment_count)
 
         find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
@@ -741,7 +741,6 @@ class PollsController < ApplicationController
                       .includes(:mentions)
                       .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
                       .paginate(page: comment_params[:next_cursor])
-                      # .group("comments.id, members.fullname, members.avatar")
                       
     @new_comment_sort = @comments.sort { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
