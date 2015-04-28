@@ -708,9 +708,8 @@ class PollsController < ApplicationController
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
 
         @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
-
+        
         @poll.increment!(:comment_count)
-        # @poll.increment!(comment_count: @poll.comment_count + 1)
 
         find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
 
