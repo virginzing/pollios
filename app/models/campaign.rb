@@ -182,8 +182,7 @@ class Campaign < ActiveRecord::Base
       used: used,
       limit: limit,
       owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json() : System::DefaultMember.new.to_json,
-      created_at: created_at.to_i,
-      redeem_myself: redeem_myself
+      created_at: created_at.to_i
     }
   end
   

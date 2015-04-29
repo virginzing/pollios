@@ -23,7 +23,8 @@ class CampaignMember < ActiveRecord::Base
       created_at: created_at.to_i,
       title: campaign.get_reward_title,
       detail: campaign.get_reward_detail,
-      expire: campaign.get_reward_expire
+      expire: campaign.get_reward_expire,
+      redeem_myself: campaign.redeem_myself
     }
   end
 end

@@ -327,10 +327,11 @@ class Poll < ActiveRecord::Base
       @reward_info = {
         title: reward_info.title,
         detail: reward_info.detail,
-        expire: reward_info.reward_expire.to_i
+        expire: reward_info.reward_expire.to_i,
+        redeem_myself: campaign.redeem_myself
       }
     end
-    
+
     @reward_info
   end
 
