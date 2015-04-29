@@ -315,24 +315,24 @@ class Poll < ActiveRecord::Base
     (campaign_id != 0) ? true : false
   end
 
-  def get_campaign_detail
-    campaign.as_json
-  end
-
   def get_reward_info
     reward_info ||= campaign.rewards.first
     @reward_info = {}
 
     if reward_info
-      @reward_info = {
+      @reward_info = [{
         title: reward_info.title,
         detail: reward_info.detail,
         expire: reward_info.reward_expire.to_i,
         redeem_myself: campaign.redeem_myself
-      }
+      }]
     end
 
     @reward_info
+  end
+
+  def get_campaign_detail
+    campaign.as_json.merge(list_reward: get_reward_info)
   end
 
   def get_photo

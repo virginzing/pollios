@@ -8,7 +8,7 @@
         <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
-        <%= f.input :expire, as: :string, label: "Campaign Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+        <%= f.input :expire, as: :string, label: "Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
       </div>
       <div class="col col-md-4">
         <div class="form-group">
@@ -25,7 +25,7 @@
     <% end %>
 
 
-    <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> add reward".html_safe, :rewards, class: 'btn btn-default btn-sm morechoice btn-pill disabled' %>
+    <!--<%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> add reward".html_safe, :rewards, class: 'btn btn-default btn-sm morechoice btn-pill disabled' %>-->
 
     <h2><strong>Advance campaign config</strong></h2>
     <div class="well">
