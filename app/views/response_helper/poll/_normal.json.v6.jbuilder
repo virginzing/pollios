@@ -14,6 +14,7 @@ json.series poll.series
 json.tags poll.cached_tags
 json.campaign poll.get_campaign
 json.campaign_detail poll.get_campaign_detail if poll.campaign_id != 0 
+json.reward_info poll.get_reward_info if poll.campaign_id != 0
 # json.share_count poll.share_count
 json.is_public poll.public
 json.type_poll poll.type_poll

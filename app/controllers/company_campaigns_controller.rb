@@ -20,7 +20,6 @@ class CompanyCampaignsController < ApplicationController
 
   def create
     @campaign = @company.campaigns.new(campaign_params)
-    @campaign.reward_expire = campaign_params[:rewards_attributes][:reward_expire]
 
     if @campaign.save
       flash[:notice] = "Successfully created..."
@@ -36,8 +35,6 @@ class CompanyCampaignsController < ApplicationController
   end
 
   def update
-    @campaign.reward_expire = campaign_params[:rewards_attributes][:reward_expire]
-    
     if @campaign.update(campaign_params)
       flash[:notice] = "Successfully updated..."
       redirect_to company_campaigns_path

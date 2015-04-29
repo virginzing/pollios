@@ -316,7 +316,22 @@ class Poll < ActiveRecord::Base
   end
 
   def get_campaign_detail
-    campaign.as_json()
+    campaign.as_json
+  end
+
+  def get_reward_info
+    reward_info ||= campaign.rewards.first
+    @reward_info = {}
+
+    if reward_info
+      @reward_info = {
+        title: reward_info.title,
+        detail: reward_info.detail,
+        expire: reward_info.reward_expire.to_i
+      }
+    end
+    
+    @reward_info
   end
 
   def get_photo
