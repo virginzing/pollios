@@ -41,7 +41,7 @@ module NotificationsHelper
       limit_message = limit_message + "...\""
     end
 
-    limit_message
+    limit_message + "."
   end
 
   def add_double_quotation(custom_message)
