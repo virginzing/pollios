@@ -1,11 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Campaign" do
-  let(:member) { create(:member, fullname: "Nutty", point: 0) }
-  let(:company) { create(:company, name: "Pollios", member: member) }
-  let(:campaign) { create(:campaign, name: "แจก 5 Point for public poll", company: company, redeem_myself: true, reward_info: { point: 5 }, system_campaign: true, 
-    rewards_attributes: [{ title: "5 public poll", detail: "free  public poll"}] ) }
-
+  let!(:member) { create(:member, fullname: "Nutty", point: 0) }
+  let!(:company) { create(:company, name: "Pollios", member: member) }
+  let!(:campaign) { create(:campaign, name: "แจก 5 Point for public poll", company: company, redeem_myself: true, reward_info: { point: 5 }, system_campaign: true, 
+    rewards_attributes: [{ title: "5 public poll", detail: "free  public poll", reward_expire: Time.zone.now + 1.year }] ) }
 
 
   describe "GET /member/list_reward.json" do
