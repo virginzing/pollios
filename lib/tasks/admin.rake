@@ -25,6 +25,9 @@ namespace :admin do
 
     end
   end
+  # Member.where(cover: nil, cover_preset: "0").each do |m|
+  #   m.update!(cover_preset: rand(1..28))
+  # end
 
   desc "Update synce facebook"
   task :sync_facebook => :environment do

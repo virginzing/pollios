@@ -64,9 +64,27 @@ RSpec.describe "Comment" do
       end
 
     end 
-
-
   end
+
+  describe "POST /comment/:id/report" do
+    let!(:comment_one) { create(:comment, poll: poll, member: member, message: "Don't like this") }
+    let!(:comment_two) { create(:comment, poll: poll, member: member, message: "Don't like that") }
+
+    before do
+      post "/comment/#{comment_one.id}/report.json", { member_id: member.id, message: "This is spam" }, { "Accept" => "application/json" }
+    end 
+
+    it "reported" do
+      expect(response.status).to eq(201)
+    end
+
+    it "has report count 1 of comment one" do
+      expect(comment_one.reload.report_count).to eq(1)
+      expect(Member::ListPoll.new(member).report_comments.size).to eq(1)
+    end
+  end
+
+
 
 
 

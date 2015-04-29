@@ -10,7 +10,6 @@ class ReportComment
     @comment.poll
   end
 
-
   def reporting
     unless find_report
       reporting = @member.member_report_comments.create!(poll_id: poll.id, comment_id: @comment.id, message: @options[:message], message_preset: @options[:message_preset])

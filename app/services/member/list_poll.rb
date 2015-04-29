@@ -33,8 +33,12 @@ class Member::ListPoll
     Rails.cache.fetch("member/#{@member.id}/report_polls") { member_report_polls }
   end
 
+  def member_report_commments
+    @member.comment_reports.to_a  
+  end
+
   def cached_report_comments
-    Rails.cache.fetch("member/#{@member.id}/report_comments") { @member.comment_reports.to_a }
+    Rails.cache.fetch("member/#{@member.id}/report_comments") { member_report_commments }
   end
 
   def member_history_viewed_polls
