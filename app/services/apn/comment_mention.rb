@@ -13,7 +13,7 @@ class Apn::CommentMention
   end
 
   def custom_message
-    message = "#{mentioner_name} mentioned you in a comment."
+    message = "#{mentioner_name} mentioned you in a comment"
     truncate_message(message)
   end
 end

@@ -16,7 +16,7 @@ class Apn::SavePoll
   # allow 170 byte for custom message
   def custom_message(receiver_id)
     number_of_saved_poll = @group_saved_poll[receiver_id] || 0
-    message = "You have #{number_of_saved_poll} poll in save later."
+    message = "You have #{number_of_saved_poll} poll in save later"
     truncate_message(message)
   end
 

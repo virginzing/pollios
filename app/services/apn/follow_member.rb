@@ -16,7 +16,7 @@ class Apn::FollowMember
 
 
   def custom_message
-    message = "#{@member.fullname} is following you."
+    message = "#{@member.fullname} is following you"
     truncate_message(message)
   end
 
