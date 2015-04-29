@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150423100520) do
+ActiveRecord::Schema.define(version: 20150429040043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -325,6 +325,7 @@ ActiveRecord::Schema.define(version: 20150423100520) do
     t.boolean  "delete_status", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "report_count",  default: 0
   end
 
   add_index "comments", ["member_id"], name: "index_comments_on_member_id", using: :btree
@@ -475,6 +476,7 @@ ActiveRecord::Schema.define(version: 20150423100520) do
     t.boolean  "virtual_group",    default: false
     t.integer  "member_id"
     t.string   "cover_preset",     default: "0"
+    t.boolean  "exclusive",        default: false
   end
 
   add_index "groups", ["member_id"], name: "index_groups_on_member_id", using: :btree
@@ -600,6 +602,20 @@ ActiveRecord::Schema.define(version: 20150423100520) do
 
   add_index "member_invite_codes", ["invite_code_id"], name: "index_member_invite_codes_on_invite_code_id", using: :btree
   add_index "member_invite_codes", ["member_id"], name: "index_member_invite_codes_on_member_id", using: :btree
+
+  create_table "member_report_comments", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.integer  "comment_id"
+    t.text     "message"
+    t.text     "message_preset"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_report_comments", ["comment_id"], name: "index_member_report_comments_on_comment_id", using: :btree
+  add_index "member_report_comments", ["member_id"], name: "index_member_report_comments_on_member_id", using: :btree
+  add_index "member_report_comments", ["poll_id"], name: "index_member_report_comments_on_poll_id", using: :btree
 
   create_table "member_report_members", force: true do |t|
     t.integer  "reporter_id"

@@ -59,7 +59,8 @@ class Poll < ActiveRecord::Base
   has_many :branches, through: :branch_polls, source: :branch
   
   has_many :triggers, as: :triggerable
-
+  has_many :member_report_comments, dependent: :destroy
+  
   belongs_to :member
   belongs_to :poll_series
   belongs_to :campaign

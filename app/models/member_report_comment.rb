@@ -1,5 +1,5 @@
 class MemberReportComment < ActiveRecord::Base
-  belongs_to :member
-  belongs_to :poll
-  belongs_to :comment
+  belongs_to :member, touch: true
+  belongs_to :poll, touch: true
+  belongs_to :comment, touch: true
 end
