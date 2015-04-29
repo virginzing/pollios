@@ -35,6 +35,12 @@ namespace :admin do
     end
   end
 
+  desc "Update reward expire in reward"
+  task :update_reward_expire => :environment do
+    Reward.all.each do |reward|
+      reward.update(reward_expire: reward.campaign.reward_expire) if reward.campaign.present?
+    end
+  end
 
   desc "Create sidekiq cron job"
   task :create_sidekiq_cron => :environment do

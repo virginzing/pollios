@@ -7,6 +7,8 @@
         <%= f.input :name, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
+        <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
+        <%= f.input :expire, as: :string, label: "Campaign Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
       </div>
       <div class="col col-md-4">
         <div class="form-group">
@@ -24,16 +26,12 @@
 
 
     <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> add reward".html_safe, :rewards, class: 'btn btn-default btn-sm morechoice btn-pill' %>
-
-    <h2><strong>Advance campaign config</strong></h2>
-
-    <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer" } %>
-    <%= f.input :expire, as: :string, label: "Campaign Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
-    <%= f.input :reward_expire, as: :string, label: "Reward Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+    <br>
 
     <% if @company.company_admin %>
+      <h2><strong>Gift</strong></h2>
+
       <div class="well">
-        <h2><strong>Gift</strong></h2>
         <%= f.input :redeem_myself %>
         <%= f.simple_fields_for :reward_info do |reward| %>
           <%= reward.input :point, required: false, input_html: { value: @campaign.reward_info.present? ? @campaign.reward_info["point"] : nil } %>

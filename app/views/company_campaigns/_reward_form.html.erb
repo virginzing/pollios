@@ -10,6 +10,10 @@
   <label class="input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice">
     <%= f.input :detail, label: false, required: false, input_html: { placeholder: "detail", :'data-parsley-required' => true } %>
   </label>
+
+  <label class="input col-lg-11 col-md-11 col-sm-11 col-xs-11 field_choice">
+  <%= f.input :reward_expire, as: :string, label: false, input_html: { placeholder: "expire", class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+  </label>
   
 </section>
 

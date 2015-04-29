@@ -9,7 +9,7 @@ class CampaignMember < ActiveRecord::Base
   self.per_page = 10
 
   def self.list_reward(member_id)
-    where("member_id = ? AND luck = ?", member_id, true).order('created_at desc').includes(:member, :campaign)
+    where("member_id = ? AND luck = ?", member_id, true).order('created_at desc').includes(:poll, :poll_series, {:campaign => :rewards})
   end
 
   def as_json(options={})
@@ -22,7 +22,8 @@ class CampaignMember < ActiveRecord::Base
       ref_no: ref_no || "",
       created_at: created_at.to_i,
       title: campaign.get_reward_title,
-      detail: campaign.get_reward_detail
+      detail: campaign.get_reward_detail,
+      expire: campaign.get_reward_expire
     }
   end
 end

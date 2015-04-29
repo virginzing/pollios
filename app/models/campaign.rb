@@ -158,6 +158,10 @@ class Campaign < ActiveRecord::Base
     rewards.present? ? rewards.first.title : ""
   end
 
+  def get_reward_expire
+    rewards.present? ? rewards.first.reward_expire.to_i : ""
+  end
+
   def get_reward_detail
     rewards.present? ? rewards.first.detail : ""
   end
@@ -179,8 +183,7 @@ class Campaign < ActiveRecord::Base
       limit: limit,
       owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json() : System::DefaultMember.new.to_json,
       created_at: created_at.to_i,
-      redeem_myself: redeem_myself,
-      reward_expire: get_reward_expire
+      redeem_myself: redeem_myself
     }
   end
   

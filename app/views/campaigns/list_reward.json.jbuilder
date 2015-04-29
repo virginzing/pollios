@@ -1,6 +1,6 @@
 json.response_status "OK"
 json.list_reward @rewards do |reward|
-  json.campaign reward.campaign.as_json()
+  json.campaign_detail reward.campaign.as_json()
 
   json.reward_info reward.as_json()
   

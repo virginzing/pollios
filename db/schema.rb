@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429040043) do
+ActiveRecord::Schema.define(version: 20150429050609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -981,9 +981,10 @@ ActiveRecord::Schema.define(version: 20150429040043) do
     t.string   "title"
     t.text     "detail"
     t.string   "photo_reward"
-    t.integer  "order_reward", default: 0
+    t.integer  "order_reward",  default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "reward_expire"
   end
 
   add_index "rewards", ["campaign_id"], name: "index_rewards_on_campaign_id", using: :btree
