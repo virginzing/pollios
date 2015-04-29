@@ -8,10 +8,11 @@ class Comment < ActiveRecord::Base
   has_many :get_member_mentionable, through: :member_mentionable, source: :mentionable
 
   has_many :member_report_comments, dependent: :destroy
-  
+
   validates_presence_of :message
 
   after_commit :send_notification, on: :create
+  after_commit :flush_cache
 
   scope :valid, -> { where(delete_status: false) }
 
@@ -26,6 +27,18 @@ class Comment < ActiveRecord::Base
   def create_mentions_list(mentioner, list_mentioned)
     list_member = Member.where(id: list_mentioned)
     list_member.collect{|e| mentions.create!(mentioner_id: mentioner.id, mentioner_name: mentioner.get_name, mentionable_id: e.id, mentionable_name: e.get_name) }
+  end
+
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id]) do
+      @comment = find_by(id: id)
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Comment::NOT_FOUND unless @comment.present?
+      @comment
+    end
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
   end
   
 end

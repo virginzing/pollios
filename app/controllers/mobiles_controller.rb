@@ -110,7 +110,7 @@ class MobilesController < ApplicationController
       if @poll.present?
         wants.json { render json: { "msg" => "Vote Success" }, status: 200 }
       else
-        wants.json { render json: { "msg" => "Vote fail" } , status: 403 }
+        wants.json { render json: { "msg" => "Vote fail" } , status: :unprocessable_entity }
       end
     end
 
@@ -152,7 +152,7 @@ class MobilesController < ApplicationController
       else
         # flash[:error] = "Error"
         # redirect_to mobile_dashboard_path
-        wants.json { render json: { "msg" => "Vote fail" } , status: 403 }
+        wants.json { render json: { "msg" => "Vote fail" } , status: :unprocessable_entity }
         wants.js
       end
     end

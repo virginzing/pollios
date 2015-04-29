@@ -525,18 +525,18 @@ class CompaniesController < ApplicationController
               format.json { render json: { error_message: nil }, status: 200 }
             rescue ActiveRecord::RecordNotUnique
               @error_message = "This member join another company already"
-              format.json { render json: { error_message: @error_message }, status: 403 }
+              format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
             end
 
           else
             @error_message = "You already joined in this group."
-            format.json { render json: { error_message: @error_message }, status: 403 }
+            format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
           end
 
         end
       else
         @error_message = "Not found this user."
-        format.json { render json: { error_message: @error_message }, status: 403 }
+        format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
       end
 
     end

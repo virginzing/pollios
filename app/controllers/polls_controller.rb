@@ -356,7 +356,7 @@ class PollsController < ApplicationController
         ApnPokePollWorker.perform_async(params[:sender_id], [params[:member_id]], params[:id])
         format.json { render json: [], status: 200 }
       else
-        format.json { render json: { error_message: "No" }, status: 403 }
+        format.json { render json: { error_message: "No" }, status: :unprocessable_entity }
       end
     end
   end
@@ -371,7 +371,7 @@ class PollsController < ApplicationController
 
         format.json { render json: [], status: 200 }
       else
-        format.json { render json: { error_message: "No" }, status: 403 }
+        format.json { render json: { error_message: "No" }, status: :unprocessable_entity }
       end
     end
   end
@@ -386,7 +386,7 @@ class PollsController < ApplicationController
 
         format.json { render json: [], status: 200 }
       else
-        format.json { render json: { error_message: "No" }, status: 403 }
+        format.json { render json: { error_message: "No" }, status: :unprocessable_entity }
       end
     end
   end
@@ -401,7 +401,7 @@ class PollsController < ApplicationController
 
         format.json { render json: [], status: 200 }
       else
-        format.json { render json: { error_message: "Don't have a data" }, status: 403 }
+        format.json { render json: { error_message: "Don't have a data" }, status: :unprocessable_entity }
       end
     end
   end
@@ -681,7 +681,7 @@ class PollsController < ApplicationController
     @report = @init_report.reporting
 
     unless @report
-      render status: 403
+      render status: :unprocessable_entity
     end
   end
 
@@ -736,11 +736,17 @@ class PollsController < ApplicationController
   def load_comment
     raise_exception_without_group if @poll.in_group
 
-    @comments = Comment.joins(:member)
+    init_list_poll ||= Member::ListPoll.new(@current_member)
+    list_report_comments_ids = init_list_poll.report_comments.map(&:id)
+
+    query = Comment.joins(:member)
                       .select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
                       .includes(:mentions)
-                      .where(poll_id: comment_params[:id], delete_status: false).order("comments.created_at desc")
-                      .paginate(page: comment_params[:next_cursor])
+                      .where(poll_id: comment_params[:id], delete_status: false, ban: false)
+
+    query = query.where("comments.id NOT IN (?)", list_report_comments_ids) if list_report_comments_ids.size > 0
+
+    @comments = query.order("comments.created_at desc").paginate(page: comment_params[:next_cursor])
                       
     @new_comment_sort = @comments.sort { |x,y| x.created_at <=> y.created_at }
     @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()

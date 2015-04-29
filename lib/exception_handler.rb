@@ -40,6 +40,10 @@ module ExceptionHandler
       NOT_FOUND = "Member not found."
     end
 
+    module Comment
+      NOT_FOUND = "Comment not found."
+    end
+
     module Token
       WRONG = "You had already signed out of Pollios. Please sign in again."
     end
@@ -85,7 +89,7 @@ module ExceptionHandler
   end
 
   def known_error_html(ex)
-    flash[:warning] = "Please sign in"
+    flash[:warning] = "Please sign in."
     redirect_to users_signin_path
   end
 
@@ -98,7 +102,7 @@ module ExceptionHandler
   end
 
   def mobile_signin_already
-    flash[:notice] = "You already sign-in"
+    flash[:notice] = "You already sign-in."
     redirect_to mobile_dashboard_path
   end
 

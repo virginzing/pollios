@@ -19,6 +19,10 @@ class Member::ListPoll
     @watches ||= cached_watch_polls
   end
 
+  def report_comments
+    @report_comments ||= cached_report_comments
+  end
+
   private
 
   def member_report_polls
@@ -27,6 +31,10 @@ class Member::ListPoll
   
   def cached_report_polls
     Rails.cache.fetch("member/#{@member.id}/report_polls") { member_report_polls }
+  end
+
+  def cached_report_comments
+    Rails.cache.fetch("member/#{@member.id}/report_comments") { @member.comment_reports.to_a }
   end
 
   def member_history_viewed_polls

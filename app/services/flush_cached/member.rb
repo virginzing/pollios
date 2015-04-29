@@ -25,6 +25,10 @@ class FlushCached::Member
     Rails.cache.delete("member/#{@member.id}/report_polls")
   end
 
+  def clear_list_report_comments
+    Rails.cache.delete("member/#{@member.id}/report_comments")
+  end
+
   def clear_list_history_viewed_polls
     Rails.cache.delete("member/#{@member.id}/history_viewed_polls")
   end

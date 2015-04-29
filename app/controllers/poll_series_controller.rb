@@ -39,11 +39,11 @@ class PollSeriesController < ApplicationController
     @un_see_questionnaire = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll_series)
     begin
       @un_see_questionnaire.save
-      render :status => 201
+      render :status => :created
     rescue => e
       @un_see_questionnaire = nil
       @response_message = "You already save to unsee questionnaires"
-      render :status => 422
+      render :status => :unprocessable_entity
     end
   end
 
@@ -51,11 +51,11 @@ class PollSeriesController < ApplicationController
     @save_later = SavePollLater.new(member_id: @current_member.id, savable: @poll_series)
     begin
       @save_later.save
-      render status: 201
+      render status: :created
     rescue => e
       @save_later = nil
       @response_message = "You already save for latar"
-      render status: 422
+      render status: :unprocessable_entity
     end
   end
 
@@ -63,9 +63,9 @@ class PollSeriesController < ApplicationController
     @un_save_later = SavePollLater.find_by(member_id: @current_member.id, savable: @poll_series)
 
     if @un_save_later.destroy
-      render status: 200
+      render status: :created
     else
-      render status: 422
+      render status: :unprocessable_entity
     end  
   end
 
@@ -81,7 +81,7 @@ class PollSeriesController < ApplicationController
 
     #   if key.present?
     #     unless @poll_series.qrcode_key == key
-    #       format.json { render json: { response_status: "ERROR", response_message: "Key is invalid" }, status: 403 }
+    #       format.json { render json: { response_status: "ERROR", response_message: "Key is invalid" }, status: :unprocessable_entity }
     #     end
     #   end
     #   format.json

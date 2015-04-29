@@ -140,6 +140,7 @@ class Member < ActiveRecord::Base
   has_many :members_invites, through: :invites, source: :invitee
 
   has_many :member_report_comments, dependent: :destroy
+  has_many :comment_reports, through: :member_report_comments, source: :comment
 
   has_one :redeemer
 

@@ -189,6 +189,10 @@ Pollios::Application.routes.draw do
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
+  scope 'comment' do
+    post ':id/report',  to: 'comments#report'
+  end
+
   scope 'feedback' do
     resources :branches
 
