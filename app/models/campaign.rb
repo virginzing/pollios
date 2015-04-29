@@ -158,16 +158,12 @@ class Campaign < ActiveRecord::Base
     rewards.present? ? rewards.first.title : ""
   end
 
-  def get_reward_expire
-    rewards.present? ? rewards.first.reward_expire.to_i : ""
-  end
-
   def get_reward_detail
     rewards.present? ? rewards.first.detail : ""
   end
 
   def get_reward_expire
-    reward_expire.present? ? reward_expire.to_i : ""
+    rewards.present? ? rewards.first.reward_expire.to_i : ""
   end
 
   def as_json(options={})
