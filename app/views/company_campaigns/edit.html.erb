@@ -8,7 +8,7 @@
         <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
-        <%= f.input :expire, as: :string, label: "Campaign Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+        <%= f.input :expire, as: :string, label: "Expire", input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
       </div>
       <div class="col col-md-4">
         <div class="form-group">
