@@ -187,11 +187,10 @@ class GroupController < ApplicationController
   end
 
   def set_public
-    begin
-      @group.update_attributes!(public: edit_group_params[:public], public_id: edit_group_params[:public_id])
-    rescue ActiveRecord::RecordInvalid => invalid
-      @group = nil
-      @error_message = invalid.record.errors.messages[:public_id][0]
+    if @group.update(edit_group_params)
+      render status: :created
+    else
+      @error_message = @group.errors.messages[:public_id][0]
       render status: :unprocessable_entity
     end
   end

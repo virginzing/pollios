@@ -40,7 +40,7 @@ class Group < ActiveRecord::Base
 
   validates :name, presence: true
 
-  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" } ,:allow_blank => true , on: :update
+  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken." }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters." } ,:allow_blank => true , on: :update
 
   mount_uploader :photo_group, PhotoGroupUploader
   mount_uploader :cover, PhotoGroupUploader
