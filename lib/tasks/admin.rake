@@ -38,6 +38,14 @@ namespace :admin do
     end
   end
 
+  # Group.where(public_id: nil).each do |g|
+  #   g.update!(public_id: "pollios" << g.id.to_s)
+  # end
+
+  # Group.where(public_id: "").each do |g|
+  #   g.update!(public_id: "pollios" << g.id.to_s)
+  # end
+
   desc "Update reward expire in reward"
   task :update_reward_expire => :environment do
     Reward.all.each do |reward|

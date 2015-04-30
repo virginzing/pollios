@@ -71,7 +71,7 @@ class Request::Search
 
 
   def groups
-    groups = Group.where("(lower(groups.name) LIKE ? AND groups.public = 't') OR (groups.public_id LIKE ? AND groups.public = 't')", "%#{search}%", "%#{search}%")
+    groups = Group.where("(lower(groups.name) LIKE ? AND groups.public = 't') OR (groups.public_id = ? AND groups.public = 't')", "%#{search}%", "#{search}")
                   .order("name asc")
 
     groups = groups.paginate(per_page: PER_PAGE, page: next_group)
