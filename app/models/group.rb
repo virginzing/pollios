@@ -47,6 +47,8 @@ class Group < ActiveRecord::Base
 
   after_commit :flush_cache
 
+  after_create :set_public_id
+
   default_scope { where(visible: true) }
 
   # def slug_candidates
@@ -76,6 +78,10 @@ class Group < ActiveRecord::Base
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
+  end
+
+  def set_public_id
+    update!(public_id: "pollios" << self.id.to_s)
   end
 
   def get_photo_group
