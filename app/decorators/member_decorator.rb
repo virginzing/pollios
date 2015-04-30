@@ -1,4 +1,4 @@
-class MemberDecorator < Draper::Decorator
+class MemberDecorator < ApplicationDecorator
   include Draper::LazyHelpers
 
   delegate_all

@@ -8,10 +8,12 @@
         <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
-        <%= f.input :expire, as: :string, input_html: { class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+        <%= f.input :expire, as: :string, label: "Expire", input_html: { value: @campaign.decorate.show_expire, class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
       </div>
       <div class="col col-md-4">
-        <%= f.input :photo_campaign %>
+        <div class="form-group">
+          <input type="file" class="default" name="campaign[photo_campaign]" id="drop_photo_campaign" accept="image/png, image/jpeg, image/gif"/>
+        </div>
       </div>
     </div>
 
@@ -77,5 +79,11 @@
   $.radio_random_immediately.click(function () {
     $.input_begin_sample.attr("disabled", false);
     $.input_end_sample.attr("disabled", false);
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+     dropZoneCampaign("<%= @campaign.photo_campaign.url.presence || '' %>");
   });
 </script>

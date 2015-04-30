@@ -36,3 +36,5 @@ en:
       nofriend: "Nofriend"
       following: "Following"
       block: "Block"
+  datepicker:
+    dformat: '%d/%m/%Y'

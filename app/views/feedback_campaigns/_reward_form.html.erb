@@ -13,7 +13,7 @@
   </label>
 
   <label class="input col-lg-12 col-md-12 col-sm-12 col-xs-12 field_choice">
-      <%= f.input :reward_expire, as: :string, label: "Expire", input_html: { placeholder: "expire", class: 'datepicker', 'data-dateformat' => 'dd/mm/yy', :"data-parsley-required" => "true" } %>
+    <%= f.input :reward_expire, as: :string, label: "Expire", input_html: { value: f.object.decorate.show_reward_expire, placeholder: "expire", class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
   </label>
   </div>
   
