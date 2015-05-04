@@ -207,6 +207,19 @@ RSpec.describe "Member" do
     end
   end
 
+  describe "POST /member/:id/report" do
+    let!(:member_one) { create(:member, email: "official_account_1@gpollios.com", member_type: :citizen) }
+    let!(:member_two) { create(:member, email: "official_account_2@gpollios.com", member_type: :citizen) }
+
+    before do
+      post "/member/#{member_two.id}/report.json", { member_id: member_one.id, message: "block", block: true }, { "Accept" => "application/json" }
+    end
+
+    it "success" do
+      expect(response.status).to eq(201)
+      expect(json["response_status"]).to eq("OK")
+    end
+  end
 
 
 end

@@ -270,7 +270,6 @@ Pollios::Application.routes.draw do
     post 'activate',              to: 'members#activate'
     post ':member_id/block',      to: 'members#block'
     post 'verify_email',          to: 'members#verify_email'
-    post ':member_id/report',     to: 'members#report'
     post ':member_id/public_id',  to: 'members#public_id'
     post ':member_id/request_code', to: 'members#send_request_code'
     post ':member_id/purchase_point', to: 'purchase#add_point'
@@ -281,6 +280,7 @@ Pollios::Application.routes.draw do
     post ':member_id/device_token', to: 'members#device_token'
     post ':member_id/invite_user_via_email',  to: 'members#invite_user_via_email'
     post ':member_id/invite_fb_user', to: 'members#invite_fb_user'
+    post ':id/report',     to: 'members#report'
   end
 
   scope 'account' do

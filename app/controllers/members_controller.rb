@@ -324,16 +324,17 @@ class MembersController < ApplicationController
 
   def report
     begin
-      @find_friend = Member.find_by(id: report_params[:friend_id])
+      @find_friend = Member.find_by(id: report_params[:id])
       @current_member.sent_reports.create!(reportee_id: @find_friend.id, message: report_params[:message])
       @find_friend.increment!(:report_count)
 
       if report_params[:block]
-        Friend.block_or_unblock_friend({ member_id: report_params[:member_id], friend_id: report_params[:friend_id]}, true)
+        Friend.block_or_unblock_friend({ member_id: report_params[:member_id], friend_id: @find_friend.id }, true)
       end
-      
+      render status: :created
     rescue => e
       @error_message = e.message
+      redner status: :unprocessable_entity
     end
   end
 
@@ -461,7 +462,7 @@ class MembersController < ApplicationController
   end
 
   def report_params
-    params.permit(:member_id, :friend_id, :message, :block)
+    params.permit(:id, :member_id, :friend_id, :message, :block)
   end
 
   def update_profile_params
