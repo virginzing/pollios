@@ -4,10 +4,8 @@ one:
   poll_id: 
   member_id: 
   message: MyString
-  delete_status: false
 
 two:
   poll_id: 
   member_id: 
   message: MyString
-  delete_status: false

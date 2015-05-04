@@ -5,7 +5,6 @@ FactoryGirl.define do
     poll_id nil
     member_id nil
     message ""
-    delete_status false
   end
 
 end

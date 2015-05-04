@@ -742,7 +742,7 @@ class PollsController < ApplicationController
     query = Comment.joins(:member)
                       .select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
                       .includes(:mentions)
-                      .where(poll_id: comment_params[:id], delete_status: false, ban: false)
+                      .where(poll_id: comment_params[:id], ban: false)
 
     query = query.where("comments.id NOT IN (?)", list_report_comments_ids) if list_report_comments_ids.size > 0
 
@@ -763,15 +763,18 @@ class PollsController < ApplicationController
     Poll.transaction do
       begin
         @comment = Comment.find_by(id: comment_params[:comment_id]) || 0
-        if @comment.member_id == @current_member.id
-          @comment.update(delete_status: true)
+        if (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
+          @comment.destroy
           @poll.decrement!(:comment_count) if @poll.comment_count > 0
+          render status: :created
         else
           @comment = nil
-          @error_message = "Only creator's comment"
+          @error_message = "You can't delete this comment. Because you're not owner comment or owner poll."
+          render status: :unprocessable_entity
         end
       rescue => e
         @error_message = e.message
+        render status: :unprocessable_entity
       end
     end
   end

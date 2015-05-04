@@ -1,4 +1,6 @@
 class Comment < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :poll
   belongs_to :member
 
@@ -13,8 +15,6 @@ class Comment < ActiveRecord::Base
 
   after_commit :send_notification, on: :create
   after_commit :flush_cache
-
-  scope :valid, -> { where(delete_status: false) }
 
   self.per_page = 10
 

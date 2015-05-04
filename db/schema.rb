@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429094315) do
+ActiveRecord::Schema.define(version: 20150504075957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -322,13 +322,14 @@ ActiveRecord::Schema.define(version: 20150429094315) do
     t.integer  "poll_id"
     t.integer  "member_id"
     t.text     "message"
-    t.boolean  "delete_status", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "report_count",  default: 0
-    t.boolean  "ban",           default: false
+    t.integer  "report_count", default: 0
+    t.boolean  "ban",          default: false
+    t.datetime "deleted_at"
   end
 
+  add_index "comments", ["deleted_at"], name: "index_comments_on_deleted_at", using: :btree
   add_index "comments", ["member_id"], name: "index_comments_on_member_id", using: :btree
   add_index "comments", ["poll_id"], name: "index_comments_on_poll_id", using: :btree
 
