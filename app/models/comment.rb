@@ -18,6 +18,10 @@ class Comment < ActiveRecord::Base
 
   self.per_page = 10
 
+  default_scope { with_deleted }
+
+  scope :without_deleted, -> { where(deleted_at: nil) }
+
   def send_notification
     unless Rails.env.test?
       CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message })

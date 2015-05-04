@@ -739,7 +739,7 @@ class PollsController < ApplicationController
     init_list_poll ||= Member::ListPoll.new(@current_member)
     list_report_comments_ids = init_list_poll.report_comments.map(&:id)
 
-    query = Comment.joins(:member)
+    query = Comment.without_deleted.joins(:member)
                       .select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
                       .includes(:mentions)
                       .where(poll_id: comment_params[:id], ban: false)
