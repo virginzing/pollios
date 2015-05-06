@@ -11,7 +11,7 @@ class PollMember < ActiveRecord::Base
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     member_block_and_banned = Member.list_friend_block.map(&:id) | Admin::BanMember.cached_member_ids
 
-    query = where("polls.draft = 'f'")
+    query = where("polls.draft = 'f' AND polls.deleted_at IS NULL")
     query = query.where("#{table_name}.poll_id NOT IN (?)", member_report_poll) if member_report_poll.size > 0
     query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.size > 0
     query
@@ -42,7 +42,7 @@ class PollMember < ActiveRecord::Base
 
   def self.find_poll_original(member_id, friend_id, type)
     query = where("(member_id = ? OR member_id IN (?)) AND share_poll_of_id = 0 AND in_group = ?", member_id, friend_id, false).limit(LIMIT_TIMELINE)
-    find_poll = check_hidden(query)
+    find_poll = check_hidden(query)               
     @poll = filter_type(find_poll, type)
     ids = @poll.map(&:id)
     poll_ids = @poll.map(&:poll_id)
