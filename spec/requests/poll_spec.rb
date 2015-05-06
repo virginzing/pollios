@@ -278,5 +278,22 @@ RSpec.describe "Poll" do
     end
   end
 
+  describe "DELETE /poll/:id/delete" do
+
+    let!(:poll_for_delete) { create(:poll, member: member, title: "for delete") }
+
+    before do
+      delete "/poll/#{poll_for_delete.id}/delete.json", { member_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "can delete" do
+      expect(json["response_status"]).to eq("OK")
+    end
+
+    it "update column to deleted_at" do
+      expect(poll_for_delete.reload.deleted_at.present?).to eq(true)
+    end
+  end
+
 
 end
