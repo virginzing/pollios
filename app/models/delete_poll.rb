@@ -18,3 +18,8 @@ class DeletePoll
   end
 
 end
+
+
+# DeletePoll.where('creator.member_id' => 93).to_a
+# DeletePoll.where(:"creator.member_id" => 93)
+# http://two.mongoid.org/docs/querying/criteria.html#where
