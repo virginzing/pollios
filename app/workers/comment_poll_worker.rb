@@ -31,7 +31,7 @@ class CommentPollWorker
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
-        type: TYPE[:poll],
+        type: TYPE[:comment],
         poll_id: poll.id,
         series: poll.series
       }
@@ -39,7 +39,7 @@ class CommentPollWorker
       find_recipient_notify.each_with_index do |member, index|
         member.apn_devices.each do |device|
           apn_custom_properties = {
-            type: TYPE[:poll],
+            type: TYPE[:comment],
             poll_id: poll.id,
             series: poll.series,
             notify: hash_list_member_badge[member.id]

@@ -1,6 +1,7 @@
 class Poll < ActiveRecord::Base
   # extend FriendlyId
   # friendly_id :slug_candidates, use: [:slugged, :finders]
+  acts_as_paranoid
 
   mount_uploader :photo_poll, PhotoPollUploader
   
@@ -87,7 +88,7 @@ class Poll < ActiveRecord::Base
 
   accepts_nested_attributes_for :poll_attachments, :reject_if => lambda { |a| a[:image].blank? }, :allow_destroy => true
 
-  default_scope { order("#{table_name}.created_at desc") }
+  default_scope { with_deleted.order("#{table_name}.created_at desc") }
 
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.zone.now) }
@@ -106,6 +107,8 @@ class Poll < ActiveRecord::Base
     query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.size > 0
     query
   }
+
+  scope :without_deleted, -> { where(deleted_at: nil) }
 
   scope :have_vote, -> { where("polls.vote_all > 0") }
   scope :unexpire, -> {
@@ -166,6 +169,7 @@ class Poll < ActiveRecord::Base
     Rails.cache.fetch([name, id]) do
       @poll = find_by(id: id)
       raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
+      raise ExceptionHandler::Deleted, ExceptionHandler::Message::Poll::DELETED unless @poll.deleted_at.nil?
       @poll
     end
   end

@@ -37,7 +37,7 @@ class Poll::CommentNotifyLog
     get_hash_list_member_badge ||= @count_notification.get_hash_list_member_badge_count
 
     @custom_properties = {
-      type: TYPE[:poll],
+      type: TYPE[:comment],
       poll_id: poll.id,
       series: poll.series
     }

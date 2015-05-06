@@ -4,6 +4,7 @@ module ExceptionHandler
   included do
     include ActiveSupport::Rescuable
     rescue_from NotFound, :with => :not_found
+    rescue_from Deleted, :with => :not_found
     rescue_from Forbidden, :with => :forbdden
     rescue_from UnprocessableEntity, :with => :unprocessable_entity
     rescue_from Unauthorized, :with => :unauthorized
@@ -17,6 +18,7 @@ module ExceptionHandler
   end
 
   class NotFound < StandardError; end
+  class Deleted < StandardError; end
   class Forbidden < StandardError; end
   class UnprocessableEntity < StandardError; end
   class Unauthorized < StandardError; end
@@ -30,8 +32,9 @@ module ExceptionHandler
 
   module Message
     module Poll
-      NOT_FOUND = "This poll was deleted from Pollios."
+      NOT_FOUND = "Poll not found."
       UNDER_INSPECTION = "Many users had reported this poll to us. We've temporary removed it."
+      DELETED = "This poll was deleted from Pollios."
     end
 
     module Member

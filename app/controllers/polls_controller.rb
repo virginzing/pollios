@@ -762,7 +762,7 @@ class PollsController < ApplicationController
   def delete_comment
     Poll.transaction do
       begin
-        @comment = Comment.find_by(id: comment_params[:comment_id]) || 0
+        @comment = Comment.find_by(id: comment_params[:comment_id])
         if (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
           @comment.destroy
           @poll.decrement!(:comment_count) if @poll.comment_count > 0
