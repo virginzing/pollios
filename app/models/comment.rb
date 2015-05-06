@@ -4,12 +4,12 @@ class Comment < ActiveRecord::Base
   belongs_to :poll
   belongs_to :member
 
-  has_many :mentions, dependent: :destroy
+  has_many :mentions
 
   has_many :member_mentionable, foreign_key: "comment_id", class_name: "Mention"
   has_many :get_member_mentionable, through: :member_mentionable, source: :mentionable
 
-  has_many :member_report_comments, dependent: :destroy
+  has_many :member_report_comments
 
   validates_presence_of :message
 

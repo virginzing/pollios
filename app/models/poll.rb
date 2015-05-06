@@ -20,47 +20,47 @@ class Poll < ActiveRecord::Base
     using: { tsearch: {dictionary: "english", prefix: true, :any_word => true }, :trigram => { :threshold => 0.1 } },
     associated_against: { choices: [:answer] }
 
-  has_many :choices, dependent: :destroy
+  has_many :choices
 
-  has_many :poll_attachments, -> { order('order_image asc') }, dependent: :destroy
+  has_many :poll_attachments, -> { order('order_image asc') }
   
-  has_many :taggings, dependent: :destroy
+  has_many :taggings
 
   has_many :tags, through: :taggings, source: :tag
 
-  has_many :watcheds, dependent: :destroy
+  has_many :watcheds
   has_many :watched_by_member, through: :watcheds, source: :member
 
-  has_many :poll_groups, dependent: :destroy
+  has_many :poll_groups
   has_many :groups, through: :poll_groups, source: :group
 
-  has_many :poll_members, dependent: :destroy
+  has_many :poll_members
   has_many :members, through: :poll_members, source: :member
 
-  has_many :campaign_members, dependent: :destroy
+  has_many :campaign_members
 
-  has_many :comments, dependent: :destroy
+  has_many :comments
 
-  has_many :history_votes, dependent: :destroy
+  has_many :history_votes
 
   has_many :who_voted,  through: :history_votes, source: :member
 
-  has_many :history_views, dependent: :destroy
-  has_many :share_polls, dependent: :destroy
-  has_many :hidden_polls, dependent: :destroy
+  has_many :history_views
+  has_many :share_polls
+  has_many :hidden_polls
 
-  has_many :member_report_polls, dependent: :destroy
+  has_many :member_report_polls
 
   has_many :un_see_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
 
   has_many :bookmarks, as: :bookmarkable
 
-  has_many :branch_polls, dependent: :destroy
+  has_many :branch_polls
   has_many :branches, through: :branch_polls, source: :branch
   
   has_many :triggers, as: :triggerable
-  has_many :member_report_comments, dependent: :destroy
+  has_many :member_report_comments
   
   belongs_to :member
   belongs_to :poll_series
