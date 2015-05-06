@@ -36,7 +36,7 @@ class Comment < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @comment = find_by(id: id)
-      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Comment::NOT_FOUND unless @comment.present?
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Comment::NOT_FOUND unless @comment.deleted_at.nil?
       @comment
     end
   end
