@@ -38,6 +38,18 @@ namespace :admin do
     end
   end
 
+
+  # NotifyLog.all.each do |notify_log|
+  #   poll_id = notify_log.custom_properties[:poll_id]
+  #   if poll_id != nil
+  #     find_poll = Poll.find_by(id: poll_id)
+
+  #     unless find_poll.present?
+  #       NotifyLog.where("custom_properties LIKE ?", "%poll_id: #{poll_id}%").update_all(poll_deleted: true)
+  #     end
+  #   end
+  # end
+
   # Group.where(public_id: nil).each do |g|
   #   g.update!(public_id: "pollios" << g.id.to_s)
   # end
