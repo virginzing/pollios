@@ -153,7 +153,7 @@
             </tr>
           </thead>
           <tbody>
-            <% @poll.comments.valid.each do |comment| %>
+            <% @poll.comments.each do |comment| %>
               <tr id="comment_<%= comment.id %>">
                 <td><%= comment.id %></td>
                 <td><%= comment.message %></td>
