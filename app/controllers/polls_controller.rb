@@ -306,6 +306,7 @@ class PollsController < ApplicationController
   def delete_my_poll
     raise ExceptionHandler::UnprocessableEntity, "You're not creator poll" unless @poll.member_id == @member_id
     @poll.destroy
+    NotifyLog.check_update_delete_status(@poll)
     DeletePoll.create_log(@poll)
   end
 

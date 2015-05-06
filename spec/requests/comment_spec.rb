@@ -39,7 +39,7 @@ RSpec.describe "Comment" do
       end
 
       it "can deleted" do
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(201)
       end
 
       it "decrement comment count" do
