@@ -96,6 +96,16 @@
                 </div>
               </section>
 
+              <section>
+                <div class="row">
+                  <div class="col col-md-4">
+                  <label class="toggle">
+                    <input type="checkbox" name="group[set_group_type]">
+                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Group Company</label>
+                  </div>
+                </div>
+              </section>
+
 
             </fieldset>
             <footer>
@@ -159,6 +169,7 @@
   $.check_system_group = <%= raw @group.system_group %>;
   $.check_need_approve = <%= raw @group.need_approve %>;
   $.check_public_group = <%= raw @group.public %>;
+  $.check_group_type = <%= raw @group.company? %>;
 
   if ($.check_leave_group) {
     $("input[name='group[leave_group]']").attr( 'checked', 'checked' );
@@ -178,6 +189,10 @@
 
   if ($.check_public_group) {
     $("input[name='group[public]']").attr( 'checked', 'checked' );
+  }
+
+  if ($.check_group_type) {
+    $("input[name='group[set_group_type]']").attr( 'checked', 'checked' );
   }
 
   $("#group_profile").parsley();

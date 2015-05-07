@@ -439,8 +439,9 @@ class CompaniesController < ApplicationController
       group.need_approve = group_params[:need_approve].present? ? true : false
       group.system_group = group_params[:system_group].present? ? true : false
       group.public = group_params[:public].present? ? true : false
+      group.group_type = group_params[:set_group_type].present? ? :company : :normal
 
-      if group.update(group_params)
+      if group.update(group_params.except(:set_group_type))
         Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
 
         group.members.each do |member|
@@ -456,7 +457,7 @@ class CompaniesController < ApplicationController
         @error_message = @current_member.errors.messages
 
         format.json
-        format.html { render 'profile' ,errors: @error_message }
+        format.html { redirect_to company_edit_group_path(@group) }
       end
     end
   end
@@ -606,7 +607,7 @@ class CompaniesController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve)  
+    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve, :set_group_type)  
   end
 
   def options_params

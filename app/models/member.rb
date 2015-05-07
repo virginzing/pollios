@@ -240,7 +240,6 @@ class Member < ActiveRecord::Base
       field :first_signup
       field :public_id
       field :fb_id
-      field :list_fb_id
       field :sync_facebook
       field :key_color
     end

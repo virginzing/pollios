@@ -7,7 +7,7 @@ class SuggestGroupsController < ApplicationController
 
 
   def manage_groups
-    @group = Group.where(public: true).with_group_type(:normal)
+    @group = Group.where(public: true)
     @current_suggest_group = SuggestGroup.all.pluck(:group_id)
   end
 
