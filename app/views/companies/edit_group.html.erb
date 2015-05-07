@@ -169,7 +169,7 @@
   $.check_system_group = <%= raw @group.system_group %>;
   $.check_need_approve = <%= raw @group.need_approve %>;
   $.check_public_group = <%= raw @group.public %>;
-  $.check_group_type = <%= raw @group.company? %>;
+  $.check_group_type = <%= raw @group.group_type_company? %>;
 
   if ($.check_leave_group) {
     $("input[name='group[leave_group]']").attr( 'checked', 'checked' );
