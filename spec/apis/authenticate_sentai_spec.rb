@@ -7,7 +7,7 @@ describe "POST /authen/sentai", type: :api do
   end
   
   it "authenticate with authen and right password" do
-    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "Nutty509"), format: :json
+    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "1234567890"), format: :json
 
     expect(ApiToken.count).to eq(1)
 
@@ -21,7 +21,7 @@ describe "POST /authen/sentai", type: :api do
   end
 
   it "authenticate with authen and wrong password" do
-    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "123456"), format: :json
+    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "000000000"), format: :json
 
     expect(last_response.status).to eq(401)
 
@@ -31,7 +31,7 @@ describe "POST /authen/sentai", type: :api do
   end
 
   it "authen with device_token" do
-    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "Nutty509", device_token: "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000"), format: :json
+    post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "1234567890", device_token: "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000"), format: :json
   
     expect(last_response.status).to eq(201)
 

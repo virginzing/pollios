@@ -1,3 +1,5 @@
+require 'rest_client'
+
 namespace :admin do
   desc "create admin"
   task create: :environment do
@@ -103,6 +105,29 @@ namespace :admin do
         group.update!(member_id: member.member_id)
       end
     end
+  end
+
+  desc "Default member and company and campaign"
+  task :deafult_member_company_campaign => [:dependent, :tasks] do
+
+    host = Rails.env.production? ? "http://codeapp-user.herokuapp.com/codeapp/signup.json" : "http://codeapp-user-dev.herokuapp.com/codeapp/signup.json"
+
+    params = {
+      email: "polliosadmin@code-app.com",
+      password: "9code7app9",
+      password_confirmation: "9code7app9",
+      fullname: "Pollios Admin"
+    }
+
+    RestClient.post host, params
+
+    member = Member.create!(fullname: "Pollios Admin", email: "polliosadmin@code-app.com", description: "Pollios Admin Official", cover_preset: 1, first_signup: false, created_company: true, waiting: false, member_type: :company)
+  
+    company = Company.create!(name: "Pollios", member: member, using_service: ["Survey", "Feedback"], company_admin: true)
+
+    Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years, member: member,  company: company,
+      description: "Gift", how_to_redeem: "กดรับเอง", redeem_myself: true, reward_info: { "point" => 5, "first_signup" => true }, reward_expire: Time.now + 100.years, system_campaign: true,
+      rewards_attributes: [{ title: "5 public poll", detail: "แจกฟรี 5 public poll free", reward_expire: Time.now + 100.years, order_reward: 0 }] )
   end
 
   desc "Reset specific some table"
