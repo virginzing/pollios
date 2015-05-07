@@ -125,6 +125,8 @@ namespace :admin do
   
     company = Company.create!(name: "Pollios", member: member, using_service: ["Survey", "Feedback"], company_admin: true)
 
+    company.feedback_recurrings.create!(period: '00:00')
+    
     group = Group.create!(name: "Pollios", public: false, description: "Group Pollios Official", member: member, cover_preset: 1, system_group: true, group_type: :company)
 
     GroupCompany.create!(group: group, company: company, main_group: true)
@@ -132,6 +134,11 @@ namespace :admin do
     Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years, member: member,  company: company,
       description: "Gift", how_to_redeem: "กดรับเอง", redeem_myself: true, reward_info: { "point" => 5, "first_signup" => true }, reward_expire: Time.now + 100.years, system_campaign: true,
       rewards_attributes: [{ title: "5 public poll", detail: "แจกฟรี 5 public poll free", reward_expire: Time.now + 100.years, order_reward: 0 }] )
+  end
+
+  desc "Default Group Recommendation"
+  task :task_name => [:dependent, :tasks] do
+    
   end
 
   desc "Reset specific some table"
