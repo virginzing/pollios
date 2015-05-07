@@ -6,9 +6,9 @@ development:
   enhance_image_tag: true
   static_image_support: false
 production:
-  cloud_name: code-app
-  api_key: '543692587982572'
-  api_secret: lHBP7L-JOLt-sRXDLMWlI6doib8
+  cloud_name: pollios
+  api_key: '531295172964415'
+  api_secret: n2FUTEUizyA9_892M14om-9IioI
   enhance_image_tag: true
   static_image_support: true
 test:

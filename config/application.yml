@@ -55,8 +55,20 @@ production:
 # update limit of member
 # Member.unscoped.where(created_company: false).order("id asc").limit(200).update_all(waiting: false)
 
+
+#  local
+
 # Cloudinary email: codeapp.server@gmail.com
 # password: 9code7app9
+
+
+# production
+
+# Cloudinary email: polliosadmin@code-app.com
+# password: 9code7app9
+
+##
+
 
 # heroku maintenance:on -a codeapp-pollios
 # heroku maintenance:off -a codeapp-pollios
