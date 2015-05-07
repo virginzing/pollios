@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150506044807) do
+ActiveRecord::Schema.define(version: 20150507064727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -359,16 +359,6 @@ ActiveRecord::Schema.define(version: 20150506044807) do
 
   add_index "company_members", ["company_id"], name: "index_company_members_on_company_id", using: :btree
   add_index "company_members", ["member_id"], name: "index_company_members_on_member_id", unique: true, using: :btree
-
-  create_table "devices", force: true do |t|
-    t.integer  "member_id"
-    t.text     "token",      null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "api_token"
-  end
-
-  add_index "devices", ["member_id"], name: "index_devices_on_member_id", using: :btree
 
   create_table "feedback_recurrings", force: true do |t|
     t.integer  "company_id"

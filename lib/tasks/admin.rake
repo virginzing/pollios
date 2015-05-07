@@ -105,4 +105,45 @@ namespace :admin do
     end
   end
 
+  desc "Reset Server"
+  task :reset_server => :environment do
+    AccessWeb.delete_all
+    AccessWeb.connection.execute('ALTER SEQUENCE access_webs_id_seq RESTART WITH 1')
+
+    ActivityFeed.delete_all
+    ActivityFeed.connection.execute('ALTER SEQUENCE activity_feeds_id_seq RESTART WITH 1')
+
+    ApiToken.delete_all
+    ApiToken.connection.execute('ALTER SEQUENCE api_tokens_id_seq RESTART WITH 1')
+
+    Apn::Device.delete_all
+    Apn::Device.connection.execute('ALTER SEQUENCE apn_devices_id_seq RESTART WITH 1')
+
+    Apn::Notification.delete_all
+    Apn::Notification.connection.execute('ALTER SEQUENCE apn_notifications_id_seq RESTART WITH 1')
+
+    Bookmark.delete_all
+    Bookmark.connection.execute('ALTER SEQUENCE bookmarks_id_seq RESTART WITH 1')
+
+    BranchPollSeries.delete_all
+    BranchPollSeries.connection.execute('ALTER SEQUENCE branch_poll_series_id_seq RESTART WITH 1')
+
+    BranchPoll.delete_all
+    BranchPoll.connection.execute('ALTER SEQUENCE branch_polls_id_seq RESTART WITH 1')
+
+    CampaignMember.delete_all
+    CampaignMember.connection.execute('ALTER SEQUENCE campaign_members_id_seq RESTART WITH 1')
+
+    Campaign.delete_all
+    Campaign.connection.execute('ALTER SEQUENCE campaigns_id_seq RESTART WITH 1')
+
+    Choice.delete_all
+    Choice.connection.execute('ALTER SEQUENCE choices_id_seq RESTART WITH 1')
+
+    CollectionPollBranch.delete_all
+    CollectionPollBranch.connection.execute('ALTER SEQUENCE collection_poll_branches_id_seq RESTART WITH 1')
+
+    
+  end
+
 end
