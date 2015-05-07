@@ -55,6 +55,7 @@ production:
 # update limit of member
 # Member.unscoped.where(created_company: false).order("id asc").limit(200).update_all(waiting: false)
 
+# heroku config:set LIMIT_MEMBER=205 -a codeapp-pollios
 
 #  local
 
