@@ -52,7 +52,7 @@ class WaitingList
     if remain_waiting_list.nil?
       0
     else
-      remain_waiting_list.size { |e| e > member_id }
+      remain_waiting_list.count { |e| e > member_id }
     end
   end
   
