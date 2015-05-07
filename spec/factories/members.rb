@@ -38,4 +38,9 @@ FactoryGirl.define do
     email "system@pollios.com"
   end
 
+  factory :dummy, class: Member do
+    authen "dummy@pollios.com"
+    app_id "com.pollios.polliosapp"
+  end
+
 end

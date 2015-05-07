@@ -105,10 +105,12 @@ namespace :admin do
     end
   end
 
-  desc "Reset Server"
-  task :reset_server => :environment do
+  desc "Reset specific some table"
+  task :reset_specific_table => :environment do
     AccessWeb.delete_all
     AccessWeb.connection.execute('ALTER SEQUENCE access_webs_id_seq RESTART WITH 1')
+
+    Activity.delete_all
 
     ActivityFeed.delete_all
     ActivityFeed.connection.execute('ALTER SEQUENCE activity_feeds_id_seq RESTART WITH 1')
@@ -124,6 +126,9 @@ namespace :admin do
 
     Bookmark.delete_all
     Bookmark.connection.execute('ALTER SEQUENCE bookmarks_id_seq RESTART WITH 1')
+
+    Branch.delete_all
+    Branch.connection.execute('ALTER SEQUENCE branches_id_seq RESTART WITH 1')
 
     BranchPollSeries.delete_all
     BranchPollSeries.connection.execute('ALTER SEQUENCE branch_poll_series_id_seq RESTART WITH 1')
@@ -143,7 +148,175 @@ namespace :admin do
     CollectionPollBranch.delete_all
     CollectionPollBranch.connection.execute('ALTER SEQUENCE collection_poll_branches_id_seq RESTART WITH 1')
 
-    
+    CollectionPollSeries.delete_all
+    CollectionPollSeries.connection.execute('ALTER SEQUENCE collection_poll_series_id_seq RESTART WITH 1')
+
+    CollectionPollSeriesBranch.delete_all
+    CollectionPollSeriesBranch.connection.execute('ALTER SEQUENCE collection_poll_series_branches_id_seq RESTART WITH 1')
+
+    CollectionPoll.delete_all
+    CollectionPoll.connection.execute('ALTER SEQUENCE collection_polls_id_seq RESTART WITH 1')
+
+    Comment.delete_all
+    Comment.connection.execute('ALTER SEQUENCE comments_id_seq RESTART WITH 1')
+
+    Company.delete_all
+    Company.connection.execute('ALTER SEQUENCE companies_id_seq RESTART WITH 1')
+
+    CompanyMember.delete_all
+    CompanyMember.connection.execute('ALTER SEQUENCE company_members_id_seq RESTART WITH 1')
+
+    CoverPreset.delete_all
+
+    DeletePoll.delete_all
+
+    FeedbackRecurring.delete_all
+    FeedbackRecurring.connection.execute('ALTER SEQUENCE feedback_recurrings_id_seq RESTART WITH 1')
+
+    Friend.delete_all
+    Friend.connection.execute('ALTER SEQUENCE friends_id_seq RESTART WITH 1')
+
+    Group.delete_all
+    Group.connection.execute('ALTER SEQUENCE groups_id_seq RESTART WITH 1')
+
+    GroupCompany.delete_all
+    GroupCompany.connection.execute('ALTER SEQUENCE group_companies_id_seq RESTART WITH 1')
+
+    GroupMember.delete_all
+    GroupMember.connection.execute('ALTER SEQUENCE group_members_id_seq RESTART WITH 1')
+
+    GroupStats.delete_all
+
+    GroupSurveyor.delete_all
+    GroupSurveyor.connection.execute('ALTER SEQUENCE group_surveyors_id_seq RESTART WITH 1') 
+
+    HiddenPoll.delete_all
+    HiddenPoll.connection.execute('ALTER SEQUENCE hidden_polls_id_seq RESTART WITH 1')
+
+    HistoryPurchase.delete_all
+    HistoryPurchase.connection.execute('ALTER SEQUENCE history_purchases_id_seq RESTART WITH 1')
+
+    HistoryView.delete_all
+    HistoryView.connection.execute('ALTER SEQUENCE history_views_id_seq RESTART WITH 1')
+
+    HistoryViewQuestionnaire.delete_all
+    HistoryViewQuestionnaire.connection.execute('ALTER SEQUENCE history_view_questionnaires_id_seq RESTART WITH 1')
+
+    HistoryVote.delete_all
+    HistoryVote.connection.execute('ALTER SEQUENCE history_votes_id_seq RESTART WITH 1')
+
+    InviteCode.delete_all
+    InviteCode.connection.execute('ALTER SEQUENCE invite_codes_id_seq RESTART WITH 1')
+
+    Invite.delete_all
+    Invite.connection.execute('ALTER SEQUENCE invies_id_seq RESTART WITH 1')
+
+    MemberInviteCode.delete_all
+    MemberInviteCode.connection.execute('ALTER SEQUENCE member_invite_codes_id_seq RESTART WITH 1')
+
+    Member.delete_all
+    Member.connection.execute('ALTER SEQUENCE members_id_seq RESTART WITH 1')
+
+    MemberUnRecomment.delete_all
+    MemberUnRecomment.connection.execute('ALTER SEQUENCE member_un_recomments_id_seq RESTART WITH 1')
+
+    MemberReportMember.delete_all
+    MemberReportMember.connection.execute('ALTER SEQUENCE member_report_members_id_seq RESTART WITH 1')
+
+    MemberReportComment.delete_all
+    MemberReportComment.connection.execute('ALTER SEQUENCE member_report_comments_id_seq RESTART WITH 1')
+
+    MemberReportPoll.delete_all
+    MemberReportPoll.connection.execute('ALTER SEQUENCE member_report_polls_id_seq RESTART WITH 1')
+
+    MemberPollFeed.delete_all
+
+    Mention.delete_all
+    Mention.connection.execute('ALTER SEQUENCE mentions_id_seq RESTART WITH 1')
+
+    NotifyLog.delete_all
+    NotifyLog.connection.execute('ALTER SEQUENCE notify_logs_id_seq RESTART WITH 1')
+
+    PollAttachment.delete_all
+    PollAttachment.connection.execute('ALTER SEQUENCE poll_attachments_id_seq RESTART WITH 1')
+
+    PollGroup.delete_all
+    PollGroup.connection.execute('ALTER SEQUENCE poll_groups_id_seq RESTART WITH 1')
+
+    Poll.delete_all
+    Poll.connection.execute('ALTER SEQUENCE polls_id_seq RESTART WITH 1')
+
+    PollMember.delete_all
+    PollMember.connection.execute('ALTER SEQUENCE poll_members_id_seq RESTART WITH 1')
+
+    PollSeries.delete_all
+    PollSeries.connection.execute('ALTER SEQUENCE poll_series_id_seq RESTART WITH 1')
+
+    PollSeriesGroup.delete_all
+    PollSeriesGroup.connection.execute('ALTER SEQUENCE poll_series_groups_id_seq RESTART WITH 1')
+
+    PollSeriesTag.delete_all
+    PollSeriesTag.connection.execute('ALTER SEQUENCE poll_series_tags_id_seq RESTART WITH 1')
+
+    Provider.delete_all
+    Provider.connection.execute('ALTER SEQUENCE providers_id_seq RESTART WITH 1')
+
+    Recurring.delete_all
+    Recurring.connection.execute('ALTER SEQUENCE recurrings_id_seq RESTART WITH 1')
+
+    Redeemer.delete_all
+    Redeemer.connection.execute('ALTER SEQUENCE redeemers_id_seq RESTART WITH 1')
+
+    RequestCode.delete_all
+    RequestCode.connection.execute('ALTER SEQUENCE request_codes_id_seq RESTART WITH 1')
+
+    RequestGroup.delete_all
+    RequestGroup.connection.execute('ALTER SEQUENCE request_groups_id_seq RESTART WITH 1')
+
+    Reward.delete_all
+    Reward.connection.execute('ALTER SEQUENCE rewards_id_seq RESTART WITH 1')
+
+    Role.delete_all
+    Role.connection.execute('ALTER SEQUENCE roles_id_seq RESTART WITH 1')
+
+    SavePollLater.delete_all
+    SavePollLater.connection.execute('ALTER SEQUENCE save_poll_laters_id_seq RESTART WITH 1')
+
+    SharePoll.delete_all
+    SharePoll.connection.execute('ALTER SEQUENCE share_polls_id_seq RESTART WITH 1')
+
+    SpecialQrcode.delete_all
+    SpecialQrcode.connection.execute('ALTER SEQUENCE special_qrcodes_id_seq RESTART WITH 1')
+
+    Suggest.delete_all
+    Suggest.connection.execute('ALTER SEQUENCE suggests_id_seq RESTART WITH 1')
+
+    SuggestGroup.delete_all
+    SuggestGroup.connection.execute('ALTER SEQUENCE suggest_groups_id_seq RESTART WITH 1')
+
+    Tag.delete_all
+    Tag.connection.execute('ALTER SEQUENCE tags_id_seq RESTART WITH 1')
+
+    Tagging.delete_all
+    Tagging.connection.execute('ALTER SEQUENCE taggings_id_seq RESTART WITH 1')
+
+    Template.delete_all
+
+    Trigger.delete_all
+    Trigger.connection.execute('ALTER SEQUENCE triggers_id_seq RESTART WITH 1')
+
+    TypeSearch.delete_all
+
+    UnseePoll.delete_all
+    UnSeePoll.connection.execute('ALTER SEQUENCE un_see_polls_id_seq RESTART WITH 1')
+
+    UserStats.delete_all
+
+    VoteStats.delete_all
+
+    Watched.delete_all
+    Watched.connection.execute('ALTER SEQUENCE watcheds_id_seq RESTART WITH 1')
+
   end
 
 end

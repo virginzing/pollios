@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507064727) do
+ActiveRecord::Schema.define(version: 20150507070837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -898,19 +898,6 @@ ActiveRecord::Schema.define(version: 20150507064727) do
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id", using: :btree
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
-
-  create_table "profiles", force: true do |t|
-    t.integer  "member_id"
-    t.date     "birthday"
-    t.integer  "gender"
-    t.text     "interests"
-    t.string   "salary"
-    t.integer  "province"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "profiles", ["member_id"], name: "index_profiles_on_member_id", using: :btree
 
   create_table "providers", force: true do |t|
     t.string   "name"
