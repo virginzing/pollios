@@ -158,7 +158,8 @@ class V6::MyPollInProfile
   def poll_voted(next_cursor = nil, limit_poll = LIMIT_POLL)
     query = Poll.without_my_poll(member_id).load_more(next_cursor).available.joins(:history_votes => :choice).includes(:member, :campaign, :poll_groups)
                 .select("polls.*, history_votes.choice_id as choice_id")
-                .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f' AND polls.series = 'f') " \
+                .where("polls.series = 'f'")
+                .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f') " \
                        "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
                        your_group_ids).references(:poll_groups)    
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
