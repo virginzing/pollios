@@ -103,7 +103,7 @@
                 <section class="col col-10">
                     <label class="label">Campaign</label>
                     <label class="select">
-                      <%= f.select :campaign_id, @company.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                      <%= f.select :campaign_id, @company.campaigns.without_system.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
                     </label>
                   </section>
 
@@ -111,7 +111,7 @@
                   <section class="col col-5">
                     <label class="label">Campaign</label>
                     <label class="select">
-                      <%= f.select :campaign_id, current_member.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                      <%= f.select :campaign_id, current_member.campaigns.without_system.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
                     </label>
                   </section>
 

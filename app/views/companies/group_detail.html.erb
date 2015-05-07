@@ -12,7 +12,7 @@
 <div class="well">
   <h4 class="alert-heading">Management</h4>
   <br>
-  <a href="<%= create_new_poll_path %>" class="icon-btn">
+  <a href="<%= create_new_poll_path(with_group: @group.id) %>" class="icon-btn">
     <i class="fa fa-edit"></i>
     <div>Poll</div>
   </a>

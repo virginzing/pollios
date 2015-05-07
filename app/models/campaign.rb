@@ -32,6 +32,8 @@ class Campaign < ActiveRecord::Base
 
   has_many :rewards, dependent: :destroy
 
+  scope :without_system, -> { where(system_campaign: false) }
+
   # after_create :set_campaign_poll
   # before_update :check_campaign_poll
 
