@@ -13,6 +13,7 @@ class CompaniesController < ApplicationController
   before_action :set_questionnaire, only: [:questionnaire_detail]
 
   expose(:group_company) { current_member.get_company.groups if current_member }
+  expose(:group_id) { @group }
 
   def dashboard
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, options_params)

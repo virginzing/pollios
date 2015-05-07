@@ -90,6 +90,16 @@
           </header>
             <fieldset>
               <div class="row">
+
+                <section class="branch_list">
+                  <label class="label">Show in group</label>
+                  <div class="row">
+                    <%= f.collection_check_boxes(:group_id, @group_list, :id, :name) do |b| %>
+                      <%= b.label(class: "label_branch col col-2") { b.check_box(class: "check_box_branch", :"data-parsley-mincheck" => "1", :"data-parsley-required" => true) + b.text } %>
+                    <% end %>
+                  </div>
+                </section>  
+
                 <section class="col col-2">
 
                 <label class="label">Expire within (day)</label>
@@ -105,14 +115,6 @@
                 </section>
 
                 <% if current_member.get_company.present? %>
-
-                <section class="col col-5"> 
-                  <div class="form-group">
-                    <label class="label">In Group</label>
-                      <input type="text" name="poll[group_id]" id="group_list">
-                  </div>
-                </section>  
-
                 <section class="col col-5">
                     <label class="label">Campaign</label>
                     <label class="select">
