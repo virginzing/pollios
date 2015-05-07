@@ -81,7 +81,7 @@ class Group < ActiveRecord::Base
   end
 
   def set_public_id
-    update!(public_id: "pollios" << self.id.to_s)
+    update!(public_id: "G.Pollios" << self.id.to_s)
   end
 
   def get_photo_group

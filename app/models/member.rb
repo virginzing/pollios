@@ -151,6 +151,8 @@ class Member < ActiveRecord::Base
 
   after_commit :flush_cache
 
+  after_create :set_public_id
+
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
   scope :receive_notify, -> { where(receive_notify: true) }
@@ -278,6 +280,10 @@ class Member < ActiveRecord::Base
   # def should_generate_new_friendly_id?
   #   fullname_changed? || super
   # end
+
+  def set_public_id
+    update!(public_id: "M.Pollios" << self.id.to_s)
+  end
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do

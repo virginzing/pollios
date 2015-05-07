@@ -76,7 +76,7 @@ namespace :admin do
 
   desc "Reset Popular tag worker"
   task :reset_tags_popular_cron => :environment do
-    Sidekiq::Cron::Job.create(name: "Reset popular tags - each day", cron: "0 0 * * * Asia/Bangkok", klass: 'ResetPopularTagWorker')
+    Sidekiq::Cron::Job.create(name: "Reset popular tag- each day", cron: "0 0 * * * Asia/Bangkok", klass: 'ResetPopularTagWorker')
   end
 
   desc "Check blacklist members"
@@ -108,7 +108,7 @@ namespace :admin do
   end
 
   desc "Default member and company and campaign"
-  task :deafult_member_company_campaign => [:dependent, :tasks] do
+  task :default_member_company_campaign => :environment do
 
     host = Rails.env.production? ? "http://codeapp-user.herokuapp.com/codeapp/signup.json" : "http://codeapp-user-dev.herokuapp.com/codeapp/signup.json"
 
@@ -124,6 +124,10 @@ namespace :admin do
     member = Member.create!(fullname: "Pollios Admin", email: "polliosadmin@code-app.com", description: "Pollios Admin Official", cover_preset: 1, first_signup: false, created_company: true, waiting: false, member_type: :company)
   
     company = Company.create!(name: "Pollios", member: member, using_service: ["Survey", "Feedback"], company_admin: true)
+
+    group = Group.create!(name: "Pollios", public: false, description: "Group Pollios Official", member: member, cover_preset: 1, system_group: true, group_type: :company)
+
+    GroupCompany.create!(group: group, company: company, main_group: true)
 
     Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years, member: member,  company: company,
       description: "Gift", how_to_redeem: "กดรับเอง", redeem_myself: true, reward_info: { "point" => 5, "first_signup" => true }, reward_expire: Time.now + 100.years, system_campaign: true,
@@ -163,6 +167,9 @@ namespace :admin do
 
     CampaignMember.delete_all
     CampaignMember.connection.execute('ALTER SEQUENCE campaign_members_id_seq RESTART WITH 1')
+
+    GiftLog.delete_all
+    GiftLog.connection.execute('ALTER SEQUENCE gift_logs_id_seq RESTART WITH 1')
 
     Campaign.delete_all
     Campaign.connection.execute('ALTER SEQUENCE campaigns_id_seq RESTART WITH 1')
@@ -234,13 +241,15 @@ namespace :admin do
     InviteCode.connection.execute('ALTER SEQUENCE invite_codes_id_seq RESTART WITH 1')
 
     Invite.delete_all
-    Invite.connection.execute('ALTER SEQUENCE invies_id_seq RESTART WITH 1')
+    Invite.connection.execute('ALTER SEQUENCE invites_id_seq RESTART WITH 1')
 
     MemberInviteCode.delete_all
     MemberInviteCode.connection.execute('ALTER SEQUENCE member_invite_codes_id_seq RESTART WITH 1')
 
     Member.delete_all
     Member.connection.execute('ALTER SEQUENCE members_id_seq RESTART WITH 1')
+
+    Member.connection.execute("DELETE FROM members_roles")
 
     MemberUnRecomment.delete_all
     MemberUnRecomment.connection.execute('ALTER SEQUENCE member_un_recomments_id_seq RESTART WITH 1')
@@ -332,7 +341,7 @@ namespace :admin do
 
     TypeSearch.delete_all
 
-    UnseePoll.delete_all
+    UnSeePoll.delete_all
     UnSeePoll.connection.execute('ALTER SEQUENCE un_see_polls_id_seq RESTART WITH 1')
 
     UserStats.delete_all
