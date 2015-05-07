@@ -208,6 +208,7 @@ class Authentication
 
       if @new_member
         follow_pollios
+        set_public_id
         add_new_group_company if member_type == "3"
         join_group_automatic if create_member_via_company?
         join_company_member if create_member_via_company?
@@ -294,6 +295,10 @@ class Authentication
     if find_pollios.present?
       Friend.create!(follower_id: @member.id, followed_id: find_pollios.id, status: :nofriend, following: true) unless @member.id == find_pollios.id
     end
+  end
+
+  def set_public_id
+    @member.update!(public_id: "M.Pollios" << @member.id.to_s)
   end
 
   def add_new_group_company
