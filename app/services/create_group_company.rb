@@ -18,6 +18,7 @@ class CreateGroupCompany
     Group.transaction do
       begin
         @group = Group.new(@group_params)
+        @group.member = @member
         @group.group_type = :company
         @group.member_count = new_list_members_count
         @group.save!
