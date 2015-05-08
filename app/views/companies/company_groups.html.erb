@@ -45,7 +45,7 @@
               <% @groups.each do |group| %>
                 <tr>
                   <td><%= group.id %></td>
-                  <td><img src="<%= group.photo_group.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= group.name %>"></td>
+                  <td><%= group.decorate.show_cover_group %></td>
                   <td><%= link_to group.name, company_group_detail_path(group) %></td>
                   <td><%= group.description %></td>
                   <td><%= group.get_all_member_count %> members</td>
