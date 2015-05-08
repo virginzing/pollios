@@ -30,6 +30,8 @@ PRODUCT_ID_IOS_STATUS: "OPEN"
 10_PUBLIC_POLL: "10publicpoll"
 1_MONTH: "1month"
 1_YEAR: "1year"
+PRODUCTION_HOST: "http://pollios.com"
+DEVELOPMENT_HOST: "http://localhost:3000"
 
 
 development:
