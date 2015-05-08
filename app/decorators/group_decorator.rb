@@ -5,7 +5,7 @@ class GroupDecorator < ApplicationDecorator
 
 
   def show_cover_group
-    image_tag( object.cover.url(:thumbnail_small), data: { toggle: "tooltip", placement: "top", :'original-title' => object.name }, alt: "user", class: 'img img-circle img-responsive center-block' )    
+    image_tag( object.cover.url(:thumbnail_small), data: { toggle: "tooltip", placement: "top", :'original-title' => object.name }, alt: "user", class: 'img img-responsive center-block' )    
   end
 
 

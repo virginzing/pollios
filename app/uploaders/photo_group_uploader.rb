@@ -29,7 +29,7 @@ class PhotoGroupUploader < CarrierWave::Uploader::Base
 
   version :thumbnail_small do
     process :eager => true
-    process :resize_to_fill => [40, 40]
+    process :resize_to_fill => [120, 60]
     cloudinary_transformation :quality => 80
   end   
 
