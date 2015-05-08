@@ -5,7 +5,11 @@ class GroupDecorator < ApplicationDecorator
 
 
   def show_cover_group
-    image_tag( object.cover.url(:thumbnail_small), data: { toggle: "tooltip", placement: "top", :'original-title' => object.name }, alt: "user", class: 'img img-responsive center-block' )    
+    if object.cover_preset == "0"
+      image_tag( object.cover.url(:thumbnail_small), data: { toggle: "tooltip", placement: "top", :'original-title' => object.name }, alt: "user", class: 'img img-responsive center-block' )    
+    else
+      image_tag( Group::CoverPresetSelector.new(object).show_cover_preset[object.cover_preset], class: 'img img-responsive center-block', size: '120x60')
+    end
   end
 
 

@@ -53,7 +53,7 @@ production:
 # or
 # figaro heroku:set -e production -a codeapp-pollios
 # update limit of member
-# Member.unscoped.where(created_company: false).order("id asc").limit(200).update_all(waiting: false)
+# Member.unscoped.where(created_company: false).order("id asc").limit(205).update_all(waiting: false)
 
 # heroku config:set LIMIT_MEMBER=205 -a codeapp-pollios
 

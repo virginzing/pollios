@@ -84,9 +84,9 @@ class ProfilesController < ApplicationController
     respond_to do |format|
       if @current_member.update(personal_detail_params)
         @current_member.update!(update_personal: true)
-        format.json { render json: { "response_status" => "OK" }, status: 200 }
+        format.json { render json: { "response_status" => "OK" }, status: :created }
       else
-        format.json { render json: { "response_status" => @current_member.errors.full_messages }, status: 403 }
+        format.json { render json: { "response_status" => @current_member.errors.full_messages }, status: :unprocessable_entity }
       end
     end
   end

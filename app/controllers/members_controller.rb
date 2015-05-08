@@ -192,6 +192,10 @@ class MembersController < ApplicationController
       first_signup = update_profile_params[:first_signup]
       fb_id = update_profile_params[:fb_id]
 
+      if update_profile_params[:gender] || update_profile_params[:birthday]
+        @current_member.update_personal = true
+      end
+      
       init_avatar = ImageUrl.new(avatar)
       init_cover = ImageUrl.new(cover)
 
