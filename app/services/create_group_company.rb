@@ -20,6 +20,7 @@ class CreateGroupCompany
         @group = Group.new(@group_params)
         @group.member = @member
         @group.group_type = :company
+        @group.cover_preset = @group_params[:cover].present? ? "0" : rand(1..26)
         @group.member_count = new_list_members_count
         @group.save!
       end
