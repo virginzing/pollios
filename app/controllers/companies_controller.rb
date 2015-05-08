@@ -330,7 +330,7 @@ class CompaniesController < ApplicationController
 
   def new_group
     @group = Group.new
-    @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)) || []
+    @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.with_group_type(:company).map(&:id)) || []
   end
 
   def new_add_surveyor
