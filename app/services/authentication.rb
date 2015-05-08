@@ -48,6 +48,10 @@ class Authentication
     @params["company_id"]
   end
 
+  def new_company
+    @params["new_company"]
+  end
+
   def redeemer
     @params["redeemer"]
   end
@@ -175,7 +179,7 @@ class Authentication
       member.approve_brand = approved_brand
       # member.point = Member::NEW_USER_POINT
       
-      if web_login.present?
+      if web_login.present? || new_company.present?
         member.auth_token = generate_auth_token
       end
       member.created_company = true if create_member_via_company? || select_service.present?

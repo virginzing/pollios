@@ -46,8 +46,7 @@
                       <%= f.input :description, label: false  %>
                     </label>
                   </section>
-
-                  <% if @find_company.company_admin %>
+                  
                   <div class="options_group">
                     <div class="form-inline">
                       <div class="col-md-2">
@@ -59,31 +58,32 @@
                     </div>
                     <div class="form-inline">
                       <div class="col-md-2">
-                        <label>System Group</label>
-                      </div>
-                      <div class="col-md-10">
-                        <input type="checkbox" name="group[system_group]" value="true"/>
-                      </div>
-                    </div>
-                    <div class="form-inline">
-                      <div class="col-md-2">
                         <label>Don't approve</label>
                       </div>
                       <div class="col-md-10">
                         <input type="checkbox" name="group[need_approve]" value="false"/>
                       </div>
                     </div>
-                    <div class="form-inline">
-                      <div class="col-md-2">
-                        <label>Can leave group</label>
-                      </div>
-                      <div class="col-md-10">
-                        <input type="checkbox" name="group[leave_group]" value="true"/>
-                      </div>
-                    </div>
-                  </div>
-                  <% end %>
 
+                    <% if @find_company.company_admin %>
+                      <div class="form-inline">
+                        <div class="col-md-2">
+                          <label>System Group</label>
+                        </div>
+                        <div class="col-md-10">
+                          <input type="checkbox" name="group[system_group]" value="true"/>
+                        </div>
+                      </div>
+                      <div class="form-inline">
+                        <div class="col-md-2">
+                          <label>Can leave group</label>
+                        </div>
+                        <div class="col-md-10">
+                          <input type="checkbox" name="group[leave_group]" value="true"/>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
                 </section>
 
 <!--                 <section class="col col-2 col-md-2">

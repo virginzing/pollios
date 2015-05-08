@@ -131,7 +131,7 @@ class AuthenSentaiController < ApplicationController
     # puts "response : #{@response}"
   	respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], 
-        "approve_brand" => signup_params["approve_brand"], "address" => signup_params["address"], 
+        "approve_brand" => signup_params["approve_brand"], "new_company" => params[:new_company], "address" => signup_params["address"], 
         "company_id" => signup_params["company_id"], "select_service" => signup_params["select_service"], "register" => :in_app, "app_id" => signup_params[:app_id] ])
       )
 

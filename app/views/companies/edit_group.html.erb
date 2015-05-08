@@ -145,7 +145,7 @@
           <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
             <div class="form-group dropzone-photo">
               <input type="hidden" name="group_id" value="<%= @group.id %>">
-              <input type="file" class="default" name="group[cover]" id="drop_cover_group" accept="image/png, image/jpeg, image/gif"/>
+              <input type="file" class="default" name="group[cover]" id="drop_cover_group" accept="image/png, image/jpeg, image/jpg"/>
             </div>
             <footer>
               <% if @group.cover.present? %>

@@ -435,12 +435,19 @@ class CompaniesController < ApplicationController
   def update_group
     respond_to do |format|
       group = @group
-      group.leave_group = group_params[:leave_group].present? ? true : false
-      group.admin_post_only = group_params[:admin_post_only].present? ? true : false
-      group.need_approve = group_params[:need_approve].present? ? true : false
-      group.system_group = group_params[:system_group].present? ? true : false
-      group.public = group_params[:public].present? ? true : false
-      group.group_type = group_params[:set_group_type].present? ? :company : :normal
+
+      if group_params[:cover]
+        group.cover_preset = "0"
+      elsif group_params[:cover_preset]
+        group.remove_old_cover
+      else
+        group.leave_group = group_params[:leave_group].present? ? true : false
+        group.admin_post_only = group_params[:admin_post_only].present? ? true : false
+        group.need_approve = group_params[:need_approve].present? ? true : false
+        group.system_group = group_params[:system_group].present? ? true : false
+        group.public = group_params[:public].present? ? true : false
+        group.group_type = group_params[:set_group_type].present? ? :company : :normal
+      end
 
       if group.update(group_params.except(:set_group_type))
         Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
@@ -448,13 +455,11 @@ class CompaniesController < ApplicationController
         group.members.each do |member|
           FlushCached::Member.new(member).clear_list_groups
         end
-        # group.get_member_active.collect {|m| Rails.cache.delete("#{m.id}/group_active") }
 
         flash[:success] = "Update group profile successfully."
         format.html { redirect_to company_group_detail_path(@group) }
         format.json
       else
-        # puts "have error"
         @error_message = @current_member.errors.messages
 
         format.json
