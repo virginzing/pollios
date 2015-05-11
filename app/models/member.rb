@@ -311,7 +311,11 @@ class Member < ActiveRecord::Base
     unless self.cover.present?
       if self.cover_preset.present?
         self.cover_preset = Member.random_cover_preset unless self.cover_preset != "0"
+      else
+        self.cover_preset = Member.random_cover_preset
       end
+    else
+      self.cover_preset = "0"
     end
   end
 
