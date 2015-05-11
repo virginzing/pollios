@@ -9,6 +9,7 @@ if @recommendations_official || @people_you_may_know || @group_recomment
 
   json.recommendations_group @group_recomment do |group|
     json.partial! 'response_helper/group/default', group: group
+    json.member_count hash_member_count[group.id] || 0
   end
 
   json.recommendations_mutual_friend @people_you_may_know do |member|

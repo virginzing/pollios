@@ -20,6 +20,10 @@ class Recommendation
     Group.where(id: group_recommended)
   end
 
+  def hash_member_count
+    @group_member_count ||= group_member_count.inject({}) { |h,v| h[v.id] = v.member_count; h }
+  end
+
   def get_friend_active
     @get_friend_active ||= @list_member_active.map(&:id)
   end
@@ -114,6 +118,11 @@ class Recommendation
     query = Member.having_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id, first_signup: false)
     query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.size > 0
     query
+  end
+
+  def group_member_count
+    Group.joins(:group_members).select("groups.*, count(group_members) as member_count").group("groups.id") \
+          .where("groups.id IN (?)", get_group.map(&:id))
   end
   
 end
