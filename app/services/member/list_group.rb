@@ -35,7 +35,7 @@ class Member::ListGroup
   end
 
   def group_member_count
-    Group.joins(:group_members).select("groups.*, count(group_members) as member_count").group("groups.id") \
+    Group.joins(:group_members_active).select("groups.*, count(group_members) as member_count").group("groups.id") \
           .where("groups.id IN (?)", cached_all_groups.map(&:id))
   end
   

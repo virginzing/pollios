@@ -64,7 +64,7 @@ class Friend::ListGroup
 
   def group_of_friend_count
     Group.joins("left join group_members on group_members.group_id = groups.id").select("groups.*, count(group_members) as member_count").group("groups.id") \
-          .where("groups.id IN (?)", together_group_of_friend.map(&:id)).uniq
+          .where("group_members.active = 't' AND groups.id IN (?)", together_group_of_friend.map(&:id)).uniq
   end
 
   def my_group

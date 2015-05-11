@@ -6,7 +6,7 @@ if @group_active || @group_inactive
   end
   json.group_request @group_inactive do |group|
     json.partial! 'response_helper/group/default', group: group
-    json.member_count group.member_count
+    json.member_count hash_member_count[group.id] || 0
   end
 
 else

@@ -28,7 +28,7 @@ class Group::ListMember
   end
 
   def join_recently
-    active.sort {|x,y| y.joined_at <=> x.join_at }[0..4]
+    active.sort {|x,y| y.joined_at <=> x.joined_at }[0..4]
   end
 
   def is_member?(member)

@@ -1,7 +1,6 @@
 if @current_member
   count_your_request = 0
   count_friend_request = 0
-  count = 0
   
   json.response_status "OK"
   
@@ -26,9 +25,7 @@ if @current_member
 
   json.group_request @group_inactive do |group|
     json.partial! 'response_helper/group/default', group: group
-    # json.invite_by Member.find(group.member_invite_id)
-    json.member_count hash_member_count[group.id]
-    count += 1
+    json.member_count hash_member_count[group.id] || 0
   end
 
   json.ask_join_group @ask_join_group, partial: 'response_helper/group/full_info', as: :group
