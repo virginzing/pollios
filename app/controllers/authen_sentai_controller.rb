@@ -42,6 +42,7 @@ class AuthenSentaiController < ApplicationController
 		session[:member_id] = nil
 		session[:return_to] = nil
     cookies.delete(:auth_token)
+    cookies.delete(:return_to)
 		flash[:success] = "Signout sucessfully."
 		redirect_to users_signin_url
 	end
@@ -146,7 +147,12 @@ class AuthenSentaiController < ApplicationController
           
           @waiting_info = WaitingList.new(member).get_info
 
-          wants.html { redirect_to admin_management_dashboard_path }
+          if params[:new_company]
+            @feedback = @auth.member.get_company.using_service.include?("Feedback")
+            @internal_survey = @auth.member.get_company.using_service.include?("Survey")
+          end
+
+          wants.html
           wants.json
           wants.js
         else
