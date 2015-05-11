@@ -152,7 +152,7 @@ class Member < ActiveRecord::Base
   after_commit :flush_cache
 
   # after_create :set_public_id
-  # after_create :set_cover_preset
+  before_create :set_cover_preset
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
@@ -242,6 +242,7 @@ class Member < ActiveRecord::Base
       field :public_id
       field :fb_id
       field :sync_facebook
+      field :show_recommend
       field :key_color
     end
 
@@ -261,6 +262,7 @@ class Member < ActiveRecord::Base
       field :blacklist_count
       field :ban_last_at
       field :report_count
+      field :show_recommend
     end
 
     show do
@@ -304,9 +306,19 @@ class Member < ActiveRecord::Base
     end
   end
 
-  # def set_cover_preset
-  #   self.cover_preset = 
-  # end
+  def set_cover_preset
+    unless self.cover.present?
+      if self.cover_preset.present?
+        self.cover_preset = Member.random_cover_preset unless self.cover_preset != "0"
+      else
+        self.cover_preset = Member.random_cover_preset
+      end
+    end
+  end
+
+  def self.random_cover_preset
+    rand(1..30).to_s
+  end
 
   def get_company
     company ? company : company_member ? company_member.company : nil

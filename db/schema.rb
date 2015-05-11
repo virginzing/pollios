@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507070837) do
+ActiveRecord::Schema.define(version: 20150511080706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -700,6 +700,7 @@ ActiveRecord::Schema.define(version: 20150507070837) do
     t.datetime "ban_last_at"
     t.datetime "sync_fb_last_at"
     t.string   "list_fb_id",                 default: [],                    array: true
+    t.boolean  "show_recommend",             default: false
   end
 
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree

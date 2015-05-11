@@ -118,9 +118,9 @@ class GroupController < ApplicationController
 
   def detail_group
     @group_members ||= Group::ListMember.new(@group)
-    @member_active = @group_members.active
-    @member_pending = @group_members.pending
-    @member_request = @group.members_request
+    @member_active = @group_members.join_recently
+    # @member_pending = @group_members.pending
+    # @member_request = @group.members_request
     # @is_admin = @member_active.collect {|e| [e.id, e.admin] }.collect{|e| e.last if e.first == @current_member.id }.compact.first
   end
 
