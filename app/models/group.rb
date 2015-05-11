@@ -94,7 +94,19 @@ class Group < ActiveRecord::Base
   end
 
   def set_public_id
-    update!(public_id: "G.Pollios" << self.id.to_s)
+    exist_count = 0
+    begin
+      join_name = name.scan(/[a-zA-Z0-9_.]+/).join
+      public_id = join_name[0..19]
+
+      if exist_count > 0
+        public_id = join_name[0..9] + Time.now.to_i.to_s  
+      end
+
+      exist_count = exist_count + 1
+    end while Group.exists?(public_id: public_id)     
+
+    update!(public_id: public_id)
   end
 
   def get_photo_group

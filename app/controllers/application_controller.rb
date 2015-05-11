@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_using_service
-    if controller_name = "company_campaigns"
+    if controller_name == "company_campaigns"
       check_service = 'Survey'
     else
       check_service = 'Feedback'
