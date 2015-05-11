@@ -167,6 +167,40 @@ class Group < ActiveRecord::Base
     @group
   end
 
+  def self.cancel_group(member, friend, group)
+    raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(group).is_admin?(member)
+
+    find_group_member = GroupMember.where(group_id: group.id, member_id: friend.id).first
+
+    if find_group_member
+      find_group_member.destroy
+      if find_group_member.group.company?
+        self.remove_role :group_admin, find_group_member.group
+      end
+    end
+
+    FlushCached::Member.new(friend).clear_list_groups
+    FlushCached::Group.new(group).clear_list_members
+
+    group
+  end
+
+  def self.leave_group(member, group)
+    find_group_member = GroupMember.where(group_id: group.id, member_id: member.id).first
+
+    if find_group_member
+      find_group_member.destroy
+      if find_group_member.group.company?
+        self.remove_role :group_admin, find_group_member.group
+      end
+    end
+
+    FlushCached::Member.new(member).clear_list_groups
+    FlushCached::Group.new(group).clear_list_members
+
+    group
+  end
+
   def self.accept_request_group(member, friend, group)
     GroupMember.transaction do
       begin

@@ -184,7 +184,9 @@ class CompaniesController < ApplicationController
   end
   
   def remove_member
-    @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
+    # @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
+    @group = Group.leave_group(Member.cached_find(params[:member_id]), Group.cached_find(params[:group_id]))
+
     respond_to do |format|
       if @group
         # Group.flush_cached_member_active(@group.id)
@@ -552,11 +554,12 @@ class CompaniesController < ApplicationController
 
   def delete_member_company
     Group.transaction do 
-      find_member = Member.find(params[:member_id])
+      find_member = Member.cached_find(params[:member_id])
 
       if params[:group_id].present?
         params[:group_id].each do |group_id|
-          @group = find_member.cancel_or_leave_group(group_id, "L")
+          # @group = find_member.cancel_or_leave_group(group_id, "L")
+          @group = Group.leave_group(find_member, Group.cached_find(group_id))
         end
       end
 

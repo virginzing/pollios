@@ -163,11 +163,11 @@ class GroupController < ApplicationController
   end
 
   def cancel_group
-    @group = @current_member.cancel_or_leave_group(group_params[:id], "C")
+    @group = Group.cancel_group(@current_member, Member.cached_find(params[:friend_id]), @group)
   end
 
   def leave_group
-    @group = @current_member.cancel_or_leave_group(group_params[:id], "L")
+    @group = Group.leave_group(@current_member, @group)
   end
 
   def kick_member

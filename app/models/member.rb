@@ -813,22 +813,6 @@ class Member < ActiveRecord::Base
     end
   end
 
-
-  def cancel_or_leave_group(group_id, type)
-    find_group_member = group_members.where(group_id: group_id).first
-    if find_group_member
-      # find_group_member.group.decrement!(:member_count) if type == "L" && find_group_member.group.member_count > 0 
-      find_group_member.destroy
-      if find_group_member.group.company?
-        self.remove_role :group_admin, find_group_member.group
-      end
-    end
-    FlushCached::Member.new(self).clear_list_groups
-    FlushCached::Group.new(find_group_member.group).clear_list_members
-    # cached_flush_active_group
-    find_group_member.group
-  end
-
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first
     if find_group_member
