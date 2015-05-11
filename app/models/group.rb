@@ -175,7 +175,7 @@ class Group < ActiveRecord::Base
     if find_group_member
       find_group_member.destroy
       if find_group_member.group.company?
-        self.remove_role :group_admin, find_group_member.group
+        friend.remove_role :group_admin, find_group_member.group
       end
     end
 
@@ -191,7 +191,7 @@ class Group < ActiveRecord::Base
     if find_group_member
       find_group_member.destroy
       if find_group_member.group.company?
-        self.remove_role :group_admin, find_group_member.group
+        member.remove_role :group_admin, find_group_member.group
       end
     end
 
