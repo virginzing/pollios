@@ -153,6 +153,7 @@ class Member < ActiveRecord::Base
 
   # after_create :set_public_id
   before_create :set_cover_preset
+  before_create :set_description
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
@@ -311,6 +312,12 @@ class Member < ActiveRecord::Base
       if self.cover_preset.present?
         self.cover_preset = Member.random_cover_preset unless self.cover_preset != "0"
       end
+    end
+  end
+
+  def set_description
+    unless self.description.present?
+      self.description = "Pollios User"
     end
   end
 
