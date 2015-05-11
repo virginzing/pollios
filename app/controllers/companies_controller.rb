@@ -378,13 +378,14 @@ class CompaniesController < ApplicationController
     @init_poll = PollOfGroup.new(current_member, @group, options_params)
     @polls = @init_poll.get_poll_of_group
 
-    @member_all = Member.joins(:group_members).select("members.*, group_members.created_at as joined_at, group_members.is_master as admin, group_members.active as member_is_active")
-                      .where("group_members.group_id = ?", @group).uniq || []
+    @member_all = Group::ListMember.new(@group)
 
-    @members = @member_all.select {|member| member if member.member_is_active }
-    @members_inactive = @member_all.select {|member| member unless member.member_is_active }
+    @members = @member_all.active
+    @members_inactive = @member_all.pending
 
     @list_surveyor = @group.surveyor
+
+    @members_request = @group.members_request
 
     @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: @group.id).order("created_at desc").paginate(page: params[:page], per_page: 10)
     # sleep 100 

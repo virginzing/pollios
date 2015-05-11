@@ -1750,6 +1750,15 @@
 	        ]
 	    });
 
+	    $('#list_member_request').dataTable({
+	        retrieve: true,
+	        iDisplayLength: 10,
+	        responsive: true,
+	        order: [
+	            [0, 'desc']
+	        ]
+	    });
+
 	    $('#list_redeemers').dataTable({
 	        retrieve: true,
 	        iDisplayLength: 10,

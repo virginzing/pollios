@@ -71,6 +71,14 @@
         <%= render 'companies/group/list_member_inactive' unless params[:page] %>
       </div>
 
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members-request" data-widget-editbutton="false" data-widget-colorbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-group"></i> </span>
+          <h2><strong>List Member Request</strong></h2>          
+        </header>
+        <%= render 'companies/group/list_member_request' unless params[:page] %>
+      </div>
+
     </article>
     <!-- WIDGET END -->
 
