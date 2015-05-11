@@ -304,6 +304,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  # def set_cover_preset
+  #   self.cover_preset = 
+  # end
+
   def get_company
     company ? company : company_member ? company_member.company : nil
   end
