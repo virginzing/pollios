@@ -28,7 +28,7 @@ class Group::ListMember
   end
 
   def join_recently
-    active.sort {|x,y| y.join_at <=> x.join_at }[0..4]
+    active.sort {|x,y| y.joined_at <=> x.join_at }[0..4]
   end
 
   def is_member?(member)
@@ -43,7 +43,7 @@ class Group::ListMember
 
   def members
     Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
-          .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active, group_members.created_at as join_at").order("members.fullname asc")
+          .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active, group_members.created_at as joined_at").order("members.fullname asc")
   end
   
   def cached_members
