@@ -50,6 +50,9 @@ production:
   MONGOLAB_URI: "mongodb://heroku_app21881982:jfk193fhbv2dpt9r8khqovj2va@ds031651.mongolab.com:31651/heroku_app21881982"
 
 
+# Member.all.each do |member|
+#   member.update!(update_personal: true) if member.birthday.present? || member.gender.present?
+# end
 # set Env to heroku
 # heroku config:set PRODUCT_ID_IOS_STATUS="OPEN" -a codeapp-pollios
 # or

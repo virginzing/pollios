@@ -152,6 +152,7 @@ class Member < ActiveRecord::Base
   after_commit :flush_cache
 
   # after_create :set_public_id
+  # after_create :set_cover_preset
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
