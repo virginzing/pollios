@@ -191,8 +191,8 @@ RSpec.describe "Member" do
 
   describe "GET /member/recommended_official" do
 
-    let!(:member_one) { create(:member, email: "official_account_1@gpollios.com", member_type: :celebrity) }
-    let!(:member_two) { create(:member, email: "official_account_2@gpollios.com", member_type: :celebrity) }
+    let!(:member_one) { create(:member, email: "official_account_1@gpollios.com", member_type: :celebrity, show_recommend: true) }
+    let!(:member_two) { create(:member, email: "official_account_2@gpollios.com", member_type: :celebrity, show_recommend: true) }
 
     before do
       get "/member/recommended_official.json", { member_id: member.id }, { "Accept" => "application/json" }

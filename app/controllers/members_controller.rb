@@ -195,6 +195,12 @@ class MembersController < ApplicationController
       if update_profile_params[:gender] || update_profile_params[:birthday]
         @current_member.update_personal = true
       end
+
+      if update_profile_params[:show_recommend]
+        @current_member.show_recommend = true
+      else
+        @current_member.show_recommend = false
+      end
       
       init_avatar = ImageUrl.new(avatar)
       init_cover = ImageUrl.new(cover)
@@ -470,7 +476,7 @@ class MembersController < ApplicationController
   end
 
   def update_profile_params
-    params.permit(:public_id, :fb_id, :cover_preset, :member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup, :first_setting_anonymous, :receive_notify, list_fb_id: [])
+    params.permit(:show_recommend, :public_id, :fb_id, :cover_preset, :member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup, :first_setting_anonymous, :receive_notify, list_fb_id: [])
   end
 
   def verify_email_params

@@ -48,6 +48,7 @@ class Group < ActiveRecord::Base
   after_commit :flush_cache
 
   after_create :set_public_id
+  before_create :set_cover_preset
 
   default_scope { where(visible: true) }
 
@@ -78,6 +79,14 @@ class Group < ActiveRecord::Base
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
+  end
+
+  def set_cover_preset
+    unless self.cover.present?
+      if self.cover_preset.present?
+        self.cover_preset = Group.random_cover_preset unless self.cover_preset != "0"
+      end
+    end
   end
 
   def set_public_id
@@ -221,7 +230,7 @@ class Group < ActiveRecord::Base
       photo_group = group[:photo_group]
       description = group[:description]
       cover = group[:cover]
-      cover_preset = group[:cover_preset] || "0"
+      cover_preset = group[:cover_preset]
       set_privacy = group[:public] || false
       set_admin_post_only = group[:admin_post_only] || false
       name = group[:name]
@@ -250,6 +259,10 @@ class Group < ActiveRecord::Base
       end
       @group
     end
+  end
+
+  def self.random_cover_preset
+    rand(1..26).to_s
   end
 
   def self.add_friend_to_group(group, member, friend_id, custom_data = {})

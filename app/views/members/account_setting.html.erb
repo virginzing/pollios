@@ -100,6 +100,15 @@
                                   </div>
                                 </section>
 
+                                <section>
+                                  <label class="checkbox">
+                                    <input type="checkbox" name="show_recommend">
+                                  <i></i>Show recommend</label>
+                                  <div class="note">
+                                    <strong>Note</strong> show recommended in app Pollios.
+                                  </div>
+                                </section>
+
                               </fieldset>
 
                               <footer>
@@ -582,4 +591,10 @@
     dropZoneCover("<%= @current_member.cover.url(:cover).presence || "" %>");
     dropZonePhotoGroup("<%= @find_group.photo_group.url(:thumbnail).presence || "" %>");
   });
+
+  $.show_recommend = <%= raw @current_member.show_recommend %>;
+
+  if ($.show_recommend) {
+    $("input[name=show_recommend]").attr('checked', true);
+  };
 </script>
