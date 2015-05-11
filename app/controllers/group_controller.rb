@@ -295,7 +295,7 @@ class GroupController < ApplicationController
   end
 
   def group_params
-    params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public, :admin, :cover, :admin_post_only, :need_approve, :public_id)
+    params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public, :admin, :cover, :cover_preset, :admin_post_only, :need_approve, :public_id)
   end
 
   def edit_group_params
