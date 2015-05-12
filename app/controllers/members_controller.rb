@@ -445,7 +445,6 @@ class MembersController < ApplicationController
         @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
         Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
         @group.increment!(:member_count)
-        # @current_member.cached_flush_active_group
         FlushCached::Member.new(@current_member).clear_list_groups
         true
       else

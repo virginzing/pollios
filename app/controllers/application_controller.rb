@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   before_filter :if => Proc.new{ |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
-  before_filter :check_maintenance
+  # before_filter :check_maintenance
 
   before_filter :check_token, :if => Proc.new { |c| c.request.format.json? }
 
@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_using_service
-    if controller_name == "company_campaigns"
+    if controller_name == "companies" || controller_name == "company_campaigns"
       check_service = 'Survey'
     else
       check_service = 'Feedback'
