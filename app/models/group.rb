@@ -178,7 +178,7 @@ class Group < ActiveRecord::Base
       end
     end
 
-    FlushCached::Member.new(friend).clear_list_groups
+    FlushCached::Member.new(member).clear_list_groups
     FlushCached::Group.new(group).clear_list_members
 
     group
