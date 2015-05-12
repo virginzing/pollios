@@ -224,7 +224,7 @@ class GroupController < ApplicationController
               find_member.remove_role :group_admin, find_group
             end
           else
-            format.json { render text: "You have already exist admin of #{find_exist_role_member.name} Company" , status: :unprocessable_entity }
+            format.json { render text: "You have already admin of #{find_exist_role_member.name} Company" , status: :unprocessable_entity }
           end
 
         else
@@ -232,6 +232,7 @@ class GroupController < ApplicationController
         end
 
         FlushCached::Member.new(find_member).clear_list_groups
+        FlushCached::Group.new(find_group).clear_list_members
 
         format.json { render json: [
               {value: 1, text: 'Member'},
