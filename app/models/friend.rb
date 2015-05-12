@@ -33,7 +33,7 @@ class Friend < ActiveRecord::Base
         init_member_list_friend ||= Member::ListFriend.new(@member)
         member_friend_active = init_member_list_friend.active.map(&:id)
 
-        raise ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} is friends" if member_friend_active.include?(@friend.id)
+        raise ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} is friends." if member_friend_active.include?(@friend.id)
 
         find_invite = where(follower: @member, followed: @friend).first_or_initialize do |friend|
           friend.follower = @member
@@ -182,7 +182,7 @@ class Friend < ActiveRecord::Base
 
       init_member_list_friend = Member::ListFriend.new(member)
 
-      raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} not friends" unless init_member_list_friend.active.map(&:id).include?(friend.id)
+      raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} not friends." unless init_member_list_friend.active.map(&:id).include?(friend.id)
 
       if find_member && find_friend
         check_that_follow(member, find_member, friend, find_friend)
@@ -209,11 +209,11 @@ class Friend < ActiveRecord::Base
 
       if accept
         active_status = true
-        raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} has canceled to request friends" unless find_member.present?
-        raise ExceptionHandler::UnprocessableEntity, "This request was cancelled" unless find_friend.present?
-        raise ExceptionHandler::UnprocessableEntity, "My friend has over 500 people" if (init_member_list_friend.friend_count >= member.friend_limit)
-        raise ExceptionHandler::UnprocessableEntity, "Your friend has over 500 people" if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
-        raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} is friends" if init_member_list_friend.active.map(&:id).include?(friend.id)
+        raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} has canceled to request friends." unless find_member.present?
+        raise ExceptionHandler::UnprocessableEntity, "This request was cancelled." unless find_friend.present?
+        raise ExceptionHandler::UnprocessableEntity, "My friend has over 500 people." if (init_member_list_friend.friend_count >= member.friend_limit)
+        raise ExceptionHandler::UnprocessableEntity, "Your friend has over 500 people." if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
+        raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} is friends." if init_member_list_friend.active.map(&:id).include?(friend.id)
         
         find_member.update_attributes!(active: active_status, status: :friend)
         find_friend.update_attributes!(active: active_status, status: :friend)
@@ -226,6 +226,7 @@ class Friend < ActiveRecord::Base
         FlushCached::Member.new(member).clear_list_followers
         FlushCached::Member.new(friend).clear_list_followers
       else
+        raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} had already accepted your request." if init_member_list_friend.active.map(&:id).include?(friend.id)
         check_that_follow(member, find_member, friend, find_friend)
         NotifyLog.check_update_cancel_request_friend_deleted(member, friend)
       end
