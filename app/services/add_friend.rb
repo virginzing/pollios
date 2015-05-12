@@ -30,7 +30,7 @@ class AddFriend
 
   def custom_message
     if @options["accept_friend"]
-      message = @member.get_name + " is now friends with you"
+      message = @member.get_name + " had accepted your friend request"
     else
       message = @member.get_name + " request friend with you" 
     end

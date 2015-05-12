@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150511080706) do
+ActiveRecord::Schema.define(version: 20150512031748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -738,12 +738,9 @@ ActiveRecord::Schema.define(version: 20150511080706) do
     t.text     "custom_properties"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "poll_deleted",      default: false
-    t.boolean  "comment_deleted",   default: false
+    t.datetime "deleted_at"
   end
 
-  add_index "notify_logs", ["comment_deleted"], name: "index_notify_logs_on_comment_deleted", using: :btree
-  add_index "notify_logs", ["poll_deleted"], name: "index_notify_logs_on_poll_deleted", using: :btree
   add_index "notify_logs", ["recipient_id"], name: "index_notify_logs_on_recipient_id", using: :btree
   add_index "notify_logs", ["sender_id"], name: "index_notify_logs_on_sender_id", using: :btree
 

@@ -227,6 +227,7 @@ class Friend < ActiveRecord::Base
         FlushCached::Member.new(friend).clear_list_followers
       else
         check_that_follow(member, find_member, friend, find_friend)
+        NotifyLog.check_update_cancel_request_friend_deleted(member, friend)
       end
 
       FlushCached::Member.new(member).clear_list_friends
