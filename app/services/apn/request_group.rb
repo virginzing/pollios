@@ -21,7 +21,7 @@ class Apn::RequestGroup
   end
 
   def custom_message
-    message = "#{member_name} request to join in #{group_name}"
+    message = "#{member_name} request to join #{group_name} group"
 
     truncate_message(message)
   end 

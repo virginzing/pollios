@@ -302,6 +302,8 @@ class Member < ActiveRecord::Base
 
   def check_sync_facebook
     if fb_id_changed? && fb_id.present?
+      raise ExceptionHandler::UnprocessableEntity, "This Facebook account had linked with another Pollios user." if Member.exists?(fb_id: fb_id)
+      
       self.sync_facebook = true
       self.sync_fb_last_at = Time.zone.now
     end

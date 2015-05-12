@@ -20,7 +20,7 @@ class AskJoinGroup
   end
 
   def custom_message
-    message = "#{member_name} joined in #{group_name}"
+    message = "#{member_name} joined #{group_name} group"
     truncate_message(message)
   end 
 

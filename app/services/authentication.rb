@@ -220,7 +220,7 @@ class Authentication
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
         @member.free_reward_first_signup
-        OneGiftWorker.perform_async(@member.id, { "message" => "You got 5 public poll free" } ) unless Rails.env.test?
+        OneGiftWorker.perform_async(@member.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
       end
 
     end

@@ -1,18 +1,22 @@
 class Poll::CommentNotifyLog
   include SymbolHash
 
-  def initialize(sender, poll, custom_data)
-    @sender = sender
-    @poll = poll
-    @custom_data = custom_data
+  def initialize(comment)
+    @comment = comment
+    @sender = comment.member
+    @poll = comment.poll
   end
 
   def poll
     @poll
   end
 
+  def comment
+    @comment
+  end
+
   def comment_message
-    @custom_data["comment_message"]
+    @comment.message
   end
 
   def member_id
@@ -38,6 +42,7 @@ class Poll::CommentNotifyLog
 
     @custom_properties = {
       type: TYPE[:comment],
+      comment_id: comment.id,
       poll_id: poll.id,
       series: poll.series
     }

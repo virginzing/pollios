@@ -14,6 +14,8 @@ class Comment < ActiveRecord::Base
   validates_presence_of :message
 
   after_commit :send_notification, on: :create
+  after_commit :create_notify_log, on: :create
+
   after_commit :flush_cache
 
   self.per_page = 10
@@ -24,8 +26,12 @@ class Comment < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message })
+      CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message } )
     end
+  end
+
+  def create_notify_log
+    Poll::CommentNotifyLog.new(self).create!
   end
 
   def create_mentions_list(mentioner, list_mentioned)

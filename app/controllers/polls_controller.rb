@@ -704,8 +704,6 @@ class PollsController < ApplicationController
 
         list_mentioned = comment_params[:list_mentioned]
 
-        Poll::CommentNotifyLog.new(@current_member, @poll, { "comment_message" => comment_params[:message]}).create!
-
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
 
         @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
@@ -763,10 +761,14 @@ class PollsController < ApplicationController
   def delete_comment
     Poll.transaction do
       begin
-        @comment = Comment.find_by(id: comment_params[:comment_id])
+        @comment = Comment.cached_find(comment_params[:comment_id])
+
+
         if (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
           @comment.destroy
+          NotifyLog.check_update_comment_deleted(@comment)
           @poll.decrement!(:comment_count) if @poll.comment_count > 0
+          
           render status: :created
         else
           @comment = nil

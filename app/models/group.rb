@@ -174,6 +174,8 @@ class Group < ActiveRecord::Base
 
     if find_group_member
       find_group_member.destroy
+      NotifyLog.check_update_cancel_invite_friend_to_group_deleted(member, friend, group)
+
       if find_group_member.group.company?
         friend.remove_role :group_admin, find_group_member.group
       end
@@ -250,10 +252,12 @@ class Group < ActiveRecord::Base
   end
 
   def self.cancel_ask_join_group(member, friend_id = nil, group)
-    if friend_id.nil?
+    if friend_id.nil? ## cancel request myself
       find_current_ask_group = group.request_groups.find_by(member_id: member.id)
       if find_current_ask_group.present?
         find_current_ask_group.destroy
+        NotifyLog.check_update_cancel_request_group_deleted(member, group)
+        
         member.flush_cache_ask_join_groups
         group
       end

@@ -19,5 +19,18 @@ class NotifyLog < ActiveRecord::Base
               .where("sender_id = #{sender.id} AND recipient_id = #{recipient.id}").update_all(deleted_at: Time.now)
   end
 
+  def self.check_update_comment_deleted(comment)
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Comment%", "%action: Comment%", "%comment_id: #{comment.id}%").update_all(deleted_at: Time.now)
+  end
+
+  def self.check_update_cancel_invite_friend_to_group_deleted(sender, recipient, group)
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Group%", "%action: Invite%", "%group_id: #{group.id}%")
+              .where("sender_id = #{sender.id} AND recipient_id = #{recipient.id}").update_all(deleted_at: Time.now)
+  end
+
+  def self.check_update_cancel_request_group_deleted(sender, group)
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?", "%type: RequestGroup%", "%action: Request%", "%group_id: #{group.id}%")
+              .where("sender_id = #{sender.id}").update_all(deleted_at: Time.now)
+  end
 
 end
