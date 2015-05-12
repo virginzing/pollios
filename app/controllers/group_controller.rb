@@ -163,7 +163,11 @@ class GroupController < ApplicationController
   end
 
   def cancel_group
-    @group = Group.cancel_group(@current_member, Member.cached_find(params[:friend_id]), @group)
+    if params[:friend_id]
+      @group = Group.cancel_group(@current_member, Member.cached_find(params[:friend_id]), @group)
+    else
+      @group = Group.deny_request_join_group_my_self(@current_member, @group)
+    end
   end
 
   def leave_group
