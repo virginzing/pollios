@@ -523,14 +523,12 @@ class CompaniesController < ApplicationController
             begin
               this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
 
-              CompanyMember.add_member_to_company(find_user, @find_company)
-
+              CompanyMember.add_member_to_company(find_user, this_group.get_company)
               Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
               
               this_group.increment!(:member_count)
-              # find_user.cached_flush_active_group
               FlushCached::Member.new(find_user).clear_list_groups
-              # Group.flush_cached_member_active(this_group.id)
+              FlushCached::Group.new(this_group).clear_list_members
 
               format.json { render json: { error_message: nil }, status: 200 }
             rescue ActiveRecord::RecordNotUnique
