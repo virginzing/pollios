@@ -65,6 +65,7 @@ class GroupController < ApplicationController
 
   def cancel_ask_join_group
     @group = Group.cancel_ask_join_group(@current_member, params[:friend_id], @group)
+    render status: @group ? :created : :unprocessable_entity
   end
 
   def poll_group

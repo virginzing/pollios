@@ -170,7 +170,7 @@ class Group < ActiveRecord::Base
   def self.deny_request_join_group_my_self(member, group) ## cancel of myself
     find_group_member = GroupMember.where(group_id: group.id, member_id: member.id).first
 
-    raise ExceptionHandler::UnprocessableEntity, "This request had already canceled." unless find_group_member.present?
+    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." unless find_group_member.present?
 
     if find_group_member
       find_group_member.destroy
@@ -192,7 +192,7 @@ class Group < ActiveRecord::Base
 
     find_group_member = GroupMember.where(group_id: group.id, member_id: friend.id).first
 
-    raise ExceptionHandler::UnprocessableEntity, "This request had already canceled." unless find_group_member.present?
+    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." unless find_group_member.present?
 
     if find_group_member
       find_group_member.destroy
@@ -233,7 +233,7 @@ class Group < ActiveRecord::Base
         @group = group
 
         if @group.need_approve
-          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has canceled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
+          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has cancelled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
         end
 
         raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved, You're in group." if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
@@ -275,7 +275,10 @@ class Group < ActiveRecord::Base
 
   def self.cancel_ask_join_group(member, friend_id = nil, group)
     if friend_id.nil? ## cancel request myself
+      raise ExceptionHandler::UnprocessableEntity, "Your request had approved by administrator." if Group::ListMember.new(group).active.map(&:id).include?(member.id)
+
       find_current_ask_group = group.request_groups.find_by(member_id: member.id)
+
       if find_current_ask_group.present?
         find_current_ask_group.destroy
         NotifyLog.check_update_cancel_request_group_deleted(member, group)
@@ -287,6 +290,9 @@ class Group < ActiveRecord::Base
       find_friend = Member.cached_find(friend_id)
 
       find_current_ask_group = group.request_groups.find_by(member_id: find_friend.id)
+
+      raise ExceptionHandler::UnprocessableEntity, "User had cancelled." unless find_current_ask_group.present?
+
       if find_current_ask_group.present?
         find_current_ask_group.destroy
         find_friend.flush_cache_ask_join_groups
@@ -436,11 +442,17 @@ class Group < ActiveRecord::Base
               find_member.remove_role :group_admin, find_group
             end
           else
-            raise ExceptionHandler::UnprocessableEntity, "You have already exist admin of #{find_exist_role_member.name} Company."
+            raise ExceptionHandler::UnprocessableEntity, "You have already admin of #{find_exist_role_member.name} Company."
           end
 
         else
           find_member_in_group.update!(is_master: admin_status)
+
+          unless Rails.env.test?
+            if admin_status
+              # Apn::PromoteAdminWorker.perform_async
+            end
+          end
         end
 
       else

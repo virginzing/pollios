@@ -259,7 +259,7 @@ RSpec.describe "Friend" do
         expect(response.status).to eq(201)
       end
 
-      it "remain invitee that invitee following invite but he was canceled by invitee" do
+      it "remain invitee that invitee following invite but he was cancelled by invitee" do
         post "/friend/deny.json", { member_id: friend.id, friend_id: member.id }, { "Accept" => "application/json" }
         find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
         find_user_two = Friend.find_by(follower: friend, followed: member, active: true, status: -1)
@@ -268,7 +268,7 @@ RSpec.describe "Friend" do
         expect(find_user_two.present?).to eq(true)
       end
 
-      it "remain invitee that invitee following invite but he was canceled by invite" do
+      it "remain invitee that invitee following invite but he was cancelled by invite" do
         post "/friend/deny.json", { member_id: member.id, friend_id: friend.id }, { "Accept" => "application/json" }
 
         find_user_one = Friend.find_by(follower: member, followed: friend, active: true, status: 0)
