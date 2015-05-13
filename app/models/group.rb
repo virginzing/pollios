@@ -170,6 +170,8 @@ class Group < ActiveRecord::Base
   def self.deny_request_join_group_my_self(member, group)
     find_group_member = GroupMember.where(group_id: group.id, member_id: member.id).first
 
+    raise ExceptionHandler::UnprocessableEntity, "This request had canceled" unless find_group_member.present?
+
     if find_group_member
       find_group_member.destroy
 
