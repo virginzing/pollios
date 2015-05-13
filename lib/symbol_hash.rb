@@ -30,7 +30,8 @@ module SymbolHash
     :report => 'Report',
     :poke => 'Poke',
     :request_friend => 'RequestFriend',
-    :receive_reward => 'ReceiveReward'
+    :receive_reward => 'ReceiveReward',
+    :promote_admin => 'PromoteAdmin'
   }
 
   AUTHORITY = {

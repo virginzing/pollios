@@ -450,7 +450,7 @@ class Group < ActiveRecord::Base
 
           unless Rails.env.test?
             if admin_status
-              # Apn::PromoteAdminWorker.perform_async
+              PromoteAdminWorker.perform_async(promoter.id, friend_id, find_group.id)
             end
           end
         end
