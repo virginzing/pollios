@@ -4,8 +4,9 @@ class NotifyLog < ActiveRecord::Base
   # default_scope { where("poll_deleted = 'f' AND comment_deleted = 'f'") }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
+  scope :less_than_3_days_limit_100, -> { where("#{table_name}.created_at > ?", 3.days.ago) }
 
-  self.per_page = 50
+  self.per_page = 20
 
   belongs_to :recipient, class_name: 'Member'
   belongs_to :sender, class_name: 'Member'
