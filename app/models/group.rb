@@ -167,10 +167,10 @@ class Group < ActiveRecord::Base
     @group
   end
 
-  def self.deny_request_join_group_my_self(member, group)
+  def self.deny_request_join_group_my_self(member, group) ## cancel of myself
     find_group_member = GroupMember.where(group_id: group.id, member_id: member.id).first
 
-    raise ExceptionHandler::UnprocessableEntity, "This request had canceled" unless find_group_member.present?
+    raise ExceptionHandler::UnprocessableEntity, "This request had already canceled." unless find_group_member.present?
 
     if find_group_member
       find_group_member.destroy
@@ -186,10 +186,13 @@ class Group < ActiveRecord::Base
     group
   end
 
-  def self.cancel_group(member, friend, group)
+  def self.cancel_group(member, friend, group) ## cancel to another people
     raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(group).is_admin?(member)
+    raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} had already accepted your request." if Group::ListMember.new(group).active.map(&:id).include?(friend.id)
 
     find_group_member = GroupMember.where(group_id: group.id, member_id: friend.id).first
+
+    raise ExceptionHandler::UnprocessableEntity, "This request had already canceled." unless find_group_member.present?
 
     if find_group_member
       find_group_member.destroy
@@ -230,10 +233,10 @@ class Group < ActiveRecord::Base
         @group = group
 
         if @group.need_approve
-          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has canceled to request this group" unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
+          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has canceled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
         end
 
-        raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved, You're in group" if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
+        raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved, You're in group." if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
 
         find_member_in_group = @group.group_members.find_by(member_id: @friend.id)
 
@@ -433,7 +436,7 @@ class Group < ActiveRecord::Base
               find_member.remove_role :group_admin, find_group
             end
           else
-            raise ExceptionHandler::UnprocessableEntity, "You have already exist admin of #{find_exist_role_member.name} Company"
+            raise ExceptionHandler::UnprocessableEntity, "You have already exist admin of #{find_exist_role_member.name} Company."
           end
 
         else
