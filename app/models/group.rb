@@ -144,6 +144,9 @@ class Group < ActiveRecord::Base
     member_id = group[:member_id]
 
     find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
+
+    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." if find_group_member.nil?
+
     if find_group_member
       @group = find_group_member.group
       @member = member

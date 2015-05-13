@@ -49,6 +49,9 @@ class Recommendation
     @mutual_friend = @mutual_friend.select {|e| e unless find_list_friend_ids.include?(e["second_user"].to_i) }
     return @mutual_friend
   end
+  # def show_mutual_friend
+  #   find_mutual_friend
+  # end
 
   def get_list_member_recommendations
     mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"] }
@@ -60,13 +63,11 @@ class Recommendation
   end
 
   def get_people_you_may_know
-    # puts "find_non_friend_in_group => #{find_non_friend_in_group}"
-    mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"].to_i } | find_non_friend_in_group
-
-    # puts "mutual_ids => #{mutual_ids}"
-    query = Member.without_member_type(:brand, :company, :celebrity).where("id IN (?)", mutual_ids).order("RANDOM()").limit(50)
+    mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"].to_i } | find_non_friend_in_group | top_10_more_friend
+    query = Member.without_member_type(:brand, :company, :celebrity).where("id IN (?) AND members.id != ?", mutual_ids, @member.id).order("RANDOM()").limit(50)
     query = query.where("id NOT IN (?)", unrecommended) if unrecommended.size > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.size > 0
+    query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.size > 0
     query
   end
 
@@ -112,6 +113,12 @@ class Recommendation
   def follower_recommendation
     follower_not_add_friend_yet = @list_member_follower.map(&:id) - @init_list_friend.cached_all_friends.map(&:id)
     Member.having_status_account(:normal).where(id: follower_not_add_friend_yet).limit(500)
+  end
+
+  def top_10_more_friend
+    query_top_10_more_friend = Friend.select("follower_id, count(follower_id) as f_count").where("status = 1").group("friends.follower_id").sort{|x,y| y["f_count"] <=> x["f_count"] }.map(&:follower_id)[0..9]
+    query_top_10_more_friend.select {|user_id| user_id unless find_list_friend_ids.include?(user_id) }
+    query_top_10_more_friend
   end
 
   def member_using_facebook

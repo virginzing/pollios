@@ -6,8 +6,11 @@ class InviteFriendWorker
 
   def perform(member_id, friend_ids, group_id, custom_data = {})
     begin
-      member = Member.cached_find(member_id)
-      group = Group.cached_find(group_id)
+      member = Member.find_by(id: member_id)
+      group = Group.find_by(id: group_id)
+
+      raise ArgumentError.new(ExceptionHandler::Message::Group::NOT_FOUND) if group.nil?
+      raise ArgumentError.new(ExceptionHandler::Message::Member::NOT_FOUND) if member.nil?
 
       member_id = custom_data["sender_id"] || member.id
 
