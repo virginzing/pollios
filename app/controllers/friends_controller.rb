@@ -94,7 +94,7 @@ class FriendsController < ApplicationController
 
   def list_of_poll
     if derived_version == 6
-      if params[:member_id] == params[:friend_id]
+      if params[:member_id] == params[:friend_id] ## poll myself
         @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
         @list_polls, @next_cursor = @init_poll.get_my_poll
         @group_by_name = @init_poll.group_by_name

@@ -56,6 +56,10 @@ class V6::MyPollInProfile
     unsee_poll_ids | saved_poll_ids_later
   end
 
+  def with_out_poll_ids_of_poll_created
+    @init_unsee_poll.get_list_poll_id_with_except_my_poll
+  end
+
   def with_out_questionnaire_id
     unsee_questionnaire_ids
   end
@@ -150,7 +154,7 @@ class V6::MyPollInProfile
                        "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
                        "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
                        your_group_ids, your_group_ids).references(:poll_groups)
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    query = query.where("polls.id NOT IN (?)", with_out_poll_ids_of_poll_created) if with_out_poll_ids_of_poll_created.size > 0
     query = query.limit(limit_poll)
     query
   end

@@ -3,7 +3,6 @@ class FlushCached::Group
     @group = group
   end
 
-
   def clear_list_group_all_member_in_group
     list_member_in_group = Group::ListMember.new(@group)
 

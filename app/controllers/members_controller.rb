@@ -186,6 +186,7 @@ class MembersController < ApplicationController
   end
 
   def update_profile
+
     respond_to do |format|
       cover_preset = update_profile_params[:cover_preset]
       avatar = update_profile_params[:avatar]
@@ -266,6 +267,12 @@ class MembersController < ApplicationController
       end
     end
   end
+
+  # def update_profile
+  #   respond_to do |wants|
+  #     wants.json { render json: {}, status: 503 }
+  #   end
+  # end
 
   def check_invited
     @list_invite = Invite.where(email: @current_member.email)
@@ -443,6 +450,9 @@ class MembersController < ApplicationController
       find_my_group = init_list_group.active.map(&:id)
       unless find_my_group.include?(@group.id)
         @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
+
+        CompanyMember.add_member_to_company(@current_member, @find_company)
+
         Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
         @group.increment!(:member_count)
         FlushCached::Member.new(@current_member).clear_list_groups

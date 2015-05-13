@@ -52,7 +52,7 @@ RSpec.describe "Poll" do
       post "/poll/#{poll.id}/un_see", { member_id: member.id }, { "Accept" => "application/json" }
       expect(response.status).to eq(422)
       expect(json["response_status"]).to eq("ERROR")
-      expect(json["response_message"]).to eq("You have already saved to unsee poll")
+      expect(json["response_message"]).to eq("You have already unsee this poll.")
       expect(UnSeePoll.count).to eq(1)
     end
   end

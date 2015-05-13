@@ -50,7 +50,7 @@ class PollsController < ApplicationController
       render :status => 201
     rescue => e
       @un_see_poll = nil
-      @response_message = "You have already saved to unsee poll"
+      @response_message = "You have already unsee this poll."
       render :status => 422
     end
   end

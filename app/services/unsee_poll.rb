@@ -19,6 +19,10 @@ class UnseePoll
     query_unsee_poll.select{|e| e if e.unseeable_type == "Poll" }.map(&:unseeable_id)
   end
 
+  def get_list_poll_id_with_except_my_poll
+    query_unsee_poll_with_except_my_poll.map(&:id)
+  end
+
   def delete_unsee_poll
     if query_unsee_poll_with_id.present?
       query_unsee_poll_with_id.destroy 
@@ -30,6 +34,10 @@ class UnseePoll
 
   def query_unsee_poll
     @query ||= UnSeePoll.where(member_id: member_id)
+  end
+
+  def query_unsee_poll_with_except_my_poll
+    Poll.joins(:un_see_polls).where("un_see_polls.member_id = ? AND polls.member_id != ?", member_id, member_id)
   end
 
   def query_unsee_poll_with_id
