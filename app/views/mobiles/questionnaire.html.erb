@@ -46,7 +46,7 @@
       <% else %>
         <% if @questionnaire.campaign_id != 0 %>
           <% if @questionnaire.campaign.random_immediately? %>
-            <% if @reward.luck %>
+            <% if @reward.receive? %>
               <div class="content">
                 <div class="row text-center">
                   <h2><strong>Lucky</strong></h2>

@@ -10,7 +10,7 @@ RSpec.describe "Campaign" do
   describe "GET /member/list_reward.json" do
     context "when user have not reward" do
       before do
-        create(:campaign_member, member: member, campaign: campaign, luck: false)
+        create(:campaign_member, member: member, campaign: campaign)
         get "/member/list_reward.json", { member_id: member.id }, { "Accept" => "application/json" }
       end
 
@@ -27,7 +27,7 @@ RSpec.describe "Campaign" do
 
     context "when user have any reward" do
       before do
-        create(:campaign_member, member: member, campaign: campaign, luck: true, serial_code: campaign.generate_serial_code, ref_no: campaign.generate_ref_no)
+        create(:campaign_member, member: member, campaign: campaign, reward_status: :receive, serial_code: campaign.generate_serial_code, ref_no: campaign.generate_ref_no)
         get "/member/list_reward.json", { member_id: member.id }, { "Accept" => "application/json" }
       end
 
@@ -45,7 +45,7 @@ RSpec.describe "Campaign" do
 
   describe "POST /campaign/claim_reward" do
     context "user have reward" do
-      let!(:campaign_member) { create(:campaign_member, member: member, campaign: campaign, luck: true, serial_code: campaign.generate_serial_code, ref_no: campaign.generate_ref_no) }
+      let!(:campaign_member) { create(:campaign_member, member: member, campaign: campaign, reward_status: :receive, serial_code: campaign.generate_serial_code, ref_no: campaign.generate_ref_no) }
       
       before do
         post "/campaign/claim_reward.json", { member_id: member.id, reward_id: campaign_member.id, ref_no: campaign_member.ref_no}

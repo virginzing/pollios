@@ -83,7 +83,7 @@ class Campaign < ActiveRecord::Base
         message = "Used"
       else
         if sample % end_sample == 0
-          @reward = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
+          @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
           increment!(:used)
           Rails.cache.delete([member_id, 'reward'])
           message = "Lucky"
@@ -91,7 +91,7 @@ class Campaign < ActiveRecord::Base
             ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
           end
         else
-          @reward = campaign_members.create!(member_id: member_id, luck: false, poll_id: poll_id, ref_no: generate_ref_no)
+          @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
           message = "Fail"
         end
       end
@@ -102,7 +102,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def free_reward(member_id)
-    @reward = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
+    @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
     increment!(:used)
     Rails.cache.delete([member_id, 'reward'])
   end
@@ -122,7 +122,7 @@ class Campaign < ActiveRecord::Base
         message = "Used"
       else
         if sample % end_sample == 0
-          @reward = campaign_members.create!(member_id: member_id, luck: true, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+          @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
           increment!(:used)
           Rails.cache.delete([member_id, 'reward'])
           message = "Lucky"
@@ -130,7 +130,7 @@ class Campaign < ActiveRecord::Base
             ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
           end
         else
-          @reward = campaign_members.create!(member_id: member_id, luck: false, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+          @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
           message = "Fail"
         end
       end

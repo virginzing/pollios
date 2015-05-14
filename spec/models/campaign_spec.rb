@@ -25,23 +25,23 @@ RSpec.describe Campaign, :type => :model do
 
     it "can receive reward" do
       campaign.prediction(member.id, poll.id)
-      expect(CampaignMember.where(member_id: member.id, campaign_id: campaign.id, luck: true).size).to eq(1)
+      expect(CampaignMember.where(member_id: member.id, campaign_id: campaign.id, reward_status: :receive).size).to eq(1)
     end
 
     it "don't receive reward when expire" do
       campaign.update(expire: 1.days.ago)
       campaign.reload.prediction(member.id, poll.id)
-      expect(CampaignMember.where(member_id: member.id, campaign_id: campaign.id, luck: true).size).to eq(0)
+      expect(CampaignMember.where(member_id: member.id, campaign_id: campaign.id, reward_status: :receive).size).to eq(0)
     end
 
     it "don't receive reward when over limit" do
       campaign.update(used: 100, limit: 100)
       campaign.reload.prediction(member.id, poll.id)
-      expect(CampaignMember.where(member_id: member.id, campaign_id: campaign.id, luck: true).size).to eq(0)
+      expect(CampaignMember.where(member_id: member.id, campaign_id: campaign.id, reward_status: :receive).size).to eq(0)
     end
 
     it "don't receive reward when you've received this reward already before" do
-      create(:campaign_member, member: member, campaign: campaign, luck: true, poll: poll)
+      create(:campaign_member, member: member, campaign: campaign, reward_status: :receive, poll: poll)
       expect(campaign.prediction(member.id, poll.id)).to eq([nil, "Used"])
 
     end

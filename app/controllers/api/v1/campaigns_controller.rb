@@ -7,7 +7,7 @@ module Api
     # before_action :set_current_member, only: [:redeem_code]
 
     def redeem_code
-      @redeem = CampaignMember.find_by(serial_code: redeem_code_params[:serial_code], luck: true)
+      @redeem = CampaignMember.with_reward_status(:receive).find_by(serial_code: redeem_code_params[:serial_code])
 
       respond_to do |wants|
         

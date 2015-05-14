@@ -102,9 +102,6 @@ class Member < ActiveRecord::Base
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
-  has_many :lucky_campaign, -> { where("campaign_members.luck = ? AND campaign_members.redeem = ?", true, false) }, class_name: "CampaignMember"
-  has_many :get_lucky_campaign, through: :lucky_campaign, source: :campaign
-
   has_many :campaigns, dependent: :destroy
 
   has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"

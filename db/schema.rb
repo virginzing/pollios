@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150514093859) do
+ActiveRecord::Schema.define(version: 20150514104412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,7 +207,6 @@ ActiveRecord::Schema.define(version: 20150514093859) do
   create_table "campaign_members", force: true do |t|
     t.integer  "campaign_id"
     t.integer  "member_id"
-    t.boolean  "luck"
     t.string   "serial_code"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -218,6 +217,7 @@ ActiveRecord::Schema.define(version: 20150514093859) do
     t.integer  "redeemer_id"
     t.string   "ref_no"
     t.boolean  "gift",           default: false
+    t.integer  "reward_status"
   end
 
   add_index "campaign_members", ["campaign_id"], name: "index_campaign_members_on_campaign_id", using: :btree
