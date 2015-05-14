@@ -191,7 +191,7 @@ class CompaniesController < ApplicationController
       if @group
         # Group.flush_cached_member_active(@group.id)
         flash[:success] = "Remove successfully."
-        format.html { redirect_to company_groups_members_path(params[:group_id]) }
+        format.html { redirect_to company_group_detail_path(params[:group_id]) }
       else
         flash[:error] = "Error"
         format.html { render 'list_members' }

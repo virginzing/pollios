@@ -171,3 +171,9 @@ input.disabled {
 section.branch_list > div > span > label {
   display: block;
 }
+
+table.header-center > thead > tr > th {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}

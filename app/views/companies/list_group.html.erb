@@ -42,10 +42,10 @@
 
             <div class="table-responsive">
             
-              <table class="table table-bordered">
+              <table class="table table-bordered header-center">
                 <thead>
                   <tr>
-                    <th width='50'>Avatar</th>
+                    <th>Avatar</th>
                     <th>Group Name</th>
                     <th width='100'></th>
                   </tr>
@@ -53,7 +53,7 @@
                 <tbody>
                   <% @company.groups.each do |group| %>
                   <tr>
-                      <td><%= image_tag(group.photo_group.url(:thumbnail), size: '30x30') %></td>
+                      <td><%= group.decorate.show_cover_group %></td>
                       <td><%= group.name %></td>
                       <td>
                         <% unless @member_group_active.include?(group.id) %>
