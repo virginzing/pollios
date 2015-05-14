@@ -8,10 +8,11 @@ class ApnRewardWorker
     begin
 
       @reward = CampaignMember.find_by(id: reward_id)
+      @member = @reward.campaign.member
 
       raise ArgumentError.new("Reward not found") if @reward.nil?
 
-      member_id = 0 # default by system account
+      # member_id = 0 # default by system account
 
       @apn_reward = Apn::Reward.new(@reward)
 
@@ -50,7 +51,7 @@ class ApnRewardWorker
           notify: hash_list_member_badge[member.id] || 0
         }
 
-        NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_reward.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+        NotifyLog.create!(sender_id: @member.id, recipient_id: member.id, message: @apn_reward.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
       end
 
       Apn::App.first.send_notifications

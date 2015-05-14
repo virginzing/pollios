@@ -130,7 +130,7 @@ class Campaign < ActiveRecord::Base
             ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
           end
         else
-          @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+          @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
           message = "Fail"
         end
       end
@@ -180,7 +180,9 @@ class Campaign < ActiveRecord::Base
       used: used,
       limit: limit,
       owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json() : System::DefaultMember.new.to_json,
-      created_at: created_at.to_i
+      created_at: created_at.to_i,
+      type_campaign: type_campaign,
+      announce_on: announce_on.to_i
     }
   end
   

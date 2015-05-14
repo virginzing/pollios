@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150514104412) do
+ActiveRecord::Schema.define(version: 20150514130503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,6 +244,7 @@ ActiveRecord::Schema.define(version: 20150514104412) do
     t.hstore   "reward_info"
     t.datetime "reward_expire"
     t.boolean  "system_campaign", default: false
+    t.datetime "announce_on"
   end
 
   add_index "campaigns", ["company_id"], name: "index_campaigns_on_company_id", using: :btree
