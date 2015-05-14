@@ -241,6 +241,7 @@ class PollsController < ApplicationController
         @poll.create_watched(current_member, @poll.id)
 
         if @poll.in_group_ids != "0"
+          
           in_group = true
           # puts "#{ @poll.in_group_ids}"
           Group.add_poll(current_member, @poll, @poll.in_group_ids.split(",").collect{|e| e.to_i })

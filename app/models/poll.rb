@@ -727,6 +727,9 @@ class Poll < ActiveRecord::Base
 
     Poll.transaction do
       begin
+
+        raise ExceptionHandler::UnprocessableEntity, "Poll had closed already." if @poll.expire_status
+        
         ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
 
         unless ever_vote

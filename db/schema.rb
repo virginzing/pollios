@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150512031748) do
+ActiveRecord::Schema.define(version: 20150514082220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -584,6 +584,18 @@ ActiveRecord::Schema.define(version: 20150512031748) do
   end
 
   add_index "invites", ["member_id"], name: "index_invites_on_member_id", using: :btree
+
+  create_table "leave_group_logs", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "group_id"
+    t.datetime "leaved_at"
+    t.boolean  "receive_invite"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "leave_group_logs", ["group_id"], name: "index_leave_group_logs_on_group_id", using: :btree
+  add_index "leave_group_logs", ["member_id"], name: "index_leave_group_logs_on_member_id", using: :btree
 
   create_table "member_invite_codes", force: true do |t|
     t.integer  "member_id"
