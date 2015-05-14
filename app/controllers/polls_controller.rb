@@ -618,11 +618,7 @@ class PollsController < ApplicationController
 
     if @history_voted
       if @poll.get_campaign
-        if @poll.campaign.random_immediately?
-          @reward = @poll.find_campaign_for_predict?(@current_member)
-        else
-          @poll.set_reward_for_random_later(@current_member)
-        end
+        @reward = @poll.find_campaign_for_predict?(@current_member)
       end 
     end
 

@@ -11,7 +11,7 @@ class Campaign < ActiveRecord::Base
   # validates :limit, presence: true, numericality: { greater_than: 0 }
   validates :name, :limit, presence: true
 
-  validates_uniqueness_of :name, :on => :create, scoped: :company_id
+  validates_uniqueness_of :name, :on => :create, scope: :company_id
 
   # has_one :poll
   # has_one :poll_series
@@ -69,19 +69,15 @@ class Campaign < ActiveRecord::Base
   end
 
   def prediction(member_id, poll_id)
-    sample = (begin_sample..end_sample).to_a.sample
-    # puts "your lucky : #{sample}"
-    if expire < Time.now
-      # puts "Campaign was expired"
-      # message = "Expired"
-      raise ExceptionHandler::UnprocessableEntity, "This campaign was expired."
-    elsif used >= limit
-      # puts "This campaign is limit."
-      raise ExceptionHandler::UnprocessableEntity, "This campaign was limit."
-    elsif campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
-      # puts "used to redeem."
-      raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll."
+    raise ExceptionHandler::UnprocessableEntity, "This campaign was expired." if expire < Time.now
+    raise ExceptionHandler::UnprocessableEntity, "This campaign was limit." if used >= limit
+    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll." if campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
+    
+    if random_later?
+      campaign_members.create!(member_id: member_id, reward_status: :waiting_announce, poll_id: poll_id, ref_no: generate_ref_no)
     else
+      sample = (begin_sample..end_sample).to_a.sample
+
       if sample % end_sample == 0
         @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
         increment!(:used)
