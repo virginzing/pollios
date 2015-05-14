@@ -102,7 +102,7 @@ class MobilesController < ApplicationController
 
     if @poll.campaign_id != 0
       if @poll.campaign.random_immediately?
-        @campaign, @message = @poll.find_campaign_for_predict?(current_member, @poll)
+        @campaign, @message = @poll.find_campaign_for_predict?(current_member)
       end
     end 
 
@@ -136,7 +136,7 @@ class MobilesController < ApplicationController
 
     if @questionnaire.campaign_id != 0
       if @questionnaire.campaign.random_immediately?
-        @campaign, @message = @questionnaire.find_campaign_for_predict?(@current_member, @questionnaire)
+        @campaign, @message = @questionnaire.find_campaign_for_predict?(@current_member)
       end
     end 
 

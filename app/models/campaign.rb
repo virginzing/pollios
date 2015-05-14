@@ -69,36 +69,31 @@ class Campaign < ActiveRecord::Base
   end
 
   def prediction(member_id, poll_id)
-    begin
-      sample = (begin_sample..end_sample).to_a.sample
-      puts "your lucky : #{sample}"
-      if expire < Time.now
-        puts "Campaign was expired"
-        message = "Expired"
-      elsif used >= limit
-        puts "This campaign is limit."
-        message = "Limited"
-      elsif campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
-        puts "used to redeem."
-        message = "Used"
-      else
-        if sample % end_sample == 0
-          @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
-          increment!(:used)
-          Rails.cache.delete([member_id, 'reward'])
-          message = "Lucky"
-          if @reward
-            ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
-          end
-        else
-          @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
-          message = "Fail"
+    sample = (begin_sample..end_sample).to_a.sample
+    # puts "your lucky : #{sample}"
+    if expire < Time.now
+      # puts "Campaign was expired"
+      # message = "Expired"
+      raise ExceptionHandler::UnprocessableEntity, "This campaign was expired."
+    elsif used >= limit
+      # puts "This campaign is limit."
+      raise ExceptionHandler::UnprocessableEntity, "This campaign was limit."
+    elsif campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
+      # puts "used to redeem."
+      raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll."
+    else
+      if sample % end_sample == 0
+        @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
+        increment!(:used)
+        Rails.cache.delete([member_id, 'reward'])
+        if @reward
+          ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
+      else
+        @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
       end
-      [@reward, message]
-    rescue => e
-      puts "prediction error => #{e.message}"
     end
+    @reward
   end
 
   def free_reward(member_id)

@@ -57,7 +57,7 @@ class CompanyCampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign).permit(:system_campaign, :type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point], :rewards_attributes => [:id, :title, :detail, :reward_expire, :_destroy])
+    params.require(:campaign).permit(:announce_on, :system_campaign, :type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point], :rewards_attributes => [:id, :title, :detail, :reward_expire, :_destroy])
   end
 
 end

@@ -135,8 +135,8 @@ class PollSeries < ActiveRecord::Base
     end 
   end
 
-  def find_campaign_for_predict?(member, poll_series)
-    campaign.prediction_questionnaire(member.id, poll_series.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
+  def find_campaign_for_predict?(member)
+    campaign.prediction_questionnaire(member.id, self.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
   def generate_qrcode_key

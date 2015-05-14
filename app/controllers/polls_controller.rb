@@ -617,9 +617,11 @@ class PollsController < ApplicationController
     @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
 
     if @history_voted
-      if @poll.campaign_id != 0
+      if @poll.get_campaign
         if @poll.campaign.random_immediately?
-          @campaign, @message = @poll.find_campaign_for_predict?(@current_member, @poll)
+          @reward = @poll.find_campaign_for_predict?(@current_member)
+        else
+          @poll.set_reward_for_random_later(@current_member)
         end
       end 
     end

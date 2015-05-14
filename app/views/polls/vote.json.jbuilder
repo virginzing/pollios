@@ -4,9 +4,9 @@ if @poll.present?
   json.scroll @poll.get_choice_scroll
   json.vote_max @poll.get_vote_max
 
-  # if @poll.campaign_id != 0
-  #   json.feedback_message @message
-  # end
+  if @reward
+    json.reward_info @reward.as_json
+  end
 
 else
   json.response_status "ERROR"

@@ -319,7 +319,7 @@ class Poll < ActiveRecord::Base
     (campaign_id != 0) ? true : false
   end
 
-  def get_reward_info
+  def get_list_reward
     reward_info ||= campaign.rewards.first
     @reward_info = {}
 
@@ -335,8 +335,12 @@ class Poll < ActiveRecord::Base
     @reward_info
   end
 
-  def get_campaign_detail
-    campaign.as_json.merge(list_reward: get_reward_info)
+  def get_reward_info(member, campaign)
+    campaign.campaign_members.find_by(poll: self, member: member).presence || {}
+  end
+
+  def get_campaign_detail(member)
+    campaign.as_json.merge(list_reward: get_list_reward).merge(reward_info: get_reward_info(member, campaign))
   end
 
   def get_photo
@@ -826,8 +830,8 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def find_campaign_for_predict?(member, poll)
-    campaign.prediction(member.id, poll.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
+  def find_campaign_for_predict?(member)
+    campaign.prediction(member.id, self.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
   def self.view_poll(poll, member)

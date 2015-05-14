@@ -17,7 +17,7 @@ RSpec.describe Campaign, :type => :model do
     let!(:member) { create(:member) }
 
     let!(:company) { create(:company_admin) }
-    let!(:campaign) { create(:campaign, member: member_system, company: company, name: "แจก 1 public poll free", used: 0, reward_info: { point: 1 }, system_campaign: true ) }
+    let!(:campaign) { create(:campaign, member: member_system, company: company, name: "แจก 1 public poll free", expire: Time.now + 100.years, used: 0, reward_info: { point: 1 }, system_campaign: true ) }
 
 
     let!(:poll) { create(:poll, member: member_system, title: "test for campaign", campaign: campaign) }
@@ -30,20 +30,17 @@ RSpec.describe Campaign, :type => :model do
 
     it "don't receive reward when expire" do
       campaign.update(expire: 1.days.ago)
-      campaign.reload.prediction(member.id, poll.id)
-      expect(CampaignMember.with_reward_status(:receive).where(member_id: member.id, campaign_id: campaign.id).size).to eq(0)
+      expect { campaign.reload.prediction(member.id, poll.id) }.to raise_error("This campaign was expired.")
     end
 
     it "don't receive reward when over limit" do
       campaign.update(used: 100, limit: 100)
-      campaign.reload.prediction(member.id, poll.id)
-      expect(CampaignMember.with_reward_status(:receive).where(member_id: member.id, campaign_id: campaign.id).size).to eq(0)
+      expect { campaign.reload.prediction(member.id, poll.id) }.to raise_error("This campaign was limit.")
     end
 
     it "don't receive reward when you've received this reward already before" do
       create(:campaign_member, member: member, campaign: campaign, reward_status: :receive, poll: poll)
-      expect(campaign.prediction(member.id, poll.id)).to eq([nil, "Used"])
-
+      expect { campaign.reload.prediction(member.id, poll.id) }.to raise_error("You used to get this reward of poll.")
     end
   end
 end
