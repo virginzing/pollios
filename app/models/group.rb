@@ -218,6 +218,7 @@ class Group < ActiveRecord::Base
     if find_group_member
       find_group_member.destroy
       LeaveGroupLog.leave_group_log(member, group)
+
       if find_group_member.group.company?
         member.remove_role :group_admin, find_group_member.group
       end
@@ -405,6 +406,8 @@ class Group < ActiveRecord::Base
 
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
+
+        GroupActionLog.create_log(kicker, member, "kick")
 
         member.remove_role :group_admin, find_member_in_group.group
 
