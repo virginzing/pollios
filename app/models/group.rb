@@ -217,6 +217,7 @@ class Group < ActiveRecord::Base
 
     if find_group_member
       find_group_member.destroy
+      LeaveGroupLog.leave_group_log(member, group)
       if find_group_member.group.company?
         member.remove_role :group_admin, find_group_member.group
       end

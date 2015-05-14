@@ -4,7 +4,7 @@ class CreateLeaveGroupLogs < ActiveRecord::Migration
       t.references :member, index: true
       t.references :group, index: true
       t.datetime :leaved_at
-      t.boolean :receive_invite
+      t.boolean :receive_invite,  default: true
 
       t.timestamps
     end
