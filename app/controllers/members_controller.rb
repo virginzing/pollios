@@ -390,6 +390,12 @@ class MembersController < ApplicationController
   def activate
     @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
   
+    if @invite_code[:status]
+      company = @invite_code[:object].company
+      list_member_in_company = Company::ListMember.new(company).get_list_members.map(&:id)
+      raise ExceptionHandler::UnprocessableEntity, "You're in #{company.name} Company." if list_member_in_company.include?(@current_member.id)
+    end
+
     respond_to do |format|
       if activate_params[:code] == "CODEAPP"
         @current_member.update(bypass_invite: true)
