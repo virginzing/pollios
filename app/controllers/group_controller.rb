@@ -203,10 +203,13 @@ class GroupController < ApplicationController
   def group_update
     group_id = group_update_params[:id]
     member_id = group_update_params[:pk]
+    taker_id = group_update_params[:taker_id]
     @admin_status = group_update_params[:value] == "1" ? false : true
 
     find_member_in_group = GroupMember.where("member_id = ? AND group_id = ?", member_id, group_id).first
     find_member = find_member_in_group.member
+
+    taker = Member.cached_find(taker_id)
 
     respond_to do |format|
       if find_member_in_group.present?
@@ -234,6 +237,12 @@ class GroupController < ApplicationController
 
         else
           find_member_in_group.update!(is_master: @admin_status)
+        end
+
+        if @admin_status
+          GroupActionLog.create_log(find_group, taker, find_member, "promote_admin")
+        else
+          GroupActionLog.create_log(find_group, taker, find_member, "degrade_admin")
         end
 
         FlushCached::Member.new(find_member).clear_list_groups
@@ -289,7 +298,7 @@ class GroupController < ApplicationController
   end
 
   def group_update_params
-    params.permit(:pk, :id, :value)
+    params.permit(:pk, :id, :value, :taker_id)
   end
 
   def options_params

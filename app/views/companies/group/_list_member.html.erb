@@ -23,7 +23,7 @@
               <td><img src="<%= member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= member.fullname %>"></td>
               <td><%= member.get_name %></td>
               <td><%= member.email %></td>
-              <td><a href="#" class="admin_status" data-type="select" data-pk="<%= member.id %>" data-url="/group/<%= params[:group_id] %>/group_update.json" data-original-title="Select Status" data-value="<%= member.admin ? 2 : 1 %>"><%= member.is_admin_group(member.admin) %></a></td>
+              <td><a href="#" class="admin_status" data-type="select" data-pk="<%= member.id %>" data-url="/group/<%= params[:group_id] %>/group_update.json?taker_id=<%= current_member.id %>" data-original-title="Select Status" data-value="<%= member.admin ? 2 : 1 %>"><%= member.is_admin_group(member.admin) %></a></td>
               <td><span data-livestamp="<%= member.joined_at.to_i %>"></span></td>
               <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= remove_member_group_path(member_id: member.id, group_id: params[:group_id]) %>" rel="nofollow">Remove</a></td>
             </tr>

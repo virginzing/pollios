@@ -407,7 +407,7 @@ class Group < ActiveRecord::Base
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_member_in_group.destroy
 
-        GroupActionLog.create_log(kicker, member, "kick")
+        GroupActionLog.create_log(self, kicker, member, "kick")
 
         member.remove_role :group_admin, find_member_in_group.group
 
@@ -460,6 +460,12 @@ class Group < ActiveRecord::Base
               PromoteAdminWorker.perform_async(promoter.id, friend_id, find_group.id)
             end
           end
+        end
+
+        if admin_status
+          GroupActionLog.create_log(self, promoter, member, "promote_admin")
+        else
+          GroupActionLog.create_log(self, promoter, member, "degrade_admin")
         end
 
       else
