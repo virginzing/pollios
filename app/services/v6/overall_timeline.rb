@@ -4,6 +4,8 @@ class V6::OverallTimeline
   include FeedSetting
 
   TYPE_TIMELINE = 'overall_timeline'
+  FILTER_NEW_POLL = 'new'
+  FILTER_ALL_POLL = 'all' 
 
   attr_accessor :list_polls, :list_shared, :order_ids, :next_cursor
 
@@ -38,6 +40,14 @@ class V6::OverallTimeline
 
   def filter_reward
     @options[:reward].presence || "1"
+  end
+
+  def only_new_poll?
+    @options[:type_timeline] == FILTER_NEW_POLL ? true : false
+  end
+
+  def vote_all_polls
+    Member.voted_polls.collect{|e| e["poll_id"] }
   end
 
   def your_friend_ids
@@ -107,6 +117,10 @@ class V6::OverallTimeline
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
+    
+    if only_new_poll?
+      query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
+    end
 
     query = query.limit(LIMIT_TIMELINE)
 
