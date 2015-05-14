@@ -149,11 +149,15 @@ class V6::MyPollInProfile
     query_group_together = "polls.member_id = #{member_id} AND poll_groups.group_id IN (?) AND poll_members.share_poll_of_id = 0"
     query_public = "polls.public = 't' AND polls.member_id = #{member_id} AND poll_members.share_poll_of_id = 0"
 
+    # query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    #             .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
+    #                    "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
+    #                    "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
+    #                    your_group_ids, your_group_ids).references(:poll_groups)
+
     query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
-                .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
-                       "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
-                       "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
-                       your_group_ids, your_group_ids).references(:poll_groups)
+                .where("(#{query_poll_member} OR #{query_group_together} OR #{query_public} )", your_group_ids).references(:poll_groups)
+
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids_of_poll_created) if with_out_poll_ids_of_poll_created.size > 0
     query = query.limit(limit_poll)
     query
