@@ -727,13 +727,13 @@ class Poll < ActiveRecord::Base
 
     Poll.transaction do
       begin
+        find_poll = Poll.cached_find(poll_id)
 
-        raise ExceptionHandler::UnprocessableEntity, "Poll had closed already." if @poll.expire_status
-        
+        raise ExceptionHandler::UnprocessableEntity, "Poll had closed already." if find_poll.expire_status
+
         ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
 
         unless ever_vote
-          find_poll = Poll.cached_find(poll_id)
           find_choice = Choice.cached_find(choice_id)
 
           poll_series_id = find_poll.series ? find_poll.poll_series_id : 0

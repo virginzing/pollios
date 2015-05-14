@@ -47,8 +47,8 @@ redirect("Pollios://192.168.1.18:3000/m/polls?key=" + '<%= @key %>');
   var app_url = "Pollios://pollios.com/m/polls?key=" + '<%= params[:key] %>';
 
   if (env) {
-    var mobile_url = "http://localhost:3000/m/polls?key=" + '<%= params[:key] %>';
-    var app_url = "Pollios://localhost:3000/m/polls?key=" + '<%= params[:key] %>';
+    var mobile_url = "http://192.168.1.101:3000/m/polls?key=" + '<%= params[:key] %>';
+    var app_url = "Pollios://192.168.1.101:3000/m/polls?key=" + '<%= params[:key] %>';
   };
 
   deeplink.setup({
