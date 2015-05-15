@@ -119,6 +119,10 @@ Pollios::Application.routes.draw do
     post 'claim_reward',  to: 'campaigns#claim_reward'
   end
 
+  scope 'reward' do
+    delete ':id/delete_reward',  to: 'campaigns#delete_reward'
+  end
+
   scope 'questionnaire' do
     post ':id/vote',        to: 'poll_series#vote'
     get ':id/qrcode',       to: 'poll_series#generate_qrcode'

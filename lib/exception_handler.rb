@@ -64,6 +64,11 @@ module ExceptionHandler
       NOT_IN_GROUP = "You're not in this group."
       NOT_ADMIN = "You're not an admin of group."
     end
+
+    module Reward
+      NOT_FOUND = "Reward not found."
+      DELETED = "This reward was deleted from Pollios."
+    end
   end
 
   def not_found(ex)

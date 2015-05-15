@@ -231,7 +231,7 @@ class GroupController < ApplicationController
               find_member.remove_role :group_admin, find_group
             end
           else
-            format.json { render text: "You have already admin of #{find_exist_role_member.name} Company" , status: :unprocessable_entity }
+            format.json { render text: "You have already admin of other Company" , status: :unprocessable_entity }
           end
 
         else

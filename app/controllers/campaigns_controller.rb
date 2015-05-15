@@ -1,7 +1,7 @@
 class CampaignsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
-  before_action :set_current_member, only: [:predict, :list_reward, :claim_reward]
+  before_action :set_current_member, only: [:predict, :list_reward, :claim_reward, :delete_reward]
   before_action :signed_user, only: [:index, :new, :show, :update, :destroy]
   before_action :history_voted_viewed, only: [:list_reward]
 
@@ -16,13 +16,19 @@ class CampaignsController < ApplicationController
     end
   end
 
+  def delete_reward
+    @reward = CampaignMember.cached_find(reward_params[:id])
+    @reward.destroy
+    render status: @reward ? :created : :unprocessable_entity
+  end
+
   def predict
     @predict = @campaign.prediction(@current_member.id)
     puts "predict => #{@predict}"
   end
 
   def list_reward
-    @rewards = CampaignMember.list_reward(@current_member.id).paginate(page: params[:next_cursor])
+    @rewards = CampaignMember.without_deleted.list_reward(@current_member.id).paginate(page: params[:next_cursor])
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page
   end
 
@@ -186,6 +192,10 @@ class CampaignsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_campaign
       @campaign = Campaign.find(params[:id])
+    end
+
+    def reward_params
+      params.permit(:member_id, :id)
     end
 
     def set_reward

@@ -6,6 +6,8 @@ class SuggestGroupsController < ApplicationController
   before_filter :authenticate_admin!
 
 
+  expose(:current_suggest_group) { @current_suggest_group }
+
   def manage_groups
     @group = Group.where(public: true)
     @current_suggest_group = SuggestGroup.all.pluck(:group_id)
