@@ -93,10 +93,8 @@ class PollSeriesController < ApplicationController
     @votes = @poll_series.vote_questionnaire(vote_params, @current_member, @poll_series, options)
 
     if @votes.present?
-      if @poll_series.campaign_id != 0 && @poll_series.campaign_id != nil
-        if @poll_series.campaign.random_immediately?
-          @campaign_member, @message = @poll_series.find_campaign_for_predict?(@current_member)
-        end
+      if @poll_series.get_campaign
+        @reward = @poll_series.find_campaign_for_predict?(@current_member)
       end 
     end
 

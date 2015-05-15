@@ -139,6 +139,10 @@ class PollSeries < ActiveRecord::Base
     campaign.prediction_questionnaire(member.id, self.id) if campaign.expire > Time.now && campaign.used <= campaign.limit
   end
 
+  def get_campaign
+    campaign_id != 0 ? true : false
+  end
+
   def generate_qrcode_key
     begin
       self.qrcode_key = SecureRandom.hex(4)

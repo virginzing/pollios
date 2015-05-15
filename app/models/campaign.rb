@@ -74,7 +74,7 @@ class Campaign < ActiveRecord::Base
     raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll." if campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
     
     if random_later?
-      campaign_members.create!(member_id: member_id, reward_status: :waiting_announce, poll_id: poll_id, ref_no: generate_ref_no)
+      @reward = campaign_members.create!(member_id: member_id, reward_status: :waiting_announce, poll_id: poll_id, ref_no: generate_ref_no)
     else
       sample = (begin_sample..end_sample).to_a.sample
 
@@ -99,36 +99,28 @@ class Campaign < ActiveRecord::Base
   end
 
   def prediction_questionnaire(member_id, poll_series_id)
-    begin
+
+    raise ExceptionHandler::UnprocessableEntity, "This campaign was expired." if expire < Time.now
+    raise ExceptionHandler::UnprocessableEntity, "This campaign was limit." if used >= limit
+    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of feedback." if campaign_members.find_by(member_id: member_id, poll_series_id: poll_series_id).present?
+
+    if random_later?
+      @reward = campaign_members.create!(member_id: member_id, reward_status: :waiting_announce, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+    else
       sample = (begin_sample..end_sample).to_a.sample
-      puts "your lucky : #{sample}"
-      if expire < Time.now
-        puts "Campaign was expired"
-        message = "Expired"
-      elsif used >= limit
-        puts "This campaign is limit."
-        message = "Limited"
-      elsif campaign_members.find_by(member_id: member_id, poll_series_id: poll_series_id).present?
-        puts "used to redeem."
-        message = "Used"
-      else
-        if sample % end_sample == 0
-          @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
-          increment!(:used)
-          Rails.cache.delete([member_id, 'reward'])
-          message = "Lucky"
-          if @reward
-            ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
-          end
-        else
-          @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
-          message = "Fail"
+
+      if sample % end_sample == 0
+        @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+        increment!(:used)
+        Rails.cache.delete([member_id, 'reward'])
+        if @reward
+          ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
+      else
+        @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
       end
-      [@reward, message]
-    rescue => e
-      puts "prediction error => #{e.message}"
     end
+    @reward
   end
 
   def generate_serial_code

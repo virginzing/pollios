@@ -795,7 +795,7 @@ class Member < ActiveRecord::Base
     #   searchable_member(params[:q])
     # end
     if params[:q].present?
-      where("fullname LIKE ? OR email LIKE ? OR public_id LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
+      Member.having_status_account(:normal).where("fullname LIKE ? OR email LIKE ? OR public_id LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%", "%#{params[:q]}%")
     end
   end
 
