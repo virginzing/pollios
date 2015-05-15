@@ -216,7 +216,6 @@ class GroupController < ApplicationController
         find_group = find_member_in_group.group
 
         if find_group.is_company? ## Is it group of company?
-
           find_role_member = find_member.roles.first
 
           if find_role_member.present?

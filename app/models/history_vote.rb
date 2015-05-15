@@ -16,7 +16,7 @@ class HistoryVote < ActiveRecord::Base
   end
 
   def self.get_gender_analysis(poll_id, choice_id, gender_type)
-    HistoryVote.where("poll_id = #{poll_id} AND choice_id = #{choice_id}").has_gender(gender_type)
+    HistoryVote.where("poll_id = ? AND choice_id = ?", poll_id, choice_id).has_gender(gender_type)
   end
 
   rails_admin do

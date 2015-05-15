@@ -261,8 +261,7 @@ class PollsController < ApplicationController
         flash[:success] = "Create poll successfully."
         redirect_to current_member.get_company.present? ? company_polls_path : polls_path
       else
-        # puts "#{@poll.errors.full_messages}"
-        render @build_poll.type_poll
+        redirect_to company_polls_path
       end
     end
   end

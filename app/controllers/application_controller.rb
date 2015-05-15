@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :null_session
+  protect_from_forgery with: :exception
 
   # before_action :restrict_only_admin
   layout :layout_by_resource
@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
 
   def test_maintenance
-    render '/public/503.html', :layout => false, status: 503
+    render file: "/public/503.html", :layout => false
   end
 
   def check_maintenance
