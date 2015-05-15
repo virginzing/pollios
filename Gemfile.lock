@@ -126,6 +126,9 @@ GEM
     bson (2.3.0)
     bson_ext (1.5.1)
     builder (3.2.2)
+    bullet (4.14.7)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.9.0)
     callsite (0.0.11)
     capybara (2.4.4)
       mime-types (>= 1.16)
@@ -512,6 +515,7 @@ GEM
     unicorn-worker-killer (0.4.3)
       get_process_mem (~> 0)
       unicorn (~> 4)
+    uniform_notifier (1.9.0)
     unscoped_associations (0.6.5)
       activerecord
     wannabe_bool (0.1.0)
@@ -546,6 +550,7 @@ DEPENDENCIES
   benchmark-ips
   bson (~> 2.2)
   bson_ext
+  bullet
   capybara
   carrierwave
   chartkick

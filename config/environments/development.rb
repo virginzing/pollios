@@ -29,5 +29,9 @@ Pollios::Application.configure do
   config.assets.debug = true
   
   config.cache_store = :dalli_store, nil,  { compress: true }
-  
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.raise = true
+  end  
 end

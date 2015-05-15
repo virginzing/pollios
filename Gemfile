@@ -69,6 +69,7 @@ group :development, :test do
   gem 'faker'
   gem 'fuubar'
   gem 'database_cleaner'
+  gem 'bullet'
 end
 
 group :test do
