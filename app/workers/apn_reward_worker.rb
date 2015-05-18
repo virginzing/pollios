@@ -25,7 +25,8 @@ class ApnRewardWorker
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
-        type: TYPE[:reward]
+        type: TYPE[:reward],
+        reward_id: @reward.id
       }
 
       find_recipient_notify.each_with_index do |member, index|
@@ -48,7 +49,9 @@ class ApnRewardWorker
       find_recipient_notify.each do |member|
 
         hash_custom = {
-          notify: hash_list_member_badge[member.id] || 0
+          notify: hash_list_member_badge[member.id] || 0,
+          type: Type[:reward],
+          reward_id: @reward.id
         }
 
         NotifyLog.create!(sender_id: @member.id, recipient_id: member.id, message: @apn_reward.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

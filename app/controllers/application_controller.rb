@@ -1,11 +1,7 @@
+# ApplicationController
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-
-  # before_action :restrict_only_admin
   layout :layout_by_resource
-
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
@@ -15,12 +11,9 @@ class ApplicationController < ActionController::Base
     strategy DecentExposure::StrongParametersStrategy
   end
 
-  # before_filter :test_maintenance
-
-  before_filter :if => Proc.new{ |c| c.request.path =~ /admin/ } do
+  before_filter :if => Proc.new { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
-  # before_filter :check_maintenance
 
   before_filter :check_token, :if => Proc.new { |c| c.request.format.json? }
 
@@ -28,7 +21,6 @@ class ApplicationController < ActionController::Base
 
   def check_token
     token = request.headers['Authorization']
-    # puts "token => #{token}"
     if params[:member_id] && token.present?
       authenticate_or_request_with_http_token do |token, options|
         access_token = set_current_member.api_tokens.where("token = ?", token)
@@ -40,10 +32,6 @@ class ApplicationController < ActionController::Base
       end
     end
     
-  end
-
-  def test_maintenance
-    render file: "/public/503.html", :layout => false
   end
 
   def check_maintenance
