@@ -50,7 +50,7 @@ class ApnRewardWorker
 
         hash_custom = {
           notify: hash_list_member_badge[member.id] || 0,
-          type: Type[:reward],
+          type: TYPE[:reward],
           reward_id: @reward.id
         }
 

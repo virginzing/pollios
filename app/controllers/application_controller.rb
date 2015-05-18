@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     strategy DecentExposure::StrongParametersStrategy
   end
 
-  before_filter :if => Proc.new { |c| c.request.path =~ /admin/ } do
+  before_filter proc { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
