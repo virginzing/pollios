@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
     else
       is_service = 'Feedback'
     end
-    permission_deny if current_member.get_company.using_service.include?(is_service)
+    permission_deny unless current_member.get_company.using_service.include?(is_service)
   end
 
   def permission_deny
@@ -61,77 +61,33 @@ class ApplicationController < ActionController::Base
     init_list_group = Member::ListGroup.new(@current_member)
     your_group = init_list_group.active
 
-    @group_by_name = Hash[ your_group.map { |f| [f.id, Hash['id' => f.id, 'name' => f.name, 'photo' => f.get_photo_group, 'member_count' => f.member_count, 'poll_count' => f.poll_count]] } ]
+    @group_by_name = Hash[ your_group.map { |f| [f.id, Hash['id' => f.id, 'name' => f.name, 'photo' => f.get_photo_group, 'member_count' => f.member_count, 'poll_count' => f.poll_count]] }]
   end
 
   def only_brand_or_company_account
-    unless @current_member.brand? || @current_member.company?
-      cookies.delete(:auth_token)
-      respond_to do |format|
-        flash[:warning] = 'Only brand or companry account.'
-        format.html { redirect_to authen_signin_path }
-      end
+    return if @current_member.brand? || @current_member.company?
+    cookies.delete(:auth_token)
+    respond_to do |format|
+      flash[:warning] = 'Only brand or companry account.'
+      format.html { redirect_to authen_signin_path }
     end
   end
 
   def set_current_member
     @current_member = Member.cached_find(params[:member_id])
-  
-    raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BLACKLIST if @current_member.blacklist?
-    raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @current_member.ban?
-
+    fail ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BLACKLIST if @current_member.blacklist?
+    fail ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @current_member.ban?
     Member.current_member = @current_member
     @current_member
   end
 
-  def set_current_guest
-    @current_guest = Guest.find_by(id: params[:guest_id])
-    unless @current_guest.present?
-      respond_to do |format|
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Error."] }
-      end
-    end
-  end
-
-  def restrict_access
-    authenticate_or_request_with_http_token do |token, options|
-      access_token = set_current_member.providers.where("token = ?", token)
-      unless access_token.present?
-
-      else
-        true
-      end
-    end
-  end
-
-  def restrict_only_admin
-    if current_member
-      unless current_member.brand?
-        reset_session
-        flash[:warning] = "Only Brand Account."
-        redirect_to authen_signin_path
-      end
-    end
-  end
-
   def only_company_account
-    if current_member
-      unless current_member.company?
-        cookies.delete(:auth_token)
-        cookies.delete(:return_to)
-        flash[:warning] = "Only Company Account"
-        redirect_to users_signin_path
-      end
-    end
+    return if current_member.company?
+    cookies.delete(:auth_token)
+    cookies.delete(:return_to)
+    flash[:warning] = 'Only Company Account.'
+    redirect_to users_signin_path
   end
-
-  # def current_member
-  #   begin
-  #     @current_member ||= Member.find(session[:member_id]) if session[:member_id]
-  #   rescue => e
-  #     session[:member_id] = nil
-  #   end
-  # end
 
   def current_member
     @current_member ||= Member.find_by(auth_token: cookies[:auth_token]) if cookies[:auth_token]
@@ -142,27 +98,14 @@ class ApplicationController < ActionController::Base
   end
 
   def signed_user
-    unless current_member.present?
-      store_location
-      flash[:warning] = "Please sign in before access this page."
-      redirect_to users_signin_url
-    end
+    return if current_member.present?
+    store_location
+    flash[:warning] = 'Please sign in before access this page.'
+    redirect_to users_signin_url
   end
 
   def current_member?(member)
     member == current_member
-  end
-
-  def is_member?
-    member_id = params[:member_id]
-    begin
-      @find_member = Member.find(member_id)
-    rescue => e
-      respond_to do |wants|
-        wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."] }
-      end
-    end
-    @find_member
   end
 
   def only_company
@@ -171,28 +114,23 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # Member.current_member = Member.find(85)
-
   def load_resource_poll_feed
-    if params[:member_id]
+    return unless params[:member_id]
+    init_list_friend = Member::ListFriend.new(Member.current_member)
+    init_list_poll = Member::ListPoll.new(Member.current_member)
+    init_list_group = Member::ListGroup.new(Member.current_member)
 
-      init_list_friend = Member::ListFriend.new(Member.current_member)
-      init_list_poll = Member::ListPoll.new(Member.current_member)
-      init_list_group = Member::ListGroup.new(Member.current_member)
+    Member.list_friend_active = init_list_friend.active
+    Member.list_friend_block = init_list_friend.block
+    Member.list_friend_request = init_list_friend.friend_request
+    Member.list_your_request = init_list_friend.your_request
+    Member.list_friend_following = init_list_friend.following
 
-      Member.list_friend_active = init_list_friend.active
-      Member.list_friend_block = init_list_friend.block
-      Member.list_friend_request = init_list_friend.friend_request
-      Member.list_your_request = init_list_friend.your_request
-      Member.list_friend_following = init_list_friend.following
-
-      Member.list_group_active = init_list_group.active
-      Member.reported_polls = init_list_poll.reports
-      Member.viewed_polls   = init_list_poll.history_viewed
-      Member.voted_polls    = init_list_poll.voted_all
-      Member.watched_polls  = init_list_poll.watched_poll_ids
-      # p "=== End ==="
-    end
+    Member.list_group_active = init_list_group.active
+    Member.reported_polls = init_list_poll.reports
+    Member.viewed_polls   = init_list_poll.history_viewed
+    Member.voted_polls    = init_list_poll.voted_all
+    Member.watched_polls  = init_list_poll.watched_poll_ids
   end
 
   def compress_gzip
@@ -203,30 +141,17 @@ class ApplicationController < ActionController::Base
     request.format.json?
   end
 
-  def correct_member
-    find_member = Member.find_by(username: params[:username])
-    unless current_member?(find_member)
-      respond_to do |format|
-        flash[:error] = "Permission Deny"
-        format.json { render json: Hash["response_status" => "ERROR", "response_message" => "No have this member in system."]}
-        format.html { redirect_to root_url }
-      end
-    end
-  end
-
   def redirect_unless_admin
-    unless current_admin
-      flash[:notice] = "Only Admin"
-      redirect_to root_path
-    end
+    return if current_admin
+    flash[:notice] = "You're not admin."
+    redirect_to root_path
   end
 
   def m_signin
-    unless current_member.present?
-      store_location
-      flash[:warning] = 'Please sign in before access this page.'
-      redirect_to mobile_signin_path
-    end
+    return if current_member.present?
+    store_location
+    flash[:warning] = 'Please sign in before access this page.'
+    redirect_to mobile_signin_path
   end
 
   def render_error(status, exception)
@@ -246,6 +171,6 @@ class ApplicationController < ActionController::Base
 
   def request_http_token_authentication(realm = 'Application')
     headers['WWW-Authenticate'] = %(Token realm="#{realm.gsub(/"/, '')}")
-    render json: Hash['response_status' => 'ERROR', 'response_message' => 'Access denied'], status: :unauthorized
+    render json: Hash['response_status' => 'ERROR', 'response_message' => 'Access denied.'], status: :unauthorized
   end
 end
