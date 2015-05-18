@@ -68,6 +68,7 @@ class Recommendation
     query = query.where("id NOT IN (?)", unrecommended) if unrecommended.size > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.size > 0
     query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.size > 0
+    query = query.where('id NOT IN (?)', get_member_using_facebook.map(&:id)) if get_member_using_facebook.map(&:id).size > 0
     query
   end
 
