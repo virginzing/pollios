@@ -103,7 +103,7 @@ gem 'rqrcode'
 gem 'rqrcode-rails3'
 gem 'rqrcode_png'
 
-gem 'mini_magick', '~> 3.5.0'
+gem 'mini_magick'
 
 gem 'randumb'
 gem 'figaro'

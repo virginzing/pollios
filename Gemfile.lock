@@ -276,8 +276,7 @@ GEM
     method_source (0.8.2)
     middleware (0.1.0)
     mime-types (1.25.1)
-    mini_magick (3.5.0)
-      subexec (~> 0.2.1)
+    mini_magick (4.2.4)
     mini_portile (0.6.2)
     minitest (5.5.1)
     mongoid_auto_increment_id (0.6.5)
@@ -499,7 +498,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    subexec (0.2.3)
     therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
       ref
@@ -595,7 +593,7 @@ DEPENDENCIES
   libv8 (~> 3.11.8.3)
   memcachier
   meta_request
-  mini_magick (~> 3.5.0)
+  mini_magick
   mongoid!
   mongoid_auto_increment_id (= 0.6.5)
   nested-hstore

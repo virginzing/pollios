@@ -18,10 +18,6 @@ class PollsController < ApplicationController
 
   before_action :get_your_group, only: [:detail, :create_poll]
 
-  # before_action :restrict_access, only: [:overall_timeline]
-  
-  # after_action :set_last_update_poll, only: [:public_poll, :overall_timeline]
-
   before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
@@ -811,7 +807,7 @@ class PollsController < ApplicationController
   end
 
   def comment_params
-    params.permit(:id, :message, :next_cursor, :comment_id, :member_id, :list_mentioned => [])
+    params.permit(:id, :message, :next_cursor, :comment_id, :member_id, list_mentioned: [])
   end
 
   def hashtag_params
@@ -831,7 +827,7 @@ class PollsController < ApplicationController
   end
 
   def options_build_params
-    params.permit(:choices => [])
+    params.permit(choices: [])
   end
 
   def choices_params
@@ -847,11 +843,11 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:thumbnail_type, :qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, :choices => [], :original_images => [])
+    params.permit(:thumbnail_type, :qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, choices: [], original_images: [])
   end
 
   def polls_params
-    params.require(:poll).permit(:draft, :show_result, :creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count ,:tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, group_id: [], choices_attributes: [:id, :answer, :_destroy])
+    params.require(:poll).permit(:draft, :show_result, :creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count, :tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, group_id: [], choices_attributes: [:id, :answer, :_destroy])
   end
 
   protected
@@ -859,6 +855,4 @@ class PollsController < ApplicationController
   def json_request?
     request.format.json?
   end
-
-
 end
