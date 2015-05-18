@@ -1,11 +1,13 @@
 class CampaignsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
-  before_action :set_current_member, only: [:predict, :list_reward, :claim_reward, :delete_reward]
+  before_action :set_current_member, only: [:predict, :list_reward, :claim_reward, :delete_reward, :detail_reward]
   before_action :signed_user, only: [:index, :new, :show, :update, :destroy]
   before_action :history_voted_viewed, only: [:list_reward]
 
   before_action :set_reward, only: [:claim_reward]
+
+  expose(:reward) { @reward }
 
   def claim_reward
     @claim = false
@@ -14,6 +16,10 @@ class CampaignsController < ApplicationController
     if init_reward.claim
       @claim = true
     end
+  end
+
+  def detail_reward
+    @reward = CampaignMember.joins(:campaign, :member).cached_find(reward_params[:id])
   end
 
   def delete_reward

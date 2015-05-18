@@ -38,7 +38,7 @@ class CampaignMember < ActiveRecord::Base
     {
       id: id,
       reward_status: reward_status,
-      serial_code: serial_code,
+      serial_code: serial_code || "",
       redeem: redeem,
       redeem_at: redeem_at.to_i.presence || "",
       ref_no: ref_no || "",

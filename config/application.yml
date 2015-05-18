@@ -54,7 +54,7 @@ production:
 #   member.update!(update_personal: true) if member.birthday.present? || member.gender.present?
 # end
 # set Env to heroku
-# heroku config:set PRODUCT_ID_IOS_STATUS="OPEN" -a codeapp-pollios
+# heroku config:set GMAIL_PASSWORD="9code7app9" -a codeapp-pollios
 # or
 # figaro heroku:set -e production -a codeapp-pollios
 # update limit of member

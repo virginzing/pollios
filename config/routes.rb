@@ -121,6 +121,7 @@ Pollios::Application.routes.draw do
 
   scope 'reward' do
     delete ':id/delete_reward',  to: 'campaigns#delete_reward'
+    get ':id/detail',            to: 'campaigns#detail_reward'
   end
 
   scope 'questionnaire' do

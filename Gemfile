@@ -70,6 +70,7 @@ group :development, :test do
   gem 'fuubar'
   gem 'database_cleaner'
   gem 'bullet'
+  gem 'rubocop', require: false
 end
 
 group :test do

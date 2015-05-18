@@ -165,7 +165,8 @@ class Campaign < ActiveRecord::Base
       owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json() : System::DefaultMember.new.to_json,
       created_at: created_at.to_i,
       type_campaign: type_campaign,
-      announce_on: announce_on.to_i
+      announce_on: announce_on.to_i,
+      random_reward: begin_sample == end_sample ? false : true
     }
   end
   
