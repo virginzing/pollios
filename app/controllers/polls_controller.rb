@@ -666,44 +666,37 @@ class PollsController < ApplicationController
 
     if new_hidden_poll
       SavePollLater.delete_save_later(@current_member.id, @poll)
-      Rails.cache.delete([ @current_member.id, 'hidden_polls'])
+      Rails.cache.delete([@current_member.id, 'hidden_polls'])
     end
-
   end
 
   def report
     @init_report = ReportPoll.new(@current_member, @poll, { message: params[:message], message_preset: params[:message_preset] })
     @report = @init_report.reporting
 
-    unless @report
-      render status: :unprocessable_entity
-    end
+    render status: @report ? :created : :unprocessable_entity
   end
 
   def destroy
     @poll.destroy
     @poll.member.flush_cache_about_poll
-    Company::TrackActivityFeedPoll.new(@current_member, @poll.in_group_ids, @poll, "delete").tracking if @poll.in_group
+    Company::TrackActivityFeedPoll.new(@current_member, @poll.in_group_ids, @poll, 'delete').tracking if @poll.in_group
     DeletePoll.create_log(@poll)
-    flash[:notice] = "Destroy successfully."
+    flash[:notice] = 'Destroy successfully.'
     redirect_to polls_url
   end
 
   # Comment
 
-  def comment  #post comment
+  def comment #post comment
     Comment.transaction do
       begin
-        raise ExceptionHandler::NotAcceptable, "This poll disallow your comment." unless @poll.allow_comment
+        fail ExceptionHandler::NotAcceptable, 'This poll disallow your comment.' unless @poll.allow_comment
 
         list_mentioned = comment_params[:list_mentioned]
-
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-
         @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
-
         @poll.increment!(:comment_count)
-
         find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
 
         if find_watched.first.present?
@@ -711,67 +704,48 @@ class PollsController < ApplicationController
         else
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
-
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
-
-        # CommentPollWorker.perform_in(5.seconds, @current_member.id, @poll.id, { comment_message: @comment.message })
-        # CommentMentionWorker.perform_in(5.seconds, @current_member.id, @poll.id, list_mentioned) if list_mentioned.present?
         render status: :created
       rescue => e
         @error_message = e.message
-        # puts "#{e.message}"
         render status: :forbidden
       end
-
     end
   end
 
   def load_comment
     raise_exception_without_group if @poll.in_group
-
     init_list_poll ||= Member::ListPoll.new(@current_member)
     list_report_comments_ids = init_list_poll.report_comments.map(&:id)
 
     query = Comment.without_deleted.joins(:member)
-                      .select("comments.*, members.fullname as member_fullname, members.avatar as member_avatar")
-                      .includes(:mentions)
-                      .where(poll_id: comment_params[:id], ban: false)
+                    .select('comments.*, members.fullname as member_fullname, members.avatar as member_avatar')
+                    .includes(:mentions)
+                    .where(poll_id: comment_params[:id], ban: false)
 
-    query = query.where("comments.id NOT IN (?)", list_report_comments_ids) if list_report_comments_ids.size > 0
+    query = query.where('comments.id NOT IN (?)', list_report_comments_ids) if list_report_comments_ids.size > 0
 
-    @comments = query.order("comments.created_at desc").paginate(page: comment_params[:next_cursor])
-                      
-    @new_comment_sort = @comments.sort { |x,y| x.created_at <=> y.created_at }
-    @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json()
+    @comments = query.order('comments.created_at desc').paginate(page: comment_params[:next_cursor])
+    @new_comment_sort = @comments.sort { |x, y| x.created_at <=> y.created_at }
+    @comments_as_json = ActiveModel::ArraySerializer.new(@new_comment_sort, each_serializer: CommentSerializer).as_json
     @next_cursor = @comments.next_page.nil? ? 0 : @comments.next_page
     @total_entries = @comments.total_entries
   end
 
   def list_mentionable
     init_list_mentionable = Poll::ListMentionable.new(@current_member, @poll)
-    @list_mentionable = ActiveModel::ArraySerializer.new(init_list_mentionable.get_list_mentionable, each_serializer: MentionSerializer).as_json()
+    @list_mentionable = ActiveModel::ArraySerializer.new(init_list_mentionable.get_list_mentionable, each_serializer: MentionSerializer).as_json
   end
 
   def delete_comment
     Poll.transaction do
       begin
         @comment = Comment.cached_find(comment_params[:comment_id])
-
-
-        if (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
-          @comment.destroy
-          NotifyLog.check_update_comment_deleted(@comment)
-          @poll.decrement!(:comment_count) if @poll.comment_count > 0
-          
-          render status: :created
-        else
-          @comment = nil
-          @error_message = "You can't delete this comment. Because you're not owner comment or owner poll."
-          render status: :unprocessable_entity
-        end
-      rescue => e
-        @error_message = e.message
-        render status: :unprocessable_entity
+        fail ExceptionHandler::UnprocessableEntity, "You can't delete this comment. Because you're not owner comment or owner poll." unless (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
+        @comment.destroy
+        NotifyLog.check_update_comment_deleted(@comment)
+        @poll.decrement!(:comment_count) if @poll.comment_count > 0
+        render status: :created
       end
     end
   end
@@ -802,8 +776,8 @@ class PollsController < ApplicationController
 
   def raise_exception_without_group
     init_list_group = Member::ListGroup.new(@current_member)
-    poll_in_group = @poll.in_group_ids.split(",").collect{|e| e.to_i }
-    raise ExceptionHandler::NotAcceptable, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).size == 0)
+    poll_in_group = @poll.in_group_ids.split(',').map(&:to_i)
+    fail ExceptionHandler::NotAcceptable, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).size == 0)
   end
 
   def comment_params
