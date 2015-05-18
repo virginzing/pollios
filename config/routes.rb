@@ -120,7 +120,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'reward' do
-    delete ':id/delete_reward',  to: 'campaigns#delete_reward'
+    delete ':id/delete',  to: 'campaigns#delete_reward'
     get ':id/detail',            to: 'campaigns#detail_reward'
   end
 

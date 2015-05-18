@@ -15,48 +15,33 @@ class ApplicationController < ActionController::Base
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-  before_filter :check_token, :if => Proc.new { |c| c.request.format.json? }
+  before_filter :check_token, proc { |c| c.request.format.json? }
 
-  helper_method :current_member, :signed_in?, :render_to_string, :only_company, :redirect_back_or, :redirect_back
+  helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back
 
   def check_token
-    token = request.headers['Authorization']
-    if params[:member_id] && token.present?
-      authenticate_or_request_with_http_token do |token, options|
-        access_token = set_current_member.api_tokens.where("token = ?", token)
-        unless access_token.present?
-          raise ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::WRONG
-        else
-          true
-        end
-      end
-    end
-    
-  end
-
-  def check_maintenance
-    maintenance_mode = Figaro.env.maintenance_mode
-
-    if maintenance_mode == "true"
-      respond_to do |wants|
-        wants.html { }
-        wants.json { raise ExceptionHandler::Maintenance, ExceptionHandler::Message::Maintenance::OPEN }
-      end
+    token_from_header = request.headers['Authorization']
+    return unless params[:member_id] && token_from_header.present?
+    authenticate_or_request_with_http_token do |token, other_options|
+      access_token = set_current_member.api_tokens.where('token = ?', token)
+      fail ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::WRONG unless access_token.present?
+      true
     end
   end
 
   def check_using_service
-    if controller_name == "companies" || controller_name == "company_campaigns"
-      check_service = 'Survey'
+    if controller_name == 'companies' || controller_name == 'company_campaigns'
+      is_service = 'Survey'
     else
-      check_service = 'Feedback'
+      is_service = 'Feedback'
     end
+    permission_deny if current_member.get_company.using_service.include?(is_service)
+  end
 
-    unless current_member.get_company.using_service.include?(check_service)
-      respond_to do |format|
-        flash[:warning] = 'Permission Deny'
-        format.html { redirect_to authen_signin_path }
-      end
+  def permission_deny
+    respond_to do |format|
+      flash[:warning] = 'Permission Deny'
+      format.html { redirect_to authen_signin_path }
     end
   end
 
@@ -65,24 +50,18 @@ class ApplicationController < ActionController::Base
   end
 
   def history_voted_viewed
-    # @history_voted  = @current_member.history_votes.includes(:choice).collect!  { |voted| [voted.poll_id, voted.choice_id, voted.choice.answer, voted.poll_series_id, voted.choice.vote] }
-    @history_voted = HistoryVote.joins(:member, :choice, :poll)
-                                .select("history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result")
-                                .where("history_votes.member_id = #{@current_member.id}")
+    @history_voted = HistoryVote.joins(:member, :choice, :poll) \
+                                .select('history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result') \
+                                .where("history_votes.member_id = #{@current_member.id}") \
                                 .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }
-    @history_viewed = @current_member.history_views.collect!  { |viewed| viewed.poll_id }
-  end
-
-  def history_voted_viewed_guest
-    @history_voted_guest  = @current_guest.history_vote_guests.collect!  { |voted| [voted.poll_id, voted.choice_id] }
-    @history_viewed_guest = @current_guest.history_view_guests.collect!  { |viewed| viewed.poll_id }
+    @history_viewed = @current_member.history_views.map(&:poll_id)
   end
 
   def get_your_group
     init_list_group = Member::ListGroup.new(@current_member)
     your_group = init_list_group.active
 
-    @group_by_name = Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    @group_by_name = Hash[ your_group.map { |f| [f.id, Hash['id' => f.id, 'name' => f.name, 'photo' => f.get_photo_group, 'member_count' => f.member_count, 'poll_count' => f.poll_count]] } ]
   end
 
   def only_brand_or_company_account
@@ -245,7 +224,7 @@ class ApplicationController < ActionController::Base
   def m_signin
     unless current_member.present?
       store_location
-      flash[:warning] = "Please sign in before access this page."
+      flash[:warning] = 'Please sign in before access this page.'
       redirect_to mobile_signin_path
     end
   end
@@ -253,23 +232,20 @@ class ApplicationController < ActionController::Base
   def render_error(status, exception)
     respond_to do |wants|
       wants.html { render action: request.path[1..-1] }
-      wants.json { render json: Hash["response_status" => status, "response_message" => exception] }
+      wants.json { render json: Hash['response_status' => status, 'response_message' => exception] }
     end
   end
 
   protected
 
   def layout_by_resource
-    if devise_controller?
-      "admin"
-    end
+    'admin' if devise_controller?
   end
 
   protected
 
-  def request_http_token_authentication(realm = "Application")
-    self.headers["WWW-Authenticate"] = %(Token realm="#{realm.gsub(/"/, "")}")
-    render json: Hash["response_status" => "ERROR", "response_message" => "Access denied"], :status => :unauthorized
+  def request_http_token_authentication(realm = 'Application')
+    headers['WWW-Authenticate'] = %(Token realm="#{realm.gsub(/"/, '')}")
+    render json: Hash['response_status' => 'ERROR', 'response_message' => 'Access denied'], status: :unauthorized
   end
-
 end
