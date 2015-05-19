@@ -222,7 +222,7 @@ class V6::OverallTimeline
     end
   end
 
-  def serailize_member_detail_as_json(member_of_share)
+  def serialize_member_detail_as_json(member_of_share)
     ActiveModel::ArraySerializer.new(member_of_share, serializer_options: { current_member: @member }, each_serializer: MemberSharedDetailSerializer).as_json
   end
 end

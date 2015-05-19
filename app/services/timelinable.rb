@@ -137,7 +137,7 @@ module Timelinable
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
         find_member_share = Member.joins(:share_polls).where("share_polls.poll_id = #{poll_member.poll_id}")
-        shared = Hash["shared" => true, "shared_by" => serailize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
+        shared = Hash["shared" => true, "shared_by" => serialize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
 
         list_polls << find_poll
         list_shared << shared

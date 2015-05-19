@@ -235,7 +235,7 @@ class OverallTimeline
       else
         find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
         find_member_share = Member.joins(:share_polls).where("share_polls.poll_id = #{poll_member.poll_id}")
-        shared = Hash["shared" => true, "shared_by" => serailize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
+        shared = Hash["shared" => true, "shared_by" => serialize_member_detail_as_json(find_member_share), "shared_at" => poll_shared_at(poll_member) ]
         if find_poll.present?
           if find_poll.series
             poll_series << find_poll
@@ -283,7 +283,7 @@ class OverallTimeline
     return false  if request == "false"
   end
 
-  def serailize_member_detail_as_json(member_of_share)
+  def serialize_member_detail_as_json(member_of_share)
     ActiveModel::ArraySerializer.new(member_of_share, serializer_options: { current_member: @member }, each_serializer: MemberSharedDetailSerializer).as_json
   end
 
