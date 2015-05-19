@@ -254,6 +254,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'member' do
+    get 'notification_count', to: 'members#notification_count'
     get 'special_code', to: 'members#special_code'
     get 'recommendations',    to: 'members#recommendations'
 

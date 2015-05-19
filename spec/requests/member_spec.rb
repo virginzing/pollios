@@ -221,5 +221,22 @@ RSpec.describe "Member" do
     end
   end
 
+  describe "GET /member/notification_count" do
+    let!(:member_with_notification) {  create(:member, fullname: 'Nuttapon', notification_count: 10, request_count: 5) }
+
+    before do
+      get "/member/notification_count.json", { member_id: member_with_notification.id }, { 'Accept' => 'application/json' }
+    end
+
+    it "be successfully" do
+      expect(json['response_status']).to eq('OK')
+    end
+
+    it "has 10 notifications and 5 requests" do
+      expect(json['notify_count']).to eq(10)
+      expect(json['request_count']).to eq(5)
+    end
+  end
+
 
 end

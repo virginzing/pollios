@@ -1,8 +1,6 @@
 if @notify
   json.response_status "OK"
-  json.request @current_member.request_count
-  json.notify @current_member.notification_count
-
+  
   json.notify @notify do |notify|
     json.notify_id notify.id
 
