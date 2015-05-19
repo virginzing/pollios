@@ -16,7 +16,7 @@ class AddFollowWorker
 
     find_recipient ||= Member.where(id: friend_id).uniq
 
-    device_ids = find_recipient.collect { |u| u.apn_devices.collect(&:id) }.flatten
+    device_ids = find_recipient.flat_map { |u| u.apn_devices.map(&:id) }
 
     @custom_properties = {
       type: TYPE[:friend],

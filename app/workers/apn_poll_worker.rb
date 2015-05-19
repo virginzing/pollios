@@ -4,12 +4,6 @@ class ApnPollWorker
   
   sidekiq_options unique: true, :retry => 1
 
-  # sidekiq_options :retry => 2
-
-  # sidekiq_retry_in do |count|
-  #   10 * (count + 1)
-  # end
-
   def perform(member_id, poll_id, custom_data = {})
     begin
       @list_apn_notification = []

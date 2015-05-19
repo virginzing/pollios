@@ -7,11 +7,11 @@ class CountNotification
   end
 
   def device_ids
-    @list_member.collect {|u| u.apn_devices.collect(&:id)}.flatten
+    @list_member.flat_map {|u| u.apn_devices.map(&:id) }
   end
 
   def member_ids
-    @list_member.collect {|u| u.apn_devices.collect(&:member_id)}.flatten
+    @list_member.flat_map {|u| u.apn_devices.map(&:member_id) }
   end
 
   def get_hash_list_member_badge_count

@@ -23,7 +23,7 @@ class AddFriendWorker
 
       find_recipient ||= Member.where(id: recipient_id).uniq
 
-      device_ids = find_recipient.collect {|u| u.apn_devices.collect(&:id)}.flatten
+      device_ids = find_recipient.flat_map { |u| u.apn_devices.map(&:id) }
 
       if action == "BecomeFriend"
         @custom_properties = {
@@ -59,9 +59,9 @@ class AddFriendWorker
       end
 
       Apn::App.first.send_notifications
-    # rescue => e
-    #   puts "AddFriendWorker => #{e.message}"
-    # end
+
+    rescue => e
+      puts "AddFriendWorker => #{e.message}"
   end
 
 

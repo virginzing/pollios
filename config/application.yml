@@ -74,7 +74,7 @@ production:
 # password: 9code7app9
 
 ##
-
+# rand(36**64).to_s(36).scan(/.{8}/).join(' ')
 
 # heroku maintenance:on -a codeapp-pollios
 # heroku maintenance:off -a codeapp-pollios
