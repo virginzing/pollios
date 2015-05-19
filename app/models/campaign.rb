@@ -61,12 +61,12 @@ class Campaign < ActiveRecord::Base
     not_receive_reward = list_reward_with_member_ids - receive_reward
 
     #receive
-    campaign_members.where(poll: poll, member_id: receive_reward).find_each do |reward|
+    campaign_members.with_reward_status(:waiting_announce).where(poll: poll, member_id: receive_reward).find_each do |reward|
       reward.update!(serial_code: generate_serial_code, reward_status: :receive)
     end
 
     #not receive
-    campaign_members.where(poll: poll, member_id: not_receive_reward).find_each do |reward|
+    campaign_members.with_reward_status(:waiting_announce).where(poll: poll, member_id: not_receive_reward).find_each do |reward|
       reward.update!(reward_status: :not_receive)
     end
 

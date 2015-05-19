@@ -217,7 +217,7 @@ class FriendsController < ApplicationController
   end
 
   def collection_profile
-    if friend_params[:member] == friend_params[:friend_id]  # me
+    if friend_params[:member_id] == friend_params[:friend_id]  # me
     
       init_list_friend ||= Member::ListFriend.new(@current_member)
 

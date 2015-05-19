@@ -20,7 +20,7 @@
     <%= form_tag '/campaign/confirm_lucky_of_poll', method: :post, remote: true, class: 'confirm_lucky' do %>
       <%= hidden_field_tag 'poll_id', poll.id %>
       <%= hidden_field_tag 'member_id', @uniq_history_votes.map(&:member_id) %>
-      <%= submit_tag "Confirm", class: 'btn btn-primary', data: { disable_with: "Please wait.." }%>
+      <%= submit_tag "Confirm", class: 'btn btn-primary', data: { disable_with: "Please wait..", confirm: 'Are you sure?' }%>
     <% end %>
   </div>
 </div>

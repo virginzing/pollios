@@ -6,8 +6,8 @@
   <p><b>Used: </b><%= campaign.used %></p>
   <p><b>Limit: </b><%= campaign.limit %></p>
   <p><b>Campaign Type: </b><%= campaign.type_campaign_text %></p>
-  <p><b>Announce On: </b><%= campaign.announce_on.strftime("%d %B %Y") %></p>
-  <p><b>Expire: </b><%= campaign.expire.strftime("%d %B %Y") %></p>
+  <p><b>Announce On: </b><%= campaign.decorate.show_announce_on %></p>
+  <p><b>Expire: </b><%= campaign.decorate.show_expire %></p>
 </div>
 
 <h2><strong>User vote this poll</strong></h2>
@@ -16,9 +16,8 @@
   <p><b>Vote count: </b><%= poll.decorate.get_vote_count %></p>
 </div>
 
-<h2><strong>Random user voted this poll</strong></h2>
-
 <% if campaign.random_later? %>
+  <h2><strong>Random user voted this poll</strong></h2>
   <%= render 'random_reward_of_poll', campaign: campaign %>
 <% end %>
 
