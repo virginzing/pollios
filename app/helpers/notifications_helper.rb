@@ -29,13 +29,13 @@ module NotificationsHelper
   #   add_double_quotation(custom_message)
   # end
 
-  def truncate_message(message, limit_message_byte = 105, decrement_byte = 8)
+  def truncate_message(message, limit_message_byte = 90, decrement_byte = 8)
     message = message.sub(/\n\n/, ' ')
 
     begin
       limit_message_byte = limit_message_byte - decrement_byte
       limit_message = message.mb_chars.limit(limit_message_byte).to_s
-    end while limit_message.to_json.bytesize > 107
+    end while limit_message.to_json.bytesize > 92
 
     if limit_message != message
       limit_message = limit_message + "...\""
