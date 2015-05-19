@@ -5,6 +5,7 @@ class ApnNotReceiveRandomRewardPollWorker
   sidekiq_options unique: true
 
   def perform(sender_id, poll_id, list_member)
+    @list_apn_notification = []
     sender = Member.cached_find(sender_id)
     poll = Poll.cached_find(poll_id)
 
