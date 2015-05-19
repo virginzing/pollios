@@ -4,10 +4,11 @@ class OneGiftWorker
 
   sidekiq_options unique: true
 
-  def perform(receive_id, custom_data = nil)
+  def perform(receive_id, reward_id, custom_data = nil)
     begin
 
       @receive = Member.find_by(id: receive_id)
+      @reward = CampaignMember.cached_find(reward_id)
 
       raise ArgumentError.new("Member not found") if @receive.nil?
 
@@ -24,7 +25,8 @@ class OneGiftWorker
       hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
       @custom_properties = {
-        type: TYPE[:reward]
+        type: TYPE[:reward],
+        reward_id: @reward.id
       }
 
       find_recipient_notify.each_with_index do |member, index|

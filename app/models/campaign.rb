@@ -117,10 +117,16 @@ class Campaign < ActiveRecord::Base
     @reward
   end
 
-  def free_reward(member_id)
-    @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
+  def free_reward(member_id, gift_log = nil)
+    if gift_log.nil?
+      @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
+    else
+      @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true, gift_log_id: gift_log.id)
+    end
+    
     increment!(:used)
     Rails.cache.delete([member_id, 'reward'])
+    @reward
   end
 
   def prediction_questionnaire(member_id, poll_series_id)

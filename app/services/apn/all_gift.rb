@@ -23,8 +23,11 @@ class Apn::AllGift
 
   def send
     recipient_ids.each do |member_id|
-      campaign.free_reward(member_id)
+      reward = campaign.free_reward(member_id, @gift_log)
     end
   end
 
+  def hash_member_ids_with_reward
+    CampaignMember.joins(:member, :campaign).with_reward_status(:receive).where(gift_log_id: @gift_log.id).inject({}) {|h,v| h[v.member_id] = v.id; h }
+  end
 end

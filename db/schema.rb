@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515095152) do
+ActiveRecord::Schema.define(version: 20150519112238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,10 +219,12 @@ ActiveRecord::Schema.define(version: 20150515095152) do
     t.boolean  "gift",           default: false
     t.integer  "reward_status"
     t.datetime "deleted_at"
+    t.integer  "gift_log_id"
   end
 
   add_index "campaign_members", ["campaign_id"], name: "index_campaign_members_on_campaign_id", using: :btree
   add_index "campaign_members", ["deleted_at"], name: "index_campaign_members_on_deleted_at", using: :btree
+  add_index "campaign_members", ["gift_log_id"], name: "index_campaign_members_on_gift_log_id", using: :btree
   add_index "campaign_members", ["member_id"], name: "index_campaign_members_on_member_id", using: :btree
   add_index "campaign_members", ["poll_series_id"], name: "index_campaign_members_on_poll_series_id", using: :btree
   add_index "campaign_members", ["redeemer_id"], name: "index_campaign_members_on_redeemer_id", using: :btree

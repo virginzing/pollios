@@ -219,8 +219,8 @@ class Authentication
         add_redeemer_to_company if create_member_via_company? && redeemer.present?
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
-        @member.free_reward_first_signup
-        OneGiftWorker.perform_async(@member.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+        @reward = @member.free_reward_first_signup
+        OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
       end
 
     end

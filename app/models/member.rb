@@ -360,7 +360,10 @@ class Member < ActiveRecord::Base
 
   def free_reward_first_signup
     campaign_first_signup = Campaign.where("reward_info -> 'first_signup' = ?", "true").first
-    campaign_first_signup.free_reward(id) if campaign_first_signup
+    if campaign_first_signup
+      reward = campaign_first_signup.free_reward(id)
+    end
+    reward
   end
 
   def create_group_surveyor(group_id)
