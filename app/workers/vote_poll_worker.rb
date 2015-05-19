@@ -80,5 +80,4 @@ class VotePollWorker
       puts "VotePollWorker => #{e.message}"
     end
   end
-
 end

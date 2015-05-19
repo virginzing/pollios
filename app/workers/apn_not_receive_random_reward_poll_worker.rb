@@ -32,6 +32,7 @@ class ApnNotReceiveRandomRewardPollWorker
     device_ids.each_with_index do |device_id, index|
       apn_custom_properties = {
         type: TYPE[:reward],
+        reward_id: list_hash_reward_with_member_ids[member_ids[index]],
         notify: hash_list_member_badge[member_ids[index]]
       }
 
@@ -57,7 +58,7 @@ class ApnNotReceiveRandomRewardPollWorker
 
     Apn::App.first.send_notifications
 
-  # rescue => e
-  #   "ApnNotReceiveRandomRewardPollWorker => #{e.message}"
+  rescue => e
+    "ApnNotReceiveRandomRewardPollWorker => #{e.message}"
   end
 end
