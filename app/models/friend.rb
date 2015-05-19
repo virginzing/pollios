@@ -121,48 +121,47 @@ class Friend < ActiveRecord::Base
     status
   end
 
-  def self.add_following(member, friend)
-    friend_id = friend[:friend_id]
-    member_id = friend[:member_id]
+  def self.add_following(member, options)
+    friend_id = options[:friend_id]
+    member_id = options[:member_id]
 
-    begin
-      friend = Member.cached_find(friend_id)
+    friend = Member.cached_find(friend_id)
 
-      find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).first
+    init_list_member = Member::ListFriend.new(member)
 
-      if find_is_friend.present?
-        find_is_friend.update(following: true)
-      else
-        create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
-      end
+    find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).first
 
-      FlushCached::Member.new(member).clear_list_friends
-      FlushCached::Member.new(friend).clear_list_followers
+    fail ExceptionHandler::UnprocessableEntity, "You had followed this official account already." if init_list_member.following.map(&:id).include?(friend.id)
 
-      Activity.create_activity_friend( member, friend ,'Follow')
-      # AddFollowWorker.perform_async(member.id, friend.id, { action: 'Follow' } ) unless Rails.env.test?
-
-      friend
-    rescue => e
-      puts "error => #{e}"
+    if find_is_friend.present?
+      find_is_friend.update(following: true)
+    else
+      create!(follower_id: member_id, followed_id: friend_id, status: :nofriend, following: true)
     end
 
+    FlushCached::Member.new(member).clear_list_friends
+    FlushCached::Member.new(friend).clear_list_followers
+
+    Activity.create_activity_friend( member, friend ,'Follow')
+    friend
   end
 
-  def self.unfollow(friend)
-    friend_id = friend[:friend_id]
-    member_id = friend[:member_id]
+  def self.unfollow(options)
+    friend_id = options[:friend_id]
+    member_id = options[:member_id]
 
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
+    init_list_member = Member::ListFriend.new(member)
+
+    fail ExceptionHandler::UnprocessableEntity, "You're not follow this official before." unless init_list_member.following.map(&:id).include?(friend.id)
+
     find_following = where(follower_id: member_id, followed_id: friend_id, status: -1).first
 
     if find_following.present?
-
       FlushCached::Member.new(member).clear_list_friends
       FlushCached::Member.new(friend).clear_list_followers
-
       find_following.destroy
     else
       false
