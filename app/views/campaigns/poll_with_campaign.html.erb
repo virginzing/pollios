@@ -1,0 +1,71 @@
+<h2><strong>Campaign Detail</strong></h2>
+<div class="well">
+  <p><b>Name: </b><%= campaign.name %></p>
+  <p><b>Description: </b><%= campaign.description %></p>
+  <p><b>How to redeem: </b><%= campaign.how_to_redeem %></p>
+  <p><b>Used: </b><%= campaign.used %></p>
+  <p><b>Limit: </b><%= campaign.limit %></p>
+  <p><b>Campaign Type: </b><%= campaign.type_campaign_text %></p>
+  <p><b>Announce On: </b><%= campaign.announce_on.strftime("%d %B %Y") %></p>
+  <p><b>Expire: </b><%= campaign.expire.strftime("%d %B %Y") %></p>
+</div>
+
+<h2><strong>User vote this poll</strong></h2>
+
+<div class='well'>
+  <p><b>Vote count: </b><%= poll.decorate.get_vote_count %></p>
+</div>
+
+<h2><strong>Random user voted this poll</strong></h2>
+
+<% if campaign.random_later? %>
+  <%= render 'random_reward_of_poll', campaign: campaign %>
+<% end %>
+
+<section id="widget-grid" class="" style="margin-top: 30px;">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-poll-<%= poll.id %>-with-campaign-<%= campaign.id %>" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>Reward</strong></h2>          
+    </header>
+
+    <!-- widget div-->
+    <div>
+      <!-- widget content -->
+      <div class="widget-body no-padding">
+
+        <table class="table table-striped table-bordered table-hover" id="collection_voter_with_campaign">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Member</th>
+              <th>Serail code</th>
+              <th>Ref no</th>
+              <th>Reward Status</th>
+              <th>Redeem</th>
+              <th>Redeem at</th>
+              <th>Redeemer</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% @list_reward.each do |cm| %>
+            <tr>
+              <td><%= cm.id %></td>
+              <td><%= cm.member.fullname %></td>
+              <td><%= cm.serial_code %></td>
+              <td><%= cm.ref_no %></td>
+              <td><%= cm.reward_status_text %></td>
+              <td><%= cm.redeem %></td>
+              <td><%= cm.redeem_at %></td>
+              <td><%= cm.redeemer_id %></td>
+              <td><%= link_to '' %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</section>

@@ -43,7 +43,11 @@
 
           <div class="qrcode">
             <div class="btn btn-default" data-toggle="modal" data-target="#qrcode_poll" rel="tooltip" data-original-title="Qrcode"><i class="fa fa-qrcode"></i></div>
+            <% if poll.get_campaign %>
+              <%= link_to 'Campaign Management', company_poll_with_campaign_path(poll), class: 'btn btn-default btn-success' %>
+            <% end %>
           </div>
+
 
         </div>
       </div> <!-- widget-->

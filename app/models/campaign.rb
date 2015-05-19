@@ -55,6 +55,26 @@ class Campaign < ActiveRecord::Base
     # end
   end
 
+  def update_reward_random_of_poll(poll, list_member)
+    list_reward_with_member_ids = campaign_members.where(poll: poll).pluck(:member_id)
+    receive_reward = list_member
+    not_receive_reward = list_reward_with_member_ids - receive_reward
+
+    #receive
+    campaign_members.where(poll: poll, member_id: receive_reward).find_each do |reward|
+      reward.update!(serial_code: generate_serial_code, reward_status: :receive)
+    end
+
+    #not receive
+    campaign_members.where(poll: poll, member_id: not_receive_reward).find_each do |reward|
+      reward.update!(reward_status: :not_receive)
+    end
+
+    update!(used: used + receive_reward.size)
+    
+    true
+  end
+
   def check_campaign_poll
     old_poll_ids = polls.pluck(:id)
     edit_poll_ids = poll_ids.class == Array ? poll_ids.delete_if {|e| e == "" } : poll_ids.split(",").collect{|id| id.to_i }.delete_if {|e| e == "" }

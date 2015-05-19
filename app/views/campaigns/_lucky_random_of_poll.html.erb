@@ -1,0 +1,38 @@
+<div class="well" style="margin-top: 40px;">
+
+<h2><strong>Random Result</strong></h2>
+<div class="row">
+  <% history_votes.each do |hv| %>
+  
+  <div class="col col-md-2">
+    <div class="thumbnail">
+      <img src="<%= hv.member.avatar.url(:thumbnail) %>">
+      <div class="caption">
+         <p><%= hv.member.get_name %></p>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col col-md-12">
+    <%= form_tag '/campaign/confirm_lucky_of_poll', method: :post, remote: true, class: 'confirm_lucky' do %>
+      <%= hidden_field_tag 'poll_id', poll.id %>
+      <%= hidden_field_tag 'member_id', @uniq_history_votes.map(&:member_id) %>
+      <%= submit_tag "Confirm", class: 'btn btn-primary', data: { disable_with: "Please wait.." }%>
+    <% end %>
+  </div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".confirm_lucky").on('ajax:send', function(xhr) {
+      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    }).on('ajax:success', function (data, status, xhr) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    });
+  });
+</script>

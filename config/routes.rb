@@ -115,6 +115,8 @@ Pollios::Application.routes.draw do
     # post ':id/predict',        to: 'campaigns#predict'
     get 'check_redeem',     to: 'campaigns#check_redeem'
     post ':id/random_later',  to: 'campaigns#random_later'
+    post ':id/random_later_of_poll',  to: 'campaigns#random_later_of_poll'
+    post 'confirm_lucky_of_poll', to: 'campaigns#confirm_lucky_of_poll'
     post 'confirm_lucky',   to: 'campaigns#confirm_lucky'
     post 'claim_reward',  to: 'campaigns#claim_reward'
   end
@@ -453,6 +455,9 @@ Pollios::Application.routes.draw do
 
     get 'polls',    to: 'companies#list_polls',     as: :company_polls
     get 'poll/:id', to: 'companies#poll_detail',    as: :company_poll_detail
+
+    get 'poll/:id/campaign',  to: 'campaigns#poll_with_campaign', as: :company_poll_with_campaign
+
     get 'poll/:id/edit', to: 'companies#edit_poll', as: :company_edit_poll
     put 'poll/:id', to: 'companies#update_poll',  as: :company_update_poll
 

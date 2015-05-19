@@ -8,6 +8,8 @@ class CampaignsController < ApplicationController
   before_action :set_reward, only: [:claim_reward]
 
   expose(:reward) { @reward }
+  expose(:campaign) { @campaign }
+  expose(:poll) { @poll }
 
   def claim_reward
     @claim = false
@@ -36,6 +38,35 @@ class CampaignsController < ApplicationController
   def list_reward
     @rewards = CampaignMember.without_deleted.list_reward(@current_member.id).paginate(page: params[:next_cursor])
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page
+  end
+
+  def poll_with_campaign
+    @poll = Poll.find(params[:id])
+    @campaign = @poll.campaign
+    @list_reward = CampaignMember.joins(:member, :poll).where(poll: @poll, campaign: @campaign)
+  end
+
+  def random_later_of_poll
+    number_luck = params[:number_luck].to_i
+    poll_id = params[:poll_id]
+    @poll = Poll.find(params[:poll_id])
+    @history_votes = HistoryVote.joins(:member, :poll).where('polls.id = ?', poll_id).sample(number_luck)
+    @uniq_history_votes = @history_votes.uniq {|e| e.member_id }
+    
+    respond_to do |wants|
+      wants.js
+    end
+  end
+
+  def confirm_lucky_of_poll
+    @poll = Poll.find(params[:poll_id])
+    @campaign = @poll.campaign
+    member_ids_receive_reward = params[:member_id].split().map(&:to_i)
+    @confirm = @campaign.update_reward_random_of_poll(@poll, member_ids_receive_reward)
+
+    respond_to do |wants|
+      wants.js
+    end
   end
 
   def load_poll

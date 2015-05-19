@@ -1,0 +1,11 @@
+$.confirm = <%= raw @confirm || false %>;
+
+if ($.confirm) {
+  handleConfirmSuccess();
+} else {
+
+};
+
+function handleConfirmSuccess() {
+  window.location.href = "<%= redirect_back company_poll_with_campaign_url(poll) %>";
+}
