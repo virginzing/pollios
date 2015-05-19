@@ -31,7 +31,7 @@ class ApnNotReceiveRandomRewardPollWorker
     device_ids.each_with_index do |device_id, index|
       apn_custom_properties = {
         type: TYPE[:reward],
-        notify: hash_list_member_badge[member.id]
+        notify: hash_list_member_badge[member_ids[index]]
       }
 
       @notf = Apn::Notification.new

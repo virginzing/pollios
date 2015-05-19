@@ -73,8 +73,8 @@ class Campaign < ActiveRecord::Base
     update!(used: used + receive_reward.size)
     
     unless Rails.env.test?
-      ApnReceiveRandomRewardPollWorker.perform_async(poll.member_id, poll.id, receive_reward)
-      ApnNotReceiveRandomRewardPollWorker.perform_async(poll.member_id, poll.id, not_receive_reward)
+      ApnReceiveRandomRewardPollWorker.perform_in(5.second, poll.member_id, poll.id, receive_reward)
+      ApnNotReceiveRandomRewardPollWorker.perform_in(5.second, poll.member_id, poll.id, not_receive_reward)
     end
 
     true
