@@ -43,7 +43,7 @@ class CampaignsController < ApplicationController
   def poll_with_campaign
     @poll = Poll.find(params[:id])
     @campaign = @poll.campaign
-    @list_reward = CampaignMember.joins(:member, :poll).where(poll: @poll, campaign: @campaign)
+    @list_reward = CampaignMember.joins(:poll).includes(:member).where(poll: @poll, campaign: @campaign)
   end
 
   def random_later_of_poll

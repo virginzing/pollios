@@ -22,7 +22,7 @@ class ApnReceiveRandomRewardPoll
   end 
 
   def list_hash_reward_with_member_ids
-    CampaignMember.joins(:member).with_reward_status(:receive).where(poll: poll).inject({}) {|h,v| h[v.member_id] = v.id; h }
+    CampaignMember.joins(:member).with_reward_status(:receive).where(poll: @poll).inject({}) {|h,v| h[v.member_id] = v.id; h }
   end
   
   
