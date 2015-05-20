@@ -32,8 +32,10 @@ class Friend < ActiveRecord::Base
 
         init_member_list_friend ||= Member::ListFriend.new(@member)
         member_friend_active = init_member_list_friend.active.map(&:id)
+        member_invite_friend = init_member_list_friend.your_request.map(&:id)
 
-        raise ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} is friends." if member_friend_active.include?(@friend.id)
+        fail ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} is friends." if member_friend_active.include?(@friend.id)
+        fail ExceptionHandler::UnprocessableEntity, "You had already added friend with #{@friend.get_name}" if member_invite_friend.include?(@friend.id)
 
         find_invite = where(follower: @member, followed: @friend).first_or_initialize do |friend|
           friend.follower = @member
