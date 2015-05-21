@@ -132,7 +132,9 @@
                           <form role="form" action="<%= update_profile_path %>" method="post" class="smart-form" enctype="multipart/form-data">
                             <div class="form-group dropzone-photo">
                               <input type="hidden" name="member_id" value="<%= @current_member.id %>">
-                              <input type="file" class="default" name="avatar" id="drop_avatar" accept="image/png, image/jpeg, image/gif"/>
+                              <input type="file" class="default" name="avatar" id="drop_avatar" accept="image/png, image/jpeg"/>
+                              <br>
+                              <span class="note">Recommended size image by 170x170 ans support file type as image/png, image/jpg and image/jpeg.</span>
                             </div>
 
                             <footer>
