@@ -84,7 +84,8 @@ class Recommendation
 
   def find_office_account
     following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
-    query = Member.with_member_type(:company, :celebrity).where(show_recommend: true).order("created_at desc").limit(500)
+    # query = Member.with_member_type(:company, :celebrity).where(show_recommend: true).order("created_at desc").limit(500)
+    query = Member.where("(member_type = 3 AND show_recommend = 't') OR (member_type = 1)").order("created_at desc").limit(500)
     query = query.where("id NOT IN (?)", following) if following.size > 0
     query = query.where("id NOT IN (?)", unrecommended) if unrecommended.size > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.size > 0
