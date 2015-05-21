@@ -603,7 +603,7 @@ class CompaniesController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.cached_find(params[:id])
+    @poll = Poll.find_by(id: params[:id])
   end
 
   def update_poll_params

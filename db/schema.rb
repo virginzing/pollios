@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519112238) do
+ActiveRecord::Schema.define(version: 20150521064116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -790,6 +790,17 @@ ActiveRecord::Schema.define(version: 20150519112238) do
 
   add_index "poll_attachments", ["poll_id"], name: "index_poll_attachments_on_poll_id", using: :btree
 
+  create_table "poll_companies", force: true do |t|
+    t.integer  "poll_id"
+    t.integer  "company_id"
+    t.string   "post_from"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_companies", ["company_id"], name: "index_poll_companies_on_company_id", using: :btree
+  add_index "poll_companies", ["poll_id"], name: "index_poll_companies_on_poll_id", using: :btree
+
   create_table "poll_groups", force: true do |t|
     t.integer  "poll_id"
     t.integer  "group_id"
@@ -849,6 +860,17 @@ ActiveRecord::Schema.define(version: 20150519112238) do
   end
 
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree
+
+  create_table "poll_series_companies", force: true do |t|
+    t.integer  "poll_series_id"
+    t.integer  "company_id"
+    t.string   "post_from"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "poll_series_companies", ["company_id"], name: "index_poll_series_companies_on_company_id", using: :btree
+  add_index "poll_series_companies", ["poll_series_id"], name: "index_poll_series_companies_on_poll_series_id", using: :btree
 
   create_table "poll_series_groups", force: true do |t|
     t.integer  "poll_series_id"

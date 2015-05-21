@@ -46,7 +46,7 @@ class GroupController < ApplicationController
         @group.remove_old_cover
       end
 
-      Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.is_company?
+      Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.company?
       FlushCached::Group.new(@group).clear_list_group_all_member_in_group
     end
   end
@@ -211,7 +211,7 @@ class GroupController < ApplicationController
       if find_member_in_group.present?
         find_group = find_member_in_group.group
 
-        if find_group.is_company? ## Is it group of company?
+        if find_group.company? ## Is it group of company?
           find_role_member = find_member.roles.first
 
           if find_role_member.present?

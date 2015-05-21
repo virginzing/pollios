@@ -154,7 +154,7 @@ class Group < ActiveRecord::Base
       find_group_member.group.increment!(:member_count)
       find_group_member.update_attributes!(active: true)
 
-      if @group.group_type_company? && !@group.system_group
+      if @group.company? && !@group.system_group
         CompanyMember.add_member_to_company(@member, @group.get_company) 
         Activity.create_activity_group(@member, @group, 'Join') 
       end
@@ -251,7 +251,7 @@ class Group < ActiveRecord::Base
           GroupMember.create!(member_id: @friend.id, active: true, is_master: false, group_id: @group.id)
         end
 
-        if @group.group_type_company? && !@group.system_group
+        if @group.company? && !@group.system_group
           CompanyMember.add_member_to_company(@friend, @group.get_company)  
         end
 
@@ -431,7 +431,7 @@ class Group < ActiveRecord::Base
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_group = find_member_in_group.group
 
-        if find_group.is_company? ## Is it group of company?
+        if find_group.company? ## Is it group of company?
           find_member = find_member_in_group.member
 
           find_role_member = find_member.roles.first
@@ -541,9 +541,9 @@ class Group < ActiveRecord::Base
     admin_post_only.present? ? true : false
   end
 
-  def company?
-    group_company.present?
-  end
+  # def company?
+  #   group_company.present?
+  # end
 
   def as_json options={}
     {

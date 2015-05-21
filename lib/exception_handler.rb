@@ -101,6 +101,10 @@ module ExceptionHandler
     redirect_to users_signin_path
   end
 
+  def site_not_found
+    render 'mobiles/errors/404'
+  end
+
   def mobile_not_found
     render 'mobiles/errors/404'
   end

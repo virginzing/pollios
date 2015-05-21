@@ -62,6 +62,8 @@ class Poll < ActiveRecord::Base
   has_many :triggers, as: :triggerable
   has_many :member_report_comments
   
+  has_one :poll_company
+  
   belongs_to :member
   belongs_to :poll_series
   belongs_to :campaign
@@ -614,6 +616,7 @@ class Poll < ActiveRecord::Base
 
         if @poll.valid? && choices
           @poll.save!
+          PollCompany.create_poll(@poll, member.get_company, :mobile) if member.company?
           
           if photo_poll && init_photo_poll.from_image_url?
             @poll.update_column(:photo_poll, init_photo_poll.split_cloudinary_url)

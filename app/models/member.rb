@@ -270,21 +270,6 @@ class Member < ActiveRecord::Base
 
   end
 
-  # def slug_candidates
-  #   [
-  #     :fullname,
-  #     [:id, :fullname]
-  #   ]
-  # end
-
-  # def should_generate_new_friendly_id?
-  #   fullname_changed? || super
-  # end
-
-  # def set_public_id
-  #   update!(public_id: "M.Pollios" << self.id.to_s)
-  # end
-
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @member = find_by(id: id)
