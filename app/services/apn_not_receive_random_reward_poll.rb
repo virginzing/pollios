@@ -2,9 +2,10 @@ class ApnNotReceiveRandomRewardPoll
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
-  def initialize(sender, poll, list_member)
+  def initialize(sender, poll, list_member, message = nil)
     @sender = sender
     @poll = poll
+    @message = message
     @list_member = list_member
   end
 
@@ -17,7 +18,7 @@ class ApnNotReceiveRandomRewardPoll
   end
 
   def custom_message
-    message = "#{@sender.get_name} announce reward. Sorry! You don't get reward"
+    message = @message || "#{@sender.get_name} announce reward. Sorry! You don't get reward"
     truncate_message(message)
   end 
 

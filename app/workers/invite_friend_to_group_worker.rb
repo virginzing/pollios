@@ -1,4 +1,4 @@
-class InviteFriendWorker
+class InviteFriendToGroupWorker
   include Sidekiq::Worker
   include SymbolHash
 
@@ -63,6 +63,6 @@ class InviteFriendWorker
 
     Apn::App.first.send_notifications
   rescue => e
-    puts "InviteFriendWorker => #{e.message}"
+    puts "InviteFriendToGroupWorker => #{e.message}"
   end
 end

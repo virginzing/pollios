@@ -372,7 +372,7 @@ class Group < ActiveRecord::Base
 
       FlushCached::Group.new(group).clear_list_members
 
-      InviteFriendWorker.perform_async(member_id, list_friend, group_id, custom_data) unless Rails.env.test?
+      InviteFriendToGroupWorker.perform_async(member_id, list_friend, group_id, custom_data) unless Rails.env.test?
     end
 
     group
