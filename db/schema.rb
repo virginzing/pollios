@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150521064116) do
+ActiveRecord::Schema.define(version: 20150521072906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -857,8 +857,10 @@ ActiveRecord::Schema.define(version: 20150521064116) do
     t.boolean  "in_group",       default: false
     t.integer  "recurring_id"
     t.boolean  "feedback",       default: false
+    t.datetime "deleted_at"
   end
 
+  add_index "poll_series", ["deleted_at"], name: "index_poll_series_on_deleted_at", using: :btree
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree
 
   create_table "poll_series_companies", force: true do |t|

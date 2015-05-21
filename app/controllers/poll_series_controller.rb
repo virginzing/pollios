@@ -164,54 +164,6 @@ class PollSeriesController < ApplicationController
     puts "error: #{@poll_series.errors.full_messages}"
   end
 
-  # def create
-  #   PollSeries.transaction do
-  #     is_public = true
-  #     in_group_ids = "0"
-  #     @expire_date = poll_series_params["expire_date"].to_i
-
-  #     @poll_series = current_member.poll_series.new(poll_series_params)
-  #     @poll_series.expire_date = set_expire_date
-  #     @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
-
-  #     @poll_series.allow_comment = poll_series_params[:allow_comment] == "on" ? true : false
-  #     @poll_series.qr_only = poll_series_params[:qr_only] == "on" ? true : false
-  #     @poll_series.require_info = poll_series_params[:require_info] == "on" ? true : false
-
-  #     if current_member.get_company.present?
-  #       is_public = false
-  #       @poll_series.in_group = true
-  #       @poll_series.in_group_ids = poll_series_params[:group_id].select{|e| e if e.present? }.join(",")
-  #     end
-
-  #     @poll_series.public = is_public
-
-  #     type_series = poll_series_params["type_series"]
-
-  #     if type_series == "1"
-  #       @poll_series.same_choices = params[:same_choices].delete_if {|choice| choice == "" }
-  #     end
-
-  #     if @poll_series.save
-  #       @poll_series.in_group_ids.split(",").each do |group_id|
-  #         PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    
-  #       end
-  #       flash[:success] = "Successfully created poll series."
-  #       redirect_to company_questionnaires_path
-  #     else
-  #       flash[:error] = @poll_series.errors.full_messages
-  #       if poll_series_params["type_series"] == "0"
-  #         render action: 'normal'
-  #       else
-  #         flash[:error] = "Something went wrong"
-  #         redirect_to same_choice_questionnaire_path
-  #       end
-  #     end
-  #     Rails.cache.delete([current_member.id, 'my_questionnaire'])
-  #     # puts "error: #{@poll_series.errors.full_messages}"
-  #   end
-  # end
-
   def create
     PollSeries.transaction do
       # is_public = true
@@ -239,6 +191,8 @@ class PollSeriesController < ApplicationController
       end
 
       if @poll_series.save
+        PollSeriesCompany.create_poll_series(@poll_series, current_member.get_company, :web)
+        
         if @poll_series.in_group
           @poll_series.in_group_ids.split(",").each do |group_id|
             PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    

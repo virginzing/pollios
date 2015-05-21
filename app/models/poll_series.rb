@@ -1,41 +1,46 @@
 class PollSeries < ActiveRecord::Base
+  acts_as_paranoid
+
   include PollSeriesHelper
   attr_accessor :tag_tokens, :same_choices, :expire_within, :group_id, :branch_list
 
   belongs_to :member
   belongs_to :campaign
 
-  has_many :polls, -> { unscope(:order).order('polls.order_poll asc') }, dependent: :destroy
+  has_many :polls, -> { unscope(:order).order('polls.order_poll asc') }
 
-  has_many :suggests, dependent: :destroy
+  has_many :suggests
 
-  has_many :campaign_members, dependent: :destroy
+  has_many :campaign_members
 
-  has_many :history_view_questionnaires, dependent: :destroy
-  has_many :poll_series_tags, dependent: :destroy
+  has_many :history_view_questionnaires
+  has_many :poll_series_tags
   has_many :tags, through: :poll_series_tags, source: :tag
 
-  has_many :history_votes, dependent: :destroy
+  has_many :history_votes
   has_many :who_voted,  through: :history_votes, source: :member
 
-  has_many :poll_series_groups, dependent: :destroy
+  has_many :poll_series_groups
   has_many :groups, through: :poll_series_groups, source: :group
 
   has_many :un_see_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
 
-  has_one :branch_poll_series, dependent: :destroy
+  has_one :branch_poll_series
   has_one :branch, through: :branch_poll_series, source: :branch
 
-  has_one :collection_poll_series_branch, dependent: :destroy
+  has_one :collection_poll_series_branch
   has_one :collection_poll_series, through: :collection_poll_series_branch, source: :collection_poll_series
-
 
   validates :description, presence: true
 
   accepts_nested_attributes_for :polls, :reject_if => lambda { |a| a[:title].blank? }, :allow_destroy => true
 
   self.per_page = 10
+
+  default_scope { with_deleted }
+
+  scope :without_deleted, -> { where(deleted_at: nil) }
 
   after_create :set_poll_series
   after_create :generate_qrcode_key
