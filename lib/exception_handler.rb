@@ -37,6 +37,11 @@ module ExceptionHandler
       DELETED = "This poll was deleted from Pollios."
     end
 
+    module PollSeries
+      NOT_FOUND = "Feedback not found."
+      DELETED = "Feedback was deleted from Pollios."
+    end
+
     module Member
       BAN = "Your account is was terminated."
       BLACKLIST = "Your account is being suspended."

@@ -58,7 +58,8 @@ class PollSeries < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @poll_series = find_by(id: id)
-      raise ExceptionHandler::NotFound, "Questionnaire not found" unless @poll_series.present?
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::PollSeries::NOT_FOUND unless @poll_series.present?
+      raise ExceptionHandler::Deleted, ExceptionHandler::Message::PollSeries::DELETED unless @poll_series.deleted_at.nil?
       @poll_series
     end
   end
