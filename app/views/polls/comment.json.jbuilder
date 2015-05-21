@@ -9,9 +9,13 @@ if @comment
     json.message @comment.message
     json.created_at @comment.created_at.to_i
 
-    json.list_mentioned @comment.mentions do |mention|
-      json.member_id mention.mentionable_id
-      json.name mention.mentionable_name
+    if @comment.mentions.size > 0
+      json.list_mentioned @comment.mentions do |mention|
+        json.member_id mention.mentionable_id
+        json.name mention.mentionable_name
+      end
+    else
+      json.list_mentioned ""
     end
 
   end
