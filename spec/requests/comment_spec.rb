@@ -19,15 +19,14 @@ RSpec.describe "Comment" do
     end
 
     context "when disable comment" do
-      it "return forbidden" do
+      it "return 422" do
         poll.update!(allow_comment: false)
-        post "/poll/#{poll.id}/comments.json", { member_id: member.id, message: "test title" }, { "Accept" => "application/json" }
+        post "/poll/#{poll.id}/comments.json", { member_id: member.id, message: "test comment" }, { "Accept" => "application/json" }
 
         expect(json["response_status"]).to eq("ERROR")
-        expect(json["response_message"]).to eq("This poll disallow your comment.")
-        expect(response.status).to eq(403)
+        expect(json["response_message"]).to eq("Poll had already disabled comment.")
+        expect(response.status).to eq(422)
       end
-
     end
 
     describe "DELETE /poll/:id/comments/:comment_id/delete" do
@@ -45,7 +44,6 @@ RSpec.describe "Comment" do
       it "decrement comment count" do
         expect(poll.reload.comment_count).to eq(9)
       end
-
     end
 
 

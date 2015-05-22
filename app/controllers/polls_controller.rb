@@ -689,7 +689,7 @@ class PollsController < ApplicationController
   def comment #post comment
     Comment.transaction do
       begin
-        fail ExceptionHandler::NotAcceptable, 'This poll disallow your comment.' unless @poll.allow_comment
+        fail ExceptionHandler::UnprocessableEntity, 'Poll had already disabled comment.' unless @poll.allow_comment
 
         list_mentioned = comment_params[:list_mentioned]
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
@@ -703,10 +703,8 @@ class PollsController < ApplicationController
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
+        
         render status: :created
-      rescue => e
-        @error_message = e.message
-        render status: :forbidden
       end
     end
   end
