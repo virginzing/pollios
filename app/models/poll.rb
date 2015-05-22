@@ -587,22 +587,20 @@ class Poll < ActiveRecord::Base
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public) && (member.point <= 0)
 
         if in_group
-          init_list_group_active = Member::ListGroup.new(member).active.map(&:id)
-
           list_group_id = in_group_ids.split(",").map(&:to_i)
-
           unless member.company?
             remain_group = member.post_poll_in_group(in_group_ids)
 
             if (remain_group.size > 0)
-              if remain_group != init_list_group_active
-                group_names = Group.where(id: (remain_group - init_list_group_active)).map(&:name).join(', ')
-                @alert_message = "You can't post poll in #{group_names}. because you're no longer group."
+              if remain_group != list_group_id
+                group_names = Group.where(id: (list_group_id - remain_group)).map(&:name).join(', ')
+                @alert_message = "This poll don't show in #{group_names} because you're no longer these group."
               end
               list_group_id = remain_group
             else
-              @alert_message = "You're no longer this group."
-              fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP 
+              group_names = Group.where(id: list_group_id).map(&:name).join(', ')
+              @alert_message = "You're no longer #{group_names}."
+              raise ArgumentError, "You're no longer #{group_names}."
             end
           end
         end
@@ -658,7 +656,7 @@ class Poll < ActiveRecord::Base
 
             @poll.flush_cache
 
-            [@poll, nil]
+            [@poll, nil, @alert_message]
           end
         else
           [nil, @poll.errors.full_messages, @alert_message]

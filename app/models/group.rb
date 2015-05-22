@@ -99,13 +99,11 @@ class Group < ActiveRecord::Base
       join_name = name.scan(/[a-zA-Z0-9_.]+/).join
       public_id = join_name[0..19]
 
-      p exist_count
       if exist_count > 0
         public_id = join_name[0..9] + Time.now.to_i.to_s  
       end
 
       exist_count = exist_count + 1
-      p public_id
     end while Group.exists?(public_id: public_id)     
 
     update!(public_id: public_id)

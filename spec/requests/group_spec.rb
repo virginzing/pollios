@@ -94,7 +94,7 @@ RSpec.describe "Group" do
   describe "POST /group/:id/promote_admin" do
 
     before do
-      create(:group_member, member: friend, group: group, is_master: true, active: true)
+      create(:group_member, member: friend, group: group, active: true, is_master: false)
       post "/group/#{group.id}/promote_admin.json", { friend_id: friend.id, member_id: member.id, admin: true }, { "Accept" => "application/json" }
     end
 
