@@ -469,7 +469,7 @@ class Group < ActiveRecord::Base
         end
 
       else
-        fail ExceptionHandler::NotFound, ExceptionHandler::Message::Group::NOT_IN_GROUP
+        fail ExceptionHandler::NotFound, ExceptionHandler::Message::Group::MEMBER_NOT_IN_GROUP
       end
       
       FlushCached::Group.new(self).clear_list_members
