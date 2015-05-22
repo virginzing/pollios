@@ -427,7 +427,9 @@ class Group < ActiveRecord::Base
       member = Member.cached_find(friend_id)
 
       fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
-      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::ListMember.new(self).is_admin?(member)
+      if admin_status
+        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::ListMember.new(self).is_admin?(member)
+      end
 
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_group = find_member_in_group.group
