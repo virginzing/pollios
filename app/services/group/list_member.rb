@@ -39,6 +39,10 @@ class Group::ListMember
     members_as_admin.map(&:id).include?(member.id) ? true : false  
   end
 
+  # def raise_error_with_out_admin
+  #   fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless is_admin?
+  # end
+
   private
 
   def members

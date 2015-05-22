@@ -69,6 +69,7 @@ module ExceptionHandler
       NOT_IN_GROUP = "You're not in this group."
       NOT_ADMIN = "You're not an admin of group."
       MEMBER_NOT_IN_GROUP = "This user no longer this group."
+      ADMIN = "This user had already admin."
     end
 
     module Reward

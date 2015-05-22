@@ -40,7 +40,7 @@ class Group < ActiveRecord::Base
 
   validates :name, presence: true
 
-  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken." }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters." } ,:allow_blank => true , on: :update
+  validates :public_id , :uniqueness => { message: "Public ID has already been taken." }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters." } ,:allow_blank => true , on: :update
 
   mount_uploader :photo_group, PhotoGroupUploader
   mount_uploader :cover, PhotoGroupUploader
@@ -99,11 +99,13 @@ class Group < ActiveRecord::Base
       join_name = name.scan(/[a-zA-Z0-9_.]+/).join
       public_id = join_name[0..19]
 
+      p exist_count
       if exist_count > 0
         public_id = join_name[0..9] + Time.now.to_i.to_s  
       end
 
       exist_count = exist_count + 1
+      p public_id
     end while Group.exists?(public_id: public_id)     
 
     update!(public_id: public_id)
@@ -424,10 +426,11 @@ class Group < ActiveRecord::Base
 
   def promote_admin(promoter, friend_id, admin_status = true)
     begin
-      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
-
       member = Member.cached_find(friend_id)
-      
+
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::ListMember.new(self).is_admin?(member)
+
       if find_member_in_group = group_members.find_by(member_id: friend_id)
         find_group = find_member_in_group.group
 

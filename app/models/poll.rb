@@ -587,13 +587,22 @@ class Poll < ActiveRecord::Base
         raise ArgumentError, "Point remain 0" if (member.citizen? && is_public) && (member.point <= 0)
 
         if in_group
-          if member.company?
-            list_group_id = in_group_ids.split(",").collect{|e| e.to_i }
-          else
-            if (member.post_poll_in_group(in_group_ids).size > 0)
-              list_group_id = member.post_poll_in_group(in_group_ids)
+          init_list_group_active = Member::ListGroup.new(member).active.map(&:id)
+
+          list_group_id = in_group_ids.split(",").map(&:to_i)
+
+          unless member.company?
+            remain_group = member.post_poll_in_group(in_group_ids)
+
+            if (remain_group.size > 0)
+              if remain_group != init_list_group_active
+                group_names = Group.where(id: (remain_group - init_list_group_active)).map(&:name).join(', ')
+                @alert_message = "You can't post poll in #{group_names}. because you're no longer group."
+              end
+              list_group_id = remain_group
             else
-              raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP 
+              @alert_message = "You're no longer this group."
+              fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP 
             end
           end
         end
@@ -652,11 +661,11 @@ class Poll < ActiveRecord::Base
             [@poll, nil]
           end
         else
-          [nil, @poll.errors.full_messages]
+          [nil, @poll.errors.full_messages, @alert_message]
         end
 
       rescue ArgumentError => detail
-        [@poll = nil, detail.message ]
+        [@poll = nil, detail.message, @alert_message]
       end
 
     end ## transaction
