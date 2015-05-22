@@ -358,6 +358,11 @@ namespace :admin do
     Watched.delete_all
     Watched.connection.execute('ALTER SEQUENCE watcheds_id_seq RESTART WITH 1')
 
+    PollCompany.delete_all
+    PollCompany.connection.execute('ALTER SEQUENCE poll_companies_id_seq RESTART WITH 1')
+
+    PollSeriesCompany.delete_all
+    PollSeriesCompany.connection.execute('ALTER SEQUENCE poll_series_companies_id_seq RESTART WITH 1')
   end
 
 end
