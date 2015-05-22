@@ -113,4 +113,26 @@ RSpec.describe Member, :type => :model do
     end
   end
 
+  describe "#post_poll_in_group" do
+    let!(:member) { create(:member, fullname: "Nutty") }
+    let!(:group) { create(:group, name: "Nutty Group 1") }
+    let!(:group_two) { create(:group, name: "Nutty Group 2") }
+    let!(:group_three) { create(:group, name: "Group 3") }
+
+    let!(:group_member_one) { create(:group_member, member: member, group: group, is_master: true, active: true) }
+    let!(:group_member_two) {  create(:group_member, member: member, group: group_two, is_master: true, active: true) }
+
+    it "has group active" do
+      init_list_group_active = Member::ListGroup.new(member).active.map(&:id)
+      expect(init_list_group_active.size).to eq(2)
+    end
+
+    it "when post poll to group group_three and group_two but user was in group one and group two" do
+      list_group_posting = "#{group_two.id},#{group_three.id}"
+      expect(list_group_posting).to eq("#{group_two.id},#{group_three.id}")
+      expect(member.post_poll_in_group(list_group_posting)).to eq([group_two.id])
+    end
+
+  end
+
 end

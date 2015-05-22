@@ -32,14 +32,9 @@ RSpec.describe Poll, :type => :model do
 
     it "return detail of poll" do
       poll, error_message, alert_message = Poll.create_poll( FactoryGirl.attributes_for(:create_poll).merge(member_id: ex_member.id), ex_member)
-
-      # tag_count = Tag.all.count
-
       expect(poll).to eq(poll) 
-
       expect(poll.qrcode_key.length).to eq(8)
-      # puts "poll => #{poll}"
-      # puts "error_message => #{error_message}"
+      expect(alert_message).to eq(nil)
     end
   end
 
@@ -155,5 +150,13 @@ RSpec.describe Poll, :type => :model do
       expect(poll.reload.notify_state_at.present?).to be true
     end
   end
+
+  describe ".get_choice_count" do
+    it "has 3 choices" do
+      expect(Poll.get_choice_count(["1", "2", "3"])).to eq(3)
+    end
+  end
+
+  
 
 end
