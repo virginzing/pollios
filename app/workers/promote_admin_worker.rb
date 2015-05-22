@@ -24,7 +24,7 @@ class PromoteAdminWorker
     @custom_properties = {
       type: TYPE[:group],
       group_id: group.id,
-      action: TYPE[:promote_admin]
+      action: ACTION[:promote_admin]
     }
 
     find_recipient_notify.each_with_index do |member, index|
