@@ -525,10 +525,14 @@ class CompaniesController < ApplicationController
 
               CompanyMember.add_member_to_company(find_user, this_group.get_company)
               Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
-              
+
               this_group.increment!(:member_count)
               FlushCached::Member.new(find_user).clear_list_groups
               FlushCached::Group.new(this_group).clear_list_members
+
+              unless Rails.env.test?
+                CompanyAddUserToGroupWorker.perform_async(find_user.id, this_group.id, this_group.get_company.id)
+              end
 
               format.json { render json: { error_message: nil }, status: 200 }
             rescue ActiveRecord::RecordNotUnique
