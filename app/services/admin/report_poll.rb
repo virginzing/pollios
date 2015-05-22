@@ -7,7 +7,7 @@ class Admin::ReportPoll
   private
 
   def report_in_friend_and_public
-    Poll.having_status_poll(:gray, :white).where("report_count != 0 AND in_group = 'f'")
+    Poll.having_status_poll(:gray).where("report_count != 0 AND in_group = 'f'")
   end
   
   
