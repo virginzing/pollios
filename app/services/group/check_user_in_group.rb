@@ -13,7 +13,7 @@ class Group::CheckUserInGroup
   end
 
   def raise_error_not_in_group
-    fail ExceptionHandler::NotAcceptable, "You're not in group." unless exists?
+    fail ExceptionHandler::UnprocessableEntity, "You're not in group." unless exists?
   end
 
 end

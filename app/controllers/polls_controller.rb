@@ -267,7 +267,7 @@ class PollsController < ApplicationController
 
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
-            raise ExceptionHandler::NotAcceptable, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
+            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless set_group.get_admin_group.map(&:id).include?(@member_id) || @poll.member_id == @member_id
             if @poll.groups.size > 1
               delete_poll_in_more_group
             else
@@ -773,7 +773,7 @@ class PollsController < ApplicationController
   def raise_exception_without_group
     init_list_group = Member::ListGroup.new(@current_member)
     poll_in_group = @poll.in_group_ids.split(',').map(&:to_i)
-    fail ExceptionHandler::NotAcceptable, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).size == 0)
+    fail ExceptionHandler::UnprocessableEntity, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).size == 0)
   end
 
   def comment_params

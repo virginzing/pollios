@@ -119,7 +119,6 @@ class GroupController < ApplicationController
   end
 
   def detail_group
-    # Group::CheckUserInGroup.new(@current_member, @group).raise_error_not_in_group
     @group_members ||= Group::ListMember.new(@group)
     @member_active = @group_members.join_recently
   end
