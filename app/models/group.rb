@@ -413,7 +413,7 @@ class Group < ActiveRecord::Base
 
         FlushCached::Group.new(self).clear_list_members
       else
-        raise ExceptionHandler::NotFound, ExceptionHandler::Message::Member::NOT_FOUND
+        raise ExceptionHandler::NotFound, ExceptionHandler::Message::Group::MEMBER_NOT_IN_GROUP
       end
 
       FlushCached::Member.new(member).clear_list_groups
