@@ -46,6 +46,7 @@ class CompanyAddUserToGroupWorker
 
     find_recipient.each do |member_receive|
       hash_custom = {
+        action: TYPE[:join],
         group: GroupNotifySerializer.new(group).as_json(),
         notify: hash_list_member_badge[member_receive.id]
       }

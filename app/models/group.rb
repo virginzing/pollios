@@ -424,7 +424,7 @@ class Group < ActiveRecord::Base
 
   def promote_admin(promoter, friend_id, admin_status = true)
     begin
-      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
 
       member = Member.cached_find(friend_id)
       
@@ -449,7 +449,7 @@ class Group < ActiveRecord::Base
               find_member.remove_role :group_admin, find_group
             end
           else
-            raise ExceptionHandler::UnprocessableEntity, "You have already admin of #{find_exist_role_member.name} Company."
+            fail ExceptionHandler::UnprocessableEntity, "You have already admin of #{find_exist_role_member.name} Company."
           end
 
         else
@@ -469,7 +469,7 @@ class Group < ActiveRecord::Base
         end
 
       else
-        raise ExceptionHandler::NotFound, ExceptionHandler::Message::GROUP::NOT_IN_GROUP
+        fail ExceptionHandler::NotFound, ExceptionHandler::Message::Group::NOT_IN_GROUP
       end
       
       FlushCached::Group.new(self).clear_list_members
