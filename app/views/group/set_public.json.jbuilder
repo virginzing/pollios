@@ -1,4 +1,4 @@
-if @group.valid?
+if @group
   json.response_status "OK"
   json.group do
     json.partial! 'response_helper/group/full_info', group: @group

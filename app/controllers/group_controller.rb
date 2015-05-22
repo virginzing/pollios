@@ -189,7 +189,7 @@ class GroupController < ApplicationController
   end
 
   def set_public
-    if @group.update(edit_group_params)
+    if @group.update!(edit_group_params)
       render status: :created
     else
       @error_message = @group.errors.messages[:public_id][0]

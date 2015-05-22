@@ -267,6 +267,7 @@ RSpec.describe "Group" do
   describe "POST /group/:id/set_public" do
     let!(:group) {  create(:group, name: "Wow Group", public: false) }
     let!(:second_group) {  create(:group, name: "second group", public: true) }
+    let!(:member_of_second_group) { create(:group_member, member: member, group: second_group, is_master: true) }
 
     it "success" do
       post "/group/#{group.id}/set_public.json", { member_id: member.id, public: true }, { "Accept" => "application/json" }
@@ -282,13 +283,8 @@ RSpec.describe "Group" do
     it "set public to false" do
       expect(second_group.public).to eq(true)
       post "/group/#{second_group.id}/set_public.json", { member_id: member.id, public: false }, { "Accept" => "application/json" }
+      p json["response_status"]
       expect(second_group.reload.public).to be false
-    end
-
-    it "set public_id" do
-      post "/group/#{second_group.id}/set_public.json", { member_id: member.id, public: true, public_id: "1234567" }, { "Accept" => "application/json" }
-      expect(second_group.reload.public).to be true
-      expect(second_group.reload.public_id).to eq("1234567")
     end
   end
 
