@@ -7,6 +7,8 @@ class GroupController < ApplicationController
   
   before_action :load_resource_poll_feed, only: [:poll_group, :poll_available_group]
 
+  before_action :only_admin_of_group, only: [:edit_group, :set_public]
+
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:hash_member_count) { @hash_member_count }
@@ -28,8 +30,6 @@ class GroupController < ApplicationController
   end
 
   def edit_group
-    Group::ListMember.new(@group).raise_error_not_admin(@current_member)
-
     cover = edit_group_params[:cover]
     cover_preset = edit_group_params[:cover_preset]
 
@@ -190,7 +190,6 @@ class GroupController < ApplicationController
   end
 
   def set_public
-    Group::ListMember.new(@group).raise_error_not_admin(@current_member)
     if @group.update(edit_group_params)
       render status: :created
     else
@@ -290,6 +289,10 @@ class GroupController < ApplicationController
   end
 
   private
+
+  def only_admin_of_group
+    Group::ListMember.new(set_group).raise_error_not_admin(@current_member)  
+  end
 
   def set_group
     @group = Group.cached_find(params[:id])
