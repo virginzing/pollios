@@ -31,7 +31,7 @@ RSpec.describe Poll, :type => :model do
     let!(:ex_member) { create(:member) }
 
     it "return detail of poll" do
-      poll, error_message = Poll.create_poll( FactoryGirl.attributes_for(:create_poll).merge(member_id: ex_member.id), ex_member)
+      poll, error_message, alert_message = Poll.create_poll( FactoryGirl.attributes_for(:create_poll).merge(member_id: ex_member.id), ex_member)
 
       # tag_count = Tag.all.count
 

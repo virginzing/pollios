@@ -28,6 +28,7 @@ class GroupController < ApplicationController
   end
 
   def edit_group
+    Group::ListMember.new(@group).raise_error_not_admin(@current_member)
 
     cover = edit_group_params[:cover]
     cover_preset = edit_group_params[:cover_preset]
@@ -189,6 +190,7 @@ class GroupController < ApplicationController
   end
 
   def set_public
+    Group::ListMember.new(@group).raise_error_not_admin(@current_member)
     if @group.update(edit_group_params)
       render status: :created
     else
