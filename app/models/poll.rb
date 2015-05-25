@@ -869,7 +869,7 @@ class Poll < ActiveRecord::Base
   end
 
   def get_choice_scroll
-    cached_choices.map(&:vote)
+    cached_choices.sort { |x,y| y.id <=> x.id }.map(&:vote)
   end
 
   def get_require_info
