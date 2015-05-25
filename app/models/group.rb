@@ -3,8 +3,6 @@ class Group < ActiveRecord::Base
   resourcify
   include GroupHelper
 
-  # friendly_id :slug_candidates, use: [:slugged, :finders]
-
   has_many :group_members, dependent: :destroy
   has_many :members, through: :group_members, source: :member
 

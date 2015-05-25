@@ -114,7 +114,7 @@ class Recommendation
 
   def follower_recommendation
     follower_not_add_friend_yet = @list_member_follower.map(&:id) - @init_list_friend.cached_all_friends.map(&:id)
-    Member.having_status_account(:normal).where(id: follower_not_add_friend_yet).limit(500)
+    Member.with_status_account(:normal).where(id: follower_not_add_friend_yet).limit(500)
   end
 
   def top_10_more_friend
@@ -124,7 +124,7 @@ class Recommendation
   end
 
   def member_using_facebook
-    query = Member.having_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id, first_signup: false)
+    query = Member.with_status_account(:normal).with_member_type(:citizen).where(fb_id: @member.list_fb_id, first_signup: false)
     query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.size > 0
     query
   end

@@ -48,6 +48,7 @@ class PromoteAdminWorker
     find_recipient_notify.each do |member|
 
       hash_custom = {
+        group: GroupNotifySerializer.new(group).as_json,
         notify: hash_list_member_badge[member.id] || 0
       }
 

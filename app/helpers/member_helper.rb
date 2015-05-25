@@ -10,7 +10,7 @@ module MemberHelper
   }, scope: :true, predicates: true, multiple: true
 
   enumerize :member_type, :in => { citizen: 0, celebrity: 1, brand: 2, company: 3 }, predicates: true, default: :citizen, scope: true
-  enumerize :status_account, :in => { normal: 1, blacklist: -1, ban: 0 }, default: :normal, predicates: true, scope: :having_status_account
+  enumerize :status_account, :in => { normal: 1, blacklist: -1, ban: 0 }, default: :normal, predicates: true, scope: true
 
   enumerize :register, :in => { in_app: 0, web_mobile: 1 }
 

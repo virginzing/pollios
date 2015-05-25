@@ -279,7 +279,7 @@ class MembersController < ApplicationController
     @list_invite.update_all(invitee_id: @current_member.id)
 
     @list_invite.map(&:member_id).uniq.each do |friend_id|
-      Friend.add_friend({ member_id: @current_member.id, friend_id: friend_id })
+      Friend.add_friend({ member_id: friend_id, friend_id: @current_member.id })
     end
   end
 

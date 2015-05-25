@@ -25,7 +25,7 @@ class Friend::FindFacebook
   private
 
   def query_member
-    query = Member.having_status_account(:normal).where(fb_id: list_fb_id).order("fullname asc")
+    query = Member.with_status_account(:normal).where(fb_id: list_fb_id).order("fullname asc")
   end
   
 end

@@ -5,7 +5,7 @@ class Admin::BanMember
   end
 
   def self.get_member_ids
-    Member.having_status_account(:ban).map(&:id)
+    Member.with_status_account(:ban).map(&:id)
   end
 
   def self.flush_cached_ban_members

@@ -77,7 +77,7 @@ class Member::ListFriend
   end
 
   def query_friend_using_facebook
-    Member.having_status_account(:normal).where(fb_id: @member.list_fb_id).order("fullname asc")
+    Member.with_status_account(:normal).where(fb_id: @member.list_fb_id).order("fullname asc")
   end
 
   def cached_friends

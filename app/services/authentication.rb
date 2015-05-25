@@ -194,14 +194,6 @@ class Authentication
         update_new_token unless @member.auth_token.present?
       end
 
-      # @member_provider = @member.providers.where("name = ?", @params["provider"]).first_or_initialize do |provider|
-      #   provider.name = @params["provider"]
-      #   provider.pid = pid
-      #   provider.token = generate_token
-      #   provider.save
-      #   @new_member_provider = true
-      # end
-
       if app_id.present?
         @member_api_token = @member.api_tokens.where("app_id = ?", app_id).first_or_initialize do |api_token|
           api_token.app_id = app_id
@@ -224,13 +216,6 @@ class Authentication
       end
 
     end
-
-    # update_member(@member) unless @new_member
-    # update_member_provider(@member_provider) unless @new_member_provider
-
-    # if uuid.present?
-    #   update_new_api_token(@member_api_token) unless @new_member_api_token
-    # end
 
     @member
   end

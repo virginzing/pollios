@@ -1,5 +1,4 @@
 module PollsHelper
-
   extend Enumerize
   extend ActiveModel::Naming
 
