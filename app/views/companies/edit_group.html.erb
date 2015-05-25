@@ -137,16 +137,14 @@
           </form>
         </div>
         <div id="tab_5-3" class="tab-pane">
-          <div class="alert alert-info alert-block">
-            <a class="close" data-dismiss="alert" href="#">×</a>
-            <h4 class="alert-heading">Group Cover Upload</h4>
-            File must be less than 500 kb and support file type as png, jpeg, jpg
-          </div>
           <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
             <div class="form-group dropzone-photo">
               <input type="hidden" name="group_id" value="<%= @group.id %>">
               <input type="file" class="default" name="group[cover]" id="drop_cover_group" accept="image/png, image/jpeg, image/jpg"/>
             </div>
+            <span class="note">Recommended image size by 640x260 and support file type as image/png, image/jpg and image/jpeg.</span>
+            <br>
+            <br>
             <footer>
               <% if @group.cover.present? %>
               <%= link_to 'Delete', delete_cover_group_path(@group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
