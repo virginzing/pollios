@@ -25,20 +25,11 @@ class AddFriendWorker
 
       device_ids = find_recipient.flat_map { |u| u.apn_devices.map(&:id) }
 
-      if action == "BecomeFriend"
-        @custom_properties = {
-          type: TYPE[:friend],
-          member_id: member_id,
-          notify: @notification_count
-        }
-      else
-        @custom_properties = {
-          type: TYPE[:friend],
-          member_id: member_id,
-          notify: @notification_count,
-          request: @request_count 
-        }
-      end
+      @custom_properties = {
+        type: TYPE[:friend],
+        member_id: member_id,
+        notify: @notification_count
+      }
 
       hash_custom = {
         action: action

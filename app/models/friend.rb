@@ -81,7 +81,7 @@ class Friend < ActiveRecord::Base
         end
 
         if find_invite_new_record
-          AddFriendWorker.perform_async(@member.id, @friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test?
+          AddFriendWorker.perform_async(@member.id, @friend.id, { action: ACTION[:request_friend] } ) unless Rails.env.test?
         end
 
         FlushCached::Member.new(@member).clear_list_friends

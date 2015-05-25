@@ -85,6 +85,7 @@ class Poll < ActiveRecord::Base
 
   after_commit :send_notification, on: :create
   after_commit :flush_cache
+  after_commit :flush_cache_choice
 
   accepts_nested_attributes_for :choices, :reject_if => lambda { |a| a[:answer].blank? }, :allow_destroy => true
 
@@ -186,8 +187,12 @@ class Poll < ActiveRecord::Base
     Rails.cache.delete([self.class.name, id])
   end
 
+  def flush_cache_choice
+    Rails.cache.delete("poll/#{id}/choices")
+  end
+
   def cached_choices
-    Rails.cache.fetch("poll/#{id}-#{updated_at.to_i}/choices") { choices.to_a }
+    Rails.cache.fetch("poll/#{id}/choices") { choices.to_a }
   end
 
   def cached_poll_attachements
@@ -571,9 +576,9 @@ class Poll < ActiveRecord::Base
         quiz = poll[:quiz].present? ? true : false
         thumbnail_type = poll[:thumbnail_type] || 0
         choices = check_type_of_choice(choices)
-
         choice_count = get_choice_count(choices)
-        in_group_ids = group_id.presence || "0"
+        list_group_id = []
+        in_group_ids = group_id
         in_group = group_id.present? ? true : false
 
         init_photo_poll = ImageUrl.new(photo_poll)
@@ -590,16 +595,15 @@ class Poll < ActiveRecord::Base
           list_group_id = in_group_ids.split(",").map(&:to_i)
           unless member.company?
             remain_group = member.post_poll_in_group(in_group_ids)
-
             if (remain_group.size > 0)
               if remain_group != list_group_id
                 group_names = Group.where(id: (list_group_id - remain_group)).map(&:name).join(', ')
-                @alert_message = "This poll don't show in #{group_names} because you're no longer these group."
+                alert_message = "This poll don't show in #{group_names} because you're no longer these group."
               end
               list_group_id = remain_group
             else
               group_names = Group.where(id: list_group_id).map(&:name).join(', ')
-              @alert_message = "You're no longer #{group_names}."
+              alert_message = "You're no longer #{group_names}."
               raise ArgumentError, "You're no longer #{group_names}."
             end
           end
@@ -616,7 +620,9 @@ class Poll < ActiveRecord::Base
           end
         end
 
-        @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: in_group_ids,
+        new_in_group_ids = list_group_id.join(",").presence || "0"
+
+        @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: new_in_group_ids,
                         type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
 
         @poll.qrcode_key = @poll.generate_qrcode_key
@@ -656,14 +662,14 @@ class Poll < ActiveRecord::Base
 
             @poll.flush_cache
 
-            [@poll, nil, @alert_message]
+            [@poll, nil, alert_message]
           end
         else
-          [nil, @poll.errors.full_messages, @alert_message]
+          [nil, @poll.errors.full_messages, alert_message]
         end
 
       rescue ArgumentError => detail
-        [@poll = nil, detail.message, @alert_message]
+        [@poll = nil, detail.message, alert_message]
       end
 
     end ## transaction
