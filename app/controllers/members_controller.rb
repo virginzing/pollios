@@ -354,7 +354,7 @@ class MembersController < ApplicationController
       @find_friend.increment!(:report_count)
 
       if report_params[:block]
-        Friend.block_or_unblock_friend({ member_id: report_params[:member_id], friend_id: @find_friend.id }, true)
+        Friend.block_friend({ member_id: report_params[:member_id], friend_id: @find_friend.id })
       end
       render status: :created
     rescue => e

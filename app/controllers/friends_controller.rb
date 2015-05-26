@@ -51,12 +51,12 @@ class FriendsController < ApplicationController
 
 
   def block_friend
-    @friend = Friend.block_or_unblock_friend(friend_params, true)
+    @friend = Friend.block_friend(friend_params)
     render status: @friend ? :created : :unprocessable_entity
   end
 
   def unblock_friend
-    @friend = Friend.block_or_unblock_friend(friend_params, false)
+    @friend = Friend.unblock_friend(friend_params)
     render status: @friend ? :created : :unprocessable_entity
   end
 

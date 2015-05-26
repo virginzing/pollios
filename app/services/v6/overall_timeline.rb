@@ -117,7 +117,7 @@ class V6::OverallTimeline
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
-    
+    query = query.where("polls.member_id NOT IN (?)", with_out_member_ids) if with_out_member_ids.size > 0
     if only_new_poll?
       query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
     end

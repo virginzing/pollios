@@ -43,6 +43,10 @@ module Timelinable
     @member.cached_hidden_polls.collect{|e| e.poll_id }
   end
 
+  def block_users
+    Member::ListFriend.new(@member).block.map(&:id)
+  end
+
   # def check_poll_not_show_result
   #   Member.voted_polls.collect{|e| e["poll_id"] if e["show_result"] == false }.compact
   # end
@@ -55,6 +59,10 @@ module Timelinable
 
   def with_out_questionnaire_id
     unsee_questionnaire_ids | saved_questionnaire_ids_later
+  end
+
+  def with_out_member_ids
+    block_users
   end
 
   # check priority #

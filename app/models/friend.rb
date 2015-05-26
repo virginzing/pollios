@@ -271,9 +271,9 @@ class Friend < ActiveRecord::Base
     true
   end
 
-  def self.block_or_unblock_friend(friend, type_block)
-    friend_id = friend[:friend_id]
-    member_id = friend[:member_id]
+  def self.block_friend(params)
+    friend_id = params[:friend_id]
+    member_id = params[:member_id]
 
     find_member = find_by(follower_id: member_id, followed_id: friend_id)
     find_friend = find_by(follower_id: friend_id, followed_id: member_id)
@@ -281,22 +281,47 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
-    begin
-      if find_member && find_friend
-        find_member.update_attributes!(block: type_block)
-        find_friend.update_attributes!(visible_poll: !type_block)
+    fail ExceptionHandler::UnprocessableEntity, "You had already blocked #{friend.get_name}" if Member::ListFriend.new(member).block.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You're not friend with #{friend.get_name}" unless Member::ListFriend.new(member).active.map(&:id).include?(friend.id)
 
-        FlushCached::Member.new(member).clear_list_friends
-        FlushCached::Member.new(friend).clear_list_friends
-        
-        FlushCached::Member.new(member).clear_list_followers
-        FlushCached::Member.new(friend).clear_list_followers
-      end
-      true
-    rescue => e
-      puts "error => #{e}"
-      nil
+    if find_member && find_friend
+      find_member.update_attributes!(block: true)
+      find_friend.update_attributes!(visible_poll: false)
+
+      FlushCached::Member.new(member).clear_list_friends
+      FlushCached::Member.new(friend).clear_list_friends
+      
+      FlushCached::Member.new(member).clear_list_followers
+      FlushCached::Member.new(friend).clear_list_followers
     end
+
+    friend
+  end
+
+  def self.unblock_friend(params)
+    friend_id = params[:friend_id]
+    member_id = params[:member_id]
+
+    find_member = find_by(follower_id: member_id, followed_id: friend_id)
+    find_friend = find_by(follower_id: friend_id, followed_id: member_id)
+
+    member = Member.cached_find(member_id)
+    friend = Member.cached_find(friend_id)
+
+    fail ExceptionHandler::UnprocessableEntity, "You're not used to block #{friend.get_name}" unless Member::ListFriend.new(member).block.map(&:id).include?(friend.id)
+
+    if find_member && find_friend
+      find_member.update_attributes!(block: false)
+      find_friend.update_attributes!(visible_poll: true)
+
+      FlushCached::Member.new(member).clear_list_friends
+      FlushCached::Member.new(friend).clear_list_friends
+      
+      FlushCached::Member.new(member).clear_list_followers
+      FlushCached::Member.new(friend).clear_list_followers
+    end
+
+    friend
   end
 
   def self.add_friend?(member_obj, search_member)
