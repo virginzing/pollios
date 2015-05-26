@@ -359,7 +359,7 @@ class MembersController < ApplicationController
       render status: :created
     rescue => e
       @error_message = e.message
-      redner status: :unprocessable_entity
+      render status: :unprocessable_entity
     end
   end
 

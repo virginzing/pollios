@@ -211,6 +211,9 @@ RSpec.describe "Member" do
     let!(:member_one) { create(:member, email: "official_account_1@gpollios.com", member_type: :citizen) }
     let!(:member_two) { create(:member, email: "official_account_2@gpollios.com", member_type: :citizen) }
 
+    let!(:friend) {  create(:friend, follower: member_one, followed: member_two, active: true, status: 1) }
+    let!(:friend_2) { create(:friend, follower: member_two, followed: member_one, active: true, status: 1) }
+    
     before do
       post "/member/#{member_two.id}/report.json", { member_id: member_one.id, message: "block", block: true }, { "Accept" => "application/json" }
     end

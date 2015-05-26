@@ -20,6 +20,10 @@ class V6::PollOfGroup
     @group.id
   end
 
+  def block_users
+    Member::ListFriend.new(@member).block.map(&:id)
+  end
+
   def original_next_cursor
     @original_next_cursor = @params[:next_cursor]
   end
@@ -50,6 +54,10 @@ class V6::PollOfGroup
 
   def my_vote_questionnaire_ids
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+  end
+
+  def with_out_member_ids
+    block_users
   end
 
   def with_out_poll_ids
@@ -94,6 +102,7 @@ class V6::PollOfGroup
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
+    query = query.where("polls.member_id NOT IN (?)", with_out_member_ids) if with_out_member_ids.size > 0
     query = query.limit(limit_poll)
     query
   end
