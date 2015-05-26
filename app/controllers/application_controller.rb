@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   def check_token
     token_from_header = request.headers['Authorization']
     return unless params[:member_id] && token_from_header.present?
-    authenticate_or_request_with_http_token do |token, other_options|
+    authenticate_or_request_with_http_token do |token, _options|
       access_token = set_current_member.api_tokens.where('token = ?', token)
       fail ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::WRONG unless access_token.present?
       true
@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
     init_list_group = Member::ListGroup.new(@current_member)
     your_group = init_list_group.active
 
-    @group_by_name = Hash[ your_group.map { |f| [f.id, Hash['id' => f.id, 'name' => f.name, 'photo' => f.get_photo_group, 'member_count' => f.member_count, 'poll_count' => f.poll_count]] }]
+    @group_by_name = Hash[your_group.map { |f| [f.id, Hash['id' => f.id, 'name' => f.name, 'photo' => f.get_photo_group, 'member_count' => f.member_count, 'poll_count' => f.poll_count]] }]
   end
 
   def only_brand_or_company_account

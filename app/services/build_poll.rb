@@ -41,7 +41,7 @@ class BuildPoll
   end
 
   def check_show_result
-    @params["show_result"]  == "on" ? true : false
+    true
   end
 
   def check_draft

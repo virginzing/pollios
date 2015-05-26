@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 class PhotoGroupUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
@@ -32,7 +31,6 @@ class PhotoGroupUploader < CarrierWave::Uploader::Base
     process :resize_to_fill => [120, 60]
     cloudinary_transformation :quality => 80
   end   
-
 
   def extension_white_list
     %w(jpg jpeg gif png)
@@ -76,5 +74,4 @@ class PhotoGroupUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
-
 end

@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
   has_many :member_active, -> { where(active: true) }, class_name: "GroupMember"
   has_many :get_member_active, through: :member_active, source: :member
 
-  has_many :member_inactive, -> { where(active: false) }, class_name: "GroupMember"
+  has_many :member_inactive, -> { where(active: false) }, class_name: 'GroupMember'
   has_many :get_member_inactive, through: :member_inactive, source: :member
 
   has_many :open_notification, -> { where(notification: true, active: true) }, class_name: "GroupMember"

@@ -43,11 +43,11 @@ class PollsController < ApplicationController
     begin
       @un_see_poll.save
       SavePollLater.delete_save_later(@current_member.id, @poll)
-      render :status => 201
+      render status: :created
     rescue => e
       @un_see_poll = nil
       @response_message = "You have already unsee this poll."
-      render :status => 422
+      render status: :unprocessable_entity
     end
   end
 
