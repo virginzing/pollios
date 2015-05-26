@@ -5,7 +5,7 @@ class RewardDecorator < ApplicationDecorator
 
 
   def show_reward_expire
-    object.reward_expire.present? ? object.reward_expire.strftime("%A, %d %B, %Y") : nil
+    object.reward_expire.present? ? object.reward_expire.strftime("%d/%m/%Y") : nil
   end
 
 end

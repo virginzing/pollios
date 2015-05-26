@@ -21,8 +21,8 @@ $(document).on('page:change', function() {
   if ($(".datepicker-set-expire").length > 0) {
     $(".datepicker-set-expire").datepicker({
       minDate : 0,
-      altFormat : 'DD, d MM, yy', 
-      dateFormat : 'DD, d MM, yy',
+      altFormat : 'dd/mm/yy', 
+      dateFormat : 'dd/mm/yy',
       prevText : '<i class="fa fa-chevron-left"></i>',
       nextText : '<i class="fa fa-chevron-right"></i>'
     });

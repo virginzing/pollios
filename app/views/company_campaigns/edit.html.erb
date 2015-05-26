@@ -8,8 +8,21 @@
         <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
         <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
-        <%= f.input :expire, as: :string, label: "Expire", input_html: { value: @campaign.decorate.show_expire, class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
-        <%= f.input :announce_on, as: :string, label: "Announce On", input_html: { value: @campaign.decorate.show_announce_on, class: 'datepicker-set-expire' } %>
+
+        <div class="row">
+          <div class="col col-md-2">
+            <%= f.input :expire, as: :string, label: "Expired", input_html: { value: @campaign.decorate.show_expire, class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
+          </div>
+          <div class="col col-md-1">
+            <span class="note">Unexpire</span>
+            <%= f.input :unexpire, as: :boolean, label: false %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-2">
+            <%= f.input :announce_on, as: :string, label: "Announce On", input_html: { value: @campaign.decorate.show_announce_on, class: 'datepicker-set-expire' } %>
+          </div>
+        </div>
       </div>
       <div class="col col-md-4">
         <div class="form-group">
@@ -55,4 +68,29 @@
   $(document).ready(function() {
      dropZoneCampaign("<%= @campaign.photo_campaign.url.presence || '' %>");
   });
+
+  $.input_campaign_unexpire = $("input#campaign_unexpire");
+
+  $.input_campaign_expire = $("input#campaign_expire");
+
+  $.input_campaign_unexpire.click(function () {
+    $.input_campaign_expire.attr('disabled', this.checked);
+    $.input_campaign_expire.attr('data-parsley-required', !this.checked);
+    if (this.checked) {
+      $.input_campaign_expire.val('');
+    };
+  });
+
+  $('.edit_campaign').bind('submit', function () {
+    $(this).find(':input').removeAttr('disabled');
+  });
+
+  $.campaign_unexpire = <%= raw @campaign.unexpired? %>;
+
+  if ($.campaign_unexpire) {
+    $.input_campaign_expire.attr('disabled', true).val('');
+    $.input_campaign_expire.attr('data-parsley-required', false);
+    $.input_campaign_unexpire.attr('checked', true);
+  };
+
 </script>

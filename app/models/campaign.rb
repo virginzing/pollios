@@ -3,7 +3,7 @@ class Campaign < ActiveRecord::Base
   # has_paper_trail
   mount_uploader :photo_campaign, PhotoCampaignUploader
 
-  attr_accessor :poll_ids, :poll_id
+  attr_accessor :poll_ids, :poll_id, :unexpire
 
   store_accessor :reward_info
 
@@ -182,6 +182,10 @@ class Campaign < ActiveRecord::Base
 
   def get_reward_expire
     rewards.present? ? rewards.first.reward_expire.to_i : ""
+  end
+
+  def unexpired?
+    ((expire - created_at) / 1.year) > 80 ? true : false
   end
 
   def as_json(options={})

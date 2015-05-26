@@ -12,9 +12,40 @@
       <%= f.input :detail, label: "Detail", required: false, input_html: { placeholder: "detail", :'data-parsley-required' => true } %>
     </label>
 
-    <label class="input col-lg-12 col-md-12 col-sm-12 col-xs-12 field_choice">
-    <%= f.input :reward_expire, as: :string, label: "Expire", input_html: { value: f.object.decorate.show_reward_expire, placeholder: "expire", class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
-    </label>
+    <div class="col col-md-2 field_choice">
+      <%= f.input :reward_expire, as: :string, label: "Expired", input_html: { value: f.object.decorate.show_reward_expire, class: 'datepicker-set-expire', id: "reward_expire", :"data-parsley-required" => "true" } %>
+    </div>
+    <div class="col col-md-1">
+      <span class="note">Unexpire</span>
+      <%= f.input :unexpire, as: :boolean, label: false, input_html: { id: "reward_unexpire" } %>
+    </div>
+
+
   </div>
 </section>
+
+<script type="text/javascript">
+  $.input_reward_unexpire = $("input#reward_unexpire");
+
+  $.input_reward_expire = $("input#reward_expire");
+
+  $.input_reward_unexpire.click(function () {
+    $.input_reward_expire.attr('disabled', this.checked);
+    $.input_reward_expire.attr('data-parsley-required', !this.checked);
+    if (this.checked) {
+      $.input_reward_expire.val('');
+    };
+  });
+
+  $.reward_unexpire = <%= raw @reward_unexpired || false %>;
+
+  if ($.reward_unexpire) {
+    $.input_reward_expire.attr('disabled', true).val('');
+    $.input_reward_expire.attr('data-parsley-required', false);
+    $.input_reward_unexpire.attr('checked', true);
+  };
+</script>
+
+
+
 
