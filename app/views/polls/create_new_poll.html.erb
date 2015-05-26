@@ -44,6 +44,8 @@
                 <section class="col col-3">
                   <div class="form-group">
                     <input type="file" class="default" name="poll[photo_poll]" id="drop_photo_poll" accept="image/png, image/jpeg, image/gif"/>
+                    <br>
+                    <span class="note">Recommended image size by 588x588 and support file type as image/png, image/jpg and image/jpeg.</span>
                   </div>
                 </section>
               </div>
@@ -207,3 +209,17 @@
   </script>
 <% end %>
 
+<style type="text/css">
+.ezdz-dropzone {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  font: bold 24px arial;
+  line-height: 200px;
+  color: lightgray;
+  text-align: center;
+  border: 5px solid lightgray;
+  border-radius: 20px;
+}
+</style>
