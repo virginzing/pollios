@@ -15,6 +15,11 @@ class Apn::CommentPoll
     @member.id
   end
 
+  def adjustment_message
+    @map_member_id_to_name ||= Member.where(id: list_mentioned).inject({}) {|h, v| h[v.id] = v.get_name; h }
+    @message.gsub(/@\[\d+\]/) {|e| @map_member_id_to_name[e.scan(/\d+/).first.to_i] }
+  end
+
   def poll_creator_id
     @poll.member.id
   end
@@ -32,9 +37,9 @@ class Apn::CommentPoll
     if receiver_id == poll_creator_id
       message = "#{member_name} commented your poll: \"#{@poll.title}\""
     elsif member_id == poll_creator_id
-      message = "#{member_name} also commented on his'poll: \"#{@message}\""
+      message = "#{member_name} also commented on his'poll: \"#{adjustment_message}\""
     else
-      message = "#{member_name} also commented on #{@poll.member.fullname}'s poll: \"#{@message}\""
+      message = "#{member_name} also commented on #{@poll.member.fullname}'s poll: \"#{adjustment_message}\""
     end
     truncate_message(message)
   end
