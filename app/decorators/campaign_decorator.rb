@@ -9,7 +9,7 @@ class CampaignDecorator < ApplicationDecorator
   end
 
   def show_announce_on
-    object.announce_on.present? ? object.expire.strftime("%d/%m/%Y") : nil
+    object.announce_on.present? ? object.announce_on.strftime("%d/%m/%Y") : nil
   end
 
 end
