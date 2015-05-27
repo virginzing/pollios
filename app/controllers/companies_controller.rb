@@ -264,6 +264,11 @@ class CompaniesController < ApplicationController
 
   def update_poll
     @poll = Poll.find(params[:id])
+
+    if update_poll_params[:expire_status].to_b
+      @poll.expire_date = Time.zone.now  
+    end
+
     if @poll.update(update_poll_params)
       flash[:success] = "Successfully updated..."
       redirect_to company_poll_detail_path
