@@ -155,7 +155,7 @@ class V6::MyPollInProfile
     #                    "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
     #                    your_group_ids, your_group_ids).references(:poll_groups)
 
-    query = Poll.without_deleted.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(#{query_poll_member} OR #{query_group_together} OR #{query_public} )", your_group_ids).references(:poll_groups)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids_of_poll_created) if with_out_poll_ids_of_poll_created.size > 0
@@ -164,7 +164,7 @@ class V6::MyPollInProfile
   end
 
   def poll_voted(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.without_deleted.without_my_poll(member_id).load_more(next_cursor).available.joins(:history_votes => :choice).includes(:member, :campaign, :poll_groups)
+    query = Poll.without_my_poll(member_id).load_more(next_cursor).available.joins(:history_votes => :choice).includes(:member, :campaign, :poll_groups)
                 .select("polls.*, history_votes.choice_id as choice_id")
                 .where("polls.series = 'f'")
                 .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f') " \
@@ -179,7 +179,7 @@ class V6::MyPollInProfile
   # "OR (history_votes.member_id = #{member_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1 AND polls.qr_only = 'f')" \
 
   def poll_watched(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.without_deleted.load_more(next_cursor).available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.load_more(next_cursor).available.joins(:watcheds).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(watcheds.member_id = #{member_id} AND watcheds.poll_notify = 't')")
                 .where("(watcheds.member_id = #{member_id} AND polls.in_group = 'f')" \
                        "OR (watcheds.member_id = #{member_id} AND polls.public = 't') " \
@@ -193,7 +193,7 @@ class V6::MyPollInProfile
   end
 
   def poll_saved(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.without_deleted.unexpire.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.unexpire.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", saved_questionnaire_ids_later, saved_poll_ids_later)
 
@@ -205,7 +205,7 @@ class V6::MyPollInProfile
   end
 
   def poll_bookmarked(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.without_deleted.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", bookmarked_questionnaire_ids, bookmarked_poll_ids)
 
