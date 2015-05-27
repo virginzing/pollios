@@ -285,7 +285,10 @@ class PollsController < ApplicationController
 
   def delete_poll_in_more_group
     find_poll_group = PollGroup.find_by(poll_id: @poll.id, group_id: params[:group_id])
-    find_poll_group.destroy if find_poll_group.present?
+    if find_poll_group.present?
+      find_poll_group.destroy
+      PollGroup.delete_some_group(@poll, params[:group_id])
+    end
   end
 
   def delete_poll_in_one_group

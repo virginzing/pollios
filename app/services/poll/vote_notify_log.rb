@@ -27,7 +27,7 @@ class Poll::VoteNotifyLog
 
       get_hash_list_member_badge ||= @count_notification.get_hash_list_member_badge_count
 
-      if @poll.in_group_ids != "0"
+      if @poll.in_group
         @poll_within_group ||= Group.joins(:poll_groups).where("poll_groups.poll_id = #{@poll.id} AND poll_groups.share_poll_of_id = 0").uniq
       end
 

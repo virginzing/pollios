@@ -31,7 +31,7 @@ class Poll < ActiveRecord::Base
   has_many :watcheds
   has_many :watched_by_member, through: :watcheds, source: :member
 
-  has_many :poll_groups
+  has_many :poll_groups, -> { where("poll_groups.deleted_at IS NULL") }
   has_many :groups, through: :poll_groups, source: :group
 
   has_many :poll_members
@@ -261,8 +261,7 @@ class Poll < ActiveRecord::Base
 
   def get_in_groups(groups_by_name)
     group = []
-    split_group_id ||= in_group_ids.split(",").collect{|e| e.to_i }
-
+    split_group_id ||= in_group_ids.split(",").map(&:to_i)
     split_group_id.each do |id|
       if groups_by_name.has_key?(id)
         group << groups_by_name.fetch(id)
