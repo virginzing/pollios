@@ -14,6 +14,7 @@ json.campaign poll.get_campaign
 json.share_count poll.share_count
 json.is_public poll.public
 json.type_poll poll.type_poll
+json.close_status poll.close_status
 
 json.poll_within poll.poll_groups do |pg|
   json.id pg.group.id

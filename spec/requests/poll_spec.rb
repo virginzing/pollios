@@ -5,15 +5,18 @@ RSpec.describe "Poll" do
   let!(:member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
   let!(:second_member) { create(:member, fullname: "Nutty 2", email: "nutty_2@gmail.com") }
-  let!(:poll) { create(:poll, member: member) }
+  let!(:poll) { create(:poll, member: member, title: "eiei") }
   let!(:choice_one) { create(:choice, poll: poll, answer: "1", vote: 0) }
   let!(:choice_two) { create(:choice, poll: poll, answer: "2", vote: 0) }
 
   describe "POST /poll/create" do
+    let!(:group) { create(:group, name: "My group 1", member: member) }
+    let!(:group_member) { create(:group_member, group: group, member: member, is_master: true, active: true) }
+
     context "friend & following" do
       
       before do
-        post "/poll/create.json", { member_id: member.id, title: "test title", choices: ["1", "2", "3"], type_poll: "binary", creator_must_vote: false }, { "Accept" => "application/json"}
+        post "/poll/create.json", { member_id: member.id, title: "test title", choices: ["1", "2", "3"], type_poll: "freeform", creator_must_vote: true, allow_comment: true, is_public: false }, { "Accept" => "application/json"}
         @poll_last = Poll.unscoped.last
       end
 
@@ -21,16 +24,60 @@ RSpec.describe "Poll" do
         expect(response.status).to eq(201)
       end
 
-      it "have value default" do
-        expect(@poll_last.qrcode_key.present?).to be true
-        expect(@poll_last.member_id).to eq(member.id)
+      it "must set qrcode every poll" do
+        expect(@poll_last.qrcode_key.present?).to be_truthy
+      end
+
+      it "set campaign_id 0 when poll don't have campaign" do
+        expect(@poll_last.campaign_id).to eq(0)
       end
 
       it "add to member poll" do
         poll_member = PollMember.find_by(member: member, poll: @poll_last, share_poll_of_id: 0, public: false, series: false, expire_date: @poll_last.expire_date, in_group: false, poll_series_id: 0)
-        expect(poll_member.present?).to be true
+        expect(poll_member.present?).to be_truthy
       end
 
+      it "would have key of json completely" do
+        expect(json.has_key?("creator")).to be_truthy
+        expect(json.has_key?("poll")).to be_truthy
+        expect(json.has_key?("list_choices")).to be_truthy
+        expect(json.has_key?("alert_message")).to be_falsey
+      end
+
+    end
+
+    context "create poll to group" do
+      before do
+        post "poll/create.json", { member_id: member.id, title: "eiei", choices: ["A", "B"], type_poll: "freeform", creator_must_vote: true, allow_comment: true, group_id: group.id.to_s }, { "Accept" => "application/json"}
+        @poll_last = Poll.unscoped.last
+      end
+
+      it "created poll to group" do
+        expect(response.status).to eq(201)
+      end
+
+      it "add poll to group" do
+        poll_group = PollGroup.find_by(member: member, poll: @poll_last, group: group)
+        expect(poll_group.present?).to be_truthy
+      end
+    end
+
+    context "create poll to public" do
+      it "reponse with a 422 status when point remain 0" do
+        post "poll/create.json", { member_id: member.id, title: "eiei", choices: ["A", "B"], type_poll: "freeform", creator_must_vote: true, allow_comment: true, is_public: true }, { "Accept" => "application/json"}
+        @poll_last = Poll.unscoped.last
+        expect(response.status).to eq(422)
+        expect(json["response_message"]).to eq(ExceptionHandler::Message::Poll::POINT_ZERO)
+      end
+
+      it "can post poll to public when user's point more than 0" do
+        member.update!(point: 1)
+        post "poll/create.json", { member_id: member.id, title: "eiei", choices: ["A", "B"], type_poll: "freeform", creator_must_vote: true, allow_comment: true, is_public: true }, { "Accept" => "application/json"}
+        @poll_last = Poll.unscoped.last
+        poll_public = PollMember.find_by(member: member, poll: @poll_last, public: true)
+        expect(response.status).to eq(201)        
+        expect(poll_public.present?).to be_truthy
+      end
     end
   end
 
@@ -84,6 +131,21 @@ RSpec.describe "Poll" do
 
       expect(json["response_status"]).to eq("ERROR")
       expect(json["response_message"]).to eq("Choice not found")
+    end
+
+    it "reponse with a 422 status when poll was closed" do
+      poll.update(close_status: true)
+      post "/poll/#{poll.id}/vote", { member_id: member.id, choice_id: 1 }, { "Accept" => "application/json" }
+
+      expect(response.status).to eq(422)
+      expect(json["response_message"]).to eq(ExceptionHandler::Message::Poll::CLOSED)
+    end
+
+    it "reponse with a 422 status when poll was expired" do
+      poll.update(expire_status: true, expire_date: 1.days.ago)
+      post "/poll/#{poll.id}/vote", { member_id: member.id, choice_id: 1 }, { "Accept" => "application/json" }
+      expect(response.status).to eq(422)
+      expect(json["response_message"]).to eq(ExceptionHandler::Message::Poll::EXPIRED)
     end
   end
 
@@ -224,11 +286,10 @@ RSpec.describe "Poll" do
 
   describe "POST /poll/:id/close" do
     it "close poll" do
-      expect(poll.expire_status).to eq(false)
-
       post "/poll/#{poll.id}/close.json", { member_id: member.id }, { "Accept" => "application/json" }
 
-      expect(poll.reload.expire_status).to eq(true)
+      expect(poll.reload.close_status).to be_truthy
+      expect(poll.reload.closed?).to be_truthy
 
       expect(response.status).to eq(200)
 

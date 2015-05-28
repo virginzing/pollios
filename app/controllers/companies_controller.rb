@@ -616,7 +616,7 @@ class CompaniesController < ApplicationController
   end
 
   def update_poll_params
-    params.require(:poll).permit(:expire_status, :campaign_id, :draft)  
+    params.require(:poll).permit(:expire_status, :campaign_id, :draft, :close_status)  
   end
 
   def set_questionnaire

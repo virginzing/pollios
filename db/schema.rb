@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527092504) do
+ActiveRecord::Schema.define(version: 20150528063051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -944,8 +944,10 @@ ActiveRecord::Schema.define(version: 20150527092504) do
     t.boolean  "draft",                   default: false
     t.boolean  "system_poll",             default: false
     t.datetime "deleted_at"
+    t.boolean  "close_status",            default: false
   end
 
+  add_index "polls", ["close_status"], name: "index_polls_on_close_status", using: :btree
   add_index "polls", ["deleted_at"], name: "index_polls_on_deleted_at", using: :btree
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id", using: :btree

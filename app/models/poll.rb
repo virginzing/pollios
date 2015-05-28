@@ -353,6 +353,10 @@ class Poll < ActiveRecord::Base
     photo_poll.url(:medium).presence || ""
   end
 
+  def closed?
+    close_status  
+  end
+
   def tag_tokens=(tokens)
     self.tag_ids = Tag.ids_from_tokens(tokens)
   end
@@ -554,26 +558,26 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.create_poll(poll, member) ## create poll for API
+  def self.create_poll(poll_params, member) ## create poll for API
     Poll.transaction do
       begin
-        title = poll[:title]
-        expire_date = poll[:expire_within]
-        choices = poll[:choices]
-        group_id = poll[:group_id]
-        member_id = poll[:member_id]
-        friend_id = poll[:friend_id]
-        type_poll = poll[:type_poll]
-        is_public = poll[:is_public].to_b
-        photo_poll = poll[:photo_poll]
-        original_images = poll[:original_images]
-        allow_comment = poll[:allow_comment] || false
-        creator_must_vote = poll[:creator_must_vote]
-        require_info = poll[:require_info].present? ? true : false
-        show_result = poll[:show_result].present? ? true : false
-        qr_only = poll[:qr_only].present? ? true : false
-        quiz = poll[:quiz].present? ? true : false
-        thumbnail_type = poll[:thumbnail_type] || 0
+        title = poll_params[:title]
+        expire_date = poll_params[:expire_within]
+        choices = poll_params[:choices]
+        group_id = poll_params[:group_id]
+        member_id = poll_params[:member_id]
+        friend_id = poll_params[:friend_id]
+        type_poll = poll_params[:type_poll]
+        is_public = poll_params[:is_public].to_b
+        photo_poll = poll_params[:photo_poll]
+        original_images = poll_params[:original_images]
+        allow_comment = poll_params[:allow_comment] || false
+        creator_must_vote = poll_params[:creator_must_vote]
+        require_info = poll_params[:require_info].present? ? true : false
+        show_result = poll_params[:show_result].present? ? true : false
+        qr_only = poll_params[:qr_only].present? ? true : false
+        quiz = poll_params[:quiz].present? ? true : false
+        thumbnail_type = poll_params[:thumbnail_type] || 0
         choices = check_type_of_choice(choices)
         choice_count = get_choice_count(choices)
         list_group_id = []
@@ -588,7 +592,7 @@ class Poll < ActiveRecord::Base
           convert_expire_date = Time.now + 100.years.to_i
         end
 
-        raise ArgumentError, "Point remain 0" if (member.citizen? && is_public) && (member.point <= 0)
+        raise ArgumentError, ExceptionHandler::Message::Poll::POINT_ZERO if (member.citizen? && is_public) && (member.point <= 0)
 
         if in_group
           list_group_id = in_group_ids.split(",").map(&:to_i)
@@ -748,7 +752,8 @@ class Poll < ActiveRecord::Base
       begin
         find_poll = Poll.cached_find(poll_id)
 
-        raise ExceptionHandler::UnprocessableEntity, "Poll had closed already." if find_poll.expire_status
+        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
+        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
         ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
 
