@@ -699,12 +699,11 @@ class PollsController < ApplicationController
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
         @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
         @poll.increment!(:comment_count)
-        find_watched = Watched.where(member_id: @current_member.id, poll_id: @poll.id)
 
-        if find_watched.first.present?
-          find_watched.first.update(comment_notify: true) if find_watched.where(comment_notify: false)
-        else
-          Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
+        find_watched = Watched.find_by(member_id: @current_member.id, poll_id: @poll.id)
+
+        if find_watched.nil?
+          WatchPoll.new(@current_member, @poll.id).watching
         end
 
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
