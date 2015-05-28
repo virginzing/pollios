@@ -693,7 +693,7 @@ class PollsController < ApplicationController
     Comment.transaction do
       begin
         fail ExceptionHandler::UnprocessableEntity, 'Poll had already disabled comment.' unless @poll.allow_comment
-
+        
         list_mentioned = comment_params[:list_mentioned]
         @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
         @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
@@ -705,6 +705,7 @@ class PollsController < ApplicationController
         else
           Watched.create!(member_id: @current_member.id, poll_id: @poll.id, poll_notify: false, comment_notify: true)
         end
+
         Activity.create_activity_comment(@current_member, @poll, 'Comment')
         
         render status: :created

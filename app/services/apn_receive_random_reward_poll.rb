@@ -17,7 +17,7 @@ class ApnReceiveRandomRewardPoll
   end
 
   def custom_message
-    message = "#{@sender.get_name} announce reward. Yay! You got reward"
+    message = "#{@sender.get_name} announce reward. Congratulation! You got reward"
     truncate_message(message)
   end 
 
