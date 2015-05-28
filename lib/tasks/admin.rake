@@ -72,6 +72,7 @@ namespace :admin do
     Sidekiq::Cron::Job.create(name: "SavePollWorker - every at 18:00", cron: '0 18 * * * Asia/Bangkok', klass: 'SavePollWorker')
     Sidekiq::Cron::Job.create(name: "RecurringPollWorker - each hourly", cron: '0 * * * *', klass: 'RecurringPollWorker')
     Sidekiq::Cron::Job.create(name: "Check subscribe of member - each day at 00:00", cron: '0 0 * * * Asia/Bangkok', klass: 'CheckSubscribeWorker')
+    Sidekiq::Cron::Job.create(name: "Check nearly expire subscription - each day at 00:00", cron: '0 0 * * * Asia/Bangkok', klass: 'CheckNearlyExpireSubscriptionWorker')
   end
 
   desc "Reset Popular tag worker"

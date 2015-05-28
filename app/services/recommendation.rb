@@ -64,7 +64,7 @@ class Recommendation
 
   def get_people_you_may_know
     mutual_ids = mutual_friend_recommendations.collect{|e| e["second_user"].to_i } | find_non_friend_in_group | top_10_more_friend
-    query = Member.without_member_type(:brand, :company, :celebrity).where("id IN (?) AND members.id != ?", mutual_ids, @member.id).order("RANDOM()").limit(50)
+    query = Member.without_member_type(:brand, :company, :celebrity).with_status_account(:normal).where("id IN (?) AND members.id != ?", mutual_ids, @member.id).order("RANDOM()").limit(50)
     query = query.where("id NOT IN (?)", unrecommended) if unrecommended.size > 0
     query = query.where("id NOT IN (?)", list_block_friend_ids) if list_block_friend_ids.size > 0
     query = query.where("id NOT IN (?)", list_all_friends) if list_all_friends.size > 0
