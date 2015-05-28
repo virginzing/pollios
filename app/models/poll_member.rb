@@ -24,6 +24,8 @@ class PollMember < ActiveRecord::Base
     where("polls.expire_status = 'f'")
   }
 
+  scope :without_closed, -> { where("polls.close_status = 'f'") }
+
   LIMIT_TIMELINE = 500
 
   def self.find_poll_celebrity_or_public(type)

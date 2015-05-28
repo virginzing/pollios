@@ -107,7 +107,7 @@ class V6::OverallTimeline
 
     new_find_poll_series_in_group = filter_group.eql?("1") ? your_group_ids : [0]
 
-    query = PollMember.available.unexpire.joins(:poll).includes(:poll => [:poll_groups])
+    query = PollMember.available.unexpire.without_closed.joins(:poll).includes(:poll => [:poll_groups])
                                                       .where("(#{poll_friend_query})" \
                                                              "OR (#{poll_group_query})" \
                                                              "OR (#{poll_series_group_query})" \
@@ -118,6 +118,7 @@ class V6::OverallTimeline
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.where("polls.member_id NOT IN (?)", with_out_member_ids) if with_out_member_ids.size > 0
+
     if only_new_poll?
       query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
     end
@@ -168,7 +169,7 @@ class V6::OverallTimeline
     new_your_friend_ids = filter_public.eql?("1") ? your_friend_ids : [0]
     your_following_ids = filter_public.eql?("1") ? your_following_ids : [0]
 
-    query = PollMember.available.unexpire.joins(:poll).where("(#{query_poll_shared})" \
+    query = PollMember.available.unexpire.without_closed.joins(:poll).where("(#{query_poll_shared})" \
                                                     "OR (#{query_poll_shared})",
                                                     new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)

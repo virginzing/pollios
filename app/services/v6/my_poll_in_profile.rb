@@ -193,7 +193,7 @@ class V6::MyPollInProfile
   end
 
   def poll_saved(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.unexpire.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
+    query = Poll.without_closed.unexpire.load_more(next_cursor).available.includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", saved_questionnaire_ids_later, saved_poll_ids_later)
 
