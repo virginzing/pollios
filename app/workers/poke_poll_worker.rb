@@ -1,13 +1,17 @@
-class ApnNearlyExpireSubscriptionWorker
+class PokePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
   sidekiq_options unique: true
   
-  def perform(sender_id, list_member, custom_data = {})
-    find_recipient ||= Member.where(id: list_member).uniq
+  def perform(sender_id, list_member, poll_id, custom_data = {})
+    @poll = Poll.cached_find(poll_id)
 
-    @apn_nearly_expire_subscription = Apn::NearlyExpireSubscription.new
+    @poll_serializer_json ||= PollSerializer.new(@poll).as_json()
+
+    @apn_poke_poll = Apn::PokePoll.new(@poll)
+
+    find_recipient ||= Member.where(id: list_member).uniq
 
     @count_notification = CountNotification.new(find_recipient)
 
@@ -18,19 +22,23 @@ class ApnNearlyExpireSubscriptionWorker
     hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
     @custom_properties = {
-      type: TYPE[:subscription]
+      type: TYPE[:poll],
+      poll_id: @poll.id,
+      series: @poll.series
     }
 
     device_ids.each_with_index do |device_id, index|
       apn_custom_properties = {
-        type: TYPE[:subscription],
+        type: TYPE[:poll],
+        poll_id: @poll.id,
+        series: @poll.series,
         notify: hash_list_member_badge[member_ids[index]]
       }
 
       @notf = Apn::Notification.new
       @notf.device_id = device_id
       @notf.badge = hash_list_member_badge[member_ids[index]]
-      @notf.alert = @apn_nearly_expire_subscription.custom_message
+      @notf.alert = @apn_poke_poll.custom_message
       @notf.sound = true
       @notf.custom_properties = apn_custom_properties
       @notf.save!
@@ -38,15 +46,18 @@ class ApnNearlyExpireSubscriptionWorker
 
     find_recipient.each do |member|
       hash_custom = {
-        notify: hash_list_member_badge[member.id]
+        action: ACTION[:poke],
+        poll: @poll_serializer_json,
+        notify: hash_list_member_badge[member.id],
+        worker: WORKER[:poke_poll]
       }
 
-      NotifyLog.create!(sender_id: sender_id, recipient_id: member.id, message: @apn_nearly_expire_subscription.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+      NotifyLog.create!(sender_id: sender_id, recipient_id: member.id, message: @apn_poke_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications
   rescue => e
-    puts "ApnNearlyExpireSubscriptionWorker => #{e.message}"
+    puts "PokePollWorker => #{e.message}"
   end
 
 end

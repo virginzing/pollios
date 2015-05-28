@@ -705,7 +705,7 @@ class Poll < ActiveRecord::Base
         end
       else
         if poll_series_id == 0
-          ApnPollWorker.perform_async(self.member_id, self.id) unless qr_only
+          PollWorker.perform_async(self.member_id, self.id) unless qr_only
         end
       end
     end

@@ -1,4 +1,4 @@
-class ApnQuestionnaireWorker
+class QuestionnaireWorker
   include Sidekiq::Worker
   include SymbolHash
 
@@ -55,7 +55,9 @@ class ApnQuestionnaireWorker
       hash_custom = {
         action: ACTION[:create],
         poll: @poll_series_serializer_json,
-        notify: hash_list_member_badge[member.id]
+        notify: hash_list_member_badge[member.id],
+        poll_series_id: @poll_series.id,
+        worker: WORKER[:questionnaire]
       }
 
       NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_questionnaire.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
@@ -63,7 +65,7 @@ class ApnQuestionnaireWorker
 
     Apn::App.first.send_notifications
   rescue => e
-    puts "ApnPollWorker => #{e.message}"
+    puts "QuestionnaireWorker => #{e.message}"
   end
 
 end

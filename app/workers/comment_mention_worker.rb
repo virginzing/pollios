@@ -51,7 +51,8 @@ class CommentMentionWorker
       hash_custom = {
         action: ACTION[:mention],
         poll: @poll_serializer_json,
-        notify: hash_list_member_badge[member.id]
+        notify: hash_list_member_badge[member.id],
+        worker: WORKER[:comment_mention]
       }
 
       NotifyLog.create!(sender_id: mentioner.id, recipient_id: member.id, message: @apn_comment_mention.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

@@ -33,7 +33,8 @@ class AddFriendWorker
 
       hash_custom = {
         action: action,
-        friend_id: friend.id
+        friend_id: friend.id,
+        worker: WORKER[:add_friend]
       }
 
       device_ids.each do |device_id|

@@ -33,7 +33,8 @@ class VotePollWorker
       @custom_properties = {
         type: TYPE[:poll],
         poll_id: poll.id,
-        series: poll.series
+        series: poll.series,
+        worker: WORKER[:vote_poll]
       }
 
       find_recipient_notify.each do |member|

@@ -1,13 +1,13 @@
-class ApnNotifyExpireSubscriptionWorker
+class NearlyExpireSubscriptionWorker
   include Sidekiq::Worker
   include SymbolHash
 
   sidekiq_options unique: true
-
+  
   def perform(sender_id, list_member, custom_data = {})
     find_recipient ||= Member.where(id: list_member).uniq
 
-    @apn_notify_expire_subscription = Apn::NotifyExpireSubscription.new
+    @apn_nearly_expire_subscription = Apn::NearlyExpireSubscription.new
 
     @count_notification = CountNotification.new(find_recipient)
 
@@ -30,7 +30,7 @@ class ApnNotifyExpireSubscriptionWorker
       @notf = Apn::Notification.new
       @notf.device_id = device_id
       @notf.badge = hash_list_member_badge[member_ids[index]]
-      @notf.alert = @apn_notify_expire_subscription.custom_message
+      @notf.alert = @apn_nearly_expire_subscription.custom_message
       @notf.sound = true
       @notf.custom_properties = apn_custom_properties
       @notf.save!
@@ -38,15 +38,17 @@ class ApnNotifyExpireSubscriptionWorker
 
     find_recipient.each do |member|
       hash_custom = {
-        notify: hash_list_member_badge[member.id]
+        notify: hash_list_member_badge[member.id],
+        action: ACTION[:subscription_nearly_expire],
+        worker: WORKER[:nearly_expire_subsription]
       }
 
-      NotifyLog.create!(sender_id: sender_id, recipient_id: member.id, message: @apn_notify_expire_subscription.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+      NotifyLog.create!(sender_id: sender_id, recipient_id: member.id, message: @apn_nearly_expire_subscription.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications
   rescue => e
-    puts "ApnNotifyExpireSubscriptionWorker => #{e.message}"
+    puts "NearlyExpireSubscriptionWorker => #{e.message}"
   end
-  
+
 end

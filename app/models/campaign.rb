@@ -73,8 +73,8 @@ class Campaign < ActiveRecord::Base
     update!(used: used + members_receive_reward.size)
     
     unless Rails.env.test?
-      ApnReceiveRandomRewardPollWorker.perform_in(5.second, poll.member_id, poll.id, members_receive_reward)
-      ApnNotReceiveRandomRewardPollWorker.perform_in(5.second, poll.member_id, poll.id, members_not_receive_reward)
+      ReceiveRandomRewardPollWorker.perform_in(5.second, poll.member_id, poll.id, members_receive_reward)
+      NotReceiveRandomRewardPollWorker.perform_in(5.second, poll.member_id, poll.id, members_not_receive_reward)
     end
 
     true
@@ -108,12 +108,12 @@ class Campaign < ActiveRecord::Base
         increment!(:used)
         Rails.cache.delete([member_id, 'reward'])
         if @reward
-          ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
+          RewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
       else
         @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
         poll = Poll.cached_find(poll_id)
-        ApnNotReceiveRandomRewardPollWorker.perform_async(member.id, poll_id, [member_id], "Sorry! You don't get reward from poll: #{poll.title}") if @reward
+        NotReceiveRandomRewardPollWorker.perform_async(member.id, poll_id, [member_id], "Sorry! You don't get reward from poll: #{poll.title}") if @reward
       end
     end
     @reward
@@ -147,7 +147,7 @@ class Campaign < ActiveRecord::Base
         increment!(:used)
         Rails.cache.delete([member_id, 'reward'])
         if @reward
-          ApnRewardWorker.perform_async(@reward.id) unless Rails.env.test?
+          RewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
       else
         @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)

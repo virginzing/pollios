@@ -47,7 +47,8 @@ class RequestGroupWorker
       hash_custom = {
         group: GroupNotifySerializer.new(group).as_json(),
         action: ACTION[:request],
-        notify: hash_list_member_badge[member_receive.id]
+        notify: hash_list_member_badge[member_receive.id],
+        worker: WORKER[:request_group]
       }
 
       NotifyLog.create!(sender_id: member.id, recipient_id: member_receive.id, message: @request_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

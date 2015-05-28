@@ -32,7 +32,7 @@ class AddMemberToGroupWorker
       apn_custom_properties = {
         type: TYPE[:group],
         group_id: group.id,
-        notify: hash_list_member_badge[member_ids[index]],
+        notify: hash_list_member_badge[member_ids[index]]
       }
 
       @notf = Apn::Notification.new
@@ -48,7 +48,8 @@ class AddMemberToGroupWorker
       hash_custom = {
         action: ACTION[:join],
         group: GroupNotifySerializer.new(group).as_json(),
-        notify: hash_list_member_badge[member_receive.id]
+        notify: hash_list_member_badge[member_receive.id],
+        worker: WORKER[:add_member_to_group]
       }
 
       NotifyLog.create!(sender_id: member.id, recipient_id: member_receive.id, message: @member_to_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

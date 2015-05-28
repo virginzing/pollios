@@ -48,10 +48,10 @@ class AllGiftWorker
     end
 
     find_recipient_notify.each do |member|
-
       hash_custom = {
         notify: hash_list_member_badge[member.id] || 0,
-        reward_id: hash_member_ids_with_reward[member.id]
+        reward_id: hash_member_ids_with_reward[member.id],
+        worker: WORKER[:all_gift]
       }
 
       NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @apn_gift.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

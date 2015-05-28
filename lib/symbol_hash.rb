@@ -31,7 +31,9 @@ module SymbolHash
     :poke => 'Poke',
     :request_friend => 'RequestFriend',
     :receive_reward => 'ReceiveReward',
-    :promote_admin => 'PromoteAdmin'
+    :promote_admin => 'PromoteAdmin',
+    :subscription_nearly_expire => 'SubscriptionNearlyExpire',
+    :subscription_expire => 'SubscriptionExpire'
   }
 
   AUTHORITY = {
@@ -39,6 +41,35 @@ module SymbolHash
     :friend_following => 'Friends & Following',
     :group => 'Group',
     :private => 'Private'
+  }
+
+  WORKER = {
+    :add_follow => 'AddFollow',
+    :approve_request_group => 'ApproveRequestGroup',
+    :add_friend => 'AddFriend',
+    :add_member_to_group => 'AddMemberToGroup',
+    :add_poll_to_group => 'AddPollToGroup',
+    :all_gift => 'AllGift',
+    :nearly_expire_subsription => 'NearlyExpireSubscription',
+    :comment_mention => 'CommentMention',
+    :comment_poll => 'CommentPoll',
+    :company_add_user_to_group => 'CompanyAddUserToGroup',
+    :invite_friend_to_group => 'InviteFriendToGroup',
+    :join_group => 'JoinGroup',
+    :not_receive_random_reward_poll => 'NotReceiveRandomRewardPoll',
+    :notify_expire_subscription => 'NotifyExpireSubscription',
+    :one_gift => 'OneGift',
+    :poke_poll => 'PokePoll',
+    :poll => 'Poll',
+    :promote_admin => 'PromoteAdmin',
+    :questionnaire => 'Questionnaire',
+    :receive_random_reward_poll => 'ReceiveRandomRewardPoll',
+    :report_poll => 'ReportPoll',
+    :request_group => 'RequestGroup',
+    :reward => 'Reward',
+    :save_poll => 'SavePoll',
+    :sum_vote_poll => 'SumVotePoll',
+    :vote_poll => 'VotePoll'
   }
 
 end

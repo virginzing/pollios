@@ -322,7 +322,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.alert_save_poll
-    ApnSavePollWorker.perform_async({})
+    SavePollWorker.perform_async({})
   end
 
   def self.from_omniauth(auth)
@@ -758,12 +758,12 @@ class Member < ActiveRecord::Base
       end
       member.update!(subscription: false, subscribe_expire: nil, member_type: :citizen)
     end
-    ApnNotifyExpireSubscriptionWorker.perform_async(0, list_member_subscribe_expiration_member_ids) if list_member_subscribe_expiration_member_ids.size > 0
+    NotifyExpireSubscriptionWorker.perform_async(0, list_member_subscribe_expiration_member_ids) if list_member_subscribe_expiration_member_ids.size > 0
   end
 
   def self.notify_nearly_expire_subscription
     list_member_nearly_subscribe_expire = Member.where("date(subscribe_expire + interval '7 hour') = ?", Time.zone.today + 3.days).map(&:id).uniq
-    ApnNearlyExpireSubscriptionWorker.perform_async(0, list_member_nearly_subscribe_expire) if list_member_nearly_subscribe_expire.size > 0
+    NearlyExpireSubscriptionWorker.perform_async(0, list_member_nearly_subscribe_expire) if list_member_nearly_subscribe_expire.size > 0
   end
 
   def self.check_blacklist_members

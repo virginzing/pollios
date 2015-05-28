@@ -48,7 +48,9 @@ class CompanyAddUserToGroupWorker
       hash_custom = {
         action: TYPE[:join],
         group: GroupNotifySerializer.new(group).as_json(),
-        notify: hash_list_member_badge[member_receive.id]
+        notify: hash_list_member_badge[member_receive.id],
+        company_id: company.id,
+        worker: WORKER[:company_add_user_to_group]
       }
 
       NotifyLog.create!(sender_id: company.member.id, recipient_id: member_receive.id, message: @add_user_to_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))

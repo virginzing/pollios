@@ -1,4 +1,4 @@
-class ApnReceiveRandomRewardPollWorker
+class ReceiveRandomRewardPollWorker
   include Sidekiq::Worker
   include SymbolHash
 
@@ -50,7 +50,8 @@ class ApnReceiveRandomRewardPollWorker
     find_recipient.each do |member|
       hash_custom = {
         reward_id: list_hash_reward_with_member_ids[member.id],
-        notify: hash_list_member_badge[member.id]
+        notify: hash_list_member_badge[member.id],
+        worker: WORKER[:receive_random_reward_poll]
       }
 
       NotifyLog.create!(sender_id: sender.id, recipient_id: member.id, message: @apn_receive_random_reward_poll.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
@@ -59,6 +60,6 @@ class ApnReceiveRandomRewardPollWorker
     Apn::App.first.send_notifications
 
   rescue => e
-    puts "ApnRewardWorker => #{e.message}"
+    puts "ReceiveRandomRewardPollWorker => #{e.message}"
   end
 end

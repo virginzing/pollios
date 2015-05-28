@@ -26,7 +26,8 @@ class AddFollowWorker
     hash_custom = {
       action: action,
       follower_id: member.id,
-      followed_id: friend.id
+      followed_id: friend.id,
+      worker: WORKER[:add_follow]
     }
 
     device_ids.each do |device_id|

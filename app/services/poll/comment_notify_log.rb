@@ -44,7 +44,8 @@ class Poll::CommentNotifyLog
       type: TYPE[:comment],
       comment_id: comment.id,
       poll_id: poll.id,
-      series: poll.series
+      series: poll.series,
+      worker: WORKER[:comment_poll]
     }
 
     find_recipient_notify.each do |member|

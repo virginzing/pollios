@@ -56,8 +56,10 @@ class InviteFriendToGroupWorker
         action: ACTION[:invite],
         group: GroupNotifySerializer.new(group).as_json,
         notify: hash_list_member_badge[member.id],
-        request: hash_list_member_request_count[member.id]
+        request: hash_list_member_request_count[member.id],
+        worker: WORKER[:invite_friend_to_group]
       }
+
       NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
