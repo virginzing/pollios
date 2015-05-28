@@ -66,7 +66,7 @@ class PurchaseController < ApplicationController
         end
       end
       rescue => e
-        render :json => {:response_status => "ERROR", :response_message => e.message }, :status => 400
+        render :json => {:response_status => "ERROR", :response_message => e.message }, status: :unprocessable_entity
       end
     end
   end

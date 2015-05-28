@@ -35,12 +35,13 @@ class HistoryPurchase < ActiveRecord::Base
             else
               new_subscribe_expire = member.subscribe_expire + value
             end
+
             Member::ListFriend.new(member).follower.each do |follower|
               FlushCached::Member.new(follower).clear_list_friends
             end
+
             member.update!(member_type: :celebrity, subscription: true, subscribe_last: Time.zone.now, subscribe_expire: new_subscribe_expire, show_recommend: true)
           end
-
         end
       end
     end
@@ -84,18 +85,18 @@ class HistoryPurchase < ActiveRecord::Base
       when "10publicpoll"
         return [10, 'P']
       when "1month"
-        return [30.days, 'S']
+        return [1.month, 'S']
       when "1year"
-        return [360.days, 'S']
+        return [1.year, 'S']
     end
   end
 
   def self.generate_day(product_id)
     case product_id
       when "1month"
-        return 30.days
+        return 1.month
       when "1year"
-        return 360.days
+        return 1.year
       else
         return 0.days
     end
