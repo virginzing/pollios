@@ -39,7 +39,7 @@ class NotifyLog < ActiveRecord::Base
   end
 
   def self.poll_with_group_deleted(poll, group)
-    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Poll%", "%poll_id: #{poll.id}%")
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Poll%", "%poll_id: #{poll.id}%", "%group_id: #{group.id}%")
   end
 
 end

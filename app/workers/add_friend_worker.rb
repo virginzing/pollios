@@ -32,7 +32,8 @@ class AddFriendWorker
       }
 
       hash_custom = {
-        action: action
+        action: action,
+        friend_id: friend.id
       }
 
       device_ids.each do |device_id|
