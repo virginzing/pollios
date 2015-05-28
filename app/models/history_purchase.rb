@@ -33,7 +33,11 @@ class HistoryPurchase < ActiveRecord::Base
             if member.subscribe_last.nil?
               new_subscribe_expire = Time.zone.now + value
             else
-              new_subscribe_expire = member.subscribe_expire + value
+              if member.subscribe_expire.nil?
+                new_subscribe_expire = Time.zone.now + value
+              else
+                new_subscribe_expire = member.subscribe_expire + value
+              end
             end
 
             Member::ListFriend.new(member).follower.each do |follower|
