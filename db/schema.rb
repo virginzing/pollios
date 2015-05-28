@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528063051) do
+ActiveRecord::Schema.define(version: 20150528144354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -485,8 +485,10 @@ ActiveRecord::Schema.define(version: 20150528063051) do
     t.integer  "member_id"
     t.string   "cover_preset",     default: "0"
     t.boolean  "exclusive",        default: false
+    t.datetime "deleted_at"
   end
 
+  add_index "groups", ["deleted_at"], name: "index_groups_on_deleted_at", using: :btree
   add_index "groups", ["member_id"], name: "index_groups_on_member_id", using: :btree
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
   add_index "groups", ["properties"], name: "index_groups_on_properties", using: :gist

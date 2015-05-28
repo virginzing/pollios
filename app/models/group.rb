@@ -1,16 +1,17 @@
 class Group < ActiveRecord::Base
+  acts_as_paranoid
   # extend FriendlyId
   resourcify
   include GroupHelper
 
-  has_many :group_members, dependent: :destroy
+  has_many :group_members
   has_many :members, through: :group_members, source: :member
 
   has_many :group_members_active, -> { where("group_members.active = 't'") }, through: :group_members, source: :member
 
   has_many :get_admin_group, -> { where("group_members.active = 't' AND group_members.is_master = 't'") },through: :group_members, source: :member
 
-  has_many :poll_groups, dependent: :destroy
+  has_many :poll_groups
   has_many :polls, through: :poll_groups, source: :poll
 
   has_many :polls_active, -> { where("polls.expire_date > ? AND polls.status_poll != -1", Time.zone.now) }, through: :poll_groups, source: :poll
@@ -24,14 +25,14 @@ class Group < ActiveRecord::Base
   has_many :open_notification, -> { where(notification: true, active: true) }, class_name: "GroupMember"
   has_many :get_member_open_notification, through: :open_notification, source: :member
 
-  has_many :invite_codes, dependent: :destroy
+  has_many :invite_codes
 
-  has_one :group_company, dependent: :destroy
+  has_one :group_company
 
-  has_many :group_surveyors, dependent: :destroy
+  has_many :group_surveyors
   has_many :surveyor, through: :group_surveyors, source: :member
 
-  has_many :request_groups, -> { where(accepted: false) } , dependent: :destroy
+  has_many :request_groups, -> { where(accepted: false) }
   has_many :members_request, through: :request_groups, source: :member
 
   belongs_to :member
@@ -48,7 +49,9 @@ class Group < ActiveRecord::Base
   after_create :set_public_id
   before_create :set_cover_preset
 
-  default_scope { where(visible: true) }
+  default_scope { with_deleted.where(visible: true) }
+
+  scope :without_deleted, -> { where(deleted_at: nil) }
 
   # def slug_candidates
   #   [
