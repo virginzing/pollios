@@ -38,4 +38,8 @@ class NotifyLog < ActiveRecord::Base
               .where("sender_id = #{sender.id}").update_all(deleted_at: Time.now)
   end
 
+  def self.poll_with_group_deleted(poll, group)
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Poll%", "%poll_id: #{poll.id}%")
+  end
+
 end

@@ -274,6 +274,7 @@ class PollsController < ApplicationController
             else
               delete_poll_in_one_group
             end
+            NotifyLog.poll_with_group_deleted(@poll, set_group)
           else
             delete_my_poll
           end
