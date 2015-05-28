@@ -42,6 +42,7 @@ class PollsController < ApplicationController
     @un_see_poll = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
+      NotifyLog.deleted_with_poll_and_member(@poll, @current_member)
       SavePollLater.delete_save_later(@current_member.id, @poll)
       render status: :created
     rescue => e
