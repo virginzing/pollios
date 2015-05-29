@@ -768,7 +768,9 @@ class Poll < ActiveRecord::Base
 
       poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
 
+      find_poll.reload
       find_poll.update_columns(vote_all: find_poll.vote_all + 1)
+      find_choice.reload
       find_choice.update_columns(vote: find_choice.vote + 1)
 
       Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
@@ -805,6 +807,7 @@ class Poll < ActiveRecord::Base
       member.flush_cache_my_vote
       FlushCached::Member.new(member).clear_list_voted_all_polls
       find_poll.touch
+      find_choice.touch
       [find_poll, history_voted]
     end
   end
