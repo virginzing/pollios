@@ -780,7 +780,7 @@ class Poll < ActiveRecord::Base
       find_choice.vote += 1
       find_choice.save!
     end
-    
+
     Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
     UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
@@ -877,7 +877,12 @@ class Poll < ActiveRecord::Base
         unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
           HistoryView.create! member_id: @member.id, poll_id: @poll.id
           Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
-          @poll.update_columns(view_all: @poll.view_all + 1)
+          
+          @poll.with_lock do
+            @poll.view_all += 1
+            @poll.save!
+          end
+
           FlushCached::Member.new(@member).clear_list_history_viewed_polls
         end
       rescue => e

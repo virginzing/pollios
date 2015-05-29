@@ -612,15 +612,16 @@ class PollsController < ApplicationController
   end
 
   def vote
-    @poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
+    poll, @history_voted = Poll.vote_poll(view_and_vote_params, @current_member, params[:data_options])
 
     if @history_voted
-      if @poll.get_campaign
-        @reward = @poll.find_campaign_for_predict?(@current_member)
+      if poll.get_campaign
+        @reward = poll.find_campaign_for_predict?(@current_member)
       end 
     end
 
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
+    @poll = @poll.reload
   end
 
   # def view
