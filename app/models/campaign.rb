@@ -105,7 +105,12 @@ class Campaign < ActiveRecord::Base
 
       if sample % end_sample == 0
         @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
-        increment!(:used)
+
+        self.with_lock do
+          self.used += 1
+          self.save!
+        end
+
         Rails.cache.delete([member_id, 'reward'])
         if @reward
           RewardWorker.perform_async(@reward.id) unless Rails.env.test?
@@ -126,7 +131,11 @@ class Campaign < ActiveRecord::Base
       @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true, gift_log_id: gift_log.id)
     end
     
-    increment!(:used)
+    self.with_lock do
+      self.used += 1
+      self.save!
+    end
+    
     Rails.cache.delete([member_id, 'reward'])
     @reward
   end
@@ -144,7 +153,12 @@ class Campaign < ActiveRecord::Base
 
       if sample % end_sample == 0
         @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
-        increment!(:used)
+        
+        self.with_lock do
+          self.used += 1
+          self.save!
+        end
+        
         Rails.cache.delete([member_id, 'reward'])
         if @reward
           RewardWorker.perform_async(@reward.id) unless Rails.env.test?

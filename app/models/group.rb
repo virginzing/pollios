@@ -152,7 +152,11 @@ class Group < ActiveRecord::Base
       @group = find_group_member.group
       @member = member
 
-      find_group_member.group.increment!(:member_count)
+      @group.with_lock do
+        @group.member_count += 1
+        @group.save!
+      end
+
       find_group_member.update_attributes!(active: true)
 
       if @group.company? && !@group.system_group

@@ -351,7 +351,11 @@ class MembersController < ApplicationController
     begin
       @find_friend = Member.find_by(id: report_params[:id])
       @current_member.sent_reports.create!(reportee_id: @find_friend.id, message: report_params[:message])
-      @find_friend.increment!(:report_count)
+
+      @find_friend.with_lock do
+        @find_friend.report_count += 1
+        @find_friend.save!
+      end
 
       if report_params[:block]
         Friend.block_friend({ member_id: report_params[:member_id], friend_id: @find_friend.id })
@@ -465,7 +469,12 @@ class MembersController < ApplicationController
         CompanyMember.add_member_to_company(@current_member, @find_company)
 
         Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
-        @group.increment!(:member_count)
+
+        @group.with_lock do
+          @group.member_count += 1
+          @group.save!
+        end
+
         FlushCached::Member.new(@current_member).clear_list_groups
         FlushCached::Group.new(@group).clear_list_members
         true

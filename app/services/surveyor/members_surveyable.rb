@@ -44,9 +44,15 @@ class Surveyor::MembersSurveyable
 
           find_surveyed.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: @surveyor.id)
 
-          @poll.increment!(:vote_all)
+          @poll.with_lock do
+            @poll.vote_all += 1
+            @poll.save!
+          end
 
-          find_choice.increment!(:vote)
+          find_choice.with_lock do
+            find_choice.vote += 1
+            find_choice.save!
+          end
 
           unless @poll.series
             VoteStats.create_vote_stats(@poll)

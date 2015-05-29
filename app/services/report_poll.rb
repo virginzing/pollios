@@ -23,7 +23,11 @@ class ReportPoll
 
   def report_increment
     report_power = @member.report_power
-    @poll.increment!(:report_count, report_power)
+
+    @poll.with_lock do
+      @poll.report_count += report_power
+      @poll.save!
+    end
 
     if @poll.report_count >= NUMBER_REPORT_COUNT
       @poll.update!(status_poll: :black)

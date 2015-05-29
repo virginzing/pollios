@@ -21,7 +21,10 @@ class ReportComment
 
   def report_increment
     report_power = @member.report_power
-    @comment.increment!(:report_count, report_power)
+    @comment.with_lock do
+      @comment.report_count += report_power
+      @comment.save!
+    end
   end
 
   private

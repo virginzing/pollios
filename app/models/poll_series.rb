@@ -265,7 +265,12 @@ class PollSeries < ActiveRecord::Base
       list_answer.each do |answer|
         @votes = Poll.vote_poll(answer, member, options)
       end
-      self.increment!(:vote_all)
+      
+      self.with_lock do
+        self.vote_all += 1
+        self.save!
+      end
+
       poll_series.suggests.create!(member_id: surveyed_id, message: params[:suggest])
       CollectionPollSeries.update_sum_vote(poll_series)
       SavePollLater.delete_save_later(member_id, poll_series)

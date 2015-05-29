@@ -264,7 +264,12 @@ class Authentication
     find_main_group = Company.find(company_id.to_i).main_groups.first
     if find_main_group.present?
       find_main_group.group_members.create!(member_id: @member.id, active: true, is_master: false)
-      find_main_group.increment!(:member_count)
+
+      find_main_group.with_lock do
+        find_main_group.member_count += 1
+        find_main_group.save!
+      end
+      
     end
   end
 
