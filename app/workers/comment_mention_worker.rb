@@ -50,6 +50,7 @@ class CommentMentionWorker
     find_recipient_notify.each do |member|
       hash_custom = {
         action: ACTION[:mention],
+        voted: poll.voted?(member),
         poll: @poll_serializer_json,
         notify: hash_list_member_badge[member.id],
         worker: WORKER[:comment_mention]

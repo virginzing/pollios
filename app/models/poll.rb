@@ -231,6 +231,10 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def voted?(member)
+    Member::ListPoll.new(member).voted_all.collect{|e| e["poll_id"] }.include?(id)
+  end
+
   def generate_qrcode_key
     begin
       self.qrcode_key = SecureRandom.hex(4)

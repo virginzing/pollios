@@ -51,6 +51,7 @@ class Poll::CommentNotifyLog
     find_recipient_notify.each do |member|
       hash_custom = {
         action: @apn_comment.custom_action(member.id),
+        voted: poll.voted?(member),
         poll: @poll_serializer_json,
         comment: comment_message,
         notify: get_hash_list_member_badge[member.id]
