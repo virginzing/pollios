@@ -27,7 +27,7 @@ class PollSerializer < ActiveModel::Serializer
   end
 
   def allow_comment
-    allow_comment
+    object.allow_comment
   end
   
 end
