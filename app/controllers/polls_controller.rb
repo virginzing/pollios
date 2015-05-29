@@ -124,8 +124,8 @@ class PollsController < ApplicationController
 
   def member_voted
     begin
-      @find_choice = Choice.cached_find(params[:choice_id])
-
+      @find_choice = Choice.find_by(id: params[:choice_id])
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if @find_choice.nil?
       @history_votes_show_result ||= HistoryVote.includes(:member)
                                     .where(poll_id: @poll.id, choice_id: @find_choice.id, show_result: true).paginate(page: params[:next_cursor], per_page: 30)
 

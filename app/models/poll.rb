@@ -756,16 +756,17 @@ class Poll < ActiveRecord::Base
 
     Poll.transaction do
       begin
-        find_poll = Poll.cached_find(poll_id)
+        find_poll = Poll.find(poll_id)
 
-        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
-        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
+        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
+        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
+        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
         ever_vote = HistoryVote.exists?(member_id: member_id, poll_id: poll_id)
 
         unless ever_vote
-          find_choice = Choice.cached_find(choice_id)
-
+          find_choice = Choice.find_by(id: choice_id)
+          fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
           poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
 
           find_poll.increment!(:vote_all)

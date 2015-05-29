@@ -67,6 +67,10 @@ module ExceptionHandler
       OPEN = "Maintenance Mode."
     end
 
+    module Choice
+      NOT_FOUND = "Choice not found."
+    end
+
     module Group
       NOT_FOUND = "Group not found."
       NOT_IN_GROUP = "You're not in this group."
