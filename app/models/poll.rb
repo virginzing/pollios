@@ -771,11 +771,16 @@ class Poll < ActiveRecord::Base
 
     poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
 
-    find_poll.reload
-    find_poll.update_columns(vote_all: find_poll.vote_all + 1)
-    find_choice.reload
-    find_choice.update_columns(vote: find_choice.vote + 1)
+    find_poll.with_lock do
+      find_poll.vote_all += 1
+      find_poll.save!
+    end
 
+    find_choice.with_lock do
+      find_choice.vote += 1
+      find_choice.save!
+    end
+    
     Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
     UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
