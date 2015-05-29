@@ -1,7 +1,7 @@
 class PollSerializer < ActiveModel::Serializer
   self.root = false
 
-  attributes :id, :creator, :title, :poll_within, :series
+  attributes :id, :creator, :title, :poll_within, :series, :allow_comment
 
   def id
     object.id
@@ -26,4 +26,8 @@ class PollSerializer < ActiveModel::Serializer
     false
   end
 
+  def allow_comment
+    allow_comment
+  end
+  
 end
