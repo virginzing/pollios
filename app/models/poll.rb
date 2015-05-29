@@ -754,22 +754,19 @@ class Poll < ActiveRecord::Base
     guest_id = poll[:guest_id]
     show_result = poll[:show_result]
 
-    find_poll = Poll.find(poll_id)
-
+    find_poll = Poll.find_by(id: poll_id)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
     ever_vote = Member::ListPoll.new(member).voted_all.collect{|e| e["poll_id"] }.include?(poll_id)
-
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
     
     find_choice = Choice.find_by(id: choice_id)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
+
     poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
-
     find_poll.increment!(:vote_all)
-
     find_choice.increment!(:vote)
 
     Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
