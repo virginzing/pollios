@@ -38,6 +38,7 @@ module ExceptionHandler
       CLOSED = "Poll had closed already."
       EXPIRED = "Poll had expired already."
       POINT_ZERO = "Poll to public 0 left."
+      VOTED = "You had already voted this poll."
     end
 
     module PollSeries

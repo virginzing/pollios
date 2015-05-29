@@ -692,26 +692,21 @@ class PollsController < ApplicationController
   # Comment
 
   def comment #post comment
-    Comment.transaction do
-      begin
-        fail ExceptionHandler::UnprocessableEntity, 'Poll had already disabled comment.' unless @poll.allow_comment
-        
-        list_mentioned = comment_params[:list_mentioned]
-        @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-        @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
-        @poll.increment!(:comment_count)
+    fail ExceptionHandler::UnprocessableEntity, 'Poll had already disabled comment.' unless @poll.allow_comment
+    list_mentioned = comment_params[:list_mentioned]
+    @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
+    @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
+    @poll.increment!(:comment_count)
 
-        find_watched = Watched.find_by(member_id: @current_member.id, poll_id: @poll.id)
+    find_watched = Watched.find_by(member_id: @current_member.id, poll_id: @poll.id)
 
-        if find_watched.nil?
-          WatchPoll.new(@current_member, @poll.id).watching
-        end
-
-        Activity.create_activity_comment(@current_member, @poll, 'Comment')
-        
-        render status: :created
-      end
+    if find_watched.nil?
+      WatchPoll.new(@current_member, @poll.id).watching
     end
+
+    Activity.create_activity_comment(@current_member, @poll, 'Comment')
+    
+    render status: :created
   end
 
   def load_comment

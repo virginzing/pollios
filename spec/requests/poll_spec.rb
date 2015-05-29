@@ -130,7 +130,7 @@ RSpec.describe "Poll" do
       post "/poll/#{poll.id}/vote", { member_id: member.id, choice_id: 1 }, { "Accept" => "application/json" }
 
       expect(json["response_status"]).to eq("ERROR")
-      expect(json["response_message"]).to eq("Choice not found")
+      expect(json["response_message"]).to eq("Choice not found.")
     end
 
     it "reponse with a 422 status when poll was closed" do
