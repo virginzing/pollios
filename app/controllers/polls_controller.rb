@@ -697,7 +697,11 @@ class PollsController < ApplicationController
     list_mentioned = comment_params[:list_mentioned]
     @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
     @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
-    @poll.update_columns(comment_count: @poll.comment_count + 1)
+
+    @poll.with_lock do 
+      @poll.comment_count += 1
+      @poll.save!
+    end
 
     find_watched = Watched.find_by(member_id: @current_member.id, poll_id: @poll.id)
 
