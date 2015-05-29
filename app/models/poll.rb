@@ -747,63 +747,66 @@ class Poll < ActiveRecord::Base
   end
 
   def self.vote_poll(poll, member, data_options = {})
-    member_id = poll[:member_id]
-    surveyor_id = poll[:surveyor_id]
-    poll_id = poll[:id]
-    choice_id = poll[:choice_id]
-    guest_id = poll[:guest_id]
-    show_result = poll[:show_result]
+    begin
+      member_id = poll[:member_id]
+      surveyor_id = poll[:surveyor_id]
+      poll_id = poll[:id]
+      choice_id = poll[:choice_id]
+      guest_id = poll[:guest_id]
+      show_result = poll[:show_result]
 
-    find_poll = Poll.find_by(id: poll_id)
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
+      find_poll = Poll.find_by(id: poll_id)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
-    ever_vote = Member::ListPoll.new(member).voted_poll?(find_poll)
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
-    
-    find_choice = Choice.find_by(id: choice_id)
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
-
-    poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
-    find_poll.increment!(:vote_all)
-    find_choice.increment!(:vote)
-
-    Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
-
-    UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
-
-    SavePollLater.delete_save_later(member_id, find_poll)
-
-    unless show_result.nil?
-      check_show_result = show_result
-    else
-      check_show_result = show_result?(member, find_poll)
-    end
-
-    if (member.id != find_poll.member_id) && !find_poll.series
-      if find_poll.notify_state.idle?
-        find_poll.update_column(:notify_state, 1)
-        find_poll.update_column(:notify_state_at, Time.zone.now)
-        SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
-      end
+      ever_vote = Member::ListPoll.new(member).voted_poll?(find_poll)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
       
-      Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
+      find_choice = Choice.find_by(id: choice_id)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
+
+      poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
+
+      find_poll.update_columns(vote_all: find_poll.vote_all + 1)
+      find_choice.update_columns(vote: find_choice.vote + 1)
+
+      Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
+
+      UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
+
+      SavePollLater.delete_save_later(member_id, find_poll)
+
+      unless show_result.nil?
+        check_show_result = show_result
+      else
+        check_show_result = show_result?(member, find_poll)
+      end
+
+      if (member.id != find_poll.member_id) && !find_poll.series
+        if find_poll.notify_state.idle?
+          find_poll.update_column(:notify_state, 1)
+          find_poll.update_column(:notify_state_at, Time.zone.now)
+          SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
+        end
+        
+        Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
+      end
+
+      history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
+
+      unless find_poll.series
+        VoteStats.create_vote_stats(find_poll) 
+        Activity.create_activity_poll(member, find_poll, 'Vote')
+      end
+
+      Trigger::Vote.new(member, find_poll, find_choice).trigger!
+
+      member.flush_cache_my_vote
+      FlushCached::Member.new(member).clear_list_voted_all_polls
+
+      [find_poll, history_voted]
     end
-
-    history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
-
-    unless find_poll.series
-      VoteStats.create_vote_stats(find_poll) 
-      Activity.create_activity_poll(member, find_poll, 'Vote')
-    end
-
-    Trigger::Vote.new(member, find_poll, find_choice).trigger!
-
-    member.flush_cache_my_vote
-    FlushCached::Member.new(member).clear_list_voted_all_polls
-
-    [find_poll, history_voted]
   end
 
   def self.show_result?(member, find_poll)
