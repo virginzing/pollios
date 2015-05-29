@@ -251,6 +251,10 @@ class Poll < ActiveRecord::Base
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
   end
 
+  def get_vote_max_no_cached
+    choices.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
+  end
+
   def get_vote_max_non_cache
     @choice ||= choices.to_a
     @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
@@ -806,6 +810,7 @@ class Poll < ActiveRecord::Base
 
       member.flush_cache_my_vote
       FlushCached::Member.new(member).clear_list_voted_all_polls
+
       find_poll.touch
       find_choice.touch
       [find_poll, history_voted]

@@ -113,6 +113,7 @@ RSpec.describe "Poll" do
       expect(json.has_key?("information")).to be true
       expect(json.has_key?("scroll")).to be true
       expect(json.has_key?("vote_max")).to be true
+      expect(json.has_key?("choices")).to be_truthy
       poll.reload
       choice_one.reload
       expect(poll.vote_all).to eq(1)
