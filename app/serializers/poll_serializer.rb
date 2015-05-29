@@ -26,5 +26,4 @@ class PollSerializer < ActiveModel::Serializer
     false
   end
 
-
 end

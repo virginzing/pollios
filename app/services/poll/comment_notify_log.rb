@@ -26,7 +26,7 @@ class Poll::CommentNotifyLog
   def create!    
     raise ArgumentError.new(ExceptionHandler::Message::Poll::NOT_FOUND) if poll.nil?
     
-    @poll_serializer_json ||= PollSerializer.new(poll).as_json()
+    @poll_serializer_json ||= PollSerializer.new(poll).as_json
 
     @apn_comment = Apn::CommentPoll.new(@sender, poll, comment_message)
 
@@ -49,10 +49,10 @@ class Poll::CommentNotifyLog
     }
 
     find_recipient_notify.each do |member|
+      voted_detail = { voted: poll.voted?(member) }
       hash_custom = {
         action: @apn_comment.custom_action(member.id),
-        voted: poll.voted?(member),
-        poll: @poll_serializer_json,
+        poll: @poll_serializer_json.merge(voted_detail),
         comment: comment_message,
         notify: get_hash_list_member_badge[member.id]
       }
