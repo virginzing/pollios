@@ -804,7 +804,7 @@ class Poll < ActiveRecord::Base
 
       member.flush_cache_my_vote
       FlushCached::Member.new(member).clear_list_voted_all_polls
-
+      find_poll.touch
       [find_poll, history_voted]
     end
   end
