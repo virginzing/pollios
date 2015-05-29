@@ -23,6 +23,10 @@ class Member::ListPoll
     @report_comments ||= cached_report_comments
   end
 
+  def voted_poll?(poll)
+    voted_all.collect{|e| e["poll_id"] }.include?(poll.id)    
+  end
+
   private
 
   def member_report_polls
