@@ -666,7 +666,13 @@ class Poll < ActiveRecord::Base
             end
 
             if member.citizen? && is_public
-              member.decrement!(:point) if member.point > 0
+              # member.decrement!(:point) 
+              if member.point > 0
+                member.with_lock do
+                  member.point -= 1
+                  member.save!
+                end
+              end
             end
 
             PollStats.create_poll_stats(@poll)

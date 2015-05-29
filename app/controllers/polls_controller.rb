@@ -745,7 +745,12 @@ class PollsController < ApplicationController
         fail ExceptionHandler::UnprocessableEntity, "You can't delete this comment. Because you're not owner comment or owner poll." unless (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
         @comment.destroy
         NotifyLog.check_update_comment_deleted(@comment)
-        @poll.decrement!(:comment_count) if @poll.comment_count > 0
+        if @poll.comment_count > 0
+          @poll.with_lock do
+            @poll.comment_count -= 1
+            @poll.save!
+          end
+        end
         render status: :created
       end
     end

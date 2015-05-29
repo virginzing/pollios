@@ -107,8 +107,10 @@ class GroupController < ApplicationController
       if find_poll_in_group.present? && params[:member_id] == find_poll_in_group.first.poll.member_id
         find_poll_in_group.first.poll.destroy
         find_poll_in_group.first.destroy
-        @group.decrement!(:poll_count)
-
+        @group.with_lock do
+          @group.poll_count -= 1
+          @group.save!
+        end
         find_poll_in_group.first.poll.member.flush_cache_about_poll
         DeletePoll.create_log(find_poll_in_group.first.poll)
         wants.json { render json: Hash["response_status" => "OK"] }

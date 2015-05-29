@@ -484,7 +484,10 @@ class CompaniesController < ApplicationController
 
   def delete_poll
     @poll.groups.each do |group|
-      group.decrement!(:poll_count)
+      group.with_lock do
+        group.poll_count -= 1
+        group.save!
+      end
     end
     @poll.destroy
     @poll.member.flush_cache_about_poll

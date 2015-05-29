@@ -9,7 +9,11 @@ class CommentsController < ApplicationController
     @destroy = false
     respond_to do |format|
       if @comment.destroy
-        @comment.poll.decrement!(:comment_count)
+        poll = @comment.poll
+        poll.with_lock do
+          poll.comment_count -= 1
+          poll.save!
+        end
         @destroy = true
         format.js
       else
