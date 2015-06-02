@@ -748,7 +748,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.check_subscribe
-    list_member_subscribe_expiration = Member.where("date(subscribe_expire + interval '7 hour') = ?", Date.today)
+    list_member_subscribe_expiration = Member.where("date(subscribe_expire + interval '7 hour') = ?", Time.zone.today)
 
     list_member_subscribe_expiration_member_ids = list_member_subscribe_expiration.map(&:id).uniq
     
