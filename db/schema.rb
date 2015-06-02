@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602155737) do
+ActiveRecord::Schema.define(version: 20150602162321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -747,12 +747,20 @@ ActiveRecord::Schema.define(version: 20150602155737) do
     t.boolean  "show_recommend",             default: false
   end
 
+  add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
+  add_index "members", ["first_signup"], name: "index_members_on_first_signup", where: "(first_signup = true)", using: :btree
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree
+  add_index "members", ["member_type"], name: "index_members_on_member_type", where: "(member_type = 3)", using: :btree
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
   add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at", using: :btree
   add_index "members", ["public_id"], name: "index_members_on_public_id", using: :btree
   add_index "members", ["setting"], name: "index_members_on_setting", using: :gist
+  add_index "members", ["show_recommend"], name: "index_members_on_show_recommend", where: "(show_recommend = true)", using: :btree
   add_index "members", ["slug"], name: "index_members_on_slug", unique: true, using: :btree
+  add_index "members", ["status_account"], name: "index_members_on_status_account", where: "(status_account = 0)", using: :btree
+  add_index "members", ["subscription"], name: "index_members_on_subscription", where: "(subscription = true)", using: :btree
+  add_index "members", ["sync_facebook"], name: "index_members_on_sync_facebook", where: "(sync_facebook = true)", using: :btree
+  add_index "members", ["update_personal"], name: "index_members_on_update_personal", where: "(update_personal = true)", using: :btree
   add_index "members", ["username"], name: "index_members_on_username", using: :btree
 
   create_table "members_roles", id: false, force: true do |t|
@@ -884,8 +892,19 @@ ActiveRecord::Schema.define(version: 20150602155737) do
     t.datetime "deleted_at"
   end
 
+  add_index "poll_series", ["allow_comment"], name: "index_poll_series_on_allow_comment", where: "(allow_comment = false)", using: :btree
+  add_index "poll_series", ["campaign_id"], name: "index_poll_series_on_campaign_id", using: :btree
   add_index "poll_series", ["deleted_at"], name: "index_poll_series_on_deleted_at", using: :btree
+  add_index "poll_series", ["feedback"], name: "index_poll_series_on_feedback", using: :btree
+  add_index "poll_series", ["in_group"], name: "index_poll_series_on_in_group", where: "(in_group = true)", using: :btree
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree
+  add_index "poll_series", ["public"], name: "index_poll_series_on_public", using: :btree
+  add_index "poll_series", ["qr_only"], name: "index_poll_series_on_qr_only", where: "(qr_only = true)", using: :btree
+  add_index "poll_series", ["qrcode_key"], name: "index_poll_series_on_qrcode_key", using: :btree
+  add_index "poll_series", ["recurring_id"], name: "index_poll_series_on_recurring_id", using: :btree
+  add_index "poll_series", ["require_info"], name: "index_poll_series_on_require_info", using: :btree
+  add_index "poll_series", ["type_poll"], name: "index_poll_series_on_type_poll", using: :btree
+  add_index "poll_series", ["type_series"], name: "index_poll_series_on_type_series", using: :btree
 
   create_table "poll_series_companies", force: true do |t|
     t.integer  "poll_series_id"
@@ -1141,6 +1160,8 @@ ActiveRecord::Schema.define(version: 20150602155737) do
     t.datetime "updated_at"
   end
 
+  add_index "tags", ["name"], name: "index_tags_on_name", using: :btree
+
   create_table "triggers", force: true do |t|
     t.integer  "triggerable_id"
     t.string   "triggerable_type"
@@ -1184,8 +1205,10 @@ ActiveRecord::Schema.define(version: 20150602155737) do
     t.boolean  "comment_notify", default: true
   end
 
+  add_index "watcheds", ["comment_notify"], name: "index_watcheds_on_comment_notify", using: :btree
   add_index "watcheds", ["member_id", "poll_id"], name: "index_watcheds_on_member_id_and_poll_id", unique: true, using: :btree
   add_index "watcheds", ["member_id"], name: "index_watcheds_on_member_id", using: :btree
   add_index "watcheds", ["poll_id"], name: "index_watcheds_on_poll_id", using: :btree
+  add_index "watcheds", ["poll_notify"], name: "index_watcheds_on_poll_notify", using: :btree
 
 end
