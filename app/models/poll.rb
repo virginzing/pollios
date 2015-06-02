@@ -261,12 +261,7 @@ class Poll < ActiveRecord::Base
   end
 
   def get_choice_detail
-    @choice ||= cached_choices
-    hash_choice = []
-    cached_choices.each do |choice|
-      hash_choice << {"choice_id" => choice.id, "answer" => choice.answer, "vote" => choice.vote }
-    end
-    hash_choice
+    ActiveModel::ArraySerializer.new(cached_choices, each_serializer: ChoiceSerializer).as_json
   end
 
   def get_in_groups(groups_by_name)

@@ -101,7 +101,7 @@ RSpec.describe Poll, :type => :model do
       mock_choice = []
 
       poll.reload.choices.each do |choice|
-        mock_choice << { "choice_id" => choice.id, "answer" => choice.answer, "vote" => choice.vote }
+        mock_choice << { choice_id: choice.id, answer: choice.answer, vote: choice.vote }
       end
 
       expect(poll.get_choice_detail).to eq(mock_choice)

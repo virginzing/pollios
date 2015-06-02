@@ -465,8 +465,7 @@ class PollsController < ApplicationController
     
     raise_exception_without_group if @poll.in_group
     Poll.view_poll(@poll, @current_member)
-    @expired = @poll.expire_date < Time.now
-    @voted = @current_member.list_voted?(@poll)
+    @choices_as_json = @poll.get_choice_detail
   end
 
   def random_poll
