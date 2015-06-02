@@ -7,6 +7,9 @@ class CampaignMember < ActiveRecord::Base
   belongs_to :poll
   belongs_to :poll_series
 
+  validates_uniqueness_of :serial_code
+  validates_uniqueness_of :ref_no
+
   scope :without_deleted, -> { where(deleted_at: nil) }
 
   default_scope { with_deleted }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528144354) do
+ActiveRecord::Schema.define(version: 20150602155737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20150528144354) do
   end
 
   add_index "api_tokens", ["member_id"], name: "index_api_tokens_on_member_id", using: :btree
+  add_index "api_tokens", ["token"], name: "index_api_tokens_on_token", using: :btree
 
   create_table "apn_apps", force: true do |t|
     t.text     "apn_dev_cert"
@@ -192,18 +193,6 @@ ActiveRecord::Schema.define(version: 20150528144354) do
   add_index "branches", ["company_id"], name: "index_branches_on_company_id", using: :btree
   add_index "branches", ["slug"], name: "index_branches_on_slug", unique: true, using: :btree
 
-  create_table "campaign_guests", force: true do |t|
-    t.integer  "campaign_id"
-    t.integer  "guest_id"
-    t.boolean  "luck"
-    t.string   "serail_code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "campaign_guests", ["campaign_id"], name: "index_campaign_guests_on_campaign_id", using: :btree
-  add_index "campaign_guests", ["guest_id"], name: "index_campaign_guests_on_guest_id", using: :btree
-
   create_table "campaign_members", force: true do |t|
     t.integer  "campaign_id"
     t.integer  "member_id"
@@ -223,11 +212,19 @@ ActiveRecord::Schema.define(version: 20150528144354) do
   end
 
   add_index "campaign_members", ["campaign_id"], name: "index_campaign_members_on_campaign_id", using: :btree
+  add_index "campaign_members", ["created_at"], name: "index_campaign_members_on_created_at", using: :btree
   add_index "campaign_members", ["deleted_at"], name: "index_campaign_members_on_deleted_at", using: :btree
+  add_index "campaign_members", ["gift"], name: "index_campaign_members_on_gift", where: "(gift = true)", using: :btree
   add_index "campaign_members", ["gift_log_id"], name: "index_campaign_members_on_gift_log_id", using: :btree
   add_index "campaign_members", ["member_id"], name: "index_campaign_members_on_member_id", using: :btree
+  add_index "campaign_members", ["poll_id"], name: "index_campaign_members_on_poll_id", using: :btree
   add_index "campaign_members", ["poll_series_id"], name: "index_campaign_members_on_poll_series_id", using: :btree
+  add_index "campaign_members", ["redeem"], name: "index_campaign_members_on_redeem", using: :btree
+  add_index "campaign_members", ["redeem_at"], name: "index_campaign_members_on_redeem_at", using: :btree
   add_index "campaign_members", ["redeemer_id"], name: "index_campaign_members_on_redeemer_id", using: :btree
+  add_index "campaign_members", ["ref_no"], name: "index_campaign_members_on_ref_no", unique: true, using: :btree
+  add_index "campaign_members", ["reward_status"], name: "index_campaign_members_on_reward_status", where: "(reward_status = 0)", using: :btree
+  add_index "campaign_members", ["serial_code"], name: "index_campaign_members_on_serial_code", unique: true, using: :btree
 
   create_table "campaigns", force: true do |t|
     t.string   "name"
@@ -253,7 +250,10 @@ ActiveRecord::Schema.define(version: 20150528144354) do
 
   add_index "campaigns", ["company_id"], name: "index_campaigns_on_company_id", using: :btree
   add_index "campaigns", ["member_id"], name: "index_campaigns_on_member_id", using: :btree
+  add_index "campaigns", ["redeem_myself"], name: "index_campaigns_on_redeem_myself", where: "(redeem_myself = true)", using: :btree
   add_index "campaigns", ["reward_info"], name: "index_campaigns_on_reward_info", using: :gist
+  add_index "campaigns", ["system_campaign"], name: "index_campaigns_on_system_campaign", where: "(system_campaign = true)", using: :btree
+  add_index "campaigns", ["type_campaign"], name: "index_campaigns_on_type_campaign", where: "(type_campaign = 1)", using: :btree
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
@@ -334,6 +334,8 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.datetime "deleted_at"
   end
 
+  add_index "comments", ["ban"], name: "index_comments_on_ban", where: "(ban = true)", using: :btree
+  add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
   add_index "comments", ["deleted_at"], name: "index_comments_on_deleted_at", using: :btree
   add_index "comments", ["member_id"], name: "index_comments_on_member_id", using: :btree
   add_index "comments", ["poll_id"], name: "index_comments_on_poll_id", using: :btree
@@ -402,6 +404,7 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.boolean  "close_friend", default: false
   end
 
+  add_index "friends", ["block"], name: "index_friends_on_block", where: "(block = true)", using: :btree
   add_index "friends", ["followed_id"], name: "index_friends_on_followed_id", using: :btree
   add_index "friends", ["follower_id", "followed_id"], name: "index_friends_on_follower_id_and_followed_id", unique: true, using: :btree
   add_index "friends", ["follower_id"], name: "index_friends_on_follower_id", using: :btree
@@ -448,7 +451,10 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.boolean  "notification", default: true
   end
 
+  add_index "group_members", ["active"], name: "index_group_members_on_active", using: :btree
   add_index "group_members", ["group_id"], name: "index_group_members_on_group_id", using: :btree
+  add_index "group_members", ["invite_id"], name: "index_group_members_on_invite_id", using: :btree
+  add_index "group_members", ["is_master"], name: "index_group_members_on_is_master", where: "(is_master = true)", using: :btree
   add_index "group_members", ["member_id", "group_id"], name: "index_group_members_on_member_id_and_group_id", unique: true, using: :btree
   add_index "group_members", ["member_id"], name: "index_group_members_on_member_id", using: :btree
 
@@ -489,10 +495,14 @@ ActiveRecord::Schema.define(version: 20150528144354) do
   end
 
   add_index "groups", ["deleted_at"], name: "index_groups_on_deleted_at", using: :btree
+  add_index "groups", ["exclusive"], name: "index_groups_on_exclusive", where: "(exclusive = true)", using: :btree
+  add_index "groups", ["group_type"], name: "index_groups_on_group_type", where: "(group_type = 1)", using: :btree
   add_index "groups", ["member_id"], name: "index_groups_on_member_id", using: :btree
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
+  add_index "groups", ["need_approve"], name: "index_groups_on_need_approve", where: "(need_approve = false)", using: :btree
   add_index "groups", ["properties"], name: "index_groups_on_properties", using: :gist
   add_index "groups", ["public_id"], name: "index_groups_on_public_id", using: :btree
+  add_index "groups", ["system_group"], name: "index_groups_on_system_group", where: "(system_group = true)", using: :btree
 
   create_table "guests", force: true do |t|
     t.string   "udid"
@@ -577,9 +587,13 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.boolean  "show_result",    default: false
   end
 
+  add_index "history_votes", ["choice_id"], name: "index_history_votes_on_choice_id", using: :btree
   add_index "history_votes", ["data_analysis"], name: "index_history_votes_on_data_analysis", using: :gist
   add_index "history_votes", ["member_id"], name: "index_history_votes_on_member_id", using: :btree
   add_index "history_votes", ["poll_id"], name: "index_history_votes_on_poll_id", using: :btree
+  add_index "history_votes", ["poll_series_id"], name: "index_history_votes_on_poll_series_id", using: :btree
+  add_index "history_votes", ["show_result"], name: "index_history_votes_on_show_result", where: "(show_result = true)", using: :btree
+  add_index "history_votes", ["surveyor_id"], name: "index_history_votes_on_surveyor_id", using: :btree
 
   create_table "invite_codes", force: true do |t|
     t.string   "code"
@@ -771,6 +785,7 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.datetime "deleted_at"
   end
 
+  add_index "notify_logs", ["custom_properties"], name: "index_notify_logs_on_custom_properties", using: :btree
   add_index "notify_logs", ["recipient_id"], name: "index_notify_logs_on_recipient_id", using: :btree
   add_index "notify_logs", ["sender_id"], name: "index_notify_logs_on_sender_id", using: :btree
 
@@ -790,6 +805,7 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.datetime "updated_at"
   end
 
+  add_index "poll_attachments", ["order_image"], name: "index_poll_attachments_on_order_image", using: :btree
   add_index "poll_attachments", ["poll_id"], name: "index_poll_attachments_on_poll_id", using: :btree
 
   create_table "poll_companies", force: true do |t|
@@ -832,8 +848,12 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.integer  "poll_series_id",   default: 0
   end
 
+  add_index "poll_members", ["in_group"], name: "index_poll_members_on_in_group", where: "(in_group = true)", using: :btree
   add_index "poll_members", ["member_id"], name: "index_poll_members_on_member_id", using: :btree
   add_index "poll_members", ["poll_id"], name: "index_poll_members_on_poll_id", using: :btree
+  add_index "poll_members", ["poll_series_id"], name: "index_poll_members_on_poll_series_id", using: :btree
+  add_index "poll_members", ["public"], name: "index_poll_members_on_public", using: :btree
+  add_index "poll_members", ["series"], name: "index_poll_members_on_series", where: "(series = true)", using: :btree
 
   create_table "poll_series", force: true do |t|
     t.integer  "member_id"
@@ -949,11 +969,26 @@ ActiveRecord::Schema.define(version: 20150528144354) do
     t.boolean  "close_status",            default: false
   end
 
+  add_index "polls", ["allow_comment"], name: "index_polls_on_allow_comment", where: "(allow_comment = false)", using: :btree
+  add_index "polls", ["campaign_id"], name: "index_polls_on_campaign_id", using: :btree
   add_index "polls", ["close_status"], name: "index_polls_on_close_status", using: :btree
+  add_index "polls", ["created_at"], name: "index_polls_on_created_at", using: :btree
   add_index "polls", ["deleted_at"], name: "index_polls_on_deleted_at", using: :btree
+  add_index "polls", ["expire_status"], name: "index_polls_on_expire_status", where: "(expire_status = true)", using: :btree
+  add_index "polls", ["in_group"], name: "index_polls_on_in_group", where: "(in_group = true)", using: :btree
   add_index "polls", ["member_id"], name: "index_polls_on_member_id", using: :btree
+  add_index "polls", ["member_type"], name: "index_polls_on_member_type", using: :btree
+  add_index "polls", ["order_poll"], name: "index_polls_on_order_poll", using: :btree
   add_index "polls", ["poll_series_id"], name: "index_polls_on_poll_series_id", using: :btree
+  add_index "polls", ["public"], name: "index_polls_on_public", using: :btree
+  add_index "polls", ["qr_only"], name: "index_polls_on_qr_only", where: "(qr_only = true)", using: :btree
+  add_index "polls", ["qrcode_key"], name: "index_polls_on_qrcode_key", using: :btree
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
+  add_index "polls", ["require_info"], name: "index_polls_on_require_info", where: "(require_info = true)", using: :btree
+  add_index "polls", ["series"], name: "index_polls_on_series", where: "(series = true)", using: :btree
+  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = (-1))", using: :btree
+  add_index "polls", ["system_poll"], name: "index_polls_on_system_poll", where: "(system_poll = true)", using: :btree
+  add_index "polls", ["type_poll"], name: "index_polls_on_type_poll", using: :btree
 
   create_table "providers", force: true do |t|
     t.string   "name"
