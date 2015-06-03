@@ -130,6 +130,8 @@ namespace :admin do
     
     group = Group.create!(name: "Pollios", public: false, description: "Group Pollios Official", member: member, cover_preset: 1, system_group: true, group_type: :company)
 
+    group.add_user_to_group(Member.where(id: member))
+    
     GroupCompany.create!(group: group, company: company, main_group: true)
 
     Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years, member: member,  company: company,
@@ -364,6 +366,10 @@ namespace :admin do
 
     PollSeriesCompany.delete_all
     PollSeriesCompany.connection.execute('ALTER SEQUENCE poll_series_companies_id_seq RESTART WITH 1')
+
+    LeaveGroupLog.delete_all
+    LeaveGroupLog.connection.execute('ALTER SEQUENCE leave_group_logs_id_seq RESTART WITH 1')
+    
   end
 
 end

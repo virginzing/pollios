@@ -13,6 +13,7 @@ class CompaniesController < ApplicationController
 
   expose(:group_company) { current_member.get_company.groups if current_member }
   expose(:group_id) { @group }
+  expose(:group) { @group.decorate }
 
   def dashboard
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
@@ -26,7 +27,7 @@ class CompaniesController < ApplicationController
   end
 
   def invites
-    @invite_codes = InviteCode.joins(:company).includes(:member_invite_code => :member)
+    @invite_codes = InviteCode.joins(:company).includes(:group, :member_invite_code => :member)
                               .select("invite_codes.*, companies.name as company_name")
                               .where("invite_codes.company_id = ?", @find_company.id)
                               .order("invite_codes.id desc")
@@ -333,7 +334,7 @@ class CompaniesController < ApplicationController
 
   def new_group
     @group = Group.new
-    @members = Member.joins(:group_members).select("DISTINCT members.*").where("group_members.group_id IN (?) AND group_members.active = 't'", set_company.groups.with_group_type(:company).map(&:id)) || []
+    @members = Company::ListMember.new(current_member.get_company).get_list_members
   end
 
   def new_add_surveyor
@@ -452,10 +453,9 @@ class CompaniesController < ApplicationController
         group.need_approve = group_params[:need_approve].present? ? true : false
         group.system_group = group_params[:system_group].present? ? true : false
         group.public = group_params[:public].present? ? true : false
-        group.group_type = group_params[:set_group_type].present? ? :company : :normal
       end
 
-      if group.update(group_params.except(:set_group_type))
+      if group.update(group_params)
         Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
 
         group.members.each do |member|
@@ -512,58 +512,75 @@ class CompaniesController < ApplicationController
     @members = query
   end
 
+  # def add_user_to_group
+
+  #   find_user = Member.cached_find(params[:member_id])   
+
+  #   init_list_group = Member::ListGroup.new(find_user)
+
+  #   respond_to do |format| 
+  #     Group.transaction do
+  #       find_user_group = init_list_group.active.map(&:id)
+
+  #       this_group = Group.find(params[:group_id])
+
+  #       unless find_user_group.include?(this_group.id)
+  #         begin
+  #           this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
+  #           # if this_group.company?
+  #           #   CompanyMember.add_member_to_company(find_user, this_group.get_company)
+  #           # end
+  #           Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
+
+  #           this_group.with_lock do
+  #             this_group.member_count += 1
+  #             this_group.save!
+  #           end
+
+  #           FlushCached::Member.new(find_user).clear_list_groups
+  #           FlushCached::Group.new(this_group).clear_list_members
+
+  #           unless Rails.env.test?
+  #             CompanyAddUserToGroupWorker.perform_async(find_user.id, this_group.id, this_group.get_company.id)
+  #           end
+
+  #           format.json { render json: { error_message: nil }, status: 200 }
+  #         rescue ActiveRecord::RecordNotUnique
+  #           @error_message = "This member join another company already"
+  #           format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
+  #         end
+
+  #       else
+  #         @error_message = "You already joined in this group."
+  #         format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
+  #       end
+
+  #     end
+  #   end
+  # end
+
   def add_user_to_group
+    find_user = Member.cached_find(params[:member_id])
+    find_group = Group.cached_find(params[:group_id])
 
-    find_user = Member.cached_find(params[:member_id])   
+    list_group_of_user = Member::ListGroup.new(find_user)
 
-    init_list_group = Member::ListGroup.new(find_user)
+    respond_to do |format|
 
-    respond_to do |format| 
-      if find_user.present?
-        Group.transaction do
-          find_user_group = init_list_group.active.map(&:id)
-
-          this_group = Group.find(params[:group_id])
-
-          unless find_user_group.include?(this_group.id)
-            begin
-              this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
-
-              if this_group.company?
-                CompanyMember.add_member_to_company(find_user, this_group.get_company)
-              end
-              
-              Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
-
-              this_group.with_lock do
-                this_group.member_count += 1
-                this_group.save!
-              end
-
-              FlushCached::Member.new(find_user).clear_list_groups
-              FlushCached::Group.new(this_group).clear_list_members
-
-              unless Rails.env.test?
-                CompanyAddUserToGroupWorker.perform_async(find_user.id, this_group.id, this_group.get_company.id)
-              end
-
-              format.json { render json: { error_message: nil }, status: 200 }
-            rescue ActiveRecord::RecordNotUnique
-              @error_message = "This member join another company already"
-              format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
-            end
-
-          else
-            @error_message = "You already joined in this group."
-            format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
-          end
-
-        end
-      else
-        @error_message = "Not found this user."
+      if list_group_of_user.active.map(&:id).include?(find_group.id)
+        @error_message = "#{find_user.get_name} had already joined #{find_group.name}."
         format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
-      end
+      else
+        list_of_users = Member.where(id: find_user)
+        find_group.add_user_to_group(list_of_users)
 
+        FlushCached::Group.new(find_group).clear_list_members
+
+        unless Rails.env.test?
+          CompanyAddUserToGroupWorker.perform_async(find_user.id, find_group.id, find_group.get_company.id)
+        end
+        format.json { render json: { error_message: nil }, status: 200 }
+      end
     end
   end
 

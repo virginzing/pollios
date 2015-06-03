@@ -2,7 +2,10 @@
 <div class="row">
   <div class="col-md-12">
     <h1 class="txt-color-blueDark page-well-header">
-        <%= image_tag(@group.photo_group.url(:thumbnail), size: '50x50') %> <%= @group.name %> Group
+        <%= group.show_cover_group_in_company %>
+        <div class="header_group_detail">
+          <%= group.name %> <%= group.show_group_type %>
+        </div>
     </h1>
   </div>
 </div>

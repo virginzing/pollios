@@ -81,6 +81,7 @@
               <tr>
                 <th>ID</th>
                 <th>Code</th>
+                <th>Group</th>
                 <th>Used</th>
                 <th>Who</th>
               </tr>
@@ -90,6 +91,7 @@
                 <tr>
                   <td><%= invite_code.id %></td>
                   <td><%= invite_code.code %></td>
+                  <td><%= invite_code.group.name %></td>
                   <td><%= invite_code_helper(invite_code.used) %></td>
                   <td><%= invite_code.member_invite_code.present? ? invite_code.member_invite_code.member.get_name : "-" %></td>
                   </td>

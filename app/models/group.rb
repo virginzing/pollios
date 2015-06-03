@@ -503,6 +503,14 @@ class Group < ActiveRecord::Base
     return (poll_groups_ids - my_vote_poll_ids).size
   end
 
+  def add_user_to_group(list_of_users)
+    list_of_users.each do |member|
+      group_members.create!(member: member, is_master: false, active: true)
+      Company::TrackActivityFeedGroup.new(member, self, "join").tracking
+      FlushCached::Member.new(member).clear_list_groups
+    end
+  end
+
 
   # def get_member_count
   #   group_members_active.map(&:id).size

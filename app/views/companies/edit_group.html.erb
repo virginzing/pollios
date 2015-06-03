@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <h1 class="page-title txt-color-blueDark page-well-header">
-      <%= image_tag(@group.photo_group.url(:thumbnail), size: '50x50') %> <%= link_to @group.name + ' Group', company_group_detail_path(@group), id: 'header-link'%> > Edit
+        <%= link_to @group.name, company_group_detail_path(@group), id: 'header-link'%> > Edit
       </h1>
     </div>
   </div>
@@ -64,18 +64,7 @@
                   <i data-swchon-text="Yes" data-swchoff-text="No"></i>Can member leave this group?</label>
                   </div>
                 </div>
-              </section> -->
-
-<!--               <section>
-                <div class="row">
-                  <div class="col col-md-4">
-                  <label class="toggle">
-                    <input type="checkbox" name="group[admin_post_only]">
-                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Can admin post poll only?</label>
-                  </div>
-                </div>
-              </section> -->
-            
+              </section> -->            
 
 <!--               <section>
                 <div class="row">
@@ -87,7 +76,7 @@
                 </div>
               </section> -->
 
-              <section>
+<!--               <section>
                 <div class="row">
                   <div class="col col-md-4">
                   <label class="toggle">
@@ -95,7 +84,18 @@
                   <i data-swchon-text="Yes" data-swchoff-text="No"></i>Searchable</label>
                   </div>
                 </div>
-              </section>
+              </section> -->
+
+              <% else %>
+                <section>
+                  <div class="row">
+                    <div class="col col-md-4">
+                    <label class="toggle">
+                      <input type="checkbox" name="group[admin_post_only]">
+                    <i data-swchon-text="Yes" data-swchoff-text="No"></i>Admin post poll only?</label>
+                    </div>
+                  </div>
+                </section>
               <% end %>
 
             </fieldset>
@@ -158,7 +158,6 @@
   $.check_system_group = <%= raw @group.system_group %>;
   $.check_need_approve = <%= raw @group.need_approve %>;
   $.check_public_group = <%= raw @group.public %>;
-  $.check_group_type = <%= raw @group.company? %>;
 
   if ($.check_leave_group) {
     $("input[name='group[leave_group]']").attr( 'checked', 'checked' );
@@ -180,9 +179,9 @@
     $("input[name='group[public]']").attr( 'checked', 'checked' );
   }
 
-  if ($.check_group_type) {
-    $("input[name='group[set_group_type]']").attr( 'checked', 'checked' );
-  }
+  // if ($.check_group_type) {
+  //   $("input[name='group[set_group_type]']").attr( 'checked', 'checked' );
+  // }
 
   $("#group_profile").parsley();
   $(document).ready(function() {

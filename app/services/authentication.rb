@@ -206,7 +206,8 @@ class Authentication
         follow_pollios
         set_public_id
         add_new_group_company if member_type == "3"
-        join_group_automatic if create_member_via_company?
+        # join_group_automatic if create_member_via_company?
+        generate_fullname if create_member_via_company?
         join_company_member if create_member_via_company?
         add_redeemer_to_company if create_member_via_company? && redeemer.present?
         @member.update_column(:avatar, avatar) if avatar.present?
@@ -270,6 +271,13 @@ class Authentication
         find_main_group.save!
       end
       
+    end
+  end
+
+  def generate_fullname
+    if @member.fullname.blank?
+      fullname_from_email = @member.email.split("@").first
+      @member.update!(fullname: fullname_from_email)
     end
   end
 
