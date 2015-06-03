@@ -16,8 +16,8 @@
   <br>
 
   <div class="panel-padding">
+    <h3><%= @poll_latest.title %></h3>
     <ul class="list-group">
-
       <% @poll_latest.cached_choices.each do |choice| %>
       <li class="list-group-item">
         <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_latest_max) %>"><%= choice.vote %></span>

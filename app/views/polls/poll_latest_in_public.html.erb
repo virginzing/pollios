@@ -1,0 +1,77 @@
+<% if @poll_latest_in_public.present? %>
+
+  <div id="chart_div_popular" align="center"></div>
+
+  <!-- <div id="chart_poll_lastest" style="height: 300px"></div> -->
+  
+<!--   <div class="poll_header">
+    Poll: <%= @poll_latest_in_public.title %>
+  </div>
+ -->
+  <% if @poll_latest_in_public.have_photo? %>
+    <br>
+    <img src="<%= @poll_latest_in_public.photo_poll.url(:thumbnail) %>" class="img-responsive center-block">
+  <% end %>
+
+  <br>
+
+  <div class="panel-padding">
+    <ul class="list-group">
+      <% @poll_latest_in_public.cached_choices.each do |choice| %>
+      <li class="list-group-item">
+        <span class="badge badge-primary <%= is_max_badge(choice.vote, @choice_poll_latest_in_public_max) %>"><%= choice.vote %></span>
+        <%= @poll_latest_in_public.rating? ? show_star_answer(choice.answer).html_safe : choice.answer %>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <%= content_tag :div, "", id: 'choice_poll_latest_in_public', data: { polls: @choice_poll_latest_in_public } %>
+
+  <script type="text/javascript">
+    var vote_all = <%= @poll_latest_in_public.vote_all %>;
+      if (vote_all > 0) {      
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawPieChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawPieChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        var chart_data = $('#choice_poll_latest_in_public').data('polls');
+        data.addColumn('string', 'Answer');
+        data.addColumn('number', 'Vote');
+
+        data.addRows(chart_data);
+
+        // Set chart options
+        var options = {
+          'title'  : '<%= @poll_latest_in_public.truncate_title %>',
+          'height' : 300,
+          'is3D': true
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div_popular'));
+        chart.draw(data, options);
+      }
+
+      $.ajax({
+        complete: function(){
+          drawPieChart();
+        }
+      });
+    } else {
+      $('#chart_div_popular').replaceWith("<div class='alert alert-info'>No vote result.</div>");
+    }
+  </script>
+
+<% else %>
+  <div class='alert alert-info'>Don't have any poll.</div>
+<% end %>

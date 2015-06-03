@@ -18,11 +18,8 @@ class CompaniesController < ApplicationController
   def dashboard
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
     @poll_latest_list = @init_poll.get_poll_of_group_company.limit(5)
-
-    @poll_popular_list = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5)
+    @poll_latest_in_public = Company::PollPublic.new(@find_company).get_list_public_poll
     render 'home/dashboard_company'
-
-    # session[:name] = "NUTTY"
   end
 
   def new
@@ -502,7 +499,7 @@ class CompaniesController < ApplicationController
 
   def add_member # wait for new imprement
     # puts "#{@member_in_group.map(&:id)}"
-    query = Member.searchable_member(params[:q]).without_member_type(:company)
+    query = Member.searchable_member(params[:q])
     @members = query
 
     # @member_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)

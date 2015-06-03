@@ -17,10 +17,10 @@
                 data-widget-fullscreenbutton="false" 
                 data-widget-custombutton="false">
       <header>
-        <h2><strong>Poll</strong> <i>latest</i></h2> 
+        <h2><strong>Poll</strong> <i>latest in groups</i></h2> 
           <div class="widget-toolbar">
             <% if @poll_latest_list.first.present? %>
-              <a href="/company/polls/<%= @poll_latest_list.first.id %>" class="btn btn-default">More</a>
+              <a href="<%= company_poll_detail_path(@poll_latest_list.first) %>" class="btn btn-default">More</a>
             <% end %>
 
           </div>
@@ -56,8 +56,8 @@
   </div>
 
   <div class="col-md-6">
-    <div class="jarviswidget" id="wid-id-poll-populars" 
-                data-widget-load="<%= poll_popular_url %>" 
+    <div class="jarviswidget" id="wid-id-poll-latest-in-public" 
+                data-widget-load="<%= poll_latest_in_public_url %>" 
                 data-widget-colorbutton="false" 
                 data-widget-colorbutton="false" 
                 data-widget-editbutton="false" 
@@ -65,7 +65,7 @@
                 data-widget-fullscreenbutton="false" 
                 data-widget-custombutton="false">
       <header>
-        <h2><strong>Poll</strong> <i>popular random</i></h2> 
+        <h2><strong>Poll</strong> <i>latest in public</i></h2> 
 
       </header>
 
@@ -102,7 +102,7 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="jarviswidget" id="wid-id-poll-latest-tables" 
+    <div class="jarviswidget" id="wid-id-poll-latest-in-groups-tables" 
                 data-widget-colorbutton="false" 
                 data-widget-colorbutton="false" 
                 data-widget-editbutton="false" 
@@ -110,7 +110,7 @@
                 data-widget-fullscreenbutton="false" 
                 data-widget-custombutton="false">
       <header>
-        <h2><strong>Poll</strong> <i>latest 1-5</i></h2> 
+        <h2><strong>Poll</strong> <i>latest in group</i></h2> 
           <div class="widget-toolbar">
             <a href="<%= company_polls_url %>" class="btn btn-default">More</a>
           </div>
@@ -144,7 +144,7 @@
                   <% @poll_latest_list.each do |poll| %>
                   <tr>                    
                     <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
-                    <td><%= link_to truncate(poll.title, length: 40), poll_path(poll) %></td>
+                    <td><%= link_to truncate(poll.title, length: 40), company_poll_detail_path(poll) %></td>
                     <td><%= poll.vote_all %></td>
                     <td><%= poll.view_all %></td>
                     <td width="100"><span data-livestamp="<%= poll.updated_at.to_i %>"></span></td>
@@ -164,7 +164,7 @@
   </div>
 
   <div class="col-md-6">
-    <div class="jarviswidget" id="wid-id-poll-popular-tables" 
+    <div class="jarviswidget" id="wid-id-poll-latest-in-public-tables" 
                 data-widget-colorbutton="false" 
                 data-widget-colorbutton="false" 
                 data-widget-editbutton="false" 
@@ -172,7 +172,7 @@
                 data-widget-fullscreenbutton="false" 
                 data-widget-custombutton="false">
       <header>
-        <h2><strong>Poll</strong> <i>popular 1-5</i></h2> 
+        <h2><strong>Poll</strong> <i>latest in public</i></h2> 
         <div class="widget-toolbar">
           <a href="<%= company_polls_url %>" class="btn btn-default">More</a>
         </div>
@@ -202,10 +202,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @poll_popular_list.each do |poll| %>
+                  <% @poll_latest_in_public.each do |poll| %>
                   <tr>
                     <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" class="img img-circle" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
-                    <td><%= link_to truncate(poll.title, length: 40), poll_path(poll) %></td>
+                    <td><%= link_to truncate(poll.title, length: 40), company_poll_detail_path(poll) %></td>
                     <td><%= poll.vote_all %></td>
                     <td><%= poll.view_all %></td>
                     <td><span data-livestamp="<%= poll.updated_at.to_i %>"></span></td>

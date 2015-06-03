@@ -7,7 +7,7 @@ class CreateGroupCompany
   end
 
   def new_list_member_ids
-    @list_member_ids.split(",").collect{|e| e.to_i }
+    @list_member_ids.split(",").collect{|e| e.to_i } << @member.id
   end
 
   def new_list_members_count

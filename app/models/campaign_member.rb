@@ -7,8 +7,8 @@ class CampaignMember < ActiveRecord::Base
   belongs_to :poll
   belongs_to :poll_series
 
-  validates_uniqueness_of :serial_code
-  validates_uniqueness_of :ref_no
+  validates_uniqueness_of :serial_code, allow_nil: true, allow_blank: true
+  validates_uniqueness_of :ref_no, allow_nil: true, allow_blank: true
 
   scope :without_deleted, -> { where(deleted_at: nil) }
 

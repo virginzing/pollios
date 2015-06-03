@@ -563,6 +563,7 @@ Pollios::Application.routes.draw do
 
   get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
   get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+  get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
 
   post 'templates',       to: 'templates#new_or_update'
   get  'templates',        to: 'templates#poll_template'
