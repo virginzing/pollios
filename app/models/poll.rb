@@ -208,7 +208,7 @@ class Poll < ActiveRecord::Base
       cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }
     else
       if have_photo?
-        photo_poll.url(:original)
+        photo_poll.url(:original).split(",")
       end
     end  
   end
