@@ -299,7 +299,10 @@ class Authentication
     company = Company.create!(name: name, address: address, member_id: member.id, using_service: select_service)
     company.feedback_recurrings.create!(period: '00:00')
     group = Group.create(name: name, authorize_invite: :master, public: false, leave_group: false, group_type: :company, member_id: member.id)
+    CompanyMember.add_member_to_company(@member, company) 
     GroupCompany.create!(group_id: group.id, company_id: company.id, main_group: true)
+    FlushCached::Group.new(group).clear_list_members
+    FlushCached::Member.new(@member).clear_list_groups
   end
 
   def update_member(member)

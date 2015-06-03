@@ -28,7 +28,7 @@ module PollHelper
 
   def show_star_answer(number_of_star)
     star_text = "<i class='fa fa-star'></i>"
-    p number_of_star
+    # p number_of_star
     case number_of_star.to_i
       when 1 then star_text*1
       when 2 then star_text*2
