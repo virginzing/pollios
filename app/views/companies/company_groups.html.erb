@@ -38,7 +38,7 @@
                 <th>Member</th>
                 <th>Poll</th>
                 <th>Created_at</th>
-                <th>Action</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
             <tbody>
@@ -51,7 +51,7 @@
                   <td><%= group.get_all_member_count %> members</td>
                   <td><%= group.get_all_poll_count %> polls</td>
                   <td><span data-livestamp="<%= group.created_at.to_i %>"></span></td>
-                  <td><%= link_to '<i class="fa fa-trash"></i>'.html_safe, company_destroy_group_path(group), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                  <!--<td><%= link_to '<i class="fa fa-trash"></i>'.html_safe, company_destroy_group_path(group), method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
                 </tr>
               <% end %>
             </tbody>

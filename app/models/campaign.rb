@@ -19,9 +19,6 @@ class Campaign < ActiveRecord::Base
   has_many :polls
   has_many :poll_series
 
-  has_many :campaign_guests, dependent: :destroy
-  has_many :guests, through: :campaign_guests, source: :guest
-
   has_many :campaign_members, dependent: :destroy
   has_many :members, through: :campaign_members, source: :member
 
