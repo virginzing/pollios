@@ -12,5 +12,13 @@ class GroupDecorator < ApplicationDecorator
     end
   end
 
+  def show_group_type
+    if object.company?
+      "Exclusive"  
+    else
+      "Normal"
+    end
+  end
+
 
 end

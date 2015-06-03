@@ -34,7 +34,7 @@
                 <th width="50">#</th>
                 <th width="120">Cover</th>
                 <th>Name</th>
-                <th>Description</th>
+                <th width="50">Type</th>
                 <th>Member</th>
                 <th>Poll</th>
                 <th>Created_at</th>
@@ -47,7 +47,7 @@
                   <td><%= group.id %></td>
                   <td><%= group.decorate.show_cover_group %></td>
                   <td><%= link_to group.name, company_group_detail_path(group) %></td>
-                  <td><%= group.description %></td>
+                  <td><%= group.decorate.show_group_type %></td>
                   <td><%= group.get_all_member_count %> members</td>
                   <td><%= group.get_all_poll_count %> polls</td>
                   <td><span data-livestamp="<%= group.created_at.to_i %>"></span></td>

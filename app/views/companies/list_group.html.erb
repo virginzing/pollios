@@ -45,13 +45,13 @@
               <table class="table table-bordered header-center">
                 <thead>
                   <tr>
-                    <th>Avatar</th>
+                    <th>Cover</th>
                     <th>Group Name</th>
                     <th width='100'></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <% @company.groups.each do |group| %>
+                  <% @company.groups.without_deleted.each do |group| %>
                   <tr>
                       <td><%= group.decorate.show_cover_group %></td>
                       <td><%= group.name %></td>

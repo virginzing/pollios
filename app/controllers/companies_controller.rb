@@ -301,7 +301,7 @@ class CompaniesController < ApplicationController
   end
 
   def company_groups
-    @groups = Group.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{set_company.id}").uniq
+    @groups = Group.without_deleted.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{set_company.id}").uniq
   end
 
   def list_polls_in_group
@@ -528,7 +528,10 @@ class CompaniesController < ApplicationController
             begin
               this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
 
-              CompanyMember.add_member_to_company(find_user, this_group.get_company)
+              if this_group.company?
+                CompanyMember.add_member_to_company(find_user, this_group.get_company)
+              end
+              
               Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
 
               this_group.with_lock do

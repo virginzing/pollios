@@ -46,6 +46,16 @@
                   <strong>Note</strong> description is show in app Pollios.
                 </div>
               </section>
+              <section>
+                <div class="row">
+                  <div class="col col-md-4">
+                  <label class="toggle">
+                    <input type="checkbox" name="group[need_approve]">
+                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Need approve to join group?</label>
+                  </div>
+                </div>
+              </section>
+              <% if @group.normal? %>
 <!--               <section>
                 <div class="row">
                   <div class="col col-md-4">
@@ -65,16 +75,7 @@
                   </div>
                 </div>
               </section> -->
-              
-              <section>
-                <div class="row">
-                  <div class="col col-md-4">
-                  <label class="toggle">
-                    <input type="checkbox" name="group[need_approve]">
-                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Need approve to join group?</label>
-                  </div>
-                </div>
-              </section>
+            
 
 <!--               <section>
                 <div class="row">
@@ -91,21 +92,11 @@
                   <div class="col col-md-4">
                   <label class="toggle">
                     <input type="checkbox" name="group[public]">
-                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Public Group</label>
+                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Searchable</label>
                   </div>
                 </div>
               </section>
-
-<!--               <section>
-                <div class="row">
-                  <div class="col col-md-4">
-                  <label class="toggle">
-                    <input type="checkbox" name="group[set_group_type]">
-                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Group Company</label>
-                  </div>
-                </div>
-              </section> -->
-
+              <% end %>
 
             </fieldset>
             <footer>

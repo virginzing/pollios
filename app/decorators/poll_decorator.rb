@@ -41,7 +41,7 @@ class PollDecorator < ApplicationDecorator
       0
     else
       arr = object.choices.collect!{|e| e.answer.to_i * e.vote.to_f }
-      arr.reduce(:+).to_f / poll.vote_all.to_f
+      (arr.reduce(:+).to_f / poll.vote_all.to_f).round(1)
     end
   end
 
