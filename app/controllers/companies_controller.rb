@@ -32,6 +32,7 @@ class CompaniesController < ApplicationController
                               .where("invite_codes.company_id = ?", @find_company.id)
                               .order("invite_codes.id desc")
     @invite = InviteCode.new
+    @groups = Company::ListGroup.new(@find_company).all
   end
 
   def search
@@ -49,6 +50,7 @@ class CompaniesController < ApplicationController
 
   def via_email
     @via_email = InviteCode.new
+    @groups = Company::ListGroup.new(@find_company).all
   end
 
   def send_email
@@ -57,6 +59,7 @@ class CompaniesController < ApplicationController
     list_email_text = invite_code_params[:list_email].split("\r\n")
     list_email_file = []
     file = invite_code_params[:file]
+    group_id = invite_code_params[:group_id]
 
     if file.present?
       if File.extname(file.original_filename) == ".txt"
@@ -71,14 +74,11 @@ class CompaniesController < ApplicationController
         end
       end
     end
-
     
-    total_email = ( list_email_text | list_email_file.collect).collect{|e| e.downcase }.uniq
-
-    # puts "total email #{total_email}"
+    total_email = ( list_email_text | list_email_file.collect.to_a).collect{|e| e.downcase }.uniq
 
     respond_to do |format|
-      @send_email = SendInvitesWorker.perform_async(total_email, @find_group.id, @find_company.id )
+      @send_email = SendInvitesWorker.perform_async(total_email, group_id.to_i, @find_company.id )
 
       if @send_email
         flash[:success] = "Send invite code via email successfully."
@@ -88,24 +88,35 @@ class CompaniesController < ApplicationController
         format.html { redirect_to via_email_path } 
       end
     end
-
     rescue => e
       flash[:error] = "Something went wrong"
       redirect_to via_email_path
     end
   end
 
-  def create
+  # def create
+  #   respond_to do |format|
+  #     if @find_company.generate_code_of_company(company_params, find_group)
+  #       flash[:success] = "Create invite code successfully."
+  #       format.html { redirect_to company_invites_path }
+  #     else
+  #       flash[:error] = "Error"
+  #       format.html { render 'new' }
+  #     end
+  #   end
+  #   # add comment
+  # end
+
+  def generate_invitation
     respond_to do |format|
-      if @find_company.generate_code_of_company(company_params, find_group)
+      if @find_company.generate_invitation_of_group(company_params)
         flash[:success] = "Create invite code successfully."
         format.html { redirect_to company_invites_path }
       else
-        flash[:error] = "Error"
-        format.html { render 'new' }
+        flash[:error] = "Something went wrong."
+        format.html { redirect_to company_invites_path }
       end
     end
-    # add comment
   end
 
   def new_member
@@ -338,8 +349,8 @@ class CompaniesController < ApplicationController
   end
 
   def new_add_surveyor
-    @groups = Group.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{set_company.id}").uniq
-    @list_members_in_company = Member.includes(:groups).where("groups.id IN (?) AND group_members.active = 't'", set_company.groups.map(&:id)).uniq.references(:groups)
+    @groups = Company::ListGroup.new(set_company).all
+    @list_members_in_company = Company::ListMember.new(set_company).get_list_members
     @add_surveyor = Company.new
   end
 
@@ -638,6 +649,9 @@ class CompaniesController < ApplicationController
 
   def set_poll
     @poll = Poll.find_by(id: params[:id])
+    fail ExceptionHandler::WebNotFound if @poll.nil?
+    fail ExceptionHandler::WebForbidden unless Company::ListPoll.new(set_company).access_poll?(@poll)
+    @poll
   end
 
   def update_poll_params
@@ -657,7 +671,7 @@ class CompaniesController < ApplicationController
   end
 
   def invite_code_params
-    params.require(:invite_code).permit(:list_email, :file)
+    params.require(:invite_code).permit(:list_email, :file, :group_id)
   end
 
   def find_group
@@ -669,14 +683,13 @@ class CompaniesController < ApplicationController
   end
 
   def set_group
-    begin
-      @group = Group.find(params[:group_id])
-      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Group::NOT_FOUND unless @group.present?
-    end
+    @group = Group.find_by(id: params[:group_id])
+    fail ExceptionHandler::WebNotFound if @group.nil?
+    @group
   end
 
   def company_params
-    params.require(:invite_code).permit(:amount_code, :prefix_name)
+    params.require(:invite_code).permit(:amount_code, :prefix_name, :group_id)
   end
 
   def multi_signup_params

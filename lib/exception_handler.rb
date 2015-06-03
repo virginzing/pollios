@@ -16,6 +16,7 @@ module ExceptionHandler
     rescue_from MobileSignInAlready, :with => :mobile_signin_already
     rescue_from MobileVoteQuestionnaireAlready, :with => :mobile_vote_questionnaire_already
     rescue_from WebForbidden, with: :web_forbidden
+    rescue_from WebNotFound, with: :web_not_found
   end
 
   class NotFound < StandardError; end
@@ -31,6 +32,7 @@ module ExceptionHandler
   class MobileSignInAlready < StandardError; end
   class MobileVoteQuestionnaireAlready < StandardError; end
   class WebForbidden < StandardError; end
+  class WebNotFound < StandardError; end
 
   module Message
     module Poll
@@ -115,6 +117,10 @@ module ExceptionHandler
 
   def web_forbidden(ex)
     render 'web/errors/403', layout: false
+  end
+
+  def web_not_found(ex)
+    render 'web/errors/404', layout: false
   end
 
   def known_error_html(ex)

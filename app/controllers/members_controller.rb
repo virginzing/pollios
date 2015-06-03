@@ -398,50 +398,28 @@ class MembersController < ApplicationController
 
   def activate
     @invite_code = InviteCode.check_valid_invite_code(activate_params[:code])
-  
-    if @invite_code[:status]
-      company = @invite_code[:object].company
-      list_member_in_company = Company::ListMember.new(company).get_list_members.map(&:id)
-      raise ExceptionHandler::UnprocessableEntity, "You're in #{company.name} Company." if list_member_in_company.include?(@current_member.id)
-    end
 
     respond_to do |format|
-      if activate_params[:code] == "CODEAPP"
-        @current_member.update(bypass_invite: true)
-        @activate = true
-        @invite_code[:message] = "Success"
-        # session[:member_id] = @current_member.id
-        # cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
-        @member = Member.find(params[:member_id])
-        format.js
-        format.json
-        format.html { redirect_to dashboard_path }
-      elsif @invite_code[:status]
-        begin
-          @group = Group.cached_find(@invite_code[:object].group_id)
+      if @invite_code[:status]
+        @group = Group.cached_find(@invite_code[:object].group_id)
 
-          if add_to_group_at_invite
-            @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
-            @activate.save
-            @invite_code[:object].update!(used: true)
-            @invite_code[:message] = "You joined #{@group.name} Group"
-
-            @member = Member.find(params[:member_id])
-          
-            format.js
-            format.json
-            format.html { redirect_to dashboard_path }
-          else
-            @error_message = flash[:warning] = "You've already in #{@group.name} Group"
-            format.json
-            format.html { redirect_to users_activate_path }
-          end
+        if add_to_group_at_invite
+          @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
+          @invite_code[:object].update!(used: true)
+          @invite_code[:message] = "You join #{@group.name} Group Successfully."
+          @member = Member.find(params[:member_id])
+          format.js
+          format.html { redirect_to dashboard_path }
+        else
+          @error_message = flash[:warning] = "You had been joined #{@group.name} Group."
+          format.html { redirect_to users_activate_path }
         end
       else
         flash[:warning] = @invite_code[:message]
-        format.json
         format.html { redirect_to users_activate_path }
       end
+
+      format.json { render status: @invite_code[:status_code] }
     end
   end
 
@@ -460,33 +438,15 @@ class MembersController < ApplicationController
   end
 
   def add_to_group_at_invite
-    if @group
-      init_list_group = Member::ListGroup.new(@current_member)
-      find_my_group = init_list_group.active.map(&:id)
-      find_company_member = CompanyMember.find_by(member: @current_member)
+    init_list_group = Member::ListGroup.new(@current_member)
+    find_my_group = init_list_group.active.map(&:id)
+    return false if find_my_group.include?(@group.id)
 
-      fail ExceptionHandler::UnprocessableEntity, "You're already in #{find_company_member.company.name} company." if find_company_member.present?
-
-      unless find_my_group.include?(@group.id)
-
-        @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
-
-        CompanyMember.add_member_to_company(@current_member, @find_company)
-
-        Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
-
-        @group.with_lock do
-          @group.member_count += 1
-          @group.save!
-        end
-
-        FlushCached::Member.new(@current_member).clear_list_groups
-        FlushCached::Group.new(@group).clear_list_members
-        true
-      else
-        nil
-      end
-    end
+    @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
+    Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
+    FlushCached::Member.new(@current_member).clear_list_groups
+    FlushCached::Group.new(@group).clear_list_members
+    true
   end
 
   def list_block

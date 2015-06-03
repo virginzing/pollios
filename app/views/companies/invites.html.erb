@@ -34,7 +34,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
-            <%= simple_form_for @invite, url: '/invites', method: :post do |f| %>
+            <%= simple_form_for @invite, url: :company_generate_invitation, method: :post do |f| %>
                 
                 <div class="col col-md-2">
                   <%= f.input :amount_code, as: :integer, label: 'Amount', input_html: { value: @find_company.max_invite_code, 'data-parsley-required' => true, "data-parsley-type" => "integer",
@@ -43,6 +43,10 @@
 
                 <div class="col col-md-2">
                   <%= f.input :prefix_name, label: 'Abbreviation', placeholder: 'CA', input_html: { value: @find_company.short_name, 'data-parsley-required' => true } %>
+                </div>
+
+                <div class="col col-md-5">
+                  <%= f.input :group_id, label: 'Group', collection: @groups, include_blank: false, input_html: { 'data-parsley-required' => true } %>
                 </div>
                 
                 <br/>

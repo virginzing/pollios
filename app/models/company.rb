@@ -34,7 +34,7 @@ class Company < ActiveRecord::Base
   attr_accessor :amount_code, :used, :prefix_name, :company_id
 
   def generate_code_of_company(invite_params, find_group = nil)
-    puts "generate code"
+    # puts "generate code"
     company_id = invite_params[:company_id]
     amount_code = invite_params[:amount_code]
 
@@ -51,6 +51,14 @@ class Company < ActiveRecord::Base
       InviteCode.create_invite_code(prefix_name, amount_code.to_i, self.id, group.id) 
     end 
   end
+
+  def generate_invitation_of_group(invite_code_params)
+    amount_code = invite_code_params[:amount_code]
+    group_id = invite_code_params[:group_id]
+    prefix_name = invite_code_params[:prefix_name]
+    InviteCode.create_invite_code(prefix_name, amount_code.to_i, id, group_id.to_i) 
+  end
+
 
   def create_group
     Group.create(name: @company_name, authorize_invite: :everyone, public: false)

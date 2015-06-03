@@ -20,7 +20,7 @@ class InviteCode < ActiveRecord::Base
 
     company_id = company_id || 0
 
-    puts "total_code = #{total_code}"
+    # puts "total_code = #{total_code}"
 
     total_code.times do 
       InviteCode.create!(code: generate_invite_code, company_id: company_id, group_id: group_id)
@@ -46,24 +46,27 @@ class InviteCode < ActiveRecord::Base
   end
 
   def self.check_valid_invite_code(code)
-    find_code = find_by(code: code)
-    if find_code.present?
-      if find_code.used
+    find_invite_code = find_by(code: code)
+    if find_invite_code.present?
+      if find_invite_code.used
         {
           status: false,
-          message: 'This code is used already.'
+          message: 'This code had used already.',
+          status_code: :unprocessable_entity
         }
       else
         {
           status: true,
-          object: find_code,
-          message: 'Success'
+          object: find_invite_code,
+          message: 'Success',
+          status_code: :created
         }
       end
     else
       {
         status: false,
-        message: 'Invalid code'
+        message: 'Invalid Code.',
+        status_code: :unprocessable_entity
       }
     end
   end

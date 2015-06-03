@@ -24,7 +24,7 @@
           <div class="checkbox checkbox-surveyor">
             <label>
             <input type="checkbox" class="checkbox style-0" id="<%= group.id %>" name="group_id[]" value="<%= group.id %>">
-            <span><img src="<%= group.photo_group.url(:thumbnail_small) %>" alt="group" class="img img-circle img-surveyor" data-toggle="tooltip" data-placement="top" title="<%= group.name %>" width="40" height="40"><%= group.name %></span>
+            <span><%= group.decorate.show_cover_group_in_add_surveyor %><%= group.name %></span>
              </label>
           </div>
         <% end %>

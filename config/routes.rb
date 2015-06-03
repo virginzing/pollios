@@ -480,6 +480,8 @@ Pollios::Application.routes.draw do
     delete 'members/remove',  to: 'companies#delete_member_company', as: :company_delete_member
 
     get 'invites',  to: 'companies#invites',    as: :company_invites
+    post 'generate_invitation', to: 'companies#generate_invitation', as: :company_generate_invitation
+    
     get 'invites/via_email',  to: 'companies#via_email',  as: :via_email
     post 'invites/send_email', to: 'companies#send_email'
 

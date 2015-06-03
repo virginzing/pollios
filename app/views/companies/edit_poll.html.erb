@@ -11,6 +11,7 @@
     </div>
 
     <br>
+    <% if @poll.in_group %>
     <div class="form-group">
       <label>Change group</label>
       <select multiple="multiple" class="searchable" name="group_select[]" disabled="disable">
@@ -19,8 +20,9 @@
         <% end %>
       </select>
     </div>
-
     <br>
+    <% end %>
+    
     <div class="form-group">
       <%= f.input :close_status, label: 'Close Poll' %>
       <%= f.input :draft, label: "Draft" %>

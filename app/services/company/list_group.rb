@@ -4,13 +4,21 @@ class Company::ListGroup
   end
 
   def access_group?(group)
-    list_groups.include?(group.id)
+    list_group_ids.include?(group.id)
+  end
+
+  def all
+    @all ||= list_groups
   end
 
   private
 
+  def list_group_ids
+    list_groups.pluck(:id)
+  end
+
   def list_groups
-    @company.groups.pluck(:id)
+    @company.groups.without_deleted
   end
   
   
