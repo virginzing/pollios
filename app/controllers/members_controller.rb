@@ -417,8 +417,9 @@ class MembersController < ApplicationController
         format.json
         format.html { redirect_to dashboard_path }
       elsif @invite_code[:status]
-        @group = Group.find_by(id: @invite_code[:object].group_id)
         begin
+          @group = Group.cached_find(@invite_code[:object].group_id)
+
           if add_to_group_at_invite
             @activate = @current_member.member_invite_codes.create!(invite_code_id: @invite_code[:object].id)
             @activate.save
@@ -461,9 +462,13 @@ class MembersController < ApplicationController
   def add_to_group_at_invite
     if @group
       init_list_group = Member::ListGroup.new(@current_member)
-
       find_my_group = init_list_group.active.map(&:id)
+      find_company_member = CompanyMember.find_by(member: @current_member)
+
+      fail ExceptionHandler::UnprocessableEntity, "You're already in #{find_company_member.company.name} company." if find_company_member.present?
+
       unless find_my_group.include?(@group.id)
+
         @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
 
         CompanyMember.add_member_to_company(@current_member, @find_company)

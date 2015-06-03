@@ -7,7 +7,7 @@ class CreateGroupCompany
   end
 
   def new_list_member_ids
-    @list_member_ids.split(",").collect{|e| e.to_i } << @member.id
+    @list_member_ids.split(",").collect{|e| e.to_i }
   end
 
   def new_list_members_count
@@ -27,6 +27,7 @@ class CreateGroupCompany
 
       if @group.present?
         @company.group_companies.create!(group_id: @group.id)
+        add_default_creator_to_group
         if new_list_members_count > 0
           add_member_to_group
         end
@@ -38,6 +39,10 @@ class CreateGroupCompany
 
   private
 
+  def add_default_creator_to_group
+    @group.group_members.create!(member: @member, active: true, is_master: true, notification: true)
+  end
+
   def add_member_to_group
     Member.where(id: new_list_member_ids).each do |member|
       GroupMember.create!(member_id: member.id, group_id: @group.id, is_master: false, active: true, notification: true)
@@ -46,6 +51,7 @@ class CreateGroupCompany
       # Rails.cache.delete([member.id, 'group_active'])
       FlushCached::Member.new(member).clear_list_groups
     end
+
   end
 
 end

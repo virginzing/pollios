@@ -5,7 +5,7 @@ module ExceptionHandler
     include ActiveSupport::Rescuable
     rescue_from NotFound, :with => :not_found
     rescue_from Deleted, :with => :not_found
-    rescue_from Forbidden, :with => :forbdden
+    rescue_from Forbidden, :with => :forbidden
     rescue_from UnprocessableEntity, :with => :unprocessable_entity
     rescue_from Unauthorized, :with => :unauthorized
     rescue_from NotAcceptable, :with => :not_acceptable
@@ -15,6 +15,7 @@ module ExceptionHandler
     rescue_from MobileForbidden, :with => :mobile_forbidden
     rescue_from MobileSignInAlready, :with => :mobile_signin_already
     rescue_from MobileVoteQuestionnaireAlready, :with => :mobile_vote_questionnaire_already
+    rescue_from WebForbidden, with: :web_forbidden
   end
 
   class NotFound < StandardError; end
@@ -29,6 +30,7 @@ module ExceptionHandler
   class MobileForbidden < StandardError; end
   class MobileSignInAlready < StandardError; end
   class MobileVoteQuestionnaireAlready < StandardError; end
+  class WebForbidden < StandardError; end
 
   module Message
     module Poll
@@ -91,7 +93,7 @@ module ExceptionHandler
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :not_found
   end
 
-  def forbdden(ex)
+  def forbidden(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbidden
   end
 
@@ -109,6 +111,10 @@ module ExceptionHandler
 
   def maintenance(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :service_unavailable
+  end
+
+  def web_forbidden(ex)
+    render 'web/errors/403', layout: false
   end
 
   def known_error_html(ex)
