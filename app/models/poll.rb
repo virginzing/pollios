@@ -204,7 +204,13 @@ class Poll < ActiveRecord::Base
   end
 
   def get_original_images
-    cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }  
+    if cached_poll_attachements.size > 0
+      cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }
+    else
+      if have_photo?
+        photo_poll.url(:original)
+      end
+    end  
   end
 
   def get_poll_in_groups(group_ids)

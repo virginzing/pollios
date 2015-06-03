@@ -34,6 +34,10 @@ class PhotoPollUploader < CarrierWave::Uploader::Base
     process :resize_to_fit => [200, 100]
   end
 
+  version :original do
+    cloudinary_transformation :quality => 80
+  end
+
   def extension_white_list
     %w(jpg jpeg gif png)
   end
