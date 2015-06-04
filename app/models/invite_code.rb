@@ -8,7 +8,7 @@ class InviteCode < ActiveRecord::Base
 
   def self.generate_invite_code
     begin
-      code = (@code_prefix + SecureRandom.hex(2)).upcase
+      code = (@code_prefix + SecureRandom.hex(3)).upcase
     end while InviteCode.exists?(code: code)
     return code
   end
