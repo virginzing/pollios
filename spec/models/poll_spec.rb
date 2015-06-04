@@ -33,7 +33,7 @@ RSpec.describe Poll, :type => :model do
     it "return detail of poll" do
       poll, error_message, alert_message = Poll.create_poll( FactoryGirl.attributes_for(:create_poll).merge(member_id: ex_member.id), ex_member)
       expect(poll).to eq(poll) 
-      expect(poll.qrcode_key.length).to eq(8)
+      expect(poll.qrcode_key.length).to eq(12)
       expect(alert_message).to eq(nil)
     end
   end

@@ -243,7 +243,7 @@ class Poll < ActiveRecord::Base
 
   def generate_qrcode_key
     begin
-      self.qrcode_key = SecureRandom.hex(4)
+      self.qrcode_key = SecureRandom.hex(6)
     end while self.class.exists?(qrcode_key: qrcode_key)
     qrcode_key
   end

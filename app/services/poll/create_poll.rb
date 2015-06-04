@@ -62,7 +62,7 @@ class Poll::CreatePoll
 
   def generate_qrcode
     begin
-      poll.qrcode_key = SecureRandom.hex(4)
+      poll.qrcode_key = SecureRandom.hex(6)
     end while Poll.exists?(qrcode_key: poll.qrcode_key)
   end
 

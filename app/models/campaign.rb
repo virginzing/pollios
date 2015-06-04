@@ -168,11 +168,17 @@ class Campaign < ActiveRecord::Base
   end
 
   def generate_serial_code
-    return id.to_s + Time.zone.now.to_i.to_s
+    begin
+      serial_code = ('S' + SecureRandom.hex(6)).upcase
+    end while CampaignMember.exists?(serial_code: serial_code)
+    serial_code
   end
 
   def generate_ref_no
-    return "P" + Time.zone.now.to_i.to_s
+    begin
+      ref_no = ('R' + SecureRandom.hex(6)).upcase
+    end while CampaignMember.exists?(ref_no: ref_no)
+    ref_no
   end
 
   def get_photo_campaign

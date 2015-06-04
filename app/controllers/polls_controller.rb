@@ -189,7 +189,7 @@ class PollsController < ApplicationController
 
   def new_generate_qrcode
     puts params[:id]
-    @poll.update!(qrcode_key: SecureRandom.hex(5))
+    @poll.update!(qrcode_key: SecureRandom.hex(6))
     flash[:success] = "Re-Generate QRCode"
     respond_to do |wants|
       wants.html { redirect_to polls_path }

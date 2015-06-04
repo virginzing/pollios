@@ -241,5 +241,13 @@ RSpec.describe "Member" do
     end
   end
 
+  describe "POST /member/activate" do
+    let!(:company) { create(:company, member: member) }
+    let!(:group) { create(:group, name: "Name Group") }
+    let!(:company_group) { create(:company_group, group: group, member: member, main_group: true) }
+
+    # let(:inivte_code) {  }
+  end
+
 
 end
