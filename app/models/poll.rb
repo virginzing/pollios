@@ -270,6 +270,11 @@ class Poll < ActiveRecord::Base
     ActiveModel::ArraySerializer.new(cached_choices, each_serializer: ChoiceSerializer).as_json
   end
 
+  def self.close_all_poll_that_expired
+    poll_expired = Poll.where("date(expire_date + interval '7 hour') = ?", Time.zone.now)
+    poll_expired.collect {|poll| poll.update!(close_status: true) }
+  end
+
   def get_in_groups(groups_by_name)
     group = []
     split_group_id ||= in_group_ids.split(",").map(&:to_i)
