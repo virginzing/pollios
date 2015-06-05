@@ -124,14 +124,9 @@
             </fieldset>
 
           <footer>
-            <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
-              Submit
-            </button>
-            <button type="button" class="btn btn-default" onclick="window.history.back();">
-              Back
-            </button>
+            <%= button_tag "Submit", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..." } %>
           </footer>
-            <% end %>
+          <% end %>
 
         </div>
         <!-- end widget content -->

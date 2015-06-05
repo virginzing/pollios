@@ -104,6 +104,10 @@ module ApplicationHelper
     end
   end
 
+  def cp(path)
+    'active' if current_page?(path)
+  end
+
   def invite_code_helper(used)
     if used
       content_tag 'div', class: 'label label-success' do
