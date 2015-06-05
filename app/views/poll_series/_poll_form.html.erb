@@ -11,7 +11,7 @@
       <section>
         <label class="label">Question</label>
         <label class="textarea">
-          <%= f.input :title , label: false, as: :text %>
+          <%= f.input :title , label: false, required: false, as: :text, input_html: { :'data-parsley-required' => true, id: 'question_title_' + Time.now.to_i.to_s, class: 'question_title' } %>
           <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
           <%= f.input :type_poll, as: :hidden, input_html: { id: 'type_poll_' + Time.now.to_i.to_s } %>
         </label>
@@ -39,16 +39,12 @@
 
       <div class="col-md-1">
         <span class="remove_poll">
-          <%= f.link_to_remove "Remove Poll", class: "btn btn-default btn-xs", data: { confirm: "Are you sure?" } %>
+          <%= f.link_to_remove "Remove Poll", class: "btn btn-default btn-xs remove_poll_nested", id: Time.now.to_i ,data: { confirm: "Are you sure?" } %>
         </span>
       </div>
     </div>
 
   </div>
-
-  <div class="panel-footer text-align-center">
-  </div>
-
 </div>
 
 <script type="text/javascript">
@@ -68,7 +64,6 @@ function hideCollectionChoice (id) {
 
   $collection_choice.find('input').attr('data-parsley-required', 'false');
   $collection_choice.hide();
-  // console.log($collection_choice.find('input').attr('data-parsley-required', 'false'));
   $("#type_poll_" + id).attr('value', 2);
 }
 
@@ -78,6 +73,21 @@ function showCollectionChoice (id) {
   $collection_choice.show();
   $("#type_poll_" + id).attr('value', 3);
 }
+
+function removeValidate(id) {
+  var $collection_choice = $("#collect_choices_" + id);
+  var $question_title = $("#question_title_" + id);
+
+  $collection_choice.find('input').attr('data-parsley-required', 'false');
+  $question_title.attr('data-parsley-required', 'false');
+}
+
+$("a.remove_poll_nested").on('confirm:complete', function(e, response) {
+  if (!response) {
+    const id = e.target.id;
+    removeValidate(id);
+  };
+});
 </script>
 
 

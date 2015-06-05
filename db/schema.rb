@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602162321) do
+ActiveRecord::Schema.define(version: 20150605084348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -890,11 +890,15 @@ ActiveRecord::Schema.define(version: 20150602162321) do
     t.integer  "recurring_id"
     t.boolean  "feedback",       default: false
     t.datetime "deleted_at"
+    t.boolean  "expire_status",  default: false
+    t.boolean  "close_status",   default: false
   end
 
   add_index "poll_series", ["allow_comment"], name: "index_poll_series_on_allow_comment", where: "(allow_comment = false)", using: :btree
   add_index "poll_series", ["campaign_id"], name: "index_poll_series_on_campaign_id", using: :btree
+  add_index "poll_series", ["close_status"], name: "index_poll_series_on_close_status", using: :btree
   add_index "poll_series", ["deleted_at"], name: "index_poll_series_on_deleted_at", using: :btree
+  add_index "poll_series", ["expire_status"], name: "index_poll_series_on_expire_status", where: "(expire_status = true)", using: :btree
   add_index "poll_series", ["feedback"], name: "index_poll_series_on_feedback", using: :btree
   add_index "poll_series", ["in_group"], name: "index_poll_series_on_in_group", where: "(in_group = true)", using: :btree
   add_index "poll_series", ["member_id"], name: "index_poll_series_on_member_id", using: :btree

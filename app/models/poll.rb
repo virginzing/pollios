@@ -272,7 +272,7 @@ class Poll < ActiveRecord::Base
 
   def self.close_all_poll_that_expired
     poll_expired = Poll.where("date(expire_date + interval '7 hour') = ?", Time.zone.now)
-    poll_expired.collect {|poll| poll.update!(close_status: true) }
+    poll_expired.collect {|poll| poll.update!(close_status: true, expire_status: true) }
   end
 
   def get_in_groups(groups_by_name)

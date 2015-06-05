@@ -31,7 +31,8 @@
             </section>
 
             <section class="col col-3">
-              <label class="label">Expire within (day)</label>
+
+<!--               <label class="label">Expire within (day)</label>
                 <label class="select">
                   <select name="poll_series[expire_date]">
                     <option value="0" selected="">Unexpired</option>
@@ -39,7 +40,7 @@
                       <option value="<%= e %>"><%= e %></option>
                     <% end %>
                   </select> <i></i> 
-                </label>
+                </label> -->
 
               <div class="option_config">
                 <label class="toggle">
@@ -110,9 +111,7 @@
         
 
           <footer>
-            <button type="submit" class="btn btn-primary" data-disable-with="Loading...">
-              Submit
-            </button>
+              <%= button_tag "Submit", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..." } %>
             <button type="button" class="btn btn-default" onclick="window.history.back();">
               Back
             </button>
@@ -149,6 +148,8 @@
 
       $("input[name=checkbox-inline]").last().attr('id', count_add_form);
       $(".collect_choices").last().attr('id', 'collect_choices_' + count_add_form);
+      $("textarea.question_title").last().attr('id', 'question_title_' + count_add_form);
+      $(".remove_poll_nested").last().attr('id', count_add_form);
       $(".poll_series_polls_type_poll:last > input").last().attr('id', 'type_poll_' + count_add_form);
       count_add_form++;
       // dropZonePicture();
