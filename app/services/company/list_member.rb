@@ -8,6 +8,10 @@ class Company::ListMember
     @get_list_members ||= company_members
   end
 
+  def access_member?(member)
+    get_list_members.include?(member)
+  end
+
 
   private
 

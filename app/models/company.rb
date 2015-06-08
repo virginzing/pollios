@@ -24,6 +24,9 @@ class Company < ActiveRecord::Base
   has_many :redeemers, dependent: :destroy
   
   has_many :get_redeemers, through: :redeemers, source: :member
+
+  has_many :poll_series_companies, dependent: :destroy
+  has_many :poll_series, through: :poll_series_companies, source: :poll_series
   
   has_many :main_groups, -> { where("group_companies.main_group = 't' ") }, through: :group_companies, source: :group
   # validates :amount_code, :prefix_name, presence: true
