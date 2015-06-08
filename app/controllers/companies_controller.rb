@@ -390,7 +390,7 @@ class CompaniesController < ApplicationController
   end
 
   def group_detail
-    fail ExceptionHandler::WebForbidden unless Company::ListGroup.new(current_member.get_company).access_group?(@group)
+    fail ExceptionHandler::Forbidden unless Company::ListGroup.new(current_member.get_company).access_group?(@group)
 
     @init_poll = PollOfGroup.new(current_member, @group, options_params)
     @polls = @init_poll.get_poll_of_group
@@ -648,9 +648,8 @@ class CompaniesController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.find_by(id: params[:id])
-    fail ExceptionHandler::WebNotFound if @poll.nil?
-    fail ExceptionHandler::WebForbidden unless Company::ListPoll.new(set_company).access_poll?(@poll)
+    @poll = Poll.cached_find(params[:id])
+    fail ExceptionHandler::Forbidden unless Company::ListPoll.new(set_company).access_poll?(@poll)
     @poll
   end
 
@@ -683,9 +682,7 @@ class CompaniesController < ApplicationController
   end
 
   def set_group
-    @group = Group.find_by(id: params[:group_id])
-    fail ExceptionHandler::WebNotFound if @group.nil?
-    @group
+    @group = Group.cached_find(params[:group_id])
   end
 
   def company_params

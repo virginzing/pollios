@@ -31,6 +31,8 @@ class Campaign < ActiveRecord::Base
 
   scope :without_system, -> { where(system_campaign: false) }
 
+  after_commit :flush_cache
+
   # after_create :set_campaign_poll
   # before_update :check_campaign_poll
 
@@ -39,6 +41,19 @@ class Campaign < ActiveRecord::Base
   accepts_nested_attributes_for :rewards, :reject_if => lambda { |a| a[:title].blank? }, :allow_destroy => true
 
   self.per_page = 10
+
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id]) do
+      @campaign = Campaign.find_by(id: id)
+      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Campaign::NOT_FOUND unless @campaign.present?
+      @campaign
+    end
+  end
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
+  end
+
   
   def set_campaign_poll
     if self.poll_ids.present?

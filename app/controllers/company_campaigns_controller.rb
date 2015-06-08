@@ -72,11 +72,9 @@ class CompanyCampaignsController < ApplicationController
 
 
   private
-
   def set_campaign
-    @campaign = Campaign.find_by(id: params[:id])
-    fail ExceptionHandler::WebNotFound if @campaign.nil?
-    fail ExceptionHandler::WebForbidden unless Company::ListCampaign.new(@company).access_campaign?(@campaign)
+    @campaign = Campaign.cached_find(params[:id])
+    fail ExceptionHandler::Forbidden unless Company::ListCampaign.new(@company).access_campaign?(@campaign)
     @campaign
   end
 

@@ -88,15 +88,27 @@ module ExceptionHandler
       NOT_FOUND = "Reward not found."
       DELETED = "This reward was deleted from Pollios."
     end
+
+    module Campaign
+      NOT_FOUND = "Campaign not found."
+      DELETED = "This campaign was deleted from Pollios."
+    end
   end
 
   def not_found(ex)
-    # Rails.logger.error "[ExceptionHandler] Exception #{ex.class}: #{ex.message}"
-    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :not_found
+    if request.format.html?
+      render 'web/errors/404', layout: false
+    else
+      render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :not_found
+    end
   end
 
   def forbidden(ex)
-    render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbidden
+    if request.format.html?
+      render 'web/errors/403', layout: false
+    else
+      render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :forbidden
+    end
   end
 
   def unprocessable_entity(ex)
