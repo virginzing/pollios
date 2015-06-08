@@ -461,7 +461,10 @@ Pollios::Application.routes.draw do
     get 'poll/:id/edit', to: 'companies#edit_poll', as: :company_edit_poll
     put 'poll/:id', to: 'companies#update_poll',  as: :company_update_poll
 
-    get 'questionnaire/:id',  to: 'companies#questionnaire_detail', as: :company_questionnaire_detail
+    scope 'questionnaire' do
+      get ':id',  to: 'poll_series#questionnaire_detail', as: :company_questionnaire_detail
+      get ':id/edit', to: 'poll_series#edit', as: :company_questionnaire_edit
+    end
 
     get 'search',   to: 'companies#search',  as: :company_search
     get 'questionnaires', to: 'companies#list_questionnaires',  as: :company_questionnaires

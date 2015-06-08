@@ -3,8 +3,12 @@ class Company::ListPollSeries
     @company = company
   end
 
+  def list_poll_series
+    @list_poll_series ||= poll_series
+  end
+
   def poll_series_ids
-    @poll_series_ids ||= poll_series.pluck(:id)
+    @poll_series_ids ||= list_poll_series.pluck(:id)
   end
 
   def access_poll_series?(poll_series)
@@ -14,7 +18,7 @@ class Company::ListPollSeries
   private
 
   def poll_series
-    @company.poll_series
+    @company.poll_series.without_deleted
   end
   
   

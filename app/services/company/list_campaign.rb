@@ -3,14 +3,22 @@ class Company::ListCampaign
     @company = company
   end
 
+  def list_campaigns
+    @list_campaigns ||= company_campaigns
+  end
+
+  def list_campaign_ids
+    @list_campaign_ids ||= list_campaigns.pluck(:id)
+  end
+
   def access_campaign?(campaign)
-    list_campaigns_ids.include?(campaign.id)
+    list_campaign_ids.include?(campaign.id)
   end
 
   private
 
-  def list_campaigns_ids
-    @company.campaigns.pluck(:id)
+  def company_campaigns
+    @company.campaigns
   end
   
   

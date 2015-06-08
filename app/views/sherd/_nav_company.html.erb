@@ -20,7 +20,7 @@
       <li class="<%= is_active?('poll_series') %>">
         <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Questionnaires</span></a>
           <ul>
-          <li class="<%= is_active_2nd_level('companies', 'list_questionnaires') || is_active_2nd_level('poll_series', 'same_choice') || is_active_2nd_level('companies', 'questionnaire_detail') || is_active_2nd_level('poll_series', 'normal') %>">
+          <li class="<%= is_active_2nd_level('companies', 'list_questionnaires') || is_active_2nd_level('poll_series', 'same_choice') || is_active_2nd_level('companies', 'questionnaire_detail') || is_active_2nd_level('poll_series', 'normal') || is_active_2nd_level('poll_series', 'edit') || is_active_2nd_level('poll_series', 'questionnaire_detail') %>">
             <a href="<%= company_questionnaires_path %>"> List Questionnaires</a>
           </li>
 

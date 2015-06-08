@@ -3,7 +3,7 @@ class PollSeriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :signed_user, only: [:index, :new, :normal, :same_choice]
   before_action :set_current_member, only: [:vote, :detail, :un_see, :save_later, :un_save_later]
-  before_action :set_poll_series, only: [:edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see, :save_later, :un_save_later]
+  before_action :set_poll_series, only: [:questionnaire_detail, :edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see, :save_later, :un_save_later]
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
 
@@ -150,8 +150,19 @@ class PollSeriesController < ApplicationController
     Base64.urlsafe_encode64(string)
   end
 
+  def questionnaire_detail
+    @poll_series = @poll_series.decorate
+    @array_list = []
+
+    @poll_series.polls.each do |poll|
+      @array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).round(2)
+    end
+
+    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@poll_series).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
+  end
+
   def edit
-    @poll_tags = @poll_series.tags
+
   end
 
   def update

@@ -38,7 +38,7 @@
                 <th>Public</th>
                 <th width="150">Expire At</th>
                 <th width="200">Created At</th>
-                <th></th>
+                <!-- <th></th> -->
               </tr>
             </thead>
             <tbody>
@@ -50,8 +50,8 @@
                   <td><%= series.view_all %></td>
                   <td><%= series.public %></td>
                   <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
-                  <td><%= series.created_at %></td>
-                  <td><!-- <%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> |--> <%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>
+                  <td><%= series.create_since %></td>
+<!--                   <td><%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> |<%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td> -->
                 </tr>
               <% end %>
             </tbody>
