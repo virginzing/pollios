@@ -11,7 +11,7 @@
     </div>
 
     <br>
-    <% if @poll.in_group %>
+    <% if false %>
     <div class="form-group">
       <label>Change group</label>
       <select multiple="multiple" class="searchable" name="group_select[]" disabled="disable">
@@ -24,6 +24,7 @@
     <% end %>
     
     <div class="form-group">
+      <%= f.input :remove_campaign, as: :boolean, input_html: { id: "remove_campaign" } %>
       <%= f.input :close_status, label: 'Close Poll' %>
       <%= f.input :draft, label: "Draft" %>
     </div>
@@ -90,6 +91,12 @@ $(document).on('page:change', function() {
   $("#clear_campaign").on("click", function () {
     $("#poll_campaign").val("0").trigger("change");
   })
+
+  $("#remove_campaign").change(function () {
+    var $input = $( this );
+    $("#poll_campaign").attr('disabled', $input.prop("checked"));
+  });
+
 });
 
 </script>

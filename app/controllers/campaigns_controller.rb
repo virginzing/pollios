@@ -88,6 +88,23 @@ class CampaignsController < ApplicationController
 
   def load_questionnaire
     @campaign = Campaign.find(params[:id])
+    @questionnaire_ids = @campaign.poll_series.pluck(:id)
+
+    @campaign_members = CampaignMember.where("campaign_id = #{@campaign.id} AND poll_series_id IN (?) AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", @questionnaire_ids, params[:date_questionnaire].to_date, params[:date_questionnaire].to_date)
+
+    if @campaign_members.present?
+      @campaign_members = @campaign_members
+    else
+      @campaign_members = []
+    end
+
+    respond_to do |wants|
+      wants.js
+    end
+  end
+
+  def load_questionnaire_feedback
+    @campaign = Campaign.find(params[:id])
 
     @collection = CollectionPollSeries.find(params[:campaign_questionnaire])
     @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
@@ -158,7 +175,8 @@ class CampaignsController < ApplicationController
   # GET /campaigns/1
   # GET /campaigns/1.json
   def show
-    @member_campaign = CampaignMember.includes(:member, :poll).where(campaign_id: @campaign.id)
+    @list_poll = Company::ListPoll.new(current_member.get_company).list_polls.where("campaign_id = ?", @campaign.id)
+    @list_questionnaire = Company::ListPollSeries.new(current_member.get_company).list_poll_series.where("campaign_id = ?", @campaign.id)
   end
 
   # GET /campaigns/new

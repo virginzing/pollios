@@ -252,6 +252,7 @@ Pollios::Application.routes.draw do
 
       get ':id/load_poll',  to: 'campaigns#load_poll'
       get ':id/load_questionnaire', to: 'campaigns#load_questionnaire'
+      get ':id/load_questionnaire_feedback',  to: 'campaigns#load_questionnaire_feedback'
     end
   end
 
@@ -463,7 +464,7 @@ Pollios::Application.routes.draw do
 
     scope 'questionnaire' do
       get ':id',  to: 'poll_series#questionnaire_detail', as: :company_questionnaire_detail
-      get ':id/edit', to: 'poll_series#edit', as: :company_questionnaire_edit
+      get ':id/edit', to: 'poll_series#edit', as: :company_edit_questionnaire
     end
 
     get 'search',   to: 'companies#search',  as: :company_search
@@ -508,6 +509,7 @@ Pollios::Application.routes.draw do
       get '',       to: 'company_campaigns#index', as: :company_campaigns
       get 'new',    to: 'company_campaigns#new', as: :new_company_campaign
       post 'create',  to: 'company_campaigns#create',  as: :create_company_campaign
+      get ':id',  to: 'campaigns#show', as: :company_campaign_detail
       get ':id/edit', to: 'company_campaigns#edit', as: :edit_company_campaign
       put ':id',   to: 'company_campaigns#update',  as: :update_company_campaign
       delete ':id', to: 'company_campaigns#destroy'

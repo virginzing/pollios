@@ -5,7 +5,7 @@ class Company::ListPoll
   end
 
   def list_polls
-    @list_polls ||= Poll.without_deleted.includes([:groups, :poll_company]).where("groups.id IN (?) OR poll_companies.company_id = ?", list_groups, @company.id).uniq.references(:groups, :poll_company)
+    @list_polls ||= Poll.without_deleted.includes([:groups, :poll_company]).where("groups.id IN (?) OR poll_companies.company_id = ?", list_groups_ids, @company.id).uniq.references(:groups, :poll_company)
   end
   
   def access_poll?(poll)

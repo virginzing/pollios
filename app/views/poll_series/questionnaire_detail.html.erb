@@ -1,7 +1,8 @@
+<% breadcrumb :company_questionnaire_detail, @poll_series %>
+
 <div class="well">
-  <h1>
-    <%= @poll_series.description %>
-  </h1>
+  <h1><u>Description</u></h1>
+  <p><%= @poll_series.description %></p>
 </div>
 <!-- widget grid -->
 <section id="widget-poll_series-detail" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
@@ -40,6 +41,8 @@
                   <h5>Vote all : <%= @poll_series.vote_all %></h5>
                   <h5>View all : <%= @poll_series.view_all %></h5>
                   <h5>Campaign : <%= @poll_series.campaign.present? ? @poll_series.campaign.name : "-" %></h5>
+                  <h5>State: <%= @poll_series.decorate.show_close_status %></h5>
+                  <h5>Allow suggest: <%= @poll_series.decorate.show_allow_comment %></h5>
                   <h5>Last updated : <span data-livestamp="<%= @poll_series.updated_at.to_i %>"></span></h5>
                 </div>
               </div>
@@ -131,4 +134,9 @@
     </table>
 
   </div>
+</div>
+
+<div class="row">
+  <div class="col col-md-12 col-md-offset-5"><%= link_to 'Edit', company_edit_questionnaire_path(@poll_series), class: 'btn btn-primary btn-lg' %>
+  <%= link_to 'Delete', @poll_series, method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger btn-lg' %></div>
 </div>

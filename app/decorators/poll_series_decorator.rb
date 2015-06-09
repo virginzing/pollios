@@ -16,4 +16,28 @@ class PollSeriesDecorator  < ApplicationDecorator
     content_tag(:span, nil , 'data-livestamp' => object.created_at.to_i)
   end
 
+  def show_close_status
+    if object.close_status
+      content_tag :span, class: 'label label-info' do
+        "Can't vote (Questionnaire closed)"
+      end
+    else
+      content_tag :span, class: 'label label-success' do
+        "Can vote (Questionnaire open)"
+      end
+    end
+  end
+
+  def show_allow_comment
+    if object.allow_comment
+      content_tag :span, class: 'label label-success' do
+        "YES"   
+      end
+    else
+      content_tag :span, class: 'label label-info' do
+        "NO"   
+      end
+    end
+  end
+
 end

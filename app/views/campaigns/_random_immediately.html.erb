@@ -22,14 +22,14 @@
   <br>
 
 <div class="row">
-    <%= form_tag "/feedback/campaigns/#{@campaign.id}/load_questionnaire_feedback", method: :get, remote: true, class: "load_ajax_form" do %>
+    <%= form_tag "/feedback/campaigns/#{@campaign.id}/load_questionnaire", method: :get, remote: true, class: "load_ajax_form" do %>
       <% utf8_enforcer_tag() %>
       <div class="col col-md-1">
         Questionnaire
       </div>
     
       <div class="col col-md-4">
-        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_collection, "id", "title"), :include_blank => "Select questionnaire", "data-parsley-required" => "true" %>
+        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_questionnaire, "id", "description"), :include_blank => "Select questionnaire", "data-parsley-required" => "true" %>
       </div>
 
       <div class="col col-md-2">
@@ -96,13 +96,4 @@ $(document).ready(function () {
   });
 
 });
-
-// .on("change", function (e) {
-//     $.campaign_poll.select2('data', null, false);
-//     $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
-//     $.get("/feedback/campaigns/<%= @campaign.id %>/load_questionnaire", { poll_series_id: e.val } ).done(function () {
-//       $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-//     })
-//     e.preventDefault();
-//   });
 </script>

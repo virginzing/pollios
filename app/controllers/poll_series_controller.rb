@@ -6,30 +6,10 @@ class PollSeriesController < ApplicationController
   before_action :set_poll_series, only: [:questionnaire_detail, :edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see, :save_later, :un_save_later]
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
-
   before_action :set_company, only: [:same_choice, :normal]
+
   def generate_qrcode
-
-    # @qr = QrcodeSerializer.new(PollSeries.find(params[:id])).as_json.to_json
-    # @qr = get_link_for_qr_code(PollSeries.find(params[:id]))
-    # puts "#{@qr}"
     @qr = GenerateQrcodeLink.new(PollSeries.find(params[:id])).get_link
-    # deflate = Zlib::Deflate.deflate(qrurl)
-    # base64_qrcode = Base64.urlsafe_encode64(deflate)
-
-    # qrcode = URI.encode(qrurl)
-
-    # @qr = RQRCode::QRCode.new( qrcode , :level => :l , size: 4)
-
-    # respond_to do |format|
-    #   format.json
-    #   format.html
-    #   format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
-    #   format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
-    #   format.gif  { render :qrcode => @qr }
-    #   format.jpeg { render :qrcode => @qr }
-    # end
-
     respond_to do |format|
       format.html
     end
@@ -70,6 +50,8 @@ class PollSeriesController < ApplicationController
   end
 
   def detail
+    raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::PollSeries::CLOSED if @poll_series.close_status
+    
     PollSeries.view_poll(@current_member, @poll_series)
 
     if @poll_series.feedback
@@ -168,11 +150,11 @@ class PollSeriesController < ApplicationController
   def update
     if @poll_series.update(poll_series_params)
       flash[:success] = "Successfully updated poll series."
-      redirect_to poll_series_index_path
+      redirect_to company_questionnaire_detail_path(@poll_series)
     else
       render action: 'edit'
     end
-    puts "error: #{@poll_series.errors.full_messages}"
+    # puts "error: #{@poll_series.errors.full_messages}"
   end
 
   def create
@@ -235,9 +217,8 @@ class PollSeriesController < ApplicationController
   end
 
   def destroy
-    @poll_series = PollSeries.find(params[:id])
     @poll_series.destroy
-    flash[:success] = "Successfully destroyed poll series."
+    flash[:success] = "Successfully destroyed questionnaires."
     redirect_to company_questionnaires_path
   end
 
@@ -257,6 +238,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:close_status, :allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

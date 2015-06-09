@@ -8,7 +8,7 @@ class Poll < ActiveRecord::Base
   include PgSearch
   include PollsHelper
 
-  attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three
+  attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three, :remove_campaign
 
   cattr_accessor :custom_error_message
 

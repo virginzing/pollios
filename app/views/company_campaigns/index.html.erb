@@ -40,7 +40,7 @@
               <% @campaigns.each do |campaign| %>
                 <tr>
                   <td><%= campaign.id %></td>
-                  <td><%= campaign.name %></td>
+                  <td><%= link_to campaign.name, company_campaign_detail_path(campaign) %></td>
                   <td><%= campaign.description %></td>
                   <td><%= campaign.how_to_redeem %></td>
                   <td><%= campaign.limit %></td>

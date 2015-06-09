@@ -48,6 +48,7 @@ module ExceptionHandler
     module PollSeries
       NOT_FOUND = "Feedback not found."
       DELETED = "Feedback was deleted from Pollios."
+      CLOSED = "Feedback was closed."
     end
 
     module Member

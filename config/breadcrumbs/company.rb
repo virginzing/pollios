@@ -32,3 +32,13 @@ end
 crumb :company_questionnaires do
   link "All Questionnaires", company_questionnaires_path
 end
+
+crumb :company_questionnaire_detail do |questionnnaire|
+  link truncate(questionnnaire.description), company_questionnaire_detail_path(questionnnaire)
+  parent :company_questionnaires
+end
+
+crumb :company_edit_questionnaire do |questionnnaire|
+  link "Edit", company_edit_questionnaire_path(questionnnaire)
+  parent :company_questionnaire_detail, questionnnaire
+end

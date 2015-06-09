@@ -1,0 +1,10 @@
+<% breadcrumb :company_edit_questionnaire, @poll_series %>
+
+<div class="well">
+  <%= simple_form_for @poll_series do |f| %>
+    <%= f.input :close_status, label: "Can't vote (Questionnaire closed)" %>
+    <%= f.input :allow_comment, label: "Allow suggest" %>
+
+    <%= f.submit 'Update', class: 'btn btn-primary' %>
+  <% end %>
+</div>
