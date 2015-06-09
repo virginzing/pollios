@@ -1,0 +1,975 @@
+/*
+
+
+
+
+
+
+
+
+
+ */
+/* line 3, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.link-guide {
+  color: red;
+}
+
+/* line 7, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.checkbox-surveyor {
+  margin: 30px;
+}
+
+/* line 11, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+img.img-surveyor {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+/* line 16, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.page-header-all {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 30px;
+}
+
+/* line 21, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.btn-pill {
+  border-radius: 10px;
+  line-height: 2px;
+  font-size: 11px;
+}
+
+/* line 27, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.filter-other {
+  margin-top: 14px;
+}
+
+/* line 31, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.btn-filter {
+  padding: 6px;
+}
+
+/* line 36, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.summary-questionnaire h5 {
+  font-size: 14px !important;
+}
+
+/* line 41, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.breadcrumb {
+  background-color: #FBFBFB;
+  border-radius: 5px;
+}
+
+/* line 46, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.breadcrumb > li {
+  display: inline;
+}
+
+/* line 50, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+input.check_box_branch {
+  margin-right: 10px;
+}
+
+/* line 54, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+td {
+  font-size: 12px !important;
+}
+
+/* line 58, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+ol.breadcrumb {
+  font-size: 12px;
+}
+
+/* line 62, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.update-button {
+  border-top: 1px solid #e6e6e6;
+  padding-top: 20px;
+  margin-top: 50px;
+}
+
+/* line 68, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+label.collection_radio_buttons {
+  margin-right: 20px;
+  margin-left: 5px;
+}
+
+/* line 73, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* line 78, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.dropdown-custom {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 6px -4px 0px;
+  list-style: none;
+  font-size: 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+
+/* line 99, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+a.text-mute {
+  color: #b3b3b3 !important;
+}
+
+/* line 103, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.note {
+  margin-bottom: 10px;
+}
+
+/* line 107, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.alert {
+  font-size: 18px !important;
+  font-family: "Roboto";
+}
+
+/* line 112, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.btn-fullwidth {
+  width: 100%;
+}
+
+/* line 116, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.disabled label {
+  color: #9d9d9d;
+}
+
+/* line 120, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+ul#parsley-id-multiple-poll_seriesbranch_list {
+  position: absolute;
+  top: -10px;
+  left: 110px;
+}
+
+/* line 126, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+ul#parsley-id-multiple-poll_seriesgroup_id {
+  position: absolute;
+  top: -10px;
+  left: 110px;
+}
+
+/* line 132, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+ul#parsley-id-multiple-pollgroup_id {
+  position: absolute;
+  top: -10px;
+  left: 110px;
+}
+
+/* line 138, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+h1.poll-title {
+  padding-bottom: 20px;
+}
+
+/* line 142, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.poll-title-detail {
+  padding-bottom: 20px;
+}
+
+/* line 146, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.input.field_choice {
+  margin-bottom: 10px;
+}
+
+/* line 150, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.remove_field_choice {
+  margin-top: 5px;
+  left: 10px;
+}
+
+/* line 155, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+a.morechoice {
+  margin-right: 100px;
+}
+
+/* line 159, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.options_group {
+  font-size: 11px;
+}
+
+/* line 163, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+input.disabled {
+  color: gray;
+}
+
+/* line 167, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.tooltip {
+  opacity: 1;
+}
+
+/* line 171, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+section.branch_list > div > span > label {
+  display: block;
+}
+
+/* line 175, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+table.header-center > thead > tr > th {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* line 181, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/custom.css.scss */
+.header_group_detail {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* line 1, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/readmore.css.scss */
+a.readmore-poll-title {
+  margin-top: 15px;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* line 8, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/readmore.css.scss */
+a.close-poll-title {
+  margin-top: 15px;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+/* line 1, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+.left-inner {
+  font-family: "Roboto";
+}
+/* line 3, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+.left-inner img {
+  float: left;
+  margin: 0px 10px 10px 0px;
+  width: 150px;
+}
+/* line 8, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+.left-inner h1 {
+  font-weight: normal;
+}
+
+/* line 14, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+span.group_label {
+  margin: 0px 4px 4px 0px;
+  border: 1px solid #ededed;
+  padding: 4px;
+  background: #fafafa;
+  border-radius: 10px;
+}
+
+/* line 22, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+.member-profile {
+  font-size: 14px;
+}
+
+/* line 27, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+.text-mute span {
+  color: #808080;
+}
+
+/* line 32, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/companies.css.scss */
+ul.list-unstyled.list-inline.summary {
+  font-size: 12px;
+  margin-top: 5px;
+}
+/* line 1, /Users/greannut/Project/PolliosV2/app/assets/stylesheets/poll_series.css.scss */
+.box {
+  width: 100%;
+  border: 1px solid #eaeaea;
+  padding: 10px 10px;
+}
+/*!
+ * @copyright &copy; Kartik Visweswaran, Krajee.com, 2014
+ * @version 3.4.0
+ *
+ * A simple yet powerful JQuery star rating plugin that allows rendering
+ * fractional star ratings and supports Right to Left (RTL) input.
+ *
+ * For more JQuery/Bootstrap plugins and demos visit http://plugins.krajee.com
+ * For more Yii related demos visit http://demos.krajee.com
+ */
+
+.rating-loading {
+    width: 25px;
+    height: 25px;
+    font-size: 0px;
+    color: #fff;
+    background: transparent url('../img/loading.gif') top left no-repeat;
+    border: none;
+}
+/*
+ * Stars
+ */
+.rating-gly {
+    font-family: 'Glyphicons Halflings';
+}
+.rating-gly-star {
+    font-family: 'Glyphicons Halflings';
+    padding-left: 2px;
+}
+
+.rating-gly-star .rating-stars:before {
+    padding-left: 2px;
+}
+
+.rating-lg .rating-gly-star, .rating-lg .rating-gly-star .rating-stars:before {
+    padding-left: 4px;
+}
+
+.rating-xl .rating-gly-star, .rating-xl .rating-gly-star .rating-stars:before {
+    padding-left: 2px;
+}
+
+.rating-active {
+    cursor: default;
+}
+
+.rating-disabled {
+    cursor: not-allowed;
+}
+
+.rating-uni {
+    font-size: 1.2em;
+    margin-top: -5px;
+}
+
+.rating-container {
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    color: #e3e3e3;
+    overflow: hidden;
+}
+
+.rating-container:before {
+    content: attr(data-content);
+}
+
+.rating-container .rating-stars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fde16d;
+    transition: all 0.25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -webkit-transition: all 0.25s ease-out;
+}
+
+.rating-container .rating-stars:before {
+    content: attr(data-content);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+}
+
+.rating-container-rtl {
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    overflow: hidden;
+    color: #fde16d;
+}
+
+.rating-container-rtl:before {
+    content: attr(data-content);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+}
+
+.rating-container-rtl .rating-stars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #e3e3e3;
+    transition: all 0.25s ease-out;
+    -o-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    -webkit-transition: all 0.25s ease-out;
+}
+
+.rating-container-rtl .rating-stars:before {
+    content: attr(data-content);
+}
+
+/**
+ * Rating sizes
+ */
+.rating-xl {
+    font-size: 4.89em;
+}
+
+.rating-lg {
+    font-size: 3.91em;
+}
+
+.rating-md {
+    font-size: 3.13em;
+}
+
+.rating-sm {
+    font-size: 2.5em;
+}
+
+.rating-xs {
+    font-size: 2em;
+}
+
+/**
+ * Clear rating button
+ */
+.star-rating .clear-rating, .star-rating-rtl .clear-rating {
+    color: #aaa;
+    cursor: not-allowed;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 60%;
+}
+
+.clear-rating-active {
+    cursor: pointer !important;
+}
+
+.clear-rating-active:hover {
+    color: #843534;
+}
+
+.star-rating .clear-rating {
+    padding-right: 5px;
+}
+
+/**
+ * Caption
+ */
+.star-rating .caption, .star-rating-rtl .caption {
+    color: #999;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 55%;
+}
+
+.star-rating .caption {
+    padding-left: 5px;
+    font-size: 14px;
+    font-family: "Roboto";
+}
+
+.star-rating-rtl .caption {
+    padding-right: 5px;
+}
+.ms-container{
+  background: transparent url('../img/switch.png') no-repeat 50% 50%;
+  width: 370px;
+}
+
+.ms-container:after{
+  content: ".";
+  display: block;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  clear: both;
+  min-height: 0;
+  visibility: hidden;
+}
+
+.ms-container .ms-selectable, .ms-container .ms-selection{
+  background: #fff;
+  color: #555555;
+  float: left;
+  width: 45%;
+}
+.ms-container .ms-selection{
+  float: right;
+}
+
+.ms-container .ms-list{
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  position: relative;
+  height: 200px;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.ms-container .ms-list.ms-focus{
+  border-color: rgba(82, 168, 236, 0.8);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  outline: 0;
+  outline: thin dotted \9;
+}
+
+.ms-container ul{
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+}
+
+.ms-container .ms-optgroup-container{
+  width: 100%;
+}
+
+.ms-container .ms-optgroup-label{
+  margin: 0;
+  padding: 5px 0px 0px 5px;
+  cursor: pointer;
+  color: #999;
+}
+
+.ms-container .ms-selectable li.ms-elem-selectable,
+.ms-container .ms-selection li.ms-elem-selection{
+  border-bottom: 1px #eee solid;
+  padding: 2px 10px;
+  color: #555;
+  font-size: 14px;
+}
+
+.ms-container .ms-selectable li.ms-hover,
+.ms-container .ms-selection li.ms-hover{
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  background-color: #08c;
+}
+
+.ms-container .ms-selectable li.disabled,
+.ms-container .ms-selection li.disabled{
+  background-color: #eee;
+  color: #aaa;
+  cursor: text;
+}
+/* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
+
+.tooltipster-default {
+	border-radius: 5px; 
+	border: 1px solid #cccccc;
+	background: #ededed;
+	color: #666666;
+}
+
+/* Use this next selector to style things like font-size and line-height: */
+.tooltipster-default .tooltipster-content {
+	font-family: "Roboto";
+	font-size: 13px;
+	line-height: 16px;
+	padding: 8px 10px;
+}
+
+/* This next selector defines the color of the border on the outside of the arrow. This will automatically match the color and size of the border set on the main tooltip styles. Set display: none; if you would like a border around the tooltip but no border around the arrow */
+.tooltipster-default .tooltipster-arrow .tooltipster-arrow-border {
+	/* border-color: ... !important; */
+}
+
+
+/* If you're using the icon option, use this next selector to style them */
+.tooltipster-icon {
+	cursor: help;
+	margin-left: 4px;
+}
+
+
+
+
+
+
+
+
+/* This is the base styling required to make all Tooltipsters work */
+.tooltipster-base {
+	padding: 0;
+	font-size: 0;
+	line-height: 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 9999999;
+	pointer-events: none;
+	width: auto;
+	overflow: visible;
+}
+.tooltipster-base .tooltipster-content {
+	overflow: hidden;
+}
+
+
+/* These next classes handle the styles for the little arrow attached to the tooltip. By default, the arrow will inherit the same colors and border as what is set on the main tooltip itself. */
+.tooltipster-arrow {
+	display: block;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+.tooltipster-arrow span, .tooltipster-arrow-border {
+	display: block;
+	width: 0; 
+	height: 0;
+	position: absolute;
+}
+.tooltipster-arrow-top span, .tooltipster-arrow-top-right span, .tooltipster-arrow-top-left span {
+	border-left: 8px solid transparent !important;
+	border-right: 8px solid transparent !important;
+	border-top: 8px solid;
+	bottom: -7px;
+}
+.tooltipster-arrow-top .tooltipster-arrow-border, .tooltipster-arrow-top-right .tooltipster-arrow-border, .tooltipster-arrow-top-left .tooltipster-arrow-border {
+	border-left: 9px solid transparent !important;
+	border-right: 9px solid transparent !important;
+	border-top: 9px solid;
+	bottom: -7px;
+}
+
+.tooltipster-arrow-bottom span, .tooltipster-arrow-bottom-right span, .tooltipster-arrow-bottom-left span {
+	border-left: 8px solid transparent !important;
+	border-right: 8px solid transparent !important;
+	border-bottom: 8px solid;
+	top: -7px;
+}
+.tooltipster-arrow-bottom .tooltipster-arrow-border, .tooltipster-arrow-bottom-right .tooltipster-arrow-border, .tooltipster-arrow-bottom-left .tooltipster-arrow-border {
+	border-left: 9px solid transparent !important;
+	border-right: 9px solid transparent !important;
+	border-bottom: 9px solid;
+	top: -7px;
+}
+.tooltipster-arrow-top span, .tooltipster-arrow-top .tooltipster-arrow-border, .tooltipster-arrow-bottom span, .tooltipster-arrow-bottom .tooltipster-arrow-border {
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+}
+.tooltipster-arrow-top-left span, .tooltipster-arrow-bottom-left span {
+	left: 6px;
+}
+.tooltipster-arrow-top-left .tooltipster-arrow-border, .tooltipster-arrow-bottom-left .tooltipster-arrow-border {
+	left: 5px;
+}
+.tooltipster-arrow-top-right span,  .tooltipster-arrow-bottom-right span {
+	right: 6px;
+}
+.tooltipster-arrow-top-right .tooltipster-arrow-border, .tooltipster-arrow-bottom-right .tooltipster-arrow-border {
+	right: 5px;
+}
+.tooltipster-arrow-left span, .tooltipster-arrow-left .tooltipster-arrow-border {
+	border-top: 8px solid transparent !important;
+	border-bottom: 8px solid transparent !important; 
+	border-left: 8px solid;
+	top: 50%;
+	margin-top: -7px;
+	right: -7px;
+}
+.tooltipster-arrow-left .tooltipster-arrow-border {
+	border-top: 9px solid transparent !important;
+	border-bottom: 9px solid transparent !important; 
+	border-left: 9px solid;
+	margin-top: -8px;
+}
+.tooltipster-arrow-right span, .tooltipster-arrow-right .tooltipster-arrow-border {
+	border-top: 8px solid transparent !important;
+	border-bottom: 8px solid transparent !important; 
+	border-right: 8px solid;
+	top: 50%;
+	margin-top: -7px;
+	left: -7px;
+}
+.tooltipster-arrow-right .tooltipster-arrow-border {
+	border-top: 9px solid transparent !important;
+	border-bottom: 9px solid transparent !important; 
+	border-right: 9px solid;
+	margin-top: -8px;
+}
+
+
+/* Some CSS magic for the awesome animations - feel free to make your own custom animations and reference it in your Tooltipster settings! */
+
+.tooltipster-fade {
+	opacity: 0;
+	-webkit-transition-property: opacity;
+	-moz-transition-property: opacity;
+	-o-transition-property: opacity;
+	-ms-transition-property: opacity;
+	transition-property: opacity;
+}
+.tooltipster-fade-show {
+	opacity: 1;
+}
+
+.tooltipster-grow {
+	-webkit-transform: scale(0,0);
+	-moz-transform: scale(0,0);
+	-o-transform: scale(0,0);
+	-ms-transform: scale(0,0);
+	transform: scale(0,0);
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-backface-visibility: hidden;
+}
+.tooltipster-grow-show {
+	-webkit-transform: scale(1,1);
+	-moz-transform: scale(1,1);
+	-o-transform: scale(1,1);
+	-ms-transform: scale(1,1);
+	transform: scale(1,1);
+	-webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+	-webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-moz-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-ms-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-o-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15);
+}
+
+.tooltipster-swing {
+	opacity: 0;
+	-webkit-transform: rotateZ(4deg);
+	-moz-transform: rotateZ(4deg);
+	-o-transform: rotateZ(4deg);
+	-ms-transform: rotateZ(4deg);
+	transform: rotateZ(4deg);
+	-webkit-transition-property: -webkit-transform, opacity;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+}
+.tooltipster-swing-show {
+	opacity: 1;
+	-webkit-transform: rotateZ(0deg);
+	-moz-transform: rotateZ(0deg);
+	-o-transform: rotateZ(0deg);
+	-ms-transform: rotateZ(0deg);
+	transform: rotateZ(0deg);
+	-webkit-transition-timing-function: cubic-bezier(0.230, 0.635, 0.495, 1);
+	-webkit-transition-timing-function: cubic-bezier(0.230, 0.635, 0.495, 2.4); 
+	-moz-transition-timing-function: cubic-bezier(0.230, 0.635, 0.495, 2.4); 
+	-ms-transition-timing-function: cubic-bezier(0.230, 0.635, 0.495, 2.4); 
+	-o-transition-timing-function: cubic-bezier(0.230, 0.635, 0.495, 2.4); 
+	transition-timing-function: cubic-bezier(0.230, 0.635, 0.495, 2.4);
+}
+
+.tooltipster-fall {
+	top: 0;
+	-webkit-transition-property: top;
+	-moz-transition-property: top;
+	-o-transition-property: top;
+	-ms-transition-property: top;
+	transition-property: top;
+	-webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+	-webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-moz-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-ms-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-o-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+}
+.tooltipster-fall-show {
+}
+.tooltipster-fall.tooltipster-dying {
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	-ms-transition-property: all;
+	transition-property: all;
+	top: 0px !important;
+	opacity: 0;
+}
+
+.tooltipster-slide {
+	left: -40px;
+	-webkit-transition-property: left;
+	-moz-transition-property: left;
+	-o-transition-property: left;
+	-ms-transition-property: left;
+	transition-property: left;
+	-webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+	-webkit-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-moz-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-ms-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	-o-transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15); 
+	transition-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.15);
+}
+.tooltipster-slide.tooltipster-slide-show {
+}
+.tooltipster-slide.tooltipster-dying {
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	-ms-transition-property: all;
+	transition-property: all;
+	left: 0px !important;
+	opacity: 0;
+}
+
+
+/* CSS transition for when contenting is changing in a tooltip that is still open. The only properties that will NOT transition are: width, height, top, and left */
+.tooltipster-content-changing {
+	opacity: 0.5;
+	-webkit-transform: scale(1.1, 1.1);
+	-moz-transform: scale(1.1, 1.1);
+	-o-transform: scale(1.1, 1.1);
+	-ms-transform: scale(1.1, 1.1);
+	transform: scale(1.1, 1.1);
+}
+/* Make clicks pass-through */
+/* line 6, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+#nprogress {
+  pointer-events: none;
+}
+
+/* line 10, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+#nprogress .bar {
+  background: #2299dd;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+
+/* Fancy blur effect */
+/* line 23, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #2299dd, 0 0 5px #2299dd;
+  opacity: 1.0;
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+  -ms-transform: rotate(3deg) translate(0px, -4px);
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+/* Remove these to get rid of the spinner */
+/* line 38, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 100;
+  top: 15px;
+  right: 15px;
+}
+
+/* line 46, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: solid 2px transparent;
+  border-top-color: #2299dd;
+  border-left-color: #2299dd;
+  border-radius: 50%;
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+  animation: nprogress-spinner 400ms linear infinite;
+}
+
+/* line 60, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+
+/* line 66, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+
+@-webkit-keyframes nprogress-spinner {
+  /* line 71, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  /* line 72, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes nprogress-spinner {
+  /* line 75, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+  0% {
+    transform: rotate(0deg);
+  }
+
+  /* line 76, /Users/greannut/.rvm/gems/ruby-2.2.2/gems/nprogress-rails-0.1.6.6/app/assets/stylesheets/nprogress.scss */
+  100% {
+    transform: rotate(360deg);
+  }
+}
+#nprogress .bar,
+#nprogress .spinner {
+  z-index: 999999;
+}
+/*input.parsley-success,
+select.parsley-success,
+textarea.parsley-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border: 1px solid #D6E9C6;
+}
+*/
+/*
+input.parsley-error,
+select.parsley-error,
+textarea.parsley-error {
+  color: #B94A48;
+  background-color: #fff0f0;
+  border: 1px solid #EED3D7;
+}
+*/
+
+
+.parsley-errors-list {
+  margin: 0px;
+  padding: 0;
+  list-style-type: none;
+  font-size: 0.9em;
+  line-height: 0.9em;
+  opacity: 0;
+  -moz-opacity: 0;
+  -webkit-opacity: 0;
+
+  transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -ms-transition: all .3s ease-in-;
+  -moz-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in;
+}
+
+.parsley-errors-list.filled {
+  opacity: 1;
+  display: block;
+  margin-top: 6px;
+  padding: 0 1px;
+  font-style: normal;
+  font-size: 11px;
+  line-height: 15px;
+  color: #D56161;
+}
