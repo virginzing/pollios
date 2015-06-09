@@ -40,7 +40,7 @@
                   <h5>Creator : <%= @poll_series.member.fullname %></h5>
                   <h5>Vote all : <%= @poll_series.vote_all %></h5>
                   <h5>View all : <%= @poll_series.view_all %></h5>
-                  <h5>Campaign : <%= @poll_series.campaign.present? ? @poll_series.campaign.name : "-" %></h5>
+                  <h5>Campaign : <%= @poll_series.show_campaign %></h5>
                   <h5>State: <%= @poll_series.decorate.show_close_status %></h5>
                   <h5>Allow suggest: <%= @poll_series.decorate.show_allow_comment %></h5>
                   <h5>Last updated : <span data-livestamp="<%= @poll_series.updated_at.to_i %>"></span></h5>

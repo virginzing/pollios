@@ -72,13 +72,13 @@ class CampaignsController < ApplicationController
   def load_poll
     @campaign = Campaign.find(params[:id])
 
-    @campaign_members = @campaign.campaign_members.where("poll_id = ? AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date)
-
-    if @campaign_members.present?
-      @campaign_members = @campaign_members
+    if params[:date_poll].present?
+      @campaign_members = @campaign.campaign_members.where("poll_id = ? AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date)
     else
-      @campaign_members = []
+      @campaign_members = @campaign.campaign_members.where("poll_id = ?", params[:campaign_poll])
     end
+
+    @campaign_members = @campaign_members || []
 
     respond_to do |wants|
       wants.js
@@ -175,6 +175,9 @@ class CampaignsController < ApplicationController
   # GET /campaigns/1
   # GET /campaigns/1.json
   def show
+    @poll_series = PollSeries.find_by(id: params[:psId]) if params[:psId]
+    @poll_series_id = @poll_series.id if @poll_series.present?
+    
     @list_poll = Company::ListPoll.new(current_member.get_company).list_polls.where("campaign_id = ?", @campaign.id)
     @list_questionnaire = Company::ListPollSeries.new(current_member.get_company).list_poll_series.where("campaign_id = ?", @campaign.id)
   end

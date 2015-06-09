@@ -1,0 +1,104 @@
+<div class="well">
+  <h1><u>Search Reward</u></h1><br>
+  <div class="row">
+    <%= form_tag "/feedback/campaigns/#{@campaign.id}/load_poll", method: :get, remote: true, class: "load_ajax_form" do %>
+      <% utf8_enforcer_tag() %>
+      <div class="col col-md-1">
+        Poll
+      </div>
+    
+      <div class="col col-md-4">
+        <%= select_tag "campaign_poll", options_from_collection_for_select(@list_poll, "id", "title"), :include_blank => "Select poll", "data-parsley-required" => "true" %>
+      </div>
+
+      <div class="col col-md-2">
+        <%= text_field_tag 'date_poll', nil , class: 'form-control date datepicker date-today', placeholder: "Select date", 'data-dateformat' => 'dd-mm-yy' %>
+      </div>
+
+      <div class="col col-md-1">
+        <%= submit_tag "Search", class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+  <br>
+
+<div class="row">
+    <%= form_tag "/feedback/campaigns/#{@campaign.id}/load_questionnaire", method: :get, remote: true, class: "load_ajax_form" do %>
+      <% utf8_enforcer_tag() %>
+      <div class="col col-md-1">
+        Questionnaire
+      </div>
+    
+      <div class="col col-md-4">
+        <%= select_tag "campaign_questionnaire", options_from_collection_for_select(@list_questionnaire, "id", "description"), :include_blank => "Select questionnaire", "data-parsley-required" => "true" %>
+      </div>
+
+      <div class="col col-md-2">
+        <%= text_field_tag 'date_questionnaire', nil , class: 'form-control date datepicker date-today', placeholder: "Select date", 'data-dateformat' => 'dd-mm-yy' %>
+      </div>
+
+      <div class="col col-md-1">
+        <%= submit_tag "Search", class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div id="campaign_with_poll">
+
+  </div>
+
+</div>
+
+
+<script>
+$(document).ready(function () {
+  var poll_series_id = '<%= raw @poll_series_id %>';
+  $(".load_ajax_form").parsley();
+
+  $.campaign_poll = $("#campaign_poll");
+  $.campaign_questionnaire = $("#campaign_questionnaire");
+
+  // $.campaign_poll.select2({
+  //     placeholder: "Select poll",
+  //     width: '100%',
+  //     allowClear: true
+  // }).on("change", function (e) {
+  //   $.campaign_questionnaire.select2('data', null, false);
+  //   $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+  //   $.get("/feedback/campaigns/<%= @campaign.id %>/load_poll", { poll_id: e.val } ).done(function () {
+  //     $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+  //   })
+  //   e.preventDefault();
+  // });
+
+  $.campaign_poll.select2({
+    placeholder: "Select poll",
+    width: '100%',
+    allowClear: true
+  });
+
+  $.campaign_questionnaire.select2({
+      placeholder: "Select questionnaire",
+      width: '100%',
+      allowClear: true
+  });
+
+  $('.date-today').datepicker({
+    dateFormat : 'dd-mm-yy',
+    prevText : '<i class="fa fa-chevron-left"></i>',
+    nextText : '<i class="fa fa-chevron-right"></i>'
+  }).datepicker("setDate", new Date());;
+
+
+  $(".load_ajax_form").on('ajax:send', function(xhr) {
+    $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+  }).on('ajax:success', function (data, status, xhr) {
+    $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+  });
+
+  if (poll_series_id.length > 0) {
+    $("#campaign_questionnaire").select2("val", poll_series_id);
+  }
+
+});
+</script>

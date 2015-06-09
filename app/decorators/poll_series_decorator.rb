@@ -40,4 +40,12 @@ class PollSeriesDecorator  < ApplicationDecorator
     end
   end
 
+  def show_campaign
+    if object.campaign.present?
+      link_to campaign.name, company_campaign_detail_path(object.campaign, psId: object.id)
+    else
+      "-"
+    end
+  end
+
 end

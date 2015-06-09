@@ -104,6 +104,11 @@ class PollSeries < ActiveRecord::Base
     Poll.find_by(poll_series_id: id, order_poll: 1)  
   end
 
+  def self.daily_check_expire
+    questionnaire_expired = PollSeries.where("date(expire_date + interval '7 hour') = ?", Time.zone.now)
+    questionnaire_expired.collect {|questionnaire| questionnaire.update!(close_status: true, expire_status: true) }
+  end
+
   def self.get_sum_poll_branch(vote_all, question_count, questionnaire_ids, index)
     array_list = []
 
