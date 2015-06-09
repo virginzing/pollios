@@ -51,7 +51,7 @@ class PollSeriesController < ApplicationController
 
   def detail
     raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::PollSeries::CLOSED if @poll_series.close_status
-    
+
     PollSeries.view_poll(@current_member, @poll_series)
 
     if @poll_series.feedback
@@ -148,6 +148,10 @@ class PollSeriesController < ApplicationController
   end
 
   def update
+    if poll_series_params[:remove_campaign].to_b
+      @poll_series.campaign_id = 0  
+    end
+
     if @poll_series.update(poll_series_params)
       flash[:success] = "Successfully updated poll series."
       redirect_to company_questionnaire_detail_path(@poll_series)
@@ -238,6 +242,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:close_status, :allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:remove_campaign, :close_status, :allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

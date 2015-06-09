@@ -2,6 +2,7 @@
 
 <div class="well">
   <%= simple_form_for @poll_series do |f| %>
+    <%= f.input :remove_campaign, as: :boolean, input_html: { id: "remove_campaign" } if @poll_series.campaign.present? %> 
     <%= f.input :close_status, label: "Can't vote (Questionnaire closed)" %>
     <%= f.input :allow_comment, label: "Allow suggest" %>
 

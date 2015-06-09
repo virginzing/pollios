@@ -277,6 +277,10 @@ class CompaniesController < ApplicationController
       @poll.expire_date = Time.zone.now  
     end
 
+    if update_poll_params[:remove_campaign].to_b
+      @poll.campaign_id = 0
+    end
+
     if @poll.update(update_poll_params)
       flash[:success] = "Successfully updated..."
       redirect_to company_poll_detail_path
@@ -639,7 +643,7 @@ class CompaniesController < ApplicationController
   end
 
   def update_poll_params
-    params.require(:poll).permit(:expire_status, :campaign_id, :draft, :close_status)  
+    params.require(:poll).permit(:expire_status, :campaign_id, :draft, :close_status, :remove_campaign)  
   end
 
   def group_params

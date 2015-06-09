@@ -3,13 +3,13 @@
 <div class="well">
   <%= simple_form_for @poll, url: company_update_poll_path, method: :put do |f| %>
 
-    <div class="form-group">
+<!--     <div class="form-group">
       <label>Change campaign  <a href="javascript:void(0)" class="btn btn-pill btn-default" id="clear_campaign">clear</a></label>
       <label class="select select_campaign">
         <%= f.select :campaign_id, @find_company.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { id: "poll_campaign", placeholder: "Select a campaign" } %>
       </label>
     </div>
-
+ -->
     <br>
     <% if false %>
     <div class="form-group">

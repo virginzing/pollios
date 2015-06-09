@@ -2,7 +2,7 @@ class PollSeries < ActiveRecord::Base
   acts_as_paranoid
 
   include PollSeriesHelper
-  attr_accessor :tag_tokens, :same_choices, :expire_within, :group_id, :branch_list
+  attr_accessor :tag_tokens, :same_choices, :expire_within, :group_id, :branch_list, :remove_campaign
 
   belongs_to :member
   belongs_to :campaign
