@@ -161,6 +161,23 @@ class Poll < ActiveRecord::Base
       end
 
     end
+
+    edit do
+      field :title
+      field :vote_all
+      field :view_all
+      field :comment_count
+      field :public
+      field :status_poll
+      field :allow_comment
+      field :expire_status
+      field :creator_must_vote
+      field :priority
+      field :draft
+      field :system_poll
+      field :deleted_at
+      field :close_status
+    end
   end
 
   # def slug_candidates
