@@ -177,6 +177,7 @@ class Poll < ActiveRecord::Base
       field :system_poll
       field :deleted_at
       field :close_status
+      field :created_at
     end
   end
 
