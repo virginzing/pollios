@@ -42,4 +42,15 @@ class NotifyLog < ActiveRecord::Base
     NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Poll%", "%poll_id: #{poll.id}%", "%group_id: #{group.id}%").update_all(deleted_at: Time.now)
   end
 
+  def self.edit_message_that_change_name(member, new_name, old_name)
+    NotifyLog.without_deleted.where("sender_id = ? AND message LIKE ?", member.id, "%#{old_name}%").all.each do |notify_log|
+      begin
+        current_message = notify_log.message
+        change_message = current_message.sub(/#{old_name}/, new_name)
+        notify_log.update!(message: change_message)
+      rescue
+      end
+    end
+  end
+
 end

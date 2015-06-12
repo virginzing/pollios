@@ -195,6 +195,7 @@ class MembersController < ApplicationController
       fullname = update_profile_params[:fullname]
       first_signup = update_profile_params[:first_signup]
       fb_id = update_profile_params[:fb_id]
+      old_name ||= @current_member.get_name
 
       if update_profile_params[:gender] || update_profile_params[:birthday]
         @current_member.update_personal = true
@@ -232,6 +233,7 @@ class MembersController < ApplicationController
 
       if @current_member.update(update_profile_params.except(:member_id))
         if fullname
+          NotifyLog.edit_message_that_change_name(@current_member, fullname, old_name)
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
         end
 
