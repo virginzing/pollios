@@ -578,7 +578,7 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 4,
+#     "member_id": 2,
 #     "title": "test post",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "freeform",
@@ -791,8 +791,8 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 2,
-#     "fb_id": "633882377"
+#     "member_id": 3,
+#     "fullname": "Mk Online"
 # }' -X POST http://localhost:3000/member/update_profile.json -i
 
 # curl -H "Content-Type: application/json" -d '{

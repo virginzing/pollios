@@ -22,8 +22,8 @@ RSpec.describe "Search" do
 
     context "search user" do
       before do
-        create(:member, fullname: "Nutty", email: "nutty@info.com", public_id: "07510509")
-        create(:member, fullname: "Mekumi", email: "mekumi@info.com", public_id: "mekumi_kiku")
+        create(:member, fullname: "Nutty", email: "nutty@info.com", public_id: "07510509", first_signup: false)
+        create(:member, fullname: "Mekumi", email: "mekumi@info.com", public_id: "mekumi_kiku", first_signup: false)
       end
 
       it "find user by public id" do
@@ -45,7 +45,7 @@ RSpec.describe "Search" do
 
     context "return result of user and group" do
 
-      let!(:member) { create(:member, fullname: "Nutty", public_id: "nutty_fanclub") }
+      let!(:member) { create(:member, fullname: "Nutty", public_id: "nutty_fanclub", first_signup: false) }
       let!(:group) { create(:group, name: "Nutty Group fanclub", public: true) }
       let!(:group_member) { create(:group_member, group: group, member: member, active: true) }
       
