@@ -109,7 +109,7 @@ class AuthenSentaiController < ApplicationController
             end
           end
           wants.html
-          wants.json { render status: :created }
+          wants.json { render status: :ok }
           wants.js
         else
           wants.html
