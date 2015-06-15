@@ -15,7 +15,7 @@ describe "POST /authen/sentai", type: :api do
 
     expect(Apn::Device.count).to eq(0)
 
-    expect(last_response.status).to eq(201)
+    expect(last_response.status).to eq(200)
 
     expect(json["response_status"]).to eq("OK")
   end
@@ -33,7 +33,7 @@ describe "POST /authen/sentai", type: :api do
   it "authen with device_token" do
     post '/authen/signin_sentai.json', FactoryGirl.attributes_for(:dummy).merge(password: "1234567890", device_token: "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000"), format: :json
   
-    expect(last_response.status).to eq(201)
+    expect(last_response.status).to eq(200)
 
     expect(Apn::Device.count).to eq(1)
 
@@ -41,7 +41,7 @@ describe "POST /authen/sentai", type: :api do
 
     expect(ApiToken.first.app_id).to eq("com.pollios.polliosapp")
 
-    expect(last_response.status).to eq(201)
+    expect(last_response.status).to eq(200)
 
     expect(json["response_status"]).to eq("OK")
   end
