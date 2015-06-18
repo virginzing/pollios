@@ -136,14 +136,14 @@
   var count_add_form = <%= Time.now.to_i + 1 %>;
 
   $(".remove_nested_fields")[0].style.visibility='hidden';
-  $(".remove_nested_fields")[1].style.visibility='hidden';
-  $(".remove_nested_fields")[2].style.visibility='hidden';
+  // $(".remove_nested_fields")[1].style.visibility='hidden';
+  // $(".remove_nested_fields")[2].style.visibility='hidden';
 
   $('.add_new_poll').click( function () {
     setTimeout(function () {
       for(var i=0; i < times; i++) {
         $(".add_new_choice").last().trigger("click");      }
-      $('.remove_nested_fields').slice(-3,-2)[0].style.visibility='hidden';
+      // $('.remove_nested_fields').slice(-3,-2)[0].style.visibility='hidden';
       $('.remove_nested_fields').slice(-2,-1)[0].style.visibility='hidden';
 
       $("input[name=checkbox-inline]").last().attr('id', count_add_form);

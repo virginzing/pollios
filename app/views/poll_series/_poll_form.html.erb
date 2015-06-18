@@ -13,20 +13,22 @@
         <label class="textarea">
           <%= f.input :title , label: false, required: false, as: :text, input_html: { :'data-parsley-required' => true, id: 'question_title_' + Time.now.to_i.to_s, class: 'question_title' } %>
           <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
-          <%= f.input :type_poll, as: :hidden, input_html: { id: 'type_poll_' + Time.now.to_i.to_s } %>
+          <!-- <%= f.input :type_poll, as: :hidden, input_html: { id: 'type_poll_' + Time.now.to_i.to_s } %> -->
+          <%= f.input :type_poll, as: :hidden, input_html: { value: 2 } %>
+          <span class="note">Support only rating (1-5).</span>
         </label>
       </section>
       
-      <section>
+<!--       <section>
         <label class="label">Setting Choice Template</label>
         <div class="inline-group">
           <label class="checkbox">
             <input type="checkbox" name="checkbox-inline" id="<%= Time.now.to_i %>">
             <i></i>Ratting</label>
         </div>
-      </section>
+      </section> -->
 
-      <section class="collect_choices" id="collect_choices_<%= Time.now.to_i %>">
+<!--       <section class="collect_choices" id="collect_choices_<%= Time.now.to_i %>">
 
         <%= f.fields_for :choices do |builder| %>
           <%= render 'choice_fields', :f => builder %>
@@ -34,7 +36,7 @@
 
         <%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> more choice".html_safe, :choices , class: 'btn btn-sm btn-default add_new_choice btn-pill morechoice' %>
 
-      </section>
+      </section> -->
       </div>
 
       <div class="col-md-1">
