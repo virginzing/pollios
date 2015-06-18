@@ -808,7 +808,7 @@ end
 # Poll.find(12).update(view_all: 273122, vote_all: 236508)
 # curl -H "Content-Type: application/json" -d '{"email":"funnysmart_online@hotmail.com","old_password":"123456", "new_password": "Nutty509" }' -X POST http://localhost:3000/authen/change_password.json -i
 
-# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon.achachotipong@gmail.com","password":"Nutty509", "app_id": "com.pollios.polliosapp", "device_token": "4rmk5ig9 e98cw0tn 4lfpl6dw syhqf394 hw2ssugi 1prkyoae xaq3d97k 27x3o8nd" }' -X POST http://pollios.com/authen/signin_sentai.json -i
+# curl -H "Content-Type: application/json" -d '{"authen":"nuttapon.achachotipong@gmail.com","password":"Nutty509", "app_id": "com.pollios.polliosapp", "device_token": "12345678 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811", "platform": "iOS" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=nuttapon.achachotipong1@gmail.com" -F "password=mefuwfhfu" -F "fullname=nuttapon.achachotipong" -F "app_id=com.pollios.polliosapp" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
 
