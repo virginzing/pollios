@@ -46,9 +46,9 @@ class V6::OverallTimeline
     @options[:type_timeline] == FILTER_NEW_POLL ? true : false
   end
 
-  def vote_all_polls
-    Member.voted_polls.collect{|e| e["poll_id"] }
-  end
+  # def vote_all_polls
+  #   @vote_all_polls ||= Member.voted_polls.collect{|e| e["poll_id"] }
+  # end
 
   def your_friend_ids
     @friend_ids ||= Member.list_friend_active.map(&:id)

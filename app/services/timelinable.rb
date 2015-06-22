@@ -31,8 +31,12 @@ module Timelinable
     init_save_poll.get_list_questionnaire_id
   end
 
+  def vote_all_polls
+    @vote_all_polls ||= Member.voted_polls.collect {|e| e["poll_id"] }
+  end
+
   def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+    @my_vote_questionnaire_ids ||= Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
 
   def history_vote_system_poll
@@ -80,7 +84,11 @@ module Timelinable
   end
 
   def check_poll_priority(poll)
-    poll.priority
+    if vote_all_polls.include?(poll.id)
+      0
+    else
+      poll.priority
+    end
   end
 
 
