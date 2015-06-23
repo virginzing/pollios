@@ -790,6 +790,7 @@ class Poll < ActiveRecord::Base
 
     find_poll = Poll.find_by(id: poll_id)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::UNDER_INSPECTION if find_poll.black?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
