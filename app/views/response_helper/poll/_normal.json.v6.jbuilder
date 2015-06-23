@@ -25,5 +25,5 @@ json.allow_comment poll.allow_comment
 json.comment_count poll.comment_count
 json.require_info poll.get_require_info
 json.creator_must_vote poll.get_creator_must_vote
-json.show_result poll.show_result
+# json.show_result poll.show_result
 json.close_status poll.close_status
