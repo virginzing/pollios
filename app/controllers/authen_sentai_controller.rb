@@ -178,6 +178,7 @@ class AuthenSentaiController < ApplicationController
 
   			flash[:error] = @response["response_message"]
         @flash_error = flash[:error]
+        p @flash_error
   			wants.html { redirect_to(:back) }
   			wants.json { render status: 422 }
         wants.js

@@ -272,16 +272,16 @@ class Poll < ActiveRecord::Base
 
   def get_vote_max
     @choice ||= cached_choices
-    @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
+    @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["choice_id" => c.id, "answer" => c.answer, "vote" => c.vote] }.compact
   end
 
   def get_vote_max_no_cached
-    choices.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
+    choices.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["choice_id" => c.id, "answer" => c.answer, "vote" => c.vote] }.compact
   end
 
   def get_vote_max_non_cache
     @choice ||= choices.to_a
-    @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["answer" => c.answer, "vote" => c.vote, "choice_id" => c.id ] }.compact
+    @choice.sort {|x,y| y["vote"] <=> x["vote"] }[0..1].collect{|c| Hash["choice_id" => c.id, "answer" => c.answer, "vote" => c.vote] }.compact
   end
 
   def get_choice_detail
