@@ -356,6 +356,7 @@ Pollios::Application.routes.draw do
 
     post ':id/open_comment',   to: 'polls#open_comment'
     post ':id/close_comment',   to: 'polls#close_comment'
+    post 'count_preset',      to: 'polls#count_preset'
   end
 
 

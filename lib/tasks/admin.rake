@@ -40,6 +40,13 @@ namespace :admin do
     end
   end
 
+  desc "Set up a default of poll preset"
+  task :set_up_default_poll_preset => :environment do
+    poll_preset_names = %w(likedislike yesno rating)
+    poll_preset_names.each_with_index do |name, index|
+      PollPreset.create(preset_id: index+1, name: name, count: 0)
+    end
+  end
 
   # NotifyLog.all.each do |notify_log|
   #   poll_id = notify_log.custom_properties[:poll_id]

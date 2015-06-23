@@ -783,7 +783,22 @@ class PollsController < ApplicationController
     render status: :created if @poll
   end
 
+  def count_preset
+    @find_preset = PollPreset.find_by(preset_id: poll_preset_params[:preset_id])
+    fail ExceptionHandler::NotFound, "Poll preset not found" if @find_preset.nil?
+
+    if @find_preset
+      @find_preset.with_lock do
+        @find_preset.update!(count: @find_preset.count + 1)
+      end
+    end
+  end
+
   private
+
+  def poll_preset_params
+    params.permit(:preset_id)
+  end
 
   def set_poll
     @poll = Poll.cached_find(params[:id])
