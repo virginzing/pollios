@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605084348) do
+ActiveRecord::Schema.define(version: 20150623035405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,11 +92,11 @@ ActiveRecord::Schema.define(version: 20150605084348) do
   create_table "apn_devices", force: true do |t|
     t.string   "token",              null: false
     t.integer  "member_id"
-    t.string   "api_token"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "last_registered_at"
     t.integer  "app_id"
+    t.string   "api_token"
   end
 
   add_index "apn_devices", ["member_id"], name: "index_apn_devices_on_member_id", using: :btree
@@ -862,6 +862,14 @@ ActiveRecord::Schema.define(version: 20150605084348) do
   add_index "poll_members", ["poll_series_id"], name: "index_poll_members_on_poll_series_id", using: :btree
   add_index "poll_members", ["public"], name: "index_poll_members_on_public", using: :btree
   add_index "poll_members", ["series"], name: "index_poll_members_on_series", where: "(series = true)", using: :btree
+
+  create_table "poll_presets", force: true do |t|
+    t.integer  "preset_id"
+    t.string   "name"
+    t.integer  "count",      default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "poll_series", force: true do |t|
     t.integer  "member_id"
