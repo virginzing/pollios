@@ -49,6 +49,7 @@ class GroupController < ApplicationController
 
       Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.company?
       FlushCached::Group.new(@group).clear_list_group_all_member_in_group
+      FlushCached::Group.new(@group).clear_list_members
     end
   end
 
@@ -312,10 +313,10 @@ class GroupController < ApplicationController
   end
 
   def group_params
-    params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public, :admin, :cover, :cover_preset, :admin_post_only, :need_approve, :public_id)
+    params.permit(:id, :name, :photo_group, :group_id, :member_id, :friend_id, :description, :public, :admin, :cover, :cover_preset, :admin_post_only, :need_approve, :public_id, :opened)
   end
 
   def edit_group_params
-    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public, :public_id, :cover_preset)
+    params.permit(:name, :description, :photo_group, :cover, :admin_post_only, :need_approve, :public, :public_id, :cover_preset, :opened)
   end
 end

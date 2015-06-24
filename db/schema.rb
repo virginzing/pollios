@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150623035405) do
+ActiveRecord::Schema.define(version: 20150624100555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -492,6 +492,7 @@ ActiveRecord::Schema.define(version: 20150623035405) do
     t.string   "cover_preset",     default: "0"
     t.boolean  "exclusive",        default: false
     t.datetime "deleted_at"
+    t.boolean  "opened",           default: false
   end
 
   add_index "groups", ["deleted_at"], name: "index_groups_on_deleted_at", using: :btree
@@ -500,6 +501,7 @@ ActiveRecord::Schema.define(version: 20150623035405) do
   add_index "groups", ["member_id"], name: "index_groups_on_member_id", using: :btree
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
   add_index "groups", ["need_approve"], name: "index_groups_on_need_approve", where: "(need_approve = false)", using: :btree
+  add_index "groups", ["opened"], name: "index_groups_on_opened", using: :btree
   add_index "groups", ["properties"], name: "index_groups_on_properties", using: :gist
   add_index "groups", ["public_id"], name: "index_groups_on_public_id", using: :btree
   add_index "groups", ["system_group"], name: "index_groups_on_system_group", where: "(system_group = true)", using: :btree
