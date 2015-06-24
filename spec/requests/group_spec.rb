@@ -74,7 +74,7 @@ RSpec.describe "Group" do
 
   describe "POST /group/:id/edit_group" do
     before do
-      post "/group/#{group.id}/edit_group.json", { member_id: member.id, name: "test name", description: "test description" }, { "Accept" => "application/json" }
+      post "/group/#{group.id}/edit_group.json", { member_id: member.id, name: "test name", description: "test description", opened: true }, { "Accept" => "application/json" }
     end
 
     it "success" do
@@ -88,6 +88,8 @@ RSpec.describe "Group" do
     it "description of group is test description" do
       expect(group.reload.description).to eq("test description")
     end
+
+    specify { expect(group.reload.opened).to be_truthy }
 
   end
 
