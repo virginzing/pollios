@@ -10,7 +10,7 @@ class MemberMailer < ActionMailer::Base
     @member = member
     @password_reset_token = password_reset_token
 
-    mail to: member.email, subject: 'Password Reset'
+    mail to: member.email, subject: 'Your Pollios password request'
   end
 
   def send_invite_group(email_url, group_name, invite_code)

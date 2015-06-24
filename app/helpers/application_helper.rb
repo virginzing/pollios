@@ -297,6 +297,11 @@ end
 #     "message": "dftyuiklfghjkl"
 # }' -X POST http://localhost:3000/poll/752/comments.json -i
 
+
+# curl -H "Content-Type: application/json" -d '{
+#     "preset_id": 5
+# }' -X POST http://localhost:3000/poll/count_preset.json -i
+
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 3
 # }' -X POST http://localhost:3000/poll/49/un_see.json -i
@@ -578,8 +583,8 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 2,
-#     "title": "test post",
+#     "member_id": 9,
+#     "title": "test post #votedi #sport",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "freeform",
 #     "allow_comment": true,
@@ -587,12 +592,10 @@ end
 #     "creator_must_vote": true
 # }' -X POST http://localhost:3000/poll/create.json -i
 
-# # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 93,
-#     "title": "post two groups",
-#     "choices": ["yes", "no", "no vote"],
-#     "type_poll": "binary"
-# }' -X POST http://localhost:3000/poll/create.json -i
+# curl -H "Content-Type: application/json" -D '{
+#     "user_id": 119
+#     "username": "Monggy"
+# }' -X POST http://digified.sirimedia.com/rest/update-user -i
 
 # curl -H "Content-Type: application/json" -d '{
 #     "member_id": 3,
@@ -658,10 +661,10 @@ end
 # NotifyLog.where("created_at > ?", 1.days.ago)
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 3,
-#     "choice_id": "132",
-#     "show_result": true
-# }' -X POST http://localhost:3000/poll/38/vote.json -i
+#     "member_id": 6,
+#     "choice_id": 184,
+#     "show_result": false
+# }' -X POST http://localhost:3000/poll/51/vote.json -i
 
 
 # curl -H "Content-Type: application/json" -d '{
@@ -766,7 +769,7 @@ end
 # }' -X POST http://localhost:3000/poll/group.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "email": "greannut@gmail.com",
+#     "email": "greannut_002@gmail.com",
 #     "password": "Nutty509",
 #     "app_id": "com.pollios.polliosapp"
 # }' -X POST http://localhost:3000/authen/signup_sentai.json -i
@@ -811,6 +814,9 @@ end
 # curl -H "Content-Type: application/json" -d '{"authen":"nuttapon.achachotipong@gmail.com","password":"Nutty509", "app_id": "com.pollios.polliosapp", "device_token": "12345678 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811", "platform": "iOS" }' -X POST http://localhost:3000/authen/signin_sentai.json -i
 # curl -F "email=nuttapon.achachotipong1@gmail.com" -F "password=mefuwfhfu" -F "fullname=nuttapon.achachotipong" -F "app_id=com.pollios.polliosapp" -X POST http://localhost:3000/authen/signup_sentai.json -i
 # # curl -F "sentai_id=64" -F "birthday=1990-01-15" -F "province_id=27" -X POST http://localhost:3000/authen/update_sentai.json -i
+
+
+# curl -F "user_id=119" -F "username=Mong555" -X POST http://digified.sirimedia.com/rest/update-user -i
 
 
 # curl -H "Content-Type: application/json" -d '{
