@@ -295,6 +295,7 @@ class PollsController < ApplicationController
             NotifyLog.poll_with_group_deleted(@poll, set_group)
           else
             delete_my_poll
+            PollGroup.own_deleted(@current_member, @poll)
           end
         else
           delete_my_poll
@@ -307,14 +308,17 @@ class PollsController < ApplicationController
     find_poll_group = PollGroup.find_by(poll_id: @poll.id, group_id: params[:group_id])
     if find_poll_group.present?
       find_poll_group.destroy
-      PollGroup.delete_some_group(@poll, params[:group_id])
+      PollGroup.delete_some_group(@poll, params[:group_id], @current_member)
     end
   end
 
   def delete_poll_in_one_group
-    find_poll_group = PollGroup.find_by(poll_id: @poll.id, group_id: params[:group_id])
+    find_poll_group = PollGroup.without_deleted.find_by(poll_id: @poll.id, group_id: params[:group_id])
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll_group.nil?
+    
     if find_poll_group.present?
       find_poll_group.destroy
+      find_poll_group.update!(deleted_by_id: @current_member.id)
       @poll.destroy
       DeletePoll.create_log(@poll)
     end

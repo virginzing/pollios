@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150624100555) do
+ActiveRecord::Schema.define(version: 20150625041619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -837,9 +837,11 @@ ActiveRecord::Schema.define(version: 20150624100555) do
     t.integer  "share_poll_of_id", default: 0
     t.integer  "member_id"
     t.datetime "deleted_at"
+    t.integer  "deleted_by_id"
   end
 
   add_index "poll_groups", ["deleted_at"], name: "index_poll_groups_on_deleted_at", using: :btree
+  add_index "poll_groups", ["deleted_by_id"], name: "index_poll_groups_on_deleted_by_id", using: :btree
   add_index "poll_groups", ["group_id"], name: "index_poll_groups_on_group_id", using: :btree
   add_index "poll_groups", ["member_id"], name: "index_poll_groups_on_member_id", using: :btree
   add_index "poll_groups", ["poll_id"], name: "index_poll_groups_on_poll_id", using: :btree
