@@ -176,9 +176,11 @@ class AuthenSentaiController < ApplicationController
   		else
         @signup = false
 
-  			flash[:error] = @response["response_message"]
+  			flash[:error] = @response["response_message"].values.flatten.join(", ")
         @flash_error = flash[:error]
+
         p @flash_error
+
   			wants.html { redirect_to(:back) }
   			wants.json { render status: 422 }
         wants.js

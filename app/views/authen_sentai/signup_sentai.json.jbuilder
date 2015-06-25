@@ -7,5 +7,5 @@ if @response["response_status"] == "OK"
   end
 else
   json.response_status "ERROR"
-  json.response_message "This email is already registered with Pollios" || @response["response_message"]
+  json.response_message @flash_error || "This email is already registered with Pollios"
 end
