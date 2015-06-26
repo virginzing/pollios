@@ -32,11 +32,11 @@
             <td><%= link_to 'Get Qrcdoe', qrcode_feedback_questionnaire_path(@collection, poll_series.branch), class: 'btn btn-default btn-pill' %></td>
           </tr>
           <% end %>
+          <tr>
+          <!-- <td class="center"><a href="#" class="btn btn-primary">More Branch</a></td><td></td></tr> -->
         </tbody>
       </table>
     </div>
-    <a href="" class="btn btn-primary">+ more branch</a>
-    <br>
   </section>
 
   <% if @collection.campaign_id.present? %>
@@ -44,9 +44,6 @@
       Go to: <%= link_to 'Campaign Management', collection_campaign_feedback_path, class: 'btn btn-pill btn-success' %>
     </section>
   <% end %>
-
-
-
 
 </div>
 
