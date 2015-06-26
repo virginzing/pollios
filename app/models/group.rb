@@ -365,10 +365,8 @@ class Group < ActiveRecord::Base
     check_valid_friend = friend_exist_group(list_friend, group)
     find_admin_group = group.get_admin_group.map(&:id)
 
-    unless member.company?
-      unless group.system_group || group.public
-        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless find_admin_group.include?(member_id) 
-      end
+    unless group.system_group || group.public
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless find_admin_group.include?(member_id) 
     end
 
     if check_valid_friend.size > 0
