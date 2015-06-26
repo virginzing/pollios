@@ -13,7 +13,7 @@
   </div>
 <% end %>
 
-<% if @collection.campaign_id.present? %>
+<% if @collection.campaign.present? %>
   <% if @collection.campaign.random_later? %>
     <%= render 'campaign_random_later', campaign: @collection.campaign %>
   <% end %>
