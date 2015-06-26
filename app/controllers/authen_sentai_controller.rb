@@ -97,7 +97,7 @@ class AuthenSentaiController < ApplicationController
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app, "app_id" => params[:app_id]]))
 			if @response["response_status"] == "OK"
         if @auth.check_valid_member?
-          fail ExceptionHandler::UnprocessableEntity, "This account can't use this app. Please sign-in at Pollios.com" if member.company?
+          # fail ExceptionHandler::UnprocessableEntity, "This account can't use this app. Please sign-in at Pollios.com" if member.company?
           @apn_device = ApnDevice.check_device?(member, sessions_params["device_token"])
           @login = true
           @waiting_info = WaitingList.new(@auth.member).get_info
