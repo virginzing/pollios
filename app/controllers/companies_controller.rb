@@ -298,6 +298,9 @@ class CompaniesController < ApplicationController
 
     @company = Company.find(params[:company_id])
     @member_group_active = init_list_group.active.map(&:id)
+    @member_group_inactive = init_list_group.inactive.map(&:id)
+
+    @list_groups = Company::ListGroup.new(@company).all
     render layout: false
   end
 

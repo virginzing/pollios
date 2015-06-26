@@ -171,7 +171,7 @@ Pollios::Application.routes.draw do
 
   scope 'group' do
     post 'build',             to: 'group#build_group'
-    post ':id/invite',        to: 'group#add_friend_to_group'
+    post ':id/invite',        to: 'group#add_friend_to_group', as: :invite_user_to_group
     post ':id/accept',        to: 'group#accept_group'
     post ':id/accept_request_group',  to: 'group#accept_request_group'
     post ':id/cancel_ask_join_group', to: 'group#cancel_ask_join_group'
