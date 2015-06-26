@@ -148,7 +148,7 @@ class MembersController < ApplicationController
         flash[:error] = e.message
       end
       respond_to do |format|
-        format.html { redirect_to account_setting_path }
+        format.html { redirect_to request.referer || account_setting_path }
       end
     end
   end
@@ -163,7 +163,7 @@ class MembersController < ApplicationController
         flash[:error] = e.message
       end
       respond_to do |format|
-        format.html { redirect_to account_setting_path }
+        format.html { redirect_to request.referer || account_setting_path }
       end
     end
   end
@@ -258,7 +258,8 @@ class MembersController < ApplicationController
         @member = @current_member.reload
 
         flash[:success] = "Update profile successfully."
-        format.html { redirect_to account_setting_path }
+
+        format.html { redirect_to request.referer || account_setting_path }
         format.json
       else
         # puts "have error"

@@ -7,4 +7,8 @@ class FeedbackController < ApplicationController
   
   end
 
+  def setting
+    
+  end
+
 end

@@ -204,6 +204,8 @@ Pollios::Application.routes.draw do
     resources :branches
 
     resources :redeemers
+
+    get 'setting',  to: 'feedback#setting', as: :feedback_setting
     
     get 'dashboard',  to: 'feedback#dashboard', as: :feedback_dashboard
     get 'polls',      to: 'feedback_poll#index',     as: :feedback_polls
