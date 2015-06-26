@@ -36,24 +36,24 @@ class Company < ActiveRecord::Base
   
   attr_accessor :amount_code, :used, :prefix_name, :company_id
 
-  def generate_code_of_company(invite_params, find_group = nil)
-    # puts "generate code"
-    company_id = invite_params[:company_id]
-    amount_code = invite_params[:amount_code]
+  # def generate_code_of_company(invite_params, find_group = nil)
+  #   # puts "generate code"
+  #   company_id = invite_params[:company_id]
+  #   amount_code = invite_params[:amount_code]
 
-    if company_id.present?
-      InviteCode.add_more_invite_code(amount_code.to_i, company_id)
-    else
-      prefix_name = invite_params[:prefix_name]
-      @company_name = invite_params[:name]
-      if find_group.nil?
-        group = create_group
-      else
-        group = find_group
-      end
-      InviteCode.create_invite_code(prefix_name, amount_code.to_i, self.id, group.id) 
-    end 
-  end
+  #   if company_id.present?
+  #     InviteCode.add_more_invite_code(amount_code.to_i, company_id)
+  #   else
+  #     prefix_name = invite_params[:prefix_name]
+  #     @company_name = invite_params[:name]
+  #     if find_group.nil?
+  #       group = create_group
+  #     else
+  #       group = find_group
+  #     end
+  #     InviteCode.create_invite_code(prefix_name, amount_code.to_i, self.id, group.id) 
+  #   end 
+  # end
 
   def generate_invitation_of_group(invite_code_params)
     amount_code = invite_code_params[:amount_code]

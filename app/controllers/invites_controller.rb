@@ -13,26 +13,26 @@ class InvitesController < ApplicationController
     @company = Company.new
   end
 
-  def create
-    respond_to do |format|
-      if company_params[:company_id].present?
-        Company.find_by(id: company_params[:company_id].to_i).generate_code_of_company(company_params)
-        flash[:success] = "Add more invite successfully."
-        format.html { redirect_to invites_path }
-      else
-        @company = Company.new(company_params.except!(:company_id))
-        @company.short_name = company_params[:prefix_name]
+  # def create
+  #   respond_to do |format|
+  #     if company_params[:company_id].present?
+  #       Company.find_by(id: company_params[:company_id].to_i).generate_code_of_company(company_params)
+  #       flash[:success] = "Add more invite successfully."
+  #       format.html { redirect_to invites_path }
+  #     else
+  #       @company = Company.new(company_params.except!(:company_id))
+  #       @company.short_name = company_params[:prefix_name]
 
-        if @company.save
-          @company.generate_code_of_company(company_params)
-          flash[:success] = "Create successfully."
-          format.html { redirect_to invites_path }
-        else
-          format.html { render 'new' }
-        end
-      end
-    end
-  end
+  #       if @company.save
+  #         @company.generate_code_of_company(company_params)
+  #         flash[:success] = "Create successfully."
+  #         format.html { redirect_to invites_path }
+  #       else
+  #         format.html { render 'new' }
+  #       end
+  #     end
+  #   end
+  # end
 
   def edit
   end

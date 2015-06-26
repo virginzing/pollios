@@ -28,15 +28,13 @@ class InviteCode < ActiveRecord::Base
 
   end
 
-  def self.add_more_invite_code(number, company_id)
+  def self.add_more_invite_code(number, company_id, group_id)
     list_invite_code = []
     total_code = number || 10
     company_id = company_id || 0
 
     company = Company.find_by(id: company_id)
-
-    group_id = company.invite_codes.first.group_id
-
+    
     @code_prefix = company.short_name || 'CA'
 
     total_code.times do 
