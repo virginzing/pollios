@@ -57,7 +57,7 @@
                       <td><%= group.name %></td>
                       <td>
                         <% unless @member_group_active.include?(group.id) %>
-                        <a href="<%= add_user_to_group_path(member_id: @member.id, group_id: group.id) %>" id="add_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Add</a>
+                        <a href="<%= add_user_to_group_path(member_id: @member.id, group_id: group.id) %>" id="add_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Invite</a>
                         <% else %>
                         <a href="javascript:void(0)" id="add_user_to_group" class="btn btn-primary disabled btn-success" data-remote="true" data-method="post"><i class="fa fa-check"></i> Joined</a>
                         <% end %>
