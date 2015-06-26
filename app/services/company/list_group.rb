@@ -18,7 +18,7 @@ class Company::ListGroup
   end
 
   def list_groups
-    @company.groups.without_deleted
+    @company.groups.order("name asc").without_deleted
   end
   
   

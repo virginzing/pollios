@@ -51,15 +51,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @company.groups.without_deleted.each do |group| %>
+                  <% @list_groups.each do |group| %>
                   <tr>
                       <td><%= group.decorate.show_cover_group %></td>
                       <td><%= group.name %></td>
                       <td>
-                        <% unless @member_group_active.include?(group.id) %>
-                        <a href="<%= add_user_to_group_path(member_id: @member.id, group_id: group.id) %>" id="add_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Invite</a>
+                        <% if @member_group_active.include?(group.id) %>
+                          <a href="javascript:void(0)" id="invite_user_to_group" class="btn btn-primary disabled btn-success" data-remote="true" data-method="post"><i class="fa fa-check"></i> Joined</a>
                         <% else %>
-                        <a href="javascript:void(0)" id="add_user_to_group" class="btn btn-primary disabled btn-success" data-remote="true" data-method="post"><i class="fa fa-check"></i> Joined</a>
+                          <% if @member_group_inactive.include?(group.id) %>
+                            <a href="javascript:void(0)" id="invite_user_to_group" class="btn btn-primary disabled btn-success" data-remote="true" data-method="post"><i class="fa fa-check"></i> Invited</a>
+                          <% else %>
+                            <a href="<%= invite_user_to_group_path(member_id: current_member.id, id: group.id, friend_id: @member.id.to_s) %>" id="invite_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Invite</a>
+                          <% end %>
                         <% end %>
                       </td>
                   </tr>
@@ -90,13 +94,13 @@
 
 <script>
 $(document).ready(function () {
-  $.add_button_to_group = $('#add_user_to_group[data-remote]');
+  $.add_button_to_group = $('#invite_user_to_group[data-remote]');
   
   $.add_button_to_group.on('ajax:send', function(xhr) {
   $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
   }).on('ajax:success', function (data, status, xhr) {
     $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
-    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Added")
+    $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Invited")
 
   }).on('ajax:error', function (event, xhr, status) {
     $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
