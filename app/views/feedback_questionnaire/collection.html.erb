@@ -33,13 +33,13 @@
           </tr>
           <% end %>
           <tr>
-          <!-- <td class="center"><a href="#" class="btn btn-primary">More Branch</a></td><td></td></tr> -->
+          <td class="center"><a href="#" class="btn btn-primary">More Branch</a></td><td></td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <% if @collection.campaign_id.present? %>
+  <% if @collection.campaign.present? %>
     <section>
       Go to: <%= link_to 'Campaign Management', collection_campaign_feedback_path, class: 'btn btn-pill btn-success' %>
     </section>
