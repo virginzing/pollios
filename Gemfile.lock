@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: git://github.com/amoeba-rb/amoeba.git
-  revision: 49a36f27a33abca920a4bcd118655a7e28c9f6b9
+  revision: 6ebb1a26393ce66f668e3582e6a938aed3431e91
   specs:
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
@@ -40,18 +40,8 @@ GIT
       rails_admin (< 0.6.6)
 
 GIT
-  remote: git://github.com/mongoid/mongoid.git
-  revision: a9f9464cfd1ee805d727f7b728a6e9fc64eeb700
-  specs:
-    mongoid (4.0.2)
-      activemodel (~> 4.0)
-      moped (~> 2.0.0)
-      origin (~> 2.1)
-      tzinfo (>= 0.3.37)
-
-GIT
   remote: git://github.com/mperham/dalli.git
-  revision: af8fdeb51930a4d8eb1ddcbfe7998923109a76d2
+  revision: 819dc9dce78aa678233ba58722a6f3dd6b6ff508
   specs:
     dalli (2.7.4)
 
@@ -67,9 +57,9 @@ GIT
 
 GIT
   remote: git://github.com/rails/jbuilder.git
-  revision: a6b829cb52905e3eb33293f2ca0c0c94534b4aa9
+  revision: dfc58d44b7327bc9032f96aa0f8bf440d0e4e5e1
   specs:
-    jbuilder (2.2.12)
+    jbuilder (2.3.0)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
 
@@ -124,7 +114,7 @@ GEM
       parser (>= 2.2.0.pre.3, < 3.0)
     aws_cf_signer (0.1.3)
     bcrypt (3.1.10)
-    benchmark-ips (2.1.1)
+    benchmark-ips (2.2.0)
     bert (1.1.6)
     bson (2.3.0)
     bson_ext (1.5.1)
@@ -148,17 +138,17 @@ GEM
       timers (~> 4.0.0)
     chartkick (1.3.2)
     chunky_png (1.3.4)
-    cloudinary (1.0.84)
+    cloudinary (1.1.0)
       aws_cf_signer
       rest-client
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
-    coffee-script (2.3.0)
+    coffee-script (2.4.1)
       coffee-script-source
       execjs
-    coffee-script-source (1.9.1)
+    coffee-script-source (1.9.1.1)
     commonjs (0.2.7)
     compass (0.12.7)
       chunky_png (~> 1.2)
@@ -167,10 +157,10 @@ GEM
     compass-rails (2.0.0)
       compass (>= 0.12.2)
     configatron (3.2.0)
-    connection_pool (2.1.3)
+    connection_pool (2.2.0)
     database_cleaner (1.4.1)
     decent_exposure (2.3.2)
-    devise (3.4.1)
+    devise (3.5.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -178,7 +168,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
-    domain_name (0.5.23)
+    domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     draper (1.4.0)
       actionpack (>= 3.0)
@@ -189,7 +179,7 @@ GEM
       activesupport (>= 3.2)
     erubis (2.7.0)
     eventmachine (1.0.7)
-    execjs (2.4.0)
+    execjs (2.5.2)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
@@ -199,8 +189,8 @@ GEM
       i18n (~> 0.5)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.8)
-    figaro (1.1.0)
+    ffi (1.9.9)
+    figaro (1.1.1)
       thor (~> 0.14)
     font-awesome-rails (4.3.0.0)
       railties (>= 3.2, < 5.0)
@@ -214,9 +204,9 @@ GEM
     get_process_mem (0.2.0)
     gretel (3.0.8)
       rails (>= 3.2.0)
-    guard (2.12.5)
+    guard (2.12.7)
       formatador (>= 0.2.4)
-      listen (~> 2.7)
+      listen (>= 2.7, <= 4.0)
       lumberjack (~> 1.0)
       nenv (~> 0.1)
       notiffany (~> 0.0)
@@ -224,13 +214,13 @@ GEM
       shellany (~> 0.0)
       thor (>= 0.18.1)
     guard-compat (1.2.1)
-    guard-rspec (4.5.0)
+    guard-rspec (4.6.0)
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
     haml (4.0.6)
       tilt
-    hashie (3.4.1)
+    hashie (3.4.2)
     hike (1.2.3)
     hitimes (1.2.2)
     htmlentities (4.3.3)
@@ -240,12 +230,12 @@ GEM
     i18n (0.7.0)
     jbuilder_cache_multi (0.0.3)
       jbuilder (>= 1.5.0, < 3)
-    jquery-rails (3.1.2)
+    jquery-rails (3.1.3)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (5.0.3)
+    jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
-    json (1.8.2)
+    json (1.8.3)
     jwt (0.1.13)
       multi_json (>= 1.5)
     kaminari (0.16.3)
@@ -256,12 +246,13 @@ GEM
       addressable (~> 2.3)
     less (2.6.0)
       commonjs (~> 0.2.7)
-    less-rails (2.6.0)
-      actionpack (>= 3.1)
+    less-rails (2.7.0)
+      actionpack (>= 4.0)
       less (~> 2.6.0)
-    libv8 (3.11.8.17)
-    listen (2.10.0)
-      celluloid (~> 0.16.0)
+      sprockets (> 2, < 4)
+      tilt
+    libv8 (3.16.14.9)
+    listen (3.0.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
     lumberjack (1.0.9)
@@ -276,16 +267,21 @@ GEM
     method_source (0.8.2)
     middleware (0.1.0)
     mime-types (1.25.1)
-    mini_magick (4.2.4)
+    mini_magick (4.2.7)
     mini_portile (0.6.2)
-    minitest (5.5.1)
+    minitest (5.7.0)
+    mongoid (4.0.2)
+      activemodel (~> 4.0)
+      moped (~> 2.0.0)
+      origin (~> 2.1)
+      tzinfo (>= 0.3.37)
     mongoid_auto_increment_id (0.6.5)
       mongoid (>= 3.1.0, < 4.1.0)
     moped (2.0.4)
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
-    multi_json (1.11.0)
+    multi_json (1.11.1)
     multipart-post (2.0.0)
     nenv (0.2.0)
     nested-hstore (0.1.2)
@@ -293,13 +289,13 @@ GEM
       activesupport
     nested_form (0.3.2)
     netrc (0.10.3)
-    newrelic_rpm (3.11.1.284)
+    newrelic_rpm (3.12.0.288)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     notiffany (0.0.6)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    nprogress-rails (0.1.6.6)
+    nprogress-rails (0.1.6.7)
     oauth2 (0.8.1)
       faraday (~> 0.8)
       httpauth (~> 0.1)
@@ -317,13 +313,13 @@ GEM
     optionable (0.2.0)
     origin (2.1.1)
     orm_adapter (0.5.0)
-    paranoia (2.1.2)
+    paranoia (2.1.3)
       activerecord (~> 4.0)
-    parser (2.2.2.3)
+    parser (2.2.2.5)
       ast (>= 1.1, < 3.0)
     pg (0.17.0)
     pg-hstore (1.2.0)
-    pg_search (0.7.9)
+    pg_search (1.0.4)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
       arel
@@ -338,7 +334,7 @@ GEM
       slop (~> 3.4)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
-    rack (1.5.2)
+    rack (1.5.5)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-contrib (1.2.0)
@@ -385,17 +381,17 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
-    raindrops (0.13.0)
+    raindrops (0.14.0)
     rake (10.4.2)
     randumb (0.5.0)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
       rake
-    rb-fsevent (0.9.4)
+    rb-fsevent (0.9.5)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     rdoc (4.2.0)
-    redcarpet (3.2.2)
+    redcarpet (3.3.2)
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
@@ -411,48 +407,46 @@ GEM
     restclient_with_cert (0.0.8)
       rest-client (>= 1.6)
     rolify (4.0.0)
-    roo (1.13.2)
-      nokogiri
-      rubyzip
-      spreadsheet (> 0.6.4)
-    rqrcode (0.4.2)
+    roo (2.0.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
+    rqrcode (0.6.0)
+      chunky_png
     rqrcode-rails3 (0.1.7)
       rqrcode (>= 0.4.2)
     rqrcode_png (0.1.5)
       chunky_png
       rqrcode
-    rspec (3.2.0)
-      rspec-core (~> 3.2.0)
-      rspec-expectations (~> 3.2.0)
-      rspec-mocks (~> 3.2.0)
-    rspec-core (3.2.2)
-      rspec-support (~> 3.2.0)
-    rspec-expectations (3.2.0)
+    rspec (3.3.0)
+      rspec-core (~> 3.3.0)
+      rspec-expectations (~> 3.3.0)
+      rspec-mocks (~> 3.3.0)
+    rspec-core (3.3.1)
+      rspec-support (~> 3.3.0)
+    rspec-expectations (3.3.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.2.0)
-    rspec-mocks (3.2.1)
+      rspec-support (~> 3.3.0)
+    rspec-mocks (3.3.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.2.0)
-    rspec-rails (3.2.1)
+      rspec-support (~> 3.3.0)
+    rspec-rails (3.3.2)
       actionpack (>= 3.0, < 4.3)
       activesupport (>= 3.0, < 4.3)
       railties (>= 3.0, < 4.3)
-      rspec-core (~> 3.2.0)
-      rspec-expectations (~> 3.2.0)
-      rspec-mocks (~> 3.2.0)
-      rspec-support (~> 3.2.0)
-    rspec-support (3.2.2)
-    rubocop (0.31.0)
+      rspec-core (~> 3.3.0)
+      rspec-expectations (~> 3.3.0)
+      rspec-mocks (~> 3.3.0)
+      rspec-support (~> 3.3.0)
+    rspec-support (3.3.0)
+    rubocop (0.32.1)
       astrolabe (~> 1.3)
-      parser (>= 2.2.2.1, < 3.0)
+      parser (>= 2.2.2.5, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.4)
-    ruby-ole (1.2.11.8)
     ruby-progressbar (1.7.5)
     rubyzip (1.1.7)
-    rufus-scheduler (3.0.9)
-      tzinfo
+    rufus-scheduler (3.1.3)
     safe_yaml (1.0.4)
     sass (3.2.19)
     sass-rails (4.0.5)
@@ -467,8 +461,8 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
-    sidekiq (3.3.3)
-      celluloid (>= 0.16.0)
+    sidekiq (3.4.1)
+      celluloid (~> 0.16.0)
       connection_pool (>= 2.1.1)
       json
       redis (>= 3.0.6)
@@ -477,7 +471,7 @@ GEM
       rufus-scheduler (>= 2.0.24)
       sidekiq (>= 2.17.3)
       tilt (< 2.0.0)
-    sidekiq-unique-jobs (3.0.11)
+    sidekiq-unique-jobs (3.0.14)
       sidekiq (>= 2.6)
     simple_form (3.1.0)
       actionpack (~> 4.0)
@@ -487,19 +481,17 @@ GEM
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
     slop (3.6.0)
-    spreadsheet (1.0.3)
-      ruby-ole (>= 1.0)
-    sprockets (2.12.3)
+    sprockets (2.12.4)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.2.4)
+    sprockets-rails (2.3.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    therubyracer (0.11.4)
-      libv8 (~> 3.11.8.12)
+    therubyracer (0.12.2)
+      libv8 (~> 3.16.14.0)
       ref
     thor (0.19.1)
     thread_safe (0.3.5)
@@ -518,8 +510,8 @@ GEM
       json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.6)
-    unicorn (4.8.3)
+    unf_ext (0.0.7.1)
+    unicorn (4.9.0)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
@@ -529,7 +521,7 @@ GEM
     uniform_notifier (1.9.0)
     unscoped_associations (0.6.5)
       activerecord
-    wannabe_bool (0.1.0)
+    wannabe_bool (0.1.1)
     warden (1.2.3)
       rack (>= 1.0)
     will_paginate (3.0.7)
@@ -590,11 +582,11 @@ DEPENDENCIES
   jquery-rails
   launchy
   less-rails
-  libv8 (~> 3.11.8.3)
+  libv8 (= 3.16.14.9)
   memcachier
   meta_request
   mini_magick
-  mongoid!
+  mongoid (= 4.0.2)
   mongoid_auto_increment_id (= 0.6.5)
   nested-hstore
   nested_form
@@ -632,7 +624,7 @@ DEPENDENCIES
   sidekiq-unique-jobs
   simple_form
   sinatra (>= 1.3.0)
-  therubyracer
+  therubyracer (= 0.12.2)
   turbolinks
   uglifier (>= 1.3.0)
   unicorn
@@ -646,3 +638,6 @@ DEPENDENCIES
   will_paginate_mongoid
   yajl-ruby
   zip-zip
+
+BUNDLED WITH
+   1.10.5

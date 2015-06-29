@@ -8,7 +8,6 @@ require 'itunes/receipt'
 require 'net/http'
 require 'roo'
 require 'csv'
-require 'spreadsheet'
 require 'zip'
 require 'rqrcode_png'
 require 'wannabe_bool'
@@ -42,7 +41,7 @@ module Pollios
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Bangkok'
-    
+
     config.autoload_paths += %W(#{config.root}/lib #{config.root})
 
     config.assets.precompile += %w(.svg .eot .woff .ttf .js .css)
@@ -50,7 +49,7 @@ module Pollios
     config.versioncake.default_version = 6
     config.versioncake.supported_version_numbers = (1...8)
 
-    config.generators do |g| 
+    config.generators do |g|
       g.orm :active_record
     end
 
@@ -72,7 +71,7 @@ module Pollios
     # Compass.sass_engine_options[:load_paths].collect { |path| path.try(:root) }.compact
 
     config.action_controller.page_cache_directory = "#{Rails.root.to_s}/public/deploy"
-    
+
     config.middleware.use BatchApi::RackMiddleware do |batch_config|
       # you can set various configuration options:
       # batch_config.verb = :post # default :post
