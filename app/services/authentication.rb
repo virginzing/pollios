@@ -29,7 +29,7 @@ class Authentication
   end
 
   def get_member_type
-    member.member_type_text  
+    member.member_type_text
   end
 
   def authenticated?
@@ -38,7 +38,7 @@ class Authentication
 
   def activate_account?
     true || check_activate_account
-  end  
+  end
 
   def check_valid_member?
     !member.blacklist? && !member.ban?
@@ -178,7 +178,7 @@ class Authentication
       member.register = register_status
       member.approve_brand = approved_brand
       # member.point = Member::NEW_USER_POINT
-      
+
       if web_login.present? || new_company.present?
         member.auth_token = generate_auth_token
       end
@@ -213,7 +213,10 @@ class Authentication
         @member.update_column(:avatar, avatar) if avatar.present?
         UserStats.create_user_stats(@member, @params["provider"])
         @reward = @member.free_reward_first_signup
-        OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+
+        unless ENV["POLLIOSDEV"].to_b
+          OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+        end
       end
 
     end
@@ -249,10 +252,10 @@ class Authentication
       waiting = false
     else
       unless limit_member > Member.unscoped.where(created_company: false).size
-        waiting = true     
+        waiting = true
       end
     end
-    
+
     waiting
   end
 
@@ -270,7 +273,7 @@ class Authentication
         find_main_group.member_count += 1
         find_main_group.save!
       end
-      
+
     end
   end
 
@@ -287,7 +290,7 @@ class Authentication
 
   def add_redeemer_to_company
     Redeemer.create!(member_id: @member.id, company_id: company_id)
-    # add role 
+    # add role
     @member.add_role :redeemer, Company.find(company_id.to_i)
   end
 
@@ -340,10 +343,10 @@ class Authentication
   # end
 
   def member_setting
-    { 
-      "post_poll"=>"friend_following", 
-      "vote_poll"=> true, 
-      "comment_poll"=> true 
+    {
+      "post_poll"=>"friend_following",
+      "vote_poll"=> true,
+      "comment_poll"=> true
     }
   end
 
