@@ -737,7 +737,7 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      unless ENV["POLLIOSDEV"]
+      unless ENV["POLLIOSDEV"].to_b
         if in_group
           in_group_ids.split(",").each do |group_id|
             AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
