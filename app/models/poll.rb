@@ -4,7 +4,7 @@ class Poll < ActiveRecord::Base
   acts_as_paranoid
 
   mount_uploader :photo_poll, PhotoPollUploader
-  
+
   include PgSearch
   include PollsHelper
 
@@ -23,7 +23,7 @@ class Poll < ActiveRecord::Base
   has_many :choices
 
   has_many :poll_attachments, -> { order('order_image asc') }
-  
+
   has_many :taggings
 
   has_many :tags, through: :taggings, source: :tag
@@ -58,12 +58,12 @@ class Poll < ActiveRecord::Base
 
   has_many :branch_polls
   has_many :branches, through: :branch_polls, source: :branch
-  
+
   has_many :triggers, as: :triggerable
   has_many :member_report_comments
-  
+
   has_one :poll_company
-  
+
   belongs_to :member
   belongs_to :poll_series
   belongs_to :campaign
@@ -74,10 +74,10 @@ class Poll < ActiveRecord::Base
   # before_create :generate_qrcode_key
 
   # after_create :set_new_title_with_tag
-  
+
   validates_presence_of :title, :on => :create
   validates_presence_of :member_id, :on => :create
-  
+
   validates_numericality_of :view_all, :greater_than_or_equal_to => 0
   validates_numericality_of :vote_all, :greater_than_or_equal_to => 0
 
@@ -100,11 +100,11 @@ class Poll < ActiveRecord::Base
   scope :load_more, -> (next_poll) { next_poll.present? ? where("polls.id < ?", next_poll) : nil }
 
   scope :without_my_poll, -> (member_id) { where("polls.member_id != ?", member_id) }
-    
+
   scope :available, -> {
     member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
     member_block_and_banned = Member.list_friend_block.map(&:id) | Admin::BanMember.cached_member_ids
-        
+
     query = having_status_poll(:gray, :white).where(draft: false, deleted_at: nil)
     query = query.where("#{table_name}.id NOT IN (?)", member_report_poll) if member_report_poll.size > 0
     query = query.where("#{table_name}.member_id NOT IN (?)", member_block_and_banned) if member_block_and_banned.size > 0
@@ -228,7 +228,7 @@ class Poll < ActiveRecord::Base
       if have_photo?
         photo_poll.url(:original).split(",")
       end
-    end  
+    end
   end
 
   def get_poll_in_groups(group_ids)
@@ -388,7 +388,7 @@ class Poll < ActiveRecord::Base
   end
 
   def closed?
-    close_status  
+    close_status
   end
 
   def tag_tokens=(tokens)
@@ -667,7 +667,7 @@ class Poll < ActiveRecord::Base
         if @poll.valid? && choices
           @poll.save!
           PollCompany.create_poll(@poll, member.get_company, :mobile) if member.company?
-          
+
           if photo_poll && init_photo_poll.from_image_url?
             @poll.update_column(:photo_poll, init_photo_poll.split_cloudinary_url)
           end
@@ -690,7 +690,7 @@ class Poll < ActiveRecord::Base
             end
 
             if member.citizen? && is_public
-              # member.decrement!(:point) 
+              # member.decrement!(:point)
               if member.point > 0
                 member.with_lock do
                   member.point -= 1
@@ -737,13 +737,15 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      if in_group
-        in_group_ids.split(",").each do |group_id|
-          AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
-        end
-      else
-        if poll_series_id == 0
-          PollWorker.perform_async(self.member_id, self.id) unless qr_only
+      unless ENV["POLLIOSDEV"]
+        if in_group
+          in_group_ids.split(",").each do |group_id|
+            AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
+          end
+        else
+          if poll_series_id == 0
+            PollWorker.perform_async(self.member_id, self.id) unless qr_only
+          end
         end
       end
     end
@@ -796,7 +798,7 @@ class Poll < ActiveRecord::Base
 
     ever_vote = Member::ListPoll.new(member).voted_poll?(find_poll)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
-    
+
     find_choice = Choice.find_by(id: choice_id)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
 
@@ -830,14 +832,14 @@ class Poll < ActiveRecord::Base
         find_poll.update_column(:notify_state_at, Time.zone.now)
         SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
       end
-      
+
       Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
     end
 
     history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
 
     unless find_poll.series
-      VoteStats.create_vote_stats(find_poll) 
+      VoteStats.create_vote_stats(find_poll)
       Activity.create_activity_poll(member, find_poll, 'Vote')
     end
 
@@ -858,7 +860,7 @@ class Poll < ActiveRecord::Base
       !member.anonymous_public
     else
       if find_poll.in_group
-        !member.anonymous_group  
+        !member.anonymous_group
       else
         !member.anonymous_friend_following
       end
@@ -908,7 +910,7 @@ class Poll < ActiveRecord::Base
         unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
           HistoryView.create! member_id: @member.id, poll_id: @poll.id
           Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
-          
+
           @poll.with_lock do
             @poll.view_all += 1
             @poll.save!
@@ -1018,7 +1020,7 @@ class Poll < ActiveRecord::Base
     {
       complete: complete_status,
       member_voted: @members_voted.to_a.size,
-      member_amount: @members_surveyable.size 
+      member_amount: @members_surveyable.size
     }
   end
 
