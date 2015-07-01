@@ -756,6 +756,7 @@ class Poll < ActiveRecord::Base
   end
 
   def self.check_type_of_choice(choices)
+    raise ExceptionHandler::UnprocessableEntity, "You must have choices attribuites." unless choices.present?
     unless choices.class == Array
       choices = choices.split(",")
     end
