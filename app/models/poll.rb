@@ -736,15 +736,13 @@ class Poll < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      unless ENV["POLLIOSDEV"].to_b
-        if in_group
-          in_group_ids.split(",").each do |group_id|
-            AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
-          end
-        else
-          if poll_series_id == 0
-            PollWorker.perform_async(self.member_id, self.id) unless qr_only
-          end
+      if in_group
+        in_group_ids.split(",").each do |group_id|
+          AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
+        end
+      else
+        if poll_series_id == 0
+          PollWorker.perform_async(self.member_id, self.id) unless qr_only
         end
       end
     end
@@ -830,9 +828,7 @@ class Poll < ActiveRecord::Base
       if find_poll.notify_state.idle?
         find_poll.update_column(:notify_state, 1)
         find_poll.update_column(:notify_state_at, Time.zone.now)
-        unless ENV["POLLIOSDEV"].to_b
-          SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
-        end
+        SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
       end
 
       Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
