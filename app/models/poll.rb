@@ -605,7 +605,7 @@ class Poll < ActiveRecord::Base
         is_public = poll_params[:is_public].to_b
         photo_poll = poll_params[:photo_poll]
         original_images = poll_params[:original_images]
-        allow_comment = poll_params[:allow_comment] || false
+        allow_comment = poll_params[:allow_comment] || true
         creator_must_vote = poll_params[:creator_must_vote]
         require_info = poll_params[:require_info].present? ? true : false
         show_result = poll_params[:show_result].present? ? true : false
@@ -708,7 +708,7 @@ class Poll < ActiveRecord::Base
             [@poll, nil, alert_message]
           end
         else
-          [nil, @poll.errors.full_messages, alert_message]
+          [nil, @poll.errors.full_messages.join(", "), alert_message]
         end
 
       rescue ArgumentError => detail
