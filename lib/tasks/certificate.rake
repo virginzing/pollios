@@ -1,9 +1,9 @@
 namespace :certificate do
   desc "Setup certificate"
   task setup: :environment do
-     app = Apn::App.new   
-     app.apn_dev_cert   = Rails.root.join('config', 'certificates','ApPinkCertificateDevelopment.pem').read
-     app.apn_prod_cert  = Rails.root.join('config', 'certificates','ApPinkCertificateDevelopment.pem').read
+     app = Apn::App.new
+     app.apn_dev_cert   = Rails.root.join('config', 'certificates','pollios_notification_development.pem').read
+     app.apn_prod_cert  = Rails.root.join('config', 'certificates','pollios_notification_production.pem').read
      app.save!
      puts "Setup Success."
   end
@@ -12,7 +12,7 @@ namespace :certificate do
 
   task clear: :environment do
     Apn::App.all.delete_all
-    puts "Clear certificates successfully."  
+    puts "Clear certificates successfully."
   end
 
   desc "Update certificates"

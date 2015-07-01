@@ -606,7 +606,7 @@ class Poll < ActiveRecord::Base
         photo_poll = poll_params[:photo_poll]
         original_images = poll_params[:original_images]
         allow_comment = poll_params[:allow_comment] || true
-        creator_must_vote = poll_params[:creator_must_vote]
+        creator_must_vote = poll_params[:creator_must_vote] || true
         require_info = poll_params[:require_info].present? ? true : false
         show_result = poll_params[:show_result].present? ? true : false
         qr_only = poll_params[:qr_only].present? ? true : false
@@ -690,7 +690,6 @@ class Poll < ActiveRecord::Base
             end
 
             if member.citizen? && is_public
-              # member.decrement!(:point)
               if member.point > 0
                 member.with_lock do
                   member.point -= 1
