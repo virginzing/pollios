@@ -47,7 +47,7 @@
 	width:224px;
 	height:471px;
 }
-.section-01 .featured .mobile-slide:after{
+/*.section-01 .featured .mobile-slide:after{
 	content:"";
 	position:absolute;
 	background:url(../images/home/mobile-slide-mirror.jpg) no-repeat 0 bottom;
@@ -55,7 +55,7 @@
 	height:53px;
 	bottom:-56px;
 	left:1px;
-}
+}*/
 .section-01 .featured .mobile-slide .image-carousel {
 	margin:66px 0 0 13px;
 	width:200px;
