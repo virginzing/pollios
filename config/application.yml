@@ -40,6 +40,7 @@ development:
   MY_VOTE: "my_vote"
   FRIEND_FOLLOWING_POLL: "friend_following_poll"
   OVERALL_TIMELINE: "overall_timeline"
+  DEVELOPMENT_SERVER: "true"
 production:
   PUBLIC_POLL: "public_poll"
   MY_POLL: "my_poll"
