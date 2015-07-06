@@ -57,8 +57,8 @@ end
 
 group :production do
   gem 'rails_12factor'
-  gem 'libv8', '3.16.14.9'
-  gem 'therubyracer', '0.12.2', :platform => :ruby
+  gem 'libv8', '~> 3.16.14.0'
+  gem 'therubyracer', :platform => :ruby
   gem 'unicorn'
   gem 'unicorn-worker-killer'
 end
