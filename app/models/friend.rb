@@ -34,6 +34,7 @@ class Friend < ActiveRecord::Base
         member_friend_active = init_member_list_friend.active.map(&:id)
         member_invite_friend = init_member_list_friend.your_request.map(&:id)
 
+        fail ExceptionHandler::UnprocessableEntity, "You can't add yourself as a friend." if @member.id == @friend.id
         fail ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} is friends." if member_friend_active.include?(@friend.id)
         fail ExceptionHandler::UnprocessableEntity, "You had already added friend with #{@friend.get_name}" if member_invite_friend.include?(@friend.id)
 
