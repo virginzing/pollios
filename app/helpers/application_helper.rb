@@ -89,7 +89,7 @@ module ApplicationHelper
   end
 
   def is_active_new_poll(c_name, a_name)
-    if controller_name == c_name 
+    if controller_name == c_name
       if action_name == a_name
         'active'
       end
@@ -167,7 +167,7 @@ module ApplicationHelper
       index = tag.size.to_f / max.size * (classes.size - 1)
       yield(tag, classes[index.round])
     end
-    
+
   end
 
   def link_to_add_fields(name, f, association, class_name)
@@ -549,7 +549,7 @@ end
 # }' -X POST http://localhost:3000/poll/16/un_bookmark.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 
+#     "member_id":
 # }' -X POST http://localhost:3000/group/51/accept.json -i
 
 # curl -H "Content-Type: application/json" -d '{ "member_id": 93 }' -X POST http://localhost:3000/poll/2292/open_comment.json -i
@@ -583,11 +583,10 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 9,
-#     "title": "test post #votedi #sport",
+#     "member_id": 2,
+#     "title": "Whats your options",
 #     "choices": ["yes", "no", "no vote"],
 #     "type_poll": "freeform",
-#     "allow_comment": true,
 #     "is_public": false,
 #     "creator_must_vote": true
 # }' -X POST http://localhost:3000/poll/create.json -i
@@ -605,7 +604,7 @@ end
 # curl -F "member_id=93" -F "title=ทดสอบ multiupload image" -F "type_poll=binary" -F "choices[]=1" -F "choices[]=2" -F "photo_poll=@test01.png" -F "original_images[]=@test02.png" -F "original_images[]=@test03.png" -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 1, 
+#     "member_id": 1,
 #     "title": "Friend 8 create two #lovely #Nuttapon My name is #eiei",
 #     "expire_within": "5",
 #     "choices": "1,2",
@@ -613,7 +612,7 @@ end
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 9, 
+#     "member_id": 9,
 #     "title": "No friend create poll",
 #     "expire_within": "5",
 #     "choices": "1,2,3",
@@ -621,7 +620,7 @@ end
 # }' -X POST http://localhost:3000/poll/create.json -i
 
 # curl -H "Content-Type: application/json" -d '{
-#     "member_id": 2, 
+#     "member_id": 2,
 #     "title": "create in group 8 kub",
 #     "expire_within": "1",
 #     "choices": "yes,no",
@@ -629,7 +628,7 @@ end
 #     "group_id": "8"
 # }' -X POST http://localhost:3000/poll/create.json -i
 
-# PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) | 
+# PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) |
 # PollMember.select(:poll_id).where("member_id = ? OR member_id IN (?) AND share_poll_of_id == 0",1,[2,3]).group(:poll_id).map(&:poll_id)
 
 # PollMember.find_by_sql("SELECT pl.poll_id FROM poll_members pl LEFT JOIN poll_members pr ON pr.member_id IN (2,3) AND pl.poll_id > pr.poll_id AND (pl.share_poll_of_id = pr.poll_id OR pl.share_poll_of_id AND pl.share_poll_of_id = pr.share_poll_of_id) WHERE pr.poll_id IS NULL AND (pl.member_id = 1 OR pl.member_id IN (2,3)) ORDER BY pl.poll_id DESC LIMIT 20")
@@ -759,7 +758,7 @@ end
 # }' -X POST http://codeapp-pollios.herokuapp.com/member/verify_email.json -i
 
 # curl -X GET http://localhost:3000/poll/public_timeline.json?member_id=1&api_version=5
-# http://localhost:3000/poll/33/choices.json?guest_id=4&voted=no 
+# http://localhost:3000/poll/33/choices.json?guest_id=4&voted=no
 
 # http://localhost:3000/poll/tags.json?member_id=4
 # http://localhost:3000/poll/guest_poll.json?guest_id=1
@@ -820,7 +819,7 @@ end
 
 
 # curl -H "Content-Type: application/json" -d '{
-# "authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000" 
+# "authen":"nuttapon@code-app.com","password":"mefuwfhfu", "device_token": "12345678 c0c342f0 3f2b6526 46fcf7b9 386c307d 2ac40035 25c1a045 74eda000"
 # }' -X POST http://codeapp-pollios.herokuapp.com/authen/signin_sentai.json -i
 
 # curl -H "Content-Type: application/json" -d '{

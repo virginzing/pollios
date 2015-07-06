@@ -57,8 +57,8 @@ end
 
 group :production do
   gem 'rails_12factor'
-  gem 'libv8', '~> 3.11.8.3'
-  gem 'therubyracer', :platform => :ruby
+  gem 'libv8', '3.16.14.9'
+  gem 'therubyracer', '0.12.2', :platform => :ruby
   gem 'unicorn'
   gem 'unicorn-worker-killer'
 end
@@ -74,8 +74,8 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara' 
-  gem 'guard-rspec' 
+  gem 'capybara'
+  gem 'guard-rspec'
   gem 'launchy'
   gem 'guard'
   gem 'shoulda-matchers', require: false
@@ -84,7 +84,7 @@ end
 gem 'wannabe_bool'
 gem 'versioncake', github: 'bwillis/versioncake'
 gem 'rest-client'
-gem 'mongoid', github: 'mongoid/mongoid'
+gem 'mongoid', '4.0.2'
 gem 'bson', '~> 2.2'
 gem 'bson_ext'
 gem 'mongoid_auto_increment_id', '0.6.5'
