@@ -211,6 +211,8 @@ class Friend < ActiveRecord::Base
 
       if accept
         active_status = true
+        fail ExceptionHandler::UnprocessableEntity, "You can't accept yourself as a friend." if member.id == friend.id
+        fail ExceptionHandler::UnprocessableEntity, "You had already invite friends with #{friend.get_name}" if init_member_list_friend.your_request.map(&:id).include?(friend.id)
         raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} has cancelled to request friends." unless find_member.present?
         raise ExceptionHandler::UnprocessableEntity, "This request was cancelled." unless find_friend.present?
         raise ExceptionHandler::UnprocessableEntity, "My friend has over 500 people." if (init_member_list_friend.friend_count >= member.friend_limit)
