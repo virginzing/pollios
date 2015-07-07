@@ -11,7 +11,18 @@ module Authenticate
 	class Sentai < Logger
 
 		def self.set_up_host_url
-			Rails.env.production? ? "http://codeapp-user.herokuapp.com" : "http://codeapp-user-dev.herokuapp.com"
+			production_sentai_url = "http://codeapp-user.herokuapp.com"
+			development_sentai_url = "http://codeapp-user-dev.herokuapp.com"
+
+			if Rails.env.production?
+				if ENV["DEVELOPMENT_SERVER"].to_b
+					development_sentai_url
+				else
+					production_sentai_url
+				end
+			else
+				development_sentai_url
+			end
 		end
 
 		def self.signin(params)
