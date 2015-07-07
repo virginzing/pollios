@@ -74,17 +74,17 @@ class AdminController < ApplicationController
       cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
       flash[:success] = "Login success as #{member.email}"
 
-      @feedback = member.get_company.using_service.include?("Feedback")
-      @internal_survey = member.get_company.using_service.include?("Survey")
+      @company = member.get_company.decorate
 
-      if @feedback && @internal_survey
+      @feedback = @company.using_service? Company::FEEDBACK
+      @internal_survey = @company.using_service? Company::SURVEY
+      @public_survey = @company.using_service? Company::PUBLIC
+
+      if @feedback || @internal_survey || @public_survey
         redirect_to select_services_path
       else
-        if @feedback
-          redirect_to feedback_dashboard_path
-        else
-          redirect_to company_dashboard_path
-        end
+        flash[:error] = "Permission denied."
+        redirect_to authen_sentai_path
       end
     rescue => e
       flash[:error] = "Error"

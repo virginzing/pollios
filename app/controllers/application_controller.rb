@@ -31,7 +31,11 @@ class ApplicationController < ActionController::Base
 
   def check_using_service
     if controller_name == 'companies' || controller_name == 'company_campaigns'
-      is_service = 'Survey'
+      if params[:select_service] == 'public'
+        is_service = 'Public'
+      else
+        is_service = 'Survey'
+      end
     else
       is_service = 'Feedback'
     end

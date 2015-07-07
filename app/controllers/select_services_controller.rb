@@ -7,7 +7,11 @@ class SelectServicesController < ApplicationController
   before_action :signed_user
 
   def index
-    @service = @current_member.get_company.using_service
+    @service = @current_member.get_company.decorate
+    
+    if @service.using_service.size == 0
+      redirect_to root_url
+    end
   end
 
 end

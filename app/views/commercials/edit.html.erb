@@ -13,14 +13,21 @@
       <div class="col-md-10">  
         <div class="checkbox">
           <label>
-            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="Survey">
+            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="<%= Company::SURVEY %>">
             <span>Internal Survey</span>
           </label>
         </div>
 
         <div class="checkbox">
           <label>
-            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="Feedback">
+            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="<%= Company::PUBLIC %>">
+            <span>Public Survey</span>
+          </label>
+        </div>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" class="checkbox style-0" name="using_service[]" value="<%= Company::FEEDBACK %>">
             <span>Feedback</span>
           </label>
         </div>
@@ -42,5 +49,9 @@
 
   if (<%= raw member.get_select_service('Feedback') %>) {
     $("[value=Feedback]").attr('checked', true);
+  };
+
+  if (<%= raw member.get_select_service('Public') %>) {
+    $("[value=Public]").attr('checked', true);
   };
 </script>

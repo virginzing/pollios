@@ -54,7 +54,7 @@ class AuthenSentaiController < ApplicationController
     render json: @no_content, status: :ok
   end
 
-  def new_sigin_sentai
+  def new_sigin_sentai ## login as Web
     @response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app]))
@@ -70,8 +70,11 @@ class AuthenSentaiController < ApplicationController
             cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
           end
 
-          @feedback = @auth.member.get_company.using_service.include?("Feedback")
-          @internal_survey = @auth.member.get_company.using_service.include?("Survey")
+          @company ||= @auth.member.get_company.decorate
+
+          @feedback = @company.using_service? Company::FEEDBACK
+          @internal_survey = @company.using_service? Company::SURVEY
+          @public_survey = @company.using_service? Company::PUBLIC
 
           wants.html
           wants.json
@@ -89,7 +92,7 @@ class AuthenSentaiController < ApplicationController
     end
   end
 
-	def signin_sentai
+	def signin_sentai ## login as iOS APP
 
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response => #{@response}"

@@ -1,5 +1,9 @@
 class Company < ActiveRecord::Base
 
+  FEEDBACK = "Feedback"
+  SURVEY = "Survey"
+  PUBLIC = "Public"
+
   belongs_to :member
 
   has_many :company_members, dependent: :destroy
