@@ -11,8 +11,8 @@ class InviteUser
         invite.member_id = @member.id
         invite.email = email
         invite.save!
-        @new_list_member << email
       end
+      @new_list_member << email
     end
 
     send_email_list
