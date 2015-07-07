@@ -143,14 +143,10 @@ class AuthenSentaiController < ApplicationController
   		if @response["response_status"] == "OK"
         @apn_device = ApnDevice.check_device?(member, signup_params["device_token"])
         if @auth.activate_account?
-
           cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
-          # session[:member_id] = member.id
           flash[:success] = "Sign up sucessfully."
-          @signup = true
-          
+          @signup = true      
           @waiting_info = WaitingList.new(member).get_info
-
           if params[:new_company]
             @company = @auth.member.get_company.decorate
             @feedback = @company.using_service? Company::FEEDBACK
@@ -163,18 +159,6 @@ class AuthenSentaiController < ApplicationController
           wants.js
         else
           @signup = false
-          @waiting = true
-          session[:activate_email] = member.email
-          session[:activate_id] = member.id
-
-          if @auth.member_type == "3"
-            @signup_company = true
-            cookies[:waiting_approve] = { value: 'waiting_approve', expires: 5.seconds.from_now }
-            flash[:warning] = "Please waiting for approve."
-          else
-            flash[:warning] = "This account is not activate yet."
-          end
-
           wants.html
           wants.json
           wants.js
@@ -184,7 +168,7 @@ class AuthenSentaiController < ApplicationController
 
   			flash[:error] = @response["response_message"].values.flatten.join(", ")
         @flash_error = flash[:error]
-        p @flash_error
+        # p @flash_error
   			wants.html { redirect_to(:back) }
   			wants.json { render status: 422 }
         wants.js

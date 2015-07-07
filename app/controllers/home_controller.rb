@@ -20,9 +20,7 @@ class HomeController < ApplicationController
   
   def index
     @popular_poll = PopularPoll.in_total
-    
-    # render layout: 'homepage'
-    render layout: 'new_homepage'
+    render layout: 'homepage'
   end
 
   private
