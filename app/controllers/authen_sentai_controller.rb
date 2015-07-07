@@ -2,8 +2,7 @@ class AuthenSentaiController < ApplicationController
 	protect_from_forgery :except => [:new_sigin_sentai, :signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company, :multi_signup_via_company]
 	# before_action :current_login?, only: [:signin]
   # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
-  # before_filter :authenticate_admin!, :redirect_unless_admin, only: :signup
-
+  before_action :authenticate_admin!, :redirect_unless_admin, only: :signup_company
   before_action :set_current_member,  only: [:signout_all_device]
 
   expose(:current_member_id) { session[:member_id] }
