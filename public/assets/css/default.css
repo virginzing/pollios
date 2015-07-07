@@ -150,7 +150,8 @@ header .logo a{
 	margin-top:58px;
 }
 .navbar-nav{
-	margin-left:255px;
+	/*margin-left:255px;*/
+	margin-bottom: 50px;
 }
 .navbar-nav > li > a{
 	text-transform:uppercase;

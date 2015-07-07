@@ -33,7 +33,6 @@ PRODUCT_ID_IOS_STATUS: "OPEN"
 PRODUCTION_HOST: "http://pollios.com"
 DEVELOPMENT_HOST: "http://localhost:3000"
 
-
 development:
   PUBLIC_POLL: "public_poll"
   MY_POLL: "my_poll"
