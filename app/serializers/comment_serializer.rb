@@ -27,8 +27,11 @@ class CommentSerializer < ActiveModel::Serializer
     end
   end
 
+  # def avatar
+  #   object.member_avatar.to_s.present? ? "http://res.cloudinary.com/pollios/image/upload/c_fit,h_180,w_180,#{Cloudinary::QualityImage::SIZE}/" + object.member_avatar.to_s : ""
+  # end
   def avatar
-    object.member_avatar.to_s.present? ? "http://res.cloudinary.com/pollios/image/upload/c_fit,h_180,w_180,#{Cloudinary::QualityImage::SIZE}/" + object.member_avatar.to_s : ""
+    object.member.avatar.present? ? object.member.get_avatar : ""
   end
 
 end

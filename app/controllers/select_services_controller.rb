@@ -8,9 +8,9 @@ class SelectServicesController < ApplicationController
 
   def index
     @service = @current_member.get_company.decorate
-    
+
     if @service.using_service.size == 0
-      redirect_to root_url
+      fail ExceptionHandler::WebForbidden
     end
   end
 

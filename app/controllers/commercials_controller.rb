@@ -19,8 +19,10 @@ class CommercialsController < ApplicationController
   end
 
   def update
-    company_params[:using_service] = company_params[:using_service].present? ? company_params[:using_service] : []
-    if set_member.get_company.update(company_params.except(:id))
+    find_company = set_member.get_company
+    if find_company.update(company_params.except(:id))
+      find_company.using_service = [] unless company_params[:using_service].present?
+      find_company.save!
       flash[:success] = "Update Successfully"
       redirect_to commercials_path
     else
