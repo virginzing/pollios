@@ -135,7 +135,7 @@ class AuthenSentaiController < ApplicationController
     # puts "response : #{@response}"
   	respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], 
-        "approve_brand" => signup_params["approve_brand"], "new_company" => params[:new_company], "address" => signup_params["address"], 
+        "approve_brand" => signup_params["approve_brand"], "new_company" => signup_params["new_company"], "address" => signup_params["address"], 
         "company_id" => signup_params["company_id"], "select_service" => signup_params["select_service"], "register" => :in_app, "app_id" => signup_params[:app_id] ])
       )
 
@@ -292,7 +292,7 @@ class AuthenSentaiController < ApplicationController
     end
 
 	  def signup_params
-	    params.permit(:format, :authen_sentai, :app_id, :approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
+	    params.permit(:new_company, :format, :authen_sentai, :app_id, :approve_brand, :email, :password, :username, :first_name, :last_name, :avatar, :fullname, :device_token, :birthday, :gender, :member_type, :key_color, :address, :company_id, :select_service => [])
 	  end
 
 	  def update_profile_params
