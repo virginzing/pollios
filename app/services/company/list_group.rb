@@ -11,6 +11,10 @@ class Company::ListGroup
     @all ||= list_groups
   end
 
+  def exclusive
+    all.select{ |g| g.company? }
+  end
+
   private
 
   def list_group_ids

@@ -32,7 +32,7 @@ class CompaniesController < ApplicationController
                               .where("invite_codes.company_id = ?", @find_company.id)
                               .order("invite_codes.id desc")
     @invite = InviteCode.new
-    @groups = Company::ListGroup.new(@find_company).all
+    @groups = Company::ListGroup.new(@find_company).exclusive
   end
 
   def search
