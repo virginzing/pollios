@@ -447,6 +447,10 @@ class MembersController < ApplicationController
 
     @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
     Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
+    if @group.company? && !@group.system_group
+      CompanyMember.add_member_to_company(@current_member, @group.get_company)
+      Activity.create_activity_group(@current_member, @group, 'Join') 
+    end
     FlushCached::Member.new(@current_member).clear_list_groups
     FlushCached::Group.new(@group).clear_list_members
     true
