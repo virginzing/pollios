@@ -3,6 +3,7 @@ $.waiting = <%= raw @waiting || false %>;
 $.signup_company = <%= raw @signup_company || false %>;
 $.feedback = <%= raw @feedback || false %>;
 $.internal_survey = <%= raw @internal_survey || false %>;
+$.public_survey = <%= raw @public_survey || false %>
 
 if ($.signup) {
   handleSignupSuccess();
@@ -28,12 +29,10 @@ function handleSignupError() {
 }
 
 function handleSignupSuccess() {
-  if ($.feedback && $.internal_survey) {
+  if ($.feedback || $.internal_survey || $.public_survey) {
     window.location.href = "<%= redirect_back select_services_url %>";
-  } else if ($.feedback) {
-    window.location.href = "<%= redirect_back feedback_dashboard_url %>";
   } else {
-    window.location.href = "<%= redirect_back company_dashboard_url %>";
+    window.location.href = "<%= redirect_back feedback_dashboard_url %>";
   };
     
 }

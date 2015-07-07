@@ -146,7 +146,8 @@ class AuthenSentaiController < ApplicationController
           flash[:success] = "Sign up sucessfully."
           @signup = true      
           @waiting_info = WaitingList.new(member).get_info
-          if params[:new_company]
+          
+          if signup_params["new_company"].to_b
             @company = @auth.member.get_company.decorate
             @feedback = @company.using_service? Company::FEEDBACK
             @internal_survey = @company.using_service? Company::SURVEY
