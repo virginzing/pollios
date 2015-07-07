@@ -15,6 +15,25 @@
  
 <body>
 
+<!-- HEADER -->
+<table class="head-wrap">
+  <tr>
+    <td></td>
+    <td class="header container" >
+        
+        <div class="content">
+          <table>
+            <tr>
+              <td><img id="logo-image" class="logo-image" src="http://pollios.com/images/logo/logo.png" alt="Logo" height="50" width="50"></td>
+            </tr>
+          </table>
+        </div>
+        
+    </td>
+    <td></td>
+  </tr>
+</table><!-- /HEADER -->
+
 <!-- BODY -->
 <table class="body-wrap">
   <tr>
@@ -26,10 +45,10 @@
         <tr>
           <td>
             <p>Your friend <b><%= @member.get_name %></b> invited you to join Pollios.</p>
-            <p>Please download Pollios application at:</p>
-            <p><a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8">Available on the App Store</a></p>
+            <p>Please download Pollios application from AppStore at:</p>
+            <p><a href="https://itunes.apple.com/us/app/pollios/id901397748">https://itunes.apple.com/us/app/pollios/id901397748</a></p>
             <p>
-              You will automatically become friends with [Name] when you register Pollios account using this e-mail address.
+              You will automatically become friends with <b><%= @member.get_name %></b> when you register Pollios account using this e-mail address.
             </p>
             <br>
             <p>=================================</p>
