@@ -27,7 +27,7 @@ class AuthenSentaiController < ApplicationController
   end
 
   def signup_company
-    render layout: "new_signup_company"
+    render layout: "signup_company"
   end
 
   def forgot_pwd
