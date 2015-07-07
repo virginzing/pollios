@@ -7,20 +7,12 @@ $.internal_survey = <%= raw @internal_survey || false %>;
 if ($.signup) {
   handleSignupSuccess();
 } else {
-  if ($.waiting) {
-    if ($.signup_company) {
-      handleWaitingApprove();
-    } else {
-      handleActivate();
-    }
-  } else {
-    handleSignupError();
-  }
+  handleSignupError();
 }
 
 function handleSignupError() {
 
-  $.msg_signup = JSON.parse('<%= @flash_error.to_json.html_safe %>');
+  $.msg_signup = JSON.parse('<%= @response["response_message"].to_json.html_safe %>');
 
   for (var k in $.msg_signup) {
     $("[name=" + k + "]").parent().removeClass("state-success").addClass("state-error").append("<em class='error'>" + $.msg_signup[k].join(",") + "</em>");

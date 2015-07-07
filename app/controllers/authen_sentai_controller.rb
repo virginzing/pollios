@@ -131,7 +131,7 @@ class AuthenSentaiController < ApplicationController
 
   end
 
-  def signup_sentai
+  def signup_sentai ## signup as company via Web and iOS
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{@response}"
   	respond_to do |wants|
@@ -152,8 +152,10 @@ class AuthenSentaiController < ApplicationController
           @waiting_info = WaitingList.new(member).get_info
 
           if params[:new_company]
-            @feedback = @auth.member.get_company.using_service.include?("Feedback")
-            @internal_survey = @auth.member.get_company.using_service.include?("Survey")
+            @company = @auth.member.get_company.decorate
+            @feedback = @company.using_service? Company::FEEDBACK
+            @internal_survey = @company.using_service? Company::SURVEY
+            @public_survey = @company.using_service? Company::PUBLIC
           end
 
           wants.html
@@ -182,9 +184,7 @@ class AuthenSentaiController < ApplicationController
 
   			flash[:error] = @response["response_message"].values.flatten.join(", ")
         @flash_error = flash[:error]
-
         p @flash_error
-
   			wants.html { redirect_to(:back) }
   			wants.json { render status: 422 }
         wants.js
