@@ -28,6 +28,20 @@ class Stats::UserRecord
     end
   end
 
+  def user_active_all
+    @user_active_all ||= if filter_by == TODAY
+      user_active_range(Date.current, Date.current)
+    elsif filter_by == YESTERDAY
+      user_active_range(1.days.ago.to_date, 1.days.ago.to_date)
+    elsif filter_by == WEEK
+      user_active_range(7.days.ago.to_date)
+    elsif filter_by == MONTH
+      user_active_range(1.month.ago.to_date)
+    else
+      user_active_total
+    end
+  end
+
   def count
     query_all.size
   end
@@ -48,6 +62,22 @@ class Stats::UserRecord
     query_all.select{|e| e if e.company? }.size
   end
 
+  def active
+    count = 0
+    user_active_all.to_a.each do |member_active|
+      count += member_active.list_member_ids.size
+    end
+    count
+  end
+
+  def user_active_total
+    count = 0
+    user_active_all.to_a.each do |member_active|
+      count += member_active.list_member_ids.size
+    end
+    count
+  end
+
   private
 
   def user_with_range(end_date, start_date = Date.current)
@@ -57,14 +87,13 @@ class Stats::UserRecord
   def user_total
     Member.unscoped
   end
+
+  def user_active_range(end_date, start_date = Date.current)
+    MemberActiveRecord.where(:stats_created_at => { :$gte => end_date, :$lte => start_date })
+  end
+
+  def user_active_total
+    MemberActiveRecord.all
+  end
   
 end
-
-
-  def vote_with_range(end_date, start_date = Date.current)
-    HistoryVote.joins(:poll).where("(date(polls.created_at + interval '7 hours') BETWEEN ? AND ?) AND polls.series = 'f'", end_date, start_date)
-  end
-
-  def vote_total
-    HistoryVote.joins(:poll).where("polls.series = 'f'")
-  end

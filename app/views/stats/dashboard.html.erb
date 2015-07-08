@@ -175,11 +175,11 @@
               </div>
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(0) %> <strong> Active</strong></li>
+                  <li style="color: rgb(215, 22, 82);font-size: 15px;"><i class="fa fa-smile-o"></i> <%= number_with_delimiter(@stats_user_record.active) %> <strong> Active</strong></li>
                   <li></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.citizen) %> <strong> Citizen</strong></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.celebrity) %> <strong> Celebrity</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.company) %> <strong> Company</strong></li>
+                  <li><i class="fa fa-building-o"></i> <%= number_with_delimiter(@stats_user_record.company) %> <strong> Company</strong></li>
                   <li><h2 style="margin: 0px;">Total: <b><%= @stats_user_record.total %></b></h2></li>
                 </ul>
               </div>
