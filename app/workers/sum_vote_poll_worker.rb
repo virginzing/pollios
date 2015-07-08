@@ -2,7 +2,7 @@ class SumVotePollWorker
   include Sidekiq::Worker
   include SymbolHash
 
-  sidekiq_options unique: true, :retry => 1
+  # sidekiq_options unique: true, :retry => 1
   
   def perform(poll_id, show_result = true)
     begin
@@ -75,11 +75,11 @@ class SumVotePollWorker
       Apn::App.first.send_notifications
 
       poll.update!(notify_state: 0)
-      p "Notify vote sucessfully"
+      # p "Notify vote sucessfully"
     rescue => e
       poll = Poll.find_by(id: poll_id)
       poll.update!(notify_state: 0) if poll.present?
-      puts "SumVotePollWorker => #{e.message}"
+      # puts "SumVotePollWorker => #{e.message}"
       @list_apn_notification.collect{|apn_notification| apn_notification.destroy }
     end
   end
