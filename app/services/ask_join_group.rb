@@ -26,8 +26,12 @@ class AskJoinGroup
 
   private
 
+  def member_as_admin_ids
+    Group::ListMember.new(@group).member_as_admin.map(&:id)
+  end
+
   def group_member_ids
-    received_notify_of_member_ids(@group.get_member_active) - [@member.id]
+    member_as_admin_ids - [@member.id]
   end
   
 end
