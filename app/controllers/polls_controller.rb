@@ -716,23 +716,30 @@ class PollsController < ApplicationController
   def comment #post comment
     fail ExceptionHandler::UnprocessableEntity, 'Poll had already disabled comment.' unless @poll.allow_comment
     list_mentioned = comment_params[:list_mentioned]
-    @comment = Comment.create!(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
-    @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
+    @comment = Comment.new(poll_id: @poll.id, member_id: @current_member.id, message: comment_params[:message])
 
-    @poll.with_lock do 
-      @poll.comment_count += 1
-      @poll.save!
+    if @comment.save
+      @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
+
+      @poll.with_lock do 
+        @poll.comment_count += 1
+        @poll.save!
+      end
+
+      find_watched = Watched.find_by(member_id: @current_member.id, poll_id: @poll.id)
+      MemberActiveRecord.record_member_active(@current_member)
+
+      if find_watched.nil?
+        WatchPoll.new(@current_member, @poll.id).watching
+      end
+
+      Activity.create_activity_comment(@current_member, @poll, 'Comment')
+      @poll.touch
+      render status: :created
+    else
+      @error_message = @comment.errors.full_messages.join(", ")
+      render status: :unprocessable_entity
     end
-
-    find_watched = Watched.find_by(member_id: @current_member.id, poll_id: @poll.id)
-
-    if find_watched.nil?
-      WatchPoll.new(@current_member, @poll.id).watching
-    end
-
-    Activity.create_activity_comment(@current_member, @poll, 'Comment')
-    @poll.touch
-    render status: :created
   end
 
   def load_comment

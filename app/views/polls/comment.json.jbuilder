@@ -1,4 +1,4 @@
-if @comment
+if @comment.valid?
   json.response_status "OK"
 
   json.comment do
