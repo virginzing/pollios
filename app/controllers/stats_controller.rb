@@ -17,6 +17,8 @@ class StatsController < ApplicationController
     @user_stats = UserStats.filter_by(filtering)
     @group_stats = GroupStats.filter_by(filtering)
     
+    @stats_poll_record = Stats::PollRecord.new(filter_by: dashboard_params[:filter_by])
+    
     if filtering == 'total'
       @user_create = UserStats.find_celebrity_or_brand_total
       @top_voted_most = PollStats.top_voted_most_total

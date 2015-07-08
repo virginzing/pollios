@@ -123,13 +123,14 @@
           </div>
           <div class="panel-body no-padding text-align-center">
               <div class="the-price">
-                <span class="count"><%= number_with_delimiter(poll_stats[:amount]) %></span>
+                <span class="count"><%= @stats_poll_record.count %></span>
               </div>
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
-                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(poll_stats[:public]) %> <strong> in Public</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(poll_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
-                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(poll_stats[:group]) %> <strong> in Group</strong></li>
+                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(@stats_poll_record.poll_public) %> <strong> in Public</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_poll_record.poll_friend_following) %> <strong> in Friend & Following</strong></li>
+                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(@stats_poll_record.poll_group) %> <strong> in Group</strong></li>
+                  <li><h2>Total: <b><%= @stats_poll_record.total %></b></h2></li>
                 </ul>
               </div>
           </div>
