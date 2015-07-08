@@ -74,7 +74,8 @@ class SumVotePollWorker
 
       Apn::App.first.send_notifications
 
-      poll.update(notify_state: 0)
+      poll.update!(notify_state: 0)
+      p "Notify vote sucessfully"
     rescue => e
       poll = Poll.find_by(id: poll_id)
       poll.update!(notify_state: 0) if poll.present?
