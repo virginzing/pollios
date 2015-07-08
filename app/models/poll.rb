@@ -118,6 +118,8 @@ class Poll < ActiveRecord::Base
     where("polls.expire_status = 'f'")
   }
 
+  scope :except_series, -> { where(series: false) }
+
   scope :without_closed, -> { where(close_status: false) }
 
   LIMIT_POLL = 30

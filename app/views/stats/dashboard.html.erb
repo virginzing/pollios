@@ -135,7 +135,7 @@
               </div>
           </div>
           <div class="panel-footer text-align-center">
-            <a href="<%= stats_polls_url %>" class="btn btn-default btn-xs" role="button">More</a>
+            <!-- <a href="<%= stats_polls_url %>" class="btn btn-default btn-xs" role="button">More</a> -->
           </div>
       </div>
     </div>
@@ -147,18 +147,19 @@
           </div>
           <div class="panel-body no-padding text-align-center">
               <div class="the-price">
-                <span class="count"><%= number_with_delimiter(vote_stats[:amount]) %></span>
+                <span class="count"><%= @stats_vote_record.count %></span>
               </div>
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
-                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(vote_stats[:public]) %> <strong> in Public</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(vote_stats[:friend_following]) %> <strong> in Friend & Following</strong></li>
-                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(vote_stats[:group]) %> <strong> in Group</strong></li>
+                  <li><i class="fa fa-globe"></i> <%= number_with_delimiter(@stats_vote_record.poll_public) %> <strong> in Public</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_vote_record.poll_friend_following) %> <strong> in Friend & Following</strong></li>
+                  <li><i class="fa fa-group"></i> <%= number_with_delimiter(@stats_vote_record.poll_group) %> <strong> in Group</strong></li>
+                  <li><h2>Total: <b><%= @stats_vote_record.total %></b></h2></li>
                 </ul>
               </div>
           </div>
           <div class="panel-footer text-align-center">
-            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+            <!-- <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a> -->
           </div>
       </div>
     </div>
@@ -170,20 +171,21 @@
           </div>
           <div class="panel-body no-padding text-align-center">
               <div class="the-price">
-                <span class="count"><%= number_with_delimiter(user_stats[:amount]) %></span>
+                <span class="count"><%= number_with_delimiter(@stats_user_record.count) %></span>
               </div>
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:facebook] || 0) %> <strong> via Facebook</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(user_stats[:sentai] || 0) %> <strong> via Sentai</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:citizen]) %> <strong> Citizen</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:celebrity]) %> <strong> Celebrity</strong></li>
-                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@user_create[:brand]) %> <strong> Brand</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(0) %> <strong> Active</strong></li>
+                  <li></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.citizen) %> <strong> Citizen</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.celebrity) %> <strong> Celebrity</strong></li>
+                  <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.company) %> <strong> Company</strong></li>
+                  <li><h2 style="margin: 0px;">Total: <b><%= @stats_user_record.total %></b></h2></li>
                 </ul>
               </div>
           </div>
           <div class="panel-footer text-align-center">
-            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+            <!-- <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a> -->
           </div>
       </div>
     </div>
@@ -196,16 +198,18 @@
           </div>
           <div class="panel-body no-padding text-align-center">
               <div class="the-price">
-                <span class="count"><%= number_with_delimiter(group_stats[:amount]) %></span>
+                <span class="count"><%= number_with_delimiter(@stats_group_record.count) %></span>
               </div>
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
-                  <li><%= number_with_delimiter(group_stats[:amount]) %> <strong> created</strong></li>
+                  <li><%= number_with_delimiter(@stats_group_record.public) %> <strong> Public</strong></li>
+                  <li><%= number_with_delimiter(@stats_group_record.private) %> <strong> Private</strong></li>
+                  <li><h2 style="margin: 0px;">Total: <b><%= @stats_group_record.total %></b></h2></li>
                 </ul>
               </div>
           </div>
           <div class="panel-footer text-align-center">
-            <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a>
+            <!-- <a href="javascript:void(0);" class="btn btn-default btn-xs" role="button">More</a> -->
           </div>
       </div>
     </div>

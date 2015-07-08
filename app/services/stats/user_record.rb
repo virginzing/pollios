@@ -1,5 +1,5 @@
-class Stats::VoteRecord
-  
+class Stats::UserRecord
+
   TODAY = 'today'
   YESTERDAY = 'yesterday'
   WEEK = 'week'
@@ -16,15 +16,15 @@ class Stats::VoteRecord
 
   def query_all
     @query_all ||= if filter_by == TODAY
-      vote_with_range(Date.current, Date.current)
+      user_with_range(Date.current, Date.current)
     elsif filter_by == YESTERDAY
-      vote_with_range(1.days.ago.to_date, 1.days.ago.to_date)
+      user_with_range(1.days.ago.to_date, 1.days.ago.to_date)
     elsif filter_by == WEEK
-      vote_with_range(7.days.ago.to_date)
+      user_with_range(7.days.ago.to_date)
     elsif filter_by == MONTH
-      vote_with_range(1.month.ago.to_date)
+      user_with_range(1.month.ago.to_date)
     else
-      vote_total
+      user_total
     end
   end
 
@@ -33,22 +33,33 @@ class Stats::VoteRecord
   end
 
   def total
-    @total ||= vote_total.size
+    @total ||= user_total.size
   end
 
-  def poll_public
-    query_all.where("polls.public = 't'").size
+  def citizen
+    query_all.select{|e| e if e.citizen? }.size
   end
 
-  def poll_friend_following
-    query_all.where("polls.public = 'f' AND polls.in_group = 'f'").size
+  def celebrity
+    query_all.select{|e| e if e.celebrity? }.size
   end
 
-  def poll_group
-    query_all.where("polls.public = 'f' AND polls.in_group = 't'").size
+  def company
+    query_all.select{|e| e if e.company? }.size
   end
 
   private
+
+  def user_with_range(end_date, start_date = Date.current)
+    Member.unscoped.where("date(created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date)
+  end
+
+  def user_total
+    Member.unscoped
+  end
+  
+end
+
 
   def vote_with_range(end_date, start_date = Date.current)
     HistoryVote.joins(:poll).where("(date(polls.created_at + interval '7 hours') BETWEEN ? AND ?) AND polls.series = 'f'", end_date, start_date)
@@ -57,6 +68,3 @@ class Stats::VoteRecord
   def vote_total
     HistoryVote.joins(:poll).where("polls.series = 'f'")
   end
-
-  
-end

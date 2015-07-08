@@ -11,41 +11,21 @@ class StatsController < ApplicationController
   def dashboard
     filtering = dashboard_params[:filter_by]
 
-    @poll_stats = PollStats.filter_by(filtering)
-    @vote_stats = VoteStats.filter_by(filtering)
+    # @poll_stats = PollStats.filter_by(filtering)
+    # @vote_stats = VoteStats.filter_by(filtering)
 
-    @user_stats = UserStats.filter_by(filtering)
-    @group_stats = GroupStats.filter_by(filtering)
+    # @user_stats = UserStats.filter_by(filtering)
+    # @group_stats = GroupStats.filter_by(filtering)
     
     @stats_poll_record = Stats::PollRecord.new(filter_by: dashboard_params[:filter_by])
-    
-    if filtering == 'total'
-      @user_create = UserStats.find_celebrity_or_brand_total
-      @top_voted_most = PollStats.top_voted_most_total
-      @poll_popular = PollStats.poll_popular_total
-      @top_voter = PollStats.top_voter_total
-    elsif filtering == 'yesterday'
+    @stats_vote_record = Stats::VoteRecord.new(filter_by: dashboard_params[:filter_by])
+    @stats_user_record = Stats::UserRecord.new(filter_by: dashboard_params[:filter_by])
+    @stats_group_record = Stats::GroupRecord.new(filter_by: dashboard_params[:filter_by])
+
+    if filtering == 'yesterday'
       @poll_per_hour = PollStats.poll_per_hour(Date.current - 1.day)
-      @user_create = UserStats.find_celebrity_or_brand_yesterday
-      @top_voted_most = PollStats.top_voted_most_yerterday
-      @poll_popular = PollStats.poll_popular_yesterday
-      @top_voter = PollStats.top_voter_yesterday
-    elsif filtering == 'week'
-      @user_create = UserStats.find_celebrity_or_brand(7.days.ago.to_date)
-      @top_voted_most = PollStats.top_voted_most(7.days.ago.to_date)
-      @poll_popular = PollStats.poll_popular(7.days.ago.to_date)
-      @top_voter = PollStats.top_voter(7.days.ago.to_date)
-    elsif filtering == 'month'
-      @user_create = UserStats.find_celebrity_or_brand(30.days.ago.to_date)
-      @top_voted_most = PollStats.top_voted_most(30.days.ago.to_date)
-      @poll_popular = PollStats.poll_popular(30.days.ago.to_date)
-      @top_voter = PollStats.top_voter(30.days.ago.to_date)
     else
-      @user_create = UserStats.find_celebrity_or_brand(Date.current)
       @poll_per_hour = PollStats.poll_per_hour
-      @top_voted_most = PollStats.top_voted_most(Date.current)
-      @poll_popular = PollStats.poll_popular(Date.current)
-      @top_voter = PollStats.top_voter(Date.current)
     end
 
   end
