@@ -27,7 +27,6 @@ class StatsController < ApplicationController
     else
       @poll_per_hour = PollStats.poll_per_hour
     end
-
   end
 
   def polls
