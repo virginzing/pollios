@@ -79,15 +79,20 @@
           </header>
           
           <fieldset>
-
+          
+          <% if current_company.using_public? %>
           <section class="form-inline">
             <label class="label col-md-1">Make Public</label>
-
             <input type="checkbox" name="poll_series[public]" id="check_public_poll_series">
-
           </section>
+          <% end %>
+
+          <% if current_company.using_public? == true && current_company.using_internal? == false %>
+            <input type="hidden" name="poll_series[public]" value="on">
+            <%= f.hidden_field :group_id, value: [] %>
+          <% end %>
         
-            <% if current_member.get_company.present? %>
+          <% if current_company.present? && current_company.using_internal? %>
 
             <section class="branch_list">
               <label class="label">Show in group</label>
@@ -181,6 +186,13 @@
 </script>
 
 <script type="text/javascript">
+  $.using_internal = <%= raw current_company.using_internal? %>;
+  $.using_public = <%= raw current_company.using_public? %>;
+
+  if ($.using_public == true && $.using_internal == false) {
+    $('#check_public_poll_series').attr('disabled', true).attr('checked', true);
+  };
+
   $('#check_public_poll_series').click(function() {
     var $this = $(this);
     // $this will contain a reference to the checkbox   
@@ -192,5 +204,6 @@
       $(".branch_list").find('input').attr('data-parsley-required', 'true');
     }
   });
+
 </script>
 

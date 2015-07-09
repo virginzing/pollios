@@ -1,6 +1,12 @@
 <% breadcrumb :company_polls %>
 
+
 <div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-edit fa-fw"></i> 
+      List Poll
+  </h1>
+
   <% if current_company.using_internal? %>
     <a href="<%= create_new_poll_path %>" class="icon-btn">
       <i class="fa fa-plus"></i>
@@ -13,6 +19,7 @@
       <div>Public Poll</div>
     </a>
   <% end %>
+
 </div>
 
 <% if current_company.using_internal? %>

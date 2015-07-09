@@ -7,6 +7,7 @@ class PollSeriesController < ApplicationController
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
   before_action :set_company, only: [:same_choice, :normal]
+  before_action :check_using_service, only: [:normal]
 
   def generate_qrcode
     @qr = GenerateQrcodeLink.new(PollSeries.find(params[:id])).get_link
