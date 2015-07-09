@@ -82,6 +82,18 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def using_public?
+    using_service.include?(Company::PUBLIC)
+  end
+
+  def using_internal?
+    using_service.include?(Company::SURVEY)
+  end
+
+  def using_feedback?
+    using_service.include?(Company::FEEDBACK)
+  end
+
   def as_json options={}
    {
       id: id,

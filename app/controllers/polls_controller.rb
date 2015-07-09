@@ -22,6 +22,7 @@ class PollsController < ApplicationController
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   before_action :set_company, only: [:create_new_poll, :create_new_public_poll]
+  before_action :only_internal_survey, only: [:create_new_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }

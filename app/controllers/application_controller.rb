@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :check_token, proc { |c| c.request.format.json? }
 
-  helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back
+  helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
 
   def check_token
     token_from_header = request.headers['Authorization']
@@ -36,6 +36,10 @@ class ApplicationController < ActionController::Base
     else
       fail ExceptionHandler::WebForbidden unless find_company.using_service.include?(Company::SURVEY) || find_company.using_service.include?(Company::PUBLIC)
     end
+  end
+
+  def only_internal_survey
+    fail ExceptionHandler::WebForbidden unless current_company.using_internal?
   end
 
   def permission_deny
@@ -91,6 +95,10 @@ class ApplicationController < ActionController::Base
 
   def current_member
     @current_member ||= Member.find_by(auth_token: cookies[:auth_token]) if cookies[:auth_token]
+  end
+
+  def current_company
+    current_member.get_company if current_member
   end
 
   def signed_in?
