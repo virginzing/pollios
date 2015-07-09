@@ -42,6 +42,10 @@ class ApplicationController < ActionController::Base
     fail ExceptionHandler::WebForbidden unless current_company.using_internal?
   end
 
+  def only_public_survey
+    fail ExceptionHandler::WebForbidden unless current_company.using_public?
+  end
+
   def permission_deny
     respond_to do |format|
       flash[:warning] = 'Permission Deny'

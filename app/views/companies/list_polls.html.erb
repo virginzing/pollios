@@ -1,19 +1,23 @@
 <% breadcrumb :company_polls %>
 
 <div class="well">
-  <a href="<%= create_new_poll_path %>" class="icon-btn">
-    <i class="fa fa-plus"></i>
-    <div>Group Poll</div>
-  </a>
-
-  <a href="<%= create_new_public_poll_path %>" class="icon-btn">
-    <i class="fa fa-plus"></i>
-    <div>Public Poll</div>
-  </a>
+  <% if current_company.using_internal? %>
+    <a href="<%= create_new_poll_path %>" class="icon-btn">
+      <i class="fa fa-plus"></i>
+      <div>Group Poll</div>
+    </a>
+  <% end %>
+  <% if current_company.using_public? %>
+    <a href="<%= create_new_public_poll_path %>" class="icon-btn">
+      <i class="fa fa-plus"></i>
+      <div>Public Poll</div>
+    </a>
+  <% end %>
 </div>
 
+<% if current_company.using_internal? %>
 <section id="widget-grid" class="">
-  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll-internal" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-users"></i> </span>
       <h2><strong>Poll Groups</strong></h2>      
@@ -83,9 +87,11 @@
 
   </div>
 </section>
+<% end %>
 
+<% if current_company.using_public? %>
 <section id="widget-grid" class="">
-  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll-public" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-globe"></i> </span>
       <h2><strong>Poll Public</strong></h2>      
@@ -141,6 +147,7 @@
 
   </div>
 </section>
+<% end %>
 
 
 
