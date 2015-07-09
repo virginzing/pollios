@@ -1,33 +1,23 @@
 <div class="container">
 
   <div class="row" style="margin-top: 60px;">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="well">
-        <a href="<%= feedback_dashboard_path %>" class="btn btn-primary btn-lg" style="width: 100%;" id="feedback" <%= 'disabled' unless @service.using_service? "Feedback" %>>
+        <a href="<%= feedback_dashboard_path %>" class="btn btn-primary btn-lg" style="width: 100%;" id="feedback" <%= 'disabled' unless @service.using_service? Company::FEEDBACK %>>
           Feedback Location
         </a>
         <div class="note">For Feedback of Location</div>
       </div>
     </div>
     
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="well">
-        <a href="<%= company_dashboard_path %>" class="btn btn-success btn-lg" style="width: 100%;" id="internal_survey" <%= 'disabled' unless @service.using_service? "Survey" %>>
-          Internal Survey
+        <a href="<%= company_dashboard_path %>" class="btn btn-success btn-lg" style="width: 100%;" id="internal_survey" <%= 'disabled' unless (@service.using_service?(Company::SURVEY) || @service.using_service?(Company::PUBLIC)) %>>
+          Internal Survey and Public Survey
         </a>
-        <div class="note">For Internal Survey</div>
+        <div class="note">For Internal Survey and Public Survey</div>
       </div>
     </div>
-
-    <div class="col-md-4">
-      <div class="well">
-        <a href="<%= company_dashboard_path(select_service: "public") %>" class="btn btn-info btn-lg" style="width: 100%;" id="public_survey" <%= 'disabled' unless @service.using_service? "Public" %>>
-          Public Survey
-        </a>
-        <div class="note">For Public Survey</div>
-      </div>
-    </div>
-
   </div>
 
 </div>

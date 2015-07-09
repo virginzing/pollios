@@ -30,16 +30,12 @@ class ApplicationController < ActionController::Base
   end
 
   def check_using_service
-    if controller_name == 'companies' || controller_name == 'company_campaigns'
-      if params[:select_service] == 'public'
-        is_service = 'Public'
-      else
-        is_service = 'Survey'
-      end
+    find_company ||= current_member.get_company
+    if request.path.split("/")[1] == Company::FEEDBACK.downcase
+      fail ExceptionHandler::WebForbidden unless find_company.using_service.include?(Company::FEEDBACK)
     else
-      is_service = 'Feedback'
+      fail ExceptionHandler::WebForbidden unless find_company.using_service.include?(Company::SURVEY) || find_company.using_service.include?(Company::PUBLIC)
     end
-    fail ExceptionHandler::WebForbidden unless current_member.get_company.using_service.include?(is_service)
   end
 
   def permission_deny
