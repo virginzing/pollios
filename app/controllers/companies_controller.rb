@@ -18,7 +18,7 @@ class CompaniesController < ApplicationController
 
   def dashboard
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
-    @poll_latest_list = @init_poll.get_poll_of_group_company.limit(5)
+    @poll_latest_list = @init_poll.get_poll_of_group_company.except_series.limit(5)
     @poll_latest_in_public = Company::PollPublic.new(@find_company).get_list_public_poll
     render 'home/dashboard_company'
   end

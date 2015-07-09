@@ -83,4 +83,8 @@ class PollOfGroup
     "polls.expire_date > '#{Time.now}'"
   end
 
+  def except_series
+    where("polls.series = 'f'")
+  end
+
 end
