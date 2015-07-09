@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     else
       is_service = 'Feedback'
     end
-    permission_deny unless current_member.get_company.using_service.include?(is_service)
+    fail ExceptionHandler::WebForbidden unless current_member.get_company.using_service.include?(is_service)
   end
 
   def permission_deny

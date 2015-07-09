@@ -4,6 +4,8 @@ class Company < ActiveRecord::Base
   SURVEY = "Survey"
   PUBLIC = "Public"
 
+  LIST_SERVICE = %w(FEEDBACK SURVEY PUBLIC)
+  
   belongs_to :member
 
   has_many :company_members, dependent: :destroy
