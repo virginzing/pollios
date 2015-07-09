@@ -14,7 +14,7 @@ class StatsController < ApplicationController
     if filtering.present?
       fail ExceptionHandler::WebNotFound unless FilterByStats::LIST_OF_FILTER.include?(filtering)
     else
-      fail ExceptionHandler::WebNotFound
+      redirect_to stats_dashboard_path(filter_by: FilterByStats::TODAY)
     end
 
     @stats_poll_record = Stats::PollRecord.new(filter_by: dashboard_params[:filter_by])
