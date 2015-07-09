@@ -56,15 +56,15 @@
                 </div>
               </section>
               <% if @group.normal? %>
-<!--               <section>
+              <section>
                 <div class="row">
                   <div class="col col-md-4">
                   <label class="toggle">
-                    <input type="checkbox" name="group[leave_group]">
-                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Can member leave this group?</label>
+                    <input type="checkbox" name="group[opened]">
+                    <i data-swchon-text="Yes" data-swchoff-text="No"></i>Everybody see poll before join group</label>
                   </div>
                 </div>
-              </section> -->            
+              </section>            
 
 <!--               <section>
                 <div class="row">
@@ -158,6 +158,7 @@
   $.check_system_group = <%= raw @group.system_group %>;
   $.check_need_approve = <%= raw @group.need_approve %>;
   $.check_public_group = <%= raw @group.public %>;
+  $.check_opened_group = <%= raw @group.opened %>;
 
   if ($.check_leave_group) {
     $("input[name='group[leave_group]']").attr( 'checked', 'checked' );
@@ -179,9 +180,9 @@
     $("input[name='group[public]']").attr( 'checked', 'checked' );
   }
 
-  // if ($.check_group_type) {
-  //   $("input[name='group[set_group_type]']").attr( 'checked', 'checked' );
-  // }
+  if ($.check_opened_group) {
+    $("input[name='group[opened]']").attr( 'checked', 'checked' );
+  }  
 
   $("#group_profile").parsley();
   $(document).ready(function() {

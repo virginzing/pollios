@@ -456,6 +456,7 @@ class CompaniesController < ApplicationController
         group.need_approve = group_params[:need_approve].present? ? true : false
         group.system_group = group_params[:system_group].present? ? true : false
         group.public = group_params[:public].present? ? true : false
+        group.opened = group_params[:opened].present? ? true : false
       end
 
       if group.update(group_params)
@@ -650,7 +651,7 @@ class CompaniesController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve, :set_group_type)  
+    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve, :set_group_type, :opened)  
   end
 
   def options_params
