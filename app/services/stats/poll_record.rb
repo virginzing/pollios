@@ -85,7 +85,6 @@ class Stats::PollRecord
     query_all.select{|e| e if e.in_group }.size
   end
 
-
   private
 
   def poll_today
