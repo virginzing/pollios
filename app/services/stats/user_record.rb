@@ -1,11 +1,6 @@
 class Stats::UserRecord
-
-  TODAY = 'today'
-  YESTERDAY = 'yesterday'
-  WEEK = 'week'
-  MONTH = 'month'
-  TOTAL = 'total'
-
+  include FilterByStats
+  
   def initialize(options = {})
     @options = options
   end

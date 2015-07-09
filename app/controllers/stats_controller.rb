@@ -10,13 +10,13 @@ class StatsController < ApplicationController
 
   def dashboard
     filtering = dashboard_params[:filter_by]
-
-    # @poll_stats = PollStats.filter_by(filtering)
-    # @vote_stats = VoteStats.filter_by(filtering)
-
-    # @user_stats = UserStats.filter_by(filtering)
-    # @group_stats = GroupStats.filter_by(filtering)
     
+    if filtering.present?
+      fail ExceptionHandler::WebNotFound unless FilterByStats::LIST_OF_FILTER.include?(filtering)
+    else
+      fail ExceptionHandler::WebNotFound
+    end
+
     @stats_poll_record = Stats::PollRecord.new(filter_by: dashboard_params[:filter_by])
     @stats_vote_record = Stats::VoteRecord.new(filter_by: dashboard_params[:filter_by])
     @stats_user_record = Stats::UserRecord.new(filter_by: dashboard_params[:filter_by])
