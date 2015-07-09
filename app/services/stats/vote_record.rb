@@ -51,7 +51,7 @@ class Stats::VoteRecord
   private
 
   def vote_with_range(end_date, start_date = Date.current)
-    HistoryVote.joins(:poll).where("(date(polls.created_at + interval '7 hours') BETWEEN ? AND ?) AND polls.series = 'f'", end_date, start_date)
+    HistoryVote.joins(:poll).where("(date(history_votes.created_at + interval '7 hours') BETWEEN ? AND ?) AND polls.series = 'f'", end_date, start_date)
   end
 
   def vote_total
