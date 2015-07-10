@@ -86,7 +86,7 @@ class V6::OverallTimeline
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
 
-    # poll_group_query = "poll_members.poll_id IN (?) AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
+    poll_public_in_group_query = "poll_members.public = 't' AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
     poll_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id = 0"
 
@@ -110,6 +110,7 @@ class V6::OverallTimeline
     query = PollMember.available.unexpire.without_closed.joins(:poll).includes(:poll => [:poll_groups])
                                                       .where("(#{poll_friend_query})" \
                                                              "OR (#{poll_group_query})" \
+                                                             "OR (#{poll_public_in_group_query})" \
                                                              "OR (#{poll_series_group_query})" \
                                                              "OR (#{poll_public_query})",
                                                              new_your_friend_ids,
