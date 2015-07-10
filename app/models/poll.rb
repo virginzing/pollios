@@ -313,17 +313,19 @@ class Poll < ActiveRecord::Base
   end
 
   def get_within(options = {}, action_timeline = {})
-    if public
+    if public && in_group
+      Hash["in" => "Group", "group_detail" => get_in_groups(options)]
+    elsif public
       if action_timeline["friend_following_poll"]
         PollType.to_hash(PollType::WHERE[:friend_following])
       else
         PollType.to_hash(PollType::WHERE[:public])
       end
     else
-      if in_group != true
-        PollType.to_hash(PollType::WHERE[:friend_following])
-      else
+      if in_group
         Hash["in" => "Group", "group_detail" => get_in_groups(options)]
+      else
+        PollType.to_hash(PollType::WHERE[:friend_following])
       end
     end
   end

@@ -487,7 +487,7 @@ class PollsController < ApplicationController
     raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Poll::UNDER_INSPECTION if @poll.black?
     raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @poll.member.ban?
     
-    raise_exception_without_group if @poll.in_group
+    raise_exception_without_group if @poll.in_group && !@poll.public
     Poll.view_poll(@poll, @current_member)
     @choices_as_json = @poll.get_choice_detail
   end
