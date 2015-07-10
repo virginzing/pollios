@@ -394,11 +394,11 @@ curl -H "Content-Type: application/json" -d '{
 
 curl -H "Content-Type: application/json" -d '{
     "member_id": 2,
-    "title": "Whats your options",
+    "title": "Whats your opinion",
     "choices": ["yes", "no", "no vote"],
     "type_poll": "freeform",
     "is_public": false,
-    "creator_must_vote": true
+    "creator_must_vote": false
 }' -X POST http://localhost:3000/poll/create.json -i
 
 curl -H "Content-Type: application/json" -D '{
@@ -431,11 +431,10 @@ curl -H "Content-Type: application/json" -d '{
 
 curl -H "Content-Type: application/json" -d '{
     "member_id": 2,
-    "title": "create in group 8 kub",
-    "expire_within": "1",
-    "choices": "yes,no",
-    "type_poll": "binary",
-    "group_id": "8"
+    "title": "Post poll in group number 2",
+    "choices": ["Like", "Dislike", "Yo"],
+    "type_poll": "freeform",
+    "group_id": "2"
 }' -X POST http://localhost:3000/poll/create.json -i
 
 PollMember.select(:poll_id ,:share_poll_of_id).where("member_id IN (?) AND share_poll_of_id != ?",[2,3], 0).group(:share_poll_of_id) |
@@ -470,10 +469,10 @@ curl -H "Content-Type: application/json" -d '{
 NotifyLog.where("created_at > ?", 1.days.ago)
 
 curl -H "Content-Type: application/json" -d '{
-    "member_id": 6,
-    "choice_id": 184,
+    "member_id": 53,
+    "choice_id": 236,
     "show_result": false
-}' -X POST http://localhost:3000/poll/51/vote.json -i
+}' -X POST http://localhost:3000/poll/69/vote.json -i
 
 
 curl -H "Content-Type: application/json" -d '{
