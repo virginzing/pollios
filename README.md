@@ -23,3 +23,7 @@ $ guard
 ```
 $ rails s
 ```
+
+```
+$ git push heroku master
+```
