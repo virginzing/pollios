@@ -27,3 +27,7 @@ $ rails s
 ```
 $ git push heroku master
 ```
+
+```
+$ git push -u bitbucket --all
+```
