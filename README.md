@@ -13,6 +13,10 @@ $ bundle exec sidekiq
 ```
 
 ```
+$ memcached -d
+```
+
+```
 $ guard
 ```
 
