@@ -104,6 +104,7 @@ Pollios::Application.routes.draw do
 
   scope 'build_questionnaire' do
     get 'normal', to: 'poll_series#normal', as: :normal_questionnaire
+    get 'public', to: 'poll_series#public_questionnaire', as: :public_questionnaire
     get 'same_choice',  to: 'poll_series#same_choice',  as: :same_choice_questionnaire
   end
 

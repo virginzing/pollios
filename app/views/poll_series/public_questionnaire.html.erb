@@ -79,26 +79,21 @@
           </header>
           
           <fieldset>
+          
+          <section class="form-inline">
+            <label class="label col-md-1">Make Public</label>
+            <input type="checkbox" name="poll_series[public]" id="check_public_poll_series">
+            <input type="hidden" name="poll_series[public]" value="on">
+            <%= f.hidden_field :group_id, value: [] %>
+          </section>
 
-          <input type="hidden" name="poll_series[public]" value="off">
-
-            <section class="branch_list">
-              <label class="label">Show in group</label>
-              <div id="error_not_group"></div>
-
-              <div class="row">
-                <%= f.collection_check_boxes(:group_id, @group_list, :id, :name) do |b| %>
-                  <%= b.label(class: "label_branch col col-md-2") { b.check_box(class: "check_box_branch", :"data-parsley-mincheck" => "1", :"data-parsley-required" => true) + b.text } %>
-                <% end %>
-              </div>
-            </section>  
-
-            <section>
-              <label class="label">Campaign</label>
-              <label class="select">
-                <%= f.select :campaign_id, @company.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
-              </label>
-            </section>
+        
+          <section>
+            <label class="label">Campaign</label>
+            <label class="select">
+              <%= f.select :campaign_id, @company.campaigns.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+            </label>
+          </section>
           
           </fieldset>
         
@@ -124,13 +119,6 @@
 
 <script type="text/javascript">
   $("#form-input").parsley();
-
-  $.list_groups = <%= raw @group_list.size %>;
-
-  if ($.list_groups == 0) {
-    $("#error_not_group").html('<div class="alert alert-warning"><p style="font-size: 14px;">List groups no longer, Please create group before <%= link_to 'New Group',company_groups_path %></p></div>');
-    $("#submit-new-group-poll").prop("disabled", true);
-  }
 
   var times = 2;
   var count_add_form = <%= Time.now.to_i + 1 %>;
@@ -181,10 +169,9 @@
 </script>
 
 <script type="text/javascript">
-  $.using_internal = <%= raw current_company.using_internal? %>;
   $.using_public = <%= raw current_company.using_public? %>;
 
-  if ($.using_public == true && $.using_internal == false) {
+  if ($.using_public == true) {
     $('#check_public_poll_series').attr('disabled', true).attr('checked', true);
   };
 
@@ -201,4 +188,3 @@
   });
 
 </script>
-

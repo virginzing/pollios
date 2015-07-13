@@ -43,6 +43,9 @@
                   <h5>Campaign : <%= @poll_series.show_campaign %></h5>
                   <h5>State: <%= @poll_series.decorate.show_close_status %></h5>
                   <h5>Allow suggest: <%= @poll_series.decorate.show_allow_comment %></h5>
+                  <% if @poll_series.in_group %>
+                    <h5>Groups : <%= raw @poll_series.decorate.show_in_groups %></h5>
+                  <% end %>
                   <h5>Last updated : <span data-livestamp="<%= @poll_series.updated_at.to_i %>"></span></h5>
                 </div>
               </div>

@@ -8,8 +8,15 @@
 
   <a href="<%= normal_questionnaire_path %>" class="icon-btn">
     <i class="fa fa-plus"></i>
-    <div>New</div>
+    <div>Group</div>
   </a>
+  
+  <% if current_company.using_public? %>
+    <a href="<%= public_questionnaire_path %>" class="icon-btn">
+      <i class="fa fa-plus"></i>
+      <div>Public</div>
+    </a>
+  <% end %>
 
 </div>
 
