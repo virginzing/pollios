@@ -747,11 +747,19 @@ class Poll < ActiveRecord::Base
     unless Rails.env.test?
       if in_group
         in_group_ids.split(",").each do |group_id|
-          AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id) unless qr_only
+          unless qr_only
+            AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
+            NotificationLog::Poll.new({ member_id: member_id, poll_id: id, group_id: group_id.to_i }).create!
+          end
         end
       else
-        if poll_series_id == 0
-          PollWorker.perform_async(self.member_id, self.id) unless qr_only
+        unless qr_only || series
+          if public
+            PollPublicWorker.perform_async(member_id, id)
+          else
+            PollWorker.perform_async(self.member_id, self.id)
+            NotificationLog::Poll.new({ member_id: member_id, poll_id: id }).create!
+          end
         end
       end
     end

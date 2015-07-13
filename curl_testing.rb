@@ -701,3 +701,6 @@ query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COU
 
 
 redis-server /usr/local/etc/redis.conf
+
+{"public"=>"1", "group"=>"1", "friend"=>"1", "watch_poll"=>"1", "request"=>"1", "join_group"=>"1"}
+
