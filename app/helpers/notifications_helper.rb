@@ -61,4 +61,8 @@ module NotificationsHelper
     list_member.map(&:id).uniq
   end
 
+  def getting_notification(list_member, type)
+    list_member.select{|member| member if member.notification[type] == "1" }
+  end
+
 end

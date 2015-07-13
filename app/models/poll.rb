@@ -749,7 +749,7 @@ class Poll < ActiveRecord::Base
         in_group_ids.split(",").each do |group_id|
           unless qr_only
             AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
-            NotificationLog::Poll.new({ member_id: member_id, poll_id: id, group_id: group_id.to_i }).create!
+            # NotificationLog::Poll.new({ member_id: member_id, poll_id: id, group_id: group_id.to_i }).create!
           end
         end
       else

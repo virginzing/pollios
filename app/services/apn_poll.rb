@@ -4,7 +4,6 @@ class ApnPoll
 
   def initialize(member, poll)
     @member = member
-    @member_id = member.id
     @poll = poll
     @init_member_list_friend = Member::ListFriend.new(@member)
   end
@@ -24,7 +23,13 @@ class ApnPoll
   end
 
   def receive_notification
-    
+    if member.citizen?
+      member_ids = friend_open_notification
+    else
+      member_ids = (friend_open_notification | follower_open_notification)
+    end
+
+    member_ids - @init_member_list_friend.blocked_by_someone
   end
 
   def member_name
@@ -48,6 +53,14 @@ class ApnPoll
 
   def apn_friend_ids
     to_map_member_ids(@init_member_list_friend.active)
+  end
+
+  def friend_open_notification
+    getting_notification(@init_member_list_friend.active_with_no_cache, "friend")
+  end
+
+  def follower_open_notification
+    getting_notification(@init_member_list_friend.follower_with_no_cache, "friend")
   end
 end
 

@@ -22,7 +22,7 @@ RSpec.describe Member, :type => :model do
 
     search_with_params = Member.search_member( { q: "n" })
 
-    expect(search_with_params).to eq([ nuttapon, ning])
+    expect(search_with_params.map(&:id).size).to eq(2)
   end
 
   describe "#citizen?" do
