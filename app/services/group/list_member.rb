@@ -15,6 +15,10 @@ class Group::ListMember
     cached_all_members.select{|member| member if member.is_active }
   end
 
+  def active_with_no_cache
+    members.select{|member| member if member.is_active }
+  end
+
   def pending
     cached_all_members.select{|member| member unless member.is_active }
   end

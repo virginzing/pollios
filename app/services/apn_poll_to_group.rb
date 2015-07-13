@@ -12,6 +12,10 @@ class ApnPollToGroup
     group_member_ids
   end
 
+  def receive_notification
+    group_member_ids_open_notification
+  end
+
   def member_name
     @member.fullname
   end
@@ -28,8 +32,11 @@ class ApnPollToGroup
   private
 
   def group_member_ids
-    # @group.get_member_open_notification.collect(&:id).flatten - [@member.id]
-    received_notify_of_member_ids(@group.get_member_active) - [@member.id]
+    to_map_member_ids(Group::ListMember.new(@group).active) - [@member.id]
+  end
+
+  def group_member_ids_open_notification
+    getting_notification(Group::ListMember.new(@group).active_with_no_cache, "group") - [@member.id]
   end
 
 end
