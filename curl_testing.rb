@@ -1,5 +1,5 @@
 curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 27 }' -X POST http://localhost:3000/friend/following.json -i
-curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 27 }' -X POST http://localhost:3000/friend/unfollow.json -i
+curl -H "Content-Type: application/json" -d '{"member_id": 21, "friend_id": 2 }' -X POST http://localhost:3000/friend/unfollow.json -i
 
 curl -H "Content-Type: application/json" -d '{"member_id": 2 , "friend_id": 4 }' -X POST http://localhost:3000/friend/add_friend.json -i
 
@@ -394,10 +394,10 @@ curl -H "Content-Type: application/json" -d '{
 
 curl -H "Content-Type: application/json" -d '{
     "member_id": 2,
-    "title": "Promote poll friend to public",
+    "title": "Post Public from greannut",
     "choices": ["yes", "no", "no vote"],
     "type_poll": "freeform",
-    "is_public": false,
+    "is_public": true,
     "creator_must_vote": false
 }' -X POST http://localhost:3000/poll/create.json -i
 
@@ -692,7 +692,10 @@ end
 
 NotifyLog.where("custom_properties LIKE ?","%type: PollSeries%")
 
-9494bda2 b735256f 2605a681 d5aed924 8ebf55e5 3c0f73df 5a085f80 7272e811
+11111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111
+22222222 22222222 22222222 22222222 22222222 22222222 22222222 22222222
+33333333 33333333 33333333 33333333 33333333 33333333 33333333 33333333
+
 db = Mongoid::Sessions.default
 
 connection = ActiveRecord::Base.connection
@@ -702,5 +705,5 @@ query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COU
 
 redis-server /usr/local/etc/redis.conf
 
-{"public"=>"1", "group"=>"1", "friend"=>"1", "watch_poll"=>"1", "request"=>"1", "join_group"=>"1"}
+{"public"=>"0", "group"=>"1", "friend"=>"1", "watch_poll"=>"1", "request"=>"1", "join_group"=>"1"}
 

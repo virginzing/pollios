@@ -15,11 +15,11 @@ class PollWorker
 
       @apn_poll = ApnPoll.new(@member, @poll)
 
-      recipient_ids = @apn_poll.recipient_ids
+      find_recipient ||= Member.where(id: @apn_poll.recipient_ids).uniq
 
-      find_recipient ||= Member.where(id: recipient_ids).uniq
+      receive_notification ||= Member.where(id: @apn_poll.receive_notification).uniq
 
-      @count_notification = CountNotification.new(find_recipient)
+      @count_notification = CountNotification.new(receive_notification)
 
       device_ids ||= @count_notification.device_ids
 
