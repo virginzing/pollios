@@ -577,7 +577,7 @@ curl -H "Content-Type: application/json" -d '{
 }' -X POST http://localhost:3000/poll/group.json -i
 
 curl -H "Content-Type: application/json" -d '{
-    "email": "greannut_002@gmail.com",
+    "email": "greannut_005@gmail.com",
     "password": "Nutty509",
     "app_id": "com.pollios.polliosapp"
 }' -X POST http://localhost:3000/authen/signup_sentai.json -i

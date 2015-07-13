@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150713095224) do
+ActiveRecord::Schema.define(version: 20150713122349) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -755,12 +755,14 @@ ActiveRecord::Schema.define(version: 20150713095224) do
     t.datetime "sync_fb_last_at"
     t.string   "list_fb_id",                 default: [],                    array: true
     t.boolean  "show_recommend",             default: false
+    t.hstore   "notification"
   end
 
   add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
   add_index "members", ["first_signup"], name: "index_members_on_first_signup", where: "(first_signup = true)", using: :btree
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree
   add_index "members", ["member_type"], name: "index_members_on_member_type", where: "(member_type = 3)", using: :btree
+  add_index "members", ["notification"], name: "index_members_on_notification", using: :gist
   add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
   add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at", using: :btree
   add_index "members", ["province_id"], name: "index_members_on_province_id", using: :btree
