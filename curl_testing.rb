@@ -394,10 +394,10 @@ curl -H "Content-Type: application/json" -d '{
 
 curl -H "Content-Type: application/json" -d '{
     "member_id": 2,
-    "title": "Post Public from greannut",
+    "title": "Post friend & following from nutty",
     "choices": ["yes", "no", "no vote"],
     "type_poll": "freeform",
-    "is_public": true,
+    "is_public": false,
     "creator_must_vote": false
 }' -X POST http://localhost:3000/poll/create.json -i
 
