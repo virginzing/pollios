@@ -156,7 +156,4 @@ RSpec.describe Poll, :type => :model do
       expect(Poll.get_choice_count(["1", "2", "3"])).to eq(3)
     end
   end
-
-  
-
 end

@@ -394,7 +394,7 @@ curl -H "Content-Type: application/json" -d '{
 
 curl -H "Content-Type: application/json" -d '{
     "member_id": 2,
-    "title": "Whats your opinion",
+    "title": "Promote poll friend to public",
     "choices": ["yes", "no", "no vote"],
     "type_poll": "freeform",
     "is_public": false,
@@ -431,7 +431,7 @@ curl -H "Content-Type: application/json" -d '{
 
 curl -H "Content-Type: application/json" -d '{
     "member_id": 2,
-    "title": "Post poll in group number 2",
+    "title": "Post poll in group number 22222222222",
     "choices": ["Like", "Dislike", "Yo"],
     "type_poll": "freeform",
     "group_id": "2"
@@ -672,6 +672,11 @@ curl -H "Content-Type: application/json" -d '{
 curl -H "Content-Type: application/json" -d '{
     "member_id": 127
 }' -X POST http://localhost:3000/poll/3039/open.json -i
+
+
+curl -H "Content-Type: application/json" -d '{
+    "member_id": 71
+}' -X POST http://localhost:3000/poll/84/promote_poll.json -i
 
 
 curl -H "Content-Type: application/json" -d '{

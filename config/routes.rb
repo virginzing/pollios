@@ -356,12 +356,12 @@ Pollios::Application.routes.draw do
 
     get ':id/detail',       to: 'polls#detail'
     post ':id/close',      to: 'polls#set_close'
+    post ':id/promote_poll',  to: 'polls#promote_poll'
 
     post ':id/open_comment',   to: 'polls#open_comment'
     post ':id/close_comment',   to: 'polls#close_comment'
     post 'count_preset',      to: 'polls#count_preset'
   end
-
 
   scope "authen" do
     get 'signin',           to: 'authen_sentai#signin', as: :authen_signin

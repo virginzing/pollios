@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
     strategy DecentExposure::StrongParametersStrategy
   end
 
+  rescue_from VersionCake::UnsupportedVersionError, :with => :render_unsupported_version
+
   before_filter proc { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
@@ -125,6 +127,13 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def render_unsupported_version
+    headers['API-Version-Supported'] = 'false'
+    respond_to do |format|
+      format.json { render json: { response_message: "You requested an unsupported version (#{requested_version})"}, status: :unprocessable_entity }
+    end
+  end
 
   def load_resource_poll_feed
     return unless params[:member_id]

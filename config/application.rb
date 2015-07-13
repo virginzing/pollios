@@ -47,7 +47,7 @@ module Pollios
     config.assets.precompile += %w(.svg .eot .woff .ttf .js .css)
 
     config.versioncake.default_version = 6
-    config.versioncake.supported_version_numbers = (1...8)
+    config.versioncake.supported_version_numbers = (6...8)
 
     config.generators do |g|
       g.orm :active_record
