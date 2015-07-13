@@ -21,6 +21,7 @@ class Member < ActiveRecord::Base
   serialize :interests, Array
 
   store_accessor :setting
+  store_accessor :notification
 
   cattr_accessor :current_member, :reported_polls, :shared_polls, :viewed_polls, :voted_polls, :list_friend_block, :list_friend_active,
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
@@ -151,6 +152,7 @@ class Member < ActiveRecord::Base
   # after_create :set_public_id
   before_create :set_cover_preset
   before_create :set_description
+  before_create :set_default_notification
 
   scope :citizen,   -> { where(member_type: 0) }
   scope :celebrity, -> { where(member_type: 1) }
@@ -282,6 +284,10 @@ class Member < ActiveRecord::Base
   
   def flush_cache
     Rails.cache.delete([self.class.name, id])
+  end
+
+  def set_default_notification
+    self.notification = Member::Notification::DEFAULT
   end
 
   def check_sync_facebook

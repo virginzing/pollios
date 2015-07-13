@@ -153,6 +153,14 @@ namespace :admin do
     
   end
 
+  desc "Set default to The Notification of Member"
+  task :set_default_notification => :environment do
+    Member.all.each do |member|
+      member.notification = Member::Notification::DEFAULT
+      member.save!
+    end
+  end
+
   desc "Reset specific some table"
   task :reset_specific_table => :environment do
     AccessWeb.delete_all
