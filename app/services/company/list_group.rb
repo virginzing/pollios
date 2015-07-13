@@ -15,6 +15,10 @@ class Company::ListGroup
     all.select{ |g| g.company? }
   end
 
+  def public
+    all.select{ |g| g.public }
+  end
+
   private
 
   def list_group_ids

@@ -7,12 +7,12 @@
       List Poll
   </h1>
 
-  <% if current_company.using_internal? %>
-    <a href="<%= create_new_poll_path %>" class="icon-btn">
-      <i class="fa fa-plus"></i>
-      <div>Group Poll</div>
-    </a>
-  <% end %>
+
+  <a href="<%= create_new_poll_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Group Poll</div>
+  </a>
+
   <% if current_company.using_public? %>
     <a href="<%= create_new_public_poll_path %>" class="icon-btn">
       <i class="fa fa-plus"></i>
