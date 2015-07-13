@@ -15,8 +15,18 @@ class Company::ListGroup
     all.select{ |g| g.company? }
   end
 
-  def public
+  def public_group
     all.select{ |g| g.public }
+  end
+
+  def show_in_groups
+    if @company.using_public? && @company.using_internal?
+      all
+    elsif @company.using_internal? 
+      exclusive
+    else
+      public_group
+    end
   end
 
   private
@@ -28,6 +38,5 @@ class Company::ListGroup
   def list_groups
     @company.groups.order("name asc").without_deleted
   end
-  
-  
+
 end

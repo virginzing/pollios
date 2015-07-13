@@ -103,7 +103,7 @@ class PollSeriesController < ApplicationController
         poll.choices.build
       end
     end
-    @group_list = current_member.get_company.groups if current_member.get_company.present?
+    @group_list = Company::ListGroup.new(current_company).show_in_groups
   end
 
   def same_choice

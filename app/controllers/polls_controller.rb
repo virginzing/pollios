@@ -209,14 +209,7 @@ class PollsController < ApplicationController
 
   def create_new_poll
     @poll = Poll.new
-    init_company_groups ||= Company::ListGroup.new(current_company)
-    @group_list = if current_company.using_public? && current_company.using_internal?
-      init_company_groups.all
-    elsif current_company.using_internal? 
-      init_company_groups.exclusive
-    else
-      init_company_groups.public
-    end
+    @group_list = Company::ListGroup.new(current_company).show_in_groups
   end
 
   def create_new_public_poll
