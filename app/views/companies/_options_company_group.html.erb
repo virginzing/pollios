@@ -11,10 +11,11 @@
       <span class="note">* Default is Exclusive Group (Don't edit)</span>
     </div>
   <% elsif current_company.using_public? %>
-    <span class="note">* Default is Exclusive Group (Don't edit)</span>
+    <span class="note">* Group type <u>Public Group</u> (Don't edit)</span>
+    <input type="hidden" name="group[public]" value="true" checked>
   <% else %>
-
-
+    <span class="note">* Group type is <u>Exclusive Group</u> (Don't edit)</span>
+    <input type="hidden" name="group[public]" value="false" checked>
   <% end %>
 
   <div class="form-inline" style="margin-top: 10px;">

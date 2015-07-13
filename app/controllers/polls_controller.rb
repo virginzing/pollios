@@ -22,7 +22,6 @@ class PollsController < ApplicationController
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   before_action :set_company, only: [:create_new_poll, :create_new_public_poll]
-  before_action :only_internal_survey, only: [:create_new_poll]
   before_action :only_public_survey, only: [:create_new_public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
@@ -210,7 +209,14 @@ class PollsController < ApplicationController
 
   def create_new_poll
     @poll = Poll.new
-    @group_list = current_member.get_company.groups if current_member.get_company.present?
+    init_company_groups ||= Company::ListGroup.new(current_company)
+    @group_list = if current_company.using_public? && current_company.using_internal?
+      init_company_groups.all
+    elsif current_company.using_internal? 
+      init_company_groups.exclusive
+    else
+      init_company_groups.public
+    end
   end
 
   def create_new_public_poll
