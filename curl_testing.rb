@@ -1,7 +1,7 @@
 curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 27 }' -X POST http://localhost:3000/friend/following.json -i
 curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 27 }' -X POST http://localhost:3000/friend/unfollow.json -i
 
-curl -H "Content-Type: application/json" -d '{"member_id": 2 , "friend_id": 3 }' -X POST http://localhost:3000/friend/add_friend.json -i
+curl -H "Content-Type: application/json" -d '{"member_id": 2 , "friend_id": 4 }' -X POST http://localhost:3000/friend/add_friend.json -i
 
  curl -H "Content-Type: application/json" -d '{"member_id": 2, "friend_id": 3 }' -X POST http://localhost:3000/friend/block.json -i
 #  curl -H "Content-Type: application/json" -d '{"member_id": 1, "friend_id": 2}' -X POST http://localhost:3000/friend/add_close_friend.json -i
