@@ -15,11 +15,11 @@ class AddPollToGroupWorker
 
     @apn_poll_to_group = ApnPollToGroup.new(member, group, poll)
 
-    recipient_ids = @apn_poll_to_group.recipient_ids
+    find_recipient ||= Member.where(id: @apn_poll_to_group.recipient_ids).uniq
 
-    find_recipient ||= Member.where(id: recipient_ids).uniq
+    receive_notification ||= Member.where(id: @apn_poll.receive_notification).uniq
 
-    @count_notification = CountNotification.new(find_recipient)
+    @count_notification = CountNotification.new(receive_notification)
 
     device_ids ||= @count_notification.device_ids
 
@@ -51,16 +51,16 @@ class AddPollToGroupWorker
       @notf.save!
     end
 
-    find_recipient.each do |member_receive|
+    find_recipient.each do |member|
       hash_custom = {
         group: GroupNotifySerializer.new(group).as_json,
         action: ACTION[:create],
         poll: @poll_serializer_json,
-        notify: hash_list_member_badge[member_receive.id],
+        notify: hash_list_member_badge[member.id],
         worker: WORKER[:add_poll_to_group]
       }
 
-      NotifyLog.create!(sender_id: member.id, recipient_id: member_receive.id, message: @apn_poll_to_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+      NotifyLog.create!(sender_id: member.id, recipient_id: member.id, message: @apn_poll_to_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications
