@@ -77,6 +77,7 @@
 
               <section class="branch_list">
                 <label class="label">Show in group</label>
+                <div id="error_not_group"></div>
                 <div class="row">
                   <%= f.collection_check_boxes(:group_id, @group_list, :id, :name) do |b| %>
                     <% if params[:with_group] == b.object.id.to_s %>
@@ -138,7 +139,7 @@
             </fieldset>
 
           <footer>
-            <%= button_tag "Submit", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..." } %>
+            <%= button_tag "Submit", class: "btn btn-primary", id: "submit-new-group-poll" ,data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..." } %>
           </footer>
             <% end %>
 
@@ -170,39 +171,46 @@
   });
 </script>
 
-<% if current_member.get_company.present? %>
-  <script type="text/javascript">
-  $( document ).ready(function() {
-    $("#group_list").select2({
-        width: "100%",
-        multiple: true,
-        placeholder: "Select a group",
-        query: function (query){
-          var data = {results: []};
 
-            $.each(<%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %>, function(){
-                if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
-                    data.results.push({id: this.id, text: this.text });
-                }
-            });
+<script type="text/javascript">
+$( document ).ready(function() {
+  $.list_groups = <%= raw @group_list.size %>;
 
-            query.callback(data);
-        }
-    });
-    $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
+  if ($.list_groups == 0) {
+    $("#error_not_group").html('<div class="alert alert-warning"><p style="font-size: 14px;">List groups no longer, Please create group before <%= link_to 'New Group',company_groups_path %></p></div>');
+    $("#submit-new-group-poll").prop("disabled", true);
+  }
 
-    // $(".add-field").click(function (event) {
-    //    window.setTimeout(function(){
-    //      $('input[name^=choices]').last().focus();
-    //    }, 200);
-    // });
+  $("#group_list").select2({
+      width: "100%",
+      multiple: true,
+      placeholder: "Select a group",
+      query: function (query){
+        var data = {results: []};
 
-    window.setTimeout(function () {
-      $(".poll_question").focus();
-    }, 0);
+          $.each(<%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %>, function(){
+              if(query.term.length == 0 || this.text.toUpperCase().indexOf(query.term.toUpperCase()) >= 0 ){
+                  data.results.push({id: this.id, text: this.text });
+              }
+          });
+
+          query.callback(data);
+      }
   });
-  </script>
-<% end %>
+  $('#group_list').select2('data', <%= raw ActiveModel::ArraySerializer.new(@group_list, each_serializer: GroupListSerializer).to_json %> );
+
+  // $(".add-field").click(function (event) {
+  //    window.setTimeout(function(){
+  //      $('input[name^=choices]').last().focus();
+  //    }, 200);
+  // });
+
+  window.setTimeout(function () {
+    $(".poll_question").focus();
+  }, 0);
+});
+</script>
+
 
 <style type="text/css">
 .ezdz-dropzone {
