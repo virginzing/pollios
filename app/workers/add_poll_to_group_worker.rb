@@ -17,7 +17,7 @@ class AddPollToGroupWorker
 
     find_recipient ||= Member.where(id: @apn_poll_to_group.recipient_ids).uniq
 
-    receive_notification ||= Member.where(id: @apn_poll.receive_notification).uniq
+    receive_notification ||= Member.where(id: @apn_poll_to_group.receive_notification).uniq
 
     @count_notification = CountNotification.new(receive_notification)
 
