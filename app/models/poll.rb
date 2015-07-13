@@ -119,6 +119,7 @@ class Poll < ActiveRecord::Base
   }
 
   scope :except_series, -> { where(series: false) }
+  scope :except_qrcode, -> { where(qr_only: false) }
 
   scope :without_closed, -> { where(close_status: false) }
 
