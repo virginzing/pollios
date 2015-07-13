@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe "Poll" do
 
   let!(:member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
+  let!(:member_with_point) { create(:member, fullname: "NUT", email: "nuttyyy@gmail.com", point: 10) }
+  
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
   let!(:second_member) { create(:member, fullname: "Nutty 2", email: "nutty_2@gmail.com") }
   let!(:poll) { create(:poll, member: member, title: "eiei") }
@@ -358,11 +360,11 @@ RSpec.describe "Poll" do
   end
 
   describe "POST /poll/:id/promote_poll" do
-    let!(:poll_in_friend) { create(:poll, member: member, title: "Poll Friend to Public", public: false) }
-    let!(:poll_in_friend_member) { create(:poll_member, poll: poll_in_friend, member: member, public: false ) }
+    let!(:poll_in_friend) { create(:poll, member: member_with_point, title: "Poll Friend to Public", public: false) }
+    let!(:poll_in_friend_member) { create(:poll_member, poll: poll_in_friend, member: member_with_point, public: false ) }
 
     it "promote poll to public" do
-      post "/poll/#{poll_in_friend.id}/promote_poll.json", { member_id: member.id }, { "Accept" => "application/json" }
+      post "/poll/#{poll_in_friend.id}/promote_poll.json", { member_id: member_with_point.id }, { "Accept" => "application/json" }
       expect(json["response_status"]).to eq("OK")
       expect(response.status).to eq(200)
     end
