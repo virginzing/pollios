@@ -1,13 +1,14 @@
 class PollSeriesController < ApplicationController
   include PollSeriesHelper
   skip_before_action :verify_authenticity_token
-  before_action :signed_user, only: [:index, :new, :normal, :same_choice]
+  before_action :signed_user, only: [:index, :new, :normal, :same_choice, :public_questionnaire]
   before_action :set_current_member, only: [:vote, :detail, :un_see, :save_later, :un_save_later]
   before_action :set_poll_series, only: [:questionnaire_detail, :edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see, :save_later, :un_save_later]
   before_action :load_resource_poll_feed, only: [:detail]
   before_action :get_your_group, only: [:detail]
-  before_action :set_company, only: [:same_choice, :normal]
-  before_action :check_using_service, only: [:normal]
+  before_action :set_company, only: [:same_choice, :normal, :public_questionnaire]
+  before_action :check_using_service, only: [:normal, :public_questionnaire]
+  before_action :only_public_survey, only: [:public_questionnaire]
 
   def generate_qrcode
     @qr = GenerateQrcodeLink.new(PollSeries.find(params[:id])).get_link
@@ -104,6 +105,16 @@ class PollSeriesController < ApplicationController
       end
     end
     @group_list = Company::ListGroup.new(current_company).show_in_groups
+  end
+
+  def public_questionnaire
+    @poll_series = PollSeries.new
+    1.times do
+      poll = @poll_series.polls.build
+      2.times do 
+        poll.choices.build
+      end
+    end
   end
 
   def same_choice

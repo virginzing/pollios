@@ -20,13 +20,14 @@ class Company::ListGroup
   end
 
   def show_in_groups
-    if @company.using_public? && @company.using_internal?
-      all
-    elsif @company.using_internal? 
-      exclusive
-    else
-      public_group
-    end
+    # if @company.using_public? && @company.using_internal?
+    #   all
+    # elsif @company.using_internal? 
+    #   exclusive
+    # else
+    #   public_group
+    # end
+    all
   end
 
   private

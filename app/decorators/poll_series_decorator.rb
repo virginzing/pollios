@@ -40,6 +40,10 @@ class PollSeriesDecorator  < ApplicationDecorator
     end
   end
 
+  def show_in_groups
+    object.groups.collect{|e| link_to e.name, company_group_detail_path(e) }.join(", ")
+  end
+
   def show_campaign
     if object.campaign.present?
       link_to campaign.name, company_campaign_detail_path(object.campaign, psId: object.id)
