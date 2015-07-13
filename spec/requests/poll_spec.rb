@@ -357,5 +357,16 @@ RSpec.describe "Poll" do
     end
   end
 
+  describe "POST /poll/:id/promote_poll" do
+    let!(:poll_in_friend) { create(:poll, member: member, title: "Poll Friend to Public", public: false) }
+    let!(:poll_in_friend_member) { create(:poll_member, poll: poll_in_friend, member: member, public: false ) }
+
+    it "promote poll to public" do
+      post "/poll/#{poll_in_friend.id}/promote_poll.json", { member_id: member.id }, { "Accept" => "application/json" }
+      expect(json["response_status"]).to eq("OK")
+      expect(response.status).to eq(200)
+    end
+  end
+
 
 end

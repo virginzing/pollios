@@ -378,6 +378,9 @@ namespace :admin do
 
     LeaveGroupLog.delete_all
     LeaveGroupLog.connection.execute('ALTER SEQUENCE leave_group_logs_id_seq RESTART WITH 1')
+
+    HistoryPromotePoll.delete_all
+    HistoryPromotePoll.connection.execute('ALTER SEQUENCE history_promote_polls_id_seq RESTART WITH 1')
     
   end
 

@@ -5,13 +5,13 @@ class PollsController < ApplicationController
   
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll, :create_new_public_poll]
 
-  before_action :set_current_member, only: [:list_mentionable, :member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
+  before_action :set_current_member, only: [:promote_poll, :list_mentionable, :member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
                                             :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
   before_action :set_current_guest, only: [:guest_poll]
 
   before_action :history_voted_viewed_guest, only: [:guest_poll]
 
-  before_action :set_poll, only: [:list_mentionable, :member_voted, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, only: [:promote_poll, :list_mentionable, :member_voted, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :show, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
 
   before_action :compress_gzip, only: [:list_mentionable, :member_voted, :load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
@@ -595,6 +595,9 @@ class PollsController < ApplicationController
     @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
   end
 
+  def promote_poll
+    @promote_poll = Poll::PromotePublic.new(@current_member, set_poll).create!
+  end
 
   def tags
     @find_tag = Tag.find_by(name: params[:name])

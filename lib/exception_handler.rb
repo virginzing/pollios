@@ -55,6 +55,7 @@ module ExceptionHandler
       BAN = "Your account is was terminated."
       BLACKLIST = "Your account is being suspended."
       NOT_FOUND = "Member not found."
+      POINT_ZERO = "You have 0 Poll to Public."
     end
 
     module Comment
