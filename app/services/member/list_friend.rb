@@ -20,11 +20,15 @@ class Member::ListFriend
   end
 
   def active
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == false && user.member_status == 1  }
+    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
+  end
+
+  def active_with_no_cache
+    all.select{|user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
   end
 
   def block
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1  }
+    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
   end
 
   def friend_request
@@ -39,8 +43,16 @@ class Member::ListFriend
     cached_all_friends.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
   end
 
+  def following_with_no_cache
+    all.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
+  end
+
   def follower
     cached_followers.select{|user| user if user.member_following == true && user.member_status != 1}
+  end
+
+  def follower_with_no_cache
+    all_followers.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
   def friend_count

@@ -57,4 +57,8 @@ module NotificationsHelper
     list_member.collect { |member| member.id if member.receive_notify }.compact.uniq
   end
 
+  def to_map_member_ids(list_member)
+    list_member.map(&:id).uniq
+  end
+
 end

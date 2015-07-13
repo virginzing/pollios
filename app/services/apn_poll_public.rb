@@ -1,10 +1,9 @@
-class ApnPoll
+class ApnPollPublic
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
   def initialize(member, poll)
     @member = member
-    @member_id = member.id
     @poll = poll
     @init_member_list_friend = Member::ListFriend.new(@member)
   end
@@ -20,11 +19,7 @@ class ApnPoll
       member_ids = (apn_friend_ids | follower_ids)
     end
 
-    member_ids - @init_member_list_friend.blocked_by_someone
-  end
-
-  def receive_notification
-    
+    (member_ids | member_open_notification_public) - @init_member_list_friend.blocked_by_someone
   end
 
   def member_name
@@ -39,15 +34,18 @@ class ApnPoll
   private
 
   def following_ids
-    to_map_member_ids(@init_member_list_friend.following)
+    to_map_member_ids(@init_member_list_friend.following_with_no_cache)
   end
 
   def follower_ids
-    to_map_member_ids(@init_member_list_friend.follower)
+    to_map_member_ids(@init_member_list_friend.follower_with_no_cache)
   end
 
   def apn_friend_ids
-    to_map_member_ids(@init_member_list_friend.active)
+    to_map_member_ids(@init_member_list_friend.active_with_no_cache)
+  end
+
+  def member_open_notification_public
+    to_map_member_ids(Member.with_notification_public) - [@member.id]
   end
 end
-
