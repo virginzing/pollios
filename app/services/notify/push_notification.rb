@@ -10,7 +10,7 @@ class Notify::PushNotification
       APNS.pem = File.join(Rails.root, 'config', 'certificates', 'pollios_notification_production.pem')
     else
       APNS.host = "gateway.sandbox.push.apple.com"
-      APNS.pem = File.join(Rails.root, 'config', 'certificates', 'pollios_notification_development.pem')
+      APNS.pem = File.join(Rails.root, 'config', 'certificates', 'PolliosDev.pem')
     end
   end
   

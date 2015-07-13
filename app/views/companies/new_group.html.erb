@@ -47,51 +47,8 @@
                     </label>
                   </section>
                   
-                  <div class="options_group">
-                    <div class="form-inline">
-                      <div class="col-md-2">
-                        <label>Public Group</label>
-                      </div>
-                      <div class="col-md-10">
-                        <input type="checkbox" name="group[public]" value="true"/>
-                      </div>
-                      <span class="note">* Default is Exclusive Group (Don't edit)</span>
-                    </div>
-                    <div class="form-inline" style="margin-top: 10px;">
-                      <div class="col-md-2">
-                        <label>Don't Approve</label>
-                      </div>
-                      <div class="col-md-10">
-                        <input type="checkbox" name="group[need_approve]" value="false"/>
-                      </div>
-                    </div>
-
-                    <% if @find_company.company_admin %>
-                      <div class="form-inline">
-                        <div class="col-md-2">
-                          <label>System Group</label>
-                        </div>
-                        <div class="col-md-10">
-                          <input type="checkbox" name="group[system_group]" value="true"/>
-                        </div>
-                      </div>
-                      <div class="form-inline">
-                        <div class="col-md-2">
-                          <label>Can leave group</label>
-                        </div>
-                        <div class="col-md-10">
-                          <input type="checkbox" name="group[leave_group]" value="true"/>
-                        </div>
-                      </div>
-                    <% end %>
-                  </div>
+                  <%= render "options_company_group" %>
                 </section>
-
-<!--                 <section class="col col-2 col-md-2">
-                  <div class="form-group new_group">
-                    <input type="file" class="default" name="group[photo_group]" id="drop_photo_each_group" accept="image/png, image/jpeg, image/gif"/>
-                  </div>
-                </section> -->
 
                 <section class="col col-lg-2 col-md-4 col-sm-4 col-xs-4">
                   <div class="form-group new_group">
