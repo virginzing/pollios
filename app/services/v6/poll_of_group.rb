@@ -96,7 +96,7 @@ class V6::PollOfGroup
 
   def api_poll_of_group(next_cursor = nil, limit_poll = LIMIT_POLL)
     poll_group_query = "poll_groups.group_id = #{@group.id}"
-    query = Poll.load_more(next_cursor).available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
+    query = Poll.except_qrcode.load_more(next_cursor).available.order("updated_at DESC, created_at DESC").joins(:groups).includes(:choices, :history_votes, :member)
                   .select("polls.*, poll_groups.share_poll_of_id as share_poll, poll_groups.group_id as group_of_id")
                   .where("(#{poll_group_query} AND #{poll_unexpire})").uniq
 

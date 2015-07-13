@@ -275,8 +275,8 @@ curl -H "Content-Type: application/json" -d '{
 
 
 curl -H "Content-Type: application/json" -d '{
-    "member_id": 53
-}' -X POST http://localhost:3000/group/21/accept.json -i
+    "member_id": 2
+}' -X POST http://localhost:3000/group/19/accept.json -i
 
 
 curl -H "Content-Type: application/json" -d '{
