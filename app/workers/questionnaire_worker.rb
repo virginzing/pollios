@@ -20,7 +20,9 @@ class QuestionnaireWorker
 
     find_recipient ||= Member.where(id: recipient_ids).uniq
 
-    @count_notification = CountNotification.new(find_recipient)
+    receive_notification ||= Member.where(id: @apn_questionnaire.receive_notification).uniq
+
+    @count_notification = CountNotification.new(receive_notification)
 
     device_ids ||= @count_notification.device_ids
 
