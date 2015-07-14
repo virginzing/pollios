@@ -696,6 +696,8 @@ NotifyLog.where("custom_properties LIKE ?","%type: PollSeries%")
 22222222 22222222 22222222 22222222 22222222 22222222 22222222 22222222
 33333333 33333333 33333333 33333333 33333333 33333333 33333333 33333333
 44444444 44444444 44444444 44444444 44444444 44444444 44444444 44444444
+55555555 55555555 55555555 55555555 55555555 55555555 55555555 55555555
+
 db = Mongoid::Sessions.default
 
 connection = ActiveRecord::Base.connection
@@ -705,5 +707,5 @@ query = "SELECT r1.follower_id AS first_user, r2.follower_id AS second_user, COU
 
 redis-server /usr/local/etc/redis.conf
 
-{"public"=>"0", "group"=>"0", "friend"=>"1", "watch_poll"=>"1", "request"=>"1", "join_group"=>"1"}
+{"public"=>"0", "group"=>"0", "friend"=>"1", "watch_poll"=>"1", "request"=>"1", "join_group"=>"0"}
 
