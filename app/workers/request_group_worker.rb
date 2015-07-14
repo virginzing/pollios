@@ -14,7 +14,9 @@ class RequestGroupWorker
 
     find_recipient ||= Member.where(id: recipient_ids).uniq
 
-    @count_notification = CountNotification.new(find_recipient)
+    receive_notification ||= Member.where(id: @request_group.receive_notification).uniq
+
+    @count_notification = CountNotification.new(receive_notification)
 
     device_ids ||= @count_notification.device_ids
 
@@ -53,7 +55,7 @@ class RequestGroupWorker
 
       NotifyLog.create!(sender_id: member.id, recipient_id: member_receive.id, message: @request_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
-    
+
     Apn::App.first.send_notifications
   rescue => e
     puts "RequestGroupWorker => #{e.message}"
