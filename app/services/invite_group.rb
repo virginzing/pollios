@@ -14,6 +14,10 @@ class InviteGroup
     end
   end
 
+  def receive_notification
+    member_open_notification
+  end
+
   def member_name
     member.fullname
   end
@@ -31,7 +35,7 @@ class InviteGroup
 
     truncate_message(message)
   end
-  
+
   private
 
   def member
@@ -39,8 +43,12 @@ class InviteGroup
   end
 
   def apn_friend_ids
-    # Member.where(id: @friend_ids, apn_invite_group: true).pluck(:id)
-    Member.where(id: @friend_ids, receive_notify: true).pluck(:id).uniq
+    Member.where(id: @friend_ids).pluck(:id).uniq
+  end
+
+  def member_open_notification
+    list_members = Member.where(id: apn_friend_ids)
+    getting_notification(list_members, "request")
   end
 
 end
