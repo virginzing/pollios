@@ -8,7 +8,7 @@ class AskJoinGroup
   end
 
   def recipient_ids
-    group_member_ids
+    group_member_ids_open_notification
   end
 
   def member_name
@@ -22,7 +22,7 @@ class AskJoinGroup
   def custom_message
     message = "#{member_name} joined #{group_name} group"
     truncate_message(message)
-  end 
+  end
 
   private
 
@@ -33,5 +33,9 @@ class AskJoinGroup
   def group_member_ids
     member_as_admin_ids - [@member.id]
   end
-  
+
+  def group_member_ids_open_notification
+    getting_notification(Group::ListMember.new(@group).active_with_no_cache, "join_group") - [@member.id]
+  end
+
 end
