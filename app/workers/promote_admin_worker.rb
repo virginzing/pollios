@@ -3,7 +3,7 @@ class PromoteAdminWorker
   include SymbolHash
 
   sidekiq_options unique: true
-  
+
   def perform(promoter_id, promotee_id, group_id)
     promoter = Member.cached_find(promoter_id)
 
@@ -17,7 +17,9 @@ class PromoteAdminWorker
 
     find_recipient_notify ||= Member.where(id: recipient_ids).uniq
 
-    @count_notification = CountNotification.new(find_recipient_notify)
+    receive_notification ||= Member.where(id: @apn_promote_admin.receive_notification).uniq
+
+    @count_notification = CountNotification.new(receive_notification)
 
     hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
@@ -27,7 +29,7 @@ class PromoteAdminWorker
       action: ACTION[:promote_admin]
     }
 
-    find_recipient_notify.each_with_index do |member, index|
+    receive_notification.each_with_index do |member, index|
       member.apn_devices.each do |device|
         apn_custom_properties = {
           type: TYPE[:group],
