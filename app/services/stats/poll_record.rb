@@ -1,10 +1,5 @@
 class Stats::PollRecord
-
-  TODAY = 'today'
-  YESTERDAY = 'yesterday'
-  WEEK = 'week'
-  MONTH = 'month'
-  TOTAL = 'total'
+  include FilterByStats
 
   def initialize(options = {})
     @options = options
@@ -57,7 +52,7 @@ class Stats::PollRecord
   end
 
   def top_voted
-    if filter_by == TODAY
+    top_voted = if filter_by == TODAY
       top_voted_with_range(Date.current)
     elsif filter_by == YESTERDAY
       top_voted_with_range(Date.current.yesterday, Date.current.yesterday)
@@ -68,6 +63,8 @@ class Stats::PollRecord
     else
       top_voted_total
     end
+    map_to_hash(top_voted)
+    # top_voted
   end
 
   def count
@@ -89,7 +86,6 @@ class Stats::PollRecord
   def poll_group
     query_all.select{|e| e if e.in_group }.size
   end
-
 
   private
 
@@ -117,7 +113,7 @@ class Stats::PollRecord
                           .order("votes_count desc").limit(10)
                           .includes(:member)
   end
-  
+
   def poll_popular_total
     Poll.unscoped.except_series.joins("left join history_votes on history_votes.poll_id = polls.id")
                   .select("polls.*, count(history_votes.poll_id) as votes_count")
@@ -130,31 +126,58 @@ class Stats::PollRecord
     Member.joins(:history_votes).select("members.*, count(history_votes.member_id) as member_votes_count")
           .where("date(history_votes.created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date)
           .group("members.id")
-          .order("member_votes_count desc").limit(10) 
+          .order("member_votes_count desc").limit(10)
   end
 
   def top_voter_total
     Member.joins(:history_votes).select("members.*, count(history_votes.member_id) as member_votes_count")
           .group("members.id")
-          .order("member_votes_count desc").limit(10) 
+          .order("member_votes_count desc")
+          .limit(10)
   end
 
   def top_voted_with_range(end_date, start_date = Date.current)
-    Member.joins(:polls)
-          .where("(date(polls.created_at + interval '7 hours' ) BETWEEN ? AND ?) AND polls.vote_all != 0 AND polls.series = 'f'", end_date, start_date)
-          .select("members.*, sum(polls.vote_all) as sum_votes_all, count(polls.member_id) as poll_count")
-          .group("members.id")
-          .order("sum_votes_all desc")
-          .limit(10)
+    Poll.joins(:history_votes)
+        .where("date(history_votes.created_at + interval '7 hours') BETWEEN ? AND ?", end_date, start_date)
+        .group("polls.id")
   end
 
   def top_voted_total
-    Member.joins(:polls)
-          .where("polls.vote_all != 0 AND polls.series = 'f'")
-          .select("members.*, sum(polls.vote_all) as sum_votes_all, count(polls.member_id) as poll_count")
-          .group("members.id")
-          .order("sum_votes_all desc")
-          .limit(10)
+    Poll.joins(:history_votes).group("polls.id")
   end
-  
+
+  def map_to_hash(collections)
+    new_hash = []
+    collections.count.map do |k, v|
+      member = Poll.find(k).member
+      new_hash << {
+        member_obj: member,
+        member_id: member.id,
+        poll_id: k,
+        vote_count: v
+      }
+    end
+    result = []
+    new_hash.each do |hash_member|
+      if result.none? {|b| b[:member_id] == hash_member[:member_id] }
+        create_hsh = {
+          member_obj: hash_member[:member_obj],
+          member_id: hash_member[:member_id],
+          poll_count: 1,
+          vote_count: hash_member[:vote_count]
+        }
+        result << create_hsh
+      else
+        result.each do |obj|
+          if obj[:member_id] == hash_member[:member_id]
+            obj[:poll_count] = obj[:poll_count] + 1
+            obj[:vote_count] = obj[:vote_count] + hash_member[:vote_count]
+          end
+        end
+      end
+    end
+
+    result.sort {|x,y| y[:vote_count] <=> x[:vote_count] }[0..9]
+  end
+
 end

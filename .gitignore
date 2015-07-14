@@ -19,3 +19,6 @@
 /config/application.yml
 
 .DS_Store
+.ruby-gemset
+.ruby-version
+curl_testing.rb
