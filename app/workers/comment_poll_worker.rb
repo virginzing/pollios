@@ -19,7 +19,9 @@ class CommentPollWorker
 
     @apn_comment = Apn::CommentPoll.new(member, poll, comment_message)
 
-    find_recipient ||= Member.where(id: @apn_comment.receive_notification).uniq
+    recipient_ids = @apn_comment.receive_notification
+
+    find_recipient ||= Member.where(id: recipient_ids).uniq
 
     find_recipient_notify ||= Member.where(id: recipient_ids - [member_id]).uniq
 
