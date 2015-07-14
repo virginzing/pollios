@@ -31,7 +31,11 @@ class Apn::CommentPoll
   def recipient_ids
     summary_member_receive_notification
   end
-  
+
+  def receive_notification
+    member_open_notification
+  end
+
   # allow 130 byte for custom message
   def custom_message(receiver_id)
     if receiver_id == poll_creator_id
@@ -67,5 +71,9 @@ class Apn::CommentPoll
   def summary_member_receive_notification
     watched_comment - list_mentioned
   end
-  
+
+  def member_open_notification
+    getting_notification(summary_member_receive_notification, "watch_poll")
+  end
+
 end
