@@ -63,19 +63,19 @@ class Stats::UserRecord
   end
 
   def active
-    count = 0
+    list_members = []
     user_active_all.to_a.each do |member_active|
-      count += member_active.list_member_ids.size
+      list_members << member_active.list_member_ids
     end
-    count
+    list_members.flatten.uniq.size
   end
 
   def user_active_total
-    count = 0
+    list_members = []
     user_active_all.to_a.each do |member_active|
-      count += member_active.list_member_ids.size
+      list_members << member_active.list_member_ids
     end
-    count
+    list_members.flatten.uniq.size
   end
 
   private
@@ -95,5 +95,5 @@ class Stats::UserRecord
   def user_active_total
     MemberActiveRecord.all
   end
-  
+
 end
