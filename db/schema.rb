@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 20150713122349) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
   enable_extension "pg_trgm"
   enable_extension "unaccent"
+  enable_extension "hstore"
 
   create_table "access_webs", force: true do |t|
     t.integer  "member_id"
@@ -753,9 +753,9 @@ ActiveRecord::Schema.define(version: 20150713122349) do
     t.integer  "blacklist_count",            default: 0
     t.datetime "ban_last_at"
     t.datetime "sync_fb_last_at"
-    t.string   "list_fb_id",                 default: [],                    array: true
+    t.string   "list_fb_id",                 default: [],                                 array: true
     t.boolean  "show_recommend",             default: false
-    t.hstore   "notification"
+    t.hstore   "notification",               default: {},                    null: false
   end
 
   add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
