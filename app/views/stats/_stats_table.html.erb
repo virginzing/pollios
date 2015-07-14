@@ -31,7 +31,7 @@
                   <% end %>
                 </tbody>
               </table>
-              
+
             </div>
           </div>
           <!-- end widget content -->
@@ -110,12 +110,12 @@
                 </tr>
               </thead>
               <tbody>
-                <% @stats_poll_record.top_voted.each do |member| %>
+                <% @stats_poll_record.top_voted.each do |hash_object| %>
                 <tr>
-                  <td><%= image_tag(member.get_avatar, size: '50x50') %></td>
-                  <td><%= member.get_name %></td>
-                  <td><%= member.sum_votes_all %></td>
-                  <td><%= member.poll_count %></td>
+                  <td><%= image_tag(hash_object[:member_obj].get_avatar, size: '50x50') %></td>
+                  <td><%= hash_object[:member_obj].get_name %></td>
+                  <td><%= hash_object[:vote_count] %></td>
+                  <td><%= hash_object[:poll_count] %></td>
                 </tr>
                 <% end %>
               </tbody>

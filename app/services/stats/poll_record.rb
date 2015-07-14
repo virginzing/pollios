@@ -1,5 +1,10 @@
 class Stats::PollRecord
-  include FilterByStats
+
+  TODAY = 'today'
+  YESTERDAY = 'yesterday'
+  WEEK = 'week'
+  MONTH = 'month'
+  TOTAL = 'total'
 
   def initialize(options = {})
     @options = options
