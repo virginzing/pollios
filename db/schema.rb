@@ -707,8 +707,8 @@ ActiveRecord::Schema.define(version: 20150713122349) do
     t.integer  "member_type",                default: 0
     t.integer  "province_id"
     t.string   "key_color"
-    t.datetime "poll_public_req_at",         default: '2015-06-29 09:50:24'
-    t.datetime "poll_overall_req_at",        default: '2015-06-29 09:50:24'
+    t.datetime "poll_public_req_at",         default: '2015-07-14 08:31:46'
+    t.datetime "poll_overall_req_at",        default: '2015-07-14 08:31:46'
     t.string   "cover"
     t.text     "description"
     t.boolean  "apn_add_friend",             default: true
@@ -895,7 +895,7 @@ ActiveRecord::Schema.define(version: 20150713122349) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2015-06-29 09:50:24'
+    t.datetime "start_date",     default: '2015-07-14 08:31:46'
     t.integer  "campaign_id"
     t.integer  "vote_all_guest", default: 0
     t.integer  "view_all_guest", default: 0
@@ -976,7 +976,7 @@ ActiveRecord::Schema.define(version: 20150713122349) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",                default: 0
-    t.datetime "start_date",              default: '2015-06-29 09:50:24'
+    t.datetime "start_date",              default: '2015-07-14 08:31:46'
     t.boolean  "series",                  default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
