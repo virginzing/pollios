@@ -73,7 +73,8 @@ class Apn::CommentPoll
   end
 
   def member_open_notification
-    getting_notification(summary_member_receive_notification, "watch_poll")
+    list_members = Member.where(id: summary_member_receive_notification)
+    getting_notification(list_members, "watch_poll")
   end
 
 end
