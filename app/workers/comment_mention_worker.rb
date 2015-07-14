@@ -7,10 +7,10 @@ class CommentMentionWorker
   def perform(mentioner_id, poll_id, mentionable_list)
     mentioner = Member.cached_find(mentioner_id)
     poll = Poll.cached_find(poll_id)
-    
+
     @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
-    @apn_comment_mention = Apn::CommentMention.new(mentioner, poll)
+    @apn_comment_mention = Apn::CommentMention.new(mentioner, poll, mentionable_list)
 
     recipient_ids = mentionable_list
 
@@ -18,7 +18,9 @@ class CommentMentionWorker
 
     find_recipient_notify ||= Member.where(id: recipient_ids - [mentioner.id]).uniq
 
-    @count_notification = CountNotification.new(find_recipient_notify)
+    receive_notification ||= Member.where(id: @apn_comment_mention.receive_notification - [mentioner.id]).uniq
+
+    @count_notification = CountNotification.new(receive_notification)
 
     hash_list_member_badge ||= @count_notification.hash_list_member_badge
 
@@ -28,7 +30,7 @@ class CommentMentionWorker
       series: poll.series
     }
 
-    find_recipient_notify.each_with_index do |member, index|
+    receive_notification.each_with_index do |member, index|
       member.apn_devices.each do |device|
         apn_custom_properties = {
           type: TYPE[:comment],
