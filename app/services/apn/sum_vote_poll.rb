@@ -13,7 +13,11 @@ class Apn::SumVotePoll
   end
 
   def recipient_ids
-    member_receive_notification
+    member_watching_poll
+  end
+
+  def receive_notification
+    member_open_notification
   end
 
   def except_member_list
@@ -105,8 +109,12 @@ class Apn::SumVotePoll
     watched_poll = Watched.joins(:member).where("poll_id = ? AND poll_notify = 't' AND members.receive_notify = 't'", @poll.id).pluck(:member_id).uniq
   end
 
-  def member_receive_notification
-    list_members = Member.where(id: (watched_poll - history_vote_in_1_minute - except_member_list))
+  def member_watching_poll
+    (watched_poll - history_vote_in_1_minute - except_member_list)
+  end
+
+  def member_open_notification
+    list_members = Member.where(id: member_watching_poll)
     getting_notification(list_members, "watch_poll")
   end
 
