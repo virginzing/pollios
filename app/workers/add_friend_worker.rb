@@ -18,12 +18,14 @@ class AddFriendWorker
       recipient_id = @add_friend.recipient_id
 
       @notification_count = @add_friend.count_notification
-      
+
       @request_count = @add_friend.count_request
 
       find_recipient ||= Member.where(id: recipient_id).uniq
 
-      device_ids = find_recipient.flat_map { |u| u.apn_devices.map(&:id) }
+      receive_notification ||= Member.where(id: @add_friend.receive_notification).uniq
+
+      device_ids = receive_notification.flat_map { |u| u.apn_devices.map(&:id) }
 
       @custom_properties = {
         type: TYPE[:friend],

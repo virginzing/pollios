@@ -9,9 +9,12 @@ class AddFriend
   end
 
   def recipient_id
-    if @friend
-      @friend.apn_add_friend ? @friend.id : nil
-    end
+    @friend.id
+  end
+
+  def receive_notification
+    list_members = Member.where(id: recipient_id)
+    getting_notification(list_members, "request")
   end
 
   def check_apn_device?
@@ -32,9 +35,9 @@ class AddFriend
     if @options["accept_friend"]
       message = @member.get_name + " had accepted your friend request"
     else
-      message = @member.get_name + " request friend with you" 
+      message = @member.get_name + " request friend with you"
     end
     truncate_message(message)
   end
-  
+
 end
