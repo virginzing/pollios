@@ -6,11 +6,11 @@ class CommentPollWorker
 
   def perform(member_id, poll_id, custom_data = {})
     member = Member.cached_find(member_id)
-    
+
     poll = Poll.raw_cached_find(poll_id)
 
     raise ArgumentError.new(ExceptionHandler::Message::Poll::NOT_FOUND) if poll.nil?
-    
+
     @poll_serializer_json ||= PollSerializer.new(poll).as_json()
 
     comment_message = custom_data["comment_message"]
@@ -19,9 +19,7 @@ class CommentPollWorker
 
     @apn_comment = Apn::CommentPoll.new(member, poll, comment_message)
 
-    recipient_ids = @apn_comment.recipient_ids
-
-    find_recipient ||= Member.where(id: recipient_ids).uniq
+    find_recipient ||= Member.where(id: @apn_comment.receive_notification).uniq
 
     find_recipient_notify ||= Member.where(id: recipient_ids - [member_id]).uniq
 
