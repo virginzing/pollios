@@ -31,3 +31,7 @@ $ git push heroku master
 ```
 $ git push -u bitbucket --all
 ```
+
+```
+$ pg_restore --verbose --clean --no-acl --no-owner -h localhost -d pollios_development latest.dump
+```
