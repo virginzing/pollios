@@ -10,9 +10,13 @@ class Apn::ApproveRequestGroup
     @group = group
   end
 
-
   def recipient_ids
     @friend.id
+  end
+
+  def receive_notification
+    list_members = Member.where(id: recipient_ids)
+    getting_notification(list_members, "request")
   end
 
   def member_name
@@ -28,5 +32,5 @@ class Apn::ApproveRequestGroup
     message = "#{member_name} approved your request to join #{group_name}"
     truncate_message(message)
   end
-  
+
 end

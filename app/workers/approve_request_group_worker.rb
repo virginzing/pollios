@@ -16,7 +16,9 @@ class ApproveRequestGroupWorker
 
     find_recipient ||= Member.where(id: recipient_ids).uniq
 
-    @count_notification = CountNotification.new(find_recipient)
+    receive_notification ||= Member.where(id: @approve_request_group.receive_notification).uniq
+
+    @count_notification = CountNotification.new(receive_notification)
 
     device_ids ||= @count_notification.device_ids
 
