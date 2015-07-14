@@ -12,6 +12,11 @@ class AskQuestionnaire
     @group.present? ? group_member_ids : []
   end
 
+  def receive_notification
+    list_members = Member.where(id: recipient_ids)
+    getting_notification(list_members, "group")
+  end
+
   def member_name
     @member.fullname
   end
