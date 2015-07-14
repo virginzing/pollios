@@ -17,7 +17,7 @@ class Apn::SumVotePoll
   end
 
   def except_member_list
-    @except_member_ids_list || []  
+    @except_member_ids_list || []
   end
 
   def last_notify_at
@@ -106,9 +106,10 @@ class Apn::SumVotePoll
   end
 
   def member_receive_notification
-    watched_poll - history_vote_in_1_minute - except_member_list
+    list_members = Member.where(id: (watched_poll - history_vote_in_1_minute - except_member_list))
+    getting_notification(list_members, "watch_poll")
   end
-  
+
   def voted_poll
     HistoryVote.joins(:member)
                 .select("member_id, members.fullname as member_fullname, history_votes.show_result as show_voter")
