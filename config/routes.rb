@@ -294,7 +294,6 @@ Pollios::Application.routes.draw do
     post ':member_id/invite_user_via_email',  to: 'members#invite_user_via_email'
     post ':member_id/invite_fb_user', to: 'members#invite_fb_user'
     post ':id/report',     to: 'members#report'
-    post
   end
 
   scope 'account' do
