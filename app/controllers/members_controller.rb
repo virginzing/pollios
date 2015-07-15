@@ -275,8 +275,8 @@ class MembersController < ApplicationController
     @current_member.update!(notification: notification_params)
 
     render json: Hash["response_status" => "OK"], status: :ok
-    rescue => e
-      fail ExceptionHandler::UnprocessableEntity, e.errors.full_messages.values.join(", ")
+    rescue ActiveRecord::RecordInvalid => e
+      fail ExceptionHandler::UnprocessableEntity, e.record.errors.full_messages.join(", ")
   end
 
   def check_invited
@@ -489,7 +489,7 @@ class MembersController < ApplicationController
   end
 
   def notification_params
-    params.permit(notification: {})
+    params.require(:notification).permit(:group, :friend, :public, :request, :join_group, :watch_poll)
   end
 
   def verify_email_params

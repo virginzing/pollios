@@ -23,6 +23,8 @@ class Member < ActiveRecord::Base
   store_accessor :setting
   store_accessor :notification
 
+  validates_with Validator::Notification, on: :update
+
   cattr_accessor :current_member, :reported_polls, :shared_polls, :viewed_polls, :voted_polls, :list_friend_block, :list_friend_active,
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
 
@@ -168,8 +170,6 @@ class Member < ActiveRecord::Base
   validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" }, :allow_blank => true , on: :update
 
   validates :key_color, length: { is: 6 }, allow_blank: true
-
-  validates :notification, presence: true
 
   LIMIT_POLL = 10
   FRIEND_LIMIT = 500
