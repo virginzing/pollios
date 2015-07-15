@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "Member" do
-  
+
   let!(:member) { create(:member, email: "faker_nut@gmail.com") }
   let!(:friend) { create(:member, fullname: "friend", email: "friend@gmail.com") }
 
   describe "POST /member/:id/device_token" do
-  
+
     let!(:device_token) { "11111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111" }
 
     before do
@@ -48,7 +48,7 @@ RSpec.describe "Member" do
 
     it "update fullname & description" do
       post "/member/update_profile.json", { member_id: member.id, fullname: "Nuttapon", description: "I'm GreanNuT" }, { "Accept" => "application/json" }
-      
+
       expect(json["response_status"]).to eq("OK")
 
       expect([member.reload.fullname, member.reload.description]).to eq(["Nuttapon", "I'm GreanNuT"])
@@ -56,7 +56,7 @@ RSpec.describe "Member" do
 
     it "set public_id" do
       post "/member/update_profile.json", { member_id: member.id, public_id: "07510509" }, { "Accept" => "application/json" }
-      
+
       expect(json["response_status"]).to eq("OK")
 
       expect(member.reload.public_id).to eq("07510509")
@@ -73,7 +73,7 @@ RSpec.describe "Member" do
     it "validate uniqueness of public_id" do
       post "/member/#{member.id}/public_id.json", { public_id: "07510509" }, { "Accept" => "application/json" }
       post "/member/#{friend.id}/public_id.json", { public_id: "07510509" }, { "Accept" => "application/json" }
-      
+
       expect(json["response_status"]).to eq("ERROR")
       expect(json["response_message"]).to eq("Public ID has already been taken")
     end
@@ -213,7 +213,7 @@ RSpec.describe "Member" do
 
     let!(:friend) {  create(:friend, follower: member_one, followed: member_two, active: true, status: 1) }
     let!(:friend_2) { create(:friend, follower: member_two, followed: member_one, active: true, status: 1) }
-    
+
     before do
       post "/member/#{member_two.id}/report.json", { member_id: member_one.id, message: "block", block: true }, { "Accept" => "application/json" }
     end
@@ -247,6 +247,27 @@ RSpec.describe "Member" do
     let!(:company_group) { create(:company_group, group: group, member: member, main_group: true) }
 
     # let(:inivte_code) {  }
+  end
+
+  describe "POST /member/update_notification" do
+    it "can update notification" do
+      notification_sample = {
+          "public"=>"0",
+          "group"=>"0",
+          "friend"=>"1",
+          "watch_poll"=>"1",
+          "request"=>"1",
+          "join_group"=>"1"
+      }
+      post "/member/update_notification.json", { member_id: member.id, notification: notification_sample }, { "Accept" => "application/json" }
+
+      member_notification = member.reload.notification
+
+      expect(member_notification["join_group"]).to eq("1")
+      expect(member_notification["group"]).to eq("0")
+
+      expect(response.status).to eq(200)
+    end
   end
 
 
