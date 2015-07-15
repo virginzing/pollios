@@ -12,7 +12,7 @@ if @new_request
   end
 
 else
-  json.response_status "ERROR"
+  json.response_status "OK"
   json.join_success false
-  json.response_message "Something went wrong"
+  json.response_message "Waiting approve"
 end

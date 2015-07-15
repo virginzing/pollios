@@ -164,6 +164,10 @@ class Group < ActiveRecord::Base
         Activity.create_activity_group(@member, @group, 'Join')
       end
 
+      if @group.member.company?
+        Company::FollowOwnerGroup.new(@member, @group.member.id).follow!
+      end
+
       clear_request_group(@member, @member)
 
       Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
@@ -258,6 +262,10 @@ class Group < ActiveRecord::Base
 
         if @group.company? && !@group.system_group
           CompanyMember.add_member_to_company(@friend, @group.get_company)
+        end
+
+        if @group.member.company?
+          Company::FollowOwnerGroup.new(@friend, @group.member.id).follow!
         end
 
         if @group.need_approve
