@@ -23,8 +23,6 @@ class Member < ActiveRecord::Base
   store_accessor :setting
   store_accessor :notification
 
-  validates_with Validator::Notification, on: :update
-
   cattr_accessor :current_member, :reported_polls, :shared_polls, :viewed_polls, :voted_polls, :list_friend_block, :list_friend_active,
                   :list_your_request, :list_friend_request, :list_friend_following, :list_group_active, :watched_polls
 
@@ -252,6 +250,7 @@ class Member < ActiveRecord::Base
       field :sync_facebook
       field :show_recommend
       field :key_color
+      field :notification
     end
 
     edit do

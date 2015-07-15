@@ -101,11 +101,11 @@ class Group < ActiveRecord::Base
       public_id = join_name[0..19]
 
       if exist_count > 0
-        public_id = join_name[0..9] + Time.now.to_i.to_s  
+        public_id = join_name[0..9] + Time.now.to_i.to_s
       end
 
       exist_count = exist_count + 1
-    end while Group.exists?(public_id: public_id)     
+    end while Group.exists?(public_id: public_id)
 
     update!(public_id: public_id)
   end
@@ -160,8 +160,8 @@ class Group < ActiveRecord::Base
       find_group_member.update_attributes!(active: true)
 
       if @group.company? && !@group.system_group
-        CompanyMember.add_member_to_company(@member, @group.get_company) 
-        Activity.create_activity_group(@member, @group, 'Join') 
+        CompanyMember.add_member_to_company(@member, @group.get_company)
+        Activity.create_activity_group(@member, @group, 'Join')
       end
 
       clear_request_group(@member, @member)
@@ -257,7 +257,7 @@ class Group < ActiveRecord::Base
         end
 
         if @group.company? && !@group.system_group
-          CompanyMember.add_member_to_company(@friend, @group.get_company)  
+          CompanyMember.add_member_to_company(@friend, @group.get_company)
         end
 
         if @group.need_approve
@@ -277,7 +277,7 @@ class Group < ActiveRecord::Base
         FlushCached::Member.new(@friend).clear_list_groups
 
         @friend.flush_cache_ask_join_groups
-       
+
         @group
       end
     end
@@ -292,7 +292,7 @@ class Group < ActiveRecord::Base
       if find_current_ask_group.present?
         find_current_ask_group.destroy
         NotifyLog.check_update_cancel_request_group_deleted(member, group)
-        
+
         member.flush_cache_ask_join_groups
         group
       end
@@ -317,40 +317,41 @@ class Group < ActiveRecord::Base
   end
 
   def self.build_group(member, group)
-    Group.transaction do
-      member_id = group[:member_id]
-      photo_group = group[:photo_group]
-      description = group[:description]
-      cover = group[:cover]
-      cover_preset = group[:cover_preset]
-      set_privacy = group[:public] || false
-      set_admin_post_only = group[:admin_post_only] || false
-      name = group[:name]
-      friend_id = group[:friend_id]
+    member_id = group[:member_id]
+    photo_group = group[:photo_group]
+    description = group[:description]
+    cover = group[:cover]
+    cover_preset = group[:cover_preset]
+    set_privacy = group[:public] || false
+    set_admin_post_only = group[:admin_post_only] || false
+    name = group[:name]
+    friend_id = group[:friend_id]
 
-      init_cover_group = ImageUrl.new(cover)
-      @group = new(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
+    init_cover_group = ImageUrl.new(cover)
+    @group = new(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
 
-      if @group.save!
+    if @group.save!
 
-        if cover && init_cover_group.from_image_url?
-          @group.update_column(:cover, init_cover_group.split_cloudinary_url)
-        end
-        
-        @group.group_members.create(member_id: member_id, is_master: true, active: true)
-        Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
-        GroupStats.create_group_stats(@group)
-
-        if @group.public
-          Activity.create_activity_group(member, @group, 'Create')
-        end
-
-        FlushCached::Member.new(member).clear_list_groups
-
-        add_friend_to_group(@group, member, friend_id) if friend_id
+      if cover && init_cover_group.from_image_url?
+        @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
-      @group
+
+      @group.group_members.create(member_id: member_id, is_master: true, active: true)
+      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
+      GroupStats.create_group_stats(@group)
+
+      if @group.public
+        Activity.create_activity_group(member, @group, 'Create')
+      end
+
+      FlushCached::Member.new(member).clear_list_groups
+
+      add_friend_to_group(@group, member, friend_id) if friend_id
     end
+
+    @group
+    rescue ActiveRecord::RecordInvalid => e
+      fail ExceptionHandler::UnprocessableEntity, e.record.errors.full_messages.join(", ")
   end
 
   def self.random_cover_preset
@@ -367,7 +368,7 @@ class Group < ActiveRecord::Base
 
     unless member.company?
       unless group.system_group || group.public
-        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless find_admin_group.include?(member_id) 
+        raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless find_admin_group.include?(member_id)
       end
     end
 
@@ -481,7 +482,7 @@ class Group < ActiveRecord::Base
       else
         fail ExceptionHandler::NotFound, ExceptionHandler::Message::Group::MEMBER_NOT_IN_GROUP
       end
-      
+
       FlushCached::Group.new(self).clear_list_members
       FlushCached::Member.new(member).clear_list_groups
       self
