@@ -132,15 +132,15 @@ namespace :admin do
     RestClient.post host, params
 
     member = Member.create!(fullname: "Pollios Admin", email: "polliosadmin@code-app.com", description: "Pollios Admin Official", cover_preset: 1, first_signup: false, created_company: true, waiting: false, member_type: :company)
-  
+
     company = Company.create!(name: "Pollios", member: member, using_service: ["Survey", "Feedback"], company_admin: true)
 
     company.feedback_recurrings.create!(period: '00:00')
-    
+
     group = Group.create!(name: "Pollios", public: false, description: "Group Pollios Official", member: member, cover_preset: 1, system_group: true, group_type: :company)
 
     group.add_user_to_group(Member.where(id: member))
-    
+
     GroupCompany.create!(group: group, company: company, main_group: true)
 
     Campaign.create!(name: "First signup free 5 public poll", used: 0, limit: 100000000, begin_sample: 1, end_sample: 1, expire: Time.now + 100.years, member: member,  company: company,
@@ -150,7 +150,7 @@ namespace :admin do
 
   desc "Default Group Recommendation"
   task :task_name => [:dependent, :tasks] do
-    
+
   end
 
   desc "Set default to The Notification of Member"
@@ -247,7 +247,7 @@ namespace :admin do
     GroupStats.delete_all
 
     GroupSurveyor.delete_all
-    GroupSurveyor.connection.execute('ALTER SEQUENCE group_surveyors_id_seq RESTART WITH 1') 
+    GroupSurveyor.connection.execute('ALTER SEQUENCE group_surveyors_id_seq RESTART WITH 1')
 
     HiddenPoll.delete_all
     HiddenPoll.connection.execute('ALTER SEQUENCE hidden_polls_id_seq RESTART WITH 1')
@@ -389,7 +389,31 @@ namespace :admin do
 
     HistoryPromotePoll.delete_all
     HistoryPromotePoll.connection.execute('ALTER SEQUENCE history_promote_polls_id_seq RESTART WITH 1')
-    
+
+  end
+
+  desc "Users in group that follow to owner group"
+  task :follow_owner_group, [:group_id] => :environment do |t, args|
+    begin
+      p "find group with id #{args.group_id}"
+      find_group = Group.cached_find(args.group_id.to_i)
+      p "find group success"
+      find_owner_group = find_group.member
+      p "find owner group is #{find_owner_group.get_name}"
+      p "#{find_owner_group.get_name} not Company Account" unless find_owner_group.company?
+      p "All users in groups is following #{find_owner_group.get_name}. Process..."
+      list_members = Group::ListMember.new(find_group).active.select{|m| m unless m.company? }
+      list_members.each do |member|
+        begin
+          Friend.add_following(member, {member_id: member.id, friend_id: find_owner_group.id})
+        rescue => e
+          true
+        end
+      end
+      p "done."
+    rescue => e
+      p e.message
+    end
   end
 
 end
