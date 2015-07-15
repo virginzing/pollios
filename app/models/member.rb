@@ -250,7 +250,6 @@ class Member < ActiveRecord::Base
       field :sync_facebook
       field :show_recommend
       field :key_color
-      field :notification
     end
 
     edit do
