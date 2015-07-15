@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'test_helper'
 
 class MemberTest < ActiveSupport::TestCase
   test "the truth" do
