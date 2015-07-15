@@ -270,5 +270,11 @@ RSpec.describe "Member" do
     end
   end
 
+  describe "GET /member/all_request_groups" do
+    it "can call to api successfully" do
+      get "/member/all_request_groups.json", { member_id: member.id }, { "Accept" => "application/json" }
+      expect(response.status).to eq(200)
+    end
+  end
 
 end
