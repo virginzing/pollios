@@ -1,12 +1,13 @@
 <div class="well">
   <%= simple_form_for :triggers, url: triggers_path, method: :post do |f| %>
-  
+
   <label>Config</label>
 
   <%= f.simple_fields_for :data do |data| %>
     <%= data.input :type, collection: ["Invite Group"], include_blank: false %>
-    <%= data.input :action, collection: ["Vote", "Comment"], include_blank: false %>
+    <%= data.input :action, collection: ["Vote"], include_blank: false %>
     <input type="hidden" id="remote_load_poll" name="poll_id"/>
+    <span class="note">Note: 1 Poll per 1 Trigger</span>
   <% end %>
 
   <div class="list_choice">
@@ -30,7 +31,8 @@
         delay: 250,
         data: function (params) {
           return {
-            q: params // search term
+            q: params,
+            trigger: true // search term
           };
         },
         results: function (data, page) {
@@ -50,7 +52,7 @@
       }
     });
 
-    $('#remote_load_poll').on("select2-selecting", function(e) { 
+    $('#remote_load_poll').on("select2-selecting", function(e) {
       console.log(e.val);
       $.get('/load_choice', { poll_id: e.val }, function (html) {
         $(".list_choice").html(html);

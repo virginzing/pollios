@@ -1,14 +1,14 @@
 <div class="well">
 
 <h1>Select suggest groups</h1>
-
+  <span class="note"><b>Note: Show recommended group at right panel.</b></span>
   <%= form_tag suggest_groups_path, method: :post do %>
     <select multiple="multiple" class="searchable" name="group_select[]">
       <% @group.each do |group| %>
         <option value="<%= group.id %>" class="tooltip_group" data-value-hidden="<%= group.id %>"><%= group.name %></option>
       <% end %>
     </select>
-  
+
     <br>
     <%= submit_tag "UPDATE", class: 'btn btn-primary', data: { disable_with: "Please wait..."} %>
   <% end %>

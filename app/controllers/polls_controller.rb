@@ -2,7 +2,7 @@ class PollsController < ApplicationController
   protect_from_forgery
 
   skip_before_action :verify_authenticity_token
-  
+
   before_action :signed_user, only: [:show, :poll_latest, :poll_popular, :binary, :freeform, :rating, :index, :series, :new, :create_new_poll, :create_new_public_poll]
 
   before_action :set_current_member, only: [:promote_poll, :list_mentionable, :member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
@@ -32,7 +32,11 @@ class PollsController < ApplicationController
   respond_to :json
 
   def load_poll
-    @poll = Poll.where("title LIKE ? AND series = 'f'", "%#{params[:q]}%")
+    if params[:trigger].to_b
+      @poll = Poll.where("title LIKE ? AND series = 'f' AND id NOT IN (?)", "%#{params[:q]}%", Trigger.all.map(&:triggerable_id))
+    else
+      @poll = Poll.where("title LIKE ? AND series = 'f'", "%#{params[:q]}%")
+    end
 
     @poll_as_json = ActiveModel::ArraySerializer.new(@poll, each_serializer: LoadPollSerializer).to_json()
 
@@ -97,16 +101,16 @@ class PollsController < ApplicationController
   end
 
   def poll_latest
-    @poll_latest_data = []  
+    @poll_latest_data = []
     @choice_poll_latest = []
-    
+
     @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
     @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
 
     if @poll_latest.present?
       @choice_poll_latest = @poll_latest.cached_choices.collect{|e| [e.answer, e.vote] }
       @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max
-        
+
       @choice_poll_latest.each do |choice|
         @poll_latest_data << { "name" => choice.first, "value" => choice.last }
       end
@@ -116,16 +120,16 @@ class PollsController < ApplicationController
   end
 
   def poll_latest_in_public
-    @poll_latest_in_public_data = []  
+    @poll_latest_in_public_data = []
     @choice_poll_latest_in_public = []
-    
+
     @init_poll ||= Company::PollPublic.new(set_company)
     @poll_latest_in_public = @init_poll.get_list_public_poll.decorate.first
 
     if @poll_latest_in_public.present?
       @choice_poll_latest_in_public = @poll_latest_in_public.cached_choices.collect{|e| [e.answer, e.vote] }
       @choice_poll_latest_in_public_max = @choice_poll_latest_in_public.collect{|e| e.last }.max
-        
+
       @choice_poll_latest_in_public.each do |choice|
         @poll_latest_in_public_data << { "name" => choice.first, "value" => choice.last }
       end
@@ -248,12 +252,12 @@ class PollsController < ApplicationController
       @poll = Poll.new(new_poll_binary_params)
       @poll.choice_count = @build_poll.list_of_choice.size
       @poll.qrcode_key = @poll.generate_qrcode_key
-      
+
       if @poll.save
         @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
 
         PollCompany.create_poll(@poll, set_company, :web)
-        
+
         @poll.create_tag(@build_poll.title_with_tag)
 
         @poll.create_watched(current_member, @poll.id)
@@ -316,7 +320,7 @@ class PollsController < ApplicationController
   def delete_poll_in_one_group
     find_poll_group = PollGroup.without_deleted.find_by(poll_id: @poll.id, group_id: params[:group_id])
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll_group.nil?
-    
+
     if find_poll_group.present?
       find_poll_group.destroy
       find_poll_group.update!(deleted_by_id: @current_member.id)
@@ -485,7 +489,7 @@ class PollsController < ApplicationController
   def detail
     raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Poll::UNDER_INSPECTION if @poll.black?
     raise ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @poll.member.ban?
-    
+
     raise_exception_without_group if @poll.in_group && !@poll.public
     Poll.view_poll(@poll, @current_member)
     @choices_as_json = @poll.get_choice_detail
@@ -642,7 +646,7 @@ class PollsController < ApplicationController
     if @history_voted
       if poll.get_campaign
         @reward = poll.find_campaign_for_predict?(@current_member)
-      end 
+      end
     end
 
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
@@ -659,7 +663,7 @@ class PollsController < ApplicationController
     unless @poll.present?
       render status: :unprocessable_entity
     else
-      render status: :created  
+      render status: :created
     end
   end
 
@@ -725,7 +729,7 @@ class PollsController < ApplicationController
     if @comment.save
       @comment.create_mentions_list(@current_member, list_mentioned) if list_mentioned.present?
 
-      @poll.with_lock do 
+      @poll.with_lock do
         @poll.comment_count += 1
         @poll.save!
       end
