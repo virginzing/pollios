@@ -1,7 +1,7 @@
 class Validator::Notification < ActiveModel::Validator
   def validate(record)
-    unless record.notification.keys.uniq.sort == Member::Notification::DEFAULT.keys.uniq.sort
-      fail ExceptionHandler::UnprocessableEntity, "Keys of notification don't match."
+    if record.notification.keys.sort != Member::Notification::DEFAULT.keys.sort
+      fail ExceptionHandler::UnprocessableEntity, "Keys of Notification don't match."
     end
   end
 end
