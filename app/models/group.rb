@@ -246,7 +246,7 @@ class Group < ActiveRecord::Base
           raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has cancelled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
         end
 
-        raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved, You're in group." if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
+        raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved." if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
 
         find_member_in_group = @group.group_members.find_by(member_id: @friend.id)
 

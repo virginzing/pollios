@@ -11,12 +11,16 @@ class Member::ListGroup
     cached_all_groups.select{|group| group if group.member_is_active }
   end
 
+  def as_admin
+    active.select{|group| group if group.member_admin }
+  end
+
   def active_non_virtual
     cached_all_groups.select{|group| group if group.member_is_active  && !group.virtual_group }
   end
 
   def active_with_public
-    cached_all_groups.select{|group| group if group.member_is_active && group.public == false }  
+    cached_all_groups.select{|group| group if group.member_is_active && group.public == false }
   end
 
   def inactive
@@ -38,11 +42,11 @@ class Member::ListGroup
     Group.joins(:group_members_active).without_deleted.select("groups.*, count(group_members) as member_count").group("groups.id") \
           .where("groups.id IN (?)", cached_all_groups.map(&:id))
   end
-  
+
   def cached_groups
     Rails.cache.fetch("member/#{@member.id}/groups") do
       groups.to_a
     end
   end
-  
+
 end
