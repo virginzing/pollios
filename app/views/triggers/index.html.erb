@@ -6,12 +6,12 @@
   <div class="jarviswidget" id="wid-list-trigger" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-thumb-tack"></i> </span>
-      <h2><strong>List Triggers</strong></h2>          
+      <h2><strong>List Triggers</strong></h2>
     </header>
 
     <!-- widget div-->
     <div>
-      
+
       <!-- widget content -->
         <div class="widget-body no-padding">
 
@@ -20,6 +20,7 @@
               <tr>
                 <th>Poll</th>
                 <th>Data</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -27,6 +28,7 @@
                 <tr>
                   <td><a href="/admin/poll/<%= trigger.triggerable.id %>"><%= trigger.triggerable.title  %></a></td>
                   <td><%= trigger.data %></td>
+                  <td width="50"><%= link_to 'Delete', trigger, class: 'btn btn-pill btn-default', data: { confirm: "Are you sure?", method: :delete } %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -34,7 +36,7 @@
 
         </div>
       <!-- end widget content -->
-      
+
     </div>
     <!-- end widget div -->
 
