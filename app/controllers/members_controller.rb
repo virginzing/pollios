@@ -4,8 +4,8 @@ class MembersController < ApplicationController
   include SymbolHash
 
   skip_before_action :verify_authenticity_token
-  
-  before_action :set_current_member, only: [:special_code, :invite_fb_user, :invite_user_via_email, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
+
+  before_action :set_current_member, only: [:update_notification, :special_code, :invite_fb_user, :invite_user_via_email, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :compress_gzip, only: [:recommended_facebook, :activity, :detail_friend, :notify, :all_request, :recommendations, :recommended_groups, :recommended_official]
   before_action :signed_user, only: [:account_setting, :index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
@@ -82,7 +82,7 @@ class MembersController < ApplicationController
   end
 
   def account_setting
-    
+
   end
 
   def unrecomment
@@ -95,7 +95,7 @@ class MembersController < ApplicationController
           m.save
           Rails.cache.delete([ @current_member.id , 'unrecomment' ])
         end
-        format.json { render json: Hash["response_status" => "OK", "response_message" => "Success"] }  
+        format.json { render json: Hash["response_status" => "OK", "response_message" => "Success"] }
       else
         format.json { render json: Hash["response_status" => "ERROR", "response_message" => "Fail"] }
       end
@@ -206,7 +206,7 @@ class MembersController < ApplicationController
       else
         @current_member.show_recommend = false
       end
-      
+
       init_avatar = ImageUrl.new(avatar)
       init_cover = ImageUrl.new(cover)
 
@@ -215,7 +215,7 @@ class MembersController < ApplicationController
       @current_member.cover_preset = "0" if cover
 
       if cover && init_cover.from_image_url? # upload via url
-        @current_member.remove_old_cover 
+        @current_member.remove_old_cover
         @current_member.update_column(:cover, init_cover.split_cloudinary_url)
       end
 
@@ -271,11 +271,13 @@ class MembersController < ApplicationController
     end
   end
 
-  # def update_profile
-  #   respond_to do |wants|
-  #     wants.json { render json: {}, status: 503 }
-  #   end
-  # end
+  def update_notification
+    @current_member.update!(notification: notification_params)
+
+    render json: Hash["response_status" => "OK"], status: :ok
+    rescue => e
+      fail ExceptionHandler::UnprocessableEntity, e.errors.full_messages.values.join(", ")
+  end
 
   def check_invited
     @list_invite = Invite.where(email: @current_member.email)
@@ -325,7 +327,7 @@ class MembersController < ApplicationController
   end
 
   def clear_request_count
-    @current_member.update_columns(request_count: 0)  
+    @current_member.update_columns(request_count: 0)
   end
 
   def is_friend(member_obj, list_compare)
@@ -438,7 +440,7 @@ class MembersController < ApplicationController
         @new_request = true
       end
     rescue => e
-      
+
     end
   end
 
@@ -451,7 +453,7 @@ class MembersController < ApplicationController
     Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
     if @group.company? && !@group.system_group
       CompanyMember.add_member_to_company(@current_member, @group.get_company)
-      Activity.create_activity_group(@current_member, @group, 'Join') 
+      Activity.create_activity_group(@current_member, @group, 'Join')
     end
     FlushCached::Member.new(@current_member).clear_list_groups
     FlushCached::Group.new(@group).clear_list_members
@@ -486,6 +488,10 @@ class MembersController < ApplicationController
     params.permit(:show_recommend, :public_id, :fb_id, :cover_preset, :member_id, :username, :fullname, :avatar, :gender, :birthday, :sentai_name, :cover, :description, :sync_facebook, :anonymous, :anonymous_public, :anonymous_friend_following, :anonymous_group, :first_signup, :first_setting_anonymous, :receive_notify, list_fb_id: [])
   end
 
+  def notification_params
+    params.permit(notification: {})
+  end
+
   def verify_email_params
     params.permit(:email)
   end
@@ -498,5 +504,5 @@ class MembersController < ApplicationController
     params.permit(:name, :description, :photo_group)
   end
 
-  
+
 end

@@ -13,7 +13,7 @@ Pollios::Application.routes.draw do
   get 'load_group', to: 'group#load_group'
 
   mount ApiTaster::Engine => "/api_taster"
-  
+
   resources :activity_feeds
 
   resources :searches do
@@ -79,7 +79,7 @@ Pollios::Application.routes.draw do
   devise_for :admins, :controllers => { :registrations => "admin/registrations" }
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-  
+
   resources :recurrings
   resources :comments
 
@@ -207,7 +207,7 @@ Pollios::Application.routes.draw do
     resources :redeemers
 
     get 'setting',  to: 'feedback#setting', as: :feedback_setting
-    
+
     get 'dashboard',  to: 'feedback#dashboard', as: :feedback_dashboard
     get 'polls',      to: 'feedback_poll#index',     as: :feedback_polls
 
@@ -215,7 +215,7 @@ Pollios::Application.routes.draw do
 
 
     get 'questionnaires', to: 'feedback_questionnaire#index', as: :feedback_questionnaires
-    
+
     scope 'questionnaire' do
       get 'new',      to: 'feedback_questionnaire#new',  as: :new_feedback_questionnaire
       post 'create',  to: 'feedback_questionnaire#create',  as: :create_feedback_questionnaire
@@ -237,8 +237,8 @@ Pollios::Application.routes.draw do
 
     scope 'collection' do
       get ':id',      to: 'feedback_questionnaire#collection', as: :collection_feedback_questionnaire
-      get ':id/edit', to: 'collection_poll_series#edit', as: :edit_collection_feedback 
-      put ':id',      to: 'collection_poll_series#update',   as: :update_collection_feedback 
+      get ':id/edit', to: 'collection_poll_series#edit', as: :edit_collection_feedback
+      put ':id',      to: 'collection_poll_series#update',   as: :update_collection_feedback
       get ':id/:branch_id/:questionnaire_id',    to: 'branches#detail',  as: :collection_feedback_branch_detail
 
       get ':id/campaigns',  to: 'feedback_questionnaire#collection_campaign', as: :collection_campaign_feedback
@@ -271,6 +271,7 @@ Pollios::Application.routes.draw do
     get 'detail_friend',      to: 'members#detail_friend'
     get 'stats',              to: 'members#stats'
     post 'update_profile',    to: 'members#update_profile', as: :update_profile
+    post 'update_notification', to: 'members#update_notification'
     post ':member_id/setting_default',   to: 'members#setting_default'
     get 'clear',              to: 'members#clear', as: :clear_history
     get 'list_reward',        to: 'campaigns#list_reward'
@@ -293,6 +294,7 @@ Pollios::Application.routes.draw do
     post ':member_id/invite_user_via_email',  to: 'members#invite_user_via_email'
     post ':member_id/invite_fb_user', to: 'members#invite_fb_user'
     post ':id/report',     to: 'members#report'
+    post
   end
 
   scope 'account' do
@@ -305,7 +307,7 @@ Pollios::Application.routes.draw do
 
   scope 'poll' do
     get ':id/member_voted', to: 'polls#member_voted'
-    
+
     get 'random_poll',  to: 'polls#random_poll'
     post ':id/bookmark',  to: 'polls#bookmark'
     post ':id/un_bookmark', to: 'polls#un_bookmark'
@@ -352,7 +354,7 @@ Pollios::Application.routes.draw do
     get ':member_id/overall_timeline',           to: 'polls#overall_timeline'
     get ':member_id/group_timeline',             to: 'polls#group_timeline'
     get ':member_id/reward_timeline',            to: 'polls#reward_poll_timeline'
-  
+
 
     get ':id/detail',       to: 'polls#detail'
     post ':id/close',      to: 'polls#set_close'
@@ -489,7 +491,7 @@ Pollios::Application.routes.draw do
 
     get 'invites',  to: 'companies#invites',    as: :company_invites
     post 'generate_invitation', to: 'companies#generate_invitation', as: :company_generate_invitation
-    
+
     get 'invites/via_email',  to: 'companies#via_email',  as: :via_email
     post 'invites/send_email', to: 'companies#send_email'
 
@@ -518,7 +520,7 @@ Pollios::Application.routes.draw do
       put ':id',   to: 'company_campaigns#update',  as: :update_company_campaign
       delete ':id', to: 'company_campaigns#destroy'
     end
-    
+
   end
 
   scope 'api/group/:group_id' do
@@ -581,7 +583,7 @@ Pollios::Application.routes.draw do
 
   get 'users_activate',     to: 'members#activate_account', as: :users_activate
   get 'users_signin',      to: 'authen_sentai#signin',  as: :users_signin
-  
+
   get 'users_signup',      to: 'authen_sentai#signup',  as: :users_signup
   get 'waiting_approve',  to: 'authen_sentai#waiting_approve',  as: :waiting_approve
 
@@ -594,7 +596,7 @@ Pollios::Application.routes.draw do
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
 
   post 'new_sigin_sentai', to: 'authen_sentai#new_sigin_sentai', as: :new_users_signin
-  
+
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'
   post 'users_forgotpassword',  to: 'authen_sentai#forgot_password'

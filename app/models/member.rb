@@ -4,14 +4,14 @@ class Member < ActiveRecord::Base
   include PgSearch
   include MemberHelper
   attr_accessor :list_email, :file, :company_id, :redeemer, :feedback
-  
+
   rolify
   # friendly_id :slug_candidates, use: [:slugged, :finders]
   # has_paper_trail
-  
+
   # multisearchable :against => [:fullname, :username, :email]
   pg_search_scope :searchable_member, :against => [:fullname, :email],
-                  :using => { 
+                  :using => {
                     :trigram => { :threshold => 0.1 }
                   }
 
@@ -35,7 +35,7 @@ class Member < ActiveRecord::Base
   has_one :company, dependent: :destroy
 
   has_one :company_member, dependent: :destroy
-  
+
   has_many :comments, dependent: :destroy
   has_many :history_purchases, dependent: :destroy
 
@@ -56,7 +56,7 @@ class Member < ActiveRecord::Base
 
   has_many :following, -> { where("following = 't' AND status != 1") }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
   has_many :get_following, -> { where('members.member_type = 1 OR members.member_type = 2') } ,through: :following, source: :followed
-  
+
   has_many :hidden_polls, dependent: :destroy
 
   has_many :history_views, dependent: :destroy
@@ -97,9 +97,9 @@ class Member < ActiveRecord::Base
   has_many :get_friend_inactive, through: :friend_inactive, source: :followed
 
   has_many :whitish_friend, -> { where(active: true, mute: false, visible_poll: true).having_status(:friend) }, class_name: "Friend", foreign_key: "follower_id"
-  
+
   has_many :get_my_poll, -> { where("polls.series = ?", false).limit(LIMIT_POLL) }, class_name: "Poll"
-  
+
   has_many :poll_members, dependent: :destroy
   has_many :polls, through: :poll_members, source: :poll
 
@@ -110,9 +110,9 @@ class Member < ActiveRecord::Base
 
   has_many :share_polls, dependent: :destroy
   has_many :recurrings, dependent: :destroy
-  
+
   has_many :poll_series
-  
+
   has_many :providers, dependent: :destroy
 
   has_many :member_report_polls, dependent: :destroy
@@ -162,19 +162,21 @@ class Member < ActiveRecord::Base
   scope :with_notification_friend,  -> { where("notification @> hstore(:key, :value)", key: "friend", value: "1") }
   scope :with_notification_group,   -> { where("notification @> hstore(:key, :value)", key: "group", value: "1") }
 
-  validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true 
+  validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
-  
+
   validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" }, :allow_blank => true , on: :update
 
   validates :key_color, length: { is: 6 }, allow_blank: true
 
+  validates :notification, presence: true
+
   LIMIT_POLL = 10
   FRIEND_LIMIT = 500
-  
+
   self.per_page = 20
 
-  rails_admin do 
+  rails_admin do
 
     configure :new_avatar do
       pretty_value do
@@ -285,7 +287,7 @@ class Member < ActiveRecord::Base
       @member
     end
   end
-  
+
   def flush_cache
     Rails.cache.delete([self.class.name, id])
   end
@@ -297,7 +299,7 @@ class Member < ActiveRecord::Base
   def check_sync_facebook
     if fb_id_changed? && fb_id.present?
       raise ExceptionHandler::UnprocessableEntity, "This Facebook account had linked with another Pollios user." if Member.exists?(fb_id: fb_id)
-      
+
       self.sync_facebook = true
       self.sync_fb_last_at = Time.zone.now
     end
@@ -432,7 +434,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_sentai_id
-    providers.where(name: 'sentai').first.pid    
+    providers.where(name: 'sentai').first.pid
   end
 
   def get_name
@@ -703,7 +705,7 @@ class Member < ActiveRecord::Base
   def list_voted?(poll)
     history_voted = Member.voted_polls
     select_poll = history_voted.select {|his_vote| his_vote["poll_id"] == poll.id }.first
-    
+
     if select_poll.present?
       choice_list ||= poll.cached_choices
       choice_voted = choice_list.select {|e| e.id == select_poll["choice_id"] }.first.vote
@@ -753,7 +755,7 @@ class Member < ActiveRecord::Base
     gender = response["gender"]
 
     find_member = where(email: email).first
-    if find_member.present? 
+    if find_member.present?
       find_member.update_attributes!(fullname: sentai_fullname, avatar: avatar, birthday: birthday, username: username, gender: gender)
       return find_member
     end
@@ -763,7 +765,7 @@ class Member < ActiveRecord::Base
     list_member_subscribe_expiration = Member.where("date(subscribe_expire + interval '7 hour') = ?", Time.zone.today)
 
     list_member_subscribe_expiration_member_ids = list_member_subscribe_expiration.map(&:id).uniq
-    
+
     list_member_subscribe_expiration.each do |member|
       Member::ListFriend.new(member).follower.each do |follower|
          FlushCached::Member.new(follower).clear_list_friends
@@ -800,7 +802,7 @@ class Member < ActiveRecord::Base
   end
 
   ################ Friend ###############
-  
+
   def mute_or_unmute_friend(friend, type_mute)
     friend_id = friend[:friend_id]
     begin
@@ -933,7 +935,7 @@ class Member < ActiveRecord::Base
 
   def check_friend_entity(user)
     find_friend = Friend.where("(follower_id = ? AND followed_id = ? AND status = ?) " \
-                        "OR (follower_id = ? AND followed_id = ? AND status = ?)", 
+                        "OR (follower_id = ? AND followed_id = ? AND status = ?)",
                         user.id, id, 1,
                         user.id, id, -1).first
 
@@ -1000,7 +1002,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_key_color
-    key_color.present? ? key_color : ""  
+    key_color.present? ? key_color : ""
   end
 
   def get_description
@@ -1032,7 +1034,7 @@ class Member < ActiveRecord::Base
   end
 
   def self.remove_cover(current_member)
-    
+
   end
 
   def serializer_member_detail  # for api
@@ -1040,7 +1042,7 @@ class Member < ActiveRecord::Base
 
     @member_id = @find_member_cached.id
     serailizer_member_feed_info = MemberInfoFeedSerializer.new(@find_member_cached).as_json()
-    
+
     serailizer_member_feed_info = serailizer_member_feed_info.merge( { "status" => entity_info } )
   end
 
