@@ -4,7 +4,7 @@ RSpec.describe "Group" do
 
   let!(:member) { create(:member) }
   let!(:friend) { create(:member, fullname: "Friend Nut", email: "friend_nut@gmail.com") }
-  let!(:group) { create(:group) }
+  let!(:group) { create(:group, member: member) }
   let!(:group_member) { create(:group_member, member: member, group: group, active: true, is_master: true) }
 
   let!(:poll) { create(:poll, member: member) }
@@ -23,13 +23,13 @@ RSpec.describe "Group" do
   end
 
   describe "GET /group/:id/polls" do
-      
+
     before do
       get "/group/#{group.id}/polls.json", { member_id: member.id, api_version: 6 }, { "Accept" => "application/json" }
     end
 
     it "success" do
-      expect(response).to be_success 
+      expect(response).to be_success
     end
 
     it "return OK" do
@@ -188,10 +188,10 @@ RSpec.describe "Group" do
 
     context "when group set need_approve is false" do
 
-      let!(:group) { create(:group, name: "Thailand", need_approve: false, public: true) }
+      let!(:group) { create(:group, name: "Thailand", need_approve: false, public: true, member: member) }
 
       let!(:someone) { create(:member, fullname: "test nut", email: "someone@gmail.com") }
-      
+
       it "join group immediately" do
         post "/group/#{group.id}/request_group.json", { member_id: someone.id }, { "Accept" => "application/json" }
 
@@ -202,7 +202,7 @@ RSpec.describe "Group" do
         expect(json["waitting_approve"]).to be false
         expect(json["join_success"]).to be true
       end
-    
+
     end
   end
 
