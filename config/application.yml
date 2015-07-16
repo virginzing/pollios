@@ -48,36 +48,3 @@ production:
   OVERALL_TIMELINE: "overall_timeline"
   MONGOHQ_URL: "mongodb://heroku:4yQKjnuIGIE0aVKblyGzCJdvfsvkz6xJIyH7sCkaFmVyXi986iZXgdHIp_UNbU1_PStUaNntUo10rOfEdbg0Fw@oceanic.mongohq.com:10082/app21881982"
   MONGOLAB_URI: "mongodb://heroku_app21881982:jfk193fhbv2dpt9r8khqovj2va@ds031651.mongolab.com:31651/heroku_app21881982"
-
-
-# Member.all.each do |member|
-#   member.update!(update_personal: true) if member.birthday.present? || member.gender.present?
-# end
-# set Env to heroku
-# heroku config:set GMAIL_PASSWORD="9code7app9" -a codeapp-pollios
-# or
-# figaro heroku:set -e production -a codeapp-pollios
-# update limit of member
-# Member.unscoped.where(created_company: false).order("id asc").limit(205).update_all(waiting: false)
-
-# heroku config:set 1_MONTH=1month9.99 -a codeapp-pollios
-
-#  local
-
-# Cloudinary email: codeapp.server@gmail.com
-# password: 9code7app9
-
-
-# production
-
-# Cloudinary email: polliosadmin@code-app.com
-# password: 9code7app9
-
-##
-# rand(36**64).to_s(36).scan(/.{8}/).join(' ')
-
-# heroku maintenance:on -a codeapp-pollios
-# heroku maintenance:off -a codeapp-pollios
-
-# git push heroku master && heroku run rake cached:clear -a codeapp-pollios && heroku restart -a codeapp-pollios
-# git push heroku master && heroku run rake db:migrate -a codeapp-pollios && heroku run rake cached:clear -a codeapp-pollios && heroku restart -a codeapp-pollios
