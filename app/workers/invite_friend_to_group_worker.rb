@@ -40,8 +40,7 @@ class InviteFriendToGroupWorker
       apn_custom_properties = {
         type: TYPE[:group],
         group_id: group.id,
-        notify: hash_list_member_badge[member_ids[index]],
-        request: hash_list_member_request_count[member_ids[index]]
+        notify: hash_list_member_badge[member_ids[index]]
       }
 
       @notf = Apn::Notification.new
@@ -58,7 +57,6 @@ class InviteFriendToGroupWorker
         action: ACTION[:invite],
         group: GroupNotifySerializer.new(group).as_json,
         notify: hash_list_member_badge[member.id],
-        request: hash_list_member_request_count[member.id],
         worker: WORKER[:invite_friend_to_group]
       }
 
