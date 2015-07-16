@@ -48,8 +48,8 @@ module NotificationsHelper
     last_word = custom_message.last(3)
     if last_word == "..."
       custom_message = custom_message + "\""
-    end 
-    
+    end
+
     custom_message
   end
 
@@ -62,7 +62,7 @@ module NotificationsHelper
   end
 
   def getting_notification(list_member, type)
-    list_member.select{|member| member if member.notification[type] == "1" }.map(&:id).uniq
+    list_member.select{|member| member if member.notification[type].to_b }.map(&:id).uniq
   end
 
 end
