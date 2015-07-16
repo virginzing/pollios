@@ -3,12 +3,12 @@ class Member::Notification
   attr_accessor :options
 
   DEFAULT = {
-    "public" => "0",
-    "group" => "1",
-    "friend" => "1",
-    "watch_poll" => "1",
-    "request" => "1",
-    "join_group" => "0"
+    "public" => "false",
+    "group" => "true",
+    "friend" => "true",
+    "watch_poll" => "true",
+    "request" => "true",
+    "join_group" => "false"
   }
 
   def initialize(member, options = DEFAULT)
@@ -20,5 +20,5 @@ class Member::Notification
     @member.notification = options
     @member.save!
   end
-  
+
 end
