@@ -7,19 +7,19 @@
 
       <header>
         <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-        <h2><strong>Form</strong></h2>       
-        
+        <h2><strong>Form</strong></h2>
+
       </header>
       <!-- widget div-->
       <div>
-    
+
         <!-- widget content -->
         <div class="widget-body">
           <%= simple_form_for @poll, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
           <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
           <%= f.input :public, as: :hidden, input_html: { value: true } %>
           <fieldset>
-              
+
             <section>
               <div class="row">
                 <section class="col col-9">
@@ -32,13 +32,13 @@
                <label class="toggle">
                  <input type="checkbox" name="poll[allow_comment]" checked="checked">
                <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Comment</label>
-               
+
                <label class="toggle">
                  <input type="checkbox" name="poll[qr_only]">
                <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
-               
+
                <label class="toggle">
-                 <input type="checkbox" name="poll[require_info]" checked="checked">
+                 <input type="checkbox" name="poll[require_info]">
                <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
 
               <label class="toggle">
@@ -55,7 +55,7 @@
                   </div>
                 </section>
               </div>
-              
+
               <br>
               <section>
                   <label class="label">Choose from preset</label>
@@ -72,7 +72,7 @@
                   </div>
               </section>
 
-            <div id="select_form_template"></div>       
+            <div id="select_form_template"></div>
 
           </fieldset>
 
@@ -91,7 +91,7 @@
                     <% (1..30).each do |e| %>
                       <option value="<%= e %>"><%= e %></option>
                     <% end %>
-                  </select> <i></i> 
+                  </select> <i></i>
                 </label>
 
                 </section>
@@ -120,7 +120,7 @@
                     </label>
                   </section>
                 <% end %>
-              </div>            
+              </div>
             </fieldset>
 
           <footer>
@@ -130,7 +130,7 @@
 
         </div>
         <!-- end widget content -->
-        
+
       </div>
       <!-- end widget div -->
       </div>
@@ -152,7 +152,7 @@
       $('#select_form_template').html('<%= j render "yesno" %>');
     } else {
       $('#select_form_template').html('<%= j render "rating" %>');
-    };  
+    };
   });
 </script>
 

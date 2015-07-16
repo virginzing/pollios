@@ -53,7 +53,7 @@ class BuildPoll
   end
 
   def set_poll_public
-    if @member.celebrity? || @params["recurring_id"].present? || check_public 
+    if @member.celebrity? || @params["recurring_id"].present? || check_public
       true
     else
       false
@@ -79,7 +79,7 @@ class BuildPoll
   def list_of_choice
     @list_of_choice ||= list_choices
   end
-  
+
   def poll_binary_params
     begin
       raise ExceptionHandler::MemberNotFoundHtml, "Member not found" unless @member.present?
@@ -102,7 +102,8 @@ class BuildPoll
         "require_info" => check_require_info,
         "in_group" => check_in_group,
         "show_result" => check_show_result,
-        "draft" => check_draft
+        "draft" => check_draft,
+        "creator_must_vote" => false,
       }
     end
   end
@@ -121,18 +122,18 @@ class BuildPoll
     else
       array_of_star = [1, 2, 3, 4, 5]
       array_of_star.each do |choice|
-        @choice_list << choice        
+        @choice_list << choice
       end
       @choice_list
     end
   end
 
   def build
-      
+
   end
 
   def create
-    
+
   end
 
 end
