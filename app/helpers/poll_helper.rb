@@ -7,7 +7,7 @@ module PollHelper
 
   # def polls_30_days_ago_chart(start = 1.month.ago)
   #   polls_by_day = Poll.total_grouped_by_date(start)
-    
+
   #   polls_friend_by_day = Poll.where("public = ? AND in_group_ids = ?", false, '0').total_grouped_by_date(start)
 
   #   polls_public_by_day = Poll.where("public = 't'").total_grouped_by_date(start)
@@ -57,11 +57,25 @@ module PollHelper
     else
       date = Date.current - 1.day
     end
-    query = Poll.unscoped.where("date(created_at + interval '7 hour') = ?", date).group("date_part('hour', created_at + interval '7 hour')").size
+    query = Poll.unscoped.where("date(created_at + interval '7 hours') = ?", date).group("date_part('hour', created_at + interval '7 hours')").size
+    map_each_hour(query)
+  end
+
+  def number_of_polls_voted_today_chart(filtering)
+    if filtering == "today" || filtering.nil?
+      date = Date.current
+    else
+      date = Date.current - 1.day
+    end
+    query = HistoryVote.unscoped.where("date(created_at + interval '7 hours') = ?", date).group("date_part('hour', created_at + interval '7 hours')").size
+    map_each_hour(query)
+  end
+
+  def map_each_hour(list_hash_count)
     new_hash = {}
 
     list = (0..23).to_a.map do |e|
-      query.map do |k,v| 
+      list_hash_count.map do |k,v|
         query_hash = { hours: e, count: v }
         if k.to_i == e
           new_hash.merge(query_hash)
@@ -88,5 +102,5 @@ module PollHelper
       end
     end
   end
-  
+
 end
