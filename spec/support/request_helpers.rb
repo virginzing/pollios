@@ -7,7 +7,7 @@ module Requests
     def generate_certification
       app = Apn::App.new
       app.apn_dev_cert   = Rails.root.join('config', 'certificates', 'local', 'PolliosDev.pem').read
-      app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'pollios_notification_production.pem').read
+      app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'PolliosProduction.pem').read
       app.save!
     end
 
@@ -21,7 +21,7 @@ module Requests
     def generate_certification
       app = Apn::App.new
       app.apn_dev_cert   = Rails.root.join('config', 'certificates', 'local', 'PolliosDev.pem').read
-      app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'pollios_notification_production.pem').read
+      app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'PolliosProduction.pem').read
       app.save!
     end
 
