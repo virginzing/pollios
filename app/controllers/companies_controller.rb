@@ -46,7 +46,7 @@ class CompaniesController < ApplicationController
 
 
   def poll_flags
-    @report_polls = Company::CompanyReportPoll.new(company_groups, @find_company).get_report_poll_in_company  
+    @report_polls = Company::CompanyReportPoll.new(company_groups, @find_company).get_report_poll_in_company
   end
 
   def via_email
@@ -75,7 +75,7 @@ class CompaniesController < ApplicationController
         end
       end
     end
-    
+
     total_email = ( list_email_text | list_email_file.collect.to_a).collect{|e| e.downcase }.uniq
 
     respond_to do |format|
@@ -86,7 +86,7 @@ class CompaniesController < ApplicationController
         format.html { redirect_to company_invites_path }
       else
         flash[:error] = "Error"
-        format.html { redirect_to via_email_path } 
+        format.html { redirect_to via_email_path }
       end
     end
     rescue => e
@@ -150,7 +150,7 @@ class CompaniesController < ApplicationController
           end
         end
       end
-      
+
       total_email = ( list_email_text | list_email_file).collect{|e| e.downcase }.uniq
 
       new_multi_signup_params = {
@@ -191,7 +191,7 @@ class CompaniesController < ApplicationController
       end
     end
   end
-  
+
   def remove_member
     # @group = Member.find(params[:member_id]).cancel_or_leave_group(params[:group_id], "L")
     @group = Group.leave_group(Member.cached_find(params[:member_id]), Group.cached_find(params[:group_id]))
@@ -236,7 +236,7 @@ class CompaniesController < ApplicationController
 
     @choice_poll = @poll.cached_choices.collect{|e| [e.answer, e.vote] }
     @choice_poll_latest_max = @choice_poll.collect{|e| e.last }.max
-      
+
     @choice_poll.each do |choice|
       @poll_data << { "name" => choice.first, "value" => choice.last }
     end
@@ -264,7 +264,7 @@ class CompaniesController < ApplicationController
         @percent_view = zero_percent
         @percent_noview = zero_percent
       end
-    end    
+    end
   end
 
   def edit_poll
@@ -275,7 +275,7 @@ class CompaniesController < ApplicationController
     @poll = Poll.find(params[:id])
 
     if update_poll_params[:expire_status].to_b
-      @poll.expire_date = Time.zone.now  
+      @poll.expire_date = Time.zone.now
     end
 
     if update_poll_params[:remove_campaign].to_b
@@ -321,7 +321,7 @@ class CompaniesController < ApplicationController
 
   def member_detail
     member_with_group = @member.get_group_active.with_group_type(:company)
-    
+
     @init_poll = PollOfGroup.new(current_member,member_with_group, options_params, true)
 
     list_voted_poll_ids = @member.cached_my_voted_all.collect{|e| e["poll_id"] }
@@ -398,7 +398,7 @@ class CompaniesController < ApplicationController
     @members_request = @group.members_request
 
     @activity_feeds = ActivityFeed.includes(:member, :trackable).where(group_id: @group.id).order("created_at desc").paginate(page: params[:page], per_page: 10)
-    # sleep 100 
+    # sleep 100
   end
 
   def create_group
@@ -440,7 +440,7 @@ class CompaniesController < ApplicationController
         @percent_view = zero_percent
         @percent_noview = zero_percent
       end
-    end  
+    end
   end
 
   def update_group
@@ -491,6 +491,7 @@ class CompaniesController < ApplicationController
         group.poll_count -= 1
         group.save!
       end
+      NotifyLog.poll_with_group_deleted(@poll, group)
     end
     @poll.destroy
     @poll.member.flush_cache_about_poll
@@ -519,11 +520,11 @@ class CompaniesController < ApplicationController
 
   # def add_user_to_group
 
-  #   find_user = Member.cached_find(params[:member_id])   
+  #   find_user = Member.cached_find(params[:member_id])
 
   #   init_list_group = Member::ListGroup.new(find_user)
 
-  #   respond_to do |format| 
+  #   respond_to do |format|
   #     Group.transaction do
   #       find_user_group = init_list_group.active.map(&:id)
 
@@ -590,7 +591,7 @@ class CompaniesController < ApplicationController
   end
 
   def delete_member_company
-    Group.transaction do 
+    Group.transaction do
       find_member = Member.cached_find(params[:member_id])
 
       if params[:group_id].present?
@@ -648,11 +649,11 @@ class CompaniesController < ApplicationController
   end
 
   def update_poll_params
-    params.require(:poll).permit(:expire_status, :campaign_id, :draft, :close_status, :remove_campaign)  
+    params.require(:poll).permit(:expire_status, :campaign_id, :draft, :close_status, :remove_campaign)
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve, :set_group_type, :opened)  
+    params.require(:group).permit(:name, :description, :photo_group, :cover, :public, :leave_group, :admin_post_only, :system_group, :need_approve, :set_group_type, :opened)
   end
 
   def options_params
