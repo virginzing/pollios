@@ -122,7 +122,7 @@ class Stats::UserRecord
   end
 
   def user_passive_range(end_date, start_date = Date.current)
-    MemberActiveRecord.where(:stats_created_at => { :$gte => end_date, :$lte => start_date }, active: "passive")
+    MemberActiveRecord.where(:stats_created_at => { :$gte => end_date, :$lte => start_date }, action: "passive")
   end
 
   def user_passive_total
