@@ -25,6 +25,12 @@ module Requests
       app.save!
     end
 
+    def set_default_pollios_app
+      PolliosApp.create!(name: "Pollios", app_id: "com.pollios.polliosapp", platform: "ios")
+      PolliosApp.create!(name: "Pollios Flickz", app_id: "com.pollios.polliosapp.flickz", platform: "ios")
+      PolliosApp.create!(name: "Pollios Beta", app_id: "com.pollios.polliosappbeta", platform: "ios")
+    end
+
   end
 
   module Caching

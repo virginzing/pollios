@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :check_token, proc { |c| c.request.format.json? }
   before_action :check_app_id, proc { |c| c.request.format.json? }
-  before_action :collect_passive_user, if: Proc.new {|c| c.request.format.json? }
+  before_action :collect_passive_user, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
 
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
 
