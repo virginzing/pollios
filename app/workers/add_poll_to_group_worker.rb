@@ -8,6 +8,7 @@ class AddPollToGroupWorker
     member  = Member.cached_find(member_id)
     group   = Group.cached_find(group_id)
     poll = Poll.raw_cached_find(poll_id)
+    sender_id = member.id
 
     raise ArgumentError.new(ExceptionHandler::Message::Poll::NOT_FOUND) if poll.nil?
 
@@ -60,12 +61,12 @@ class AddPollToGroupWorker
         worker: WORKER[:add_poll_to_group]
       }
 
-      NotifyLog.create!(sender_id: member.id, recipient_id: member.id, message: @apn_poll_to_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
+      NotifyLog.create!(sender_id: sender_id, recipient_id: member.id, message: @apn_poll_to_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
     end
 
     Apn::App.first.send_notifications
   rescue => e
     puts "AddPollToGroupWorker => #{e.message}"
   end
-  
+
 end
