@@ -477,7 +477,7 @@
 
 	function dropZonePhotoGroup(photo_group_url) {
 			$('input[type=file]#drop_photo_group').ezdz(option_drop_zone("Drop Photo"));
-	    $('input[type=file]#drop_photo_group').ezdz('preview', photo_group_url, option_drop_zone("Drop Photo"));   
+	    $('input[type=file]#drop_photo_group').ezdz('preview', photo_group_url, option_drop_zone("Drop Photo"));
 	}
 
 	function dropZoneCoverGroup(cover_url) {
@@ -1695,7 +1695,7 @@
 	            //     pageTotal = data.length ?
 	            //         data.reduce( function (a, b) {
 	            //         	return intVal(a) + intVal(b);
-	            //         } ) : 
+	            //         } ) :
 	            //     0;
 	            //     $( api.column( 6 ).footer() ).html(pageTotal);
 	            // }
@@ -1947,6 +1947,7 @@
 	function graphStatsDashboard() {
 	    $.polls_ago_chart = $("#polls_ago_chart").length;
 	    $.poll_created_today_chart = $("#number_of_polls_created_today_chart").length;
+	    $.poll_voted_today_chart = $("#number_of_polls_voted_today_chart").length;
 
 	    if ($.polls_ago_chart) {
 	        new Morris.Bar({
@@ -1973,6 +1974,25 @@
 	            // Chart data records -- each entry in this array corresponds to a point on
 	            // the chart.
 	            data: $('#number_of_polls_created_today_chart').data('polls'),
+	            // The name of the data record attribute that contains x-values.
+	            xkey: 'hours',
+	            // A list of names of data record attributes that contain y-values.
+	            ykeys: ['count'],
+
+	            barColors: ['#4c4f53'],
+	            // Labels for the ykeys -- will be displayed when you hover over the
+	            // chart.
+	            labels: ['Count']
+	        });
+	    }
+
+	    if ($.poll_voted_today_chart) {
+	        new Morris.Bar({
+	            // ID of the element in which to draw the chart.
+	            element: 'number_of_polls_voted_today_chart',
+	            // Chart data records -- each entry in this array corresponds to a point on
+	            // the chart.
+	            data: $('#number_of_polls_voted_today_chart').data('polls'),
 	            // The name of the data record attribute that contains x-values.
 	            xkey: 'hours',
 	            // A list of names of data record attributes that contain y-values.
