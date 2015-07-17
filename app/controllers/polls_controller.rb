@@ -21,6 +21,8 @@ class PollsController < ApplicationController
   before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
+  before_action :collect_active_user, only: [:create_poll, :vote, :comment]
+
   before_action :set_company, only: [:create_new_poll, :create_new_public_poll]
   before_action :only_public_survey, only: [:create_new_public_poll]
 

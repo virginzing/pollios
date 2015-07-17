@@ -1,6 +1,6 @@
 class Stats::UserRecord
   include FilterByStats
-  
+
   def initialize(options = {})
     @options = options
   end
@@ -34,6 +34,20 @@ class Stats::UserRecord
       user_active_range(1.month.ago.to_date)
     else
       user_active_total
+    end
+  end
+
+  def user_passive_all
+    @user_passive_all ||= if filter_by == TODAY
+      user_passive_range(Date.current, Date.current)
+    elsif filter_by == YESTERDAY
+      user_passive_range(1.days.ago.to_date, 1.days.ago.to_date)
+    elsif filter_by == WEEK
+      user_passive_range(7.days.ago.to_date)
+    elsif filter_by == MONTH
+      user_passive_range(1.month.ago.to_date)
+    else
+      user_passive_total
     end
   end
 
@@ -73,6 +87,22 @@ class Stats::UserRecord
     list_members.flatten.uniq.size
   end
 
+  def passive
+    list_members = []
+    user_passive_all.to_a.each do |member_active|
+      list_members << member_active.list_member_ids
+    end
+    list_members.flatten.uniq.size
+  end
+
+  def user_passive_total
+    list_members = []
+    user_passive_all.to_a.each do |member_active|
+      list_members << member_active.list_member_ids
+    end
+    list_members.flatten.uniq.size
+  end
+
   private
 
   def user_with_range(end_date, start_date = Date.current)
@@ -84,11 +114,19 @@ class Stats::UserRecord
   end
 
   def user_active_range(end_date, start_date = Date.current)
-    MemberActiveRecord.where(:stats_created_at => { :$gte => end_date, :$lte => start_date })
+    MemberActiveRecord.where(:stats_created_at => { :$gte => end_date, :$lte => start_date }, action: "active")
   end
 
   def user_active_total
-    MemberActiveRecord.all
+    MemberActiveRecord.where(active: "active")
+  end
+
+  def user_passive_range(end_date, start_date = Date.current)
+    MemberActiveRecord.where(:stats_created_at => { :$gte => end_date, :$lte => start_date }, active: "passive")
+  end
+
+  def user_passive_total
+    MemberActiveRecord.where(active: "passive")
   end
 
 end

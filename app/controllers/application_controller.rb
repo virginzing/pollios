@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :check_token, proc { |c| c.request.format.json? }
   before_action :check_app_id, proc { |c| c.request.format.json? }
+  before_action :collect_passive_user, proc { |c| c.request.format.json? }
 
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
 
@@ -36,6 +37,20 @@ class ApplicationController < ActionController::Base
     app_id = request.headers["HTTP_APP_ID"]
     if app_id.present?
       fail ExceptionHandler::UnprocessableEntity, "Application expired."  unless PolliosApp.list_app_ids.include?(app_id)
+    end
+  end
+
+  def collect_passive_user
+    if set_current_member.present?
+      app_id = request.headers["HTTP_APP_ID"]
+      MemberActiveRecord.record_member_active(set_current_member, "passive", app_id)
+    end
+  end
+
+  def collect_active_user
+    if set_current_member.present?
+      app_id = request.headers["HTTP_APP_ID"]
+      MemberActiveRecord.record_member_active(set_current_member, "active", app_id)
     end
   end
 
