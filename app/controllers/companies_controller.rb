@@ -493,6 +493,11 @@ class CompaniesController < ApplicationController
       end
       NotifyLog.poll_with_group_deleted(@poll, group)
     end
+
+    unless @poll.in_group
+      NotifyLog.check_update_poll_deleted(@poll)
+    end
+
     @poll.destroy
     @poll.member.flush_cache_about_poll
     DeletePoll.create_log(@poll)
