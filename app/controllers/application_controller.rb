@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   end
 
   before_filter :check_token, proc { |c| c.request.format.json? }
+  before_action :check_app_id, proc { |c| c.request.format.json? }
 
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
 
@@ -28,6 +29,13 @@ class ApplicationController < ActionController::Base
       access_token = set_current_member.api_tokens.where('token = ?', token)
       fail ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::WRONG unless access_token.present?
       true
+    end
+  end
+
+  def check_app_id
+    app_id = request.headers["HTTP_APP_ID"]
+    if app_id.present?
+      fail ExceptionHandler::UnprocessableEntity, "Application expired."  unless PolliosApp.list_app_ids.include?(app_id)
     end
   end
 
