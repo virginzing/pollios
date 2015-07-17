@@ -3,7 +3,7 @@ namespace :certificate do
   task setup: :environment do
      app = Apn::App.new
      app.apn_dev_cert   = Rails.root.join('config', 'certificates', 'local', 'PolliosDev.pem').read
-     app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'pollios_notification_production.pem').read
+     app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'PolliosProduction.pem').read
      app.save!
      puts "Setup Success."
   end
@@ -19,7 +19,7 @@ namespace :certificate do
   task :update => :environment do
     app = Apn::App.first
     app.apn_dev_cert   = Rails.root.join('config', 'certificates', 'local', 'PolliosDev.pem').read
-    app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'pollios_notification_production.pem').read
+    app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'PolliosProduction.pem').read
     app.save!
   end
 

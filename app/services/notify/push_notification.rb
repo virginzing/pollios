@@ -7,7 +7,7 @@ class Notify::PushNotification
   def env
     if @params[:env] == "production"
       APNS.host = "gateway.push.apple.com"
-      APNS.pem = File.join(Rails.root, 'config', 'certificates', 'server_production', 'pollios_notification_production.pem')
+      APNS.pem = File.join(Rails.root, 'config', 'certificates', 'server_production', 'PolliosProduction.pem')
     else
       APNS.host = "gateway.sandbox.push.apple.com"
       APNS.pem = File.join(Rails.root, 'config', 'certificates', 'local', 'PolliosDev.pem')
