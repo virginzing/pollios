@@ -118,7 +118,7 @@ class Stats::UserRecord
   end
 
   def user_active_total
-    MemberActiveRecord.where(active: "active")
+    MemberActiveRecord.where(action: "active")
   end
 
   def user_passive_range(end_date, start_date = Date.current)
@@ -126,7 +126,7 @@ class Stats::UserRecord
   end
 
   def user_passive_total
-    MemberActiveRecord.where(active: "passive")
+    MemberActiveRecord.where(action: "passive")
   end
 
 end
