@@ -232,6 +232,7 @@ class PollSeriesController < ApplicationController
   end
 
   def destroy
+    NotifyLog.deleted_feedback(@poll_series)
     @poll_series.destroy
     flash[:success] = "Successfully destroyed questionnaires."
     redirect_to company_questionnaires_path
