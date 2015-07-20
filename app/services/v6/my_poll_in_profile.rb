@@ -3,7 +3,7 @@ class V6::MyPollInProfile
   include GroupApi
 
   attr_accessor :next_cursor
-  
+
   def initialize(member, options = nil)
     @member = member
     @options = options
@@ -164,12 +164,12 @@ class V6::MyPollInProfile
   end
 
   def poll_voted(next_cursor = nil, limit_poll = LIMIT_POLL)
-    query = Poll.without_my_poll(member_id).load_more(next_cursor).available.joins(:history_votes => :choice).includes(:member, :campaign, :poll_groups)
+    query = Poll.load_more(next_cursor).available.joins(:history_votes => :choice).includes(:member, :campaign, :poll_groups)
                 .select("polls.*, history_votes.choice_id as choice_id")
                 .where("polls.series = 'f'")
                 .where("(history_votes.member_id = #{member_id} AND polls.in_group = 'f') " \
                        "OR (history_votes.member_id = #{member_id} AND poll_groups.group_id IN (?))",
-                       your_group_ids).references(:poll_groups)    
+                       your_group_ids).references(:poll_groups)
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
@@ -249,7 +249,7 @@ class V6::MyPollInProfile
         @poll_ids = @polls[(index+1)..(LIMIT_POLL+index)]
       else
         @polls.select!{ |e| e < set_next_cursor }
-        @poll_ids = @polls[0..(LIMIT_POLL-1)] 
+        @poll_ids = @polls[0..(LIMIT_POLL-1)]
       end
 
     else
@@ -274,7 +274,7 @@ class V6::MyPollInProfile
     [@select_poll, next_cursor]
   end
 
-  def get_type_of_poll_feed     
+  def get_type_of_poll_feed
     case @type_feed
       when "poll_created" then poll_with_my_created
       when "poll_voted" then poll_with_my_voted
