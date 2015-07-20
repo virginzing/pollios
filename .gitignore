@@ -23,3 +23,6 @@
 .ruby-gemset
 .ruby-version
 curl_testing.rb
+
+# Ignore Spring files.
+/spring/*.pid
