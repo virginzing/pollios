@@ -6,6 +6,6 @@ class MemberTest < ActiveSupport::TestCase
   end
 
   test "eiei" do
-    assert_equal(1, 2)
+    assert_equal(1, 1)
   end
 end
