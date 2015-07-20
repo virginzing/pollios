@@ -12,7 +12,7 @@ class V6::FriendPollInProfile
     @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
     @init_save_poll ||= SavePoll.new( { member_id: member.id} )
   end
-  
+
   def friend_id
     @friend.id
   end
@@ -42,7 +42,7 @@ class V6::FriendPollInProfile
   end
 
   def my_group_id
-    @my_group_ids ||= @my_group.map(&:id)  
+    @my_group_ids ||= @my_group.map(&:id)
   end
 
   def friend_group_id
@@ -78,7 +78,7 @@ class V6::FriendPollInProfile
   end
 
   def get_poll_friend
-    @poll_created ||= poll_created 
+    @poll_created ||= poll_created
   end
 
   def get_vote_friend
@@ -143,7 +143,7 @@ class V6::FriendPollInProfile
     query = Poll.available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
                 where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
-                "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
+                "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
                 my_and_friend_group, my_and_friend_group).references(:poll_groups)
   end
 
@@ -151,7 +151,7 @@ class V6::FriendPollInProfile
     query = Poll.available.joins(:history_votes).includes(:choices, :member, :campaign, :poll_groups)
                 .where("polls.series = 'f'")
                 .where("(history_votes.member_id = #{friend_id} AND polls.member_id IN (?) AND polls.in_group = 'f') " \
-                "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))", 
+                "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))",
                 (list_my_friend_ids << friend_id),
                 my_and_friend_group).references(:poll_groups)
   end
@@ -173,7 +173,7 @@ class V6::FriendPollInProfile
     query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(#{query_poll_member} AND #{poll_unexpire}) OR (#{query_poll_member} AND #{poll_expire_have_vote})" \
                 "OR (#{query_group_together} AND #{poll_unexpire}) OR (#{query_group_together} AND #{poll_expire_have_vote})" \
-                "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})", 
+                "OR (#{query_public} AND #{poll_unexpire}) OR (#{query_public} AND #{poll_expire_have_vote})",
                 my_and_friend_group, my_and_friend_group).references(:poll_groups)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
@@ -185,7 +185,8 @@ class V6::FriendPollInProfile
   def poll_voted_with_visibility(next_cursor = nil, limit_poll = LIMIT_POLL)
     query = Poll.without_my_poll(friend_id).load_more(next_cursor).available.joins(:history_votes).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
             .where("(history_votes.member_id = #{is_friend} AND polls.in_group = 'f' AND polls.series = 'f') " \
-            "OR (history_votes.member_id = #{friend_id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1 AND polls.qr_only = 'f')" \
+            "OR (history_votes.member_id = #{friend_id} AND polls.series = 't' AND polls.order_poll = 1 AND polls.qr_only = 'f')" \
+            "OR (history_votes.member_id = #{friend_id} AND polls.public = 't')" \
             "OR (history_votes.member_id = #{friend_id} AND poll_groups.group_id IN (?))",
             my_and_friend_group).references(:poll_groups)
 
@@ -203,7 +204,7 @@ class V6::FriendPollInProfile
             "OR (watcheds.member_id = #{friend_id} AND poll_groups.group_id IN (?))", my_and_friend_group)
             .order("watcheds.created_at DESC")
             .references(:poll_groups)
-            
+
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.limit(limit_poll)
     query
@@ -260,7 +261,7 @@ class V6::FriendPollInProfile
         @poll_ids = @polls[(index+1)..(LIMIT_POLL+index)]
       else
         @polls.select!{ |e| e < set_next_cursor }
-        @poll_ids = @polls[0..(LIMIT_POLL-1)] 
+        @poll_ids = @polls[0..(LIMIT_POLL-1)]
       end
 
     else
@@ -286,7 +287,7 @@ class V6::FriendPollInProfile
     [@select_poll, next_cursor]
   end
 
-  def get_type_of_poll_feed     
+  def get_type_of_poll_feed
     case @type_feed
       when "poll_created" then poll_with_friend_created
       when "poll_voted" then poll_with_friend_voted
@@ -332,6 +333,6 @@ class V6::FriendPollInProfile
     Rails.cache.delete([@member.id, 'watch_visible_with', @friend.id])
   end
 
-  
+
 end
 
