@@ -48,7 +48,7 @@ class PollSeriesController < ApplicationController
       render status: :created
     else
       render status: :unprocessable_entity
-    end  
+    end
   end
 
   def detail
@@ -79,7 +79,7 @@ class PollSeriesController < ApplicationController
     if @votes.present?
       if @poll_series.get_campaign
         @reward = @poll_series.find_campaign_for_predict?(@current_member)
-      end 
+      end
     end
 
   end
@@ -100,7 +100,7 @@ class PollSeriesController < ApplicationController
     @poll_series = PollSeries.new
     1.times do
       poll = @poll_series.polls.build
-      2.times do 
+      2.times do
         poll.choices.build
       end
     end
@@ -111,7 +111,7 @@ class PollSeriesController < ApplicationController
     @poll_series = PollSeries.new
     1.times do
       poll = @poll_series.polls.build
-      2.times do 
+      2.times do
         poll.choices.build
       end
     end
@@ -161,7 +161,7 @@ class PollSeriesController < ApplicationController
 
   def update
     if poll_series_params[:remove_campaign].to_b
-      @poll_series.campaign_id = 0  
+      @poll_series.campaign_id = 0
     end
 
     if @poll_series.update(poll_series_params)
@@ -180,12 +180,11 @@ class PollSeriesController < ApplicationController
 
       @poll_series = current_member.poll_series.new(PollSeries::WebForm.new(@current_member, poll_series_params).new_params)
 
-      puts "new params => #{PollSeries::WebForm.new(@current_member, poll_series_params).new_params}"
+      # puts "new params => #{PollSeries::WebForm.new(@current_member, poll_series_params).new_params}"
       @poll_series.expire_date = set_expire_date
       @poll_series.campaign_id = poll_series_params[:campaign_id].presence || 0
 
       unless @poll_series.public
-        # is_public = false
         @poll_series.in_group = true
         @poll_series.in_group_ids = "0"
         @poll_series.in_group_ids = poll_series_params[:group_id].select{|e| e if e.present? }.join(",")
@@ -201,10 +200,10 @@ class PollSeriesController < ApplicationController
 
       if @poll_series.save
         PollSeriesCompany.create_poll_series(@poll_series, current_member.get_company, :web)
-        
+
         if @poll_series.in_group
           @poll_series.in_group_ids.split(",").each do |group_id|
-            PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)    
+            PollSeriesGroup.create!(poll_series_id: @poll_series.id, group_id: group_id.to_i, member_id: current_member.id)
           end
         end
         flash[:success] = "Successfully created poll series."
@@ -233,6 +232,7 @@ class PollSeriesController < ApplicationController
   end
 
   def destroy
+    NotifyLog.deleted_feedback(@poll_series)
     @poll_series.destroy
     flash[:success] = "Successfully destroyed questionnaires."
     redirect_to company_questionnaires_path
@@ -254,6 +254,6 @@ class PollSeriesController < ApplicationController
   end
 
   def poll_series_params
-    params.require(:poll_series).permit(:remove_campaign, :close_status, :allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
+    params.require(:poll_series).permit(:remove_campaign, :close_status, :allow_comment, :expire_within, :feedback, :campaign_id, :description, :member_id, :expire_date, :public, :tag_tokens, :type_poll, :type_series, :qr_only, :require_info, :group_id => [],:same_choices => [], polls_attributes: [:id, :member_id, :title, :photo_poll, :series, :type_poll, :_destroy, :choices_attributes => [:id, :poll_id, :answer, :_destroy]])
   end
 end

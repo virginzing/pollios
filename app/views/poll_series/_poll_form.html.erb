@@ -1,4 +1,4 @@
-<div class="panel panel-redLight">  
+<div class="panel panel-redLight">
 
   <div class="panel-heading">
       <h4 class="panel-title">New Poll</h4>
@@ -12,13 +12,14 @@
         <label class="label">Question</label>
         <label class="textarea">
           <%= f.input :title , label: false, required: false, as: :text, input_html: { :'data-parsley-required' => true, id: 'question_title_' + Time.now.to_i.to_s, class: 'question_title' } %>
+          <%= f.input :series, as: :hidden, input_html: { value: true } %>
           <%= f.input :member_id, input_html: { value: current_member.id }, as: :hidden %>
           <!-- <%= f.input :type_poll, as: :hidden, input_html: { id: 'type_poll_' + Time.now.to_i.to_s } %> -->
           <%= f.input :type_poll, as: :hidden, input_html: { value: 2 } %>
           <span class="note">Support only rating (1-5).</span>
         </label>
       </section>
-      
+
 <!--       <section>
         <label class="label">Setting Choice Template</label>
         <div class="inline-group">
@@ -53,7 +54,7 @@
 $("input[name=checkbox-inline]").click(function() {
   var $this = $(this);
   var $id = $this.attr('id')
-  // $this will contain a reference to the checkbox   
+  // $this will contain a reference to the checkbox
   if ($this.is(':checked')) {
     hideCollectionChoice($id);
   } else {
