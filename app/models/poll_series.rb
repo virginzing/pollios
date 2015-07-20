@@ -141,8 +141,12 @@ class PollSeries < ActiveRecord::Base
   def send_notification
     unless Rails.env.test?
       unless qr_only
-        self.in_group_ids.split(",").each do |group_id|
-          QuestionnaireWorker.perform_async(self.member_id, self.id, group_id)
+        if in_group
+          self.in_group_ids.split(",").each do |group_id|
+            QuestionnaireWorker.perform_async(self.member_id, self.id, group_id)
+          end
+        else
+          FeedbackPublicWorker.perform_async(self.member_id, self.id)
         end
       end
     end
