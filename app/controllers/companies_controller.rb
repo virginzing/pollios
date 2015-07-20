@@ -385,8 +385,8 @@ class CompaniesController < ApplicationController
   def group_detail
     fail ExceptionHandler::Forbidden unless Company::ListGroup.new(current_member.get_company).access_group?(@group)
 
-    @init_poll = PollOfGroup.new(current_member, @group, options_params)
-    @polls = @init_poll.get_poll_of_group
+    init_poll = Company::Groups::ListPolls.new(@group)
+    @polls = init_poll.all
 
     @member_all = Group::ListMember.new(@group)
 
@@ -501,7 +501,7 @@ class CompaniesController < ApplicationController
     @poll.destroy
     @poll.member.flush_cache_about_poll
     DeletePoll.create_log(@poll)
-    flash[:notice] = "Destroy successfully."
+    flash[:success] = "Destroy successfully."
     redirect_to company_polls_path
   end
 

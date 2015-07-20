@@ -47,7 +47,7 @@ class PollSeries < ActiveRecord::Base
   after_commit :send_notification, on: :create
   after_commit :flush_cache
 
-  amoeba do 
+  amoeba do
     enable
 
     set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 } ]
@@ -72,7 +72,7 @@ class PollSeries < ActiveRecord::Base
   def self.filter_by(startdate, finishdate, options)
     startdate = startdate || Date.current
     finishdate = finishdate || Date.current
-    
+
     if options.present?
       startdate = Date.current
 
@@ -101,7 +101,7 @@ class PollSeries < ActiveRecord::Base
 
 
   def poll_first
-    Poll.find_by(poll_series_id: id, order_poll: 1)  
+    Poll.find_by(poll_series_id: id, order_poll: 1)
   end
 
   def self.daily_check_expire
@@ -116,7 +116,7 @@ class PollSeries < ActiveRecord::Base
       sum = 0
     else
       PollSeries.where("id IN (?)", questionnaire_ids).each do |ps|
-        Poll.unscoped.where("poll_series_id = ?", ps.id).order("polls.order_poll asc").includes(:choices).each do |poll|    
+        Poll.unscoped.where("poll_series_id = ?", ps.id).order("polls.order_poll asc").includes(:choices).each do |poll|
           array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).to_f
         end
       end
@@ -140,10 +140,12 @@ class PollSeries < ActiveRecord::Base
 
   def send_notification
     unless Rails.env.test?
-      self.in_group_ids.split(",").each do |group_id|
-        QuestionnaireWorker.perform_async(self.member_id, self.id, group_id) unless self.qr_only
+      unless qr_only
+        self.in_group_ids.split(",").each do |group_id|
+          QuestionnaireWorker.perform_async(self.member_id, self.id, group_id)
+        end
       end
-    end 
+    end
   end
 
   def find_campaign_for_predict?(member)
@@ -177,7 +179,7 @@ class PollSeries < ActiveRecord::Base
 
   def self.get_feedback_hourly
     recurring_poll_series_ids = []
-    
+
     hour = Time.zone.now.hour
     # hour = Date.current.midnight.hour
 
@@ -192,7 +194,7 @@ class PollSeries < ActiveRecord::Base
     where("id IN (?)", poll_series_ids).each do |ps|
       old_feedback = ps.amoeba_dup
       new_feedback = old_feedback.save!
-    end      
+    end
   end
 
   # def get_link_for_qr_code_series
@@ -261,7 +263,7 @@ class PollSeries < ActiveRecord::Base
   end
 
   def vote_questionnaire(params, member, poll_series, options = {})
-    
+
     surveyed_id = params[:surveyed_id] || params[:member_id]
     member_id = params[:member_id]
 
@@ -270,7 +272,7 @@ class PollSeries < ActiveRecord::Base
       list_answer.each do |answer|
         @votes = Poll.vote_poll(answer, member, options)
       end
-      
+
       self.with_lock do
         self.vote_all += 1
         self.save!
@@ -280,7 +282,7 @@ class PollSeries < ActiveRecord::Base
       CollectionPollSeries.update_sum_vote(poll_series)
       SavePollLater.delete_save_later(member_id, poll_series)
       member.flush_cache_my_vote
-    
+
       FlushCached::Member.new(member).clear_list_voted_all_polls
       true
     end
@@ -313,7 +315,7 @@ class PollSeries < ActiveRecord::Base
     {
       complete: complete_status,
       member_voted: @members_voted.size,
-      member_amount: @members_surveyable.size 
+      member_amount: @members_surveyable.size
     }
   end
 
