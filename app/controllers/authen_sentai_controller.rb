@@ -1,5 +1,5 @@
 class AuthenSentaiController < ApplicationController
-  protect_from_forgery with: :null_session
+
   before_action :authenticate_admin!, :redirect_unless_admin, only: :signup_company
   before_action :authenticate_with_token!,  only: [:signout_all_device]
 

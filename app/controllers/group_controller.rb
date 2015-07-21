@@ -1,5 +1,4 @@
 class GroupController < ApplicationController
-  protect_from_forgery with: :null_session
 
   before_action :authenticate_with_token!
   before_action :set_group, only: [:set_public, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]

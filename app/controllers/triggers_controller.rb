@@ -3,8 +3,6 @@ class TriggersController < ApplicationController
 
   before_action :find_trigger, only: [:destroy]
 
-  skip_before_action :verify_authenticity_token
-
   def index
     @list_triggers = Trigger.all
   end

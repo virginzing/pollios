@@ -3,8 +3,6 @@ module Api
     class CompaniesController < ApplicationController
       respond_to :json
 
-      skip_before_action :verify_authenticity_token
-
       before_action :list_groups, only: [:poll_detail]
       before_action :authenticate_with_token!, only: [:polls, :poll_detail]
       before_action :set_group, only: [:polls, :poll_detail]

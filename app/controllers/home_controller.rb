@@ -1,9 +1,9 @@
 class HomeController < ApplicationController
+
   before_action :signed_user, only: [:dashboard]
-  
   before_action :only_brand_or_company_account, only: [:dashboard]
 
-  def dashboard    
+  def dashboard
     if current_member.brand?
       @questionnaire = PollSeries.where(member_id: current_member.id).last
       @poll_latest_list = Poll.where(member_id: @current_member.id, series: false).order("created_at desc").limit(5)
@@ -17,7 +17,7 @@ class HomeController < ApplicationController
       render 'home/dashboard_company'
     end
   end
-  
+
   def index
     @popular_poll = PopularPoll.in_total
     render layout: 'homepage'

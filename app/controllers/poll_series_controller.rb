@@ -1,6 +1,6 @@
 class PollSeriesController < ApplicationController
   include PollSeriesHelper
-  skip_before_action :verify_authenticity_token
+
   before_action :signed_user, only: [:index, :new, :normal, :same_choice, :public_questionnaire]
   before_action :authenticate_with_token!, only: [:vote, :detail, :un_see, :save_later, :un_save_later]
   before_action :set_poll_series, only: [:questionnaire_detail, :edit, :update, :destroy, :vote, :generate_qrcode, :detail, :un_see, :save_later, :un_save_later]

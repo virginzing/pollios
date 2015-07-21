@@ -1,5 +1,5 @@
 class CampaignsController < ApplicationController
-  skip_before_action :verify_authenticity_token
+
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
   before_action :authenticate_with_token!, only: [:predict, :list_reward, :claim_reward, :delete_reward, :detail_reward]
   before_action :signed_user, only: [:index, :new, :show, :update, :destroy]

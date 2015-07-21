@@ -1,8 +1,6 @@
 class MobilesController < ApplicationController
   layout 'mobile'
 
-  skip_before_action :verify_authenticity_token
-
   expose(:member) { @auth.member }
   expose(:member_decorate) { current_member.decorate }
 
