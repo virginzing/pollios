@@ -176,15 +176,12 @@ Pollios::Application.routes.draw do
     get ':id/members',        to: 'group#members'
     post ':id/delete_poll',   to: 'group#delete_poll'
     post ':id/notification',  to: 'group#notification'
-    post ':id/group_update',  to: 'group#group_update'
     post ':id/kick_member',   to: 'group#kick_member'
     post ':id/promote_admin', to: 'group#promote_admin'
     post ':id/edit_group',    to: 'group#edit_group'
     post ':id/request_group', to: 'group#request_group'
     post ':id/public_id',     to: 'group#public_id'
     post ':id/set_public',    to: 'group#set_public'
-    delete ':id/delete_photo_group',  to: 'group#delete_photo_group', as: :delete_photo_group
-    delete ':id/delete_cover_group',  to: 'group#delete_cover_group', as: :delete_cover_group
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
@@ -560,6 +557,11 @@ Pollios::Application.routes.draw do
     end
 
     get 'load_group', to: 'groups#load_group', as: :web_load_group
+    scope 'group' do
+      post ':id/group_update',  to: 'groups#group_update'
+      delete ':id/delete_photo_group',  to: 'groups#delete_photo_group', as: :delete_photo_group
+      delete ':id/delete_cover_group',  to: 'groups#delete_cover_group', as: :delete_cover_group
+    end
   end
 
   get '/qrcode',  to: 'mobiles#check_qrcode'
