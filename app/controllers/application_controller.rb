@@ -1,11 +1,11 @@
-# ApplicationController
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
-  layout :layout_by_resource
+  include Authenticable
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
   include PollsHelper
+
+  protect_from_forgery with: :exception
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
@@ -13,25 +13,17 @@ class ApplicationController < ActionController::Base
 
   rescue_from VersionCake::UnsupportedVersionError, :with => :render_unsupported_version
 
+  layout :layout_by_resource
+
   before_filter proc { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-  before_action :check_token, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
   before_action :check_app_id, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
+
   before_action :collect_passive_user, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
 
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
-
-  def check_token
-    token_from_header = request.headers['Authorization']
-    return unless params[:member_id] && token_from_header.present?
-    authenticate_or_request_with_http_token do |token, _options|
-      access_token = set_current_member.api_tokens.where('token = ?', token)
-      fail ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::WRONG unless access_token.present?
-      true
-    end
-  end
 
   def check_app_id
     app_id = request.headers["HTTP_APP_ID"]
@@ -41,16 +33,16 @@ class ApplicationController < ActionController::Base
   end
 
   def collect_passive_user
-    if set_current_member.present?
+    if valid_current_member.present?
       app_id = request.headers["HTTP_APP_ID"]
-      MemberActiveRecord.record_member_active(set_current_member, "passive", app_id)
+      MemberActiveRecord.record_member_active(valid_current_member, "passive", app_id)
     end
   end
 
   def collect_active_user
-    if set_current_member.present?
+    if valid_current_member.present?
       app_id = request.headers["HTTP_APP_ID"]
-      MemberActiveRecord.record_member_active(set_current_member, "active", app_id)
+      MemberActiveRecord.record_member_active(valid_current_member, "active", app_id)
     end
   end
 
@@ -80,14 +72,6 @@ class ApplicationController < ActionController::Base
 
   def load_company
     @company = current_member.get_company
-  end
-
-  def history_voted_viewed
-    @history_voted = HistoryVote.joins(:member, :choice, :poll) \
-                                .select('history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result') \
-                                .where("history_votes.member_id = #{@current_member.id}") \
-                                .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }
-    @history_viewed = @current_member.history_views.map(&:poll_id)
   end
 
   def get_your_group

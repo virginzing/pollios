@@ -1,5 +1,4 @@
 class PollsController < ApplicationController
-  include Authenticable
   include InitializableFeed
   include Groupable
 
