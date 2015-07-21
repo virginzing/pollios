@@ -76,7 +76,7 @@ $('.searchable').multiSelect({
               if (origin.data('ajax') !== 'cached') {
                   $.ajax({
                       type: 'GET',
-                      url: '/load_group',
+                      url: "<%= web_load_group_path %>",
                       data: {
                         group_id: origin.attr('data-value-hidden')
                       },

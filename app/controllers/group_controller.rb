@@ -1,6 +1,6 @@
 class GroupController < ApplicationController
+  protect_from_forgery with: :null_session
 
-  skip_before_action :verify_authenticity_token
   before_action :authenticate_with_token!, only: [:set_public, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :edit_group, :promote_admin, :kick_member, :detail_group, :my_group, :build_group, :accept_group, :cancel_group, :leave_group, :poll_available_group, :poll_group, :notification, :add_friend_to_group]
   before_action :set_group, only: [:delete_photo_group, :delete_cover_group, :set_public, :members, :cancel_ask_join_group, :accept_request_group, :request_group, :delete_group, :edit_group, :promote_admin, :kick_member, :add_friend_to_group, :detail_group, :poll_group, :delete_poll, :notification, :poll_available_group, :leave_group, :cancel_group]
   before_action :initialize_poll_feed!, only: [:poll_group, :poll_available_group]
@@ -10,11 +10,6 @@ class GroupController < ApplicationController
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:hash_member_count) { @hash_member_count }
-
-  def load_group
-    @group = Group.cached_find(params[:group_id])
-    render layout: false
-  end
 
   def my_group
     init_list_group = Member::ListGroup.new(@current_member)

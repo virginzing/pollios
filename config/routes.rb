@@ -9,7 +9,6 @@ Pollios::Application.routes.draw do
   get 'list_members', to: 'members#list_members'
 
   get 'load_choice',  to: 'choices#load_choice'
-  get 'load_group', to: 'group#load_group'
 
   mount ApiTaster::Engine => "/api_taster"
 
@@ -559,6 +558,8 @@ Pollios::Application.routes.draw do
       get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
       get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
     end
+
+    get 'load_group', to: 'groups#load_group', as: :web_load_group
   end
 
   get '/qrcode',  to: 'mobiles#check_qrcode'
