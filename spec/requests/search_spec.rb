@@ -68,10 +68,8 @@ RSpec.describe "Search" do
     it "clear key of users_and_groups to empty" do
       TypeSearch.create_log_search_users_and_groups(member_two, "Nuttapon")
       TypeSearch.create_log_search_users_and_groups(member_two, "Nutty")
-      p TypeSearch.find_search_users_and_groups(member_two)
       expect(TypeSearch.find_search_users_and_groups(member_two).count).to eq(2)
       post "/searches/clear_search_users_and_groups.json", { member_id: member_two.id }, { "Accept" => "application/json" }
-      p TypeSearch.find_search_users_and_groups(member_two)
       expect(TypeSearch.find_search_users_and_groups(member_two).count).to eq(0)
     end
 

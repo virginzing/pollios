@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   include Authenticable
+  include InitializableFeed
+  include Groupable
   include ExceptionHandler
   include AuthenSentaiHelper
   include PollHelper
@@ -22,6 +24,8 @@ class ApplicationController < ActionController::Base
   before_action :check_app_id, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
 
   before_action :collect_passive_user, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
+
+  before_action :compress_gzip, if: Proc.new { |c| c.request.format.json? }
 
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
 
@@ -74,13 +78,6 @@ class ApplicationController < ActionController::Base
     @company = current_member.get_company
   end
 
-  def get_your_group
-    init_list_group = Member::ListGroup.new(@current_member)
-    your_group = init_list_group.active
-
-    @group_by_name = Hash[your_group.map { |f| [f.id, Hash['id' => f.id, 'name' => f.name, 'photo' => f.get_photo_group, 'member_count' => f.member_count, 'poll_count' => f.poll_count]] }]
-  end
-
   def only_brand_or_company_account
     return if @current_member.brand? || @current_member.company?
     cookies.delete(:auth_token)
@@ -88,14 +85,6 @@ class ApplicationController < ActionController::Base
       flash[:warning] = 'Only brand or companry account.'
       format.html { redirect_to authen_signin_path }
     end
-  end
-
-  def set_current_member
-    @current_member = Member.cached_find(params[:member_id])
-    fail ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BLACKLIST if @current_member.blacklist?
-    fail ExceptionHandler::Forbidden, ExceptionHandler::Message::Member::BAN if @current_member.ban?
-    Member.current_member = @current_member
-    @current_member
   end
 
   def only_company_account
@@ -142,25 +131,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def load_resource_poll_feed
-    return unless params[:member_id]
-    init_list_friend = Member::ListFriend.new(Member.current_member)
-    init_list_poll = Member::ListPoll.new(Member.current_member)
-    init_list_group = Member::ListGroup.new(Member.current_member)
-
-    Member.list_friend_active = init_list_friend.active
-    Member.list_friend_block = init_list_friend.block
-    Member.list_friend_request = init_list_friend.friend_request
-    Member.list_your_request = init_list_friend.your_request
-    Member.list_friend_following = init_list_friend.following
-
-    Member.list_group_active = init_list_group.active
-    Member.reported_polls = init_list_poll.reports
-    Member.viewed_polls   = init_list_poll.history_viewed
-    Member.voted_polls    = init_list_poll.voted_all
-    Member.watched_polls  = init_list_poll.watched_poll_ids
-  end
-
   def compress_gzip
     request.env['HTTP_ACCEPT_ENCODING'] = 'gzip'
   end
@@ -194,8 +164,6 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     'admin' if devise_controller?
   end
-
-  protected
 
   def request_http_token_authentication(realm = 'Application')
     headers['WWW-Authenticate'] = %(Token realm="#{realm.gsub(/"/, '')}")

@@ -1,17 +1,11 @@
 class PollsController < ApplicationController
-  include InitializableFeed
-  include Groupable
-
   protect_from_forgery with: :null_session
 
   before_action :authenticate_with_token!
-  before_action :initialize_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
+  before_action :initialize_poll_feed!, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
   before_action :set_poll, except: [:random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
-
-  before_action :compress_gzip, only: [:list_mentionable, :member_voted, :load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
-                                       :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
 
   before_action :list_groups, only: [:detail, :create_poll]
 
@@ -559,11 +553,5 @@ class PollsController < ApplicationController
 
   def poll_params
     params.permit(:thumbnail_type, :qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, choices: [], original_images: [])
-  end
-
-  protected
-
-  def json_request?
-    request.format.json?
   end
 end

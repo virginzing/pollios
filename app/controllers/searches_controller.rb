@@ -2,7 +2,6 @@ class SearchesController < ApplicationController
   include Authenticable
 
   before_action :authenticate_with_token!
-  before_action :compress_gzip
 
   def users_and_groups
     init_request_search = Request::Search.new(@current_member, users_and_groups_params.except(:member_id))

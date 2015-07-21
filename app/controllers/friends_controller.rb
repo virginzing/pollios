@@ -1,10 +1,9 @@
 class FriendsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  before_action :compress_gzip, only: [:list_of_bookmark, :list_of_save_poll_later, :list_of_group, :collection_profile, :follower_of_friend, :following_of_friend, :friend_of_friend, :list_of_vote, :list_friend, :list_of_watched,  :list_request, :search_friend, :polls, :profile, :list_of_poll, :my_following, :my_follower]
-  before_action :set_current_member
+  before_action :authenticate_with_token!
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]
-  before_action :load_resource_poll_feed, only: [:list_of_bookmark, :list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend]
+  before_action :initialize_poll_feed!, only: [:list_of_bookmark, :list_of_save_poll_later, :list_of_poll, :list_of_vote, :list_of_watched, :list_friend]
 
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -190,7 +189,7 @@ class FriendsController < ApplicationController
         @hash_member_count = init_list_group.hash_member_count_of_friend
       end
     end
-    
+
   end
 
   ## below is my profile ##
@@ -218,7 +217,7 @@ class FriendsController < ApplicationController
 
   def collection_profile
     if friend_params[:member_id] == friend_params[:friend_id]  # me
-    
+
       init_list_friend ||= Member::ListFriend.new(@current_member)
 
       @list_friend = init_list_friend.active
@@ -266,7 +265,7 @@ class FriendsController < ApplicationController
   def find_via_facebook
     init_list_friend ||= Member::ListFriend.new(@current_member)
     init_find_friend_via_facebook = Friend::FindFacebook.new(@current_member, params[:list_fb_id])
-    
+
     @list_friend = init_find_friend_via_facebook.get_friend_facebook
     @list_friend_is_friend = Friend.check_add_friend?(@current_member, @list_friend, init_list_friend.check_is_friend) if @list_friend.present?
   end
