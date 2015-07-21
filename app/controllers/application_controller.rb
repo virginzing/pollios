@@ -7,7 +7,9 @@ class ApplicationController < ActionController::Base
   include PollHelper
   include PollsHelper
 
-  protect_from_forgery with: :null_session
+  layout :layout_by_resource
+
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format.json? }
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
@@ -15,15 +17,13 @@ class ApplicationController < ActionController::Base
 
   rescue_from VersionCake::UnsupportedVersionError, :with => :render_unsupported_version
 
-  layout :layout_by_resource
-
   before_filter proc { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-  before_action :check_app_id, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
+  before_action :check_app_id, if: Proc.new { |c| c.request.format.json? && params[:member_id].present? }
 
-  before_action :collect_passive_user, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
+  before_action :collect_passive_user, if: Proc.new { |c| c.request.format.json? && params[:member_id].present? }
 
   before_action :compress_gzip, if: Proc.new { |c| c.request.format.json? }
 
