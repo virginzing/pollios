@@ -1,5 +1,4 @@
 class SearchesController < ApplicationController
-  include Authenticable
 
   before_action :authenticate_with_token!
 

@@ -1,4 +1,5 @@
 class TagsController < ApplicationController
+
   def index
     @tags = Tag.order("name asc")
     respond_to do |wants|
@@ -8,7 +9,7 @@ class TagsController < ApplicationController
 
   def search_autocmp_tags
     @tags = Tag.search_autocmp_tags(params["q"].rstrip)
-    
+
     if @tags.present?
       @tags = @tags
     else
@@ -28,5 +29,5 @@ class TagsController < ApplicationController
   def search_tag
     @tags = Tag.joins(:taggings)
   end
-  
+
 end

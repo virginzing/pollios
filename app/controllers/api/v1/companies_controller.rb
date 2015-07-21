@@ -3,17 +3,11 @@ module Api
     class CompaniesController < ApplicationController
       respond_to :json
 
-      skip_before_action :verify_authenticity_token
-
       before_action :authenticate_with_token!
-
       before_action :initialize_poll_feed!, only: [:polls, :poll_detail, :company_polls]
-
       before_action :list_groups, only: [:poll_detail, :polls]
       before_action :set_group, only: [:polls, :poll_detail]
-
       before_action :set_company
-
       before_action :set_poll_series, only: [:questionnaire_detail, :load_suggest]
 
       expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }

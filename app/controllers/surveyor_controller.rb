@@ -1,6 +1,5 @@
 class SurveyorController < ApplicationController
 
-
   def load_surveyor
     find_member = Member.find_by(id: params[:id])
     respond_to do |wants|

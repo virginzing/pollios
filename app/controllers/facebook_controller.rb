@@ -1,5 +1,4 @@
 class FacebookController < ApplicationController
-  protect_from_forgery :except => [:login]
 
   expose(:member) { @auth.member }
 

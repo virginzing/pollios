@@ -1,5 +1,4 @@
 class PollsController < ApplicationController
-  protect_from_forgery with: :null_session
 
   before_action :authenticate_with_token!
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,

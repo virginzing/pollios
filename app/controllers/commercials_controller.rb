@@ -1,7 +1,7 @@
 class CommercialsController < ApplicationController
+
   layout 'admin'
   decorates_assigned :member
-  skip_before_action :verify_authenticity_token
   before_filter :authenticate_admin!, :redirect_unless_admin
 
   def index

@@ -1,5 +1,5 @@
 class TemplatesController < ApplicationController
-  skip_before_action :verify_authenticity_token
+
   before_action :authenticate_with_token!, only: [:new_or_update, :poll_template]
 
   def new_or_update

@@ -1,9 +1,6 @@
-include MemberCoverPreset
-
 class MembersController < ApplicationController
   include SymbolHash
-
-  skip_before_action :verify_authenticity_token
+  include MemberCoverPreset
 
   before_action :authenticate_with_token!, only: [:all_request_groups, :update_notification, :special_code, :invite_fb_user, :invite_user_via_email, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :signed_user, only: [:account_setting, :index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
