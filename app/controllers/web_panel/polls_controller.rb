@@ -1,6 +1,5 @@
 module WebPanel
   class PollsController < ApplicationController
-    skip_before_action :verify_authenticity_token
 
     before_action :signed_user, except: [:load_poll, :poke_poll, :poke_dont_vote, :poke_dont_view, :poke_view_no_vote]
     before_action :set_company, only: [:create_new_poll, :create_new_public_poll]
