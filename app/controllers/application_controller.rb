@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   layout :layout_by_resource
 
-  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format.json? }
+  protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
