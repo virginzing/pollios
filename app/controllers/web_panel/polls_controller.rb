@@ -64,7 +64,7 @@ module WebPanel
 
     def create_new_poll
       @poll = Poll.new
-      @group_list = Company::ListGroup.new(current_company).show_in_groups
+      @group_list = Company::ListGroup.new(set_company).show_in_groups
     end
 
     def poll_latest

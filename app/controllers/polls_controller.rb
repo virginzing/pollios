@@ -3,6 +3,8 @@ class PollsController < ApplicationController
   include InitializableFeed
   include Groupable
 
+  protect_from_forgery with: :null_session
+
   before_action :authenticate_with_token!
   before_action :initialize_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
@@ -182,7 +184,7 @@ class PollsController < ApplicationController
     @poll = Poll.find_by(id: params[:poll_id])
   end
 
-  def choices #
+  def choices ## deprecate
     @expired = @poll.expire_date < Time.now
     @choices = @poll.cached_choices
     @voted = HistoryVote.voted?(@current_member, @poll.id)

@@ -4,7 +4,7 @@ RSpec.describe "Poll" do
 
   let!(:member) { create(:member, fullname: "Nutty", email: "nutty@gmail.com") }
   let!(:member_with_point) { create(:member, fullname: "NUT", email: "nuttyyy@gmail.com", point: 10) }
-  
+
   let!(:friend) { create(:member, fullname: "Ning", email: "ning@gmail.com") }
   let!(:second_member) { create(:member, fullname: "Nutty 2", email: "nutty_2@gmail.com") }
   let!(:poll) { create(:poll, member: member, title: "eiei") }
@@ -16,7 +16,7 @@ RSpec.describe "Poll" do
     let!(:group_member) { create(:group_member, group: group, member: member, is_master: true, active: true) }
 
     context "friend & following" do
-      
+
       before do
         post "/poll/create.json", { member_id: member.id, title: "test title", choices: ["1", "2", "3"], type_poll: "freeform", creator_must_vote: true, allow_comment: true, is_public: false }, { "Accept" => "application/json"}
         @poll_last = Poll.unscoped.last
@@ -77,7 +77,7 @@ RSpec.describe "Poll" do
         post "poll/create.json", { member_id: member.id, title: "eiei", choices: ["A", "B"], type_poll: "freeform", creator_must_vote: true, allow_comment: true, is_public: true }, { "Accept" => "application/json"}
         @poll_last = Poll.unscoped.last
         poll_public = PollMember.find_by(member: member, poll: @poll_last, public: true)
-        expect(response.status).to eq(201)        
+        expect(response.status).to eq(201)
         expect(poll_public.present?).to be_truthy
       end
     end
@@ -187,7 +187,7 @@ RSpec.describe "Poll" do
       post "/poll/#{poll.id}/bookmark.json", { member_id: member.id }, { "Accept" => "application/json" }
 
       expect(response.status).to eq(201)
-      
+
       expect(json["response_status"]).to eq("OK")
 
       expect(Bookmark.count).to eq(1)
@@ -367,6 +367,30 @@ RSpec.describe "Poll" do
       post "/poll/#{poll_in_friend.id}/promote_poll.json", { member_id: member_with_point.id }, { "Accept" => "application/json" }
       expect(json["response_status"]).to eq("OK")
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "POST /poll/scan_qrcode" do
+    before do
+      post "/scan_qrcode.json", { member_id: member.id, qrcode_key: poll.qrcode_key, id: poll.id }, { "Accept" => "application/json" }
+    end
+
+    it "should see detail of poll via scaning qrcode" do
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "GET /poll/:id/detail" do
+    before do
+      get "/poll/#{poll.id}/detail.json", { member_id: member.id }, { "Accept" => "application/json" }
+    end
+
+    it "should be all pass" do
+      expect(response.status).to eq(200)
+    end
+
+    it "should have a response keys equal default keys of poll feed" do
+      expect(json.keys.sort).to eq(Poll::KeysPollFeed::KEYS.sort)
     end
   end
 

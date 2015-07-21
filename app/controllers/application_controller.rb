@@ -17,8 +17,8 @@ class ApplicationController < ActionController::Base
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end
 
-  before_filter :check_token, proc { |c| c.request.format.json? }
-  before_action :check_app_id, proc { |c| c.request.format.json? }
+  before_action :check_token, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
+  before_action :check_app_id, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
   before_action :collect_passive_user, if: Proc.new {|c| c.request.format.json? && params[:member_id].present? }
 
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
