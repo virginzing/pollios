@@ -1,1 +1,0 @@
-json.partial! 'response_helper/poll/timeline'

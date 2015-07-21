@@ -1,7 +1,7 @@
 class CampaignsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_campaign, only: [:show, :edit, :update, :destroy, :polls, :predict]
-  before_action :set_current_member, only: [:predict, :list_reward, :claim_reward, :delete_reward, :detail_reward]
+  before_action :authenticate_with_token!, only: [:predict, :list_reward, :claim_reward, :delete_reward, :detail_reward]
   before_action :signed_user, only: [:index, :new, :show, :update, :destroy]
   before_action :history_voted_viewed, only: [:list_reward]
 
@@ -30,11 +30,6 @@ class CampaignsController < ApplicationController
     render status: @reward ? :created : :unprocessable_entity
   end
 
-  def predict
-    @predict = @campaign.prediction(@current_member.id)
-    puts "predict => #{@predict}"
-  end
-
   def list_reward
     @rewards = CampaignMember.without_deleted.list_reward(@current_member.id).paginate(page: params[:next_cursor])
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page
@@ -52,7 +47,7 @@ class CampaignsController < ApplicationController
     @poll = Poll.find(params[:poll_id])
     @history_votes = HistoryVote.joins(:member, :poll).where('polls.id = ?', poll_id).sample(number_luck)
     @uniq_history_votes = @history_votes.uniq {|e| e.member_id }
-    
+
     respond_to do |wants|
       wants.js
     end
@@ -142,11 +137,11 @@ class CampaignsController < ApplicationController
   end
 
   def confirm_lucky
-    
+
     if params[:member_id].present?
       member_id = params[:member_id].split(" ")
 
-      
+
     end
 
     respond_to do |wants|
@@ -156,7 +151,7 @@ class CampaignsController < ApplicationController
 
 
   def check_redeem
-    
+
     ## don't forget clear cache reward ##
   end
 
@@ -177,7 +172,7 @@ class CampaignsController < ApplicationController
   def show
     @poll_series = PollSeries.find_by(id: params[:psId]) if params[:psId]
     @poll_series_id = @poll_series.id if @poll_series.present?
-    
+
     @list_poll = Company::ListPoll.new(current_member.get_company).list_polls.where("campaign_id = ?", @campaign.id)
     @list_questionnaire = Company::ListPollSeries.new(current_member.get_company).list_poll_series.where("campaign_id = ?", @campaign.id)
   end
@@ -259,11 +254,19 @@ class CampaignsController < ApplicationController
     def set_reward
       @campaign_member = CampaignMember.find_by(id: params[:reward_id], member_id: params[:member_id], ref_no: params[:ref_no])
       raise ExceptionHandler::NotFound, "Reward not found" unless @campaign_member.present?
-      @campaign_member  
+      @campaign_member
     end
 
     def redeem_code_params
       params.permit(:serial_code, :member_id)
+    end
+
+    def history_voted_viewed
+      @history_voted = HistoryVote.joins(:member, :choice, :poll) \
+                                  .select('history_votes.*, choices.answer as choice_answer, choices.vote as choice_vote, polls.show_result as display_result') \
+                                  .where("history_votes.member_id = #{@current_member.id}") \
+                                  .collect! { |voted| [voted.poll_id, voted.choice_id, voted.choice_answer, voted.poll_series_id, voted.choice_vote, voted.display_result] }
+      @history_viewed = @current_member.history_views.map(&:poll_id)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

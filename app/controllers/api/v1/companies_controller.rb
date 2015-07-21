@@ -5,14 +5,13 @@ module Api
 
       skip_before_action :verify_authenticity_token
 
-      before_action :set_current_member
+      before_action :authenticate_with_token!
 
-      before_action :load_resource_poll_feed, only: [:polls, :poll_detail, :company_polls]
-      
-      before_action :get_your_group, only: [:poll_detail, :polls]
+      before_action :initialize_poll_feed!, only: [:polls, :poll_detail, :company_polls]
+
+      before_action :list_groups, only: [:poll_detail, :polls]
       before_action :set_group, only: [:polls, :poll_detail]
 
-      before_action :compress_gzip
       before_action :set_company
 
       before_action :set_poll_series, only: [:questionnaire_detail, :load_suggest]
@@ -54,7 +53,7 @@ module Api
                           .select("suggests.*, members.fullname as member_fullname, members.avatar as member_avatar")
                           .where(poll_series_id: suggest_params[:id]).order("suggests.created_at desc")
                           .paginate(page: suggest_params[:next_cursor])
-                          
+
         @new_suggest_sort = @suggests.sort { |x,y| x.created_at <=> y.created_at }
         @suggests_as_json = ActiveModel::ArraySerializer.new(@new_suggest_sort, each_serializer: SuggestSerializer).as_json()
         @next_cursor = @suggests.next_page.nil? ? 0 : @suggests.next_page
