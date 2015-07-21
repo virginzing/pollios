@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   include Authenticable
   include InitializableFeed
   include Groupable
@@ -7,9 +8,11 @@ class ApplicationController < ActionController::Base
   include PollHelper
   include PollsHelper
 
+  protect_from_forgery
+
   layout :layout_by_resource
 
-  protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
+  skip_before_action :verify_authenticity_token, if: :json_request?
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
@@ -135,10 +138,6 @@ class ApplicationController < ActionController::Base
     request.env['HTTP_ACCEPT_ENCODING'] = 'gzip'
   end
 
-  def request_json?
-    request.format.json?
-  end
-
   def redirect_unless_admin
     return if current_admin
     flash[:notice] = "You're not admin."
@@ -160,6 +159,10 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def json_request?
+    request.format.json?
+  end
 
   def layout_by_resource
     'admin' if devise_controller?
