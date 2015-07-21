@@ -26,6 +26,7 @@
       <div class="tab-content">
         <div id="tab_5-1" class="tab-pane active">
           <form role="form" action="<%= company_update_group_path %>" class="smart-form" method="post" id="group_profile">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
             <fieldset>
               <section>
                 <label class="label">Group Name</label>
@@ -64,7 +65,7 @@
                     <i data-swchon-text="Yes" data-swchoff-text="No"></i>Everybody see poll before join group</label>
                   </div>
                 </div>
-              </section>            
+              </section>
 
 <!--               <section>
                 <div class="row">
@@ -113,6 +114,7 @@
             File must be less than 500 kb and support file type as png, jpeg, jpg
           </div>
           <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
             <div class="form-group dropzone-photo">
               <input type="hidden" name="group_id" value="<%= @group.id %>">
               <input type="file" class="default" name="group[photo_group]" id="drop_photo_group" accept="image/png, image/jpeg, image/gif"/>
@@ -129,6 +131,7 @@
         </div>
         <div id="tab_5-3" class="tab-pane">
           <form role="form" action="<%= company_update_group_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
             <div class="form-group dropzone-photo">
               <input type="hidden" name="group_id" value="<%= @group.id %>">
               <input type="file" class="default" name="group[cover]" id="drop_cover_group" accept="image/png, image/jpeg, image/jpg"/>
@@ -146,7 +149,7 @@
             </footer>
           </form>
         </div>
-        
+
       </div>
     </div>
     <!--end col-md-9-->
@@ -182,7 +185,7 @@
 
   if ($.check_opened_group) {
     $("input[name='group[opened]']").attr( 'checked', 'checked' );
-  }  
+  }
 
   $("#group_profile").parsley();
   $(document).ready(function() {

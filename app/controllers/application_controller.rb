@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   include PollHelper
   include PollsHelper
 
-  protect_from_forgery
-
   layout :layout_by_resource
+
+  protect_from_forgery with: :exception
 
   skip_before_action :verify_authenticity_token, if: :json_request?
 

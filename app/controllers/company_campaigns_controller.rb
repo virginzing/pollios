@@ -31,7 +31,7 @@ class CompanyCampaignsController < ApplicationController
     @campaign = @company.campaigns.new(campaign_params)
 
     if @campaign.save
-      flash[:notice] = "Successfully created..."
+      flash[:success] = "Successfully created..."
       redirect_to company_campaigns_path
     else
       flash[:error] = "Fail"

@@ -9,24 +9,24 @@
 		<meta name="author" content="">
 		<meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
 		<!-- Use the correct meta names below for your web application
-			 Ref: http://davidbcalhoun.com/2010/viewport-metatag 
-			 
+			 Ref: http://davidbcalhoun.com/2010/viewport-metatag
+
 		<meta name="HandheldFriendly" content="True">
 		<meta name="MobileOptimized" content="320">-->
-		
+
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<!-- Basic Styles -->
-		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css">	
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/font-awesome.min.css">
 
 		<!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-production.css">
-		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.css">	
-		
+		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.css">
+
 		<!-- SmartAdmin RTL Support is under construction
 			<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-rtl.css"> -->
-		
+
 		<!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
 		<link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/demo.css">
 
@@ -76,7 +76,7 @@
 	      </a>
       </h1>
 			<% if current_admin %>
-			<span id="login-header-space"> <span class="hidden-xs">Need an Brand or Company account?</span> <a href="<%= users_signup_brand_url %>" class="btn btn-danger">Brand</a> 
+			<span id="login-header-space"> <span class="hidden-xs">Need an Brand or Company account?</span> <a href="<%= users_signup_brand_url %>" class="btn btn-danger">Brand</a>
 			<a href="<%= users_signup_company_url %>" class="btn btn-primary">Company</a> </span>
 			<% end %>
 		</header>
@@ -97,9 +97,9 @@
                   <a href="javascript:void(0);" class="btn btn-danger btn-sm">Demo 2</a>
                 </div> -->
               </div>
-              
+
               <img src="/smartadmin/img/demo/iphoneview.png" alt="" class="pull-right display-image" style="height:400px">
-              
+
             </div>
 
 <!--             <div class="row">
@@ -120,6 +120,7 @@
 					<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
 						<div class="well no-padding">
 							<form action="<%= new_users_signin_path %>" method="post" id="login-form" class="smart-form client-form" data-remote="true">
+								<%= csrf_meta_tag %>
 								<header>
 									Sign In
 								</header>
@@ -132,6 +133,8 @@
 											<input type="email" name="authen">
 											<b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter email address</b></label>
 									</section>
+
+
 
 									<section>
 										<label class="label">Password</label>
@@ -157,19 +160,19 @@
 							</form>
 
 						</div>
-												
+
 					</div>
 				</div>
 			</div>
 
 		</div>
 
-		<!--================================================== -->	
+		<!--================================================== -->
 
-		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events 		
+		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events
 		<script src="/smartadmin/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> -->
-		
-		<!-- BOOTSTRAP JS -->		
+
+		<!-- BOOTSTRAP JS -->
 		<script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script>
 
 		<!-- CUSTOM NOTIFICATION -->
@@ -177,35 +180,35 @@
 
 		<!-- JARVIS WIDGETS -->
 		<script src="/smartadmin/js/smartwidgets/jarvis.widget.min.js"></script>
-		
+
 		<!-- EASY PIE CHARTS -->
 		<script src="/smartadmin/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
-		
+
 		<!-- SPARKLINES -->
 		<script src="/smartadmin/js/plugin/sparkline/jquery.sparkline.min.js"></script>
-		
+
 		<!-- JQUERY VALIDATE -->
 		<script src="/smartadmin/js/plugin/jquery-validate/jquery.validate.min.js"></script>
-		
+
 		<!-- JQUERY MASKED INPUT -->
 		<script src="/smartadmin/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-		
+
 		<!-- JQUERY SELECT2 INPUT -->
 		<script src="/smartadmin/js/plugin/select2/select2.min.js"></script>
 
 		<!-- JQUERY UI + Bootstrap Slider -->
 		<script src="/smartadmin/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
-		
+
 		<!-- browser msie issue fix -->
 		<script src="/smartadmin/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
-		
+
 		<!-- FastClick: For mobile devices -->
 		<script src="/smartadmin/js/plugin/fastclick/fastclick.js"></script>
-		
+
 		<!--[if IE 7]>
-			
+
 			<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
-			
+
 		<![endif]-->
 
 		<!-- MAIN APP JS FILE -->

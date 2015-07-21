@@ -9,12 +9,12 @@
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <!-- Use the correct meta names below for your web application
       Ref: http://davidbcalhoun.com/2010/viewport-metatag
-      
+
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">-->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
     <link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" data-turbolinks-track="true">
     <!-- Basic Styles -->
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css" data-turbolinks-track="true">
@@ -77,11 +77,11 @@
     <script src="/smartadmin/js/plugin/datatables/dataTables.tableTools.min.js"></script>
     <script src="/smartadmin/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
     <script src="/smartadmin/js/plugin/datatables/dataTables.responsive.nightly.min.js"></script>
-    
+
     <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
+    <%= csrf_meta_tag %>
   </head>
   <body class="fixed-header">
 
@@ -112,7 +112,7 @@
         </div>
       <% end %>
       <!-- end logout button -->
-      
+
       <!-- search mobile button (this is hidden till mobile view port) -->
       <div id="search-mobile" class="btn-header transparent pull-right">
         <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
@@ -261,18 +261,18 @@
   <script src="/plugins/typeahead/typeaheadjs.min.js"></script>
   <!--<script src="/smartadmin/js/plugin/jquery.lazy.min.js"></script>-->
 
-  
+
   <!-- PAGE RELATED PLUGIN(S) -->
-  
+
   <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
   <!-- <script src="/smartadmin/js/plugin/flot/jquery.flot.cust.js"></script>
   <script src="/smartadmin/js/plugin/flot/jquery.flot.resize.js"></script>
   <script src="/smartadmin/js/plugin/flot/jquery.flot.tooltip.js"></script> -->
-  
+
   <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
   <!-- <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
   <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script> -->
-  
+
   <!-- Full Calendar -->
   <!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
   <script>
@@ -317,7 +317,7 @@
         }
     }]);
   }
-  
+
 
   function smoothScroll() {
       $(function() {
@@ -351,7 +351,7 @@
               });
       };
 
-      function poke_something(poke_something) { 
+      function poke_something(poke_something) {
         poke_something.on('ajax:send', function(xhr) {
           $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
         }).on('ajax:success', function (data, status, xhr) {
