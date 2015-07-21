@@ -1,7 +1,6 @@
 class CompaniesController < ApplicationController
-  decorates_assigned :poll, :member
 
-  skip_before_action :verify_authenticity_token
+  decorates_assigned :poll, :member
 
   before_action :signed_user
   before_action :set_company

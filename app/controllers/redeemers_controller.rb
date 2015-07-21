@@ -1,8 +1,7 @@
 class RedeemersController < ApplicationController
-  
+
   decorates_assigned :member
 
-  skip_before_action :verify_authenticity_token
   before_action :signed_user
   before_action :load_company
   before_action :check_using_service
@@ -17,19 +16,19 @@ class RedeemersController < ApplicationController
   end
 
   def create
-    
+
   end
 
   def edit
-    
+
   end
 
   def update
-    
+
   end
 
   def destroy
-    
+
   end
 
   private

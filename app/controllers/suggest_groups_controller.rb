@@ -1,10 +1,7 @@
 class SuggestGroupsController < ApplicationController
   layout 'admin'
 
-  skip_before_action :verify_authenticity_token, only: [:login_as, :create_notification]
-
   before_filter :authenticate_admin!
-
 
   expose(:current_suggest_group) { @current_suggest_group }
 
@@ -24,7 +21,7 @@ class SuggestGroupsController < ApplicationController
         SuggestGroup.create!(group_id: group_id)
       end
 
-      SuggestGroup.flush_cached_all  
+      SuggestGroup.flush_cached_all
 
       flash[:success] = "Successfully created"
     else

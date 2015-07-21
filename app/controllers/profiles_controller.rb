@@ -1,6 +1,5 @@
 class ProfilesController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
   before_action :authenticate_with_token!, only: [:load_form, :update_personal_detail]
 
   # def load_form

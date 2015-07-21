@@ -1,7 +1,6 @@
 class FeedbackQuestionnaireController < ApplicationController
-  decorates_assigned :collections
 
-  skip_before_action :verify_authenticity_token
+  decorates_assigned :collections
   before_action :signed_user
   before_action :load_company
   before_action :check_using_service
@@ -23,7 +22,7 @@ class FeedbackQuestionnaireController < ApplicationController
       2.times { poll.choices.build }
     end
 
-    @branch_list = @company.branches 
+    @branch_list = @company.branches
   end
 
   def collection
@@ -81,7 +80,7 @@ class FeedbackQuestionnaireController < ApplicationController
           @collection.collection_poll_series_branches.create!(branch_id: branch_id, poll_series_id: @poll_series.id)
           BranchPollSeries.create!(poll_series_id: @poll_series.id, branch_id: branch_id.to_i)
           list_question = @poll_series.polls.map {|e| [e.order_poll, e.title] }.sort {|x,y| x[0] <=> y[0]}
-          @collection.update(questions: list_question)  
+          @collection.update(questions: list_question)
         else
           @success = false
         end
@@ -98,7 +97,7 @@ class FeedbackQuestionnaireController < ApplicationController
         render action: 'new'
       end
     end
-    
+
   end
 
   def set_expire_date
@@ -110,7 +109,7 @@ class FeedbackQuestionnaireController < ApplicationController
   end
 
   def show
-    
+
   end
 
 
@@ -118,7 +117,7 @@ class FeedbackQuestionnaireController < ApplicationController
   @collection_poll = CollectionPollSeries.find(params[:id])
 
     if @collection_poll
-      
+
       @collection_poll.collection_poll_series_branches.each do |cp|
         cp.poll_series.destroy
       end

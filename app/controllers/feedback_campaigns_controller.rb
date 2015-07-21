@@ -1,6 +1,5 @@
 class FeedbackCampaignsController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
   before_action :signed_user
   before_action :load_company
   before_action :check_using_service
@@ -36,7 +35,7 @@ class FeedbackCampaignsController < ApplicationController
   end
 
   def edit
-    
+
   end
 
   def update
@@ -50,7 +49,7 @@ class FeedbackCampaignsController < ApplicationController
   end
 
   def destroy
-    
+
   end
 
   private
@@ -62,5 +61,5 @@ class FeedbackCampaignsController < ApplicationController
   def campaign_params
     params.require(:campaign).permit(:type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point, :friend_limit], :rewards_attributes => [:id, :title, :detail, :reward_expire, :_destroy])
   end
-  
+
 end

@@ -1,6 +1,5 @@
 class CollectionPollSeriesController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
   before_action :signed_user
   before_action :load_company
 
@@ -17,7 +16,7 @@ class CollectionPollSeriesController < ApplicationController
       @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
       @questionnaires = PollSeries.joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
-      @questionnaires.update_all(campaign_id: @collection.campaign_id)  
+      @questionnaires.update_all(campaign_id: @collection.campaign_id)
     end
 
     if @collection.update(collection_poll_series_params.except(:company_id))

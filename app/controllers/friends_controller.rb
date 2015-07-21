@@ -1,5 +1,4 @@
 class FriendsController < ApplicationController
-  skip_before_action :verify_authenticity_token
 
   before_action :authenticate_with_token!
   before_action :set_friend, only: [:profile, :list_of_poll, :list_of_vote, :list_of_group, :list_of_watched]

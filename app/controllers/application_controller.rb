@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   include PollHelper
   include PollsHelper
 
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
