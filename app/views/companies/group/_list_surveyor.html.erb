@@ -1,6 +1,6 @@
 <!-- widget div-->
 <div>
-  
+
   <!-- widget content -->
     <div class="widget-body no-padding">
 
@@ -11,7 +11,7 @@
             <th width="50">Avatar</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Action</th>
+            <th width="50">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +21,7 @@
               <td><img src="<%= member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= member.fullname %>"></td>
               <td><%= member.get_name %></td>
               <td><%= member.email %></td>
-              <td><a class="btn btn-default btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= company_remove_surveyor_path(@group.id, member.id) %>" rel="nofollow">Remove Surveyor</a></td>
+              <td><a class="btn btn-pill btn-danger" data-confirm="Are you sure?" data-method="delete" href="<%= company_remove_surveyor_path(@group.id, member.id) %>" rel="nofollow">Remove</a></td>
             </tr>
           <% end %>
         </tbody>
@@ -29,6 +29,6 @@
 
     </div>
 <!-- end widget content -->
-  
+
 </div>
 <!-- end widget div -->
