@@ -1,8 +1,7 @@
 class SearchesController < ApplicationController
-  
-  skip_before_action :verify_authenticity_token
-  before_action :set_current_member
-  before_action :compress_gzip
+  include Authenticable
+
+  before_action :authenticate_with_token!
 
   def users_and_groups
     init_request_search = Request::Search.new(@current_member, users_and_groups_params.except(:member_id))

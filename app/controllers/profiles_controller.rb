@@ -1,8 +1,7 @@
 class ProfilesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
-  before_action :set_current_member, only: [:load_form, :update_personal_detail]
-  before_action :compress_gzip, only: [:load_form]
+  before_action :authenticate_with_token!, only: [:load_form, :update_personal_detail]
 
   # def load_form
   #   @form = [{

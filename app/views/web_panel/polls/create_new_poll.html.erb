@@ -15,7 +15,7 @@
 
         <!-- widget content -->
         <div class="widget-body">
-          <%= simple_form_for @poll, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= simple_form_for @poll, url: web_create_poll_path, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
           <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
 
           <fieldset>

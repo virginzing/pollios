@@ -1,0 +1,6 @@
+one:
+  id: 1
+  member_id: 1
+  group_id: 1
+  is_master: true
+  active: true

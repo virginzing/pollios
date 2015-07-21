@@ -1,15 +1,10 @@
 class AuthenSentaiController < ApplicationController
-	protect_from_forgery :except => [:new_sigin_sentai, :signin_sentai, :signup_sentai, :update_sentai, :change_password, :signup_sentai_via_company, :multi_signup_via_company]
-	# before_action :current_login?, only: [:signin]
-  # before_action :compress_gzip, only: [:signin_sentai, :signup_sentai]
+  protect_from_forgery with: :null_session
   before_action :authenticate_admin!, :redirect_unless_admin, only: :signup_company
-  before_action :set_current_member,  only: [:signout_all_device]
+  before_action :authenticate_with_token!,  only: [:signout_all_device]
 
   expose(:current_member_id) { session[:member_id] }
   expose(:member) { @auth.member }
-
-	include Authenticate
-
 
 	def signin
     session[:activate_email] = nil
@@ -134,8 +129,8 @@ class AuthenSentaiController < ApplicationController
   	@response = Authenticate::Sentai.signup(signup_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response : #{@response}"
   	respond_to do |wants|
-      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"], 
-        "approve_brand" => signup_params["approve_brand"], "new_company" => signup_params["new_company"], "address" => signup_params["address"], 
+      @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "member_type" => signup_params["member_type"],
+        "approve_brand" => signup_params["approve_brand"], "new_company" => signup_params["new_company"], "address" => signup_params["address"],
         "company_id" => signup_params["company_id"], "select_service" => signup_params["select_service"], "register" => :in_app, "app_id" => signup_params[:app_id] ])
       )
 
@@ -144,9 +139,9 @@ class AuthenSentaiController < ApplicationController
         if @auth.activate_account?
           cookies[:auth_token] = { value: member.auth_token, expires: 6.hour.from_now }
           flash[:success] = "Sign up sucessfully."
-          @signup = true      
+          @signup = true
           @waiting_info = WaitingList.new(member).get_info
-          
+
           if signup_params["new_company"].to_b
             @company = @auth.member.get_company.decorate
             @feedback = @company.using_service? Company::FEEDBACK
@@ -240,7 +235,7 @@ class AuthenSentaiController < ApplicationController
         format.json { render status: 422 }
       end
     end
-    
+
   end
 
   def reset_password
@@ -288,7 +283,7 @@ class AuthenSentaiController < ApplicationController
       params.permit(:new_password, :password_reset_token)
     end
 
-    def signup_company_params 
+    def signup_company_params
       params.require(:member).permit(:company_id, :member_type, :email, :password, :password_confirmation, :redeemer, :feedback, :fullname)
     end
 

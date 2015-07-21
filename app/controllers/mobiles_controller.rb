@@ -8,20 +8,18 @@ class MobilesController < ApplicationController
 
   before_action :m_signin, only: [:polls, :vote_questionnaire, :recent_view]
   before_action :set_series, only: [:vote_questionnaire]
-  before_action :set_current_member, only: [:vote_questionnaire, :vote_poll]
+  before_action :authenticate_with_token!, only: [:vote_questionnaire, :vote_poll]
   before_action :set_poll, only: [:vote_poll]
   after_action :delete_cookie, only: [:authen_facebook]
-  
-  caches_page :terms_of_service, :privacy_policy
 
-  before_action :compress_gzip, only: [:product_id]
+  caches_page :terms_of_service, :privacy_policy
 
   def product_id
     @list_product_id = [
       ENV["1_PUBLIC_POLL"], ENV["5_PUBLIC_POLL"], ENV["10_PUBLIC_POLL"], ENV["1_MONTH"], ENV["1_YEAR"]
     ]
   end
-  
+
   def terms_of_service
     render layout: false
   end
@@ -68,7 +66,7 @@ class MobilesController < ApplicationController
         @questionnaire = @poll
         # raise ExceptionHandler::MobileVoteQuestionnaireAlready if HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
         @history_votes = HistoryVote.exists?(member_id: current_member.id, poll_series_id: @questionnaire.id)
-        
+
         PollSeries.view_poll(@current_member, @questionnaire) unless @history_votes
 
         @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("polls.order_poll asc")
@@ -104,7 +102,7 @@ class MobilesController < ApplicationController
       if @poll.campaign.random_immediately?
         @campaign, @message = @poll.find_campaign_for_predict?(current_member)
       end
-    end 
+    end
 
     respond_to do |wants|
       if @poll.present?
@@ -138,7 +136,7 @@ class MobilesController < ApplicationController
       if @questionnaire.campaign.random_immediately?
         @campaign, @message = @questionnaire.find_campaign_for_predict?(@current_member)
       end
-    end 
+    end
 
     @vote_status = false
 
@@ -209,11 +207,11 @@ class MobilesController < ApplicationController
   end
 
   def signin_form
-    
+
   end
 
   def signup_form
-    
+
   end
 
   def authen
@@ -308,7 +306,7 @@ class MobilesController < ApplicationController
         @poll = @collection_poll_series_branch.poll_series
         @feedback_status = @collection_poll_series_branch.collection_poll_series.feedback_status
       end
-      
+
     else
       @poll = Poll.find_by(id: id, series: series)
     end
@@ -319,7 +317,7 @@ class MobilesController < ApplicationController
   end
 
   def get_member_from_key(key)
-    decode64_key_member(key)  
+    decode64_key_member(key)
   end
 
   def decode64_key(key)

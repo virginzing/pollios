@@ -4,13 +4,11 @@ module Api
   class CampaignsController < ApplicationController
     skip_before_action :verify_authenticity_token
 
-    # before_action :set_current_member, only: [:redeem_code]
-
     def redeem_code
       @redeem = CampaignMember.with_reward_status(:receive).find_by(serial_code: redeem_code_params[:serial_code])
 
       respond_to do |wants|
-        
+
         if @redeem.present?
           if @redeem.redeem
             wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "You already use this serial code"], status: 422 }
@@ -22,7 +20,7 @@ module Api
 
             wants.json { render json: Hash["response_status" => "OK", "campaign" => @campaign_detail, "member_detail" =>  @member_detail, "response_message" => "Redeem sucessfully"] }
           end
-        else  
+        else
           wants.json { render json: Hash["response_status" => "ERROR", "response_message" => "Serial code not found"], status: 404 }
         end
       end
