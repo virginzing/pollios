@@ -91,16 +91,10 @@ Pollios::Application.routes.draw do
   resources :members
   resources :poll_series, except: [:index]
   resources :password_resets
-  # resources :invites
+
   resources :companies
 
   get 'invites/new',    to: 'invites#new',  as: :new_invitation
-
-  scope 'build_poll' do
-    get 'binary',   to: 'polls#binary', as: :binary_poll
-    get 'rating',   to: 'polls#rating', as: :rating_poll
-    get 'freeform', to: 'polls#freeform', as: :freeform_poll
-  end
 
   scope 'build_questionnaire' do
     get 'normal', to: 'poll_series#normal', as: :normal_questionnaire
@@ -438,8 +432,8 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
-    get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
-    get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
+    # get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
+    # get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
 
     get 'dashboard',  to: 'companies#dashboard', as: :company_dashboard
     get 'load_surveyor',  to: 'surveyor#load_surveyor'
@@ -556,6 +550,17 @@ Pollios::Application.routes.draw do
     get 'privacy_policy',   to: 'mobiles#privacy_policy', as: :app_privacy_policy
   end
 
+  scope module: 'web_panel' do
+    get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
+    get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
+    get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+
+    scope 'company' do
+      get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
+      get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
+    end
+  end
+
   get '/qrcode',  to: 'mobiles#check_qrcode'
   get '/qrcode_member', to: 'mobiles#check_qrcode_member'
 
@@ -574,9 +579,9 @@ Pollios::Application.routes.draw do
   post '/check_valid_email', to: 'members#check_valid_email'
   post '/check_valid_username', to: 'members#check_valid_username'
 
-  get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
-  get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
-  get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
+  # get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
+  # get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+  # get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
 
   post 'templates',       to: 'templates#new_or_update'
   get  'templates',        to: 'templates#poll_template'
