@@ -1,49 +1,25 @@
 class PollsController < ApplicationController
-  protect_from_forgery
+  include Authenticable
+  include InitializableFeed
+  include Groupable
 
-  skip_before_action :verify_authenticity_token
+  before_action :authenticate_with_token!
+  before_action :initialize_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
+                                                 :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
-  before_action :signed_user, only: [:index, :series, :new, :create_new_poll]
-
-  before_action :set_current_member, only: [:promote_poll, :list_mentionable, :member_voted, :random_poll, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :load_comment, :set_close, :poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :comment, :choices, :delete_poll, :report, :watch, :unwatch, :detail, :hashtag_popular, :hashtag,
-                                            :scan_qrcode, :hide, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :vote_poll, :view_poll, :tags, :my_poll, :share, :my_watched, :my_vote, :unshare, :vote, :destroy]
-  before_action :set_current_guest, only: [:guest_poll]
-
-  before_action :history_voted_viewed_guest, only: [:guest_poll]
-
-  before_action :set_poll, only: [:promote_poll, :list_mentionable, :member_voted, :bookmark, :un_bookmark, :un_save_later, :save_later, :un_see, :delete_poll_share, :close_comment, :open_comment, :set_close,:poke_poll, :poke_dont_view, :poke_view_no_vote, :poke_dont_vote, :delete_comment, :load_comment, :comment, :delete_poll, :report, :watch, :unwatch, :destroy, :vote, :view, :choices, :share, :unshare, :hide, :new_generate_qrcode, :scan_qrcode, :detail]
+  before_action :set_poll, except: [:random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
 
   before_action :compress_gzip, only: [:list_mentionable, :member_voted, :load_comment, :detail, :reward_poll_timeline, :hashtag_popular, :public_poll, :my_poll, :my_vote,
                                        :my_watched, :friend_following_poll, :group_timeline, :overall_timeline, :reward_poll_timeline]
 
-  before_action :get_your_group, only: [:detail, :create_poll]
-
-  before_action :load_resource_poll_feed, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
-                                                 :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
+  before_action :list_groups, only: [:detail, :create_poll]
 
   before_action :collect_active_user, only: [:create_poll, :vote, :comment]
-
-  # before_action :set_company, only: [:create_new_poll, :create_new_public_poll]
-  # before_action :only_public_survey, only: [:create_new_public_poll]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:hash_priority) { @hash_priority }
-
-  respond_to :json
-
-  def load_poll
-    if params[:trigger].to_b
-      @poll = Poll.where("title LIKE ? AND series = 'f' AND id NOT IN (?)", "%#{params[:q]}%", Trigger.all.map(&:triggerable_id))
-    else
-      @poll = Poll.where("title LIKE ? AND series = 'f'", "%#{params[:q]}%")
-    end
-
-    @poll_as_json = ActiveModel::ArraySerializer.new(@poll, each_serializer: LoadPollSerializer).to_json()
-
-    render json: @poll_as_json, root: false
-  end
 
   def un_see
     @un_see_poll = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll)
@@ -102,51 +78,6 @@ class PollsController < ApplicationController
     end
   end
 
-  # def poll_latest
-  #   @poll_latest_data = []
-  #   @choice_poll_latest = []
-
-  #   @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
-  #   @poll_latest = @init_poll.get_poll_of_group_company.decorate.first
-
-  #   if @poll_latest.present?
-  #     @choice_poll_latest = @poll_latest.cached_choices.collect{|e| [e.answer, e.vote] }
-  #     @choice_poll_latest_max = @choice_poll_latest.collect{|e| e.last }.max
-
-  #     @choice_poll_latest.each do |choice|
-  #       @poll_latest_data << { "name" => choice.first, "value" => choice.last }
-  #     end
-  #   end
-
-  #   render layout: false
-  # end
-
-  # def poll_latest_in_public
-  #   @poll_latest_in_public_data = []
-  #   @choice_poll_latest_in_public = []
-
-  #   @init_poll ||= Company::PollPublic.new(set_company)
-  #   @poll_latest_in_public = @init_poll.get_list_public_poll.decorate.first
-
-  #   if @poll_latest_in_public.present?
-  #     @choice_poll_latest_in_public = @poll_latest_in_public.cached_choices.collect{|e| [e.answer, e.vote] }
-  #     @choice_poll_latest_in_public_max = @choice_poll_latest_in_public.collect{|e| e.last }.max
-
-  #     @choice_poll_latest_in_public.each do |choice|
-  #       @poll_latest_in_public_data << { "name" => choice.first, "value" => choice.last }
-  #     end
-  #   end
-
-  #   render layout: false
-  # end
-
-  # def poll_popular
-  #   @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, {}, true)
-  #   @poll_popular = @init_poll.get_poll_of_group_company.where("vote_all != 0").order("vote_all desc").limit(5).decorate.sample(5).first
-  #   @choice_poll_popular = []
-  #   render layout: false
-  # end
-
   def member_voted
     begin
       @find_choice = Choice.find_by(id: params[:choice_id])
@@ -154,136 +85,19 @@ class PollsController < ApplicationController
       @history_votes_show_result ||= HistoryVote.includes(:member)
                                     .where(poll_id: @poll.id, choice_id: @find_choice.id, show_result: true).paginate(page: params[:next_cursor], per_page: 30)
 
-      # @history_votes_show_result = @history_votes.select{|e| e if e.show_result }
-      # @history_votes_not_show_result = @history_votes.select{|e| e unless e.show_result }
-
       @list_history_votes_show_result = @history_votes_show_result.collect{|e| e.member.serializer_member_detail }
 
       @next_cursor = @history_votes_show_result.next_page.nil? ? 0 : @history_votes_show_result.next_page
       @total_history_votes_show_result = @history_votes_show_result.total_entries
 
-      # puts "history vote show result => #{@history_votes_show_result}"
-
-      # puts "history votes not show result => #{@history_votes_not_show_result.size}"
     rescue ActiveRecord::RecordNotFound => e
       @response_message = e.message
-    end
-  end
-
-  def generate_qrcode
-    @qr = QrcodeSerializer.new(Poll.find(params[:id])).as_json.to_json
-    puts "#{@qr}"
-    if params[:png_size] == "2x"
-      respond_to do |format|
-        format.png  { render :qrcode => @qr, :level => :h, :unit => 6, layout: false }
-      end
-    else
-      respond_to do |format|
-        format.json
-        format.html
-        format.svg  { render :qrcode => @qr, :level => :h, :size => 4 }
-        format.png  { render :qrcode => @qr, :level => :h, :unit => 4, layout: false }
-        format.gif  { render :qrcode => @qr }
-        format.jpeg { render :qrcode => @qr }
-      end
-    end
-  end
-
-  def set_last_update_poll
-    @current_member.update_columns(poll_public_req_at: Time.now) if action_name == "public_poll"
-    @current_member.update_columns(poll_overall_req_at: Time.now) if action_name == "overall_timeline"
-  end
-
-  def new_generate_qrcode
-    puts params[:id]
-    @poll.update!(qrcode_key: SecureRandom.hex(6))
-    flash[:success] = "Re-Generate QRCode"
-    respond_to do |wants|
-      wants.html { redirect_to polls_path }
     end
   end
 
   def scan_qrcode
     from_scan = Qrcode.new(scan_qrcode_params)
     @poll = from_scan.poll_detail
-    puts "@poll => #{@poll.as_json()}"
-  end
-
-  def new
-    @poll = Poll.new
-  end
-
-  # def create_new_poll
-  #   @poll = Poll.new
-  #   @group_list = Company::ListGroup.new(current_company).show_in_groups
-  # end
-
-  # def create_new_public_poll
-  #   @poll = Poll.new
-  # end
-
-  # def binary
-  #   @poll = Poll.new
-  #   @group_list = current_member.get_company.groups if current_member.get_company.present?
-  # end
-
-  # def rating
-  #   @poll = Poll.new
-  #   @group_list = current_member.get_company.groups if current_member.get_company.present?
-  # end
-
-  # def freeform
-  #   @poll = Poll.new
-  #   @group_list = current_member.get_company.groups if current_member.get_company.present?
-  # end
-
-  def index
-    if current_member.get_company.present?
-      @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
-      @polls = @init_poll.get_poll_of_group_company.paginate(page: params[:next_cursor])
-    else
-      @polls = Poll.where(member_id: current_member.id, series: false).paginate(page: params[:page])
-    end
-  end
-
-  def create ## for Web
-    Poll.transaction do
-      in_group = false
-      @build_poll = BuildPoll.new(current_member, polls_params, {choices: params[:choices]})
-      new_poll_binary_params = @build_poll.poll_binary_params
-      @poll = Poll.new(new_poll_binary_params)
-      @poll.choice_count = @build_poll.list_of_choice.size
-      @poll.qrcode_key = @poll.generate_qrcode_key
-
-      if @poll.save
-        @choice = Choice.create_choices_on_web(@poll.id, @build_poll.list_of_choice)
-
-        PollCompany.create_poll(@poll, set_company, :web)
-
-        @poll.create_tag(@build_poll.title_with_tag)
-
-        @poll.create_watched(current_member, @poll.id)
-
-        if @poll.in_group_ids != "0"
-          in_group = true
-          Group.add_poll(current_member, @poll, @poll.in_group_ids.split(",").collect{ |e| e.to_i } )
-          Company::TrackActivityFeedPoll.new(current_member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
-        end
-
-        unless @poll.qr_only
-          current_member.poll_members.create!(poll_id: @poll.id, share_poll_of_id: 0, public: @poll.public, series: @poll.series, expire_date: @poll.expire_date, in_group: in_group)
-        end
-
-        PollStats.create_poll_stats(@poll)
-        current_member.flush_cache_about_poll
-        Activity.create_activity_poll(current_member, @poll, 'Create')
-        @poll.flush_cache
-        flash[:success] = "Create poll successfully."
-        redirect_to current_member.get_company.present? ? company_polls_path : polls_path
-      else
-        redirect_to company_polls_path
-      end
-    end
   end
 
   def delete_poll
@@ -352,89 +166,6 @@ class PollsController < ApplicationController
     end
   end
 
-
-  # def show
-  #   @choice_data_chart = []
-  #   if current_member.get_company.present?
-  #     init_company = PollDetailCompany.new(params[:group_id] || @poll.groups, @poll)
-  #     @member_group = init_company.get_member_in_group
-  #     @member_voted_poll = init_company.get_member_voted_poll
-  #     @member_novoted_poll = init_company.get_member_not_voted_poll
-  #     @member_viewed_poll = init_company.get_member_viewed_poll
-  #     @member_noviewed_poll = init_company.get_member_not_viewed_poll
-  #     @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
-
-  #     if @member_group.size > 0
-  #       @percent_vote = ((@member_voted_poll.size * 100)/@member_group.size).to_s
-  #       @percent_novote = ((@member_novoted_poll.size * 100)/@member_group.size).to_s
-  #       @percent_view = ((@member_viewed_poll.size * 100)/@member_group.size).to_s
-  #       @percent_noview = ((@member_noviewed_poll.size * 100)/@member_group.size).to_s
-  #     else
-  #       zero_percent = "0"
-  #       @percent_vote = zero_percent
-  #       @percent_novote = zero_percent
-  #       @percent_view = zero_percent
-  #       @percent_noview = zero_percent
-  #     end
-  #   end
-  # end
-
-  def poke_poll
-    respond_to do |format|
-      if params[:sender_id] && params[:member_id] && params[:id]
-        PokePollWorker.perform_async(params[:sender_id], [params[:member_id]], params[:id])
-        format.json { render json: [], status: 200 }
-      else
-        format.json { render json: { error_message: "No" }, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def poke_dont_vote
-    respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.get_company.groups, @poll)
-      @member_novoted_poll = init_company.get_member_not_voted_poll
-
-      if @member_novoted_poll.length > 0
-        PokePollWorker.perform_async(@current_member.id, @member_novoted_poll.collect{|e| e.id }, params[:id])
-
-        format.json { render json: [], status: 200 }
-      else
-        format.json { render json: { error_message: "No" }, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def poke_dont_view
-    respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.get_company.groups, @poll)
-      @member_noviewed_poll = init_company.get_member_not_viewed_poll
-
-      if @member_noviewed_poll.length > 0
-        PokePollWorker.perform_async(@current_member.id, @member_noviewed_poll.collect{|e| e.id }, params[:id])
-
-        format.json { render json: [], status: 200 }
-      else
-        format.json { render json: { error_message: "No" }, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def poke_view_no_vote
-    respond_to do |format|
-      init_company = PollDetailCompany.new(@current_member.get_company.groups, @poll)
-      @member_viewed_no_vote_poll = init_company.get_member_viewed_not_vote_poll
-
-      if @member_viewed_no_vote_poll.length > 0
-        PokePollWorker.perform_async(@current_member.id, @member_viewed_no_vote_poll.collect{|e| e.id }, params[:id])
-
-        format.json { render json: [], status: 200 }
-      else
-        format.json { render json: { error_message: "Don't have a data" }, status: :unprocessable_entity }
-      end
-    end
-  end
-
   def set_close
     raise ExceptionHandler::UnprocessableEntity, "You're not owner this poll" if @poll.member_id != @current_member.id
 
@@ -451,41 +182,22 @@ class PollsController < ApplicationController
     @poll = Poll.find_by(id: params[:poll_id])
   end
 
-  def choices
+  def choices #
     @expired = @poll.expire_date < Time.now
     @choices = @poll.cached_choices
     @voted = HistoryVote.voted?(@current_member, @poll.id)
   end
 
   def public_poll
-    if derived_version == 4
-      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = Poll.list_of_poll(@current_member, ENV["PUBLIC_POLL"], options_params)
-    elsif derived_version == 5
-      @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
+    @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
 
-      @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
+    @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
 
-      @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
+    @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
 
-      @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-      @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-      @total_entries = @polls.total_entries
-    elsif derived_version == 6
-      public_timeline = V6::PublicTimeline.new(@current_member, options_params)
-      @list_polls, @list_shared, @order_ids, @next_cursor = public_timeline.get_timeline
-      @group_by_name = public_timeline.group_by_name
-      @total_entries = public_timeline.total_entries
-    else
-      @init_poll = PublicTimelinable.new(public_poll_params, @current_member)
-
-      @poll_paginate = @init_poll.poll_public.paginate(page: params[:next_cursor])
-
-      @polls = public_poll_params["pull_request"] == "yes" ? @poll_paginate.per_page(1000) : @poll_paginate
-
-      @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-      @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-      @total_entries = @polls.total_entries
-    end
+    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+    @total_entries = @polls.total_entries
   end
 
   def detail
@@ -497,7 +209,7 @@ class PollsController < ApplicationController
     @choices_as_json = @poll.get_choice_detail
   end
 
-  def random_poll
+  def random_poll #
     @poll = Poll.unscoped.public_poll.active_poll.order("RANDOM()").first
     Poll.view_poll(@poll, @current_member)
     @expired = @poll.expire_date < Time.now
@@ -505,17 +217,10 @@ class PollsController < ApplicationController
   end
 
   def friend_following_poll
-    if params[:api_version].to_i < 6
-      friend_following_timeline = FriendFollowingTimeline.new(@current_member, options_params)
-      @poll_series, @series_shared, @poll_nonseries, @nonseries_shared, @next_cursor = friend_following_timeline.poll_friend_following
-      @group_by_name = friend_following_timeline.group_by_name
-      @total_entries = friend_following_timeline.total_entries
-    else
-      friend_following_timeline = V6::FriendFollowingTimeline.new(@current_member, options_params)
-      @list_polls, @list_shared, @order_ids, @next_cursor = friend_following_timeline.get_timeline
-      @group_by_name = friend_following_timeline.group_by_name
-      @total_entries = friend_following_timeline.total_entries
-    end
+    friend_following_timeline = V6::FriendFollowingTimeline.new(@current_member, options_params)
+    @list_polls, @list_shared, @order_ids, @next_cursor = friend_following_timeline.get_timeline
+    @group_by_name = friend_following_timeline.group_by_name
+    @total_entries = friend_following_timeline.total_entries
   end
 
   def overall_timeline
@@ -540,39 +245,21 @@ class PollsController < ApplicationController
   end
 
   def my_poll
-    if derived_version == 6
-      @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
-      @list_polls, @next_cursor = @init_poll.get_my_poll
-      @group_by_name = @init_poll.group_by_name
-    else
-      @init_poll = MyPollInProfile.new(@current_member, options_params)
-      @polls = @init_poll.my_poll.paginate(page: params[:next_cursor])
-      poll_helper
-    end
+    @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+    @list_polls, @next_cursor = @init_poll.get_my_poll
+    @group_by_name = @init_poll.group_by_name
   end
 
   def my_vote
-    if derived_version == 6
-      @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
-      @list_polls, @next_cursor = @init_poll.get_my_vote
-      @group_by_name = @init_poll.group_by_name
-    else
-      @init_poll = MyPollInProfile.new(@current_member, options_params)
-      @polls = @init_poll.my_vote.paginate(page: params[:next_cursor])
-      poll_helper
-    end
+    @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+    @list_polls, @next_cursor = @init_poll.get_my_vote
+    @group_by_name = @init_poll.group_by_name
   end
 
   def my_watched
-    if derived_version == 6
-      @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
-      @list_polls, @next_cursor = @init_poll.get_my_watch
-      @group_by_name = @init_poll.group_by_name
-    else
-      @init_poll = MyPollInProfile.new(@current_member, options_params)
-      @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
-      poll_helper
-    end
+    @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
+    @list_polls, @next_cursor = @init_poll.get_my_watch
+    @group_by_name = @init_poll.group_by_name
   end
 
   def poll_helper
@@ -581,7 +268,6 @@ class PollsController < ApplicationController
     @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
     @total_entries = @polls.total_entries
   end
-
 
   def guest_poll
     if params[:type] == "active"
@@ -626,7 +312,6 @@ class PollsController < ApplicationController
     end
   end
 
-
   def hashtag
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
     @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_timeline
@@ -654,10 +339,6 @@ class PollsController < ApplicationController
     @vote = Hash["voted" => true, "choice_id" => @history_voted.choice_id] if @history_voted
     @poll = @poll.reload
   end
-
-  # def view
-  #   @poll = Poll.view_poll(view_and_vote_params)
-  # end
 
   def create_poll
     @poll, @error_message, @alert_message = Poll.create_poll(poll_params, @current_member)
@@ -752,7 +433,7 @@ class PollsController < ApplicationController
     end
   end
 
-  def load_comment
+  def load_comment #
     raise_exception_without_group if @poll.in_group
     init_list_poll ||= Member::ListPoll.new(@current_member)
     list_report_comments_ids = init_list_poll.report_comments.map(&:id)
@@ -771,7 +452,7 @@ class PollsController < ApplicationController
     @total_entries = @comments.total_entries
   end
 
-  def list_mentionable
+  def list_mentionable #
     init_list_mentionable = Poll::ListMentionable.new(@current_member, @poll)
     @list_mentionable = ActiveModel::ArraySerializer.new(init_list_mentionable.get_list_mentionable, each_serializer: MentionSerializer).as_json
   end
@@ -794,12 +475,12 @@ class PollsController < ApplicationController
     end
   end
 
-  def open_comment
+  def open_comment #
     @poll = @poll.update(allow_comment: true)
     render status: :created if @poll
   end
 
-  def close_comment
+  def close_comment #
     @poll = @poll.update(allow_comment: false)
     render status: :created if @poll
   end
@@ -877,10 +558,6 @@ class PollsController < ApplicationController
 
   def poll_params
     params.permit(:thumbnail_type, :qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, choices: [], original_images: [])
-  end
-
-  def polls_params
-    params.require(:poll).permit(:draft, :show_result, :creator_must_vote, :qr_only, :require_info, :allow_comment, :member_type, :campaign_id, :member_id, :title, :public, :expire_within, :expire_date, :choice_count, :tag_tokens, :recurring_id, :type_poll, :choice_one, :choice_two, :choice_three, :photo_poll, :title_with_tag, group_id: [], choices_attributes: [:id, :answer, :_destroy])
   end
 
   protected

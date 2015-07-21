@@ -8,7 +8,6 @@ Pollios::Application.routes.draw do
 
   get 'list_members', to: 'members#list_members'
 
-  get 'load_poll',  to: 'polls#load_poll'
   get 'load_choice',  to: 'choices#load_choice'
   get 'load_group', to: 'group#load_group'
 
@@ -308,13 +307,9 @@ Pollios::Application.routes.draw do
     post ':id/un_see',  to: 'polls#un_see'
     post ':id/save_later',  to: 'polls#save_later'
     post ':id/un_save_later', to: 'polls#un_save_later'
-    get ':id/qrcode',       to: 'polls#generate_qrcode'
+    # get ':id/qrcode',       to: 'polls#generate_qrcode'
     get ':id/list_mentionable',           to: 'polls#list_mentionable'
-    post 'poke_poll',       to: 'polls#poke_poll',  as: :poke_poll
-    post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
-    post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
-    post 'poke_view_no_vote',  to: 'polls#poke_view_no_vote', as: :poke_view_no_vote
-    post 'new_generate_qrcode',    to: 'polls#new_generate_qrcode'
+    # post 'new_generate_qrcode',    to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll
     post 'create',          to: 'polls#create_poll'
     get 'guest_poll',       to: 'polls#guest_poll'
@@ -554,6 +549,12 @@ Pollios::Application.routes.draw do
     get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
     get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
     get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+    get 'load_poll',  to: 'polls#load_poll'
+    post 'create',    to: 'polls#create_poll', as: :web_create_poll
+    post 'poke_poll',       to: 'polls#poke_poll',  as: :poke_poll
+    post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
+    post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
+    post 'poke_view_no_vote',  to: 'polls#poke_view_no_vote', as: :poke_view_no_vote
 
     scope 'company' do
       get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
