@@ -4,6 +4,7 @@ if @poll_series.present?
   json.polls @poll_series.polls.includes(:choices).order("id asc") do |poll|
     json.id poll.id
     json.title poll.title
+    json.type_poll poll.type_poll
     json.choices poll.choices do |choice|
       json.choice_id choice.id
       json.answer choice.answer
