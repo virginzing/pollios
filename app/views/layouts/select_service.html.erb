@@ -9,12 +9,12 @@
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <!-- Use the correct meta names below for your web application
       Ref: http://davidbcalhoun.com/2010/viewport-metatag
-      
+
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">-->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
     <link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" data-turbolinks-track="true">
     <!-- Basic Styles -->
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css" data-turbolinks-track="true">
@@ -79,6 +79,7 @@
     <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <%= csrf_meta_tag %>
   </head>
   <body class="fixed-header">
     <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -106,10 +107,10 @@
               <li>
                 <a href="#" class="text-mute"><%= current_member.email %></a>
               </li>
-              <li class="divider"></li>              
+              <li class="divider"></li>
               <li>
                 <a href="#">Profiles</a>
-              </li>              
+              </li>
               <li>
                 <a href="/users_signout">Sign Out</a>
               </li>
@@ -178,18 +179,18 @@
   <script src="/smartadmin/js/app.js"></script>
   <script src="/plugins/x-editable/moment.min.js"></script>
 
-  
+
   <!-- PAGE RELATED PLUGIN(S) -->
-  
+
   <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
   <!-- <script src="/smartadmin/js/plugin/flot/jquery.flot.cust.js"></script>
   <script src="/smartadmin/js/plugin/flot/jquery.flot.resize.js"></script>
   <script src="/smartadmin/js/plugin/flot/jquery.flot.tooltip.js"></script> -->
-  
+
   <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
   <!-- <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
   <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script> -->
-  
+
   <!-- Full Calendar -->
   <!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
   <script>
