@@ -3,3 +3,4 @@ one:
   fullname: "Nut"
   email: "nut@mini.com"
   auth_token: "123"
+  point: 5
