@@ -158,9 +158,9 @@ class Member < ActiveRecord::Base
   scope :celebrity, -> { where(member_type: 1) }
   scope :receive_notify, -> { where(receive_notify: true) }
 
-  scope :with_notification_public,  -> { where("notification @> hstore(:key, :value)", key: "public", value: "1") }
-  scope :with_notification_friend,  -> { where("notification @> hstore(:key, :value)", key: "friend", value: "1") }
-  scope :with_notification_group,   -> { where("notification @> hstore(:key, :value)", key: "group", value: "1") }
+  scope :with_notification_public,  -> { where("notification @> hstore(:key, :value) OR notification @> hstore(:key_one, :value_one)", key: "public", value: "1", key_one: "public", value_one: "true") }
+  scope :with_notification_friend,  -> { where("notification @> hstore(:key, :value) OR notification @> hstore(:key_one, :value_one)", key: "friend", value: "1", key_one: "friend", value_one: "true") }
+  scope :with_notification_group,   -> { where("notification @> hstore(:key, :value) OR notification @> hstore(:key_one, :value_one)", key: "group", value: "1", key_one: "group", value_one: "true") }
 
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
