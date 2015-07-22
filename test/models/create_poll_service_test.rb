@@ -54,4 +54,8 @@ class CreatePollServiceTest < ActiveSupport::TestCase
     assert_equal(@poll.calculate_choices, 2)
   end
 
+  def test_that_it_have_a_default_type_poll_is_freeform
+    assert_equal(@poll.default_type_poll, "freeform")
+  end
+
 end

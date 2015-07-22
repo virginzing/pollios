@@ -32,6 +32,10 @@ class CreatePollService
     list_choices.size
   end
 
+  def default_type_poll
+    Poll.type_poll.default_value
+  end
+
   def poll_attributes
     {
       member_id: @creator.id,
@@ -46,7 +50,7 @@ class CreatePollService
       campaign_id: 0,
       recurring_id: 0,
       qrcode_key: generate_qrcode_key,
-      type_poll: params[:type_poll]
+      type_poll: params[:type_poll] || default_type_poll
     }
   end
 
