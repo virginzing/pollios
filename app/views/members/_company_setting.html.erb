@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
     <h1 class="page-title txt-color-blueDark">
-      <i class="fa fa-cog fa-fw"></i> 
+      <i class="fa fa-cog fa-fw"></i>
         Setting
     </h1>
   </div>
@@ -11,7 +11,7 @@
   <div class="row">
   <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
     <h1 class="page-title txt-color-blueDark">
-      <i class="fa fa-user fa-fw "></i> 
+      <i class="fa fa-user fa-fw "></i>
         Company Profile
     </h1>
   </div>
@@ -80,7 +80,7 @@
                                     <% end %>
                                   </tbody>
                                 </table>
-                                
+
                               </div>
                             </div>
                             <!--tab-pane-->
@@ -103,10 +103,10 @@
                       <ul class="ver-inline-menu tabbable margin-bottom-10">
                          <li class="active">
                             <a data-toggle="tab" href="#tab_1-1">
-                            <i class="fa fa-cog"></i> 
+                            <i class="fa fa-cog"></i>
                             Personal info
-                            </a> 
-                            <span class="after"></span>                                    
+                            </a>
+                            <span class="after"></span>
                          </li>
                          <li class=""><a data-toggle="tab" href="#tab_2-2"><i class="fa fa-picture-o"></i> Change Avatar</a></li>
                          <li class=""><a data-toggle="tab" href="#tab_4-4"><i class="fa fa-picture-o"></i> Change Cover</a></li>
@@ -117,7 +117,7 @@
                       <div class="tab-content">
                          <div id="tab_1-1" class="tab-pane active">
                             <form role="form" action="<%= update_profile_path %>" class="smart-form" method="post" id="member_profile">
-
+                              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
                               <fieldset>
 
                                 <section>
@@ -141,8 +141,8 @@
 
                                 <section>
                                   <label class="label">Description</label>
-                                  <label class="textarea">                    
-                                    <textarea rows="3" class="custom-scroll" name="description"><%= current_member.description %></textarea> 
+                                  <label class="textarea">
+                                    <textarea rows="3" class="custom-scroll" name="description"><%= current_member.description %></textarea>
                                   </label>
                                   <div class="note">
                                     <strong>Note</strong> description is show in app Pollios.
@@ -152,7 +152,7 @@
                               </fieldset>
 
                               <footer>
-                                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >  
+                                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
                                   Submit
                                 </button>
                               </footer>
@@ -170,6 +170,7 @@
                            </div>
 
                           <form role="form" action="<%= update_profile_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+                            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
                             <div class="form-group dropzone-photo">
                               <input type="hidden" name="member_id" value="<%= @current_member.id %>">
                               <input type="file" class="default" name="avatar" id="drop_avatar" accept="image/png, image/jpeg, image/gif"/>
@@ -195,12 +196,12 @@
                            </div>
 
                             <form role="form" action="<%= update_profile_path %>" method="post" class="smart-form" enctype="multipart/form-data">
-
+                             <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
                              <div class="form-group dropzone-photo">
                                 <input type="hidden" name="member_id" value="<%= @current_member.id %>">
-                                <input type="file" name="cover" id="drop_cover" accept="image/png, image/jpeg, image/gif"/>  
+                                <input type="file" name="cover" id="drop_cover" accept="image/png, image/jpeg, image/gif"/>
                               </div>
-                              
+
                               <footer>
                                 <% if @current_member.cover.present? %>
                                 <%= link_to 'Delete', delete_cover_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
@@ -214,6 +215,7 @@
 
                          <div id="tab_3-3" class="tab-pane">
                             <form action="/authen/change_password" method="POST" id="change_password" class="smart-form client-form" data-remote="true">
+                              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
                               <fieldset>
                                 <section>
                                   <input type="hidden" name="email" value="<%= current_member.email %>">
@@ -258,7 +260,7 @@
 
                       </div>
                    </div>
-                   <!--end col-md-9-->                                   
+                   <!--end col-md-9-->
                 </div>
              </div>
 
@@ -269,10 +271,10 @@
                     <ul class="ver-inline-menu tabbable margin-bottom-10">
                        <li class="active">
                           <a data-toggle="tab" href="#tab_1">
-                          <i class="fa fa-briefcase"></i> 
+                          <i class="fa fa-briefcase"></i>
                           General Questions
-                          </a> 
-                          <span class="after"></span>                                    
+                          </a>
+                          <span class="after"></span>
                        </li>
                        <li><a data-toggle="tab" href="#tab_2"><i class="fa fa-group"></i> Membership</a></li>
                        <li><a data-toggle="tab" href="#tab_3"><i class="fa fa-leaf"></i> Terms Of Service</a></li>
@@ -510,10 +512,10 @@
                                 <div id="accordion3_1" class="panel-collapse collapse  in">
                                    <div class="panel-body">
                                       <p>
-                                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. 
+                                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
                                       </p>
                                       <p>
-                                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. 
+                                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
                                       </p>
                                       <p>
                                          Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
