@@ -20,6 +20,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from VersionCake::UnsupportedVersionError, :with => :render_unsupported_version
 
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    render file: "/public/422", layout: false
+  end
+
   before_filter proc { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
   end

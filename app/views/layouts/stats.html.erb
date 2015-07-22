@@ -9,11 +9,11 @@
     <meta name="author" content="">
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <!-- Use the correct meta names below for your web application
-       Ref: http://davidbcalhoun.com/2010/viewport-metatag 
-       
+       Ref: http://davidbcalhoun.com/2010/viewport-metatag
+
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">-->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Basic Styles -->
@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700" data-turbolinks-track="true">
 
     <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
-    
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 
     <!-- <script src="/plugins/jquery_ujs.js" type="text/javascript"></script> -->
@@ -55,16 +55,16 @@
     </script>
     <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
     <!-- BOOTSTRAP JS -->
-    <script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script> 
+    <script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script>
     <script src="/plugins/jquery.textcomplete.js" type="text/javascript"></script>
-    <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %> 
+    <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
 
     <script src="/smartadmin/js/plugin/morris/raphael.min.js"></script>
     <script src="/smartadmin/js/plugin/morris/morris.min.js"></script>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
-  
+    <%= csrf_meta_tag %>
   </head>
   <body class="fixed-header">
     <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
@@ -81,13 +81,13 @@
           </a>
         </h1>
         <!-- END LOGO PLACEHOLDER -->
-        
+
         </div>
         <!-- END AJAX-DROPDOWN -->
 
       <!-- pulled right: nav area -->
       <div class="pull-right">
-        
+
         <!-- logout button -->
         <div id="logout" class="btn-header transparent pull-right">
           <span> <a href="/users_signin" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
@@ -122,7 +122,7 @@
 
     <!-- MAIN PANEL -->
     <div id="main" role="main" style="margin-left:0px">
-    
+
       <div class="container">
 
         <section id="filter">
@@ -134,7 +134,7 @@
               <a href="<%= stats_dashboard_path(filter_by: 'month') %>" class="btn btn-default <%= filter_helper('month') %>">Month</a>
               <a href="<%= stats_dashboard_path(filter_by: 'total') %>" class="btn btn-default <%= filter_helper('total') %>">Total</a>
             </div>
-          </div>          
+          </div>
         </section>
 
         <%= yield %>
@@ -223,18 +223,18 @@
     <script src="/smartadmin/js/app.js"></script>
 
     <script type="text/javascript" src='/plugins/jquery.overlay.js'></script>
-    
+
     <!-- PAGE RELATED PLUGIN(S) -->
-    
+
     <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
     <!-- <script src="/smartadmin/js/plugin/flot/jquery.flot.cust.js"></script>
     <script src="/smartadmin/js/plugin/flot/jquery.flot.resize.js"></script>
     <script src="/smartadmin/js/plugin/flot/jquery.flot.tooltip.js"></script> -->
-    
+
     <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
     <!-- <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
     <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script> -->
-    
+
     <!-- Full Calendar -->
     <!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
 
@@ -288,7 +288,7 @@
         // DO NOT REMOVE : GLOBAL FUNCTIONS!
         pageSetUp();
         drawBreadCrumb();
-        
+
 
         var searchFunc = function (term, callback) {
           $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
@@ -299,7 +299,7 @@
               callback([]); // Callback must be invoked even if something went wrong.
             });
         };
-      
+
         /*
          * PAGE RELATED SCRIPTS
          */
@@ -371,7 +371,7 @@
       ga('send', 'pageview');
 
     </script>
-    
+
 
   </body>
 
