@@ -73,9 +73,6 @@ class Poll < ActiveRecord::Base
 
   before_save :set_default_value
   after_create :set_priority
-  # before_create :generate_qrcode_key
-
-  # after_create :set_new_title_with_tag
 
   validates_presence_of :title, :on => :create
   validates_presence_of :member_id, :on => :create
