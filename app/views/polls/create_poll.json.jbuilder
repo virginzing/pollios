@@ -3,7 +3,7 @@ if @poll.present?
   json.creator do
     json.partial! 'response_helper/member/create_poll', member: @poll.member
   end
-  
+
  json.poll do
     json.id @poll.id
     json.title @poll.title
@@ -34,10 +34,5 @@ if @poll.present?
     json.answer choice.answer
   end
 
-  json.alert_message @alert_message if @alert_message
-
-else
-  json.response_status "ERROR"
-  json.response_message @error_message
   json.alert_message @alert_message if @alert_message
 end

@@ -7,10 +7,7 @@ class AlertSerializer
   end
 
   def to_json
-    {
-      response_status: @response_status,
-      alert_message: @alert_message
-    }
+    Hash["response_status" => @response_status, "alert_message" => @alert_message]
   end
 
 

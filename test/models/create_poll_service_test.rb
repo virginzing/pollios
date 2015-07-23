@@ -219,8 +219,8 @@ class CreatePollServiceTest < ActiveSupport::TestCase
 
   def test_decrease_point_when_citizen_create_poll_to_public
     @poll.params[:is_public] = true
-
     assert_equal(@member.point, 5)
+
     @poll.create!
     assert_equal(@member.point, 4)
   end
@@ -229,8 +229,13 @@ class CreatePollServiceTest < ActiveSupport::TestCase
     @poll.params[:is_public] = true
     @poll.creator = @celebrity
     assert_equal(@celebrity.point, 5)
+
     @poll.create!
     assert_equal(@celebrity.point, 5)
   end
+
+
+
+
 
 end

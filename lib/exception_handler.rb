@@ -120,8 +120,8 @@ module ExceptionHandler
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unprocessable_entity
   end
 
-  def custom_error(options)
-    render json: options, status: :unprocessable_entity
+  def custom_error(ex)
+    render json: ex.message, status: :unprocessable_entity
   end
 
   def unauthorized(ex)

@@ -113,7 +113,7 @@ class CreatePollService
         unless available_post_to_group_ids.size > 0
           group_names = Group.where(id: post_to_group_ids)
           alert_message = "You're no longer in #{group_names.map(&:name).join(', ')}."
-          raise ExceptionHandler::CustomError, AlertSerializer.new({ response_status: "OK", alert_message: alert_message}).to_json
+          raise ExceptionHandler::CustomError, AlertSerializer.new({ response_status: "ERROR", alert_message: alert_message}).to_json
         end
       end
     end
@@ -122,6 +122,7 @@ class CreatePollService
 
   def alert_message
     if (available_post_to_group_ids.size != post_to_group_ids.size) && in_group?
+      ""
       group_names = Group.where(id: (post_to_group_ids - available_post_to_group_ids)).map(&:name).join(', ')
       alert_message = "This poll don't show in #{group_names} because you're no longer these group."
     end
@@ -198,7 +199,7 @@ class CreatePollService
   end
 
   def poll_public_status
-    if params[:is_public]
+    if params[:is_public].to_b
       true
     else
       false
