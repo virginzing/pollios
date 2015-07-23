@@ -1,4 +1,6 @@
 one:
-  id: 1
-  member_id: 1
+  member: one
   name: "group"
+two:
+  member: two
+  name: "second group"
