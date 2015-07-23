@@ -1,15 +1,11 @@
-include MemberCoverPreset
-
 class MembersController < ApplicationController
   include SymbolHash
+  include MemberCoverPreset
 
-  skip_before_action :verify_authenticity_token
-
-  before_action :set_current_member, only: [:all_request_groups, :update_notification, :special_code, :invite_fb_user, :invite_user_via_email, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
-  before_action :compress_gzip, only: [:recommended_facebook, :activity, :detail_friend, :notify, :all_request, :recommendations, :recommended_groups, :recommended_official]
+  before_action :authenticate_with_token!, only: [:all_request_groups, :update_notification, :special_code, :invite_fb_user, :invite_user_via_email, :device_token, :setting_default, :unrecomment, :recommendations, :recommended_facebook, :recommended_groups, :recommended_official, :send_request_code, :public_id, :list_block, :report, :activate, :all_request, :my_profile, :activity, :detail_friend, :stats, :update_profile, :notify, :add_to_group_at_invite]
   before_action :signed_user, only: [:account_setting, :index, :profile, :update_group, :delete_avatar, :delete_cover, :delete_photo_group]
 
-  before_action :load_resource_poll_feed, only: [:detail_friend, :my_profile]
+  before_action :initialize_poll_feed!, only: [:detail_friend, :my_profile]
 
   before_action :set_company, only: [:account_setting, :profile, :delete_photo_group], :if => :only_company
   before_action :find_group, only: [:account_setting, :profile, :delete_photo_group], :if => :only_company

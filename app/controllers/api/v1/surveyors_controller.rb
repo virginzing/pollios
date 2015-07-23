@@ -3,10 +3,7 @@ module Api
     class SurveyorsController < ApplicationController
       respond_to :json
 
-      skip_before_action :verify_authenticity_token
-    
-      before_action :set_current_member
-      before_action :compress_gzip, if: :request_json?
+      before_action :authenticate_with_token!
 
       def list_polls
         @init_poll = PollOfGroup.new(@current_member, find_group_that_surveyor, options_params)
@@ -14,7 +11,7 @@ module Api
       end
 
       def poll_detail
-        
+
       end
 
       def members_surveyable
@@ -45,7 +42,7 @@ module Api
         @init_survey_questionnaire = Surveyor::MembersSurveyableQuestionnaire.new(set_quesitonnaire, @current_member, params)
         @survey_questionnaire = @init_survey_questionnaire.survey
       end
-      
+
       private
 
       def find_group_that_surveyor

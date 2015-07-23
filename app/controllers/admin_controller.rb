@@ -1,7 +1,5 @@
 class AdminController < ApplicationController
   layout 'admin'
-  skip_before_action :verify_authenticity_token, only: [:login_as, :create_notification]
-
   before_filter :authenticate_admin!, :redirect_unless_admin, except: [:load_reason_poll, :load_reason_member]
 
   def dashboard
@@ -9,7 +7,7 @@ class AdminController < ApplicationController
   end
 
   def notification
-    
+
   end
 
   def create_notification
@@ -50,12 +48,12 @@ class AdminController < ApplicationController
   end
 
   def edit_ceritification
-   
+
   end
 
   def update_certification
      @certificate = Apn::App.find(params[:id])
-     
+
      @certificate.apn_dev_cert = File.read(cert_params[:apn_dev_cert].path) if cert_params[:apn_dev_cert]
      @certificate.apn_prod_cert = File.read(cert_params[:apn_prod_cert].path) if cert_params[:apn_prod_cert]
 

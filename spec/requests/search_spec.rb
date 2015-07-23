@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Search" do
-
   let!(:member) { create(:member, fullname: "Nutty") }
+  let!(:member_two) { create(:member, fullname: "Nutty agian", email: "nutagain@gmail.com") }
 
   let!(:group) { create(:group, name: "Nut Group", public: true) }
 
@@ -12,13 +12,11 @@ RSpec.describe "Search" do
 
     it "find group by group name" do
       get "/searches/users_and_groups.json", { member_id: member.id, search: "Nut" }, { "Accept" => "application/json" }
-      
+
       expect(response).to be_success
       expect(json["response_status"]).to eq("OK")
       expect(json["list_groups"].count).to eq(1)
     end
-
-
 
     context "search user" do
       before do
@@ -48,7 +46,7 @@ RSpec.describe "Search" do
       let!(:member) { create(:member, fullname: "Nutty", public_id: "nutty_fanclub", first_signup: false) }
       let!(:group) { create(:group, name: "Nutty Group fanclub", public: true) }
       let!(:group_member) { create(:group_member, group: group, member: member, active: true) }
-      
+
       it "get user and also group list" do
         get "/searches/users_and_groups.json", { member_id: member.id, search: "fanclub" }, { "Accept" => "application/json" }
 
@@ -63,20 +61,16 @@ RSpec.describe "Search" do
   describe "POST /searches/clear_search_users_and_groups" do
 
     it "success" do
-      post "/searches/clear_search_users_and_groups.json", { member_id: member.id }, { "Accept" => "application/json" }
+      post "/searches/clear_search_users_and_groups.json", { member_id: member_two.id }, { "Accept" => "application/json" }
       expect(response.status).to eq(201)
     end
 
     it "clear key of users_and_groups to empty" do
-      TypeSearch.create_log_search_users_and_groups(member, "Nuttapon")
-      TypeSearch.create_log_search_users_and_groups(member, "Nutty")
-
-      expect(TypeSearch.find_search_users_and_groups(member).count).to eq(2)
-
-      post "/searches/clear_search_users_and_groups.json", { member_id: member.id }, { "Accept" => "application/json" }
-
-      expect(TypeSearch.find_search_users_and_groups(member).count).to eq(0)
-
+      TypeSearch.create_log_search_users_and_groups(member_two, "Nuttapon")
+      TypeSearch.create_log_search_users_and_groups(member_two, "Nutty")
+      expect(TypeSearch.find_search_users_and_groups(member_two).count).to eq(2)
+      post "/searches/clear_search_users_and_groups.json", { member_id: member_two.id }, { "Accept" => "application/json" }
+      expect(TypeSearch.find_search_users_and_groups(member_two).count).to eq(0)
     end
 
   end

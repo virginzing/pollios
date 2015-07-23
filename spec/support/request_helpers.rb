@@ -5,9 +5,9 @@ module Requests
     end
 
     def generate_certification
-      app = Apn::App.new   
-      app.apn_dev_cert   = Rails.root.join('config', 'certificates','pollios_notification_development.pem').read
-      app.apn_prod_cert  = Rails.root.join('config', 'certificates','pollios_notification_production.pem').read
+      app = Apn::App.new
+      app.apn_dev_cert   = Rails.root.join('config', 'certificates', 'local', 'PolliosDev.pem').read
+      app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'PolliosProduction.pem').read
       app.save!
     end
 
@@ -19,10 +19,16 @@ module Requests
     end
 
     def generate_certification
-      app = Apn::App.new   
-      app.apn_dev_cert   = Rails.root.join('config', 'certificates','pollios_notification_development.pem').read
-      app.apn_prod_cert  = Rails.root.join('config', 'certificates','pollios_notification_production.pem').read
+      app = Apn::App.new
+      app.apn_dev_cert   = Rails.root.join('config', 'certificates', 'local', 'PolliosDev.pem').read
+      app.apn_prod_cert  = Rails.root.join('config', 'certificates', 'server_production', 'PolliosProduction.pem').read
       app.save!
+    end
+
+    def set_default_pollios_app
+      PolliosApp.create!(name: "Pollios", app_id: "com.pollios.polliosapp", platform: "ios")
+      PolliosApp.create!(name: "Pollios Flickz", app_id: "com.pollios.polliosapp.flickz", platform: "ios")
+      PolliosApp.create!(name: "Pollios Beta", app_id: "com.pollios.polliosappbeta", platform: "ios")
     end
 
   end
@@ -40,5 +46,5 @@ module Requests
       with_caching(false, &block)
     end
   end
-  
+
 end

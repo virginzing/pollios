@@ -8,9 +8,7 @@ Pollios::Application.routes.draw do
 
   get 'list_members', to: 'members#list_members'
 
-  get 'load_poll',  to: 'polls#load_poll'
   get 'load_choice',  to: 'choices#load_choice'
-  get 'load_group', to: 'group#load_group'
 
   mount ApiTaster::Engine => "/api_taster"
 
@@ -91,16 +89,10 @@ Pollios::Application.routes.draw do
   resources :members
   resources :poll_series, except: [:index]
   resources :password_resets
-  # resources :invites
+
   resources :companies
 
   get 'invites/new',    to: 'invites#new',  as: :new_invitation
-
-  scope 'build_poll' do
-    get 'binary',   to: 'polls#binary', as: :binary_poll
-    get 'rating',   to: 'polls#rating', as: :rating_poll
-    get 'freeform', to: 'polls#freeform', as: :freeform_poll
-  end
 
   scope 'build_questionnaire' do
     get 'normal', to: 'poll_series#normal', as: :normal_questionnaire
@@ -113,7 +105,6 @@ Pollios::Application.routes.draw do
   end
 
   scope 'campaign' do
-    # post ':id/predict',        to: 'campaigns#predict'
     get 'check_redeem',     to: 'campaigns#check_redeem'
     post ':id/random_later',  to: 'campaigns#random_later'
     post ':id/random_later_of_poll',  to: 'campaigns#random_later_of_poll'
@@ -185,15 +176,12 @@ Pollios::Application.routes.draw do
     get ':id/members',        to: 'group#members'
     post ':id/delete_poll',   to: 'group#delete_poll'
     post ':id/notification',  to: 'group#notification'
-    post ':id/group_update',  to: 'group#group_update'
     post ':id/kick_member',   to: 'group#kick_member'
     post ':id/promote_admin', to: 'group#promote_admin'
     post ':id/edit_group',    to: 'group#edit_group'
     post ':id/request_group', to: 'group#request_group'
     post ':id/public_id',     to: 'group#public_id'
     post ':id/set_public',    to: 'group#set_public'
-    delete ':id/delete_photo_group',  to: 'group#delete_photo_group', as: :delete_photo_group
-    delete ':id/delete_cover_group',  to: 'group#delete_cover_group', as: :delete_cover_group
     # get 'load_activity_feed',  to: 'group#load_activity_feed', as: :group_activity_feed
   end
 
@@ -314,13 +302,9 @@ Pollios::Application.routes.draw do
     post ':id/un_see',  to: 'polls#un_see'
     post ':id/save_later',  to: 'polls#save_later'
     post ':id/un_save_later', to: 'polls#un_save_later'
-    get ':id/qrcode',       to: 'polls#generate_qrcode'
+    # get ':id/qrcode',       to: 'polls#generate_qrcode'
     get ':id/list_mentionable',           to: 'polls#list_mentionable'
-    post 'poke_poll',       to: 'polls#poke_poll',  as: :poke_poll
-    post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
-    post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
-    post 'poke_view_no_vote',  to: 'polls#poke_view_no_vote', as: :poke_view_no_vote
-    post 'new_generate_qrcode',    to: 'polls#new_generate_qrcode'
+    # post 'new_generate_qrcode',    to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll
     post 'create',          to: 'polls#create_poll'
     get 'guest_poll',       to: 'polls#guest_poll'
@@ -438,8 +422,8 @@ Pollios::Application.routes.draw do
   end
 
   scope 'company' do
-    get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
-    get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
+    # get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
+    # get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
 
     get 'dashboard',  to: 'companies#dashboard', as: :company_dashboard
     get 'load_surveyor',  to: 'surveyor#load_surveyor'
@@ -556,6 +540,30 @@ Pollios::Application.routes.draw do
     get 'privacy_policy',   to: 'mobiles#privacy_policy', as: :app_privacy_policy
   end
 
+  scope module: 'web_panel' do
+    get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
+    get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
+    get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+    get 'load_poll',  to: 'polls#load_poll'
+    post 'create',    to: 'polls#create_poll', as: :web_create_poll
+    post 'poke_poll',       to: 'polls#poke_poll',  as: :poke_poll
+    post 'poke_dont_vote',  to: 'polls#poke_dont_vote', as: :poke_dont_vote
+    post 'poke_dont_view',  to: 'polls#poke_dont_view', as: :poke_dont_view
+    post 'poke_view_no_vote',  to: 'polls#poke_view_no_vote', as: :poke_view_no_vote
+
+    scope 'company' do
+      get 'new_poll', to: 'polls#create_new_poll', as: :create_new_poll
+      get 'new_public_poll',  to: 'polls#create_new_public_poll', as: :create_new_public_poll
+    end
+
+    get 'load_group', to: 'groups#load_group', as: :web_load_group
+    scope 'group' do
+      post ':id/group_update',  to: 'groups#group_update'
+      delete ':id/delete_photo_group',  to: 'groups#delete_photo_group', as: :delete_photo_group
+      delete ':id/delete_cover_group',  to: 'groups#delete_cover_group', as: :delete_cover_group
+    end
+  end
+
   get '/qrcode',  to: 'mobiles#check_qrcode'
   get '/qrcode_member', to: 'mobiles#check_qrcode_member'
 
@@ -574,9 +582,9 @@ Pollios::Application.routes.draw do
   post '/check_valid_email', to: 'members#check_valid_email'
   post '/check_valid_username', to: 'members#check_valid_username'
 
-  get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
-  get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
-  get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
+  # get 'poll_latest',      to: 'polls#poll_latest', as: :poll_latest
+  # get 'poll_popular',      to: 'polls#poll_popular', as: :poll_popular
+  # get 'poll_latest_in_public',  to: 'polls#poll_latest_in_public', as: :poll_latest_in_public
 
   post 'templates',       to: 'templates#new_or_update'
   get  'templates',        to: 'templates#poll_template'

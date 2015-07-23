@@ -1,0 +1,5 @@
+one:
+  id: 1
+  fullname: "Nut"
+  email: "nut@mini.com"
+  auth_token: "123"

@@ -1,8 +1,8 @@
 <div class="well">
   <%= simple_form_for Apn::App.new, url: admin_update_certification_path do |f| %>
     <label for=""></label>
-    <%= f.input :apn_dev_cert, as: :file %>
-    <%= f.input :apn_prod_cert, as: :file %>
+    <%= f.input :apn_dev_cert, label: "Development", as: :file %>
+    <%= f.input :apn_prod_cert, label: "Production", as: :file %>
     <%= f.submit "Update", class: 'btn btn-primary' %>
   <% end %>
 </div>

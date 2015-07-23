@@ -19,6 +19,10 @@ class NotifyLog < ActiveRecord::Base
     NotifyLog.without_deleted.where("custom_properties LIKE ?", "%poll_id: #{poll.id}%").where("recipient_id = #{member.id}").update_all(deleted_at: Time.now)
   end
 
+  def self.deleted_feedback(poll_series)
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ?", "%poll_id: #{poll_series.id}%","%series: true%").update_all(deleted_at: Time.now)
+  end
+
   def self.check_update_cancel_request_friend_deleted(sender, recipient)
     NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Friend%", "%action: RequestFriend%")
               .where("sender_id = #{sender.id} AND recipient_id = #{recipient.id}").update_all(deleted_at: Time.now)

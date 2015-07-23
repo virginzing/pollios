@@ -1,9 +1,7 @@
 class CommercialsController < ApplicationController
-  decorates_assigned :member
-  
+
   layout 'admin'
-  
-  # skip_before_action :verify_authenticity_token
+  decorates_assigned :member
   before_filter :authenticate_admin!, :redirect_unless_admin
 
   def index
@@ -11,7 +9,7 @@ class CommercialsController < ApplicationController
   end
 
   def new
-    
+
   end
 
   def edit
@@ -35,7 +33,7 @@ class CommercialsController < ApplicationController
   private
 
   def set_member
-    @member = Member.find(params[:id])  
+    @member = Member.find(params[:id])
   end
 
   def company_params

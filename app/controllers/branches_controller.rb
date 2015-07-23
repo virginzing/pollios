@@ -1,23 +1,20 @@
 class BranchesController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
-
   before_action :signed_user
   before_action :load_company
   before_action :check_using_service
   before_action :set_branch, only: [:edit, :update, :destroy]
-
 
   def detail
     @array_list = []
     @branch = Branch.find(params[:branch_id])
     @questionnaire = PollSeries.cached_find(params[:questionnaire_id]).decorate
     # @questionnaire = Groupping.where("groupable_id IN (?) AND groupable_type = 'PollSeries' AND collection_poll_id = ?", @branch.branch_poll_series.map(&:poll_series_id), params[:id]).first.groupable
-    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@questionnaire).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url  
+    @qr = RQRCode::QRCode.new(GenerateQrcodeLink.new(@questionnaire).get_redirect_link, :size => 8, :level => :h ).to_img.resize(200, 200).to_data_url
 
     @questionnaire.polls.each do |poll|
       @array_list << poll.choices.collect!{|e| e.answer.to_i * e.vote.to_f }.reduce(:+).round(2)
-    end                           
+    end
   end
 
   def index

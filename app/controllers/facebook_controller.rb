@@ -1,6 +1,4 @@
 class FacebookController < ApplicationController
-  protect_from_forgery :except => [:login]
-  # before_action :compress_gzip, only: [:login]
 
   expose(:member) { @auth.member }
 

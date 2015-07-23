@@ -27,6 +27,14 @@ namespace :admin do
 
     end
   end
+
+  desc "Setup default to PolliosApp"
+  task :setup_polliosapp => :environment do
+    PolliosApp.create!(name: "Pollios", app_id: "com.pollios.polliosapp", platform: "ios")
+    PolliosApp.create!(name: "Pollios Flickz", app_id: "com.pollios.polliosapp.flickz", platform: "ios")
+    PolliosApp.create!(name: "Pollios Beta", app_id: "com.pollios.polliosappbeta", platform: "ios")
+  end
+
   # Member.where(cover: nil, cover_preset: "0").each do |m|
   #   m.update!(cover_preset: rand(1..28))
   # end

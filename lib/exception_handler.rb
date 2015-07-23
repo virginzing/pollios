@@ -64,6 +64,7 @@ module ExceptionHandler
 
     module Token
       WRONG = "You had already signed out of Pollios. Please sign in again."
+      INVALID = WRONG
     end
 
     module Auth

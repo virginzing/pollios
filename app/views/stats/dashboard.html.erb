@@ -25,7 +25,26 @@
           <% if number_of_polls_created_today_chart(params[:filter_by]).present? %>
             <%= content_tag :div, "", id: 'number_of_polls_created_today_chart', data: { polls: number_of_polls_created_today_chart(params[:filter_by]) } %>
           <% else %>
-            <h3>No have information of poll created per hour.</h3>
+            <h3 class="text-center">There isn't any poll.</h3>
+          <% end %>
+        </div>
+      </div>
+      <!-- end widget div -->
+    </div>
+
+    <div class="jarviswidget jarviswidget-color-darken" id="wid-votes-per-hour" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-collapsed="true">
+      <header>
+        <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+        <h2><strong>Number of votes per hour</strong></h2>
+      </header>
+
+      <!-- widget div-->
+      <div>
+        <div class="widget-body" style="min-height: 0px;">
+          <% if number_of_polls_voted_today_chart(params[:filter_by]).present? %>
+            <%= content_tag :div, "", id: 'number_of_polls_voted_today_chart', data: { polls: number_of_polls_voted_today_chart(params[:filter_by]) } %>
+          <% else %>
+            <h3 class="text-center">There isn't any vote.</h3>
           <% end %>
         </div>
       </div>
@@ -37,7 +56,7 @@
         <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
         <h2><strong>Poll created on 30 days ago</strong></h2>
       </header>
-      
+
       <!-- widget div-->
       <div>
         <div class="widget-body" style="min-height: 0px;">
@@ -93,7 +112,7 @@
         <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
         <h2><strong>Total Poll</strong></h2>
       </header>
-      
+
       <!-- widget div-->
       <div>
         <div class="widget-body" style="min-height: 0px;">
@@ -176,7 +195,7 @@
               <div class="price-features" style="background: #ffffff;min-height: 200px;">
                 <ul class="list-unstyled text-left">
                   <li style="color: rgb(215, 22, 82);font-size: 15px;"><i class="fa fa-smile-o"></i> <%= number_with_delimiter(@stats_user_record.active) %> <strong> Active</strong></li>
-                  <li></li>
+                  <li style="color: rgb(215, 22, 82);font-size: 15px;"><i class="fa fa-smile-o"></i> <%= number_with_delimiter(@stats_user_record.passive) %> <strong> Passive</strong></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.citizen) %> <strong> Citizen</strong></li>
                   <li><i class="fa fa-user"></i> <%= number_with_delimiter(@stats_user_record.celebrity) %> <strong> Celebrity</strong></li>
                   <li><i class="fa fa-building-o"></i> <%= number_with_delimiter(@stats_user_record.company) %> <strong> Company</strong></li>
@@ -215,7 +234,7 @@
     </div>
 
   </div>
-  
+
 <%= render partial: 'stats_table' %>
 
 

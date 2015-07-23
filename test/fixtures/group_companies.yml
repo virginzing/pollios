@@ -1,0 +1,5 @@
+one:
+  id: 1
+  group_id: 1
+  company_id: 1
+  main_group: true

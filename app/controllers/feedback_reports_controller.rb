@@ -1,10 +1,8 @@
 class FeedbackReportsController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
   before_action :signed_user
   before_action :load_company
   before_action :check_using_service
-  # before_action :set_questionnaire, only: [:show , :destroy]
 
   def collection
     @collection = CollectionPollSeries.find(params[:id])
@@ -12,7 +10,7 @@ class FeedbackReportsController < ApplicationController
 
     @questionnaires ||= PollSeries.filter_by(params[:startdate], params[:finishdate], params[:filter_by]).includes(:polls).joins(:branch)
                                 .where("branch_poll_series.branch_id IN (?) AND poll_series.id IN (?)", @company.branches.map(&:id), @questionnaire_ids)
-                               
+
     @branches = Branch.joins(:branch_poll_series => :poll_series)
                       .select("branches.*, count(branch_poll_series.poll_series_id) as questionnaire_count, sum(poll_series.vote_all) as questionnaire_vote_all")
                       .where("branch_poll_series.poll_series_id IN (?)", @questionnaires.map(&:id))
@@ -30,7 +28,7 @@ class FeedbackReportsController < ApplicationController
   end
 
   def polls
-    
+
   end
 
 
