@@ -10,6 +10,11 @@ class CreatePollServiceTest < ActiveSupport::TestCase
     })
     @group = groups(:one)
     @group_two = groups(:two)
+    @celebrity = members(:celebrity)
+  end
+
+  def test_that_citizen_have_point
+    assert @poll.member_have_point?
   end
 
   def test_that_poll_not_in_public_by_default
@@ -83,6 +88,18 @@ class CreatePollServiceTest < ActiveSupport::TestCase
   def test_that_it_have_to_watching_poll
     poll = @poll.create!
     assert_equal(poll.watcheds.count, 1)
+  end
+
+  def test_that_it_can_create_the_poll
+    assert_difference "Poll.count", 1 do
+      @poll.create!
+    end
+  end
+
+  def test_that_it_can_create_poll_to_feed
+    assert_difference "PollMember.count", 1 do
+      @poll.create!
+    end
   end
 
   def test_that_validate_success_when_post_poll_to_friend
@@ -167,7 +184,7 @@ class CreatePollServiceTest < ActiveSupport::TestCase
 
   def test_that_citizen_have_a_point_when_post_to_pubic
     @poll.params[:is_public] = true
-    p @poll.available_post_to_group_ids
+
     assert @poll.create!
   end
 
@@ -182,8 +199,38 @@ class CreatePollServiceTest < ActiveSupport::TestCase
   def test_add_poll_with_1_image
     image_url = "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
     @poll.params[:photo_poll] = image_url
+    @poll.params[:original_images] = [image_url]
     poll = @poll.create!
+
+    assert_equal(poll.photo_poll_identifier, "v1436275533/mkhzo71kca62y9btz3bd.png")
+    assert_equal(poll.get_original_images.size, 1)
   end
 
+  def test_add_poll_with_2_images
+    image_url_one = "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
+    image_url_two = "http://res.cloudinary.com/code-app/image/upload/v1433344706/dcxanj8qcc1fal6r0rud.png"
+    @poll.params[:photo_poll] = image_url_one
+    @poll.params[:original_images] = [image_url_one, image_url_two]
+    poll = @poll.create!
+
+    assert poll
+    assert_equal(poll.get_original_images.size, 2)
+  end
+
+  def test_decrease_point_when_citizen_create_poll_to_public
+    @poll.params[:is_public] = true
+
+    assert_equal(@member.point, 5)
+    @poll.create!
+    assert_equal(@member.point, 4)
+  end
+
+  def test_not_decrease_point_when_celebrity_create_poll_to_public
+    @poll.params[:is_public] = true
+    @poll.creator = @celebrity
+    assert_equal(@celebrity.point, 5)
+    @poll.create!
+    assert_equal(@celebrity.point, 5)
+  end
 
 end

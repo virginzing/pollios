@@ -46,8 +46,8 @@ class CreatePollService
     Poll.type_poll.default_value
   end
 
-  def is_citizen_and_having_point?
-    creator.citizen? && creator.point > 0
+  def member_have_point?
+    creator.point > 0
   end
 
   def split_tags_form_title
@@ -88,7 +88,7 @@ class CreatePollService
       if new_poll.save
         update_photo_poll if params[:photo_poll].present?
         additional_poll_attachments if params[:original_images].present?
-        decrease_point! if is_citizen_and_having_point? && in_public?
+        decrease_point! if creator.citizen? && in_public?
         creatable_tagging!
         watching_poll!
         add_poll_to_feed!
@@ -106,8 +106,8 @@ class CreatePollService
   end
 
   def validate_that_can_create!
-    if in_public?
-      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::POINT_ZERO unless is_citizen_and_having_point?
+    if in_public? && creator.citizen?
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::POINT_ZERO unless member_have_point?
     else
       if in_group? && !creator.company?
         unless available_post_to_group_ids.size > 0
@@ -232,7 +232,7 @@ class CreatePollService
 
   def additional_poll_attachments
     convert_list_original_images.each_with_index do |url_attachment, index|
-      poll_attachment = poll_attachments.create!(order_image: index + 1)
+      poll_attachment = @poll.poll_attachments.create!(order_image: index + 1)
       poll_attachment.update_column(:image, url_attachment)
     end
   end
