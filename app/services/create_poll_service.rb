@@ -113,7 +113,7 @@ class CreatePollService
         unless available_post_to_group_ids.size > 0
           group_names = Group.where(id: post_to_group_ids)
           alert_message = "You're no longer in #{group_names.map(&:name).join(', ')}"
-          raise ExceptionHandler::CustomError, { response_status: "ERROR", alert_message: alert_message }
+          raise ExceptionHandler::CustomError, AlertSerializer.new({ response_status: "OK", alert_message: alert_message}).to_json
         end
       end
     end
