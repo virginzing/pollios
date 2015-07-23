@@ -1,4 +1,3 @@
 one:
-  id: 1
   name: "company"
-  member_id: 1
+  member: one

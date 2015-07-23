@@ -1,6 +1,5 @@
 one:
-  id: 1
-  member_id: 1
-  group_id: 1
+  member: one
+  group: one
   is_master: true
   active: true

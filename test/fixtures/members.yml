@@ -1,5 +1,25 @@
 one:
-  id: 1
   fullname: "Nut"
   email: "nut@mini.com"
   auth_token: "123"
+  point: 5
+
+two:
+  fullname: "Two"
+  email: "two@pollios.com"
+  auth_token: "123"
+  point: 0
+
+citizen_no_point:
+  fullname: "No Point User"
+  email: "no_point@pollios.com"
+  auth_token: "123"
+  member_type: 0
+  point: 0
+
+celebrity:
+  fullname: "Celebrity"
+  email: "celebrity@pollios.com"
+  auth_token: "123"
+  member_type: 1
+  point: 5
