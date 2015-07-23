@@ -171,7 +171,7 @@ class CreatePollServiceTest < ActiveSupport::TestCase
     exception = assert_raise(ExceptionHandler::CustomError) { @poll.create! }
 
     alert_message = "You're no longer in second group."
-    assert_equal(AlertSerializer.new({ response_status: "OK", alert_message: alert_message}).to_json[:alert_message], eval(exception.message)[:alert_message])
+    assert_equal(alert_message, exception.message)
   end
 
   def test_add_poll_to_more_group_but_no_longer_some_group

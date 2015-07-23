@@ -61,7 +61,7 @@ class CreatePollService
     params[:expire_date] = convert_expire_date
     params[:public] = poll_public_status
     params[:in_group] = in_group_status
-    params[:in_group_ids] = in_group_ids
+    params[:in_group_ids] = available_post_to_group_ids.join(",")
     params[:series] = false
     params[:poll_series_id] = 0
     params[:choice_count] = calculate_choices
@@ -113,7 +113,7 @@ class CreatePollService
         unless available_post_to_group_ids.size > 0
           group_names = Group.where(id: post_to_group_ids)
           alert_message = "You're no longer in #{group_names.map(&:name).join(', ')}."
-          raise ExceptionHandler::CustomError, AlertSerializer.new({ response_status: "ERROR", alert_message: alert_message}).to_json
+          raise ExceptionHandler::CustomError, alert_message
         end
       end
     end
