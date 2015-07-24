@@ -5,7 +5,7 @@ module WebPanel
     before_filter :authenticate_admin!, :redirect_unless_admin
 
     def index
-      @groups = Group.where("name LIKE ?", "%#{params[:q]}%") if params[:q].present?
+      @groups = Group.where("lower(name) LIKE ?", "%#{params[:q].downcase}%") if params[:q].present?
     end
 
     def members_with_group
