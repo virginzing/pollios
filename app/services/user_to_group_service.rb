@@ -7,7 +7,9 @@ class UserToGroupService
   end
 
   def users
-    Member.where("id NOT IN (?) AND lower(fullname) LIKE ?", members_in_group_active.map(&:id), "%#{@fullname.downcase}%") if @fullname.present? & @group_id.present?
+    query = Member.where("lower(fullname) LIKE ?", "%#{@fullname.downcase}%") if @fullname.present? & @group_id.present?
+    query = query.where("id NOT IN (?)", members_in_group_active.map(&:id)) if members_in_group_active.size > 0
+    query
   end
 
   def add!
