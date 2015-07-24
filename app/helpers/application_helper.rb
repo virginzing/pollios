@@ -1,4 +1,14 @@
 module ApplicationHelper
+
+  def full_title(page_title = '')
+    base_title = "Pollios"
+    if page_title.empty?
+      base_title
+    else
+      page_title + " | " + base_title
+    end
+  end
+
   def flash_class(level)
     case level
       when "notice" then "alert alert-warning"
@@ -183,5 +193,5 @@ module ApplicationHelper
   def qr_code(size, url)
     "https://chart.googleapis.com/chart?cht=qr&chld=l&chs=#{size}x#{size}&chl=#{url}"
   end
-  
+
 end
