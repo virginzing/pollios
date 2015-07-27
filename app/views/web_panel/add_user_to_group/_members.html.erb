@@ -27,7 +27,7 @@
                 <td><img src="<%= user.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= user.fullname %>"></td>
                 <td><%= user.get_name %></td>
                 <td><%= user.email %></td>
-                <td><a href="<%= remote_user_to_group_path(member_id: user.id, group_id: params[:group_id]) %>" id="remote_user_to_group" class="btn btn-primary" data-remote="true" data-method="post"><i class="fa fa-plus"></i> Add</a></td>
+                <td><a href="<%= remote_user_to_group_path(member_id: user.id, group_id: params[:group_id]) %>" id="remote_user_to_group" class="btn btn-primary" data-remote="true" data-method="post" data-disable-with="<i class='fa fa-spinner fa-spin'></i> Loading..."><i class="fa fa-plus"></i> Add</a></td>
                 </tr>
                 <% end %>
               </tbody>
