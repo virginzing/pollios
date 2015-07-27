@@ -50,7 +50,7 @@
                       <img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>">
                       </div>
                   </td>
-                  <td><%= link_to poll.truncate_title(100), company_poll_detail_path(poll) %></td>
+                  <td><%= link_to poll.truncate_title(100), public_survey_poll_path(poll) %></td>
 
                   <td><%= poll.get_vote_count %></td>
                   <td><%= poll.get_view_count %></td>

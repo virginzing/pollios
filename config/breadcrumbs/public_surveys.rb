@@ -7,6 +7,17 @@ crumb :public_survey_poll_new do
   parent :public_survey_polls
 end
 
+crumb :public_survey_poll do |poll|
+  link truncate(poll.title), public_survey_poll_path(poll)
+  parent :public_survey_polls
+end
+
+crumb :edit_public_survey_poll do |poll|
+  link truncate(poll.title), public_survey_poll_path(poll)
+  parent :public_survey_polls
+end
+
+
 ## polls ##
 
 # crumb :company_new_group_poll do
