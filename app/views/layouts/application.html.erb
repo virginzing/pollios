@@ -146,14 +146,14 @@
     will not initialize.
     -->
     <nav>
-      <% if current_member.get_company.present? %>
-        <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' || controller.controller_name == 'feedback_campaigns' || controller.controller_name == 'redeemers' || controller_name == 'collection_poll_series' %>
-          <%= render partial: 'sherd/nav_feedback' %>
-        <% else %>
-          <%= render partial: 'sherd/nav_company' %>
-        <% end %>
+      <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' || controller.controller_name == 'feedback_campaigns' || controller.controller_name == 'redeemers' || controller_name == 'collection_poll_series' %>
+        <%= render partial: 'sherd/nav_feedback' %>
+      <% elsif controller.class.parent == PublicSurveys %>
+        <%= render partial: 'sherd/nav_public_surveys' %>
+      <% elsif controller.class.parent == InternalSurveys %>
+        <%= render partial: 'sherd/nav_internal_surveys' %>
       <% else %>
-        <%= render partial: 'sherd/nav_brand' %>
+        <%= render partial: 'sherd/nav_company' %>
       <% end %>
     </nav>
     <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>

@@ -1,0 +1,122 @@
+<% breadcrumb :public_survey_polls  %>
+
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-edit fa-fw"></i>
+      List Poll
+  </h1>
+
+  <a href="<%= new_public_survey_poll_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Public Poll</div>
+  </a>
+
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll-public" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-globe"></i> </span>
+      <h2><strong>Poll Public</strong></h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_polls_public" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <!-- <th width="50">#</th> -->
+                <th width="50">Creator</th>
+                <th width="200">Title</th>
+                <th>Vote</th>
+                <th>View</th>
+                <th>Report</th>
+                <th>Expire</th>
+                <th width="150">Created At</th>
+<!--                 <th>Re-Generate</th> -->
+                <!-- <th>Action</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <% @public_polls.each do |poll| %>
+                <tr>
+                  <!-- <td><%= poll.id %></td> -->
+                  <td>
+                    <div class="profile">
+                      <img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>">
+                      </div>
+                  </td>
+                  <td><%= link_to poll.truncate_title(100), company_poll_detail_path(poll) %></td>
+
+                  <td><%= poll.get_vote_count %></td>
+                  <td><%= poll.get_view_count %></td>
+                  <td><%= poll.get_report_count %></td>
+                  <td><%= poll.expire_status %></td>
+                  <td><%= poll.create_since %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
+<script type="text/javascript">
+  $('[rel=tooltip]').tooltip();
+  $('[data-toggle=tooltip]').tooltip();
+    function load_qrcode(poll_id) {
+
+    BootstrapDialog.show({
+          title: 'Qrcode',
+          message: function(dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+
+                return $message;
+            },
+            data: {
+                'pageToLoad': '/poll/' + poll_id + '/qrcode'
+            }
+    });
+  }
+</script>
+
+ <script type="text/javascript">
+ function showIFrame(url, title) {
+    var iframebox = document.getElementById('iframebox');
+    iframebox.src = url;
+    var desc = document.getElementById('title');
+    desc.innerHTML = title;
+ }
+ </script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+      </div>
+      <div class="modal-body">
+        <div style="padding-left: 210px;">
+          <iframe src="" id="iframebox"></iframe>
+        </div>
+        <img style="position: absolute; top: 20px; left: 230px; opacity:0.3;" src="/img/pollios3.png" />
+        <h2 id="title" class="text-center"></h2>
+      </div>
+    </div>
+  </div>
+</div>
