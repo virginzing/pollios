@@ -1,0 +1,76 @@
+<div class="well">
+  <h1>Search Group</h1>
+  <%= form_tag(user_to_group_path, method: 'get') do %>
+    <div class="input-group input-group-lg" style="margin-bottom: 30px;">
+      <input class="form-control input-lg" type="text" name="q" placeholder="Search..." id="search-group">
+      <div class="input-group-btn">
+        <button type="submit" class="btn btn-default">
+          &nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-search fa-lg"></i>&nbsp;&nbsp;&nbsp;
+        </button>
+      </div>
+    </div>
+  <% end %>
+
+
+  <% if @groups %>
+    <section id="widget-grid">
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-user-to-group" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-users"></i> </span>
+          <h2><strong>Result of groups</strong></h2>
+        </header>
+        <!-- widget div-->
+        <div>
+
+          <!-- widget content -->
+          <div class="widget-body no-padding">
+            <table id="list_members" class="table table-striped table-bordered table-hover" width="100%">
+              <thead>
+                <tr>
+                  <th width="100">Cover</th>
+                  <th>Group Name</th>
+                  <th width='50'></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @groups.each do |group| %>
+                  <tr>
+                      <td><%= group.decorate.show_cover_group %></td>
+                      <td><%= group.name %></td>
+                      <td>
+                        <a href="javascript:void(0)" class="btn btn-default btn-xs" rel="tooltip" data-original-title="Select Company Account" onclick="load_member_with_group(<%= group.id %>, '<%= group.name %>')"><i class="fa fa-cog">
+                      </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            <!-- end widget content -->
+
+          </div>
+          <!-- end widget div -->
+        </div>
+    </section>
+  <% end %>
+</div>
+
+<% content_for :javascript do %>
+  <script type="text/javascript">
+    $('[rel=tooltip]').tooltip();
+    function load_member_with_group(group_id, group_name) {
+      BootstrapDialog.show({
+            title: 'Select group (' + group_name + ')',
+            message: function(dialog) {
+                  var $message = $('<div></div>');
+                  var pageToLoad = dialog.getData('pageToLoad');
+                  $message.load(pageToLoad);
+
+                  return $message;
+              },
+              data: {
+                  'pageToLoad': '/manage/dashboard/members_with_group?group_id=' + group_id
+              }
+      });
+    }
+  </script>
+<% end %>

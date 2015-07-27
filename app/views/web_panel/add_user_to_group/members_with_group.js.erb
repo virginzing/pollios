@@ -1,0 +1,34 @@
+$("#list_members_with_group").html("<%= escape_javascript(render 'members') %>");
+
+$('#add_user_to_group').dataTable({
+  retrieve: true,
+  iDisplayLength: 10,
+  order: [
+      [0, 'desc']
+  ]
+});
+
+$.add_button_to_group = $('#remote_user_to_group[data-remote]');
+
+$.add_button_to_group.on('ajax:send', function(xhr) {
+$("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+}).on('ajax:success', function (data, status, xhr) {
+  $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+  $(this).addClass('disabled btn-success').html("<i class='fa fa-check'></i> Added")
+
+}).on('ajax:error', function (event, xhr, status) {
+  $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+  var json_response = JSON.parse(xhr.responseText);
+  handleErrorAddGroup(json_response.error_message);
+
+});
+
+function handleErrorAddGroup (error_message) {
+  $.smallBox({
+    title : "Warning",
+    content: error_message,
+    color: "#C46A69",
+    icon: "fa fa-warning",
+    timeout: 6000
+  });
+}

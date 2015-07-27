@@ -401,6 +401,12 @@ Pollios::Application.routes.draw do
     get 'manage_groups', to: 'suggest_groups#manage_groups', as: :admin_suggest_groups
     post 'manage_groups', to: 'suggest_groups#create',  as: :suggest_groups
 
+    scope module: 'web_panel' do
+      get 'user_to_group',  to: 'add_user_to_group#index',  as: :user_to_group
+      get 'members_with_group',   to: 'add_user_to_group#members_with_group', as: :members_with_group
+      post 'remote_user_to_group',  to: 'add_user_to_group#remote_user_to_group', as: :remote_user_to_group
+    end
+
     resources :special_qrcodes
 
     resources :invites

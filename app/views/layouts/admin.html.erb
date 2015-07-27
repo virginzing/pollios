@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-    <title> Pollios </title>
+    <title><%= full_title(yield(:title)) %></title>
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
@@ -173,6 +173,10 @@
             <a href="<%= admin_suggest_groups_path %>" title="Suggest Groups"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Suggest Group</span></a>
           </li>
 
+          <li class="<%= is_active?('add_user_to_group') %>">
+            <a href="<%= user_to_group_path %>" title="User to Group"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">User to Group</span></a>
+          </li>
+
           <li class="<%= is_active?('triggers') %>">
             <a href="<%= triggers_path %>" title="Triggers"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">Trigger</span></a>
           </li>
@@ -269,6 +273,7 @@
           <img alt="loading" src="/smartadmin/img/loading_1.gif">
         </div>
         <%= yield %>
+        <%= yield(:javascript) %>
       </div>
       <!-- END MAIN CONTENT -->
 
