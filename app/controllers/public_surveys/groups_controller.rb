@@ -18,6 +18,7 @@ class PublicSurveys::GroupsController < ApplicationController
   def create
     @init_group_company = CreateGroupCompany.new(current_member, current_company, group_params, params[:list_member])
     @group = @init_group_company.create_group
+    FlushCached::Member.new(current_member).clear_list_groups
 
     respond_to do |wants|
       if @group
