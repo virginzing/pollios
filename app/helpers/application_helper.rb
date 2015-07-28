@@ -18,6 +18,10 @@ module ApplicationHelper
     end
   end
 
+  def bread_crumb_using_service(request_path)
+    request_path.split("/")[1].titleize
+  end
+
   def convert_poll_url(activity)
     public_survey_poll_path(activity) if controller.class.parent == PublicSurveys
   end
