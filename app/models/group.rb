@@ -52,7 +52,7 @@ class Group < ActiveRecord::Base
   default_scope { with_deleted.where(visible: true) }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
-
+  scope :only_public, -> { where(public: true) }
   # def slug_candidates
   #   [
   #     :name,
@@ -539,7 +539,7 @@ class Group < ActiveRecord::Base
   end
 
   def get_all_poll_count
-    poll_groups.map(&:poll_id).uniq.size
+    poll_groups.without_deleted.map(&:poll_id).uniq.size
   end
 
   def is_company?

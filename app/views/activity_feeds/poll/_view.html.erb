@@ -1,7 +1,7 @@
 <small class="pull-right"><span data-livestamp="<%= activity.created_at.to_i %>"></span></small>
-<strong><%= activity.member.fullname %></strong> viewed on 
+<strong><%= activity.member.fullname %></strong> viewed on
   <% if activity.trackable %>
-    <strong><%= link_to activity.trackable.title, company_poll_detail_path(activity.trackable), class: 'poll-title' %></strong><br>
+    <strong><%= link_to activity.trackable.title, convert_poll_url(activity.trackable), class: 'poll-title' %></strong><br>
   <% else %>
     poll which has since been removed <br>
   <% end %>

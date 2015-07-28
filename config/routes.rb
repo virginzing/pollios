@@ -4,6 +4,12 @@ require 'api_constraints'
 
 Pollios::Application.routes.draw do
 
+  def draw(routes_name)
+    instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
+  end
+
+  draw :public_surveys
+
   get 'services', to: 'select_services#index',  as: :select_services
 
   get 'list_members', to: 'members#list_members'

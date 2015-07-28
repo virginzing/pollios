@@ -104,7 +104,7 @@ class PollSeriesController < ApplicationController
         poll.choices.build
       end
     end
-    @group_list = Company::ListGroup.new(current_company).show_in_groups
+    @group_list = Company::ListGroup.new(current_company).exclusive
   end
 
   def public_questionnaire

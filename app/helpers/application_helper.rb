@@ -18,6 +18,19 @@ module ApplicationHelper
     end
   end
 
+  def bread_crumb_using_service(request_path)
+    str_path = request_path.split("/")[1]
+    if str_path == "company"
+      "Internal Survey"
+    else
+      str_path.titleize
+    end
+  end
+
+  def convert_poll_url(activity)
+    public_survey_poll_path(activity) if controller.class.parent == PublicSurveys
+  end
+
   def current_controller?(options)
     url_string = CGI.escapeHTML(url_for(options))
     params = ActionController::Routing::Routes.recognize_path(url_string, :method => :get)

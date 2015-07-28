@@ -1,0 +1,36 @@
+<!-- widget div-->
+<div>
+
+  <!-- widget content -->
+  <div class="widget-body no-padding">
+    <table id="list_default" class="table table-striped table-bordered table-hover" width="100%">
+      <thead>
+        <tr>
+          <th width="20">#</th>
+          <th width="70">Avatar</th>
+          <th width="150">Title</th>
+          <th>Vote All</th>
+          <th>View All</th>
+          <th width="100">Created At</th>
+          <th width="50">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @polls.each do |poll| %>
+          <tr>
+            <td><%= poll.id %></td>
+            <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
+            <td><%= link_to poll.title, public_survey_poll_path(poll), class: 'poll-title' %></td>
+            <td><%= poll.vote_all %></td>
+            <td><%= poll.view_all %></td>
+            <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
+            <td></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <!-- end widget content -->
+
+</div>
+<!-- end widget div -->

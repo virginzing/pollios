@@ -1,0 +1,61 @@
+<% breadcrumb :public_survey_campaigns %>
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-gift fa-fw"></i>
+      List Campaign
+  </h1>
+
+  <a href="<%= new_public_survey_campaign_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Campaign</div>
+  </a>
+
+</div>
+
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-company-list-campaign" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-gift"></i> </span>
+      <h2><strong>Campaigns</strong></h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_company_campaign" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>How to redeem</th>
+                <th>Limit</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @campaigns.each do |campaign| %>
+                <tr>
+                  <td><%= campaign.id %></td>
+                  <td><%= link_to campaign.name, public_survey_campaign_path(campaign) %></td>
+                  <td><%= campaign.description %></td>
+                  <td><%= campaign.how_to_redeem %></td>
+                  <td><%= campaign.limit %></td>
+                  <td width="150"><%= link_to 'Edit', edit_public_survey_campaign_path(campaign), class: 'btn btn-default btn-pill' %> <%= link_to 'Remove', public_survey_campaign_path(campaign), class: 'btn btn-default btn-pill', method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>

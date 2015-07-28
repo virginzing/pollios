@@ -1,0 +1,11 @@
+<% breadcrumb :edit_public_survey_feedback, poll_series %>
+
+<div class="well">
+  <%= simple_form_for poll_series, url: public_survey_feedback_path(poll_series), method: :put do |f| %>
+    <%= f.input :remove_campaign, as: :boolean, input_html: { id: "remove_campaign" } if poll_series.campaign.present? %>
+    <%= f.input :close_status, label: "Can't vote (Questionnaire closed)" %>
+    <%= f.input :allow_comment, label: "Allow suggest" %>
+
+    <%= f.submit 'Update', class: 'btn btn-primary' %>
+  <% end %>
+</div>

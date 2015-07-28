@@ -1,3 +1,5 @@
+<% breadcrumb :internal_survey_group, group %>
+
 <div class="well">
 <div class="row">
   <div class="col-md-12">
@@ -20,10 +22,10 @@
     <div>Poll</div>
   </a>
 
-  <a href="<%= company_add_member_url %>" class="icon-btn">
+<!--   <a href="<%= company_add_member_url %>" class="icon-btn">
     <i class="fa fa-plus"></i>
     <div>User</div>
-  </a>
+  </a> -->
 
   <a href="<%= company_edit_group_path %>" class="icon-btn">
     <i class="fa fa-cog"></i>
@@ -53,7 +55,7 @@
       <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members" data-widget-editbutton="false" data-widget-colorbutton="false">
         <header>
           <span class="widget-icon"> <i class="fa fa-group"></i> </span>
-          <h2><strong>List Member</strong></h2>          
+          <h2><strong>List Member</strong></h2>
         </header>
         <%= render 'companies/group/list_member' unless params[:page] %>
       </div>
@@ -61,7 +63,7 @@
       <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-list_surveyor" data-widget-editbutton="false" data-widget-colorbutton="false">
         <header>
           <span class="widget-icon"> <i class="fa fa-group"></i> </span>
-          <h2><strong>List Surveyor</strong></h2>          
+          <h2><strong>List Surveyor</strong></h2>
         </header>
         <%= render 'companies/group/list_surveyor' unless params[:page] %>
       </div>
@@ -69,7 +71,7 @@
       <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members-inactive" data-widget-editbutton="false" data-widget-colorbutton="false">
         <header>
           <span class="widget-icon"> <i class="fa fa-group"></i> </span>
-          <h2><strong>List Member Inactive</strong></h2>          
+          <h2><strong>List Member Inactive</strong></h2>
         </header>
         <%= render 'companies/group/list_member_inactive' unless params[:page] %>
       </div>
@@ -77,7 +79,7 @@
       <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members-request" data-widget-editbutton="false" data-widget-colorbutton="false">
         <header>
           <span class="widget-icon"> <i class="fa fa-group"></i> </span>
-          <h2><strong>List Member Request</strong></h2>          
+          <h2><strong>List Member Request</strong></h2>
         </header>
         <%= render 'companies/group/list_member_request' unless params[:page] %>
       </div>
@@ -118,7 +120,7 @@
                 var $message = $('<div></div>');
                 var pageToLoad = dialog.getData('pageToLoad');
                 $message.load(pageToLoad);
-        
+
                 return $message;
             },
             data: {
@@ -173,7 +175,7 @@
   ias.extension(new IASTriggerExtension({offset: 5})); // shows a trigger after page 3
   // ias.extension(new IASNoneLeftExtension({
   //   text: 'There are no more pages left to load.'      // override text when no pages left
-  // })); 
+  // }));
 </script>
 
 <!-- Modal -->

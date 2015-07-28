@@ -5,7 +5,7 @@ class Company < ActiveRecord::Base
   PUBLIC = "Public"
 
   LIST_SERVICE = [FEEDBACK, SURVEY, PUBLIC]
-  
+
   belongs_to :member
 
   has_many :company_members, dependent: :destroy
@@ -13,7 +13,7 @@ class Company < ActiveRecord::Base
 
   has_many :invite_codes, dependent: :destroy
   has_many :branches, dependent: :destroy
-  
+
   has_many :group_companies, dependent: :destroy
   has_many :groups, through: :group_companies , source: :group
 
@@ -28,18 +28,18 @@ class Company < ActiveRecord::Base
   has_many :campaigns, dependent: :destroy
 
   has_many :redeemers, dependent: :destroy
-  
+
   has_many :get_redeemers, through: :redeemers, source: :member
 
   has_many :poll_series_companies, dependent: :destroy
   has_many :poll_series, through: :poll_series_companies, source: :poll_series
-  
+
   has_many :main_groups, -> { where("group_companies.main_group = 't' ") }, through: :group_companies, source: :group
   # validates :amount_code, :prefix_name, presence: true
-  
+
   # validates :name, presence: true, :uniqueness => { :case_sensitive => false, message: "Name must be unique" }, on: :create
   validates :name, presence: true
-  
+
   attr_accessor :amount_code, :used, :prefix_name, :company_id
 
   # def generate_code_of_company(invite_params, find_group = nil)
@@ -57,15 +57,15 @@ class Company < ActiveRecord::Base
   #     else
   #       group = find_group
   #     end
-  #     InviteCode.create_invite_code(prefix_name, amount_code.to_i, self.id, group.id) 
-  #   end 
+  #     InviteCode.create_invite_code(prefix_name, amount_code.to_i, self.id, group.id)
+  #   end
   # end
 
   def generate_invitation_of_group(invite_code_params)
     amount_code = invite_code_params[:amount_code]
     group_id = invite_code_params[:group_id]
     prefix_name = invite_code_params[:prefix_name]
-    InviteCode.create_invite_code(prefix_name, amount_code.to_i, id, group_id.to_i) 
+    InviteCode.create_invite_code(prefix_name, amount_code.to_i, id, group_id.to_i)
   end
 
 

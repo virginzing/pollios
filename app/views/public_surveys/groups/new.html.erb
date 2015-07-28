@@ -1,0 +1,178 @@
+<% breadcrumb :new_public_survey_group %>
+
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-company-new-group" data-widget-colorbutton="false" data-widget-editbutton="false">
+
+      <header>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2><strong>Form</strong></h2>
+
+      </header>
+      <!-- widget div-->
+      <div>
+
+        <!-- widget content -->
+        <div class="widget-body">
+          <%= simple_form_for @group, :url => public_survey_groups_path, :html => { :multipart => true, class: "smart-form", id: "new_group" } do |f| %>
+          <header>
+            Group Detail
+          </header>
+
+          <fieldset>
+
+            <section>
+              <div class="row">
+                <section class="col col-lg-10 col-md-8 col-sm-8 col-xs-8">
+
+                  <section>
+                    <label class="label">Name</label>
+                    <label class="input">
+                      <%= f.input :name, label: false, input_html: { :"data-parsley-required" => "true" }  %>
+                    </label>
+                  </section>
+
+                  <section>
+                    <label class="label">Description</label>
+                    <label class="textarea">
+                      <%= f.input :description, label: false  %>
+                    </label>
+                  </section>
+
+                  <%= render "options_company_group" %>
+                </section>
+
+                <section class="col col-lg-2 col-md-4 col-sm-4 col-xs-4">
+                  <div class="form-group new_group">
+                    <input type="file" class="default" name="group[cover]" id="drop_cover_each_group" accept="image/png, image/jpeg, image/gif"/>
+                  </div>
+                </section>
+
+              </div>
+            </section>
+
+          </fieldset>
+
+          <header>
+            Select Member
+          </header>
+
+          <fieldset>
+            <section>
+            <table id="select_member_company" class="table table-border" width="100%">
+              <thead>
+                <tr>
+                  <th width="50">#</th>
+                  <th width="50">Avatar</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th width="100">Joined at</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @members.each do |member| %>
+                  <tr>
+                    <td><%= member.id %></td>
+                    <td><%= image_tag(member.avatar.url(:thumbnail), size: '30x30') %></td>
+                    <td><%= member.get_name %></td>
+                    <td><%= member.email %></td>
+                    <td><span data-livestamp="<%= member.created_at.to_i %>"></span></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+            </section>
+          </fieldset>
+
+          <footer>
+            <%= button_tag "Submit", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..." } %>
+          </footer>
+          <% end %>
+
+
+      </div>
+      <!-- end widget div -->
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script type="text/javascript">
+  $("#new_group").parsley();
+  $(document).ready( function () {
+      var list_member = [];
+      $('#select_member_company').dataTable({
+        retrieve: true,
+        responsive: true,
+        iDisplayLength: 10,
+        order: [[0, 'desc']],
+        dom: 'T<"clear">lfrtip',
+        tableTools: {
+            "sRowSelect": "multi",
+            "aButtons": [ "select_all", "select_none" ]
+        }
+      });
+
+    var table = $('#select_member_company').DataTable();
+
+    // $('#select_member_company tbody').on( 'click', 'tr', function () {
+    //     $(this).toggleClass('ac');
+    // } );
+
+    $('#new_group').submit(function () {
+      var member_select = table.rows('.active').data()
+      $.each(member_select, function(index, value) {
+        list_member.push(value[0]);
+      });
+      $(this).append(function () {
+          return $('<input>', {
+              type: 'hidden',
+              name: 'list_member',
+              value: list_member
+          })
+      })
+    });
+  });
+</script>
+
+<style type="text/css">
+  .dataTables_filter .input-group-addon {
+    width: 14px;
+    margin-top: 0;
+    float: left;
+    height: 16px;
+    padding-top: 8px;
+  }
+  tr.active {
+    border: 2px solid #0091d9!important;
+    background: aliceblue;
+  }
+  tr.active:after {
+    display: block;
+    position: absolute;
+    content: "\f00c";
+    color: #0091d9;
+    right: 6px;
+    font-family: FontAwesome;
+    z-index: 2;
+    font-size: 14px;
+  }
+  #select_member_company_length {
+    float: right;
+  }
+  .dataTables_filter {
+
+  }
+  .DTTT.btn-group {
+    padding: 10px 0px;
+  }
+  a.DTTT_button_text {
+    padding: 5px;
+  }
+  input[type="search"] {
+    padding: 8px 10px;
+  }
+
+</style>

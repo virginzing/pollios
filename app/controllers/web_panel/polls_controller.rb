@@ -50,9 +50,9 @@ module WebPanel
           Activity.create_activity_poll(current_member, @poll, 'Create')
           @poll.flush_cache
           flash[:success] = "Create poll successfully."
-          redirect_to current_member.get_company.present? ? company_polls_path : polls_path
+          redirect_to params[:redirect_url]
         else
-          redirect_to company_polls_path
+          redirect_to params[:redirect_url]
         end
       end
     end
@@ -63,7 +63,7 @@ module WebPanel
 
     def create_new_poll
       @poll = Poll.new
-      @group_list = Company::ListGroup.new(set_company).show_in_groups
+      @group_list = Company::ListGroup.new(set_company).exclusive
     end
 
     def poll_latest

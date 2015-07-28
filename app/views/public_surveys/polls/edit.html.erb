@@ -1,0 +1,103 @@
+<% breadcrumb :edit_public_survey_poll, poll %>
+
+<div class="well">
+  <%= simple_form_for @poll, url: company_update_poll_path, method: :put do |f| %>
+    <br>
+    <% if false %>
+    <div class="form-group">
+      <label>Change group</label>
+      <select multiple="multiple" class="searchable" name="group_select[]" disabled="disable">
+        <% @groups.each do |group| %>
+          <option value="<%= group.id %>"><%= group.name %></option>
+        <% end %>
+      </select>
+    </div>
+    <br>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.input :remove_campaign, as: :boolean, input_html: { id: "remove_campaign" } %>
+      <%= f.input :close_status, label: 'Close Poll' %>
+      <%= f.input :draft, label: "Draft" %>
+    </div>
+
+    <%= f.input :company_id, input_html: { value: current_company.id }, as: :hidden %>
+
+
+    <div class="update-button">
+      <%= f.submit "Update", class: 'btn btn-primary', data: { disable_with: "Please wait..." } %>
+    </div>
+  <% end %>
+</div>
+<script>
+
+var group_selected = <%= raw @poll.in_group_ids.split(",") %>;
+
+$.each(group_selected, function (index, value) {
+  $("select option[value=" + value + "]").attr('selected','selected');
+})
+
+$('.searchable').multiSelect({
+  selectableHeader: "<input type='text' class='form-control search-input suggest-group-searchable' placeholder='search'>",
+  selectionHeader: "<input type='text' class='form-control search-input suggest-group-searchable' placeholder='search'>",
+  afterInit: function(ms){
+    var that = this,
+        $selectableSearch = that.$selectableUl.prev(),
+        $selectionSearch = that.$selectionUl.prev(),
+        selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+        selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+    .on('keydown', function(e){
+      if (e.which === 40){
+        that.$selectableUl.focus();
+        return false;
+      }
+    });
+
+    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+    .on('keydown', function(e){
+      if (e.which == 40){
+        that.$selectionUl.focus();
+        return false;
+      }
+    });
+  },
+  afterSelect: function(){
+    this.qs1.cache();
+    this.qs2.cache();
+  },
+  afterDeselect: function(){
+    this.qs1.cache();
+    this.qs2.cache();
+  }
+});
+
+$(document).on('page:change', function() {
+  $("#poll_campaign").select2("val", "<%= @poll.campaign_id %>");
+  $("#poll_campaign").select2({
+    allowClear: true,
+    width: '100%'
+  });
+
+  $("#clear_campaign").on("click", function () {
+    $("#poll_campaign").val("0").trigger("change");
+  })
+
+  $("#remove_campaign").change(function () {
+    var $input = $( this );
+    $("#poll_campaign").attr('disabled', $input.prop("checked"));
+  });
+
+});
+
+</script>
+
+<style>
+input.suggest-group-searchable {
+  margin-bottom: 10px;
+}
+label.select_campaign {
+  width: 100%;
+}
+</style>

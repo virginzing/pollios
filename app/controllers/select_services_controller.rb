@@ -5,7 +5,7 @@ class SelectServicesController < ApplicationController
   before_action :signed_user
 
   def index
-    @service = @current_member.get_company.decorate
+    @service = current_company.decorate
 
     if @service.using_service.size == 0
       fail ExceptionHandler::WebForbidden
