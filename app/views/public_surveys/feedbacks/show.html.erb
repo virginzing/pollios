@@ -1,0 +1,145 @@
+<% breadcrumb :public_survey_feedback, poll_series %>
+
+<div class="well">
+  <h1><u>Description</u></h1>
+  <p><%= poll_series.description %></p>
+</div>
+<!-- widget grid -->
+<section id="widget-poll_series-detail" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+
+  <!-- row -->
+  <div class="row">
+
+    <!-- NEW WIDGET START -->
+    <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+      <!-- Widget ID (each widget will need unique ID)-->
+      <div class="jarviswidget" id="wid-certification">
+
+        <header>
+          <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+          <h2>Questionnaire</h2>
+
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+          <!-- widget edit box -->
+          <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+            <input class="form-control" type="text">
+          </div>
+          <!-- end widget edit box -->
+
+          <!-- widget content -->
+          <div class="widget-body">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="summary-poll_series">
+                  <h5>Creator : <%= poll_series.member.fullname %></h5>
+                  <h5>Vote all : <%= poll_series.vote_all %></h5>
+                  <h5>View all : <%= poll_series.view_all %></h5>
+                  <h5>Campaign : <%= poll_series.show_campaign %></h5>
+                  <h5>State: <%= poll_series.decorate.show_close_status %></h5>
+                  <h5>Allow suggest: <%= poll_series.decorate.show_allow_comment %></h5>
+                  <% if poll_series.in_group %>
+                    <h5>Groups : <%= raw poll_series.decorate.show_in_groups %></h5>
+                  <% end %>
+                  <h5>Last updated : <span data-livestamp="<%= poll_series.updated_at.to_i %>"></span></h5>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="box">
+                  <%= image_tag @qr, class: "img-responsive center-block" %>
+                </div>
+<!--                 <%= link_to 'Link', GenerateQrcodeLink.new(poll_series).get_redirect_link, class: 'btn btn-default btn-pill' %> -->
+              </div>
+            </div>
+          </div>
+          <!-- end widget content -->
+
+        </div>
+        <!-- end widget div -->
+
+      </div>
+      <!-- end widget -->
+
+    </article>
+    <!-- WIDGET END -->
+
+  </div>
+
+  <!-- end row -->
+
+  <!-- row -->
+
+  <div class="row">
+
+    <!-- a blank row to get started -->
+    <div class="col-sm-12">
+
+    </div>
+
+  </div>
+
+  <!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+<div class="well">
+  <h1 class="text-center">
+    Summary
+  </h1>
+
+  <br>
+
+  <div class="row">
+    <table class="table table-striped table-forum">
+      <thead>
+        <tr>
+          <th colspan="1">Question</th>
+          <th class="text-center" style="width: 150px;">Average (5)</th>
+          <th class="text-center" style="width: 150px;">Percent (100%)</th>
+          <th class="text-center" style="width: 150px;">Rating (5)</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <% poll_series.polls.each_with_index do |poll, index| %>
+          <tr>
+            <td>
+              <h4><a href="#">
+                <%= poll.title %>
+              </a>
+                <small>......</small>
+              </h4>
+            </td>
+            <td class="text-center">
+              <a href="javascript:void(0);"><%= poll_series.sum_average(@array_list[index]) %></a>
+            </td>
+            <td class="text-center">
+              <a href="javascript:void(0);"><%= poll_series.percent_average(@array_list[index]) %></a>
+            </td>
+            <td class="text-center">
+              <a href="javascript:void(0);">
+                <div class="rating" style="width: 100%; font-size: 10px;">
+                  <input type="number" class="rating input-id" data-size="xs" data-readonly="true" data-show-clear="false" data-default-caption="{rating} Rates" data-show-caption="false" data-star-captions="{}" value="<%= poll_series.sum_average(@array_list[index]) %>">
+                </div>
+              </a>
+            </td>
+          </tr>
+        <% end %>
+
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col col-md-12 col-md-offset-5"><%= link_to 'Edit', edit_public_survey_feedback_path(poll_series), class: 'btn btn-primary btn-lg' %>
+  <%= link_to 'Delete', public_survey_feedback_path(poll_series), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger btn-lg' %></div>
+</div>

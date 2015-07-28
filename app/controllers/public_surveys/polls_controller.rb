@@ -77,6 +77,15 @@ class PublicSurveys::PollsController < ApplicationController
   end
 
   def destroy
+    @poll.groups.each do |group|
+      NotifyLog.poll_with_group_deleted(@poll, group)
+    end
+
+    if @poll.in_group
+      @poll.poll_groups.update_all(deleted_by_id: current_member.id)
+      Company::TrackActivityFeedPoll.new(current_member, @poll.in_group_ids, @poll, 'delete').tracking
+    end
+
     NotifyLog.check_update_poll_deleted(@poll)
     @poll.destroy
     @poll.member.flush_cache_about_poll
@@ -88,7 +97,12 @@ class PublicSurveys::PollsController < ApplicationController
   private
 
   def set_poll
-    @poll = Poll.find(params[:id])
+    @poll = Poll.cached_find(params[:id])
+    if @poll.in_group
+      raise ExceptionHandler::Forbidden if (@poll.groups.map(&:id) & Company::ListGroup.new(current_company).all.map(&:id)).size < 0
+    else
+      raise ExceptionHandler::Forbidden if (@poll.member.id != current_member.id) || !@poll.public
+    end
   end
 
   def update_poll_params

@@ -30,7 +30,7 @@
           <ul class="list-unstyled list-inline">
             <li><i class="fa fa-calendar"></i> <%= poll.created_at %></li>
             <li><i class="fa fa-group"></i>
-              <%= poll.poll_in_group %>
+              <%= poll.poll_in_public_groups %>
             </li>
           </ul>
 
@@ -469,7 +469,7 @@
 <div class="well text-center">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <%= link_to '<i class="fa fa-trash-o fa-lg"></i> Delete Poll'.html_safe , public_survey_poll_path(poll), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-lg'%>
+      <%= link_to '<i class="fa fa-trash-o fa-lg"></i> Delete Poll'.html_safe , public_survey_poll_path(poll, member_id: current_member.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-lg'%>
     </div>
   </div>
 </div>

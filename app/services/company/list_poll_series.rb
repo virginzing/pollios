@@ -7,6 +7,10 @@ class Company::ListPollSeries
     @list_poll_series ||= poll_series
   end
 
+  def only_public_survey
+    list_poll_series.select{|poll_series| poll_series.public }
+  end
+
   def poll_series_ids
     @poll_series_ids ||= list_poll_series.pluck(:id)
   end
@@ -20,6 +24,6 @@ class Company::ListPollSeries
   def poll_series
     @company.poll_series.without_deleted
   end
-  
-  
+
+
 end

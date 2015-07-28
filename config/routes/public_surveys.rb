@@ -6,12 +6,18 @@ scope module: 'public_surveys' do
 
     end
 
-    scope 'feedbacks' do
-      get '/',  to: 'feedbacks#index',  as: :public_survey_feedbacks
+    resources :feedbacks, as: 'public_survey_feedbacks' do
+
     end
 
-    scope 'groups' do
-      get '/',  to: 'groups#index', as: :public_survey_groups
+    resources :groups, as: 'public_survey_groups' do
+      collection do
+        get 'new_poll'
+      end
+
+      member do
+        delete 'remove_member'
+      end
     end
 
     scope 'campaigns' do

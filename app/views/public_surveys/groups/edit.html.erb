@@ -1,0 +1,154 @@
+<div class="well">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h1 class="page-title txt-color-blueDark page-well-header">
+        <%= link_to group.name, public_survey_group_path(group), id: 'header-link'%> > Edit
+      </h1>
+    </div>
+  </div>
+</div>
+<div class="well well-sm">
+  <div class="row profile-account">
+    <div class="col-md-3">
+      <ul class="ver-inline-menu tabbable margin-bottom-10">
+        <li class="active">
+          <a data-toggle="tab" href="#tab_5-1">
+            <i class="fa fa-cog"></i>
+            Group info
+          </a>
+          <span class="after"></span>
+        </li>
+        <!-- <li class=""><a data-toggle="tab" href="#tab_5-2"><i class="fa fa-picture-o"></i> Change Photo</a></li> -->
+        <li class=""><a data-toggle="tab" href="#tab_5-3"><i class="fa fa-picture-o"></i> Change Cover</a></li>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <div class="tab-content">
+        <div id="tab_5-1" class="tab-pane active">
+          <form role="form" action="<%= public_survey_group_path(group) %>" class="smart-form" method="post" id="group_profile">
+            <input type="hidden" name="_method" value="put" />
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <fieldset>
+              <section>
+                <label class="label">Group Name</label>
+                <label class="input">
+                  <input type="hidden" name="group_id" value="<%= @group.id %>">
+                  <input type="text" name="group[name]" value="<%= @group.name %>" data-parsley-required="true">
+                </label>
+                <div class="note">
+                  <strong>Note</strong> Group name is show in app Pollios.
+                </div>
+              </section>
+              <section>
+                <label class="label">Description</label>
+                <label class="textarea">
+                  <textarea rows="3" class="custom-scroll" name="group[description]"><%= @group.description %></textarea>
+                </label>
+                <div class="note">
+                  <strong>Note</strong> description is show in app Pollios.
+                </div>
+              </section>
+              <section>
+                <div class="row">
+                  <div class="col col-md-4">
+                  <label class="toggle">
+                    <input type="checkbox" name="group[need_approve]">
+                  <i data-swchon-text="Yes" data-swchoff-text="No"></i>Need approve to join group?</label>
+                  </div>
+                </div>
+              </section>
+              <% if @group.normal? %>
+              <section>
+                <div class="row">
+                  <div class="col col-md-4">
+                  <label class="toggle">
+                    <input type="checkbox" name="group[opened]">
+                    <i data-swchon-text="Yes" data-swchoff-text="No"></i>Everybody see poll before join group</label>
+                  </div>
+                </div>
+              </section>
+              <% else %>
+                <section>
+                  <div class="row">
+                    <div class="col col-md-4">
+                    <label class="toggle">
+                      <input type="checkbox" name="group[admin_post_only]">
+                    <i data-swchon-text="Yes" data-swchoff-text="No"></i>Admin post poll only?</label>
+                    </div>
+                  </div>
+                </section>
+              <% end %>
+
+            </fieldset>
+            <footer>
+              <button type="submit" class="btn btn-primary" id="submit_detail_group" data-disable-with="Loading..." onclick="" >
+              Submit
+              </button>
+            </footer>
+          </form>
+        </div>
+        <div id="tab_5-3" class="tab-pane">
+          <form role="form" action="<%= public_survey_group_path(group) %>" method="post" class="smart-form" enctype="multipart/form-data">
+            <input type="hidden" name="_method" value="put" />
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <div class="form-group dropzone-photo">
+              <input type="hidden" name="group_id" value="<%= @group.id %>">
+              <input type="file" class="default" name="group[cover]" id="drop_cover_group" accept="image/png, image/jpeg, image/jpg"/>
+            </div>
+            <span class="note">Recommended image size by 640x260 and support file type as image/png, image/jpg and image/jpeg.</span>
+            <br>
+            <br>
+            <footer>
+              <% if @group.cover.present? %>
+              <%= link_to 'Delete', delete_cover_group_path(@group), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+              <% end %>
+              <button type="submit" class="btn btn-primary" id="drop_cover_group" data-disable-with="Loading..." onclick="" disabled="disabled">
+              Submit
+              </button>
+            </footer>
+          </form>
+        </div>
+
+      </div>
+    </div>
+    <!--end col-md-9-->
+  </div>
+</div>
+<script>
+  $.check_leave_group = <%= raw @group.leave_group %>;
+  $.check_admin_post_only = <%= raw @group.admin_post_only %>;
+  $.check_system_group = <%= raw @group.system_group %>;
+  $.check_need_approve = <%= raw @group.need_approve %>;
+  $.check_public_group = <%= raw @group.public %>;
+  $.check_opened_group = <%= raw @group.opened %>;
+
+  if ($.check_leave_group) {
+    $("input[name='group[leave_group]']").attr( 'checked', 'checked' );
+  };
+
+  if ($.check_admin_post_only) {
+    $("input[name='group[admin_post_only]']").attr( 'checked', 'checked' );
+  };
+
+  if ($.check_need_approve) {
+    $("input[name='group[need_approve]']").attr( 'checked', 'checked' );
+  }
+
+  if ($.check_system_group) {
+    $("input[name='group[system_group]']").attr( 'checked', 'checked' );
+  }
+
+  if ($.check_public_group) {
+    $("input[name='group[public]']").attr( 'checked', 'checked' );
+  }
+
+  if ($.check_opened_group) {
+    $("input[name='group[opened]']").attr( 'checked', 'checked' );
+  }
+
+  $("#group_profile").parsley();
+  $(document).ready(function() {
+    dropZonePhotoGroup("<%= @group.photo_group.url(:thumbnail).presence || "" %>");
+    dropZoneCoverGroup("<%= @group.cover.url(:thumbnail).presence || "" %>");
+  });
+</script>

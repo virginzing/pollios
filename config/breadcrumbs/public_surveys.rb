@@ -1,8 +1,10 @@
+## polls ##
+
 crumb :public_survey_polls do
   link "All Polls", public_survey_polls_path
 end
 
-crumb :public_survey_poll_new do
+crumb :new_public_survey_poll do
   link "New Public poll"
   parent :public_survey_polls
 end
@@ -16,6 +18,45 @@ crumb :edit_public_survey_poll do |poll|
   link truncate(poll.title), public_survey_poll_path(poll)
   parent :public_survey_polls
 end
+
+## feedbacks ##
+
+crumb :public_survey_feedbacks do
+  link "All Feedbacks", public_survey_feedbacks_path
+end
+
+crumb :new_public_survey_feedback do
+  link "New Feedback"
+  parent :public_survey_feedbacks
+end
+
+crumb :public_survey_feedback do |feedback|
+  link truncate(feedback.description), public_survey_feedback_path(feedback)
+  parent :public_survey_feedbacks
+end
+
+crumb :edit_public_survey_feedback do |feedback|
+  link truncate(feedback.description), public_survey_feedback_path(feedback)
+  parent :public_survey_feedbacks
+end
+
+
+## groups ##
+
+crumb :public_survey_groups do
+  link "All Groups", public_survey_groups_path
+end
+
+crumb :new_public_survey_group do
+  link "New Group"
+  parent :public_survey_groups
+end
+
+crumb :new_poll_public_survey_group do
+  link "New poll to group"
+  parent :public_survey_groups
+end
+
 
 
 ## polls ##

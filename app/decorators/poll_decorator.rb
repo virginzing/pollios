@@ -57,24 +57,32 @@ class PollDecorator < ApplicationDecorator
     end
   end
 
+  def poll_in_public_groups
+    content_tag(:li) do
+      poll.groups.map do |group|
+        concat(content_tag(:span, link_to(group.name, public_survey_group_path(group)), class: 'group_label'))
+      end
+    end
+  end
+
   def get_photo_poll
     if photo_poll.present?
-      image_tag(object.photo_poll.url(:thumbnail))  
+      image_tag(object.photo_poll.url(:thumbnail))
     end
   end
 
   def lazy_photo_poll
     if photo_poll.present?
-      image_tag("", data: { src: object.photo_poll.url(:thumbnail) }, class: 'lazy' )  
+      image_tag("", data: { src: object.photo_poll.url(:thumbnail) }, class: 'lazy' )
     end
   end
 
   def search_poll_image
     if photo_poll.present?
-      image_tag(object.photo_poll.url(:thumbnail))  
+      image_tag(object.photo_poll.url(:thumbnail))
     end
   end
-  
+
 
 end
 

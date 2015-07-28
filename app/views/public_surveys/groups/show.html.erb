@@ -1,0 +1,178 @@
+<div class="well">
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="txt-color-blueDark page-well-header">
+        <%= group.show_cover_group_in_company %>
+        <div class="header_group_detail">
+          <%= group.name %> <%= group.show_group_type %>
+        </div>
+    </h1>
+  </div>
+</div>
+</div>
+
+
+<div class="well">
+  <h4 class="alert-heading">Management</h4>
+  <br/>
+  <a href="<%= edit_public_survey_group_path(group) %>" class="icon-btn">
+    <i class="fa fa-cog"></i>
+    <div>Setting</div>
+  </a>
+
+</div>
+
+<section id="widget-grid" class="">
+
+  <!-- row -->
+  <div class="row">
+
+    <!-- NEW WIDGET START -->
+    <article class="col-md-8">
+
+      <!-- Widget ID (each widget will need unique ID)-->
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-polls" data-widget-colorbutton="false" data-widget-editbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+          <h2><strong>List Polls</strong></h2>
+        </header>
+        <%= render 'list_public_polls' unless params[:page] %>
+      </div>
+      <!-- end widget -->
+
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members" data-widget-editbutton="false" data-widget-colorbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-group"></i> </span>
+          <h2><strong>List Member</strong></h2>
+        </header>
+        <%= render 'list_members' unless params[:page] %>
+      </div>
+
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members-inactive" data-widget-editbutton="false" data-widget-colorbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-group"></i> </span>
+          <h2><strong>List Member Inactive</strong></h2>
+        </header>
+        <%= render 'companies/group/list_member_inactive' unless params[:page] %>
+      </div>
+
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-members-request" data-widget-editbutton="false" data-widget-colorbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-group"></i> </span>
+          <h2><strong>List Member Request</strong></h2>
+        </header>
+        <%= render 'companies/group/list_member_request' unless params[:page] %>
+      </div>
+
+    </article>
+    <!-- WIDGET END -->
+
+    <!-- NEW WIDGET START -->
+    <article class="col-md-4">
+
+      <!-- Widget ID (each widget will need unique ID)-->
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-group-<%= params[:group_id] %>-company-activity" data-widget-colorbutton="false" data-widget-editbutton="false">
+        <header>
+          <span class="widget-icon"> <i class="fa fa-globe"></i> </span>
+          <h2>Activity Feed</h2>
+        </header>
+        <%= render 'list_activity_feed' %>
+      </div>
+      <!-- end widget -->
+
+    </article>
+    <!-- WIDGET END -->
+
+  </div>
+
+  <!-- end row -->
+
+  <!-- row -->
+</section>
+
+ <script type="text/javascript">
+  $('[rel=tooltip]').tooltip();
+  function load_qrcode(poll_id) {
+
+    BootstrapDialog.show({
+          title: 'Qrcode',
+          message: function(dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+
+                return $message;
+            },
+            data: {
+                'pageToLoad': '/poll/' + poll_id + '/qrcode'
+            }
+    });
+  }
+</script>
+
+ <script type="text/javascript">
+ function showIFrame(url, title) {
+    var iframebox = document.getElementById('iframebox');
+    iframebox.src = url;
+    var desc = document.getElementById('title');
+    desc.innerHTML = title;
+ }
+ </script>
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+    $('.admin_status').editable({
+      showbuttons: false,
+      source: [
+              {value: 1, text: 'Member'},
+              {value: 2, text: 'Admin'}
+      ],
+      value: function(value) {
+        $(this).text(value);
+      },
+      error: function(response, newValue) {
+          if(response.status === 500) {
+              return 'Service unavailable. Please try later.';
+          } else {
+              return response.responseText;
+          }
+      }
+    });
+
+  });
+</script>
+
+<script>
+  var ias = $('#overflow').ias({
+    container: '#activity_feeds',
+    item: '.feed-element',
+    pagination: '#pagination',
+    next: '.next',
+    delay: 1250
+  });
+
+  ias.extension(new IASSpinnerExtension());            // shows a spinner (a.k.a. loader)
+  ias.extension(new IASTriggerExtension({offset: 5})); // shows a trigger after page 3
+  // ias.extension(new IASNoneLeftExtension({
+  //   text: 'There are no more pages left to load.'      // override text when no pages left
+  // }));
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+      </div>
+      <div class="modal-body">
+        <div style="padding-left: 210px;">
+          <iframe src="" id="iframebox"></iframe>
+        </div>
+        <img style="position: absolute; top: 20px; left: 230px; opacity:0.3;" src="/img/pollios3.png" />
+        <h2 id="title" class="text-center"></h2>
+      </div>
+    </div>
+  </div>
+</div>
