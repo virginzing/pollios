@@ -1,0 +1,32 @@
+<% breadcrumb :public_survey_campaign, @campaign %>
+
+<div class="well">
+<p>
+  <strong>Name:</strong>
+  <%= @campaign.name %>
+</p>
+
+<p>
+  <strong>Photo campaign:</strong>
+  <%= @campaign.photo_campaign %>
+</p>
+
+<p>
+  <strong>Used:</strong>
+  <%= @campaign.used %>
+</p>
+
+<p>
+  <strong>Limit:</strong>
+  <%= @campaign.limit %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @campaign.type_campaign_text %>
+</p>
+</div>
+
+<%= render 'load_reward' %>
+
+

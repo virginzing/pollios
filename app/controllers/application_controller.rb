@@ -72,7 +72,11 @@ class ApplicationController < ActionController::Base
   end
 
   def only_public_survey
-    fail ExceptionHandler::WebForbidden unless current_company.using_public?
+    if current_company
+      fail ExceptionHandler::WebForbidden unless current_company.using_public?
+    else
+      signed_user
+    end
   end
 
   def permission_deny

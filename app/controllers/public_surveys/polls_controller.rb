@@ -1,10 +1,11 @@
 class PublicSurveys::PollsController < ApplicationController
 
   before_action :only_public_survey
-  before_action :set_poll, only: [:show, :edit, :update, :destroy]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :campaigns]
 
   expose(:poll) { @poll.decorate }
   expose(:member) { @poll.member.decorate }
+  expose(:campaign) { @campaign }
 
   def index
     @init_poll_public = Company::PollPublic.new(current_company)
@@ -92,6 +93,11 @@ class PublicSurveys::PollsController < ApplicationController
     DeletePoll.create_log(@poll)
     flash[:success] = "Destroy successfully."
     redirect_to public_survey_polls_path
+  end
+
+  def campaigns
+    @campaign = @poll.campaign
+    @list_reward = CampaignMember.joins(:poll).includes(:member).where(poll: @poll, campaign: @campaign)
   end
 
   private

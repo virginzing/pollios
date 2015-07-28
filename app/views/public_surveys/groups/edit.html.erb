@@ -1,12 +1,4 @@
-<div class="well">
-  <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-      <h1 class="page-title txt-color-blueDark page-well-header">
-        <%= link_to group.name, public_survey_group_path(group), id: 'header-link'%> > Edit
-      </h1>
-    </div>
-  </div>
-</div>
+<% breadcrumb :edit_public_survey_group, @group %>
 <div class="well well-sm">
   <div class="row profile-account">
     <div class="col-md-3">
@@ -19,7 +11,7 @@
           <span class="after"></span>
         </li>
         <!-- <li class=""><a data-toggle="tab" href="#tab_5-2"><i class="fa fa-picture-o"></i> Change Photo</a></li> -->
-        <li class=""><a data-toggle="tab" href="#tab_5-3"><i class="fa fa-picture-o"></i> Change Cover</a></li>
+        <li class=""><a data-toggle="tab" href="#change_cover"><i class="fa fa-picture-o"></i> Change Cover</a></li>
       </ul>
     </div>
     <div class="col-md-9">
@@ -87,7 +79,7 @@
             </footer>
           </form>
         </div>
-        <div id="tab_5-3" class="tab-pane">
+        <div id="change_cover" class="tab-pane">
           <form role="form" action="<%= public_survey_group_path(group) %>" method="post" class="smart-form" enctype="multipart/form-data">
             <input type="hidden" name="_method" value="put" />
             <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
