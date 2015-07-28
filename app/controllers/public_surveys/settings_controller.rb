@@ -1,7 +1,7 @@
 class PublicSurveys::SettingsController < ApplicationController
   include SymbolHash
 
-  before_action :only_public_survey
+  before_action :only_public_survey, except: [:editable]
 
   def index
 

@@ -4,10 +4,4 @@
   </div>
 </div>
 
-<% if current_company.using_internal? && current_company.using_public? %>
-  <%= render 'companies/dashboard/all_survey' %>
-<% elsif current_company.using_internal? %>
-  <%= render 'companies/dashboard/internal_survey' %>
-<% else %>
-  <%= render 'companies/dashboard/public_survey' %>
-<% end %>
+<%= render 'companies/dashboard/internal_survey' %>

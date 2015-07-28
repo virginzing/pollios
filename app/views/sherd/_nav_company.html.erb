@@ -26,13 +26,13 @@
 
         </ul>
       </li>
-      
+
       <% if current_company.using_internal? %>
         <li class="<%= is_active_2nd_level('companies', 'company_members') || is_active_2nd_level('companies', 'add_member') || is_active_2nd_level('companies', 'member_detail') || is_active_2nd_level('companies', 'new_member') || is_active_2nd_level('companies', 'search_member') || is_active_2nd_level('companies', 'new_add_surveyor') %>">
           <a href="<%= company_members_path %>" title="Member"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">Members</span></a>
         </li>
       <% end %>
-      
+
       <li class="<%= is_active_2nd_level('companies', 'company_groups') || is_active_2nd_level('companies', 'new_group') || is_active_2nd_level('companies', 'list_members_in_group') || is_active_2nd_level('companies', 'group_detail') || is_active_2nd_level('companies', 'edit_group') || is_active_2nd_level('companies', 'group_poll_detail') %>">
         <a href="<%= company_groups_path %>" title="Group"><i class="fa fa-lg fa-fw fa-building-o"></i> <span class="menu-item-parent">Groups</span></a>
       </li>
@@ -40,7 +40,7 @@
       <li class="<%= is_active_2nd_level('company_campaigns', 'index') || is_active_2nd_level('company_campaigns', 'edit') || is_active_2nd_level('campaigns', 'show') ||is_active_2nd_level('company_campaigns', 'new') %>">
         <a href="<%= company_campaigns_path %>"><i class="fa fa-lg fa-fw fa-gift"></i> <span class="menu-item-parent">Campaigns</span></a>
       </li>
-      
+
       <% if current_company.using_internal? %>
       <li class="<%= is_active_2nd_level('companies', 'invites') || is_active_2nd_level('companies', 'via_email') %>">
         <a href="<%= company_invites_path %>" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invites</span></a>

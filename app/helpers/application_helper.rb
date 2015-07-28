@@ -19,7 +19,12 @@ module ApplicationHelper
   end
 
   def bread_crumb_using_service(request_path)
-    request_path.split("/")[1].titleize
+    str_path = request_path.split("/")[1]
+    if str_path == "company"
+      "Internal Survey"
+    else
+      str_path.titleize
+    end
   end
 
   def convert_poll_url(activity)

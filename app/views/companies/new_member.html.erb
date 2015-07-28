@@ -1,4 +1,12 @@
+<% breadcrumb :new_member_internal_survey_member %>
+
 <div class="well well-lg">
+
+  <h1 class="page-header-all">
+    <i class="fa fa-plus fa-fw"></i>
+      Add Members
+  </h1>
+
   <div class="well well-lg">
     <%= simple_form_for Member.new, url: authen_signup_via_company_path, method: :post, :html => { :multipart => true } do |f| %>
         <div class="row">
@@ -7,7 +15,7 @@
           <div class="col col-md-12">
             <%= f.input :email, as: :email, placeholder: "test1@exmaple.com" %>
           </div>
-          
+
           <div class="col col-md-12">
             <%= f.input :password, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-length' => '[6,255]' } %>
           </div>
@@ -21,7 +29,7 @@
           </div>
 
         </div>
-    
+
     <% end %>
   </div>
 </div>
@@ -44,13 +52,13 @@
 
           <%= f.input :password, as: :password, input_html: { 'data-parsley-required' => true, 'data-parsley-length' => '[6,255]' } %>
         </div>
-      
+
       <div class="col col-md-offset-5 col-md-2">
         <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
       </div>
 
       </div>
-  
+
   <% end %>
 </div>
 

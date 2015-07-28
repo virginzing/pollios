@@ -2,21 +2,21 @@
 
 <div class="well">
   <h1 class="page-header-all">
-    <i class="fa fa-edit fa-fw"></i> 
-      List Questionnaire & Feedback
+    <i class="fa fa-edit fa-fw"></i>
+      List Questionnaires & Feedbacks
   </h1>
 
-  <a href="<%= normal_questionnaire_path %>" class="icon-btn">
+  <a href="<%= normal_questionnaire_path %>" class="icon-btn custom">
     <i class="fa fa-plus"></i>
-    <div>Group</div>
+    <div>Feedback to Group</div>
   </a>
-  
-  <% if current_company.using_public? %>
+
+<!--   <% if current_company.using_public? %>
     <a href="<%= public_questionnaire_path %>" class="icon-btn">
       <i class="fa fa-plus"></i>
       <div>Public</div>
     </a>
-  <% end %>
+  <% end %> -->
 
 </div>
 
@@ -24,12 +24,12 @@
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-questionnaire" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-      <h2><strong>List of Questionnaire</strong></h2>          
+      <h2><strong>Feedbacks</strong></h2>
     </header>
 
     <!-- widget div-->
     <div>
-      
+
       <!-- widget content -->
         <div class="widget-body no-padding">
 
@@ -55,7 +55,7 @@
                   <td><%= series.view_all %></td>
                   <td><%= series.public %></td>
                   <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
-                  <td><%= series.create_since %></td>
+                  <td><%= series.decorate.create_since %></td>
 <!--                   <td><%= link_to 'Edit', edit_poll_series_path(series) , method: :get %> |<%= link_to 'Delete', poll_series_path(series), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td> -->
                 </tr>
               <% end %>
@@ -64,7 +64,7 @@
 
         </div>
       <!-- end widget content -->
-      
+
     </div>
     <!-- end widget div -->
 
