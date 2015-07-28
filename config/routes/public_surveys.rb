@@ -31,7 +31,9 @@ scope module: 'public_surveys' do
     end
 
     resources :settings, as: 'public_survey_settings' do
-
+      collection do
+        put 'editable'
+      end
     end
   end
 end

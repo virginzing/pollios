@@ -1,0 +1,233 @@
+<div class="well">
+  <div class="row">
+  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+    <h1 class="page-title txt-color-blueDark">
+      <i class="fa fa-user fa-fw "></i>
+        Account Setting
+    </h1>
+  </div>
+</div>
+
+  <div class="row profile">
+    <div class="col-md-12">
+       <!--BEGIN TABS-->
+       <div class="tabbable tabbable-custom tabbable-full-width">
+          <ul class="nav nav-tabs" id="myTab">
+             <li class="active"><a href="#tab_overview" data-toggle="tab">Overview</a></li>
+             <li class=""><a href="#tab_account" data-toggle="tab">Account</a></li>
+          </ul>
+          <div class="tab-content">
+
+             <div class="tab-pane fade in active" id="tab_overview">
+                <div class="row">
+                   <div class="col-md-3">
+                      <ul class="list-unstyled profile-nav">
+                          <li><%= image_tag(current_member.avatar.url(:thumbnail)) %></li>
+                   </div>
+                   <div class="col-md-9">
+                      <div class="row">
+                         <div class="col-md-8 profile-info">
+                            <h1><%= current_member.get_name %></h1>
+                         </div>
+                         <!--end col-md-8-->
+                         <div class="col-md-4">
+
+                         </div>
+                         <!--end col-md-4-->
+                      </div>
+                      <!--end row-->
+
+                   </div>
+                </div>
+             </div>
+
+             <!--tab_1_2-->
+             <div class="tab-pane fade" id="tab_account">
+                <div class="row profile-account">
+                   <div class="col-md-3">
+                      <ul class="ver-inline-menu tabbable margin-bottom-10">
+                         <li class="active">
+                            <a data-toggle="tab" href="#tab_1-1">
+                            <i class="fa fa-cog"></i>
+                            Personal info
+                            </a>
+                            <span class="after"></span>
+                         </li>
+                         <li class=""><a data-toggle="tab" href="#tab_2-2"><i class="fa fa-picture-o"></i> Change Avatar</a></li>
+                         <li class=""><a data-toggle="tab" href="#tab_4-4"><i class="fa fa-picture-o"></i> Change Cover</a></li>
+                         <li class=""><a data-toggle="tab" href="#tab_3-3"><i class="fa fa-lock"></i> Change Password</a></li>
+                      </ul>
+                   </div>
+                   <div class="col-md-9">
+                      <div class="tab-content">
+                         <div id="tab_1-1" class="tab-pane active">
+                            <form role="form" action="<%= editable_public_survey_settings_path %>" class="smart-form" method="post" id="member_profile">
+                              <input type="hidden" name="_method" value="put" />
+                              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                              <fieldset>
+
+                                <section>
+                                  <label class="label">Email</label>
+                                  <label class="input state-disabled">
+                                    <input type="text" name="email" value="<%= current_member.email %>" disabled="disabled">
+                                  </label>
+                                </section>
+
+                                <section>
+                                  <input type="hidden" value="<%= current_member.id %>" name="member_id">
+
+                                  <label class="label">Name</label>
+                                  <label class="input">
+                                    <input type="text" name="fullname" value="<%= current_member.fullname %>">
+                                  </label>
+                                  <div class="note">
+                                    <strong>Note</strong> name is show in app Pollios.
+                                  </div>
+                                </section>
+
+                                <section>
+                                  <label class="label">Description</label>
+                                  <label class="textarea">
+                                    <textarea rows="3" class="custom-scroll" name="description"><%= current_member.description %></textarea>
+                                  </label>
+                                  <div class="note">
+                                    <strong>Note</strong> description is show in app Pollios.
+                                  </div>
+                                </section>
+
+                                <section>
+                                  <label class="checkbox">
+                                    <input type="checkbox" name="show_recommend">
+                                  <i></i>Show recommend</label>
+                                  <div class="note">
+                                    <strong>Note</strong> show recommended in app Pollios.
+                                  </div>
+                                </section>
+
+                              </fieldset>
+
+                              <footer>
+                                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+                                  Submit
+                                </button>
+                              </footer>
+
+                            </form>
+
+                         </div>
+
+                         <div id="tab_2-2" class="tab-pane">
+                          <form role="form" action="<%= update_profile_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+                            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                            <div class="form-group dropzone-photo">
+                              <input type="hidden" name="member_id" value="<%= current_member.id %>">
+                              <input type="file" class="default" name="avatar" id="drop_avatar" accept="image/png, image/jpeg"/>
+                              <br>
+                              <span class="note">Recommended image size by 180x180 and support file type as image/png, image/jpg and image/jpeg.</span>
+                            </div>
+
+                            <footer>
+                              <% if current_member.avatar.present? %>
+                              <%= link_to 'Delete', delete_avatar_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+                              <% end %>
+                              <button type="submit" class="btn btn-primary" id="drop_avatar" data-disable-with="Loading..." onclick="" disabled='disabled'>
+                                Submit
+                              </button>
+                            </footer>
+                          </form>
+
+                         </div>
+
+                         <div id="tab_4-4" class="tab-pane">
+                            <form role="form" action="<%= update_profile_path %>" method="post" class="smart-form" enctype="multipart/form-data">
+                              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                             <div class="form-group dropzone-photo">
+                                <input type="hidden" name="member_id" value="<%= current_member.id %>">
+                                <input type="file" name="cover" id="drop_cover" accept="image/png, image/jpeg, image/gif"/>
+                                <br>
+                                <span class="note">Recommended image size by 640x424 and support file type as image/png, image/jpg and image/jpeg.</span>
+                              </div>
+
+                              <footer>
+                                <% if current_member.cover.present? %>
+                                <%= link_to 'Delete', delete_cover_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %>
+                                <% end %>
+                                <button type="submit" class="btn btn-primary" id="drop_cover" data-disable-with="Loading..." onclick="" disabled='disabled'>
+                                  Submit
+                                </button>
+                              </footer>
+                            </form>
+                         </div>
+
+                         <div id="tab_3-3" class="tab-pane">
+                            <form action="/authen/change_password" method="POST" id="change_password" class="smart-form client-form" data-remote="true">
+                              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                              <fieldset>
+                                <section>
+                                  <input type="hidden" name="email" value="<%= current_member.email %>">
+                                  <label class="label">Current Password</label>
+                                  <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" name="old_password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter current password</b></label>
+                                </section>
+
+                                <section>
+                                  <label class="label">New Password</label>
+                                  <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" name="new_password" id="new_password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter enter new password</b> </label>
+                                </section>
+
+                                <section>
+                                  <label class="label">Re-New Password</label>
+                                  <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" name="re_new_password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter enter Re-new password</b> </label>
+                                </section>
+
+                              </fieldset>
+                              <footer>
+                                <button type="submit" class="btn btn-primary" id="submit_signin" data-disable-with="Loading..." onclick="" >
+                                  Submit
+                                </button>
+                              </footer>
+                            </form>
+                         </div>
+
+                         <script type="text/javascript">
+                         $('[data-remote]').on('ajax:send', function(xhr) {
+                            $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+                         }).on('ajax:success', function (data, status, xhr) {
+                            console.log(data.name);
+                            console.log('success');
+                            $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+                         });
+                         </script>
+
+                      </div>
+                   </div>
+                   <!--end col-md-9-->
+                </div>
+             </div>
+            <!--tab_group-->
+          </div>
+       </div>
+       <!--END TABS-->
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $("#group_profile").parsley();
+  $(document).ready(function() {
+    dropZoneAvatar("<%= current_member.avatar.url(:thumbnail).presence || "" %>");
+    dropZoneCover("<%= current_member.cover.url(:cover).presence || "" %>");
+  });
+
+  $.show_recommend = <%= raw current_member.show_recommend %>;
+
+  if ($.show_recommend) {
+    $("input[name=show_recommend]").attr('checked', true);
+  };
+</script>

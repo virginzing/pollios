@@ -595,7 +595,6 @@
   $(document).ready(function() {
     dropZoneAvatar("<%= @current_member.avatar.url(:thumbnail).presence || "" %>");
     dropZoneCover("<%= @current_member.cover.url(:cover).presence || "" %>");
-    dropZonePhotoGroup("<%= @find_group.photo_group.url(:thumbnail).presence || "" %>");
   });
 
   $.show_recommend = <%= raw @current_member.show_recommend %>;
