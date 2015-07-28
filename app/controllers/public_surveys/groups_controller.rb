@@ -53,11 +53,7 @@ class PublicSurveys::GroupsController < ApplicationController
       elsif group_params[:cover_preset]
         group.remove_old_cover
       else
-        group.leave_group = group_params[:leave_group].present? ? true : false
-        group.admin_post_only = group_params[:admin_post_only].present? ? true : false
         group.need_approve = group_params[:need_approve].present? ? true : false
-        group.system_group = group_params[:system_group].present? ? true : false
-        group.public = group_params[:public].present? ? true : false
         group.opened = group_params[:opened].present? ? true : false
       end
 

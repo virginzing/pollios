@@ -19,7 +19,7 @@ class Company::CompanyReportPoll
   private
 
   def report_poll_in_company
-    Poll.joins(:member_report_polls).includes(:groups, :member, :poll_company)
+    Poll.without_deleted.joins(:member_report_polls).includes(:groups, :member, :poll_company)
         .where("(polls.in_group = 't' AND groups.id IN (?)) OR polls.member_id = ? OR poll_companies.company_id = ?", @group_list, company_member.id, @company.id).uniq.references(:groups)
   end
 
