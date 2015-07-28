@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-    <title> Pollios </title>
+    <title><%= full_title(yield(:title)) %></title>
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
@@ -146,14 +146,14 @@
     will not initialize.
     -->
     <nav>
-      <% if current_member.get_company.present? %>
-        <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' || controller.controller_name == 'feedback_campaigns' || controller.controller_name == 'redeemers' || controller_name == 'collection_poll_series' %>
-          <%= render partial: 'sherd/nav_feedback' %>
-        <% else %>
-          <%= render partial: 'sherd/nav_company' %>
-        <% end %>
+      <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' || controller.controller_name == 'feedback_campaigns' || controller.controller_name == 'redeemers' || controller_name == 'collection_poll_series' %>
+        <%= render partial: 'sherd/nav_feedback' %>
+      <% elsif controller.class.parent == PublicSurveys %>
+        <%= render partial: 'sherd/nav_public_surveys' %>
+      <% elsif controller.class.parent == InternalSurveys %>
+        <%= render partial: 'sherd/nav_internal_surveys' %>
       <% else %>
-        <%= render partial: 'sherd/nav_brand' %>
+        <%= render partial: 'sherd/nav_company' %>
       <% end %>
     </nav>
     <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -203,14 +203,19 @@
   <div id="shortcut">
     <ul>
 
-      <% if current_member.get_company.using_service.include?(Company::SURVEY) || current_member.get_company.using_service.include?(Company::PUBLIC) %>
+      <% if current_company.using_service.include?(Company::SURVEY) %>
         <li>
-          <a href="<%= company_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-greenDark"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal & Public</span> </span> </a>
+          <a href="<%= company_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-green"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal Survey</span> </span> </a>
+        </li>
+      <% end %>
+      <% if current_member.get_company.using_service.include?(Company::PUBLIC) %>
+        <li>
+          <a href="<%= public_survey_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-globe fa-4x"></i> <span>Public Survey</span> </span> </a>
         </li>
       <% end %>
       <% if current_member.get_company.using_service.include?(Company::FEEDBACK) %>
         <li>
-          <a href="<%= feedback_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-location-arrow fa-4x"></i> <span> Feedback Location</span> </span> </a>
+          <a href="<%= feedback_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-red"> <span class="iconbox"> <i class="fa fa-location-arrow fa-4x"></i> <span> Feedback Location</span> </span> </a>
         </li>
       <% end %>
 
@@ -277,6 +282,8 @@
   <!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
   <script>
   $.bread_crumb = $('#ribbon ol.breadcrumb');
+  $.using_service = "<%= raw bread_crumb_using_service(request.path) %>";
+
   dropZonePicture();
   dropZonePhotoEachGroup();
   dropZoneCoverEachGroup();
@@ -285,7 +292,7 @@
               count = nav_elems.length;
           //console.log("breadcrumb")
           $.bread_crumb.empty();
-          $.bread_crumb.append($("<li>Home</li>"));
+          $.bread_crumb.append($("<li>" + $.using_service + "</li>"));
           nav_elems.each(function() {
               $.bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text())));
               // update title when breadcrumb is finished...

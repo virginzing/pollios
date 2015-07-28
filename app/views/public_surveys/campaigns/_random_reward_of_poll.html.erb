@@ -1,0 +1,34 @@
+<div class="well">
+  <%= form_tag "/campaign/#{campaign.id}/random_later_of_poll", method: :post, remote: true, class: 'random_later' do %>
+    <%= hidden_field_tag 'poll_id', poll.id %>
+    <div class="row">
+      <div class="col col-md-2">
+        Quantity
+      </div>
+      <div class="col col-md-2">
+        <%= number_field_tag "number_luck", 0,class: 'form-control' %>
+      </div>
+    </div>
+
+    <br>
+
+    <%= submit_tag 'Random', class: 'btn btn-primary', data: { disable_with: "Please wait.." } %>
+  <% end %>
+
+
+  <div class="list_lucky_random">
+
+  </div>
+
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".random_later").on('ajax:send', function(xhr) {
+      $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
+    }).on('ajax:success', function (data, status, xhr) {
+      $("#ajaxLoader").removeClass('fadeIn').addClass('fadeOut');
+    });
+  });
+</script>

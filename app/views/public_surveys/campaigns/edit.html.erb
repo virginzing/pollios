@@ -1,0 +1,95 @@
+<% breadcrumb :edit_public_survey_campaign, @campaign %>
+
+<div class="well">
+  <%= simple_nested_form_for @campaign, url: public_survey_campaign_path(@campaign), method: :put, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
+    <%= f.input :member_id, as: :hidden, input_html: { value: current_member.id } %>
+    <h2><strong>Campaign detail</strong></h2>
+    <div class="row">
+      <div class="col col-md-8">
+        <%= f.input :name, input_html: { :"data-parsley-required" => "true" } %>
+        <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
+        <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
+        <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
+
+        <div class="row">
+          <div class="col col-md-2">
+            <%= f.input :expire, as: :string, label: "Expired", input_html: { value: @campaign.decorate.show_expire, class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
+          </div>
+          <div class="col col-md-1">
+            <span class="note">Unexpire</span>
+            <%= f.input :unexpire, as: :boolean, label: false %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-2">
+            <%= f.input :announce_on, as: :string, label: "Announce On", input_html: { value: @campaign.decorate.show_announce_on, class: 'datepicker-set-expire' } %>
+          </div>
+        </div>
+      </div>
+      <div class="col col-md-4">
+        <div class="form-group">
+          <input type="file" class="default" name="campaign[photo_campaign]" id="drop_photo_campaign" accept="image/png, image/jpeg, image/gif"/>
+        </div>
+      </div>
+    </div>
+
+    <h2><strong>Reward detail</strong></h2>
+
+
+    <%= f.fields_for :rewards do |reward| %>
+      <%= render 'reward_form',  :f => reward %>
+    <% end %>
+
+    <% if current_company.company_admin %>
+      <h2><strong>Gift</strong></h2>
+
+      <div class="well">
+        <%= f.input :redeem_myself %>
+        <%= f.simple_fields_for :reward_info do |reward| %>
+          <%= reward.input :point, required: false, input_html: { value: @campaign.reward_info.present? ? @campaign.reward_info["point"] : nil } %>
+          <!-- <%= reward.input :friend_limit, required: false %> -->
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="row">
+
+      <div class="col col-md-offset-5 col-md-2">
+        <%= f.submit "Update", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
+      </div>
+
+    </div>
+
+  <% end %>
+</div>
+
+<script>
+  $(document).ready(function() {
+     dropZoneCampaign("<%= @campaign.photo_campaign.url.presence || '' %>");
+  });
+
+  $.input_campaign_unexpire = $("input#campaign_unexpire");
+
+  $.input_campaign_expire = $("input#campaign_expire");
+
+  $.input_campaign_unexpire.click(function () {
+    $.input_campaign_expire.attr('disabled', this.checked);
+    $.input_campaign_expire.attr('data-parsley-required', !this.checked);
+    if (this.checked) {
+      $.input_campaign_expire.val('');
+    };
+  });
+
+  $('.edit_campaign').bind('submit', function () {
+    $(this).find(':input').removeAttr('disabled');
+  });
+
+  $.campaign_unexpire = <%= raw @campaign.unexpired? %>;
+
+  if ($.campaign_unexpire) {
+    $.input_campaign_expire.attr('disabled', true).val('');
+    $.input_campaign_expire.attr('data-parsley-required', false);
+    $.input_campaign_unexpire.attr('checked', true);
+  };
+
+</script>

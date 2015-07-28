@@ -45,6 +45,9 @@ guard :minitest, all_on_start: false, test_file_patterns: '*_test.rb' do
   watch(%r{^app/models/(.*?)\.rb$}) do |matches|
     "test/models/#{matches[1]}_test.rb"
   end
+  watch(%r{^app/services/(.*?)\.rb$}) do |matches|
+    "test/models/#{matches[1]}_test.rb"
+  end
   watch(%r{^app/controllers/(.*?)_controller\.rb$}) do |matches|
     resource_tests(matches[1])
   end

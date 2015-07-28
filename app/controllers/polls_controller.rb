@@ -399,8 +399,8 @@ class PollsController < ApplicationController
     @poll.member.flush_cache_about_poll
     Company::TrackActivityFeedPoll.new(@current_member, @poll.in_group_ids, @poll, 'delete').tracking if @poll.in_group
     DeletePoll.create_log(@poll)
-    flash[:notice] = 'Destroy successfully.'
-    redirect_to polls_url
+    flash[:success] = 'Successfully deleted poll.'
+    redirect_to company_polls_path
   end
 
   # Comment

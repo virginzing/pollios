@@ -1,0 +1,9 @@
+one:
+  name: "free point"
+  member: one
+  company: one
+  begin_sample: 1
+  end_sample: 1
+  description: "..."
+  how_to_redeem: "..."
+  limit: 1000

@@ -1,0 +1,189 @@
+<% breadcrumb :new_public_survey_poll %>
+
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false">
+
+      <header>
+        <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+        <h2><strong>Form</strong></h2>
+
+      </header>
+      <!-- widget div-->
+      <div>
+
+        <!-- widget content -->
+        <div class="widget-body">
+          <%= simple_form_for @poll, url: web_create_poll_path, :html => { :multipart => true, class: "smart-form", id: "form-input" } do |f| %>
+          <%= f.input :type_poll, as: :hidden, input_html: { value: "freeform" } %>
+          <input type="hidden" name="redirect_url" class="form-control" value="<%= public_survey_polls_url %>">
+          <%= f.input :public, as: :hidden, input_html: { value: true } %>
+          <fieldset>
+
+            <section>
+              <div class="row">
+                <section class="col col-9">
+                  <label class="label">Poll Question</label>
+                  <label class="textarea">
+                    <textarea class="maxlength_textarea poll_question" id="textarea3" rows="5" name="poll[title_with_tag]" style="display: block; width: 100%;" required></textarea>
+                  </label>
+                  <div class="note">Use # for tagging.</div>
+              <div class="option_config">
+               <label class="toggle">
+                 <input type="checkbox" name="poll[allow_comment]" checked="checked">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Allow Comment</label>
+
+               <label class="toggle">
+                 <input type="checkbox" name="poll[qr_only]">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Qrcode Only</label>
+
+               <label class="toggle">
+                 <input type="checkbox" name="poll[require_info]">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Require Infomation</label>
+
+              <label class="toggle">
+                 <input type="checkbox" name="poll[draft]">
+               <i data-swchon-text="on" data-swchoff-text="off"></i>Draft</label>
+             </div>
+                </section>
+
+                <section class="col col-3">
+                  <div class="form-group">
+                    <input type="file" class="default" name="poll[photo_poll]" id="drop_photo_poll" accept="image/png, image/jpeg, image/gif">
+                    <br>
+                    <span class="note">Recommended image size by 588x588 and support file type as image/png, image/jpg and image/jpeg.</span>
+                  </div>
+                </section>
+              </div>
+
+              <br>
+              <section>
+                  <label class="label">Choose from preset</label>
+                  <div class="inline-group" id="template">
+                      <label class="radio">
+                          <input type="radio" name="radio-inline" checked="checked" id="freeform-template">
+                          <i></i>Freeform Poll</label>
+<!--                       <label class="radio">
+                          <input type="radio" name="radio-inline" id="yesno-template">
+                          <i></i>Yes/No Poll</label> -->
+                      <label class="radio">
+                          <input type="radio" name="radio-inline" id="star-template">
+                          <i></i>Star Rating Poll</label>
+                  </div>
+              </section>
+
+            <div id="select_form_template"></div>
+
+          </fieldset>
+
+          <header>
+            Advance Poll Config
+          </header>
+            <fieldset>
+
+              <div class="row">
+                <section class="col col-2">
+
+                <label class="label">Expire within (day)</label>
+                <label class="select">
+                  <select name="poll[expire_date]">
+                    <option value="0" selected="">Unexpired</option>
+                    <% (1..30).each do |e| %>
+                      <option value="<%= e %>"><%= e %></option>
+                    <% end %>
+                  </select> <i></i>
+                </label>
+
+                </section>
+
+                <% if current_member.get_company.present? %>
+
+                <section class="col col-10">
+                    <label class="label">Campaign</label>
+                    <label class="select">
+                      <%= f.select :campaign_id, current_company.campaigns.without_system.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                    </label>
+                  </section>
+
+                <% else %>
+                  <section class="col col-5">
+                    <label class="label">Campaign</label>
+                    <label class="select">
+                      <%= f.select :campaign_id, current_member.campaigns.without_system.all.map {|r| [r.name, r.id ] }, { include_blank: true },  { class: 'select2', placeholder: "Select a campaign"} %>
+                    </label>
+                  </section>
+
+                  <section class="col col-5">
+                    <label class="label">Recurring</label>
+                    <label class="select">
+                      <%= f.select :recurring_id, list_recurring.map { |r| [ r.description + " รันทุกๆ  " + r.period.strftime("%H:%M") + " น.", r.id.to_i]}, { include_blank: true },  { class: 'select2', placeholder: "Select a recurring"} %>
+                    </label>
+                  </section>
+                <% end %>
+              </div>
+            </fieldset>
+
+          <footer>
+            <%= button_tag "Submit", class: "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Saving..." } %>
+          </footer>
+          <% end %>
+
+        </div>
+        <!-- end widget content -->
+
+      </div>
+      <!-- end widget div -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+  $("#form-input").parsley();
+</script>
+
+<script type="text/javascript">
+  $('#select_form_template').html('<%= j render "web_panel/polls/freeform" %>');
+
+  $('#template').on('click', function () {
+    if ($('#freeform-template').is(':checked')) {
+      $('#select_form_template').html('<%= j render "web_panel/polls/freeform" %>');
+    } else if ($('#yesno-template').is(':checked')) {
+      $('#select_form_template').html('<%= j render "web_panel/polls/yesno" %>');
+    } else {
+      $('#select_form_template').html('<%= j render "web_panel/polls/rating" %>');
+    };
+  });
+</script>
+
+<% if current_member.get_company.present? %>
+  <script type="text/javascript">
+  $( document ).ready(function() {
+    $(".add-field").click(function (event) {
+       window.setTimeout(function(){
+         $('input[name^=choices]').last().focus();
+       }, 200);
+    });
+
+    window.setTimeout(function () {
+      $(".poll_question").focus();
+    }, 0);
+  });
+  </script>
+<% end %>
+
+<style type="text/css">
+.ezdz-dropzone {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  font: bold 24px arial;
+  line-height: 200px;
+  color: lightgray;
+  text-align: center;
+  border: 5px solid lightgray;
+  border-radius: 20px;
+}
+</style>

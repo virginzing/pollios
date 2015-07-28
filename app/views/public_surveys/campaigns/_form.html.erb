@@ -1,0 +1,123 @@
+<% breadcrumb :new_public_survey_campaign %>
+
+<div class="well">
+  <%= simple_nested_form_for @campaign, url: public_survey_campaigns_path, :html => { :multipart => true } do |f| %>
+    <%= f.input :member_id, as: :hidden, input_html: { value: current_member.id } %>
+    <h2><strong>Campaign detail</strong></h2>
+    <div class="row">
+      <div class="col col-md-8">
+        <%= f.input :name, input_html: { :"data-parsley-required" => "true", :autofocus => true } %>
+        <%= f.input :description, input_html: { :"data-parsley-required" => "true" } %>
+        <%= f.input :how_to_redeem, input_html: { :"data-parsley-required" => "true" } %>
+        <%= f.input :limit, input_html: { :"data-parsley-required" => "true", :"data-parsley-type" => "integer", :"data-parsley-min" => "1"  } %>
+        <div class="row">
+          <div class="col col-md-2">
+            <%= f.input :expire, as: :string, label: "Expired", input_html: { class: 'datepicker-set-expire', :"data-parsley-required" => "true" } %>
+          </div>
+          <div class="col col-md-1">
+            <span class="note">Unexpire</span>
+            <%= f.input :unexpire, as: :boolean, label: false %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-2">
+          <%= f.input :announce_on, as: :string, label: "Announce On", input_html: { class: 'datepicker-set-expire' } %>
+          </div>
+        </div>
+      </div>
+      <div class="col col-md-4">
+        <div class="form-group">
+          <input type="file" class="default" name="campaign[photo_campaign]" id="drop_photo_campaign" accept="image/png, image/jpeg, image/gif"/>
+        </div>
+      </div>
+    </div>
+
+    <h2><strong>Reward detail</strong></h2>
+
+
+    <%= f.fields_for :rewards do |reward| %>
+      <%= render 'reward_form',  :f => reward %>
+    <% end %>
+
+
+    <!--<%= f.link_to_add "<i class='fa fa-plus txt-color-red'></i> add reward".html_safe, :rewards, class: 'btn btn-default btn-sm morechoice btn-pill disabled' %>-->
+
+    <h2><strong>Advance campaign config</strong></h2>
+    <div class="well">
+      <%= f.input :type_campaign, as: :radio_buttons %>
+
+      <div class="row">
+        <div class="col-md-2">
+          <%= f.input :begin_sample %>
+        </div>
+        <div class="col-md-2">
+          <%= f.input :end_sample,  input_html: { value: 1 } %>
+        </div>
+      </div>
+
+    </div>
+
+    <% if current_company.company_admin %>
+    <h2><strong>Gift</strong></h2>
+    <div class="well">
+      <%= f.input :redeem_myself %>
+      <%= f.simple_fields_for :reward_info do |reward| %>
+        <%= reward.input :point, required: false %>
+        <!-- <%= reward.input :friend_limit, required: false %> -->
+      <% end %>
+    </div>
+    <h2><strong>Other</strong></h2>
+      <div class="well">
+        <%= f.input :system_campaign %>
+      </div>
+    <% end %>
+
+    <div class="row">
+
+      <div class="col col-md-offset-5 col-md-2">
+        <%= f.submit "Create", class: 'btn btn-primary btn-lg btn-fullwidth', "data-disable-with" => "Loading..." %>
+      </div>
+
+    </div>
+
+  <% end %>
+</div>
+
+<script>
+
+  $.input_begin_sample = $("input#campaign_begin_sample");
+  $.input_end_sample = $("input#campaign_end_sample");
+
+  $.radio_random_immediately = $("#campaign_type_campaign_random_immediately");
+  $.radio_random_later = $("#campaign_type_campaign_random_later");
+
+  $.radio_random_later.click(function () {
+    $.input_begin_sample.attr("disabled", true);
+    $.input_end_sample.attr("disabled", true);
+  });
+
+  $.radio_random_immediately.click(function () {
+    $.input_begin_sample.attr("disabled", false);
+    $.input_end_sample.attr("disabled", false);
+  });
+
+  $(document).ready(function() {
+    dropZoneCampaign("<%= @campaign.photo_campaign.url.presence || '' %>");
+  });
+
+  $.input_campaign_unexpire = $("input#campaign_unexpire");
+
+  $.input_campaign_expire = $("input#campaign_expire");
+
+  $.input_campaign_unexpire.click(function () {
+    $.input_campaign_expire.attr('disabled', this.checked);
+    $.input_campaign_expire.attr('data-parsley-required', !this.checked);
+    if (this.checked) {
+      $.input_campaign_expire.val('');
+    };
+  });
+
+  $('.new_campaign').bind('submit', function () {
+    $(this).find(':input').removeAttr('disabled');
+  })
+</script>

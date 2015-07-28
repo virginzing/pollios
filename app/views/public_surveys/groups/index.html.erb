@@ -1,0 +1,74 @@
+<% breadcrumb :public_survey_groups %>
+
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-building-o fa-fw"></i>
+      List Public Groups
+  </h1>
+
+  <a href="<%= new_public_survey_group_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Group</div>
+  </a>
+
+  <a href="<%= new_poll_public_survey_groups_path %>" class="icon-btn custom">
+    <i class="fa fa-plus"></i>
+    <div>Poll to Group</div>
+  </a>
+
+<!--   <a href="<%=  %>" class="icon-btn custom">
+    <i class="fa fa-plus"></i>
+    <div>Feedback to Group</div>
+  </a> -->
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-company-groups" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-group"></i> </span>
+      <h2><strong>Groups</strong></h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_groups" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th width="120">Cover</th>
+                <th>Name</th>
+                <th width="50">Type</th>
+                <th>Member</th>
+                <th>Poll</th>
+                <th>Created_at</th>
+                <!-- <th>Action</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <% @groups.each do |group| %>
+                <tr>
+                  <td><%= group.id %></td>
+                  <td><%= group.decorate.show_cover_group %></td>
+                  <td><%= link_to group.name, public_survey_group_path(group) %></td>
+                  <td><%= group.decorate.show_group_type %></td>
+                  <td><%= group.get_all_member_count %> members</td>
+                  <td><%= group.get_all_poll_count %> polls</td>
+                  <td><span data-livestamp="<%= group.created_at.to_i %>"></span></td>
+                  <!--<td><%= link_to '<i class="fa fa-trash"></i>'.html_safe, company_destroy_group_path(group), method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
