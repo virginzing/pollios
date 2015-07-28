@@ -20,7 +20,7 @@
 
 <% if campaign.random_later? %>
   <h2><strong>Random user voted this poll</strong></h2>
-  <%= render 'random_reward_of_poll', campaign: campaign %>
+  <%= render 'public_surveys/campaigns/random_reward_of_poll', campaign: campaign %>
 <% end %>
 
 <section id="widget-grid" class="" style="margin-top: 30px;">

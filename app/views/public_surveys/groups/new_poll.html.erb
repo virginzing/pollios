@@ -157,7 +157,7 @@ $( document ).ready(function() {
   $.list_groups = <%= raw @group_list.size %>;
 
   if ($.list_groups == 0) {
-    $("#error_not_group").html('<div class="alert alert-warning"><p style="font-size: 14px;">List groups no longer, Please create group before <%= link_to 'New Group',company_groups_path %></p></div>');
+    $("#error_not_group").html('<div class="alert alert-warning"><p style="font-size: 14px;">List groups no longer, Please create group before <%= link_to 'New Group', new_public_survey_group_path %></p></div>');
     $("#submit-new-group-poll").prop("disabled", true);
   }
 
