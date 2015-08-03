@@ -16,7 +16,13 @@ class Member::ListGroup
   end
 
   def active_non_virtual
-    cached_all_groups.select{|group| group if group.member_is_active  && !group.virtual_group }
+    list_groups = cached_all_groups.select{|group| group if group.member_is_active && !group.virtual_group }
+    if @member.company? 
+      if @member.get_company.using_public? && !@member.get_company.using_internal?
+        list_groups.select! {|elem| elem if elem.public }
+      end
+    end
+    list_groups
   end
 
   def active_with_public

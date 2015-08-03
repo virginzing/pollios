@@ -85,7 +85,7 @@ class PublicSurveys::CampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign).permit(:unexpire, :announce_on, :system_campaign, :type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point], :rewards_attributes => [:id, :title, :detail, :reward_expire, :_destroy, :unexpire])
+    params.require(:campaign).permit(:unexpire, :announce_on, :system_campaign, :type_campaign, :member_id, :name, :description, :how_to_redeem, :limit, :expire, :photo_campaign, :end_sample, :begin_sample, :redeem_myself, :reward_expire, :reward_info => [:point, :first_signup], :rewards_attributes => [:id, :title, :detail, :reward_expire, :_destroy, :unexpire])
   end
 
 end

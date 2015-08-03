@@ -215,7 +215,9 @@ class Authentication
 
         unless new_company.to_b
           @reward = @member.free_reward_first_signup
-          OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+          if @reward
+            OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+          end
         end
       end
 

@@ -19,7 +19,6 @@ class CreateGroupCompany
       begin
         @group = Group.new(@group_params)
         @group.member = @member
-        @group.group_type = :company
         @group.member_count = new_list_members_count
         @group.group_type = @group.public ? :normal : :company
         @group.need_approve = @group_params["need_approve"].to_b
