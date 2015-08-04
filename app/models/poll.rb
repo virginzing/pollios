@@ -183,13 +183,6 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  # def slug_candidates
-  #   [
-  #     :title,
-  #     [:id, :title]
-  #   ]
-  # end
-
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @poll = find_by(id: id)
@@ -403,10 +396,6 @@ class Poll < ActiveRecord::Base
     Tag.joins(:taggings).select("tags.*, count(tag_id) as count").group("tags.id")
   end
 
-  # def tag_list
-  #   tags.map(&:name).join(",")
-  # end
-
   def self.get_public_poll(member, option = {})
     list_friend = member.whitish_friend.map(&:followed_id) << member.id
     query_poll = Poll.includes(:member, :choices).where("member_id IN (?) OR public = ?", list_friend, true)
@@ -564,7 +553,6 @@ class Poll < ActiveRecord::Base
   end
 
   def self.split_poll(list_of_poll)
-    # puts "list_of_poll => #{list_of_poll.to_a.map(&:id)}"
     poll_series = []
     poll_nonseries = []
 
@@ -577,9 +565,6 @@ class Poll < ActiveRecord::Base
     end
 
     [poll_series, poll_nonseries]
-
-    # puts "poll_series #{poll_series.map(&:id)}"
-    # puts "poll_nonseries #{poll_nonseries.map(&:id)}"
   end
 
 
@@ -596,7 +581,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.create_poll(poll_params, member) ## create poll for API
+  def self.create_poll(poll_params, member) ## create poll for API is deprecated...
     Poll.transaction do
       begin
         title = poll_params[:title]
