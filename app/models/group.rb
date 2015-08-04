@@ -53,22 +53,6 @@ class Group < ActiveRecord::Base
 
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :only_public, -> { where(public: true) }
-  # def slug_candidates
-  #   [
-  #     :name,
-  #     [:id, :name]
-  #   ]
-  # end
-
-  # def should_generate_new_friendly_id?
-  #   name_changed? || super
-  # end
-
-  # def cached_created_by
-  #   Rails.cache.fetch([ self, 'created_by' ]) do
-  #     group_members.where(is_master: true).first.member.fullname
-  #   end
-  # end
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
@@ -319,16 +303,17 @@ class Group < ActiveRecord::Base
     find_request_group.update!(accepted: true, accepter_id: member.id) if find_request_group.present?
   end
 
-  def self.build_group(member, group)
-    member_id = group[:member_id]
-    photo_group = group[:photo_group]
-    description = group[:description]
-    cover = group[:cover]
-    cover_preset = group[:cover_preset]
-    set_privacy = group[:public].to_b
-    set_admin_post_only = group[:admin_post_only].to_b
-    name = group[:name]
-    friend_id = group[:friend_id]
+  def self.build_group(member, group_params)
+    member_id = group_params[:member_id]
+    photo_group = group_params[:photo_group]
+    description = group_params[:description]
+    cover = group_params[:cover]
+    cover_preset = group_params[:cover_preset]
+    set_privacy = group_params[:public].to_b
+    set_admin_post_only = group_params[:admin_post_only].to_b
+    name = group_params[:name]
+    friend_id = group_params[:friend_id]
+
     init_cover_group = ImageUrl.new(cover)
 
     @group = new(member_id: member.id, name: name, photo_group: photo_group, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
@@ -369,6 +354,7 @@ class Group < ActiveRecord::Base
 
     list_friend = friend_id.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group)
+    p "check_valid_friend => #{check_valid_friend}"
     find_admin_group = group.get_admin_group.map(&:id)
 
     unless member.company?
