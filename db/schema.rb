@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150717061348) do
+ActiveRecord::Schema.define(version: 20150804033916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -473,8 +473,6 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.string   "photo_group"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "member_count",     default: 0
-    t.integer  "poll_count",       default: 0
     t.integer  "authorize_invite"
     t.text     "description"
     t.boolean  "leave_group",      default: true
