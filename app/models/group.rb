@@ -53,22 +53,6 @@ class Group < ActiveRecord::Base
 
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :only_public, -> { where(public: true) }
-  # def slug_candidates
-  #   [
-  #     :name,
-  #     [:id, :name]
-  #   ]
-  # end
-
-  # def should_generate_new_friendly_id?
-  #   name_changed? || super
-  # end
-
-  # def cached_created_by
-  #   Rails.cache.fetch([ self, 'created_by' ]) do
-  #     group_members.where(is_master: true).first.member.fullname
-  #   end
-  # end
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
@@ -151,11 +135,6 @@ class Group < ActiveRecord::Base
     if find_group_member
       @group = find_group_member.group
       @member = member
-
-      @group.with_lock do
-        @group.member_count += 1
-        @group.save!
-      end
 
       find_group_member.update_attributes!(active: true)
 
@@ -324,19 +303,20 @@ class Group < ActiveRecord::Base
     find_request_group.update!(accepted: true, accepter_id: member.id) if find_request_group.present?
   end
 
-  def self.build_group(member, group)
-    member_id = group[:member_id]
-    photo_group = group[:photo_group]
-    description = group[:description]
-    cover = group[:cover]
-    cover_preset = group[:cover_preset]
-    set_privacy = group[:public].to_b
-    set_admin_post_only = group[:admin_post_only].to_b
-    name = group[:name]
-    friend_id = group[:friend_id]
+  def self.build_group(member, group_params)
+    member_id = group_params[:member_id]
+    photo_group = group_params[:photo_group]
+    description = group_params[:description]
+    cover = group_params[:cover]
+    cover_preset = group_params[:cover_preset]
+    set_privacy = group_params[:public].to_b
+    set_admin_post_only = group_params[:admin_post_only].to_b
+    name = group_params[:name]
+    friend_id = group_params[:friend_id]
+
     init_cover_group = ImageUrl.new(cover)
 
-    @group = new(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
+    @group = new(member_id: member.id, name: name, photo_group: photo_group, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
 
     if @group.save!
 
@@ -511,8 +491,6 @@ class Group < ActiveRecord::Base
   def get_poll_not_vote_count
     poll_groups_ids = Poll.available.joins(:groups).where("poll_groups.group_id = #{self.id}").uniq.map(&:id)
     my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
-    # puts "#{poll_groups_ids}"
-    # puts "#{my_vote_poll_ids}"
     return (poll_groups_ids - my_vote_poll_ids).size
   end
 
@@ -524,15 +502,7 @@ class Group < ActiveRecord::Base
     end
   end
 
-
-  # def get_member_count
-  #   group_members_active.map(&:id).size
-  # end
-
   def get_member_count
-    # Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/member_count") do
-    #   group_members_active.map(&:id).size
-    # end
     Group::ListMember.new(self).active.to_a.size
   end
 

@@ -13,8 +13,7 @@ json.choice_count poll.choice_count
 json.series poll.series
 json.tags poll.cached_tags
 json.campaign poll.get_campaign
-json.campaign_detail poll.get_campaign_detail(@current_member) if poll.campaign_id != 0 
-# json.share_count poll.share_count
+json.campaign_detail poll.get_campaign_detail(@current_member) if poll.campaign_id != 0
 json.is_public poll.public
 json.type_poll poll.type_poll
 json.poll_within poll.get_within(@group_by_name, params[:action])

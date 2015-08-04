@@ -471,10 +471,6 @@ class CompaniesController < ApplicationController
 
   def delete_poll
     @poll.groups.each do |group|
-      group.with_lock do
-        group.poll_count -= 1
-        group.save!
-      end
       NotifyLog.poll_with_group_deleted(@poll, group)
     end
 
@@ -526,11 +522,6 @@ class CompaniesController < ApplicationController
   #           #   CompanyMember.add_member_to_company(find_user, this_group.get_company)
   #           # end
   #           Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
-
-  #           this_group.with_lock do
-  #             this_group.member_count += 1
-  #             this_group.save!
-  #           end
 
   #           FlushCached::Member.new(find_user).clear_list_groups
   #           FlushCached::Group.new(this_group).clear_list_members

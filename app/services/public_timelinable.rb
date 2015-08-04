@@ -32,7 +32,7 @@ class PublicTimelinable
 
     query_poll_public = "poll_members.public = 't' AND share_poll_of_id = 0 AND poll_members.in_group = 'f'"
 
-    query_poll_public_with_hidden = "poll_members.public = 't' AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND poll_members.in_group = 'f'" 
+    query_poll_public_with_hidden = "poll_members.public = 't' AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND poll_members.in_group = 'f'"
 
     if my_hidden.empty?
       query = Poll.available.unexpire.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
@@ -44,9 +44,6 @@ class PublicTimelinable
 
     query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.size > 0
 
-    if to_bool(@pull_request)
-      query = query.where("polls.id > ? AND polls.updated_at > ?", since_id, @member.poll_public_req_at)
-    end 
     query
   end
 
@@ -72,5 +69,5 @@ class PublicTimelinable
     return true   if request == "true"
     return false  if request == "false"
   end
-  
+
 end
