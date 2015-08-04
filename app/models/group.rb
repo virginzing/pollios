@@ -354,7 +354,6 @@ class Group < ActiveRecord::Base
 
     list_friend = friend_id.split(",").collect {|e| e.to_i }
     check_valid_friend = friend_exist_group(list_friend, group)
-    p "check_valid_friend => #{check_valid_friend}"
     find_admin_group = group.get_admin_group.map(&:id)
 
     unless member.company?
