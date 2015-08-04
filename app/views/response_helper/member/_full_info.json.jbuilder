@@ -4,9 +4,7 @@ json.birthday member.get_birthday
 json.gender member.check_gender
 json.province member.get_province
 json.first_signup member.get_first_signup
-# json.setting_default member.setting
 json.update_personal member.update_personal
-# json.first_setting_anonymous member.get_first_setting_anonymous
 json.notification member.notification
 
 json.subscription do

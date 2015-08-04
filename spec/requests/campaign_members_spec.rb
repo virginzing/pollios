@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Reward" do
   let!(:company) { create(:company, name: "Test Company") }
 
-  let!(:campaign) { create(:campaign, name: "แจก 5 Point for public poll", company: company, redeem_myself: true, reward_info: { point: 5 }, system_campaign: true, 
+  let!(:campaign) { create(:campaign, name: "แจก 5 Point for public poll", company: company, redeem_myself: true, reward_info: { point: 5 }, system_campaign: true,
     rewards_attributes: [{ title: "5 public poll", detail: "free  public poll", reward_expire: Time.zone.now + 1.year }] ) }
 
   let!(:member) { create(:member, fullname: "Nuttapn") }

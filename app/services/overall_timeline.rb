@@ -156,12 +156,12 @@ class OverallTimeline
   end
 
 
-  def check_new_pull_request(query)
-    if to_bool(@pull_request)
-      query = query.joins(:poll).where("polls.updated_at > ? AND polls.id > ?", @member.poll_overall_req_at, since_id)
-    end
-    query
-  end
+  # def check_new_pull_request(query)
+  #   if to_bool(@pull_request)
+  #     query = query.joins(:poll).where("polls.updated_at > ? AND polls.id > ?", @member.poll_overall_req_at, since_id)
+  #   end
+  #   query
+  # end
 
   # def check_hidden_poll(query)
   #   @hidden_poll.empty? ? query : query.hidden(@hidden_poll)

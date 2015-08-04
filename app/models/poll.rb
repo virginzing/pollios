@@ -878,8 +878,6 @@ class Poll < ActiveRecord::Base
     show_result
   end
 
-  # {"birthday"=>"Jan 15, 1990", "gender"=>1, "salary"=>3, "interests"=>[3, 2, 1], "province"=>27}
-
   def self.new_hash_for_analysis(hash_analysis)
     # puts "hash_analysis => #{hash_analysis.present?}"
     if hash_analysis.present?
