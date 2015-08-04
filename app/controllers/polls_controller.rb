@@ -223,7 +223,6 @@ class PollsController < ApplicationController
     @group_by_name = overall_timeline.group_by_name
     @total_entries = overall_timeline.total_entries
     # @hash_priority = overall_timeline.get_hash_priority
-    p @group_by_name
   end
 
   def group_timeline

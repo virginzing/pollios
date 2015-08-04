@@ -129,7 +129,7 @@ class Poll < ActiveRecord::Base
 
   amoeba do
     enable
-    set [{:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:favorite_count => 0}, {:share_count => 0} ]
+    set [{:vote_all => 0}, {:view_all => 0}, {:share_count => 0} ]
 
     customize(lambda { |original_poll, new_poll|
                 new_poll.expire_date = original_poll.expire_date + 1.day

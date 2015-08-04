@@ -33,7 +33,7 @@ class HashtagTimeline
   end
 
   def group_by_name
-    Hash[your_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group]] }]
+    Hash[your_group.map{ |group| [group.id, GroupDetailSerializer.new(group).as_json] }]
   end
 
   def get_hashtag

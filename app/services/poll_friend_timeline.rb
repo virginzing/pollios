@@ -24,7 +24,7 @@ class PollFriendTimeline
   end
 
   def group_by_name
-    Hash[@friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group]] }]
+    Hash[@friend_group.map{ |group| [group.id, GroupDetailSerializer.new(group).as_json] }]
   end
 
   def get_poll_friend

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150804043318) do
+ActiveRecord::Schema.define(version: 20150804062554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -886,8 +886,6 @@ ActiveRecord::Schema.define(version: 20150804043318) do
     t.datetime "expire_date"
     t.datetime "start_date",     default: '2015-07-15 06:41:36'
     t.integer  "campaign_id"
-    t.integer  "vote_all_guest", default: 0
-    t.integer  "view_all_guest", default: 0
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
     t.integer  "type_poll"
@@ -979,9 +977,6 @@ ActiveRecord::Schema.define(version: 20150804043318) do
     t.integer  "poll_series_id"
     t.integer  "choice_count"
     t.integer  "campaign_id"
-    t.integer  "vote_all_guest",          default: 0
-    t.integer  "view_all_guest",          default: 0
-    t.integer  "favorite_count",          default: 0
     t.integer  "share_count",             default: 0
     t.integer  "recurring_id",            default: 0
     t.string   "in_group_ids"
@@ -992,7 +987,6 @@ ActiveRecord::Schema.define(version: 20150804043318) do
     t.boolean  "allow_comment",           default: true
     t.integer  "comment_count",           default: 0
     t.string   "member_type"
-    t.integer  "loadedfeed_count",        default: 0
     t.boolean  "qr_only",                 default: false
     t.boolean  "require_info",            default: false
     t.boolean  "expire_status",           default: false
