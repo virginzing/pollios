@@ -306,7 +306,7 @@ class Poll < ActiveRecord::Base
 
     if group.empty?
       find_group = Group.where("id IN (?)", split_group_id).first
-      group << Hash["id" => find_group.id, "name" => find_group.name, "cover" => find_group.get_cover_group, "virtual_group" => find_group.virtual_group]
+      group << GroupDetailSerializer.new(find_group).as_json
     end
 
     group
