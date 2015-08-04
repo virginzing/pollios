@@ -152,11 +152,6 @@ class Group < ActiveRecord::Base
       @group = find_group_member.group
       @member = member
 
-      @group.with_lock do
-        @group.member_count += 1
-        @group.save!
-      end
-
       find_group_member.update_attributes!(active: true)
 
       if @group.company? && !@group.system_group
@@ -336,7 +331,7 @@ class Group < ActiveRecord::Base
     friend_id = group[:friend_id]
     init_cover_group = ImageUrl.new(cover)
 
-    @group = new(member_id: member.id, name: name, photo_group: photo_group, member_count: 1, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
+    @group = new(member_id: member.id, name: name, photo_group: photo_group, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
 
     if @group.save!
 
@@ -511,8 +506,6 @@ class Group < ActiveRecord::Base
   def get_poll_not_vote_count
     poll_groups_ids = Poll.available.joins(:groups).where("poll_groups.group_id = #{self.id}").uniq.map(&:id)
     my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
-    # puts "#{poll_groups_ids}"
-    # puts "#{my_vote_poll_ids}"
     return (poll_groups_ids - my_vote_poll_ids).size
   end
 
@@ -524,15 +517,7 @@ class Group < ActiveRecord::Base
     end
   end
 
-
-  # def get_member_count
-  #   group_members_active.map(&:id).size
-  # end
-
   def get_member_count
-    # Rails.cache.fetch("/group/#{id}-#{updated_at.to_i}/member_count") do
-    #   group_members_active.map(&:id).size
-    # end
     Group::ListMember.new(self).active.to_a.size
   end
 

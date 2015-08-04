@@ -12,7 +12,7 @@ class PollFriendTimeline
   end
 
   def my_group_id
-    @my_group_ids ||= @my_group.pluck(:id)  
+    @my_group_ids ||= @my_group.pluck(:id)
   end
 
   def friend_group_id
@@ -24,11 +24,11 @@ class PollFriendTimeline
   end
 
   def group_by_name
-    Hash[@friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    Hash[@friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group]] }]
   end
 
   def get_poll_friend
-    @poll_of_friend ||= poll_of_friend  
+    @poll_of_friend ||= poll_of_friend
   end
 
   private
@@ -37,10 +37,10 @@ class PollFriendTimeline
     query = Poll.available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups).
                 where("(poll_members.member_id = ? AND poll_members.in_group = ?) " \
                 "OR (poll_members.member_id = ? AND poll_groups.group_id IN (?) " \
-                "OR (poll_members.public = ? AND poll_members.member_id = ?))", 
-                friend_id, false, 
-                friend_id, my_and_friend_group, 
+                "OR (poll_members.public = ? AND poll_members.member_id = ?))",
+                friend_id, false,
+                friend_id, my_and_friend_group,
                 true, friend_id).references(:poll_groups)
   end
-  
+
 end
