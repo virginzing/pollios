@@ -1,10 +1,10 @@
 class GroupSerializer < ActiveModel::Serializer
   self.root false
 
-  attributes :id, :name, :photo, :member_count, :poll_count
+  attributes :id, :name, :photo
 
   def photo
     object.photo_group.url(:thumbnail)
   end
-  
+
 end

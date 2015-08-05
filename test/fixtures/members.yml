@@ -10,6 +10,13 @@ two:
   auth_token: "123"
   point: 0
 
+three:
+  fullname: "Three"
+  email: "three@pollios.com"
+  auth_token: "123"
+  point: 0
+
+
 citizen_no_point:
   fullname: "No Point User"
   email: "no_point@pollios.com"

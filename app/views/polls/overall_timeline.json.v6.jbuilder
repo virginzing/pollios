@@ -18,17 +18,11 @@ if @list_polls
             json.answer choice.answer
           end
         end
-
-        # json.my_shared poll.check_my_shared(share_poll_ids, poll.id)
-        # json.other_shared @list_shared[count]
-
       end
     else
       json.poll do
         json.timeline_id @order_ids[count]
         json.partial! 'response_helper/poll/normal', poll: poll, order: @order_ids[count]
-        # json.my_shared poll.check_my_shared(share_poll_ids, poll.id)
-        # json.other_shared @list_shared[count]
       end
     end
 
@@ -38,5 +32,5 @@ if @list_polls
 
   json.total_entries @total_entries
   json.next_cursor @next_cursor
-  
+
 end

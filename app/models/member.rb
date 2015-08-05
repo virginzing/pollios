@@ -402,9 +402,9 @@ class Member < ActiveRecord::Base
     key_color || ""
   end
 
-  def get_first_setting_anonymous
-    first_setting_anonymous.present? ? true : false
-  end
+  # def get_first_setting_anonymous
+  #   first_setting_anonymous.present? ? true : false
+  # end
 
   def Member.check_image_avatar(avatar)
     for_campare_url_image = /\.(gif|jpg|png)\z/i

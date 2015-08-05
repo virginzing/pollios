@@ -66,7 +66,7 @@ class V6::FriendPollInProfile
   end
 
   def group_by_name
-    Hash[friend_group.map{ |f| [f.id, Hash["id" => f.id, "name" => f.name, "photo" => f.get_photo_group, "member_count" => f.member_count, "poll_count" => f.poll_count]] }]
+    Hash[friend_group.map{ |group| [group.id, GroupDetailSerializer.new(group).as_json] }]
   end
 
   def with_out_poll_ids

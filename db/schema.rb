@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150717061348) do
+ActiveRecord::Schema.define(version: 20150804062554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -473,8 +473,6 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.string   "photo_group"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "member_count",     default: 0
-    t.integer  "poll_count",       default: 0
     t.integer  "authorize_invite"
     t.text     "description"
     t.boolean  "leave_group",      default: true
@@ -701,19 +699,12 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.string   "email"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "group_active",               default: false
     t.integer  "friend_limit"
-    t.integer  "friend_count",               default: 0
     t.integer  "member_type",                default: 0
     t.integer  "province_id"
     t.string   "key_color"
-    t.datetime "poll_public_req_at",         default: '2015-07-15 06:41:36'
-    t.datetime "poll_overall_req_at",        default: '2015-07-15 06:41:36'
     t.string   "cover"
     t.text     "description"
-    t.boolean  "apn_add_friend",             default: true
-    t.boolean  "apn_invite_group",           default: true
-    t.boolean  "apn_poll_friend",            default: true
     t.boolean  "sync_facebook",              default: false
     t.integer  "report_power",               default: 1
     t.boolean  "anonymous",                  default: false
@@ -753,9 +744,9 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.integer  "blacklist_count",            default: 0
     t.datetime "ban_last_at"
     t.datetime "sync_fb_last_at"
-    t.string   "list_fb_id",                 default: [],                                 array: true
+    t.string   "list_fb_id",                 default: [],                 array: true
     t.boolean  "show_recommend",             default: false
-    t.hstore   "notification",               default: {},                    null: false
+    t.hstore   "notification",               default: {},    null: false
   end
 
   add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
@@ -763,8 +754,6 @@ ActiveRecord::Schema.define(version: 20150717061348) do
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree
   add_index "members", ["member_type"], name: "index_members_on_member_type", where: "(member_type = 3)", using: :btree
   add_index "members", ["notification"], name: "index_members_on_notification", using: :gist
-  add_index "members", ["poll_overall_req_at"], name: "index_members_on_poll_overall_req_at", using: :btree
-  add_index "members", ["poll_public_req_at"], name: "index_members_on_poll_public_req_at", using: :btree
   add_index "members", ["province_id"], name: "index_members_on_province_id", using: :btree
   add_index "members", ["public_id"], name: "index_members_on_public_id", using: :btree
   add_index "members", ["setting"], name: "index_members_on_setting", using: :gist
@@ -897,8 +886,6 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.datetime "expire_date"
     t.datetime "start_date",     default: '2015-07-15 06:41:36'
     t.integer  "campaign_id"
-    t.integer  "vote_all_guest", default: 0
-    t.integer  "view_all_guest", default: 0
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
     t.integer  "type_poll"
@@ -990,9 +977,6 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.integer  "poll_series_id"
     t.integer  "choice_count"
     t.integer  "campaign_id"
-    t.integer  "vote_all_guest",          default: 0
-    t.integer  "view_all_guest",          default: 0
-    t.integer  "favorite_count",          default: 0
     t.integer  "share_count",             default: 0
     t.integer  "recurring_id",            default: 0
     t.string   "in_group_ids"
@@ -1003,7 +987,6 @@ ActiveRecord::Schema.define(version: 20150717061348) do
     t.boolean  "allow_comment",           default: true
     t.integer  "comment_count",           default: 0
     t.string   "member_type"
-    t.integer  "loadedfeed_count",        default: 0
     t.boolean  "qr_only",                 default: false
     t.boolean  "require_info",            default: false
     t.boolean  "expire_status",           default: false
