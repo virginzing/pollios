@@ -298,14 +298,20 @@ class Poll < ActiveRecord::Base
     end
 
     if group.empty?
-      find_group = Group.where("id IN (?)", split_group_id).first
-      group << GroupDetailSerializer.new(find_group).as_json
+      if @group_id.present?
+        group << GroupDetailSerializer.new(Group.find(@group_id)).as_json
+      else
+        find_group = Group.where("id IN (?)", split_group_id).first
+        group << GroupDetailSerializer.new(find_group).as_json
+      end
     end
 
     group
   end
 
-  def get_within(options = {}, action_timeline = {})
+  def get_within(options = {}, action_timeline = {}, group_id = nil)
+    @group_id = group_id
+
     if public && in_group
       Hash["in" => "Group", "group_detail" => get_in_groups(options)]
     elsif public
