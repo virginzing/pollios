@@ -52,6 +52,7 @@ group :development do
   gem 'quiet_assets'
   gem 'proxylocal'
   gem 'meta_request'
+  gem 'annotate'
   # gem 'rack-mini-profiler'
 end
 

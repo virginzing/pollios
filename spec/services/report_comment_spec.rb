@@ -2,7 +2,9 @@ require 'rails_helper'
 
 RSpec.describe "ReportComment Services (report_comment_spec.rb)" do
 	let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com") }
-	let!(:poll) { create(:poll, member: member, title: "test poll") }
+	# let!(:poll) { create(:poll, member: member, title: "test poll") }
+	let!(:poll) { create(:faker_test_poll, member: member) }
+
 	let!(:comment) { create(:comment, poll: poll, member: member, message: "test comment") }
 
 	# using ListPoll class in Member module to create a new poll to be reported (test)

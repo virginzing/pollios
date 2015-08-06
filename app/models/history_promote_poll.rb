@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: history_promote_polls
+#
+#  id         :integer          not null, primary key
+#  member_id  :integer
+#  poll_id    :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class HistoryPromotePoll < ActiveRecord::Base
   belongs_to :member
   belongs_to :poll

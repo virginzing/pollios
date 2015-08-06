@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: save_poll_laters
+#
+#  id           :integer          not null, primary key
+#  member_id    :integer
+#  savable_id   :integer
+#  savable_type :string(255)
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+
 class SavePollLater < ActiveRecord::Base
   belongs_to :member
   belongs_to :savable, polymorphic: true
