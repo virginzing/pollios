@@ -82,6 +82,7 @@ class Company < ActiveRecord::Base
     end
   end
 
+  # for checking service that a company is using
   def using_public?
     using_service.include?(Company::PUBLIC)
   end

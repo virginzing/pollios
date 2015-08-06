@@ -71,6 +71,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'bullet'
   gem 'rubocop', require: false
+  gem 'pry-rails'
 end
 
 group :test do
