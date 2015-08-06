@@ -19,9 +19,9 @@ class CreateGroupCompany
       begin
         @group = Group.new(@group_params)
         @group.member = @member
-        @group.group_type = :company
-        @group.member_count = new_list_members_count
         @group.group_type = @group.public ? :normal : :company
+        @group.need_approve = @group_params["need_approve"].to_b
+        @group.opened = @group_params["opened"].to_b
         @group.save!
       end
 
@@ -48,7 +48,6 @@ class CreateGroupCompany
       GroupMember.create!(member_id: member.id, group_id: @group.id, is_master: false, active: true, notification: true)
       CompanyMember.add_member_to_company(member, @company)
       Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
-      # Rails.cache.delete([member.id, 'group_active'])
       FlushCached::Member.new(member).clear_list_groups
     end
 

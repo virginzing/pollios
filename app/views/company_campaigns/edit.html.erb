@@ -1,4 +1,6 @@
-<div class="well"> 
+<% breadcrumb :edit_internal_survey_campaign, @campaign %>
+
+<div class="well">
   <%= simple_nested_form_for @campaign, url: update_company_campaign_path, method: :put, :html => { :multipart => true, 'data-parsley-validate' => true } do |f| %>
     <%= f.input :member_id, as: :hidden, input_html: { value: current_member.id } %>
     <h2><strong>Campaign detail</strong></h2>
@@ -32,7 +34,7 @@
     </div>
 
     <h2><strong>Reward detail</strong></h2>
-    
+
 
     <%= f.fields_for :rewards do |reward| %>
       <%= render 'reward_form',  :f => reward %>
@@ -48,6 +50,7 @@
         <%= f.input :redeem_myself %>
         <%= f.simple_fields_for :reward_info do |reward| %>
           <%= reward.input :point, required: false, input_html: { value: @campaign.reward_info.present? ? @campaign.reward_info["point"] : nil } %>
+          <%= reward.input :first_signup, input_html: { value: true }, readonly: true %>
           <!-- <%= reward.input :friend_limit, required: false %> -->
         <% end %>
       </div>

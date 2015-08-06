@@ -15,8 +15,8 @@ RSpec.describe "Tag" do
     end
 
     it "success" do
-      expect(json["response_status"]).to eq("OK")    
+      expect(json["response_status"]).to eq("OK")
     end
 
-  end 
+  end
 end

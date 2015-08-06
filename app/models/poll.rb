@@ -73,9 +73,6 @@ class Poll < ActiveRecord::Base
 
   before_save :set_default_value
   after_create :set_priority
-  # before_create :generate_qrcode_key
-
-  # after_create :set_new_title_with_tag
 
   validates_presence_of :title, :on => :create
   validates_presence_of :member_id, :on => :create
@@ -132,7 +129,7 @@ class Poll < ActiveRecord::Base
 
   amoeba do
     enable
-    set [{:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:favorite_count => 0}, {:share_count => 0} ]
+    set [{:vote_all => 0}, {:view_all => 0}, {:share_count => 0} ]
 
     customize(lambda { |original_poll, new_poll|
                 new_poll.expire_date = original_poll.expire_date + 1.day
@@ -185,13 +182,6 @@ class Poll < ActiveRecord::Base
       field :created_at
     end
   end
-
-  # def slug_candidates
-  #   [
-  #     :title,
-  #     [:id, :title]
-  #   ]
-  # end
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
@@ -308,14 +298,20 @@ class Poll < ActiveRecord::Base
     end
 
     if group.empty?
-      find_group = Group.where("id IN (?)", split_group_id).first
-      group << Hash["id" => find_group.id, "name" => find_group.name, "cover" => find_group.get_cover_group, "virtual_group" => find_group.virtual_group]
+      if @group_id.present?
+        group << GroupDetailSerializer.new(Group.find(@group_id)).as_json
+      else
+        find_group = Group.where("id IN (?)", split_group_id).first
+        group << GroupDetailSerializer.new(find_group).as_json
+      end
     end
 
     group
   end
 
-  def get_within(options = {}, action_timeline = {})
+  def get_within(options = {}, action_timeline = {}, group_id = nil)
+    @group_id = group_id
+
     if public && in_group
       Hash["in" => "Group", "group_detail" => get_in_groups(options)]
     elsif public
@@ -405,10 +401,6 @@ class Poll < ActiveRecord::Base
   def self.tag_counts
     Tag.joins(:taggings).select("tags.*, count(tag_id) as count").group("tags.id")
   end
-
-  # def tag_list
-  #   tags.map(&:name).join(",")
-  # end
 
   def self.get_public_poll(member, option = {})
     list_friend = member.whitish_friend.map(&:followed_id) << member.id
@@ -567,7 +559,6 @@ class Poll < ActiveRecord::Base
   end
 
   def self.split_poll(list_of_poll)
-    # puts "list_of_poll => #{list_of_poll.to_a.map(&:id)}"
     poll_series = []
     poll_nonseries = []
 
@@ -580,9 +571,6 @@ class Poll < ActiveRecord::Base
     end
 
     [poll_series, poll_nonseries]
-
-    # puts "poll_series #{poll_series.map(&:id)}"
-    # puts "poll_nonseries #{poll_nonseries.map(&:id)}"
   end
 
 
@@ -599,7 +587,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.create_poll(poll_params, member) ## create poll for API
+  def self.create_poll(poll_params, member) ## create poll for API is deprecated...
     Poll.transaction do
       begin
         title = poll_params[:title]
@@ -880,8 +868,6 @@ class Poll < ActiveRecord::Base
 
     show_result
   end
-
-  # {"birthday"=>"Jan 15, 1990", "gender"=>1, "salary"=>3, "interests"=>[3, 2, 1], "province"=>27}
 
   def self.new_hash_for_analysis(hash_analysis)
     # puts "hash_analysis => #{hash_analysis.present?}"

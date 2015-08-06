@@ -215,7 +215,9 @@ class Authentication
 
         unless new_company.to_b
           @reward = @member.free_reward_first_signup
-          OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+          if @reward
+            OneGiftWorker.perform_async(@member.id, @reward.id, { "message" => "You got 5 free public polls" } ) unless Rails.env.test?
+          end
         end
       end
 
@@ -268,12 +270,6 @@ class Authentication
     find_main_group = Company.find(company_id.to_i).main_groups.first
     if find_main_group.present?
       find_main_group.group_members.create!(member_id: @member.id, active: true, is_master: false)
-
-      find_main_group.with_lock do
-        find_main_group.member_count += 1
-        find_main_group.save!
-      end
-
     end
   end
 

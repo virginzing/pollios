@@ -50,7 +50,7 @@ class PollSeries < ActiveRecord::Base
   amoeba do
     enable
 
-    set [ {:vote_all => 0}, {:view_all => 0}, {:vote_all_guest => 0}, {:view_all_guest => 0}, {:share_count => 0}, { :comment_count => 0 } ]
+    set [ {:vote_all => 0}, {:view_all => 0}, {:share_count => 0}, { :comment_count => 0 } ]
 
     include_association [:polls, :branch_poll_series, :collection_poll_series_branch]
   end
@@ -177,7 +177,6 @@ class PollSeries < ActiveRecord::Base
   end
 
   def get_link
-    # get_link_for_qr_code_series
     GenerateQrcodeLink.new(self).get_link
   end
 
@@ -185,7 +184,6 @@ class PollSeries < ActiveRecord::Base
     recurring_poll_series_ids = []
 
     hour = Time.zone.now.hour
-    # hour = Date.current.midnight.hour
 
     FeedbackRecurring.where("EXTRACT (HOUR from period) = ?", hour).each do |rf|
       rf.collection_poll_series.where(recurring_status: true).each do |cps|
@@ -200,19 +198,6 @@ class PollSeries < ActiveRecord::Base
       new_feedback = old_feedback.save!
     end
   end
-
-  # def get_link_for_qr_code_series
-  #   if Rails.env.production?
-  #     "http://pollios.com/m/polls?key=" << secret_qrcode_key
-  #   else
-  #     "http://localhost:3000/m/polls?key=" << secret_qrcode_key
-  #   end
-  # end
-
-  # def secret_qrcode_key
-  #   string = "id=" + self.qrcode_key + "&s=t"
-  #   Base64.urlsafe_encode64(string)
-  # end
 
   def set_poll_series
     begin

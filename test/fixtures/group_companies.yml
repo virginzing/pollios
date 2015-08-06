@@ -1,5 +1,4 @@
 one:
-  id: 1
-  group_id: 1
-  company_id: 1
+  group: one
+  company: one
   main_group: true

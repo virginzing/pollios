@@ -3,22 +3,21 @@
 
 <div class="well">
   <h1 class="page-header-all">
-    <i class="fa fa-edit fa-fw"></i> 
-      List Poll
+    <i class="fa fa-edit fa-fw"></i>
+      List Polls
   </h1>
-
 
   <a href="<%= create_new_poll_path %>" class="icon-btn">
     <i class="fa fa-plus"></i>
     <div>Group Poll</div>
   </a>
 
-  <% if current_company.using_public? %>
+<!--   <% if current_company.using_public? %>
     <a href="<%= create_new_public_poll_path %>" class="icon-btn">
       <i class="fa fa-plus"></i>
       <div>Public Poll</div>
     </a>
-  <% end %>
+  <% end %> -->
 
 </div>
 
@@ -27,12 +26,12 @@
   <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll-internal" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
       <span class="widget-icon"> <i class="fa fa-users"></i> </span>
-      <h2><strong>Poll Groups</strong></h2>      
+      <h2><strong>Polls</strong></h2>
     </header>
 
     <!-- widget div-->
     <div>
-      
+
       <!-- widget content -->
         <div class="widget-body no-padding">
 
@@ -88,7 +87,7 @@
 
         </div>
       <!-- end widget content -->
-      
+
     </div>
     <!-- end widget div -->
 
@@ -96,69 +95,7 @@
 </section>
 <% end %>
 
-<% if current_company.using_public? %>
-<section id="widget-grid" class="">
-  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-poll-public" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
-    <header>
-      <span class="widget-icon"> <i class="fa fa-globe"></i> </span>
-      <h2><strong>Poll Public</strong></h2>      
-    </header>
-
-    <!-- widget div-->
-    <div>
-      
-      <!-- widget content -->
-        <div class="widget-body no-padding">
-
-          <table id="list_polls_public" class="table table-striped table-bordered table-hover" width="100%">
-            <thead>
-              <tr>
-                <!-- <th width="50">#</th> -->
-                <th width="50">Creator</th>
-                <th width="200">Title</th>
-                <th>Vote</th>
-                <th>View</th>
-                <th>Report</th>
-                <th>Expire</th>
-                <th width="150">Created At</th>
-<!--                 <th>Re-Generate</th> -->
-                <!-- <th>Action</th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <% @public_polls.each do |poll| %>
-                <tr>
-                  <!-- <td><%= poll.id %></td> -->
-                  <td>
-                    <div class="profile">
-                      <img src="<%= poll.member.avatar.url(:thumbnail_small) %>" alt="user" class="img img-circle img-responsive center-block" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>">
-                      </div>
-                  </td>
-                  <td><%= link_to poll.truncate_title(100), company_poll_detail_path(poll) %></td>
-
-                  <td><%= poll.get_vote_count %></td>
-                  <td><%= poll.get_view_count %></td>
-                  <td><%= poll.get_report_count %></td>
-                  <td><%= poll.expire_status %></td>
-                  <td><%= poll.create_since %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-
-        </div>
-      <!-- end widget content -->
-      
-    </div>
-    <!-- end widget div -->
-
-  </div>
-</section>
-<% end %>
-
-
-
- <script type="text/javascript">
+<script type="text/javascript">
   $('[rel=tooltip]').tooltip();
   $('[data-toggle=tooltip]').tooltip();
     function load_qrcode(poll_id) {
@@ -169,7 +106,7 @@
                 var $message = $('<div></div>');
                 var pageToLoad = dialog.getData('pageToLoad');
                 $message.load(pageToLoad);
-        
+
                 return $message;
             },
             data: {

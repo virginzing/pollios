@@ -1,0 +1,99 @@
+<section id="widget-grid" class="">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="jarviswidget" id="wid-id-poll-latest-in-public"
+        data-widget-load="<%= poll_latest_in_public_url %>"
+        data-widget-colorbutton="false"
+        data-widget-colorbutton="false"
+        data-widget-editbutton="false"
+        data-widget-deletebutton="false"
+        data-widget-fullscreenbutton="false"
+        data-widget-custombutton="false">
+        <header>
+          <h2><strong>Poll</strong> <i>latest in public</i></h2>
+        </header>
+        <!-- widget div-->
+        <div>
+
+          <!-- widget edit box -->
+          <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+
+          </div>
+          <!-- end widget edit box -->
+
+          <!-- widget content -->
+          <div class="widget-body">
+            <!-- widget body text-->
+
+            <p>This content will be replaced via ajax loader...</p>
+
+            <!-- end widget body text-->
+
+          </div>
+          <!-- end widget content -->
+
+        </div>
+        <!-- end widget div -->
+
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="jarviswidget" id="wid-id-poll-latest-in-public-tables"
+        data-widget-colorbutton="false"
+        data-widget-colorbutton="false"
+        data-widget-editbutton="false"
+        data-widget-deletebutton="false"
+        data-widget-fullscreenbutton="false"
+        data-widget-custombutton="false">
+        <header>
+          <h2><strong>Poll</strong> <i>latest in public</i></h2>
+          <div class="widget-toolbar">
+            <a href="<%= public_survey_polls_path %>" class="btn btn-default">More</a>
+          </div>
+        </header>
+        <!-- widget div-->
+        <div>
+
+          <!-- widget edit box -->
+          <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+
+          </div>
+          <!-- end widget edit box -->
+
+          <div class="widget-body no-padding" style="min-height: 0px;">
+            <div class="table-responsive">
+              <table class="table" style="margin-bottom: 0px;">
+                <thead>
+                  <tr>
+                    <th>Creator</th>
+                    <th>Title</th>
+                    <th>Vote All</th>
+                    <th>View All</th>
+                    <th>Updated at</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @poll_latest_in_public.each do |poll| %>
+                  <tr>
+                    <td><img src="<%= poll.member.avatar.url(:thumbnail_small) %>" class="img img-circle" data-toggle="tooltip" data-placement="top" title="<%= poll.member.fullname %>"></td>
+                    <td><%= link_to truncate(poll.title, length: 40), company_poll_detail_path(poll) %></td>
+                    <td><%= poll.vote_all %></td>
+                    <td><%= poll.view_all %></td>
+                    <td><span data-livestamp="<%= poll.updated_at.to_i %>"></span></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- end widget div -->
+
+      </div>
+    </div>
+  </div>
+</section>

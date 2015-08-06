@@ -1,4 +1,14 @@
 module ApplicationHelper
+
+  def full_title(page_title = '')
+    base_title = "Pollios"
+    if page_title.empty?
+      base_title
+    else
+      page_title + " | " + base_title
+    end
+  end
+
   def flash_class(level)
     case level
       when "notice" then "alert alert-warning"
@@ -6,6 +16,19 @@ module ApplicationHelper
       when "error" then "alert alert-danger"
       else 'alert alert-info'
     end
+  end
+
+  def bread_crumb_using_service(request_path)
+    str_path = request_path.split("/")[1]
+    if str_path == "company"
+      "Internal Survey"
+    else
+      str_path.titleize
+    end
+  end
+
+  def convert_poll_url(activity)
+    public_survey_poll_path(activity) if controller.class.parent == PublicSurveys
   end
 
   def current_controller?(options)
@@ -183,5 +206,5 @@ module ApplicationHelper
   def qr_code(size, url)
     "https://chart.googleapis.com/chart?cht=qr&chld=l&chs=#{size}x#{size}&chl=#{url}"
   end
-  
+
 end

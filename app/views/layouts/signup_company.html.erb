@@ -9,20 +9,20 @@
     <meta name="author" content="">
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <!-- Use the correct meta names below for your web application
-       Ref: http://davidbcalhoun.com/2010/viewport-metatag 
-       
+       Ref: http://davidbcalhoun.com/2010/viewport-metatag
+
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">-->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Basic Styles -->
-    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css"> 
+    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/font-awesome.min.css">
 
     <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-production.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.css">  
+    <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-skins.css">
     <link rel="stylesheet" type="text/css" href="/plugins/bootstrap-fileupload/bootstrap-fileupload.css" />
     <!-- SmartAdmin RTL Support is under construction
       <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/smartadmin-rtl.css"> -->
@@ -30,10 +30,10 @@
     <!-- We recommend you use "your_style.css" to override SmartAdmin
          specific styles this will also ensure you retrain your customization with each SmartAdmin update.
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/your_style.css"> -->
-    
+
     <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/demo.css">
-    
+
     <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
 
     <!-- FAVICONS -->
@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-    
+
     <script> if (!window.jQuery) { document.write('<script src="/smartadmin/js/libs/jquery-2.0.2.min.js"><\/script>');} </script>
 
       <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -63,7 +63,7 @@
       ga('send', 'pageview');
 
     </script>
-
+    <%= csrf_meta_tag %>
   </head>
   <body id="login">
     <!-- possible classes: minified, no-right-panel, fixed-ribbon, fixed-header, fixed-width-->
@@ -94,9 +94,9 @@
               <div class="pull-left login-desc-box-l">
                 <h4 class="paragraph-header">Raise your hand</h4>
               </div>
-              
+
               <img src="/smartadmin/img/demo/iphoneview.png" alt="" class="pull-right display-image" style="height:400px">
-              
+
             </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
@@ -136,7 +136,7 @@
                 </fieldset>
 
                 <fieldset>
-                  
+
                   <section>
                     <label class="input"> <i class="icon-append fa fa-info-circle"></i>
                       <input type="text" name="fullname" placeholder="Company Name">
@@ -152,7 +152,7 @@
                 <fieldset>
                   <section>
                       <label class="col-md-3 control-label">Select Service</label>
-                      <div class="col-md-9">  
+                      <div class="col-md-9">
                         <div class="checkbox">
                           <label>
                             <input type="checkbox" class="checkbox style-0" name="select_service[]" value="<%= Company::SURVEY %>">
@@ -166,7 +166,7 @@
                             <span>Public Survey</span>
                           </label>
                         </div>
-    
+
                         <div class="checkbox">
                           <label>
                             <input type="checkbox" class="checkbox style-0" name="select_service[]" value="<%= Company::FEEDBACK %>">
@@ -210,7 +210,7 @@
             <h4 class="modal-title" id="myModalLabel">Terms & Conditions</h4>
           </div>
           <div class="modal-body custom-scroll terms-body">
-            
+
            <div id="left">
 
 
@@ -221,7 +221,7 @@
 
                 <h2>Introduction</h2>
 
-                    
+
 
             </div>
 
@@ -232,7 +232,7 @@
               <button type="button" class="btn btn-primary" id="i-agree">
                 <i class="fa fa-check"></i> I Agree
               </button>
-              
+
               <button type="button" class="btn btn-danger pull-left" id="print">
                 <i class="fa fa-print"></i> Print
               </button>
@@ -243,15 +243,15 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <!--================================================== -->  
+    <!--================================================== -->
 
     <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
     <script data-pace-options='{ "restartOnRequestAfter": true }' src="/smartadmin/js/plugin/pace/pace.min.js"></script>-->
 
-    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events     
+    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events
     <script src="/smartadmin/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> -->
-    
-    <!-- BOOTSTRAP JS -->   
+
+    <!-- BOOTSTRAP JS -->
     <script src="/smartadmin/js/bootstrap/bootstrap.min.js"></script>
 
     <!-- CUSTOM NOTIFICATION -->
@@ -259,38 +259,38 @@
 
     <!-- JARVIS WIDGETS -->
     <script src="/smartadmin/js/smartwidgets/jarvis.widget.min.js"></script>
-    
+
     <!-- EASY PIE CHARTS -->
     <script src="/smartadmin/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
-    
+
     <!-- SPARKLINES -->
     <script src="/smartadmin/js/plugin/sparkline/jquery.sparkline.min.js"></script>
-    
+
     <!-- JQUERY VALIDATE -->
     <script src="/smartadmin/js/plugin/jquery-validate/jquery.validate.min.js"></script>
-    
+
     <!-- JQUERY MASKED INPUT -->
     <script src="/smartadmin/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
-    
+
     <!-- JQUERY SELECT2 INPUT -->
     <script src="/smartadmin/js/plugin/select2/select2.min.js"></script>
 
     <!-- JQUERY UI + Bootstrap Slider -->
     <script src="/smartadmin/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
     <script type="text/javascript" src="/plugins/bootstrap-fileupload/bootstrap-fileupload.js"></script>
-    
+
     <!-- browser msie issue fix -->
     <script src="/smartadmin/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
-    
+
     <!-- FastClick: For mobile devices -->
     <script src="/smartadmin/js/plugin/fastclick/fastclick.js"></script>
-    
+
     <!--[if IE 7]>
-      
+
       <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
-      
+
     <![endif]-->
-    
+
     <!-- MAIN APP JS FILE -->
     <script src="/smartadmin/js/app.js"></script>
 
@@ -304,7 +304,7 @@
       });
 
       runAllForms();
-      
+
       // Model i agree button
       $("#i-agree").click(function(){
         $this=$("#terms");
@@ -315,7 +315,7 @@
           $('#myModal').modal('toggle');
         }
       });
-      
+
       // Validation
       $(function() {
         // Validation
@@ -393,6 +393,6 @@
 
       });
     </script>
-  
+
   </body>
 </html>

@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
     <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-    <title> Pollios </title>
+    <title><%= full_title(yield(:title)) %></title>
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <!-- Use the correct meta names below for your web application
       Ref: http://davidbcalhoun.com/2010/viewport-metatag
-      
+
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">-->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
     <link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" data-turbolinks-track="true">
     <!-- Basic Styles -->
     <link rel="stylesheet" type="text/css" media="screen" href="/smartadmin/css/bootstrap.min.css" data-turbolinks-track="true">
@@ -77,11 +77,11 @@
     <script src="/smartadmin/js/plugin/datatables/dataTables.tableTools.min.js"></script>
     <script src="/smartadmin/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
     <script src="/smartadmin/js/plugin/datatables/dataTables.responsive.nightly.min.js"></script>
-    
+
     <%= javascript_include_tag "https://www.google.com/jsapi", "chartkick" %>
     <script src="/smartadmin/js/plugin/chartkick.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
+    <%= csrf_meta_tag %>
   </head>
   <body class="fixed-header">
 
@@ -112,7 +112,7 @@
         </div>
       <% end %>
       <!-- end logout button -->
-      
+
       <!-- search mobile button (this is hidden till mobile view port) -->
       <div id="search-mobile" class="btn-header transparent pull-right">
         <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
@@ -146,14 +146,12 @@
     will not initialize.
     -->
     <nav>
-      <% if current_member.get_company.present? %>
-        <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' || controller.controller_name == 'feedback_campaigns' || controller.controller_name == 'redeemers' || controller_name == 'collection_poll_series' %>
-          <%= render partial: 'sherd/nav_feedback' %>
-        <% else %>
-          <%= render partial: 'sherd/nav_company' %>
-        <% end %>
+      <% if controller.controller_name == 'branches' || controller.controller_name == 'feedback' || controller.controller_name == 'feedback_questionnaire' || controller.controller_name == 'feedback_poll' || controller.controller_name == 'feedback_reports' || controller.controller_name == 'feedback_campaigns' || controller.controller_name == 'redeemers' || controller_name == 'collection_poll_series' %>
+        <%= render partial: 'sherd/nav_feedback' %>
+      <% elsif controller.class.parent == PublicSurveys %>
+        <%= render partial: 'sherd/nav_public_surveys' %>
       <% else %>
-        <%= render partial: 'sherd/nav_brand' %>
+        <%= render partial: 'sherd/nav_company' %>
       <% end %>
     </nav>
     <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -203,14 +201,19 @@
   <div id="shortcut">
     <ul>
 
-      <% if current_member.get_company.using_service.include?(Company::SURVEY) || current_member.get_company.using_service.include?(Company::PUBLIC) %>
+      <% if current_company.using_service.include?(Company::SURVEY) %>
         <li>
-          <a href="<%= company_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-greenDark"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal & Public</span> </span> </a>
+          <a href="<%= company_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-green"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal Survey</span> </span> </a>
+        </li>
+      <% end %>
+      <% if current_member.get_company.using_service.include?(Company::PUBLIC) %>
+        <li>
+          <a href="<%= public_survey_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-globe fa-4x"></i> <span>Public Survey</span> </span> </a>
         </li>
       <% end %>
       <% if current_member.get_company.using_service.include?(Company::FEEDBACK) %>
         <li>
-          <a href="<%= feedback_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-location-arrow fa-4x"></i> <span> Feedback Location</span> </span> </a>
+          <a href="<%= feedback_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-red"> <span class="iconbox"> <i class="fa fa-location-arrow fa-4x"></i> <span> Feedback Location</span> </span> </a>
         </li>
       <% end %>
 
@@ -261,22 +264,24 @@
   <script src="/plugins/typeahead/typeaheadjs.min.js"></script>
   <!--<script src="/smartadmin/js/plugin/jquery.lazy.min.js"></script>-->
 
-  
+
   <!-- PAGE RELATED PLUGIN(S) -->
-  
+
   <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
   <!-- <script src="/smartadmin/js/plugin/flot/jquery.flot.cust.js"></script>
   <script src="/smartadmin/js/plugin/flot/jquery.flot.resize.js"></script>
   <script src="/smartadmin/js/plugin/flot/jquery.flot.tooltip.js"></script> -->
-  
+
   <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
   <!-- <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
   <script src="/smartadmin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script> -->
-  
+
   <!-- Full Calendar -->
   <!-- <script src="/smartadmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script> -->
   <script>
   $.bread_crumb = $('#ribbon ol.breadcrumb');
+  $.using_service = "<%= raw bread_crumb_using_service(request.path) %>";
+
   dropZonePicture();
   dropZonePhotoEachGroup();
   dropZoneCoverEachGroup();
@@ -285,7 +290,7 @@
               count = nav_elems.length;
           //console.log("breadcrumb")
           $.bread_crumb.empty();
-          $.bread_crumb.append($("<li>Home</li>"));
+          $.bread_crumb.append($("<li>" + $.using_service + "</li>"));
           nav_elems.each(function() {
               $.bread_crumb.append($("<li></li>").html($.trim($(this).clone().children(".badge").remove().end().text())));
               // update title when breadcrumb is finished...
@@ -317,7 +322,7 @@
         }
     }]);
   }
-  
+
 
   function smoothScroll() {
       $(function() {
@@ -351,7 +356,7 @@
               });
       };
 
-      function poke_something(poke_something) { 
+      function poke_something(poke_something) {
         poke_something.on('ajax:send', function(xhr) {
           $("#ajaxLoader").removeClass('fadeOut').addClass('fadeIn').show();
         }).on('ajax:success', function (data, status, xhr) {

@@ -53,7 +53,7 @@ RSpec.describe "Comment" do
       end
 
       it "return successfully" do
-        expect(response.status).to eq(200)  
+        expect(response.status).to eq(200)
       end
 
       it "has 1 comment on this poll" do
@@ -61,7 +61,7 @@ RSpec.describe "Comment" do
         expect(json["comments"].count).to eq(1)
       end
 
-    end 
+    end
   end
 
   describe "POST /comment/:id/report" do
@@ -70,7 +70,7 @@ RSpec.describe "Comment" do
 
     before do
       post "/comment/#{comment_one.id}/report.json", { member_id: member.id, message: "This is spam" }, { "Accept" => "application/json" }
-    end 
+    end
 
     it "reported" do
       expect(response.status).to eq(201)

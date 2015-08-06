@@ -1,0 +1,93 @@
+<% breadcrumb :public_survey_feedbacks %>
+
+<div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-edit fa-fw"></i>
+      List Feedbacks
+  </h1>
+
+  <a href="<%= new_public_survey_feedback_path %>" class="icon-btn">
+    <i class="fa fa-plus"></i>
+    <div>Public</div>
+  </a>
+</div>
+
+<section id="widget-grid" class="">
+  <div class="jarviswidget jarviswidget-color-blueDark" id="wid-list-questionnaire" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2><strong>Feedbacks</strong></h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+      <!-- widget content -->
+        <div class="widget-body no-padding">
+
+          <table id="list_default" class="table table-striped table-bordered table-hover" width="100%">
+            <thead>
+              <tr>
+                <th width="50">#</th>
+                <th width="290">Description</th>
+                <th>Vote All</th>
+                <th>View All</th>
+                <th>Public</th>
+                <th width="150">Expire At</th>
+                <th width="200">Created At</th>
+                <!-- <th></th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <% @feedbacks.each do |series| %>
+                <tr>
+                  <td><%= series.id %></td>
+                  <td><%= link_to series.description, public_survey_feedback_path(series) %></td>
+                  <td><%= series.vote_all %></td>
+                  <td><%= series.view_all %></td>
+                  <td><%= series.public %></td>
+                  <td><%= series.expire_date.strftime("%B %d, %Y") %></td>
+                  <td><%= series.decorate.create_since %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+        </div>
+      <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+  </div>
+</section>
+
+<script type="text/javascript">
+ function showIFrame(url, description) {
+    var iframebox = document.getElementById('iframebox');
+    iframebox.src = url;
+    var desc = document.getElementById('description');
+    desc.innerHTML = description;
+ }
+</script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+      </div>
+      <div class="modal-body">
+<!--         <div style="padding-left: 210px;">
+          <iframe src="" id="iframebox"></iframe>
+        </div> -->
+         <%= image_tag @qr %>
+         <img style="position: absolute; top: 20px; left: 230px; opacity:0.3;" src="/img/pollios3.png" />
+        <h2 id="description" class="text-center"></h2>
+      </div>
+    </div>
+  </div>
+</div>

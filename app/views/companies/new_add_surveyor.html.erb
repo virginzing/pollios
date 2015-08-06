@@ -1,20 +1,18 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-    <h1 class="page-title txt-color-blueDark">
-      <i class="fa fa-plus fa-fw "></i> 
-        Add Surveyor
-    </h1>
-  </div>
-</div>
+<% breadcrumb :new_surveyor_internal_survey_member %>
 
 <div class="well">
+  <h1 class="page-header-all">
+    <i class="fa fa-plus fa-fw"></i>
+      Add Surveyor
+  </h1>
+
   <%= simple_form_for @add_surveyor, url: company_add_surveyor_path, method: :post, :html => { :multipart => true, id: 'form-input' } do |f| %>
-      
+
       <div class="col col-12">
         <%= f.label 'Member in Company' %>
         <%= f.select :member_id, @list_members_in_company.map {|r| [r.fullname, r.id ] }, { include_blank: true },  { class: 'select2_surveyor', id: "select-surveyor", placeholder: "Select a member", :"data-parsley-required" => "true" } %>
       </div>
-      
+
       <br>
 
       <div class="col col-12">
@@ -29,7 +27,7 @@
           </div>
         <% end %>
       </div>
-  
+
       <br/>
 
       <div class="col col-12">

@@ -1,46 +1,39 @@
 <div class="options_group">
-
-  <% if current_company.using_internal? && current_company.using_public? %>
-    <div class="form-inline">
-      <div class="col-md-2">
-        <label>Public Group</label>
-      </div>
-      <div class="col-md-10">
-        <input type="checkbox" name="group[public]" value="true"/>
-      </div>
-      <span class="note">* Default is Exclusive Group (Don't edit)</span>
-    </div>
-  <% elsif current_company.using_public? %>
-    <span class="note">* Group type <u>Public Group</u> (Don't edit)</span>
-    <input type="hidden" name="group[public]" value="true" checked>
-  <% else %>
-    <span class="note">* Group type is <u>Exclusive Group</u> (Don't edit)</span>
-    <input type="hidden" name="group[public]" value="false" checked>
-  <% end %>
+  <span class="note">* Type of group is <u>Exclusive</u> (Don't edit)</span>
+  <input type="hidden" name="group[public]" value="false" checked>
 
   <div class="form-inline" style="margin-top: 10px;">
-    <div class="col-md-2">
-      <label>Don't Approve</label>
+    <div class="col-md-3">
+      <label>Need approve to join group</label>
     </div>
-    <div class="col-md-10">
-      <input type="checkbox" name="group[need_approve]" value="false"/>
+    <div class="col-md-9">
+      <input type="checkbox" name="group[need_approve]"/>
     </div>
   </div>
 
-  <% if @find_company.company_admin %>
+  <div class="form-inline" style="margin-top: 10px;">
+    <div class="col-md-3">
+      <label>Everybody see poll before join group</label>
+    </div>
+    <div class="col-md-9">
+      <input type="checkbox" name="group[opened]"/>
+    </div>
+  </div>
+
+  <% if current_company.company_admin %>
     <div class="form-inline">
-      <div class="col-md-2">
+      <div class="col-md-3">
         <label>System Group</label>
       </div>
-      <div class="col-md-10">
+      <div class="col-md-9">
         <input type="checkbox" name="group[system_group]" value="true"/>
       </div>
     </div>
     <div class="form-inline">
-      <div class="col-md-2">
+      <div class="col-md-3">
         <label>Can leave group</label>
       </div>
-      <div class="col-md-10">
+      <div class="col-md-9">
         <input type="checkbox" name="group[leave_group]" value="true"/>
       </div>
     </div>

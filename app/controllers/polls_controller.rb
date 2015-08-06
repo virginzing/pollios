@@ -334,14 +334,21 @@ class PollsController < ApplicationController
     @poll = @poll.reload
   end
 
-  def create_poll
-    @poll, @error_message, @alert_message = Poll.create_poll(poll_params, @current_member)
+  # def create_poll
+  #   @poll, @error_message, @alert_message = Poll.create_poll(poll_params, @current_member)
 
-    unless @poll.present?
-      render status: :unprocessable_entity
-    else
-      render status: :created
-    end
+  #   unless @poll.present?
+  #     render status: :unprocessable_entity
+  #   else
+  #     render status: :created
+  #   end
+  # end
+
+  def create_poll
+    init_create_poll = CreatePollService.new(@current_member, poll_params)
+    @poll = init_create_poll.create!
+    @alert_message = init_create_poll.alert_message
+    render status: :created
   end
 
   def share
@@ -392,8 +399,8 @@ class PollsController < ApplicationController
     @poll.member.flush_cache_about_poll
     Company::TrackActivityFeedPoll.new(@current_member, @poll.in_group_ids, @poll, 'delete').tracking if @poll.in_group
     DeletePoll.create_log(@poll)
-    flash[:notice] = 'Destroy successfully.'
-    redirect_to polls_url
+    flash[:success] = 'Successfully deleted poll.'
+    redirect_to company_polls_path
   end
 
   # Comment
@@ -551,6 +558,6 @@ class PollsController < ApplicationController
   end
 
   def poll_params
-    params.permit(:thumbnail_type, :qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :friend_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :buy_poll, :require_info, choices: [], original_images: [])
+    params.permit(:thumbnail_type, :qr_only, :quiz, :show_result, :title, :expire_date, :member_id, :group_id, :api_version, :poll_series_id, :series, :choice_count, :recurring_id, :expire_within, :type_poll, :is_public, :photo_poll, :allow_comment, :creator_must_vote, :require_info, choices: [], original_images: [])
   end
 end

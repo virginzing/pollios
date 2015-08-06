@@ -92,7 +92,7 @@ module WebPanel
         end
 
         respond_to do |format|
-          format.html { redirect_to company_edit_group_path(find_group) }
+          format.html { redirect_to(:back) }
         end
       end
     end

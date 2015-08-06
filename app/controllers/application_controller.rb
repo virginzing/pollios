@@ -7,10 +7,11 @@ class ApplicationController < ActionController::Base
   include AuthenSentaiHelper
   include PollHelper
   include PollsHelper
-
-  protect_from_forgery
+  include SessionsHelper
 
   layout :layout_by_resource
+
+  protect_from_forgery with: :exception
 
   skip_before_action :verify_authenticity_token, if: :json_request?
 
@@ -19,6 +20,10 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from VersionCake::UnsupportedVersionError, :with => :render_unsupported_version
+
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    render file: "/public/422", layout: false
+  end
 
   before_filter proc { |c| c.request.path =~ /admin/ } do
     @head_stylesheet_paths = ['rails_admin_custom.css']
@@ -67,7 +72,11 @@ class ApplicationController < ActionController::Base
   end
 
   def only_public_survey
-    fail ExceptionHandler::WebForbidden unless current_company.using_public?
+    if current_company
+      fail ExceptionHandler::WebForbidden unless current_company.using_public?
+    else
+      signed_user
+    end
   end
 
   def permission_deny
@@ -96,25 +105,6 @@ class ApplicationController < ActionController::Base
     cookies.delete(:return_to)
     flash[:warning] = 'Only Company Account.'
     redirect_to users_signin_path
-  end
-
-  def current_member
-    @current_member ||= Member.find_by(auth_token: cookies[:auth_token]) if cookies[:auth_token]
-  end
-
-  def current_company
-    current_member.get_company if current_member
-  end
-
-  def signed_in?
-    !current_member.nil?
-  end
-
-  def signed_user
-    return if current_member.present?
-    store_location
-    flash[:warning] = 'Please sign in before access this page.'
-    redirect_to users_signin_url
   end
 
   def current_member?(member)

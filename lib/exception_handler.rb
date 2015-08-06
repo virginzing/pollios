@@ -17,6 +17,7 @@ module ExceptionHandler
     rescue_from MobileVoteQuestionnaireAlready, :with => :mobile_vote_questionnaire_already
     rescue_from WebForbidden, with: :web_forbidden
     rescue_from WebNotFound, with: :web_not_found
+    rescue_from CustomError, with: :custom_error
   end
 
   class NotFound < StandardError; end
@@ -33,6 +34,7 @@ module ExceptionHandler
   class MobileVoteQuestionnaireAlready < StandardError; end
   class WebForbidden < StandardError; end
   class WebNotFound < StandardError; end
+  class CustomError < StandardError; end
 
   module Message
     module Poll
@@ -116,6 +118,10 @@ module ExceptionHandler
 
   def unprocessable_entity(ex)
     render json: Hash["response_status" => "ERROR", "response_message" => ex.message], status: :unprocessable_entity
+  end
+
+  def custom_error(ex)
+    render json:  Hash["response_status" => "ERROR", "response_message" => ex.message, "alert_message" => ex.message], status: :unprocessable_entity
   end
 
   def unauthorized(ex)

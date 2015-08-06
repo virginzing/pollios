@@ -35,8 +35,7 @@ RSpec.describe "Poll" do
       end
 
       it "add to member poll" do
-        poll_member = PollMember.find_by(member: member, poll: @poll_last, share_poll_of_id: 0, public: false, series: false, expire_date: @poll_last.expire_date, in_group: false, poll_series_id: 0)
-        expect(poll_member.present?).to be_truthy
+        expect(@poll_last.poll_members.present?).to be_truthy
       end
 
       it "would have key of json completely" do

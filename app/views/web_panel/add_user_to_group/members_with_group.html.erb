@@ -1,0 +1,15 @@
+<form action="<%= members_with_group_path %>" method="GET" role="form" id="members_with_group" data-remote="true">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <legend>Search User</legend><div class="note">Note: The result will show to list of users who not join this group.</div>
+
+  <div class="form-group">
+    <input type="hidden" name="group_id" id="inputGroup_id" class="form-control" value="<%= params[:group_id] %>">
+    <input type="text" class="form-control" name="fullname" id="" placeholder="Fullname">
+  </div>
+
+  <%= button_tag "Submit", class: "btn btn-primary", id: "submit-search-user" ,data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Loading..." } %>
+
+  <div id="list_members_with_group">
+  </div>
+
+</form>

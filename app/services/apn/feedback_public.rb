@@ -11,6 +11,7 @@ class Apn::FeedbackPublic
 
   def recipient_ids
     member_ids = (apn_friend_ids | follower_ids)
+    p member_open_notification_public
     (member_ids | member_open_notification_public) - @init_member_list_friend.blocked_by_someone
   end
 

@@ -12,9 +12,9 @@
           <th>Vote All</th>
           <th>View All</th>
           <th width="100">Created At</th>
-          <th>Qrcode</th>
+<!--           <th>Qrcode</th> -->
           <!-- <th>Re-Generate</th> -->
-          <th>Action</th>
+          <!-- <th>Action</th> -->
         </tr>
       </thead>
       <tbody>
@@ -26,14 +26,7 @@
             <td><%= poll.vote_all %></td>
             <td><%= poll.view_all %></td>
             <td><%= poll.created_at.strftime("%B %d, %Y") %></td>
-            <td><button data-toggle="modal" class="btn btn-primary" data-target="#myModal" onclick="showIFrame('/poll/<%= poll.id %>/qrcode.png', '<%= poll.title %>')">Show</button></td>
-<!--                     <td>
-              <%= form_tag '/poll/new_generate_qrcode' do %>
-                <%= hidden_field_tag 'id', poll.id %>
-                <%= submit_tag 'Re new', class: 'btn btn-primary' %>
-              <% end %>
-            </td> -->
-            <td><%= link_to 'Delete', poll_path(poll, member_id: current_member), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default btn-danger' %></td>
+<!--             <td><%= link_to 'Delete', poll_path(poll, member_id: current_member), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-pill btn-danger' %></td> -->
           </tr>
         <% end %>
       </tbody>

@@ -9,16 +9,17 @@ class CompaniesController < ApplicationController
   before_action :set_poll, only: [:poll_detail, :delete_poll, :group_poll_detail, :edit_poll]
   before_action :set_group, only: [:remove_surveyor, :list_polls_in_group, :list_members_in_group, :destroy_group, :group_detail, :update_group, :group_poll_detail, :edit_group]
   before_action :set_member, only: [:member_detail]
-  before_action :only_internal_survey, only: [:company_members, :member_detail]
+  before_action :only_internal_survey
 
   expose(:group_company) { current_member.get_company.groups if current_member }
   expose(:group_id) { @group }
   expose(:group) { @group.decorate }
+  expose(:exclusive_groups) { Company::ListGroup.new(current_company).exclusive }
 
   def dashboard
-    @init_poll ||= PollOfGroup.new(current_member, current_member.get_company.groups, options_params)
+    @init_poll ||= PollOfGroup.new(current_member, exclusive_groups, options_params)
     @poll_latest_list = @init_poll.get_poll_of_group_company.except_series.limit(5)
-    @poll_latest_in_public = Company::PollPublic.new(@find_company).get_list_public_poll
+    @poll_latest_in_public = Company::PollPublic.new(current_company).get_list_public_poll
     render 'home/dashboard_company'
   end
 
@@ -45,7 +46,7 @@ class CompaniesController < ApplicationController
 
 
   def poll_flags
-    @report_polls = Company::CompanyReportPoll.new(company_groups, @find_company).get_report_poll_in_company
+    @report_polls = Company::CompanyReportPoll.new(company_groups, @find_company).get_report_only_exclusive_groups
   end
 
   def via_email
@@ -93,19 +94,6 @@ class CompaniesController < ApplicationController
       redirect_to via_email_path
     end
   end
-
-  # def create
-  #   respond_to do |format|
-  #     if @find_company.generate_code_of_company(company_params, find_group)
-  #       flash[:success] = "Create invite code successfully."
-  #       format.html { redirect_to company_invites_path }
-  #     else
-  #       flash[:error] = "Error"
-  #       format.html { render 'new' }
-  #     end
-  #   end
-  #   # add comment
-  # end
 
   def generate_invitation
     respond_to do |format|
@@ -208,15 +196,12 @@ class CompaniesController < ApplicationController
   end
 
   def list_polls  ## company polls
-    @init_poll = PollOfGroup.new(current_member, current_member.get_company.groups, options_params, true)
+    @init_poll = PollOfGroup.new(current_member, exclusive_groups, options_params, true)
     @polls = @init_poll.get_poll_of_group_company.decorate
-
-    @init_poll_public = Company::PollPublic.new(@find_company)
-    @public_polls = @init_poll_public.get_list_public_poll.decorate
   end
 
   def list_questionnaires
-    @list_questionnaires = Company::ListPollSeries.new(set_company).list_poll_series.decorate
+    @list_questionnaires = Company::ListPollSeries.new(set_company).only_internal_survey
   end
 
   def list_campaigns
@@ -305,7 +290,7 @@ class CompaniesController < ApplicationController
   end
 
   def company_groups
-    @groups = Group.without_deleted.eager_load(:group_company, :poll_groups, :group_members).where("group_companies.company_id = #{set_company.id}").uniq
+    @groups = exclusive_groups
   end
 
   def list_polls_in_group
@@ -341,7 +326,7 @@ class CompaniesController < ApplicationController
   end
 
   def new_add_surveyor
-    @groups = Company::ListGroup.new(set_company).all
+    @groups = exclusive_groups
     @list_members_in_company = Company::ListMember.new(set_company).get_list_members
     @add_surveyor = Company.new
   end
@@ -466,7 +451,7 @@ class CompaniesController < ApplicationController
           FlushCached::Member.new(member).clear_list_groups
         end
 
-        flash[:success] = "Update group profile successfully."
+        flash[:success] = "Successfully updated group."
         format.html { redirect_to company_group_detail_path(@group) }
         format.json
       else
@@ -486,10 +471,6 @@ class CompaniesController < ApplicationController
 
   def delete_poll
     @poll.groups.each do |group|
-      group.with_lock do
-        group.poll_count -= 1
-        group.save!
-      end
       NotifyLog.poll_with_group_deleted(@poll, group)
     end
 
@@ -541,11 +522,6 @@ class CompaniesController < ApplicationController
   #           #   CompanyMember.add_member_to_company(find_user, this_group.get_company)
   #           # end
   #           Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
-
-  #           this_group.with_lock do
-  #             this_group.member_count += 1
-  #             this_group.save!
-  #           end
 
   #           FlushCached::Member.new(find_user).clear_list_groups
   #           FlushCached::Group.new(this_group).clear_list_members
