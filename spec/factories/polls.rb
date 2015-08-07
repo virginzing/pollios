@@ -69,19 +69,20 @@ FactoryGirl.define do
     f.expire_status false
   end
 
-  # factory :create_poll, class: Poll do
-  #   title "ทดสอบ #eiei #nut"
-  #   in_group false
-  #   choices ["yes", "no"]
-  #   type_poll "binary"
-  # end
+  # This should cause some problem
+  factory :create_poll, class: Poll do
+    title "ทดสอบ #eiei #nut"
+    in_group false
+    choices ["yes", "no"]
+    type_poll "binary"
+  end
 
-  # factory :create_poll_public, class: Poll do
-  #   title "Poll Public"
-  #   expire_within 2
-  #   choices ["yes", "no"]
-  #   type_poll "binary"
-  #   is_public true
-  # end
+  factory :create_poll_public, class: Poll do
+    title "Poll Public"
+    expire_within 2
+    choices ["yes", "no"]
+    type_poll "binary"
+    is_public true
+  end
 
 end
