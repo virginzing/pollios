@@ -746,7 +746,7 @@ ActiveRecord::Schema.define(version: 20150804062554) do
     t.datetime "sync_fb_last_at"
     t.string   "list_fb_id",                 default: [],                 array: true
     t.boolean  "show_recommend",             default: false
-    t.hstore   "notification",               default: {},    null: false
+    t.hstore   "notification",               default: "",    null: false
   end
 
   add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
@@ -884,7 +884,7 @@ ActiveRecord::Schema.define(version: 20150804062554) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2015-07-16 08:57:50'
+    t.datetime "start_date",     default: '2015-08-06 09:11:23'
     t.integer  "campaign_id"
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
@@ -972,7 +972,11 @@ ActiveRecord::Schema.define(version: 20150804062554) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",                default: 0
+<<<<<<< HEAD
     t.datetime "start_date",              default: '2015-07-16 08:57:50'
+=======
+    t.datetime "start_date",              default: '2015-08-06 09:11:23'
+>>>>>>> b97f73cb70e580b32a292d25956c791ab94a6158
     t.boolean  "series",                  default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"

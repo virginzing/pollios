@@ -11,6 +11,8 @@ class ReportComment
   end
 
   def reporting
+    return nil unless can_report
+
     unless find_report
       reporting = @member.member_report_comments.create!(poll_id: poll.id, comment_id: @comment.id, message: @options[:message], message_preset: @options[:message_preset])
       report_increment
@@ -28,6 +30,13 @@ class ReportComment
   end
 
   private
+
+  def can_report
+    if @comment.member_id == @member.id
+      return false
+    end
+    return true
+  end
 
   def find_report
     @member.member_report_comments.find_by(comment_id: @comment.id)

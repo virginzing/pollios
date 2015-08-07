@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: invite_codes
+#
+#  id         :integer          not null, primary key
+#  code       :string(255)
+#  used       :boolean          default(FALSE)
+#  created_at :datetime
+#  updated_at :datetime
+#  company_id :integer
+#  group_id   :integer
+#
+
 class InviteCode < ActiveRecord::Base
   has_one :member_invite_code,  dependent: :destroy
 
