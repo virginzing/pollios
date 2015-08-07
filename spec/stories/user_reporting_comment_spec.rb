@@ -10,7 +10,7 @@ RSpec.describe "stories/user_reporting_comment_spec.rb" do
     let!(:comment_from_another_member) { create(:comment, poll: poll, member: another_member, message: Faker::Lorem.sentence )}
 
     # using ListPoll class in Member module to fetch list of comments this user has reported
-    let!(:comments_reported_by_member) { Member::ListPoll.new(member).report_comments }
+    let(:comments_reported_by_member) { Member::ListPoll.new(member).report_comments }
   
     context "A User report his own comment" do
         it "- user never report any comment (report count = 0)" do
@@ -27,29 +27,12 @@ RSpec.describe "stories/user_reporting_comment_spec.rb" do
             expect(comments_reported_by_member.size).to eq(0)
         end
 
-        it "- user try reporting another user's comment (should == true/object), comment has report count == 1" do
+        it "- user try reporting another user's comment (should == true/object), comment's report count == 1, user's comment report = 1" do
             expect(ReportComment.new(member, comment_from_another_member, {message: "spam"}).reporting).to be_truthy
             expect(comment_from_another_member.report_count).to eq(1)
-
-            # TODO: Make this really work. Still don't know why it doesn't
-            # expect(comments_reported_by_member.size).to eq(1)
+            expect(comments_reported_by_member.size).to eq(1)
         end
     end
 
-  #   context "A User reporting on a comment by another user" do
-  #       it "- user never report any comment (report count = 0)" do
-  #           expect(comments_reported_by_member.size).to eq(0)
-  #       end     
-
-
-  #       it "- After reporting, user has reported comments count == 1" do
-  #         ReportComment.new(member, comment_from_another_member, { message: "spam" }).reporting
-  #         expect(comments_reported_by_member.report_count).to eq(1)
-  #     end
-
-  #     it "- That comment removed from user's visibilty" do
-  #     end
-  # end
-
-
 end
+
