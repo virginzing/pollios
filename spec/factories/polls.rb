@@ -49,24 +49,24 @@
 
 FactoryGirl.define do
 
-  factory :poll do |f|
-    f.title Faker::Lorem.sentence
-    f.type_poll :binary
-    f.status_poll :gray
-    f.in_group false
-    f.public false
-    f.expire_date Time.zone.now + 1.weeks
-    f.expire_status false
+  factory :poll, class: Poll do 
+    title Faker::Lorem.sentence
+    type_poll :binary
+    status_poll :gray
+    in_group false
+    public false
+    expire_date Time.zone.now + 1.weeks
+    expire_status false
   end
 
-  factory :faker_test_poll, class: Poll do |f|
-    f.title Faker::Lorem.sentence
-    f.type_poll :binary
-    f.status_poll :gray
-    f.in_group false
-    f.public false
-    f.expire_date Time.zone.now + 1.weeks
-    f.expire_status false
+  factory :faker_test_poll, class: Poll do
+    title Faker::Lorem.sentence
+    type_poll :binary
+    status_poll :gray
+    in_group false
+    public false
+    expire_date Time.zone.now + 1.weeks
+    expire_status false
   end
 
   # This should cause some problem

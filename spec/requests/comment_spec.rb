@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Comment API" do
   let!(:member) { create(:member) }
+  let!(:another_member) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email)}
   let!(:poll) { create(:poll, member: member, allow_comment: true) }
   let!(:poll_not_allows_comment) { create(:poll, member: member, allow_comment: false) }
 
@@ -80,7 +81,7 @@ RSpec.describe "Comment API" do
     let!(:comment_two) { create(:comment, poll: poll, member: member, message: "Don't like that") }
 
     before do
-      post "/comment/#{comment_one.id}/report.json", { member_id: member.id, message: "This is spam" }, { "Accept" => "application/json" }
+      post "/comment/#{comment_one.id}/report.json", { member_id: another_member.id, message: "This is spam" }, { "Accept" => "application/json" }
     end
 
     it "reported" do
@@ -89,7 +90,7 @@ RSpec.describe "Comment API" do
 
     it "has report count 1 of comment one" do
       expect(comment_one.reload.report_count).to eq(1)
-      expect(Member::ListPoll.new(member).report_comments.size).to eq(1)
+      expect(Member::ListPoll.new(another_member).report_comments.size).to eq(1)
     end
   end
 end
