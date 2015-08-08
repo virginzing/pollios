@@ -57,6 +57,10 @@ FactoryGirl.define do
     public false
     expire_date Time.zone.now + 1.weeks
     expire_status false
+
+    trait :not_allow_comment do
+      allow_comment false
+    end
   end
 
   factory :faker_test_poll, class: Poll do
@@ -68,6 +72,7 @@ FactoryGirl.define do
     expire_date Time.zone.now + 1.weeks
     expire_status false
   end
+
 
   # This should cause some problem
   factory :create_poll, class: Poll do

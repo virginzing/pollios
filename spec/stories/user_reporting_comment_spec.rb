@@ -1,6 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "stories/user_reporting_comment_spec.rb" do
+pathname = Pathname.new(__FILE__)
+RSpec.describe "[Story: #{pathname.dirname.basename}/#{pathname.basename}]\n\nUser reporting comments" do
+
     let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com") }
     let!(:another_member) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email)}
 
