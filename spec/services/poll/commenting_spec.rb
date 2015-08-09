@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 pathname = Pathname.new(__FILE__)
-RSpec.describe "[Story: #{pathname.dirname.basename}/#{pathname.basename}]\n\n User commenting on a poll" do
-
+RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\nPollCommenting" do
     let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com") }
     let!(:another_member) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email)}
 
@@ -16,7 +15,7 @@ RSpec.describe "[Story: #{pathname.dirname.basename}/#{pathname.basename}]\n\n U
 
     context "A user commenting on a poll not allowing comment" do
         let(:poll) { create(:poll, :not_allow_comment, member: member) }
-        it "- a poll should not allow commenting (poll.allow_comment == false)" do
+        it "- a poll does not allow commenting" do
             expect(poll.allow_comment).to be false
         end
 
@@ -29,7 +28,7 @@ RSpec.describe "[Story: #{pathname.dirname.basename}/#{pathname.basename}]\n\n U
     context "A user commenting on a poll allowing comment" do
         let(:poll) { create(:poll, member: member) }
 
-        it "- a poll should allow commenting (poll.allow_comment == true)" do
+        it "- a poll allows commenting" do
             expect(poll.allow_comment).to be true
         end
 
@@ -39,17 +38,3 @@ RSpec.describe "[Story: #{pathname.dirname.basename}/#{pathname.basename}]\n\n U
             expect(poll.comment_count).to eq(1)
         end
     end
-
-    # TODO: This will be tested with AllowComment service class
-    #
-    # context "A user disable comment on his poll, another user attempt to comment" do
-    #     let(:poll) { create(:poll, member: member) }
-
-    #     it "- should be able to disable comment on his own poll" do
-    #         poll_comment = PollComment.new(poll, member, Faker::Lorem.sentence)
-    #         expect(poll_comment.disable_comment).to be true
-    #         expect(poll_comment.commenting).to be false
-    #         expect(poll.comment_count).to eq(0)
-    #     end
-    # end
-end

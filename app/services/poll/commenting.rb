@@ -1,4 +1,5 @@
 class PollCommenting
+  
   def initialize(poll, member, comment_message)
     @poll = poll
     @member = member
@@ -25,21 +26,4 @@ class PollCommenting
     return comment_saved_success
   end
 
-  # TODO: Make a "AllowComment Service" class for dealing with enabling, disabling attributes
-  #
-  # def disable_comment
-  #   return false unless member_own_poll
-  #   @poll.allow_comment = false
-  #   return true
-  # end
-
-  # def enable_comment
-  #   return false unless member_own_poll
-  #   @poll.allow_comment = true
-  # end
-
-  # private
-  # def member_own_poll
-  #   return @poll_member_id == @member_id
-  # end
 end
