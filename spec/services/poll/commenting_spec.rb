@@ -38,3 +38,4 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
             expect(poll.comment_count).to eq(1)
         end
     end
+end
