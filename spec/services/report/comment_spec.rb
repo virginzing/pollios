@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe "ReportComment Services (report_comment_spec.rb)" do
+pathname = Pathname.new(__FILE__)
+RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\nReportComment" do
 	let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com") }
 	let!(:another_member) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email)}
 
@@ -19,5 +20,12 @@ RSpec.describe "ReportComment Services (report_comment_spec.rb)" do
 	it "has report count 1 when this comment was reported by another member" do
 		ReportComment.new(another_member, comment, { message: "spam" }).reporting
 		expect(comment.report_count).to eq(1)
+	end
+
+	let(:member_with_power_3) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email, report_power: 3)}
+
+	it "has report count 3 when reported by member with report power 3" do
+		ReportComment.new(member_with_power_3, comment, { message: "spam" }).reporting
+		expect(comment.report_count).to eq(3)		
 	end
 end
