@@ -123,7 +123,8 @@ FactoryGirl.define do
     title Faker::Lorem.sentence
     public false
     allow_comment true
-
+    creator_must_vote true
+    type_poll "freeform"
   end
 
 end

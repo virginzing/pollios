@@ -303,6 +303,7 @@ class Group < ActiveRecord::Base
       raise ExceptionHandler::UnprocessableEntity, "Your request had approved by administrator." if Group::ListMember.new(group).active.map(&:id).include?(member.id)
 
       find_current_ask_group = group.request_groups.find_by(member_id: member.id)
+      raise ExceptionHandler::UnprocessableEntity,  "There isn't your request to this group." unless find_current_ask_group.present?
 
       if find_current_ask_group.present?
         find_current_ask_group.destroy
