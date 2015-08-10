@@ -63,17 +63,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :faker_test_poll, class: Poll do
-    title Faker::Lorem.sentence
-    type_poll :binary
-    status_poll :gray
-    in_group false
-    public false
-    expire_date Time.zone.now + 1.weeks
-    expire_status false
-  end
-
-
   # This should cause some problem
   factory :create_poll, class: Poll do
     title "ทดสอบ #eiei #nut"

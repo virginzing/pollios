@@ -5,7 +5,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com") }
     let!(:another_member) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email)}
 
-    let!(:poll) { create(:faker_test_poll, member: member) }
+    let!(:poll) { create(:poll, member: member) }
 
     let!(:comment_from_member) { create(:comment, poll: poll, member: member, message: "test comment") }
     let!(:comment_from_another_member) { create(:comment, poll: poll, member: another_member, message: Faker::Lorem.sentence )}
