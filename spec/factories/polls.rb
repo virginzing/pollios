@@ -49,7 +49,7 @@
 
 FactoryGirl.define do
 
-  factory :poll, class: Poll do 
+  factory :poll, class: Poll do
     title Faker::Lorem.sentence
     type_poll :binary
     status_poll :gray
@@ -88,6 +88,42 @@ FactoryGirl.define do
     choices ["yes", "no"]
     type_poll "binary"
     is_public true
+  end
+
+  factory :story, class: Poll do
+    member
+    title Faker::Lorem.sentence
+    public false
+    allow_comment true
+
+    factory :poll_with_choices do
+      transient do
+        choices_count 2
+      end
+
+      after(:create) do |poll, evaluator|
+        create_list(:choice, evaluator.choices_count, poll: poll)
+      end
+    end
+
+    trait :is_public do
+      public true
+    end
+
+    trait :disable_comment do
+      allow_comment false
+    end
+
+    factory :poll_to_public,   traits: [:is_public]
+    factory :poll_that_disable_comment, traits: [:disable_comment]
+  end
+
+  factory :poll_required, class: Poll do
+    member
+    title Faker::Lorem.sentence
+    public false
+    allow_comment true
+
   end
 
 end

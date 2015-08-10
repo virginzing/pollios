@@ -18,5 +18,4 @@ FactoryGirl.define do
     vote 0
     correct false
   end
-
 end
