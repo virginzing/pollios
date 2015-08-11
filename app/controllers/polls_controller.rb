@@ -4,7 +4,7 @@ class PollsController < ApplicationController
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
-  before_action :set_poll, except: [:random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
+  before_action :set_poll, except: [:count_preset, :random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
 
   before_action :list_groups, only: [:detail, :create_poll]
 
