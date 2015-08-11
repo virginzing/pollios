@@ -16,7 +16,7 @@ json.campaign poll.get_campaign
 json.campaign_detail poll.get_campaign_detail(@current_member) if poll.campaign_id != 0
 json.is_public poll.public
 json.type_poll poll.type_poll
-json.poll_within poll.get_within(@group_by_name, params[:action], params[:id])
+json.poll_within poll.get_within(@group_by_name, params[:action], @group_id)
 json.watched poll.check_watched
 json.photo poll.get_photo
 json.thumbnail_type poll.thumbnail_type || 0
