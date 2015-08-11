@@ -258,6 +258,10 @@ class PollsController < ApplicationController
     @group_by_name = @init_poll.group_by_name
   end
 
+  def promote_poll
+    @promote_poll = Poll::PromotePublic.new(@current_member, set_poll).create!
+  end
+
   #### deprecated ####
 
   # def poll_helper
@@ -287,29 +291,27 @@ class PollsController < ApplicationController
   #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
   # end
 
-  def promote_poll
-    @promote_poll = Poll::PromotePublic.new(@current_member, set_poll).create!
-  end
+  #### deprecated ####
 
-  def tags
-    @find_tag = Tag.find_by(name: params[:name])
-    friend_list = @current_member.get_friend_active.map(&:id) << @current_member.id
+  # def tags
+  #   @find_tag = Tag.find_by(name: params[:name])
+  #   friend_list = @current_member.get_friend_active.map(&:id) << @current_member.id
 
-    if params[:type] == "series"
-      query_poll = @find_tag.poll_series
-    else
-      query_poll = @find_tag.polls.where(series: false)
-    end
-    if params[:next_cursor]
-      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-      .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
-      .order("poll_members.created_at desc")
-    else
-      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-      .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
-      .order("poll_members.created_at desc")
-    end
-  end
+  #   if params[:type] == "series"
+  #     query_poll = @find_tag.poll_series
+  #   else
+  #     query_poll = @find_tag.polls.where(series: false)
+  #   end
+  #   if params[:next_cursor]
+  #     @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+  #     .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
+  #     .order("poll_members.created_at desc")
+  #   else
+  #     @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+  #     .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
+  #     .order("poll_members.created_at desc")
+  #   end
+  # end
 
   def hashtag
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
