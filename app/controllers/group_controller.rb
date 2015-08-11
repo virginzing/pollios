@@ -172,10 +172,6 @@ class GroupController < ApplicationController
     @group  = @current_member.delete_group(group_params[:group_id])
   end
 
-  def notification
-    @notification = @group.set_notification(group_params[:member_id])
-  end
-
   def set_public
     if @group.update!(edit_group_params)
       render status: :created
@@ -184,6 +180,12 @@ class GroupController < ApplicationController
       render status: :unprocessable_entity
     end
   end
+
+  #### deprecated ####
+
+  # def notification
+  #   @notification = @group.set_notification(group_params[:member_id])
+  # end
 
   private
 

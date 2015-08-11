@@ -104,7 +104,6 @@ class FriendsController < ApplicationController
     end
   end
 
-
   def list_of_vote
     if derived_version == 6
       if params[:member_id] == params[:friend_id]
@@ -149,9 +148,9 @@ class FriendsController < ApplicationController
     member.flush_cache_my_vote if vote_poll_count != member.cached_my_voted.size
   end
 
-  def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
-    friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
-  end
+  # def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
+  #   friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
+  # end
 
   def check_my_watch_flush_cache?(member, watch_poll_count)
     member.flush_cache_my_watch if watch_poll_count != member.cached_watched

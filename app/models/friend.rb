@@ -236,7 +236,7 @@ class Friend < ActiveRecord::Base
         raise ExceptionHandler::UnprocessableEntity, "My friend has over 500 people." if (init_member_list_friend.friend_count >= member.friend_limit)
         raise ExceptionHandler::UnprocessableEntity, "Your friend has over 500 people." if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
         raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} is friends." if init_member_list_friend.active.map(&:id).include?(friend.id)
-        
+
         find_member.update_attributes!(active: active_status, status: :friend)
         find_friend.update_attributes!(active: active_status, status: :friend)
 
@@ -244,7 +244,7 @@ class Friend < ActiveRecord::Base
         Activity.create_activity_friend( friend, member , ACTION[:become_friend])
 
         AddFriendWorker.perform_async(member.id, friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
-        
+
         FlushCached::Member.new(member).clear_list_followers
         FlushCached::Member.new(friend).clear_list_followers
       else
@@ -271,7 +271,7 @@ class Friend < ActiveRecord::Base
         find_member.update!(status: :nofriend)
       end
     end
-    
+
     if find_friend.present?
       unless find_friend.following
         find_old_member = Friend.where(follower: member_object, followed: friend_object).first
@@ -288,7 +288,7 @@ class Friend < ActiveRecord::Base
 
     FlushCached::Member.new(member_object).clear_list_followers
     FlushCached::Member.new(friend_object).clear_list_followers
-    
+
     true
   end
 
@@ -311,7 +311,7 @@ class Friend < ActiveRecord::Base
 
       FlushCached::Member.new(member).clear_list_friends
       FlushCached::Member.new(friend).clear_list_friends
-      
+
       FlushCached::Member.new(member).clear_list_followers
       FlushCached::Member.new(friend).clear_list_followers
     end
@@ -337,7 +337,7 @@ class Friend < ActiveRecord::Base
 
       FlushCached::Member.new(member).clear_list_friends
       FlushCached::Member.new(friend).clear_list_friends
-      
+
       FlushCached::Member.new(member).clear_list_followers
       FlushCached::Member.new(friend).clear_list_followers
     end
@@ -347,12 +347,13 @@ class Friend < ActiveRecord::Base
 
   def self.add_friend?(member_obj, search_member)
     check_my_friend = []
+    init_list_friend ||= Member::ListFriend.new(member_obj)
 
-    my_friend = member_obj.cached_get_friend_active.map(&:id)
-    your_request = member_obj.cached_get_your_request.map(&:id)
-    friend_request = member_obj.cached_get_friend_request.map(&:id)
-    my_following = member_obj.cached_get_following.map(&:id)
-    block_friend = member_obj.cached_block_friend.map(&:id)
+    my_friend = init_list_friend.active.map(&:id)
+    your_request = init_list_friend.your_request.map(&:id)
+    friend_request = init_list_friend.friend_request.map(&:id)
+    my_following = init_list_friend.following.map(&:id)
+    block_friend = init_list_friend.block.map(&:id)
 
     search_member.each do |member|
       if my_friend.include?(member.id)
@@ -367,7 +368,7 @@ class Friend < ActiveRecord::Base
         hash = Hash["add_friend_already" => false, "status" => :nofriend]
       end
 
-      if member.celebrity? || member.brand?
+      if member.celebrity?
         my_following.include?(member.id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
       else
         hash.merge!({"following" => "" })
@@ -404,21 +405,18 @@ class Friend < ActiveRecord::Base
 
     return check_my_friend
   end
+  # def self.flush_cached_friend(member_id, friend_id)
+  #   Rails.cache.delete([ member_id, 'friend_active'])
+  #   Rails.cache.delete([ member_id, 'your_request'])
+  #   Rails.cache.delete([ member_id, 'friend_request'])
+  #   Rails.cache.delete([ member_id, 'following'])
+  #   Rails.cache.delete([ member_id, 'follower'])
 
-
-
-  def self.flush_cached_friend(member_id, friend_id)
-    Rails.cache.delete([ member_id, 'friend_active'])
-    Rails.cache.delete([ member_id, 'your_request'])
-    Rails.cache.delete([ member_id, 'friend_request'])
-    Rails.cache.delete([ member_id, 'following'])
-    Rails.cache.delete([ member_id, 'follower'])
-
-    Rails.cache.delete([ friend_id, 'friend_active'])
-    Rails.cache.delete([ friend_id, 'your_request'])
-    Rails.cache.delete([ friend_id, 'friend_request'])
-    Rails.cache.delete([ friend_id, 'following'])
-    Rails.cache.delete([ friend_id, 'follower'])
-  end
+  #   Rails.cache.delete([ friend_id, 'friend_active'])
+  #   Rails.cache.delete([ friend_id, 'your_request'])
+  #   Rails.cache.delete([ friend_id, 'friend_request'])
+  #   Rails.cache.delete([ friend_id, 'following'])
+  #   Rails.cache.delete([ friend_id, 'follower'])
+  # end
 
 end
