@@ -11,9 +11,12 @@
 
 FactoryGirl.define do
   factory :company_member do
+
+  end
+
+  factory :company_member_required, class: CompanyMember do
     company nil
     member nil
-    main_group true
   end
 
 end

@@ -36,4 +36,14 @@ FactoryGirl.define do
     reward_expire Time.now + 100.days
   end
 
+  factory :campaign_required, class: Campaign do
+    member nil
+    company nil
+    name Faker::Commerce.product_name
+    limit 1000
+    expire Faker::Time.between(DateTime.now - 365, DateTime.now)
+    description ".."
+    how_to_redeem ".."
+  end
+
 end

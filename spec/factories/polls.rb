@@ -80,7 +80,7 @@ FactoryGirl.define do
   end
 
   factory :story, class: Poll do
-    member
+    member nil
     title Faker::Lorem.sentence
     public false
     allow_comment true
@@ -108,7 +108,7 @@ FactoryGirl.define do
   end
 
   factory :poll_required, class: Poll do
-    member
+    member nil
     title Faker::Lorem.sentence
     public false
     allow_comment true
