@@ -267,23 +267,25 @@ class PollsController < ApplicationController
   #   @total_entries = @polls.total_entries
   # end
 
-  def guest_poll
-    if params[:type] == "active"
-      query_poll = Poll.active_poll
-    elsif params[:type] == "inactive"
-      query_poll = Poll.inactive_poll
-    else
-      query_poll = Poll.all
-    end
+  #### deprecated ####
 
-    if params[:next_cursor]
-      @poll = query_poll.includes(:poll_series, :member).where("id < ? AND public = ?)", params[:next_cursor], true).order("created_at desc")
-    else
-      @poll = query_poll.includes(:poll_series, :member).where("public = ?", true).order("created_at desc")
-    end
+  # def guest_poll
+  #   if params[:type] == "active"
+  #     query_poll = Poll.active_poll
+  #   elsif params[:type] == "inactive"
+  #     query_poll = Poll.inactive_poll
+  #   else
+  #     query_poll = Poll.all
+  #   end
 
-    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  end
+  #   if params[:next_cursor]
+  #     @poll = query_poll.includes(:poll_series, :member).where("id < ? AND public = ?)", params[:next_cursor], true).order("created_at desc")
+  #   else
+  #     @poll = query_poll.includes(:poll_series, :member).where("public = ?", true).order("created_at desc")
+  #   end
+
+  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+  # end
 
   def promote_poll
     @promote_poll = Poll::PromotePublic.new(@current_member, set_poll).create!
@@ -298,7 +300,6 @@ class PollsController < ApplicationController
     else
       query_poll = @find_tag.polls.where(series: false)
     end
-    puts "query_poll => #{query_poll}"
     if params[:next_cursor]
       @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
       .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)

@@ -368,7 +368,6 @@ class Poll < ActiveRecord::Base
 
   def get_within(options = {}, action_timeline = {}, group_id = nil)
     @group_id = group_id
-
     if public && in_group
       Hash["in" => "Group", "group_detail" => get_in_groups(options)]
     elsif public
