@@ -265,6 +265,26 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def send_notification
+    unless Rails.env.test?
+      if in_group
+        in_group_ids.split(",").each do |group_id|
+          unless qr_only
+            AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
+          end
+        end
+      else
+        unless qr_only || series
+          if public
+            PollPublicWorker.perform_async(member_id, id)
+          else
+            PollWorker.perform_async(self.member_id, self.id)
+          end
+        end
+      end
+    end
+  end
+
   def get_original_images
     if cached_poll_attachements.size > 0
       cached_poll_attachements.collect{|attachment| attachment.image.url(:original) }
@@ -274,20 +294,6 @@ class Poll < ActiveRecord::Base
       end
     end
   end
-
-  #### deprecated ####
-
-  # def get_poll_in_groups(group_ids)
-  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
-  # end
-
-  # def set_new_title_with_tag
-  #   poll_title = self.title
-  #   tags.pluck(:name).each do |tag|
-  #     poll_title = poll_title + " " + "#" + tag
-  #   end
-  #   update_attributes!(title: poll_title)
-  # end
 
   def set_priority
     if public
@@ -452,6 +458,283 @@ class Poll < ActiveRecord::Base
   def self.tag_counts
     Tag.joins(:taggings).select("tags.*, count(tag_id) as count").group("tags.id")
   end
+
+  def create_watched(member, poll_id)
+    WatchPoll.new(member, poll_id).watching
+  end
+
+  def self.get_choice_count(choices)
+    choices.size
+  end
+
+  def create_tag(title)
+    split_tags = []
+    title.gsub(/\B#([[:word:]]+)/) { split_tags << $1 }
+    if split_tags.size > 0
+      tag_list = []
+      split_tags.each do |tag_name|
+        tag_list << Tag.find_or_create_by(name: tag_name).id
+      end
+      self.tag_ids = tag_list
+    end
+  end
+
+  def self.vote_poll(poll, member, data_options = {})
+    member_id = poll[:member_id]
+    surveyor_id = poll[:surveyor_id]
+    poll_id = poll[:id]
+    choice_id = poll[:choice_id]
+    guest_id = poll[:guest_id]
+    show_result = poll[:show_result]
+
+    find_poll = Poll.find_by(id: poll_id)
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::UNDER_INSPECTION if find_poll.black?
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
+
+    ever_vote = Member::ListPoll.new(member).voted_poll?(find_poll)
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
+
+    find_choice = Choice.find_by(id: choice_id)
+    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
+
+    poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
+
+    find_poll.with_lock do
+      find_poll.vote_all += 1
+      find_poll.save!
+    end
+
+    find_choice.with_lock do
+      find_choice.vote += 1
+      find_choice.save!
+    end
+
+    Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
+
+    UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
+
+    SavePollLater.delete_save_later(member_id, find_poll)
+
+    unless show_result.nil?
+      check_show_result = show_result
+    else
+      check_show_result = show_result?(member, find_poll)
+    end
+
+    if (member.id != find_poll.member_id) && !find_poll.series
+      if find_poll.notify_state.idle?
+        find_poll.update_column(:notify_state, 1)
+        find_poll.update_column(:notify_state_at, Time.zone.now)
+        SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
+      end
+
+      Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
+    end
+
+    history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
+
+    unless find_poll.series
+      VoteStats.create_vote_stats(find_poll)
+      Activity.create_activity_poll(member, find_poll, 'Vote')
+    end
+    Trigger::Vote.new(member, find_poll, find_choice).trigger!
+
+    member.flush_cache_my_vote
+    FlushCached::Member.new(member).clear_list_voted_all_polls
+
+    find_poll.touch
+    find_choice.touch
+    [find_poll, history_voted]
+  end
+
+  def self.show_result?(member, find_poll)
+    show_result = false
+
+    show_result = if find_poll.public
+      !member.anonymous_public
+    else
+      if find_poll.in_group
+        !member.anonymous_group
+      else
+        !member.anonymous_friend_following
+      end
+    end
+
+    show_result
+  end
+
+  def self.get_poll_hourly
+    hour = Time.zone.now.hour
+    start_time = Time.new(2000, 01, 01, hour, 00, 00)
+    end_time = start_time.change(min: 59, sec: 59)
+    @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.zone.now).having_status(:active)
+    if @recurring.size > 0
+      Recurring.re_create_poll(@recurring)
+    end
+  end
+
+  def have_photo?
+    photo_poll.present?
+  end
+
+  def check_recurring
+    if recurring_id != 0
+      recurring.description
+    else
+      "-"
+    end
+  end
+
+  def check_my_shared(my_shared_ids, poll_id)
+    if my_shared_ids.include?(poll_id)
+      Hash["shared" => true]
+    else
+      Hash["shared" => false]
+    end
+  end
+
+  def check_watched
+    watched_poll_ids = Member.watched_polls
+    if watched_poll_ids.include?(id)
+      true
+    else
+      false
+    end
+  end
+
+  def get_require_info
+    require_info.present? ? true : false
+  end
+
+  def hour
+    self.created_at.utc.strftime('%Y-%m-%d %H:00:00 UTC')
+  end
+
+  def as_json options={}
+    {
+      id: id,
+      text: title
+    }
+  end
+
+  def check_status_survey(member)
+
+    @init_member_suveyable = Surveyor::MembersSurveyable.new(self, member)
+
+    @members_surveyable = @init_member_suveyable.get_members_in_group.to_a.map(&:id)
+
+    @members_voted = @init_member_suveyable.get_members_voted.to_a.map(&:id)
+
+    remain_can_survey = @members_surveyable - @members_voted
+
+    complete_status = remain_can_survey.size > 0 ? false : true
+
+    {
+      complete: complete_status,
+      member_voted: @members_voted.to_a.size,
+      member_amount: @members_surveyable.size
+    }
+  end
+
+  def find_campaign_for_predict?(member)
+    campaign.prediction(member.id, self.id) if (campaign.expire > Time.now) && (campaign.used < campaign.limit) && (campaign.campaign_members.find_by(member_id: member.id, poll_id: self.id).nil?)
+  end
+
+  def self.view_poll(poll, member)
+    HistoryView.transaction do
+      begin
+        @poll = poll.reload
+        @member = member
+
+        unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
+          HistoryView.create! member_id: @member.id, poll_id: @poll.id
+          Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
+
+          @poll.with_lock do
+            @poll.view_all += 1
+            @poll.save!
+          end
+
+          FlushCached::Member.new(@member).clear_list_history_viewed_polls
+        end
+      rescue => e
+        puts "message => #{e.message}"
+      end
+    end
+  end
+
+  ## for group api ##
+
+  def get_member_shared_this_poll(group_id)
+    member = Member.joins(:share_polls).where("share_polls.poll_id = ? AND share_polls.shared_group_id = ?", id, group_id)
+    ActiveModel::ArraySerializer.new(member, serializer_options: { current_member: Member.current_member }, each_serializer: MemberSharedDetailSerializer).as_json()
+  end
+
+  def get_group_shared(group_id)
+    @group_id = group_id
+    @poll_id = id
+    Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json ]
+  end
+
+  def serailize_group_detail_as_json
+    group = PollGroup.where(poll_id: @poll_id).pluck(:group_id)
+    your_group_ids = Member.list_group_active.map(&:id)
+    group_list = group & your_group_ids
+
+    if group.present?
+      ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json()
+    else
+      nil
+    end
+  end
+
+  def serializer_member_detail
+    @find_member_cached ||= Member.cached_member(member)
+    @member_id = @find_member_cached[:member_id]
+    @member_type = @find_member_cached[:type]
+    member_hash = @find_member_cached.merge( { "status" => entity_info } )
+    member_hash
+  end
+
+  def entity_info
+    @my_friend = Member.list_friend_active.map(&:id)
+    @your_request = Member.list_your_request.map(&:id)
+    @friend_request = Member.list_friend_request.map(&:id)
+    @my_following = Member.list_friend_following.map(&:id)
+
+    if @my_friend.include?(@member_id)
+      hash = Hash["add_friend_already" => true, "status" => :friend]
+    elsif @your_request.include?(@member_id)
+      hash = Hash["add_friend_already" => true, "status" => :invite]
+    elsif @friend_request.include?(@member_id)
+      hash = Hash["add_friend_already" => true, "status" => :invitee]
+    else
+      hash = Hash["add_friend_already" => false, "status" => :nofriend]
+    end
+
+    if @member_type == "Citizen" || @member_type == "Brand"
+      @my_following.include?(@member_id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
+    else
+      hash.merge!({"following" => "" })
+    end
+    hash
+  end
+
+  #### deprecated ####
+
+  # def get_poll_in_groups(group_ids)
+  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
+  # end
+
+  # def set_new_title_with_tag
+  #   poll_title = self.title
+  #   tags.pluck(:name).each do |tag|
+  #     poll_title = poll_title + " " + "#" + tag
+  #   end
+  #   update_attributes!(title: poll_title)
+  # end
 
   #### deprecated ####
 
@@ -803,26 +1086,6 @@ class Poll < ActiveRecord::Base
   #   end
   # end
 
-  def send_notification
-    unless Rails.env.test?
-      if in_group
-        in_group_ids.split(",").each do |group_id|
-          unless qr_only
-            AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
-          end
-        end
-      else
-        unless qr_only || series
-          if public
-            PollPublicWorker.perform_async(member_id, id)
-          else
-            PollWorker.perform_async(self.member_id, self.id)
-          end
-        end
-      end
-    end
-  end
-
   #### deprecated ####
 
   # def should_generate_new_friendly_id?
@@ -838,112 +1101,6 @@ class Poll < ActiveRecord::Base
   #   end
   #   choices
   # end
-
-  def create_watched(member, poll_id)
-    WatchPoll.new(member, poll_id).watching
-  end
-
-  def self.get_choice_count(choices)
-    choices.size
-  end
-
-  def create_tag(title)
-    split_tags = []
-    title.gsub(/\B#([[:word:]]+)/) { split_tags << $1 }
-    if split_tags.size > 0
-      tag_list = []
-      split_tags.each do |tag_name|
-        tag_list << Tag.find_or_create_by(name: tag_name).id
-      end
-      self.tag_ids = tag_list
-    end
-  end
-
-  def self.vote_poll(poll, member, data_options = {})
-    member_id = poll[:member_id]
-    surveyor_id = poll[:surveyor_id]
-    poll_id = poll[:id]
-    choice_id = poll[:choice_id]
-    guest_id = poll[:guest_id]
-    show_result = poll[:show_result]
-
-    find_poll = Poll.find_by(id: poll_id)
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::UNDER_INSPECTION if find_poll.black?
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
-
-    ever_vote = Member::ListPoll.new(member).voted_poll?(find_poll)
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
-
-    find_choice = Choice.find_by(id: choice_id)
-    fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Choice::NOT_FOUND if find_choice.nil?
-
-    poll_series_id = find_poll.series ? find_poll.poll_series_id : 0
-
-    find_poll.with_lock do
-      find_poll.vote_all += 1
-      find_poll.save!
-    end
-
-    find_choice.with_lock do
-      find_choice.vote += 1
-      find_choice.save!
-    end
-
-    Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
-
-    UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
-
-    SavePollLater.delete_save_later(member_id, find_poll)
-
-    unless show_result.nil?
-      check_show_result = show_result
-    else
-      check_show_result = show_result?(member, find_poll)
-    end
-
-    if (member.id != find_poll.member_id) && !find_poll.series
-      if find_poll.notify_state.idle?
-        find_poll.update_column(:notify_state, 1)
-        find_poll.update_column(:notify_state_at, Time.zone.now)
-        SumVotePollWorker.perform_in(1.minutes, poll_id, show_result) unless Rails.env.test?
-      end
-
-      Poll::VoteNotifyLog.new(member, find_poll, check_show_result).create!
-    end
-
-    history_voted = member.history_votes.create!(poll_id: poll_id, choice_id: choice_id, poll_series_id: poll_series_id, data_analysis: data_options, surveyor_id: surveyor_id, created_at: Time.zone.now + 0.5.seconds, show_result: check_show_result)
-
-    unless find_poll.series
-      VoteStats.create_vote_stats(find_poll)
-      Activity.create_activity_poll(member, find_poll, 'Vote')
-    end
-    Trigger::Vote.new(member, find_poll, find_choice).trigger!
-
-    member.flush_cache_my_vote
-    FlushCached::Member.new(member).clear_list_voted_all_polls
-
-    find_poll.touch
-    find_choice.touch
-    [find_poll, history_voted]
-  end
-
-  def self.show_result?(member, find_poll)
-    show_result = false
-
-    show_result = if find_poll.public
-      !member.anonymous_public
-    else
-      if find_poll.in_group
-        !member.anonymous_group
-      else
-        !member.anonymous_friend_following
-      end
-    end
-
-    show_result
-  end
 
   #### deprecated ####
 
@@ -972,42 +1129,11 @@ class Poll < ActiveRecord::Base
   #   end
   # end
 
-  def find_campaign_for_predict?(member)
-    campaign.prediction(member.id, self.id) if (campaign.expire > Time.now) && (campaign.used < campaign.limit) && (campaign.campaign_members.find_by(member_id: member.id, poll_id: self.id).nil?)
-  end
-
-  def self.view_poll(poll, member)
-    HistoryView.transaction do
-      begin
-        @poll = poll.reload
-        @member = member
-
-        unless HistoryView.exists?(member_id: @member.id, poll_id: @poll.id)
-          HistoryView.create! member_id: @member.id, poll_id: @poll.id
-          Company::TrackActivityFeedPoll.new(@member, @poll.in_group_ids, @poll, "view").tracking if @poll.in_group
-
-          @poll.with_lock do
-            @poll.view_all += 1
-            @poll.save!
-          end
-
-          FlushCached::Member.new(@member).clear_list_history_viewed_polls
-        end
-      rescue => e
-        puts "message => #{e.message}"
-      end
-    end
-  end
-
   #### deprecated ####
 
   # def get_choice_scroll
   #   cached_choices.sort { |x,y| y.id <=> x.id }.map(&:vote)
   # end
-
-  def get_require_info
-    require_info.present? ? true : false
-  end
 
   #### deprecated ####
 
@@ -1019,61 +1145,11 @@ class Poll < ActiveRecord::Base
   #   end
   # end
 
-  def self.get_poll_hourly
-    hour = Time.zone.now.hour
-    start_time = Time.new(2000, 01, 01, hour, 00, 00)
-    end_time = start_time.change(min: 59, sec: 59)
-    @recurring = Recurring.where("(period BETWEEN ? AND ?) AND end_recur > ?", start_time.to_s, end_time.to_s, Time.zone.now).having_status(:active)
-    if @recurring.size > 0
-      Recurring.re_create_poll(@recurring)
-    end
-  end
-
-  def have_photo?
-    photo_poll.present?
-  end
-
-  def check_recurring
-    if recurring_id != 0
-      recurring.description
-    else
-      "-"
-    end
-  end
-
-  def check_my_shared(my_shared_ids, poll_id)
-    if my_shared_ids.include?(poll_id)
-      Hash["shared" => true]
-    else
-      Hash["shared" => false]
-    end
-  end
-
-  def check_watched
-    watched_poll_ids = Member.watched_polls
-    if watched_poll_ids.include?(id)
-      true
-    else
-      false
-    end
-  end
-
   #### deprecated ####
 
   # def get_expire_date
   #   expire_date.present? ? expire_date.to_i : ""
   # end
-
-  def hour
-    self.created_at.utc.strftime('%Y-%m-%d %H:00:00 UTC')
-  end
-
-  def as_json options={}
-    {
-      id: id,
-      text: title
-    }
-  end
 
   #### deprecated ####
 
@@ -1087,81 +1163,5 @@ class Poll < ActiveRecord::Base
   #   end
 
   # end
-
-  def check_status_survey(member)
-
-    @init_member_suveyable = Surveyor::MembersSurveyable.new(self, member)
-
-    @members_surveyable = @init_member_suveyable.get_members_in_group.to_a.map(&:id)
-
-    @members_voted = @init_member_suveyable.get_members_voted.to_a.map(&:id)
-
-    remain_can_survey = @members_surveyable - @members_voted
-
-    complete_status = remain_can_survey.size > 0 ? false : true
-
-    {
-      complete: complete_status,
-      member_voted: @members_voted.to_a.size,
-      member_amount: @members_surveyable.size
-    }
-  end
-
-  ## for group api ##
-
-  def get_member_shared_this_poll(group_id)
-    member = Member.joins(:share_polls).where("share_polls.poll_id = ? AND share_polls.shared_group_id = ?", id, group_id)
-    ActiveModel::ArraySerializer.new(member, serializer_options: { current_member: Member.current_member }, each_serializer: MemberSharedDetailSerializer).as_json()
-  end
-
-  def get_group_shared(group_id)
-    @group_id = group_id
-    @poll_id = id
-    Hash["in" => "Group", "group_detail" => serailize_group_detail_as_json ]
-  end
-
-  def serailize_group_detail_as_json
-    group = PollGroup.where(poll_id: @poll_id).pluck(:group_id)
-    your_group_ids = Member.list_group_active.map(&:id)
-    group_list = group & your_group_ids
-
-    if group.present?
-      ActiveModel::ArraySerializer.new(Group.where("id IN (?)", group_list), each_serializer: GroupSerializer).as_json()
-    else
-      nil
-    end
-  end
-
-  def serializer_member_detail
-    @find_member_cached ||= Member.cached_member(member)
-    @member_id = @find_member_cached[:member_id]
-    @member_type = @find_member_cached[:type]
-    member_hash = @find_member_cached.merge( { "status" => entity_info } )
-    member_hash
-  end
-
-  def entity_info
-    @my_friend = Member.list_friend_active.map(&:id)
-    @your_request = Member.list_your_request.map(&:id)
-    @friend_request = Member.list_friend_request.map(&:id)
-    @my_following = Member.list_friend_following.map(&:id)
-
-    if @my_friend.include?(@member_id)
-      hash = Hash["add_friend_already" => true, "status" => :friend]
-    elsif @your_request.include?(@member_id)
-      hash = Hash["add_friend_already" => true, "status" => :invite]
-    elsif @friend_request.include?(@member_id)
-      hash = Hash["add_friend_already" => true, "status" => :invitee]
-    else
-      hash = Hash["add_friend_already" => false, "status" => :nofriend]
-    end
-
-    if @member_type == "Citizen" || @member_type == "Brand"
-      @my_following.include?(@member_id) ? hash.merge!({"following" => true }) : hash.merge!({"following" => false })
-    else
-      hash.merge!({"following" => "" })
-    end
-    hash
-  end
 
 end

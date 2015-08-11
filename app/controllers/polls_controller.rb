@@ -232,11 +232,13 @@ class PollsController < ApplicationController
     @total_entries = group_timeline.total_entries
   end
 
-  def reward_poll_timeline
-    @init_poll = PollRewardTimeline.new(@current_member, public_poll_params)
-    @polls = @init_poll.reward_poll.paginate(page: params[:next_cursor])
-    poll_helper
-  end
+  #### deprecated ####
+
+  # def reward_poll_timeline
+  #   @init_poll = PollRewardTimeline.new(@current_member, public_poll_params)
+  #   @polls = @init_poll.reward_poll.paginate(page: params[:next_cursor])
+  #   poll_helper
+  # end
 
   def my_poll
     @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
@@ -256,12 +258,14 @@ class PollsController < ApplicationController
     @group_by_name = @init_poll.group_by_name
   end
 
-  def poll_helper
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @init_poll.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
-  end
+  #### deprecated ####
+
+  # def poll_helper
+  #   @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+  #   @group_by_name ||= @init_poll.group_by_name
+  #   @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+  #   @total_entries = @polls.total_entries
+  # end
 
   def guest_poll
     if params[:type] == "active"
