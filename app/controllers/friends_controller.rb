@@ -104,7 +104,6 @@ class FriendsController < ApplicationController
     end
   end
 
-
   def list_of_vote
     if derived_version == 6
       if params[:member_id] == params[:friend_id]
@@ -130,16 +129,6 @@ class FriendsController < ApplicationController
         @list_polls, @next_cursor = @init_poll.get_friend_watch_feed
         @group_by_name = @init_poll.group_by_name
       end
-    else
-      if params[:member_id] == params[:friend_id]
-        @init_poll = MyPollInProfile.new(@current_member, options_params)
-        @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
-      else
-        @init_poll = MyPollInProfile.new(@find_friend, options_params)
-        @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-        @polls = @init_poll_friend.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
-      end
-      poll_helper
     end
   end
 
@@ -159,9 +148,9 @@ class FriendsController < ApplicationController
     member.flush_cache_my_vote if vote_poll_count != member.cached_my_voted.size
   end
 
-  def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
-    friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
-  end
+  # def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
+  #   friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
+  # end
 
   def check_my_watch_flush_cache?(member, watch_poll_count)
     member.flush_cache_my_watch if watch_poll_count != member.cached_watched
@@ -250,12 +239,14 @@ class FriendsController < ApplicationController
 
   ###
 
-  def poll_helper
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @init_poll.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
-  end
+  #### deprecated ####
+
+  # def poll_helper
+  #   @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+  #   @group_by_name ||= @init_poll.group_by_name
+  #   @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+  #   @total_entries = @polls.total_entries
+  # end
 
   def is_friend(list_compare)
     @is_friend = Friend.add_friend?(@current_member, list_compare)

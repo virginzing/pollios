@@ -16,7 +16,12 @@
 #  company_admin    :boolean          default(FALSE)
 #
 
+# using_service have many services such as "Survey" (Internal Survey), "Publuc" (Public Survey) and "Feedback" (Location Feedback)
+
+require 'faker'
+
 FactoryGirl.define do
+
   factory :company do
     member nil
     name "Code App"
@@ -24,12 +29,25 @@ FactoryGirl.define do
     using_service ["Survey"]
   end
 
-
   factory :company_admin, class: Company do
     member nil
     name "Company Admin"
     using_service ["Survey", "Feedback"]
     company_admin true
+  end
+
+  factory :company_required, class: Company do
+    member nil
+    name Faker::Name.name
+    using_service ["Survey"]
+  end
+
+  factory :company_optional, class: Company do
+    member nil
+    name Faker::Company.name
+    using_service ["Survey"]
+    address Faker::Address.city
+    telephone_number Faker::Company.duns_number
   end
 
 end

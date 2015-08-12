@@ -103,4 +103,14 @@ FactoryGirl.define do
     app_id "com.pollios.polliosapp"
   end
 
+  factory :member_required, class: Member do
+    fullname Faker::Name.name
+    email Faker::Internet.email
+  end
+
+  factory :member_optional, class: Member, parent: :member_required do
+    avatar Faker::Avatar.image
+    cover_preset 1
+  end
+
 end

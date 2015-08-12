@@ -398,7 +398,6 @@ class Member < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    # puts "auth => #{auth}"
     fb_params = {
       id: auth.uid,
       provider: 'facebook',
@@ -436,13 +435,15 @@ class Member < ActiveRecord::Base
     find_group_surveyor.destroy if find_group_surveyor.present?
   end
 
-  def get_poll_count
-    Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
-  end
+  #### deprecated ####
 
-  def get_questionnaire_count
-    PollSeries.where("(poll_series.member_id = #{self.id})").size
-  end
+  # def get_poll_count
+  #   Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
+  # end
+
+  # def get_questionnaire_count
+  #   PollSeries.where("(poll_series.member_id = #{self.id})").size
+  # end
 
   def new_avatar
     avatar.url(:thumbnail)
@@ -461,6 +462,8 @@ class Member < ActiveRecord::Base
   def get_key_color
     key_color || ""
   end
+
+  #### deprecated ####
 
   # def get_first_setting_anonymous
   #   first_setting_anonymous.present? ? true : false
@@ -491,9 +494,9 @@ class Member < ActiveRecord::Base
     recent_history_subscription.present? ? recent_history_subscription.map(&:product_id).first : ""
   end
 
-  def get_sentai_id
-    providers.where(name: 'sentai').first.pid
-  end
+  # def get_sentai_id
+  #   providers.where(name: 'sentai').first.pid
+  # end
 
   def get_name
     fullname.presence || ""
@@ -553,33 +556,33 @@ class Member < ActiveRecord::Base
   #   }
   # end
 
-  def cached_poll_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_poll_count']) do
-      FriendPollInProfile.new(member, self, {}).poll_friend_count
-    end
-  end
+  # def cached_poll_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_poll_count']) do
+  #     FriendPollInProfile.new(member, self, {}).poll_friend_count
+  #   end
+  # end
 
-  def cached_voted_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_vote_count']) do
-      FriendPollInProfile.new(member, self, {}).vote_friend_count
-    end
-  end
+  # def cached_voted_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_vote_count']) do
+  #     FriendPollInProfile.new(member, self, {}).vote_friend_count
+  #   end
+  # end
 
-  def cached_groups_friend_count(member)
-    FriendPollInProfile.new(member, self, {}).group_friend_count
-  end
+  # def cached_groups_friend_count(member)
+  #   FriendPollInProfile.new(member, self, {}).group_friend_count
+  # end
 
-  def cached_watched_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_watch_count']) do
-      FriendPollInProfile.new(member, self, {}).watched_friend_count
-    end
-  end
+  # def cached_watched_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_watch_count']) do
+  #     FriendPollInProfile.new(member, self, {}).watched_friend_count
+  #   end
+  # end
 
-  def cached_block_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_block_count']) do
-      FriendPollInProfile.new(member, self, {}).block_friend_count
-    end
-  end
+  # def cached_block_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_block_count']) do
+  #     FriendPollInProfile.new(member, self, {}).block_friend_count
+  #   end
+  # end
 
   def cached_shared_poll
     Rails.cache.fetch("member/#{id}-#{updated_at.to_i}/shared") { share_polls.to_a }
@@ -599,18 +602,18 @@ class Member < ActiveRecord::Base
     Member.voted_polls.select{|e| e["poll_series_id"] == 0 }.collect{|e| e["poll_id"] }
   end
 
-  def cached_my_poll
-    Rails.cache.fetch([self.id, 'my_poll']) do
-      @init_poll = MyPollInProfile.new(self)
-      @init_poll.my_poll.to_a
-    end
-  end
+  # def cached_my_poll
+  #   Rails.cache.fetch([self.id, 'my_poll']) do
+  #     @init_poll = MyPollInProfile.new(self)
+  #     @init_poll.my_poll.to_a
+  #   end
+  # end
 
-  def cached_my_questionnaire
-    Rails.cache.fetch([self.id, 'my_questionnaire']) do
-      PollSeries.where(member_id: id).to_a
-    end
-  end
+  # def cached_my_questionnaire
+  #   Rails.cache.fetch([self.id, 'my_questionnaire']) do
+  #     PollSeries.where(member_id: id).to_a
+  #   end
+  # end
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
@@ -1033,11 +1036,13 @@ class Member < ActiveRecord::Base
   end
 
   def is_friend(user_obj)
-    @my_friend ||= user_obj.cached_get_friend_active.map(&:id)
-    @your_request ||= user_obj.cached_get_your_request.map(&:id)
-    @friend_request ||= user_obj.cached_get_friend_request.map(&:id)
-    @my_following ||= user_obj.cached_get_following.map(&:id)
-    @block_friend ||= user_obj.cached_block_friend.map(&:id)
+    init_list_friend ||= Member::ListFriend.new(user_obj)
+
+    @my_friend ||= init_list_friend.active.map(&:id)
+    @your_request ||= init_list_friend.your_request.map(&:id)
+    @friend_request ||= init_list_friend.friend_request.map(&:id)
+    @my_following ||= init_list_friend.following.map(&:id)
+    @block_friend ||= init_list_friend.block.map(&:id)
 
     if @my_friend.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :friend]

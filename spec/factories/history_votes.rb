@@ -22,4 +22,11 @@ FactoryGirl.define do
 
   end
 
+  factory :history_vote_required, class: HistoryVote do
+    member nil
+    poll nil
+    choice nil
+    show_result true
+  end
+
 end

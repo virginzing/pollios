@@ -4,7 +4,7 @@ class PollsController < ApplicationController
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
                                                  :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
 
-  before_action :set_poll, except: [:random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
+  before_action :set_poll, except: [:count_preset, :random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
 
   before_action :list_groups, only: [:detail, :create_poll]
 
@@ -232,11 +232,13 @@ class PollsController < ApplicationController
     @total_entries = group_timeline.total_entries
   end
 
-  def reward_poll_timeline
-    @init_poll = PollRewardTimeline.new(@current_member, public_poll_params)
-    @polls = @init_poll.reward_poll.paginate(page: params[:next_cursor])
-    poll_helper
-  end
+  #### deprecated ####
+
+  # def reward_poll_timeline
+  #   @init_poll = PollRewardTimeline.new(@current_member, public_poll_params)
+  #   @polls = @init_poll.reward_poll.paginate(page: params[:next_cursor])
+  #   poll_helper
+  # end
 
   def my_poll
     @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
@@ -256,55 +258,60 @@ class PollsController < ApplicationController
     @group_by_name = @init_poll.group_by_name
   end
 
-  def poll_helper
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @init_poll.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
-  end
-
-  def guest_poll
-    if params[:type] == "active"
-      query_poll = Poll.active_poll
-    elsif params[:type] == "inactive"
-      query_poll = Poll.inactive_poll
-    else
-      query_poll = Poll.all
-    end
-
-    if params[:next_cursor]
-      @poll = query_poll.includes(:poll_series, :member).where("id < ? AND public = ?)", params[:next_cursor], true).order("created_at desc")
-    else
-      @poll = query_poll.includes(:poll_series, :member).where("public = ?", true).order("created_at desc")
-    end
-
-    @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  end
-
   def promote_poll
     @promote_poll = Poll::PromotePublic.new(@current_member, set_poll).create!
   end
 
-  def tags
-    @find_tag = Tag.find_by(name: params[:name])
-    friend_list = @current_member.get_friend_active.map(&:id) << @current_member.id
+  #### deprecated ####
 
-    if params[:type] == "series"
-      query_poll = @find_tag.poll_series
-    else
-      query_poll = @find_tag.polls.where(series: false)
-    end
-    puts "query_poll => #{query_poll}"
-    if params[:next_cursor]
-      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-      .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
-      .order("poll_members.created_at desc")
-    else
-      @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-      .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
-      .order("poll_members.created_at desc")
-    end
-  end
+  # def poll_helper
+  #   @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+  #   @group_by_name ||= @init_poll.group_by_name
+  #   @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+  #   @total_entries = @polls.total_entries
+  # end
+
+  #### deprecated ####
+
+  # def guest_poll
+  #   if params[:type] == "active"
+  #     query_poll = Poll.active_poll
+  #   elsif params[:type] == "inactive"
+  #     query_poll = Poll.inactive_poll
+  #   else
+  #     query_poll = Poll.all
+  #   end
+
+  #   if params[:next_cursor]
+  #     @poll = query_poll.includes(:poll_series, :member).where("id < ? AND public = ?)", params[:next_cursor], true).order("created_at desc")
+  #   else
+  #     @poll = query_poll.includes(:poll_series, :member).where("public = ?", true).order("created_at desc")
+  #   end
+
+  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
+  # end
+
+  #### deprecated ####
+
+  # def tags
+  #   @find_tag = Tag.find_by(name: params[:name])
+  #   friend_list = @current_member.get_friend_active.map(&:id) << @current_member.id
+
+  #   if params[:type] == "series"
+  #     query_poll = @find_tag.poll_series
+  #   else
+  #     query_poll = @find_tag.polls.where(series: false)
+  #   end
+  #   if params[:next_cursor]
+  #     @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+  #     .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
+  #     .order("poll_members.created_at desc")
+  #   else
+  #     @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
+  #     .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
+  #     .order("poll_members.created_at desc")
+  #   end
+  # end
 
   def hashtag
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)

@@ -12,7 +12,13 @@
 
 FactoryGirl.define do
   factory :bookmark do
+
+  end
+
+  factory :bookmark_required, class: Bookmark do
     member nil
+    bookmarkable_id nil
+    bookmarkable_type nil
   end
 
 end

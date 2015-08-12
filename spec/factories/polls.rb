@@ -49,7 +49,7 @@
 
 FactoryGirl.define do
 
-  factory :poll, class: Poll do 
+  factory :poll, class: Poll do
     title Faker::Lorem.sentence
     type_poll :binary
     status_poll :gray
@@ -57,16 +57,10 @@ FactoryGirl.define do
     public false
     expire_date Time.zone.now + 1.weeks
     expire_status false
-  end
 
-  factory :faker_test_poll, class: Poll do
-    title Faker::Lorem.sentence
-    type_poll :binary
-    status_poll :gray
-    in_group false
-    public false
-    expire_date Time.zone.now + 1.weeks
-    expire_status false
+    trait :not_allow_comment do
+      allow_comment false
+    end
   end
 
   # This should cause some problem
@@ -83,6 +77,43 @@ FactoryGirl.define do
     choices ["yes", "no"]
     type_poll "binary"
     is_public true
+  end
+
+  factory :story, class: Poll do
+    member nil
+    title Faker::Lorem.sentence
+    public false
+    allow_comment true
+
+    factory :poll_with_choices do
+      transient do
+        choices_count 2
+      end
+
+      after(:create) do |poll, evaluator|
+        create_list(:choice, evaluator.choices_count, poll: poll)
+      end
+    end
+
+    trait :is_public do
+      public true
+    end
+
+    trait :disable_comment do
+      allow_comment false
+    end
+
+    factory :poll_to_public,   traits: [:is_public]
+    factory :poll_that_disable_comment, traits: [:disable_comment]
+  end
+
+  factory :poll_required, class: Poll do
+    member nil
+    title Faker::Lorem.sentence
+    public false
+    allow_comment true
+    creator_must_vote true
+    type_poll "freeform"
   end
 
 end

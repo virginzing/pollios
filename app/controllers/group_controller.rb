@@ -80,10 +80,7 @@ class GroupController < ApplicationController
       @init_poll = V6::PollOfGroup.new(@current_member, @group, options_params)
       @list_polls, @next_cursor = @init_poll.get_poll_available_of_group
       @group_by_name = @init_poll.group_by_name.slice(@group.id)
-    else
-      @init_poll = PollOfGroup.new(@current_member, @group, options_params)
-      @polls = @init_poll.get_poll_available_of_group.paginate(page: params[:next_cursor])
-      poll_helper
+      @group_id = @group.id
     end
   end
 
@@ -175,10 +172,6 @@ class GroupController < ApplicationController
     @group  = @current_member.delete_group(group_params[:group_id])
   end
 
-  def notification
-    @notification = @group.set_notification(group_params[:member_id])
-  end
-
   def set_public
     if @group.update!(edit_group_params)
       render status: :created
@@ -187,6 +180,12 @@ class GroupController < ApplicationController
       render status: :unprocessable_entity
     end
   end
+
+  #### deprecated ####
+
+  # def notification
+  #   @notification = @group.set_notification(group_params[:member_id])
+  # end
 
   private
 

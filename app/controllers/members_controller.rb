@@ -462,7 +462,7 @@ class MembersController < ApplicationController
   end
 
   def list_block
-    @list_block = @current_member.cached_block_friend
+    @list_block = Member::ListFriend.new(current_member).block
   end
 
   def clear

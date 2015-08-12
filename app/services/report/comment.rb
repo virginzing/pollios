@@ -13,13 +13,15 @@ class ReportComment
   def reporting
     return nil unless can_report
 
-    unless find_report
+    unless already_reported
       reporting = @member.member_report_comments.create!(poll_id: poll.id, comment_id: @comment.id, message: @options[:message], message_preset: @options[:message_preset])
       report_increment
       FlushCached::Member.new(@member).clear_list_report_comments
     end
     reporting
   end
+
+  private
 
   def report_increment
     report_power = @member.report_power
@@ -29,7 +31,6 @@ class ReportComment
     end
   end
 
-  private
 
   def can_report
     if @comment.member_id == @member.id
@@ -38,7 +39,7 @@ class ReportComment
     return true
   end
 
-  def find_report
+  def already_reported
     @member.member_report_comments.find_by(comment_id: @comment.id)
   end
 

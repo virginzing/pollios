@@ -11,12 +11,18 @@
 #  slug       :string(255)
 #  note       :text
 #
+require 'faker'
 
 FactoryGirl.define do
+
   factory :branch do
-    name "MyString"
-address "MyText"
-company nil
+
+  end
+
+  factory :branch_required, class: Branch do
+    company nil
+    name Faker::Name.name
+    address Faker::Address.city
   end
 
 end

@@ -5,7 +5,7 @@ describe "GET /poll/:member_id/overall_timeline", type: :api do
 
   before do
     3.times do
-      Poll.create_poll(FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id), member)
+      CreatePollService.new(member, FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id)).create!
     end
   end
 

@@ -26,3 +26,4 @@ curl_testing.rb
 
 # Ignore Spring files.
 /spring/*.pid
+/spec/models/factory_spec.rb

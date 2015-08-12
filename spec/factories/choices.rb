@@ -19,4 +19,8 @@ FactoryGirl.define do
     correct false
   end
 
+  factory :choice_required, class: Choice do
+    poll nil
+    answer Faker::Name.name
+  end
 end

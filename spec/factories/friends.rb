@@ -24,4 +24,25 @@ FactoryGirl.define do
     following false
   end
 
+  factory :friend_required, class: Friend do
+    follower nil
+    followed nil
+    status :friend
+  end
+
+  factory :friend_following, class: Friend, parent: :friend_required do
+    status :nofriend
+    following true
+  end
+
+  factory :friend_invite, class: Friend, parent: :friend_required do
+    status :invite
+    following false
+  end
+
+  factory :friend_invitee, class: Friend, parent: :friend_required do
+    status :invitee
+    following false
+  end
+
 end
