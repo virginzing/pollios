@@ -277,7 +277,7 @@ class Member < ActiveRecord::Base
       field :key_color
     end
 
-    update do
+    edit do
       field :email do
        read_only true
       end
@@ -310,25 +310,7 @@ class Member < ActiveRecord::Base
       field :sync_facebook
       field :show_recommend
       field :key_color
-    end
-
-    edit do
-      field :fullname
-      field :username
-      field :gender
-      field :member_type
-      field :friend_limit
-      field :birthday
-      field :province
-      field :avatar, :carrierwave
-      field :cover, :carrierwave
-      field :key_color
-      field :status_account
-      field :blacklist_last_at
-      field :blacklist_count
-      field :ban_last_at
-      field :report_count
-      field :show_recommend
+      field :show_search
     end
 
     show do
