@@ -479,7 +479,6 @@ RSpec.describe "Friend" do
   end
 
   describe "GET /friend/find_via_facebook" do
-
     let!(:friend_facebook_1) { create(:member, email: "fb_1@gmail.com", fullname: "fb1", fb_id: "1234") }
     let!(:friend_facebook_2) { create(:member, email: "fb_2@gmail.com", fullname: "fb2", fb_id: "5678") }
     let!(:friend_facebook_3) { create(:member, email: "fb_3@gmail.com", fullname: "fb3", fb_id: "0123") }
@@ -491,7 +490,16 @@ RSpec.describe "Friend" do
 
       expect(json["friend"].size).to eq(2)
     end
+  end
 
+  describe "GET /friend/all" do
+    before do
+      get "/friend/all.json", { member_id: member.id, friend_id: friend.id }
+    end
+
+    it "must return a success" do
+      expect(response.status).to eq(200)
+    end
   end
 
 end
