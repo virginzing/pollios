@@ -614,7 +614,7 @@ Pollios::Application.routes.draw do
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
 
-  post 'new_sigin_sentai', to: 'authen_sentai#new_sigin_sentai', as: :new_users_signin
+  post 'web_sigin_sentai', to: 'authen_sentai#web_sigin_sentai', as: :web_sigin_sentai
 
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'

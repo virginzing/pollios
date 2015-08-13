@@ -9,7 +9,7 @@ class AuthenSentaiController < ApplicationController
 	def signin
     session[:activate_email] = nil
     session[:activate_id] = nil
-    render layout: "new_login"
+    render layout: "signin"
 	end
 
 	def signup
@@ -48,7 +48,7 @@ class AuthenSentaiController < ApplicationController
     render json: @no_content, status: :ok
   end
 
-  def new_sigin_sentai ## login as Web
+  def web_sigin_sentai ## login as Web
     @response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     respond_to do |wants|
       @auth = Authentication.new(@response.merge!(Hash["provider" => "sentai", "web_login" => params[:web_login], "register" => :in_app]))
@@ -87,7 +87,6 @@ class AuthenSentaiController < ApplicationController
   end
 
 	def signin_sentai ## login as iOS APP
-
 		@response = Authenticate::Sentai.signin(sessions_params.merge!(Hash["app_name" => "pollios"]))
     # puts "response => #{@response}"
 		respond_to do |wants|
