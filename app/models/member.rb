@@ -864,16 +864,16 @@ class Member < ActiveRecord::Base
 
   ################ Friend ###############
 
-  def mute_or_unmute_friend(friend, type_mute)
-    friend_id = friend[:friend_id]
-    begin
-      find_friend = friends.where(followed_id: friend_id).first
-      find_friend.update_attributes!(mute: type_mute)
-    rescue => e
-      puts "error => #{e}"
-      nil
-    end
-  end
+  # def mute_or_unmute_friend(friend, type_mute)
+  #   friend_id = friend[:friend_id]
+  #   begin
+  #     find_friend = friends.where(followed_id: friend_id).first
+  #     find_friend.update_attributes!(mute: type_mute)
+  #   rescue => e
+  #     puts "error => #{e}"
+  #     nil
+  #   end
+  # end
 
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first
