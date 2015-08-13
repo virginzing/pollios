@@ -1,4 +1,4 @@
-class ReportComment
+class Report::Comment
 
   def initialize(member, comment, options = {})
     @member = member
@@ -43,5 +43,5 @@ class ReportComment
     @member.member_report_comments.find_by(comment_id: @comment.id)
   end
 
-  
+
 end

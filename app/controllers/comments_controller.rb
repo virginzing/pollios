@@ -22,7 +22,7 @@ class CommentsController < ApplicationController
 
 
   def report
-    @init_report = ReportComment.new(@current_member, @comment, { message: params[:message], message_preset: params[:message_preset] })
+    @init_report = Report::Comment.new(@current_member, @comment, { message: params[:message], message_preset: params[:message_preset] })
     @report = @init_report.reporting
 
     unless @report

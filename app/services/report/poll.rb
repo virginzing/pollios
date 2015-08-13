@@ -1,4 +1,4 @@
-class ReportPoll
+class Report::Poll
 
   NUMBER_REPORT_COUNT = 10
 
@@ -51,5 +51,5 @@ class ReportPoll
   def in_group?
     @poll.in_group
   end
-  
+
 end

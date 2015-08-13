@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 pathname = Pathname.new(__FILE__)
-RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\nReportComment" do
+RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\nReport::Comment" do
     let!(:member) { create(:member, fullname: "Nuttapon", email: "nuttapon@gmail.com") }
     let!(:another_member) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email)}
 
@@ -19,7 +19,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
 
         it "- user try reporting his own comment. cannot do." do
-            expect(ReportComment.new(member, comment_from_member, {message: "spam"}).reporting).to be_falsey
+            expect(Report::Comment.new(member, comment_from_member, {message: "spam"}).reporting).to be_falsey
         end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
 
         it "- user can report another user's comment. also incrase comment's report count & user's comment report" do
-            expect(ReportComment.new(member, comment_from_another_member, {message: "spam"}).reporting).to be_truthy
+            expect(Report::Comment.new(member, comment_from_another_member, {message: "spam"}).reporting).to be_truthy
             expect(comment_from_another_member.report_count).to eq(1)
             expect(comments_reported_by_member.size).to eq(1)
         end
@@ -39,8 +39,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         let(:member_with_power_3) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email, report_power: 3)}
 
         it "has report count 3 when reported by member with report power 3" do
-            ReportComment.new(member_with_power_3, comment_from_member, { message: "spam" }).reporting
-            expect(comment_from_member.report_count).to eq(3)       
+            Report::Comment.new(member_with_power_3, comment_from_member, { message: "spam" }).reporting
+            expect(comment_from_member.report_count).to eq(3)
         end
     end
 end

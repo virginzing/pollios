@@ -395,7 +395,7 @@ class PollsController < ApplicationController
   end
 
   def report
-    @init_report = ReportPoll.new(@current_member, @poll, { message: params[:message], message_preset: params[:message_preset] })
+    @init_report = Report::Poll.new(@current_member, @poll, { message: params[:message], message_preset: params[:message_preset] })
     @report = @init_report.reporting
 
     render status: @report ? :created : :unprocessable_entity
