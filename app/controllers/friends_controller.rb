@@ -181,21 +181,21 @@ class FriendsController < ApplicationController
 
   ## below is my profile ##
 
-  # def list_friend
-  #   @friend_active = Member.list_friend_active
-  #   @your_request = Member.list_your_request
-  #   @friend_request = Member.list_friend_request
-  # end
+  def list_friend
+    @friend_active = Member.list_friend_active
+    @your_request = Member.list_your_request
+    @friend_request = Member.list_friend_request
+  end
 
-  # def my_following
-  #   @list_following = @current_member.cached_get_following
-  #   @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
-  # end
+  def my_following
+    @list_following = @current_member.cached_get_following
+    @is_friend = Friend.add_friend?(@current_member, @list_following) if @list_following.present?
+  end
 
-  # def my_follower
-  #   @list_follower = @current_member.cached_get_follower
-  #   @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
-  # end
+  def my_follower
+    @list_follower = @current_member.cached_get_follower
+    @is_friend = Friend.add_friend?(@current_member, @list_follower) if @list_follower.present?
+  end
 
   def profile
     init_list_friend ||= Member::ListFriend.new(@current_member)
