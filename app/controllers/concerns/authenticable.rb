@@ -2,12 +2,14 @@ module Authenticable
 
   def authenticate_with_token!
     valid_current_member
-    token_from_header = request.headers['Authorization']
-    return unless token_from_header.present?
-    authenticate_or_request_with_http_token do |token, _options|
-      access_token = valid_current_member.api_tokens.where('token = ?', token)
-      raise ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::INVALID unless access_token.present?
-      true
+    unless Rails.env.test?
+      token_from_header = request.headers['Authorization']
+      raise ExceptionHandler::Unauthorized, "Access Denied." unless token_from_header.present?
+      authenticate_or_request_with_http_token do |token, _options|
+        access_token = valid_current_member.api_tokens.where('token = ?', token)
+        raise ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::INVALID unless access_token.present?
+        true
+      end
     end
   end
 
