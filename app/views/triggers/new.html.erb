@@ -14,7 +14,7 @@
   </div>
 
   <div class="footer" style="margin-top: 20px;">
-  <%= f.submit "Create", class: 'btn btn-primary' %>
+  <%= f.submit "SUBMIT", class: 'btn btn-default', id: "submit-trigger" %>
   </div>
 
   <% end %>
@@ -23,6 +23,7 @@
 
 <script>
   $(document).ready(function() {
+    $("#submit-trigger").attr("disabled", true);
     $("#remote_load_poll").select2({
       width: '100%',
       placeholder: "Select poll",
@@ -56,6 +57,7 @@
       console.log(e.val);
       $.get('/load_choice', { poll_id: e.val }, function (html) {
         $(".list_choice").html(html);
+        $("#submit-trigger").attr("disabled", false);
       })
 
     });
