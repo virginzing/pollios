@@ -1,3 +1,52 @@
+# == Schema Information
+#
+# Table name: polls
+#
+#  id                      :integer          not null, primary key
+#  member_id               :integer
+#  title                   :text
+#  public                  :boolean          default(FALSE)
+#  vote_all                :integer          default(0)
+#  created_at              :datetime
+#  updated_at              :datetime
+#  photo_poll              :string(255)
+#  expire_date             :datetime
+#  view_all                :integer          default(0)
+#  start_date              :datetime         default(2014-02-03 15:36:16 UTC)
+#  series                  :boolean          default(FALSE)
+#  poll_series_id          :integer
+#  choice_count            :integer
+#  campaign_id             :integer
+#  share_count             :integer          default(0)
+#  recurring_id            :integer          default(0)
+#  in_group_ids            :string(255)
+#  qrcode_key              :string(255)
+#  type_poll               :integer
+#  report_count            :integer          default(0)
+#  status_poll             :integer          default(0)
+#  allow_comment           :boolean          default(TRUE)
+#  comment_count           :integer          default(0)
+#  member_type             :string(255)
+#  qr_only                 :boolean
+#  require_info            :boolean
+#  expire_status           :boolean          default(FALSE)
+#  creator_must_vote       :boolean          default(TRUE)
+#  in_group                :boolean          default(FALSE)
+#  show_result             :boolean          default(TRUE)
+#  order_poll              :integer          default(1)
+#  quiz                    :boolean          default(FALSE)
+#  notify_state            :integer          default(0)
+#  notify_state_at         :datetime
+#  priority                :integer
+#  thumbnail_type          :integer          default(0)
+#  comment_notify_state    :integer          default(0)
+#  comment_notify_state_at :datetime
+#  draft                   :boolean          default(FALSE)
+#  system_poll             :boolean          default(FALSE)
+#  deleted_at              :datetime
+#  close_status            :boolean          default(FALSE)
+#
+
 require 'rails_helper'
 
 RSpec.describe Poll, :type => :model do
@@ -24,15 +73,15 @@ RSpec.describe Poll, :type => :model do
   it { should belong_to(:poll_series) }
   it { should belong_to(:campaign) }
   it { should belong_to(:recurring) }
-  
+
   let!(:member) { create(:member, email: "test@gmail.com") }
 
   describe ".create_poll" do
     let!(:ex_member) { create(:member) }
 
     it "return detail of poll" do
-      poll, error_message, alert_message = Poll.create_poll( FactoryGirl.attributes_for(:create_poll).merge(member_id: ex_member.id), ex_member)
-      expect(poll).to eq(poll) 
+      poll, error_message, alert_message = CreatePollService.new(ex_member, FactoryGirl.attributes_for(:create_poll).merge(member_id: ex_member.id)).create!
+      expect(poll).to eq(poll)
       expect(poll.qrcode_key.length).to eq(12)
       expect(alert_message).to eq(nil)
     end
@@ -108,18 +157,18 @@ RSpec.describe Poll, :type => :model do
     end
   end
 
-  describe ".check_type_of_choice" do
-    let!(:choice_list) { ["A", "B", "C"] }
-    let!(:choice_list_string) { "A,B,C" }
+  # describe ".check_type_of_choice" do
+  #   let!(:choice_list) { ["A", "B", "C"] }
+  #   let!(:choice_list_string) { "A,B,C" }
 
-    it "return same choice_list" do
-      expect(Poll.check_type_of_choice(choice_list)).to eq(choice_list)
-    end
+  #   it "return same choice_list" do
+  #     expect(Poll.check_type_of_choice(choice_list)).to eq(choice_list)
+  #   end
 
-    it "split string by (,) and return arraoy of choice_list" do
-      expect(Poll.check_type_of_choice(choice_list_string)).to eq(choice_list)
-    end
-  end
+  #   it "split string by (,) and return arraoy of choice_list" do
+  #     expect(Poll.check_type_of_choice(choice_list_string)).to eq(choice_list)
+  #   end
+  # end
 
   describe "#vote_poll" do
     let!(:poll) { create(:poll, member_id: member.id) }
@@ -127,7 +176,7 @@ RSpec.describe Poll, :type => :model do
     let!(:choice1) { create(:choice, poll: poll, answer: "1", vote: 10 ) }
     let!(:choice2) { create(:choice, poll: poll, answer: "2", vote: 20 ) }
     let!(:choice3) { create(:choice, poll: poll, answer: "3", vote: 30 ) }
-    
+
     let!(:member_one) { create(:member, fullname: "member_one") }
 
     before do

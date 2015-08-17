@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: groups
+#
+#  id               :integer          not null, primary key
+#  name             :string(255)
+#  public           :boolean          default(FALSE)
+#  photo_group      :string(255)
+#  created_at       :datetime
+#  updated_at       :datetime
+#  authorize_invite :integer
+#  description      :text
+#  leave_group      :boolean          default(TRUE)
+#  group_type       :integer
+#  cover            :string(255)
+#  admin_post_only  :boolean          default(FALSE)
+#  need_approve     :boolean          default(TRUE)
+#  public_id        :string(255)
+#  visible          :boolean          default(TRUE)
+#  system_group     :boolean          default(FALSE)
+#  virtual_group    :boolean          default(FALSE)
+#  member_id        :integer
+#  cover_preset     :string(255)      default("0")
+#  exclusive        :boolean          default(FALSE)
+#  deleted_at       :datetime
+#  opened           :boolean          default(FALSE)
+#
+
 class Group < ActiveRecord::Base
   acts_as_paranoid
   # extend FriendlyId
@@ -95,7 +123,6 @@ class Group < ActiveRecord::Base
   end
 
   def get_photo_group
-    # photo_group.present? ? photo_group.url(:thumbnail) : ""
     photo_group.present? ? resize_photo_group(photo_group.url) : ""
   end
 
@@ -103,12 +130,7 @@ class Group < ActiveRecord::Base
     photo_group_url.split("upload").insert(1, "upload/c_fill,h_200,w_200," + Cloudinary::QualityImage::SIZE).sum
   end
 
-  # def api_get_photo_group
-  #   photo_group.present? ? resize_photo_group(photo_group.url) : ""
-  # end
-
   def get_cover_group
-    # cover.present? ? cover.url(:cover) : ""
     cover.present? ? resize_cover_group(cover.url) : ""
   end
 
@@ -118,10 +140,6 @@ class Group < ActiveRecord::Base
 
   def get_public_id
     public_id.present? ? public_id : ""
-  end
-
-  def set_notification(member_id)
-    group_member = group_members.where("member_id = ?", member_id)
   end
 
   def self.accept_group(member, group)
@@ -275,6 +293,7 @@ class Group < ActiveRecord::Base
       raise ExceptionHandler::UnprocessableEntity, "Your request had approved by administrator." if Group::ListMember.new(group).active.map(&:id).include?(member.id)
 
       find_current_ask_group = group.request_groups.find_by(member_id: member.id)
+      raise ExceptionHandler::UnprocessableEntity,  "There isn't your request to this group." unless find_current_ask_group.present?
 
       if find_current_ask_group.present?
         find_current_ask_group.destroy
@@ -514,10 +533,6 @@ class Group < ActiveRecord::Base
     poll_groups.without_deleted.map(&:poll_id).uniq.size
   end
 
-  def is_company?
-    self.group_type == "company"
-  end
-
   def get_company
     group_company.company
   end
@@ -526,29 +541,14 @@ class Group < ActiveRecord::Base
     get_admin_group.map(&:id).include?(current_member.id)
   end
 
-  def self.cached_member_active(group_id)
-    Rails.cache.fetch([ 'group', group_id, 'member_active']) do
-      Group.find(group_id).get_member_active.to_a.map(&:id)
-    end
-  end
-
-  def self.flush_cached_member_active(group_id)
-    Rails.cache.delete([ 'group', group_id, 'member_active' ])
-  end
-
   def get_admin_post_only
     admin_post_only.present? ? true : false
   end
-
-  # def company?
-  #   group_company.present?
-  # end
 
   def as_json options={}
     {
       id: id,
       name: name,
-      # photo: get_photo_group,
       cover: get_cover_group,
       public: public,
       description: get_description,
@@ -561,4 +561,27 @@ class Group < ActiveRecord::Base
     }
   end
 
+  #### deprecated ####
+
+  # def self.cached_member_active(group_id)
+  #   Rails.cache.fetch([ 'group', group_id, 'member_active']) do
+  #     Group.find(group_id).get_member_active.to_a.map(&:id)
+  #   end
+  # end
+
+  # def self.flush_cached_member_active(group_id)
+  #   Rails.cache.delete([ 'group', group_id, 'member_active' ])
+  # end
+
+  # def company?
+  #   group_company.present?
+  # end
+
+  # def is_company?
+  #   self.group_type == "company"
+  # end
+
+  # def set_notification(member_id)
+  #   group_member = group_members.where("member_id = ?", member_id)
+  # end
 end

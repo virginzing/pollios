@@ -6,7 +6,7 @@ RSpec.describe "Tag" do
   # create_poll factory girl have 2 tags by default
 
   before do
-    @poll = Poll.create_poll(FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id), member)
+    @poll = CreatePollService.new(member, FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id)).create!
   end
 
   describe "GET /hashtag_popular" do

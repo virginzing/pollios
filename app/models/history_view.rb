@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: history_views
+#
+#  id         :integer          not null, primary key
+#  member_id  :integer
+#  poll_id    :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class HistoryView < ActiveRecord::Base
   belongs_to :member
   belongs_to :poll

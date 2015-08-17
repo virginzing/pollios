@@ -52,6 +52,7 @@ group :development do
   gem 'quiet_assets'
   gem 'proxylocal'
   gem 'meta_request'
+  gem 'annotate'
   # gem 'rack-mini-profiler'
 end
 
@@ -71,6 +72,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'bullet'
   gem 'rubocop', require: false
+  gem 'pry-rails'
 end
 
 group :test do

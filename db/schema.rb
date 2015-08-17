@@ -885,7 +885,7 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2015-07-15 06:41:36'
+    t.datetime "start_date",     default: '2015-08-06 09:11:23'
     t.integer  "campaign_id"
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
@@ -973,7 +973,7 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",                default: 0
-    t.datetime "start_date",              default: '2015-07-15 06:41:36'
+    t.datetime "start_date",              default: '2015-08-06 09:11:23'
     t.boolean  "series",                  default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"

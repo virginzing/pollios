@@ -24,7 +24,7 @@ class AdminController < ApplicationController
   end
 
   def report
-    @report_polls = Admin::ReportPoll.new.get_report_poll
+    @report_polls = Admin::ListReportPoll.new.get_report_poll
     @report_members = Member.with_status_account(:normal).where("report_count != 0")
   end
 

@@ -7,10 +7,10 @@ describe "GET /friend/polls", type: :api do
 
   before do
     3.times do
-      Poll.create_poll(FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id), member)
+      CreatePollService.new(member, FactoryGirl.attributes_for(:create_poll).merge(member_id: member.id)).create!
     end
     2.times do
-      Poll.create_poll(FactoryGirl.attributes_for(:create_poll).merge(member_id: friend.id), friend)
+      CreatePollService.new(friend, FactoryGirl.attributes_for(:create_poll).merge(member_id: friend.id)).create!
     end
   end
 

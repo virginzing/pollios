@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: access_webs
+#
+#  id              :integer          not null, primary key
+#  member_id       :integer
+#  accessable_id   :integer
+#  accessable_type :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class AccessWeb < ActiveRecord::Base
   belongs_to :member
   belongs_to :accessable, polymorphic: true

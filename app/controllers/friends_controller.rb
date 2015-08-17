@@ -37,7 +37,6 @@ class FriendsController < ApplicationController
   end
 
   def accept_friend
-    # @detail_friend, @status, @active = Friend.accept_or_deny_freind(friend_params, true)
     @accept_friend = Friend.accept_or_deny_freind(friend_params, true)
     render status: @accept_friend ? :created : :unprocessable_entity
   end
@@ -46,7 +45,6 @@ class FriendsController < ApplicationController
     @friend = Friend.accept_or_deny_freind(friend_params, false)
     render status: @friend ? :created : :unprocessable_entity
   end
-
 
   def block_friend
     @friend = Friend.block_friend(friend_params)
@@ -58,13 +56,13 @@ class FriendsController < ApplicationController
     render status: @friend ? :created : :unprocessable_entity
   end
 
-  def mute_friend
-    @friend = @current_member.mute_or_unmute_friend(friend_params, true)
-  end
+  # def mute_friend
+  #   @friend = @current_member.mute_or_unmute_friend(friend_params, true)
+  # end
 
-  def unmute_friend
-    @friend = @current_member.mute_or_unmute_friend(friend_params, false)
-  end
+  # def unmute_friend
+  #   @friend = @current_member.mute_or_unmute_friend(friend_params, false)
+  # end
 
   def search_friend
     @search = Member.search_member(friend_params)
@@ -73,22 +71,24 @@ class FriendsController < ApplicationController
     TypeSearch.create_log_search_users_and_groups(@current_member, friend_params[:q])
   end
 
-  def friend_of_friend
-    @friend = Friend.friend_of_friend(friend_params)
-    is_friend(@friend) if @friend.present?
-  end
+  #### deprecated ####
 
-  def following_of_friend
-    find_user = Member.cached_find(friend_params[:friend_id])
-    init_list_friend ||= Member::ListFriend.new(find_user)
-    @list_following = init_list_friend.following
-    @is_friend = Friend.check_add_friend?(find_user, @list_following, init_list_friend.check_is_friend) if @list_following.present?
-  end
+  # def friend_of_friend
+  #   @friend = Friend.friend_of_friend(friend_params)
+  #   is_friend(@friend) if @friend.present?
+  # end
 
-  def follower_of_friend
-    @friend = Friend.follower_of_friend(friend_params)
-    is_friend(@friend) if @friend.present?
-  end
+  # def following_of_friend
+  #   find_user = Member.cached_find(friend_params[:friend_id])
+  #   init_list_friend ||= Member::ListFriend.new(find_user)
+  #   @list_following = init_list_friend.following
+  #   @is_friend = Friend.check_add_friend?(find_user, @list_following, init_list_friend.check_is_friend) if @list_following.present?
+  # end
+
+  # def follower_of_friend
+  #   @friend = Friend.follower_of_friend(friend_params)
+  #   is_friend(@friend) if @friend.present?
+  # end
 
   def list_of_poll
     if derived_version == 6
@@ -103,7 +103,6 @@ class FriendsController < ApplicationController
       end
     end
   end
-
 
   def list_of_vote
     if derived_version == 6
@@ -130,16 +129,6 @@ class FriendsController < ApplicationController
         @list_polls, @next_cursor = @init_poll.get_friend_watch_feed
         @group_by_name = @init_poll.group_by_name
       end
-    else
-      if params[:member_id] == params[:friend_id]
-        @init_poll = MyPollInProfile.new(@current_member, options_params)
-        @polls = @init_poll.my_watched.paginate(page: params[:next_cursor])
-      else
-        @init_poll = MyPollInProfile.new(@find_friend, options_params)
-        @init_poll_friend = FriendPollInProfile.new(@current_member, @find_friend, poll_friend_params)
-        @polls = @init_poll_friend.get_watched_friend_with_visibility.paginate(page: params[:next_cursor])
-      end
-      poll_helper
     end
   end
 
@@ -155,24 +144,23 @@ class FriendsController < ApplicationController
     @group_by_name = @init_poll.group_by_name
   end
 
-  def check_my_vote_flush_cache?(member, vote_poll_count)
-    member.flush_cache_my_vote if vote_poll_count != member.cached_my_voted.size
-  end
+  # def check_my_vote_flush_cache?(member, vote_poll_count)
+  #   member.flush_cache_my_vote if vote_poll_count != member.cached_my_voted.size
+  # end
 
-  def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
-    friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
-  end
+  # def check_friend_vote_flush_cache?(friend, member, vote_poll_count)
+  #   friend.flush_cache_friend_vote if vote_poll_count != friend.cached_voted_friend_count(member)
+  # end
 
-  def check_my_watch_flush_cache?(member, watch_poll_count)
-    member.flush_cache_my_watch if watch_poll_count != member.cached_watched
-  end
+  # def check_my_watch_flush_cache?(member, watch_poll_count)
+  #   member.flush_cache_my_watch if watch_poll_count != member.cached_watched
+  # end
 
-  def check_friend_watch_flush_cache?(friend, member, watch_poll_count)
-    friend.flush_cache_friend_watch if watch_poll_count != friend.cached_watched_friend_count(member)
-  end
+  # def check_friend_watch_flush_cache?(friend, member, watch_poll_count)
+  #   friend.flush_cache_friend_watch if watch_poll_count != friend.cached_watched_friend_count(member)
+  # end
 
   def list_of_group
-
     if params[:member_id] == params[:friend_id]
       init_list_group = Member::ListGroup.new(@current_member)
       @groups = init_list_group.active_non_virtual
@@ -250,12 +238,14 @@ class FriendsController < ApplicationController
 
   ###
 
-  def poll_helper
-    @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-    @group_by_name ||= @init_poll.group_by_name
-    @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-    @total_entries = @polls.total_entries
-  end
+  #### deprecated ####
+
+  # def poll_helper
+  #   @poll_series, @poll_nonseries = Poll.split_poll(@polls)
+  #   @group_by_name ||= @init_poll.group_by_name
+  #   @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
+  #   @total_entries = @polls.total_entries
+  # end
 
   def is_friend(list_compare)
     @is_friend = Friend.add_friend?(@current_member, list_compare)

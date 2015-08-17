@@ -69,21 +69,25 @@ class GroupController < ApplicationController
   end
 
   def members
+    init_list_friend ||= Member::ListFriend.new(@current_member)
     @group_members ||= Group::ListMember.new(@group)
+
     @member_active = @group_members.active
+    @check_status_friend_of_member_active = Friend.check_add_friend?(@current_member, @member_active, init_list_friend.check_is_friend) if @member_active.present?
+
     @member_pending = @group_members.pending
+    @check_status_friend_of_member_pending = Friend.check_add_friend?(@current_member, @member_pending, init_list_friend.check_is_friend) if @member_pending.present?
+
     @member_request = @group.members_request
+    @check_status_friend_of_member_request = Friend.check_add_friend?(@current_member, @member_request, init_list_friend.check_is_friend) if @member_request.present?
   end
 
   def poll_available_group
     if derived_version == 6
       @init_poll = V6::PollOfGroup.new(@current_member, @group, options_params)
       @list_polls, @next_cursor = @init_poll.get_poll_available_of_group
-      @group_by_name = @init_poll.group_by_name
-    else
-      @init_poll = PollOfGroup.new(@current_member, @group, options_params)
-      @polls = @init_poll.get_poll_available_of_group.paginate(page: params[:next_cursor])
-      poll_helper
+      @group_by_name = @init_poll.group_by_name.slice(@group.id)
+      @group_id = @group.id
     end
   end
 
@@ -175,10 +179,6 @@ class GroupController < ApplicationController
     @group  = @current_member.delete_group(group_params[:group_id])
   end
 
-  def notification
-    @notification = @group.set_notification(group_params[:member_id])
-  end
-
   def set_public
     if @group.update!(edit_group_params)
       render status: :created
@@ -187,6 +187,12 @@ class GroupController < ApplicationController
       render status: :unprocessable_entity
     end
   end
+
+  #### deprecated ####
+
+  # def notification
+  #   @notification = @group.set_notification(group_params[:member_id])
+  # end
 
   private
 

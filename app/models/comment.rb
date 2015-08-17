@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: comments
+#
+#  id           :integer          not null, primary key
+#  poll_id      :integer
+#  member_id    :integer
+#  message      :text
+#  created_at   :datetime
+#  updated_at   :datetime
+#  report_count :integer          default(0)
+#  ban          :boolean          default(FALSE)
+#  deleted_at   :datetime
+#
+
 class Comment < ActiveRecord::Base
   acts_as_paranoid
 
@@ -17,6 +32,8 @@ class Comment < ActiveRecord::Base
   after_commit :create_notify_log, on: :create
 
   after_commit :flush_cache
+
+  # after_save :increase_poll_comment_count
 
   self.per_page = 10
 
@@ -46,6 +63,14 @@ class Comment < ActiveRecord::Base
       @comment
     end
   end
+
+  # THIS SHOULD WORK. DON'T KNOW WHY. BUT MAYBE WE SHOULDN'T RELY ON CALL-BACK
+  # def increase_poll_comment_count
+  #   self.poll.with_lock do
+  #     self.poll.comment_count += 1
+  #     self.poll.save!
+  #   end
+  # end
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])

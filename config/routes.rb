@@ -146,7 +146,6 @@ Pollios::Application.routes.draw do
     post 'add_close_friend',  to: 'friends#add_close_friend'
     post 'unclose_friend',  to: 'friends#unclose_friend'
     get 'all',              to: 'friends#list_friend'
-    get 'request',          to: 'friends#list_request'
     get 'list_following',   to: 'friends#my_following'
     get 'list_follower',    to: 'friends#my_follower'
     get 'search',           to: 'friends#search_friend'
@@ -160,11 +159,11 @@ Pollios::Application.routes.draw do
     get 'save_poll_later',  to: 'friends#list_of_save_poll_later'
     get 'groups',           to: 'friends#list_of_group'
     get 'bookmarks',        to: 'friends#list_of_bookmark'
-    get 'friend_of_friend', to: 'friends#friend_of_friend'
-    get 'following_of_friend', to: 'friends#following_of_friend'
-    get 'follower_of_friend',  to: 'friends#follower_of_friend'
+    # get 'friend_of_friend', to: 'friends#friend_of_friend'
+    # get 'following_of_friend', to: 'friends#following_of_friend'
+    # get 'follower_of_friend',  to: 'friends#follower_of_friend'
     get 'collection_profile',  to: 'friends#collection_profile'
-    get 'find_via_facebook',   to: 'friends#find_via_facebook'
+    post 'find_via_facebook',   to: 'friends#find_via_facebook'
   end
 
   scope 'group' do
@@ -181,7 +180,7 @@ Pollios::Application.routes.draw do
     get ':id/polls',          to: 'group#poll_available_group'
     get ':id/members',        to: 'group#members'
     post ':id/delete_poll',   to: 'group#delete_poll'
-    post ':id/notification',  to: 'group#notification'
+    # post ':id/notification',  to: 'group#notification'
     post ':id/kick_member',   to: 'group#kick_member'
     post ':id/promote_admin', to: 'group#promote_admin'
     post ':id/edit_group',    to: 'group#edit_group'
@@ -313,8 +312,8 @@ Pollios::Application.routes.draw do
     # post 'new_generate_qrcode',    to: 'polls#new_generate_qrcode'
     get 'series',           to: 'polls#series',  as: :series_poll
     post 'create',          to: 'polls#create_poll'
-    get 'guest_poll',       to: 'polls#guest_poll'
-    get 'tags',             to: 'polls#tags'
+    # get 'guest_poll',       to: 'polls#guest_poll'
+    # get 'tags',             to: 'polls#tags'
     get 'qrcode',           to: 'polls#qrcode'
     get 'my_poll',          to: 'polls#my_poll'
     get 'my_vote',          to: 'polls#my_vote'
@@ -615,7 +614,7 @@ Pollios::Application.routes.draw do
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
 
-  post 'new_sigin_sentai', to: 'authen_sentai#new_sigin_sentai', as: :new_users_signin
+  post 'web_sigin_sentai', to: 'authen_sentai#web_sigin_sentai', as: :web_sigin_sentai
 
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'

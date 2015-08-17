@@ -1,3 +1,63 @@
+# == Schema Information
+#
+# Table name: members
+#
+#  id                         :integer          not null, primary key
+#  fullname                   :string(255)
+#  username                   :string(255)
+#  avatar                     :string(255)
+#  email                      :string(255)
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  friend_limit               :integer
+#  member_type                :integer          default(0)
+#  key_color                  :string(255)
+#  cover                      :string(255)
+#  description                :text
+#  sync_facebook              :boolean          default(FALSE)
+#  report_power               :integer          default(1)
+#  anonymous                  :boolean          default(FALSE)
+#  anonymous_public           :boolean          default(FALSE)
+#  anonymous_friend_following :boolean          default(FALSE)
+#  anonymous_group            :boolean          default(FALSE)
+#  report_count               :integer          default(0)
+#  status_account             :integer          default(1)
+#  first_signup               :boolean          default(TRUE)
+#  point                      :integer          default(0)
+#  subscription               :boolean          default(FALSE)
+#  subscribe_last             :datetime
+#  subscribe_expire           :datetime
+#  bypass_invite              :boolean          default(FALSE)
+#  auth_token                 :string(255)
+#  approve_brand              :boolean          default(FALSE)
+#  approve_company            :boolean          default(FALSE)
+#  gender                     :integer
+#  province                   :integer
+#  birthday                   :date
+#  interests                  :text
+#  salary                     :integer
+#  setting                    :hstore
+#  update_personal            :boolean          default(FALSE)
+#  notification_count         :integer          default(0)
+#  request_count              :integer          default(0)
+#  cover_preset               :string(255)      default("0")
+#  register                   :integer          default(0)
+#  slug                       :string(255)
+#  public_id                  :string(255)
+#  waiting                    :boolean          default(FALSE)
+#  created_company            :boolean          default(FALSE)
+#  first_setting_anonymous    :boolean          default(TRUE)
+#  receive_notify             :boolean          default(TRUE)
+#  fb_id                      :string(255)
+#  blacklist_last_at          :datetime
+#  blacklist_count            :integer          default(0)
+#  ban_last_at                :datetime
+#  sync_fb_last_at            :datetime
+#  list_fb_id                 :string(255)      default([]), is an Array
+#  show_recommend             :boolean          default(FALSE)
+#  notification               :hstore           default({}), not null
+#
+
 class Member < ActiveRecord::Base
   NEW_USER_POINT = 5
   # extend FriendlyId
@@ -320,7 +380,6 @@ class Member < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    # puts "auth => #{auth}"
     fb_params = {
       id: auth.uid,
       provider: 'facebook',
@@ -358,13 +417,15 @@ class Member < ActiveRecord::Base
     find_group_surveyor.destroy if find_group_surveyor.present?
   end
 
-  def get_poll_count
-    Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
-  end
+  #### deprecated ####
 
-  def get_questionnaire_count
-    PollSeries.where("(poll_series.member_id = #{self.id})").size
-  end
+  # def get_poll_count
+  #   Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
+  # end
+
+  # def get_questionnaire_count
+  #   PollSeries.where("(poll_series.member_id = #{self.id})").size
+  # end
 
   def new_avatar
     avatar.url(:thumbnail)
@@ -383,6 +444,8 @@ class Member < ActiveRecord::Base
   def get_key_color
     key_color || ""
   end
+
+  #### deprecated ####
 
   # def get_first_setting_anonymous
   #   first_setting_anonymous.present? ? true : false
@@ -413,9 +476,9 @@ class Member < ActiveRecord::Base
     recent_history_subscription.present? ? recent_history_subscription.map(&:product_id).first : ""
   end
 
-  def get_sentai_id
-    providers.where(name: 'sentai').first.pid
-  end
+  # def get_sentai_id
+  #   providers.where(name: 'sentai').first.pid
+  # end
 
   def get_name
     fullname.presence || ""
@@ -475,33 +538,33 @@ class Member < ActiveRecord::Base
   #   }
   # end
 
-  def cached_poll_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_poll_count']) do
-      FriendPollInProfile.new(member, self, {}).poll_friend_count
-    end
-  end
+  # def cached_poll_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_poll_count']) do
+  #     FriendPollInProfile.new(member, self, {}).poll_friend_count
+  #   end
+  # end
 
-  def cached_voted_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_vote_count']) do
-      FriendPollInProfile.new(member, self, {}).vote_friend_count
-    end
-  end
+  # def cached_voted_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_vote_count']) do
+  #     FriendPollInProfile.new(member, self, {}).vote_friend_count
+  #   end
+  # end
 
-  def cached_groups_friend_count(member)
-    FriendPollInProfile.new(member, self, {}).group_friend_count
-  end
+  # def cached_groups_friend_count(member)
+  #   FriendPollInProfile.new(member, self, {}).group_friend_count
+  # end
 
-  def cached_watched_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_watch_count']) do
-      FriendPollInProfile.new(member, self, {}).watched_friend_count
-    end
-  end
+  # def cached_watched_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_watch_count']) do
+  #     FriendPollInProfile.new(member, self, {}).watched_friend_count
+  #   end
+  # end
 
-  def cached_block_friend_count(member)
-    Rails.cache.fetch([ self.id, 'friend_block_count']) do
-      FriendPollInProfile.new(member, self, {}).block_friend_count
-    end
-  end
+  # def cached_block_friend_count(member)
+  #   Rails.cache.fetch([ self.id, 'friend_block_count']) do
+  #     FriendPollInProfile.new(member, self, {}).block_friend_count
+  #   end
+  # end
 
   def cached_shared_poll
     Rails.cache.fetch("member/#{id}-#{updated_at.to_i}/shared") { share_polls.to_a }
@@ -521,18 +584,18 @@ class Member < ActiveRecord::Base
     Member.voted_polls.select{|e| e["poll_series_id"] == 0 }.collect{|e| e["poll_id"] }
   end
 
-  def cached_my_poll
-    Rails.cache.fetch([self.id, 'my_poll']) do
-      @init_poll = MyPollInProfile.new(self)
-      @init_poll.my_poll.to_a
-    end
-  end
+  # def cached_my_poll
+  #   Rails.cache.fetch([self.id, 'my_poll']) do
+  #     @init_poll = MyPollInProfile.new(self)
+  #     @init_poll.my_poll.to_a
+  #   end
+  # end
 
-  def cached_my_questionnaire
-    Rails.cache.fetch([self.id, 'my_questionnaire']) do
-      PollSeries.where(member_id: id).to_a
-    end
-  end
+  # def cached_my_questionnaire
+  #   Rails.cache.fetch([self.id, 'my_questionnaire']) do
+  #     PollSeries.where(member_id: id).to_a
+  #   end
+  # end
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
@@ -783,16 +846,16 @@ class Member < ActiveRecord::Base
 
   ################ Friend ###############
 
-  def mute_or_unmute_friend(friend, type_mute)
-    friend_id = friend[:friend_id]
-    begin
-      find_friend = friends.where(followed_id: friend_id).first
-      find_friend.update_attributes!(mute: type_mute)
-    rescue => e
-      puts "error => #{e}"
-      nil
-    end
-  end
+  # def mute_or_unmute_friend(friend, type_mute)
+  #   friend_id = friend[:friend_id]
+  #   begin
+  #     find_friend = friends.where(followed_id: friend_id).first
+  #     find_friend.update_attributes!(mute: type_mute)
+  #   rescue => e
+  #     puts "error => #{e}"
+  #     nil
+  #   end
+  # end
 
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first
@@ -955,11 +1018,13 @@ class Member < ActiveRecord::Base
   end
 
   def is_friend(user_obj)
-    @my_friend ||= user_obj.cached_get_friend_active.map(&:id)
-    @your_request ||= user_obj.cached_get_your_request.map(&:id)
-    @friend_request ||= user_obj.cached_get_friend_request.map(&:id)
-    @my_following ||= user_obj.cached_get_following.map(&:id)
-    @block_friend ||= user_obj.cached_block_friend.map(&:id)
+    init_list_friend ||= Member::ListFriend.new(user_obj)
+
+    @my_friend ||= init_list_friend.active.map(&:id)
+    @your_request ||= init_list_friend.your_request.map(&:id)
+    @friend_request ||= init_list_friend.friend_request.map(&:id)
+    @my_following ||= init_list_friend.following.map(&:id)
+    @block_friend ||= init_list_friend.block.map(&:id)
 
     if @my_friend.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :friend]

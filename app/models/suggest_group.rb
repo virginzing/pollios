@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: suggest_groups
+#
+#  id         :integer          not null, primary key
+#  group_id   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class SuggestGroup < ActiveRecord::Base
 
   def self.cached_all
