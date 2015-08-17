@@ -69,10 +69,17 @@ class GroupController < ApplicationController
   end
 
   def members
+    init_list_friend ||= Member::ListFriend.new(@current_member)
     @group_members ||= Group::ListMember.new(@group)
+
     @member_active = @group_members.active
+    @check_status_friend_of_member_active = Friend.check_add_friend?(@current_member, @member_active, init_list_friend.check_is_friend) if @member_active.present?
+
     @member_pending = @group_members.pending
+    @check_status_friend_of_member_pending = Friend.check_add_friend?(@current_member, @member_pending, init_list_friend.check_is_friend) if @member_pending.present?
+
     @member_request = @group.members_request
+    @check_status_friend_of_member_request = Friend.check_add_friend?(@current_member, @member_request, init_list_friend.check_is_friend) if @member_request.present?
   end
 
   def poll_available_group
