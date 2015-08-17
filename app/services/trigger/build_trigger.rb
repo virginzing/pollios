@@ -32,5 +32,5 @@ class Trigger::BuildTrigger
   def setup
     Trigger.create!(triggerable: poll, data: poll_as_json)
   end
-  
+
 end

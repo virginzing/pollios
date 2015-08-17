@@ -17,6 +17,9 @@ class TriggersController < ApplicationController
     if build_trigger
       flash[:success] = "Create success"
       redirect_to triggers_path
+    else
+      flash[:error] = "Select a element of choices less than 1 choice"
+      redirect_to new_trigger_path
     end
 
   end
