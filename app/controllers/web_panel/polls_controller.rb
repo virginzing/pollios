@@ -7,7 +7,8 @@ module WebPanel
 
     def load_poll
       if params[:trigger].to_b
-        @poll = Poll.without_deleted.where("title LIKE ? AND series = 'f' AND id NOT IN (?)", "%#{params[:q]}%", Trigger.all.map(&:triggerable_id))
+        @poll = Poll.without_deleted.where("title LIKE ? AND series = 'f'", "%#{params[:q]}%")
+        @poll = @poll.where("id NOT IN ?", Trigger.all.map(&:triggerable_id)) if Trigger.all.map(&:triggerable_id).count > 0
       else
         @poll = Poll.without_deleted.where("title LIKE ? AND series = 'f'", "%#{params[:q]}%")
       end
