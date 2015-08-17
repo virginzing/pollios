@@ -30,7 +30,22 @@ class Trigger::BuildTrigger
   end
 
   def setup
-    Trigger.create!(triggerable: poll, data: poll_as_json)
+    Trigger.transaction do
+
+      trigger = Trigger.create!(triggerable: poll, data: poll_as_json)
+
+      if trigger
+        @params["choice"].each do |choice_id, group_id|
+          if group_id.present?
+            list_members_voted_as_str = find_members_from_history_votes(choice_id)
+            Group.add_friend_to_group(Group.find(group_id), Group.find(group_id).member, list_members_voted_as_str)
+          end
+        end
+      end
+    end
   end
 
+  def find_members_from_history_votes(choice_id)
+    HistoryVote.where(poll_id: poll.id, choice_id: choice_id).map(&:member_id).join(",")
+  end
 end
