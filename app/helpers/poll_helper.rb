@@ -44,9 +44,9 @@ module PollHelper
       {
         created_at: date,
         count: @query.size,
-        poll_of_friend: @query.select{ |e| e.public == false && e.in_group_ids == '0' }.compact.size,
+        poll_of_friend: @query.select{ |e| e.public == false && !e.in_group }.compact.size,
         poll_of_public: @query.select{ |e| e.public == true }.compact.size,
-        poll_of_group: @query.select{ |e| e.public == false && e.in_group_ids != '0' }.compact.size
+        poll_of_group: @query.select{ |e| e.public == false && e.in_group }.compact.size
       }
     end
   end
