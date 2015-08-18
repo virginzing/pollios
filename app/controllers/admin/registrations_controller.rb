@@ -1,3 +1,5 @@
+# use when create a new admin
+
 class Admin::RegistrationsController < Devise::RegistrationsController
 
   before_filter :authenticate_admin!, :redirect_unless_admin
