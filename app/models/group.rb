@@ -340,6 +340,7 @@ class Group < ActiveRecord::Base
     if @group.save!
 
       if cover && init_cover_group.from_image_url?
+        @group.update_column(:cover_preset, "0")
         @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
 
