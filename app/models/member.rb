@@ -230,7 +230,7 @@ class Member < ActiveRecord::Base
   validates :key_color, length: { is: 6 }, allow_blank: true
 
   LIMIT_POLL = 10
-  FRIEND_LIMIT = 500
+  FRIEND_LIMIT = 1000
 
   self.per_page = 20
 
