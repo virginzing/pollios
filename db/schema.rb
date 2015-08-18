@@ -476,6 +476,7 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.integer  "authorize_invite"
     t.text     "description"
     t.boolean  "leave_group",      default: true
+    t.integer  "group_type"
     t.string   "cover"
     t.boolean  "admin_post_only",  default: false
     t.boolean  "need_approve",     default: true
@@ -488,7 +489,6 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.boolean  "exclusive",        default: false
     t.datetime "deleted_at"
     t.boolean  "opened",           default: false
-    t.integer  "group_type"
   end
 
   add_index "groups", ["deleted_at"], name: "index_groups_on_deleted_at", using: :btree
@@ -701,7 +701,6 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.datetime "updated_at"
     t.integer  "friend_limit"
     t.integer  "member_type",                default: 0
-    t.integer  "province_id"
     t.string   "key_color"
     t.string   "cover"
     t.text     "description"
@@ -755,7 +754,6 @@ ActiveRecord::Schema.define(version: 20150813093318) do
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree
   add_index "members", ["member_type"], name: "index_members_on_member_type", where: "(member_type = 3)", using: :btree
   add_index "members", ["notification"], name: "index_members_on_notification", using: :gist
-  add_index "members", ["province_id"], name: "index_members_on_province_id", using: :btree
   add_index "members", ["public_id"], name: "index_members_on_public_id", using: :btree
   add_index "members", ["setting"], name: "index_members_on_setting", using: :gist
   add_index "members", ["show_recommend"], name: "index_members_on_show_recommend", where: "(show_recommend = true)", using: :btree
@@ -885,7 +883,7 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2015-08-06 09:11:23'
+    t.datetime "start_date",     default: '2014-02-03 15:36:16'
     t.integer  "campaign_id"
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
@@ -894,9 +892,9 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.string   "in_group_ids",   default: "0"
     t.boolean  "allow_comment",  default: true
     t.integer  "comment_count",  default: 0
-    t.boolean  "qr_only",        default: true
+    t.boolean  "qr_only"
     t.string   "qrcode_key"
-    t.boolean  "require_info",   default: true
+    t.boolean  "require_info"
     t.boolean  "in_group",       default: false
     t.integer  "recurring_id"
     t.boolean  "feedback",       default: false
@@ -973,7 +971,7 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",                default: 0
-    t.datetime "start_date",              default: '2015-08-06 09:11:23'
+    t.datetime "start_date",              default: '2014-02-03 15:36:16'
     t.boolean  "series",                  default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
@@ -988,8 +986,8 @@ ActiveRecord::Schema.define(version: 20150813093318) do
     t.boolean  "allow_comment",           default: true
     t.integer  "comment_count",           default: 0
     t.string   "member_type"
-    t.boolean  "qr_only",                 default: false
-    t.boolean  "require_info",            default: false
+    t.boolean  "qr_only"
+    t.boolean  "require_info"
     t.boolean  "expire_status",           default: false
     t.boolean  "creator_must_vote",       default: true
     t.boolean  "in_group",                default: false

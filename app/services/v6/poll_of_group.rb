@@ -105,6 +105,7 @@ class V6::PollOfGroup
     query = query.where("polls.member_id NOT IN (?)", with_out_member_ids) if with_out_member_ids.size > 0
     query = query.limit(limit_poll)
     query
+
   end
 
   def poll_of_group_company

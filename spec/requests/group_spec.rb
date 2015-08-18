@@ -7,7 +7,7 @@ RSpec.describe "Group" do
   let!(:group) { create(:group, member: member) }
   let!(:group_member) { create(:group_member, member: member, group: group, active: true, is_master: true) }
 
-  let!(:poll) { create(:poll, member: member) }
+  let!(:poll) { create(:poll_to_group, member: member) }
   let!(:poll_group) { create(:poll_group, poll: poll, group: group, member: member) }
 
   it "return 1 group" do

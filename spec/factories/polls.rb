@@ -84,6 +84,7 @@ FactoryGirl.define do
     title Faker::Lorem.sentence
     public false
     allow_comment true
+    qr_only false
 
     factory :poll_with_choices do
       transient do
@@ -103,6 +104,12 @@ FactoryGirl.define do
       allow_comment false
     end
 
+    trait :in_group do
+      in_group true
+      in_group_ids ""
+    end
+
+    factory :poll_to_group,   traits: [:in_group]
     factory :poll_to_public,   traits: [:is_public]
     factory :poll_that_disable_comment, traits: [:disable_comment]
   end
