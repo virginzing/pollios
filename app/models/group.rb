@@ -388,8 +388,6 @@ class Group < ActiveRecord::Base
       end
 
       FlushCached::Group.new(group).clear_list_members
-      p list_friend
-      p list_invite_friend_ids
       InviteFriendToGroupWorker.perform_async(member_id, list_invite_friend_ids, group_id, custom_data) unless Rails.env.test?
     end
 
