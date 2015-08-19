@@ -417,6 +417,7 @@ Pollios::Application.routes.draw do
     resources :invites
     resources :commercials
     resources :gifts
+    resources :messages, only: [:index, :new, :create]
     resources :triggers
     resources :system_campaigns
   end

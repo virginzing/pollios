@@ -9,6 +9,7 @@ module SymbolHash
     :request_group => 'RequestGroup',
     :save_poll_later => 'SavePollLater',
     :reward => 'Reward',
+    :system_message => 'SystemMessage',
     :subscription => 'Subscription'
   }
 
@@ -67,6 +68,7 @@ module SymbolHash
     :report_poll => 'ReportPoll',
     :request_group => 'RequestGroup',
     :reward => 'Reward',
+    :all_message => 'Message',
     :save_poll => 'SavePoll',
     :sum_vote_poll => 'SumVotePoll',
     :vote_poll => 'VotePoll'
