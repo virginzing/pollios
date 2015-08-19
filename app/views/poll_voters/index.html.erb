@@ -1,0 +1,81 @@
+<div class="well">
+  <%= simple_form_for :poll_voters, url: poll_voters_path, method: :get do |f| %>
+
+  <label>Config</label>
+
+  <%= f.simple_fields_for :data do |data| %>
+    <input type="hidden" id="remote_load_poll" name="poll_id"/>
+  <% end %>
+
+  <div class="list_choice">
+  </div>
+
+  <div class="footer" style="margin-top: 20px;">
+  <%= f.submit "SUBMIT", class: 'btn btn-default', id: "submit-trigger" %>
+  </div>
+
+<table class="table users">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @all_voters.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.get_name %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+  <% end %>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    $("#submit-trigger").attr("disabled", true);
+    $("#remote_load_poll").select2({
+      width: '100%',
+      placeholder: "Select poll",
+      ajax: {
+        url: "/load_poll.json",
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params,
+            trigger: true // search term
+          };
+        },
+        results: function (data, page) {
+          return {
+              results: data
+          };
+        },
+        cache: true,
+      },
+      escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+      minimumInputLength: 3,
+      formatResult: function (option) {
+            return "<div>" + option.desc + "</div>";
+        },
+      formatSelection: function (option) {
+            return option.desc;
+      }
+    });
+
+    $('#remote_load_poll').on("select2-selecting", function(e) {
+      console.log(e.val);
+      $.get('/load_choices_as_checkbox', { poll_id: e.val }, function (html) {
+        $(".list_choice").html(html);
+        $("#submit-trigger").attr("disabled", false);
+      })
+
+    });
+
+  });
+
+</script>

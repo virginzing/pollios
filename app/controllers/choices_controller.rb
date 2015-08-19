@@ -11,6 +11,12 @@ class ChoicesController < ApplicationController
     render layout: false  
   end
 
+  def load_choices_as_checkbox
+    @choices = Choice.where(poll_id: params[:poll_id])
+
+    render layout: false    
+  end
+
   def index
     @choices = @poll.choices
   end

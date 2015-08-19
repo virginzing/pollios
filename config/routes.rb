@@ -15,6 +15,7 @@ Pollios::Application.routes.draw do
   get 'list_members', to: 'members#list_members'
 
   get 'load_choice',  to: 'choices#load_choice'
+  get 'load_choices_as_checkbox', to: 'choices#load_choices_as_checkbox'
 
   mount ApiTaster::Engine => "/api_taster"
 
@@ -418,6 +419,7 @@ Pollios::Application.routes.draw do
     resources :commercials
     resources :gifts
     resources :messages, only: [:index, :new, :create]
+    resources :poll_voters, only: [:index]
     resources :triggers
     resources :system_campaigns
   end
