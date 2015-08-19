@@ -92,6 +92,11 @@ namespace :admin do
     Sidekiq::Cron::Job.create(name: "Daily expire to questionnaires - each day at 00:00", cron: '0 0 * * * Asia/Bangkok', klass: 'DailyCheckExpireQuestionnairesWorker')
   end
 
+  desc "Delete to notification logs every 3 days"
+  task :cron_delete_notification_log => :environment do
+    Sidekiq::Cron::Job.create(name: "AutoDeleteNotificationLogEvery3DaysWorker - every 3 days", cron: '0 0 */3 * * Asia/Bangkok', klass: 'AutoDeleteNotificationLogEvery3DaysWorker')
+  end
+
   desc "Reset Popular tag worker"
   task :reset_tags_popular_cron => :environment do
     Sidekiq::Cron::Job.create(name: "Reset popular tag- each day", cron: "0 0 * * * Asia/Bangkok", klass: 'ResetPopularTagWorker')

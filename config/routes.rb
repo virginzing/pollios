@@ -146,7 +146,6 @@ Pollios::Application.routes.draw do
     post 'add_close_friend',  to: 'friends#add_close_friend'
     post 'unclose_friend',  to: 'friends#unclose_friend'
     get 'all',              to: 'friends#list_friend'
-    get 'request',          to: 'friends#list_request'
     get 'list_following',   to: 'friends#my_following'
     get 'list_follower',    to: 'friends#my_follower'
     get 'search',           to: 'friends#search_friend'
@@ -160,11 +159,11 @@ Pollios::Application.routes.draw do
     get 'save_poll_later',  to: 'friends#list_of_save_poll_later'
     get 'groups',           to: 'friends#list_of_group'
     get 'bookmarks',        to: 'friends#list_of_bookmark'
-    get 'friend_of_friend', to: 'friends#friend_of_friend'
-    get 'following_of_friend', to: 'friends#following_of_friend'
-    get 'follower_of_friend',  to: 'friends#follower_of_friend'
+    # get 'friend_of_friend', to: 'friends#friend_of_friend'
+    # get 'following_of_friend', to: 'friends#following_of_friend'
+    # get 'follower_of_friend',  to: 'friends#follower_of_friend'
     get 'collection_profile',  to: 'friends#collection_profile'
-    get 'find_via_facebook',   to: 'friends#find_via_facebook'
+    post 'find_via_facebook',   to: 'friends#find_via_facebook'
   end
 
   scope 'group' do
@@ -418,6 +417,7 @@ Pollios::Application.routes.draw do
     resources :invites
     resources :commercials
     resources :gifts
+    resources :messages, only: [:index, :new, :create]
     resources :triggers
     resources :system_campaigns
   end
@@ -615,7 +615,7 @@ Pollios::Application.routes.draw do
   get 'users_forgotpassword',   to: 'authen_sentai#forgot_pwd', as: :users_forgotpassword
   get 'users_resetpassword/:id', to: 'authen_sentai#reset_pwd', as: :users_resetpassword
 
-  post 'new_sigin_sentai', to: 'authen_sentai#new_sigin_sentai', as: :new_users_signin
+  post 'web_sigin_sentai', to: 'authen_sentai#web_sigin_sentai', as: :web_sigin_sentai
 
   post 'users_signin',     to: 'authen_sentai#signin_sentai'
   post 'users_signup',     to: 'authen_sentai#signup_sentai'

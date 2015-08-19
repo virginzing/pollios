@@ -230,7 +230,7 @@ class Member < ActiveRecord::Base
   validates :key_color, length: { is: 6 }, allow_blank: true
 
   LIMIT_POLL = 10
-  FRIEND_LIMIT = 500
+  FRIEND_LIMIT = 1000
 
   self.per_page = 20
 
@@ -277,7 +277,7 @@ class Member < ActiveRecord::Base
       field :key_color
     end
 
-    update do
+    edit do
       field :email do
        read_only true
       end
@@ -310,25 +310,7 @@ class Member < ActiveRecord::Base
       field :sync_facebook
       field :show_recommend
       field :key_color
-    end
-
-    edit do
-      field :fullname
-      field :username
-      field :gender
-      field :member_type
-      field :friend_limit
-      field :birthday
-      field :province
-      field :avatar, :carrierwave
-      field :cover, :carrierwave
-      field :key_color
-      field :status_account
-      field :blacklist_last_at
-      field :blacklist_count
-      field :ban_last_at
-      field :report_count
-      field :show_recommend
+      field :show_search
     end
 
     show do
@@ -864,16 +846,16 @@ class Member < ActiveRecord::Base
 
   ################ Friend ###############
 
-  def mute_or_unmute_friend(friend, type_mute)
-    friend_id = friend[:friend_id]
-    begin
-      find_friend = friends.where(followed_id: friend_id).first
-      find_friend.update_attributes!(mute: type_mute)
-    rescue => e
-      puts "error => #{e}"
-      nil
-    end
-  end
+  # def mute_or_unmute_friend(friend, type_mute)
+  #   friend_id = friend[:friend_id]
+  #   begin
+  #     find_friend = friends.where(followed_id: friend_id).first
+  #     find_friend.update_attributes!(mute: type_mute)
+  #   rescue => e
+  #     puts "error => #{e}"
+  #     nil
+  #   end
+  # end
 
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first

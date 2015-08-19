@@ -340,6 +340,7 @@ class Group < ActiveRecord::Base
     if @group.save!
 
       if cover && init_cover_group.from_image_url?
+        @group.update_column(:cover_preset, "0")
         @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
 
@@ -372,7 +373,7 @@ class Group < ActiveRecord::Base
     member_id = member.id
 
     list_friend = friend_id.split(",").collect {|e| e.to_i }
-    check_valid_friend = friend_exist_group(list_friend, group)
+    list_invite_friend_ids = friend_exist_group(list_friend, group)
     find_admin_group = group.get_admin_group.map(&:id)
 
     unless member.company?
@@ -381,15 +382,14 @@ class Group < ActiveRecord::Base
       end
     end
 
-    if check_valid_friend.size > 0
-      Member.where(id: check_valid_friend).each do |friend|
+    if list_invite_friend_ids.size > 0
+      Member.where(id: list_invite_friend_ids).each do |friend|
         GroupMember.create(member_id: friend.id, group_id: group_id, is_master: false, invite_id: member_id, active: friend.group_active)
         FlushCached::Member.new(friend).clear_list_groups
       end
 
       FlushCached::Group.new(group).clear_list_members
-
-      InviteFriendToGroupWorker.perform_async(member_id, list_friend, group_id, custom_data) unless Rails.env.test?
+      InviteFriendToGroupWorker.perform_async(member_id, list_invite_friend_ids, group_id, custom_data) unless Rails.env.test?
     end
 
     group

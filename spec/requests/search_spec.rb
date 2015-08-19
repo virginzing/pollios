@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Search" do
   let!(:member) { create(:member, fullname: "Nutty") }
-  let!(:member_two) { create(:member, fullname: "Nutty agian", email: "nutagain@gmail.com") }
+  let(:member_two) { create(:member, fullname: "Nutty agian", email: "nutagain@gmail.com") }
 
   let!(:group) { create(:group, name: "Nut Group", public: true) }
 
@@ -60,16 +60,22 @@ RSpec.describe "Search" do
 
   describe "POST /searches/clear_search_users_and_groups" do
 
+    before do
+      TypeSearch.delete_all
+      TypeSearch.create_log_search_users_and_groups(member_two, "Nuttapon")
+      TypeSearch.create_log_search_users_and_groups(member_two, "Nutty")
+    end
+
     it "success" do
       post "/searches/clear_search_users_and_groups.json", { member_id: member_two.id }, { "Accept" => "application/json" }
       expect(response.status).to eq(201)
     end
 
     it "clear key of users_and_groups to empty" do
-      TypeSearch.create_log_search_users_and_groups(member_two, "Nuttapon")
-      TypeSearch.create_log_search_users_and_groups(member_two, "Nutty")
+      p TypeSearch.find_search_users_and_groups(member_two)
       expect(TypeSearch.find_search_users_and_groups(member_two).count).to eq(2)
       post "/searches/clear_search_users_and_groups.json", { member_id: member_two.id }, { "Accept" => "application/json" }
+      p TypeSearch.find_search_users_and_groups(member_two)
       expect(TypeSearch.find_search_users_and_groups(member_two).count).to eq(0)
     end
 
