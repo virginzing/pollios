@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813093318) do
+ActiveRecord::Schema.define(version: 20150819064645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -783,6 +783,14 @@ ActiveRecord::Schema.define(version: 20150813093318) do
 
   add_index "mentions", ["comment_id"], name: "index_mentions_on_comment_id", using: :btree
   add_index "mentions", ["mentioner_id", "mentionable_id"], name: "index_mentions_on_mentioner_id_and_mentionable_id", using: :btree
+
+  create_table "message_logs", force: true do |t|
+    t.integer  "admin_id"
+    t.string   "message"
+    t.text     "list_member", default: [], array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "notify_logs", force: true do |t|
     t.integer  "sender_id"
