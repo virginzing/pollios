@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819064645) do
+ActiveRecord::Schema.define(version: 20150820053058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -635,6 +635,16 @@ ActiveRecord::Schema.define(version: 20150819064645) do
 
   add_index "leave_group_logs", ["group_id"], name: "index_leave_group_logs_on_group_id", using: :btree
   add_index "leave_group_logs", ["member_id"], name: "index_leave_group_logs_on_member_id", using: :btree
+
+  create_table "member_agree_comments", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "comment_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_agree_comments", ["comment_id"], name: "index_member_agree_comments_on_comment_id", using: :btree
+  add_index "member_agree_comments", ["member_id"], name: "index_member_agree_comments_on_member_id", using: :btree
 
   create_table "member_invite_codes", force: true do |t|
     t.integer  "member_id"
