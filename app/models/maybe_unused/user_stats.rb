@@ -1,3 +1,5 @@
+#UNUSED
+
 class UserStats
   include Mongoid::Document
   include Mongoid::Attributes::Dynamic
