@@ -257,8 +257,6 @@ namespace :admin do
     GroupMember.delete_all
     GroupMember.connection.execute('ALTER SEQUENCE group_members_id_seq RESTART WITH 1')
 
-    GroupStats.delete_all
-
     GroupSurveyor.delete_all
     GroupSurveyor.connection.execute('ALTER SEQUENCE group_surveyors_id_seq RESTART WITH 1')
 

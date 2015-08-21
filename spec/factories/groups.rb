@@ -30,6 +30,10 @@ FactoryGirl.define do
   factory :group do
     name "Codeapp"
     group_type 0
+
+    factory :group_with_cover_url do
+      cover "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
+    end
   end
 
   factory :group_required, class: Group do
