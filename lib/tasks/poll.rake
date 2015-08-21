@@ -91,7 +91,6 @@ namespace :poll do
 
     UserStats.delete_all
     VoteStats.delete_all
-    GroupStats.delete_all
     Template.delete_all
     Company.delete_all
     GroupCompany.delete_all

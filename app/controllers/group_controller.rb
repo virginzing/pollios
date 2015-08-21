@@ -52,6 +52,7 @@ class GroupController < ApplicationController
   end
 
   def accept_group
+#    GroupService.new(@current_member, Group.find(params[:id]).accept_invitation
     @group = Group.accept_group(@current_member, group_params)
   end
 

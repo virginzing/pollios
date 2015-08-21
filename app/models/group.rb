@@ -333,9 +333,20 @@ class Group < ActiveRecord::Base
     name = group_params[:name]
     friend_id = group_params[:friend_id]
 
-    init_cover_group = ImageUrl.new(cover)
 
-    @group = new(member_id: member.id, name: name, photo_group: photo_group, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
+    @group = new(
+      member_id: member.id, 
+      name: name, 
+      photo_group: photo_group, 
+      authorize_invite: :everyone, 
+      description: description, 
+      public: set_privacy, 
+      cover: cover, 
+      cover_preset: cover_preset, 
+      group_type: :normal, 
+      admin_post_only: set_admin_post_only)
+
+    init_cover_group = ImageUrl.new(cover)
 
     if @group.save!
 
@@ -344,11 +355,8 @@ class Group < ActiveRecord::Base
         @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
 
-      @group.create_group_company(company: member.get_company) if member.company?
+      @group.create_group_company(company: member.get_company) if member.company.present?
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
-
-      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
-      GroupStats.create_group_stats(@group)
 
       if @group.public
         Activity.create_activity_group(member, @group, 'Create')

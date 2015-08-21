@@ -368,6 +368,15 @@ class Member < ActiveRecord::Base
   end
 
   def get_company
+    # if company
+    #     company
+    # else
+    #   if company_member
+    #       company_member.company
+    #   else
+    #     nil
+    #   end
+    # end
     company ? company : company_member ? company_member.company : nil
   end
 
