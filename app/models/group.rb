@@ -167,7 +167,6 @@ class Group < ActiveRecord::Base
 
       clear_request_group(@member, @member)
 
-      Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
 
       FlushCached::Group.new(@group).clear_list_members
@@ -268,8 +267,6 @@ class Group < ActiveRecord::Base
         if @group.need_approve
           ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
         end
-
-        Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
 
         FlushCached::Group.new(@group).clear_list_members
 
@@ -524,7 +521,6 @@ class Group < ActiveRecord::Base
   def add_user_to_group(list_of_users)
     list_of_users.each do |member|
       group_members.create!(member: member, is_master: false, active: true)
-      Company::TrackActivityFeedGroup.new(member, self, "join").tracking
       FlushCached::Member.new(member).clear_list_groups
     end
   end

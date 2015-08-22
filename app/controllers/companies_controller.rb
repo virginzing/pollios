@@ -444,7 +444,6 @@ class CompaniesController < ApplicationController
       end
 
       if group.update(group_params)
-        Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
 
         group.members.each do |member|
           FlushCached::Member.new(member).clear_list_groups
@@ -501,48 +500,6 @@ class CompaniesController < ApplicationController
     query = Member.searchable_member(params[:q]).without_member_type(:company)
     @members = query
   end
-
-  # def add_user_to_group
-
-  #   find_user = Member.cached_find(params[:member_id])
-
-  #   init_list_group = Member::ListGroup.new(find_user)
-
-  #   respond_to do |format|
-  #     Group.transaction do
-  #       find_user_group = init_list_group.active.map(&:id)
-
-  #       this_group = Group.find(params[:group_id])
-
-  #       unless find_user_group.include?(this_group.id)
-  #         begin
-  #           this_group.group_members.create!(member_id: find_user.id, is_master: false, active: true)
-  #           # if this_group.company?
-  #           #   CompanyMember.add_member_to_company(find_user, this_group.get_company)
-  #           # end
-  #           Company::TrackActivityFeedGroup.new(find_user, this_group, "join").tracking
-
-  #           FlushCached::Member.new(find_user).clear_list_groups
-  #           FlushCached::Group.new(this_group).clear_list_members
-
-  #           unless Rails.env.test?
-  #             CompanyAddUserToGroupWorker.perform_async(find_user.id, this_group.id, this_group.get_company.id)
-  #           end
-
-  #           format.json { render json: { error_message: nil }, status: 200 }
-  #         rescue ActiveRecord::RecordNotUnique
-  #           @error_message = "This member join another company already"
-  #           format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
-  #         end
-
-  #       else
-  #         @error_message = "You already joined in this group."
-  #         format.json { render json: { error_message: @error_message }, status: :unprocessable_entity }
-  #       end
-
-  #     end
-  #   end
-  # end
 
   def add_user_to_group
     find_user = Member.cached_find(params[:member_id])
