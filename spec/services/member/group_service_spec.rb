@@ -44,11 +44,17 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
     end
 
-    context "#create: A member create group with invitation list" do
+    context "#create #invite: A member create group with invitation list" do
         let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
 
-        it "- Group has member id: 3,4,17,23,27,41 in inactive members" do
-            expect(Group::ListMember.new(new_group).pending).to match_array([3, 4, 17, 23, 27, 41])
+        before(:example) do
+            users = FactoryGirl.create_list(:sequence_member, 10)
+        end
+
+        it "- Members id: 103,104,105,107,108,109 are not in group, and added to inactive members" do
+            expect(Group::ListMember.new(new_group).filter_new_member([103, 104, 105, 107, 108, 109])).to match_array([103, 104, 105, 107, 108, 109])
+            expect(Group::ListMember.new(new_group).pending_ids_non_cache).to include(103, 104, 105, 107, 108, 109)
+
         end
     end
 

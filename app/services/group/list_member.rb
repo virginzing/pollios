@@ -23,6 +23,13 @@ class Group::ListMember
     cached_all_members.select{|member| member unless member.is_active }
   end
 
+   # for testing and emergency only
+  def pending_ids_non_cache
+    members.select{|member| member unless member.is_active }
+    members.map(&:id)
+  end
+
+
   def members_as_member
     cached_all_members.select{ |member| member unless member.admin }
   end
@@ -51,11 +58,17 @@ class Group::ListMember
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless is_admin?(member)
   end
 
+  # NOT TESTED
+  def filter_new_member(member_id_list)
+    return member_id_list - @group.group_members.map(&:member_id)
+  end
+
   private
 
   def members
     Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
           .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active, group_members.created_at as joined_at").order("members.fullname asc")
+
   end
   
   def cached_members

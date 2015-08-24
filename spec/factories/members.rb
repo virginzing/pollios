@@ -73,6 +73,13 @@ FactoryGirl.define do
     factory :member_is_company, traits: [:is_company]
   end
 
+  factory :sequence_member, class: Member do
+    fullname Faker::Name.name
+
+    sequence(:id) { |n| n+100 }
+    sequence(:email) { |n| "mail#{n}@mail.com" }
+  end
+
   factory :one, class: Member do
     email "nuttapon@code-app.com"
   end

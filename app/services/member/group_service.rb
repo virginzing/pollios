@@ -33,12 +33,39 @@ class Member::GroupService
         return @group
     end
 
-    def invite(group, friend_ids)
-        if friend_ids
+    def invite(group, friend_ids, options = {})
+        unless friend_ids
+            return
+        end
+
+        member_ids = friend_ids.split(",").map(&:to_i)
+        member_ids_to_invite = members_not_in_group_from(member_ids)
+
+        # TODO: Implement this logic.
+        # unless member.company?
+        #   unless group.system_group || group.public
+        #     raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless find_admin_group.include?(member_id)
+        # end
+
+        if member_ids_to_invite.size > 0
+            members = Member.where(id: member_ids_to_invite)
+            members.each do |friend|
+                invite_member(friend)
+            end
+
+            FlushCached::Group.new(@group).clear_list_members
+            InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, @group_id, options) unless Rails.env.test?
+
+            # binding.pry
+
         end
     end
 
-    private
+    def members_not_in_group_from(member_list)
+        return member_list - @group.group_members.map(&:member_id)
+    end
+
+private
 
     # helper functions for #create
     def set_group_cover(cover)
@@ -51,5 +78,11 @@ class Member::GroupService
 
     def set_admin_of_group(group_id)
         @group.group_members.create(member_id: @member.id, is_master: true, active: true)
+    end
+
+
+    def invite_member(invitee)
+        GroupMember.create(member_id: invitee.id, group_id: @group.id, is_master: false, invite_id: @member.id, active: invitee.group_active)
+        FlushCached::Member.new(invitee).clear_list_groups
     end
 end

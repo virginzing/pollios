@@ -44,7 +44,7 @@ FactoryGirl.define do
     end
 
     trait :with_invitation_list do
-      friend_id "3,4,17,23,27,41"
+      friend_id "103,104,105,107,108,109"
     end
 
     factory :group_with_cover_url, traits: [:with_cover_url]
