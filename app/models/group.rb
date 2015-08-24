@@ -347,14 +347,19 @@ class Group < ActiveRecord::Base
 
     if @group.save!
 
+      # set cover
       if cover && init_cover_group.from_image_url?
         @group.update_column(:cover_preset, "0")
         @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
 
+      # create company group (group_company)
       @group.create_group_company(company: member.get_company) if member.company.present?
+
+      # set admin of group
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
 
+      # add created group to member activity (maybe not needed)
       if @group.public
         Activity.create_activity_group(member, @group, 'Create')
       end

@@ -16,22 +16,31 @@ class Member::GroupService
             cover_preset: group_params[:cover_preset],
             public: group_params[:public].to_b,
             admin_post_only: group_params[:admin_post_only].to_b,
-            authorize_invite: :everyone
+            authorize_invite: :everyone,
+            need_approve: group_params[:need_approve]
             )
 
         if @group.save!
             set_group_cover(group_params[:cover])
             set_admin_of_group(@group.id)
             @group.create_group_company(company: @member.get_company) if @member.company.present?
-            
+
+            FlushCached::Member.new(@member).clear_list_groups
+
+            invite(@group, group_params[:friend_id])
         end
 
         return @group
     end
 
+    def invite(group, friend_ids)
+        if friend_ids
+        end
+    end
+
     private
 
-    # helper functions for create
+    # helper functions for #create
     def set_group_cover(cover)
         cover_group_url = ImageUrl.new(cover)
         if cover && cover_group_url.from_image_url?
