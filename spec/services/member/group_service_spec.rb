@@ -45,7 +45,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     end
 
-    context "#create #invite: A member create group with invitation list" do
+    context "#create #invite: A member create group with invitation list: 103,104,105,107,108,109" do
         let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
 
         before(:context) do
