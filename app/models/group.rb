@@ -504,7 +504,7 @@ class Group < ActiveRecord::Base
 
       FlushCached::Group.new(self).clear_list_members
       FlushCached::Member.new(member).clear_list_groups
-      self
+      self 
     end
   end
 
