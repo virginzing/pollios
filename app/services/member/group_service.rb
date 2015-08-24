@@ -39,7 +39,7 @@ class Member::GroupService
         end
 
         member_ids = friend_ids.split(",").map(&:to_i)
-        member_ids_to_invite = members_not_in_group_from(member_ids)
+        member_ids_to_invite = members_not_in_group_from(member_ids, group)
 
         # TODO: Implement this logic.
         # unless member.company?
@@ -53,16 +53,14 @@ class Member::GroupService
                 invite_member(friend)
             end
 
-            FlushCached::Group.new(@group).clear_list_members
-            InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, @group_id, options) unless Rails.env.test?
-
-            # binding.pry
+            FlushCached::Group.new(group).clear_list_members
+            InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, group.id, options) unless Rails.env.test?
 
         end
     end
 
-    def members_not_in_group_from(member_list)
-        return member_list - @group.group_members.map(&:member_id)
+    def members_not_in_group_from(member_list, group)
+        return member_list - group.group_members.map(&:member_id)
     end
 
 private
