@@ -451,7 +451,6 @@ class MembersController < ApplicationController
     return false if find_my_group.include?(@group.id)
 
     @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
-    Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
     if @group.company? && !@group.system_group
       CompanyMember.add_member_to_company(@current_member, @group.get_company)
       Activity.create_activity_group(@current_member, @group, 'Join')

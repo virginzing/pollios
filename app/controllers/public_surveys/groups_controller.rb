@@ -58,7 +58,6 @@ class PublicSurveys::GroupsController < ApplicationController
       end
 
       if group.update(group_params)
-        Company::TrackActivityFeedGroup.new(current_member, group, "update").tracking
 
         group.members.each do |member|
           FlushCached::Member.new(member).clear_list_groups

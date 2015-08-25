@@ -31,7 +31,10 @@ class GroupMembers
 
   def members
     Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
-          .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active").order("members.fullname asc")
+          .select(
+            "DISTINCT members.*, 
+            group_members.is_master as admin, 
+            group_members.active as is_active").order("members.fullname asc")
   end
   
   def cached_members

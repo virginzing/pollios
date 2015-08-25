@@ -16,22 +16,56 @@ class Member::GroupService
             cover_preset: group_params[:cover_preset],
             public: group_params[:public].to_b,
             admin_post_only: group_params[:admin_post_only].to_b,
-            authorize_invite: :everyone
+            authorize_invite: :everyone,
+            need_approve: group_params[:need_approve]
             )
 
         if @group.save!
             set_group_cover(group_params[:cover])
             set_admin_of_group(@group.id)
             @group.create_group_company(company: @member.get_company) if @member.company.present?
-            
+
+            FlushCached::Member.new(@member).clear_list_groups
+
+            invite(@group, group_params[:friend_id])
         end
 
         return @group
     end
 
-    private
+    def invite(group, friend_ids, options = {})
+        unless friend_ids
+            return
+        end
 
-    # helper functions for create
+        member_ids = friend_ids.split(",").map(&:to_i)
+        member_ids_to_invite = Group::ListMember.new(group).filter_non_members_from_list(member_ids)
+
+        # TODO: Implement this logic.
+        # unless member.company?
+        #   unless group.system_group || group.public
+        #     raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless find_admin_group.include?(member_id)
+        # end
+
+        if member_ids_to_invite.size > 0
+            members = Member.where(id: member_ids_to_invite)
+            members.each do |friend|
+                invite_member(friend)
+            end
+
+            FlushCached::Group.new(group).clear_list_members
+            InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, group.id, options) unless Rails.env.test?
+
+        end
+    end
+
+private
+
+    def members_not_in_group_from(member_list, group)
+        return member_list - group.group_members.map(&:member_id)
+    end
+
+    # helper functions for #create
     def set_group_cover(cover)
         cover_group_url = ImageUrl.new(cover)
         if cover && cover_group_url.from_image_url?
@@ -42,5 +76,11 @@ class Member::GroupService
 
     def set_admin_of_group(group_id)
         @group.group_members.create(member_id: @member.id, is_master: true, active: true)
+    end
+
+
+    def invite_member(invitee)
+        GroupMember.create(member_id: invitee.id, group_id: @group.id, is_master: false, invite_id: @member.id, active: invitee.group_active)
+        FlushCached::Member.new(invitee).clear_list_groups
     end
 end

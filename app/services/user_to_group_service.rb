@@ -18,7 +18,6 @@ class UserToGroupService
     Group.transaction do
       unless members_in_group_active.map(&:id).include?(@member_id)
         find_group.group_members.create!(member: find_member, is_master: false, active: true)
-        Company::TrackActivityFeedGroup.new(find_member, find_group, "join").tracking
         clear_all_cached!
         true
       else

@@ -426,19 +426,11 @@ class Member < ActiveRecord::Base
     find_group_surveyor.destroy if find_group_surveyor.present?
   end
 
-  #### deprecated ####
-
-  # def get_poll_count
-  #   Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
-  # end
-
-  # def get_questionnaire_count
-  #   PollSeries.where("(poll_series.member_id = #{self.id})").size
-  # end
 
   def new_avatar
     avatar.url(:thumbnail)
   end
+
 
   def get_activity_count
     find_activify = Activity.find_by(member_id: id)
@@ -453,12 +445,6 @@ class Member < ActiveRecord::Base
   def get_key_color
     key_color || ""
   end
-
-  #### deprecated ####
-
-  # def get_first_setting_anonymous
-  #   first_setting_anonymous.present? ? true : false
-  # end
 
   def Member.check_image_avatar(avatar)
     for_campare_url_image = /\.(gif|jpg|png)\z/i
@@ -484,10 +470,6 @@ class Member < ActiveRecord::Base
   def get_recent_history_subscription
     recent_history_subscription.present? ? recent_history_subscription.map(&:product_id).first : ""
   end
-
-  # def get_sentai_id
-  #   providers.where(name: 'sentai').first.pid
-  # end
 
   def get_name
     fullname.presence || ""
@@ -600,11 +582,6 @@ class Member < ActiveRecord::Base
   #   end
   # end
 
-  # def cached_my_questionnaire
-  #   Rails.cache.fetch([self.id, 'my_questionnaire']) do
-  #     PollSeries.where(member_id: id).to_a
-  #   end
-  # end
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
@@ -855,16 +832,6 @@ class Member < ActiveRecord::Base
 
   ################ Friend ###############
 
-  # def mute_or_unmute_friend(friend, type_mute)
-  #   friend_id = friend[:friend_id]
-  #   begin
-  #     find_friend = friends.where(followed_id: friend_id).first
-  #     find_friend.update_attributes!(mute: type_mute)
-  #   rescue => e
-  #     puts "error => #{e}"
-  #     nil
-  #   end
-  # end
 
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first
@@ -1064,7 +1031,6 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    # detect_image(avatar)
     if avatar.present?
       avatar.url(:thumbnail)
     else

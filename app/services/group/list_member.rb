@@ -23,6 +23,20 @@ class Group::ListMember
     cached_all_members.select{|member| member unless member.is_active }
   end
 
+   # for testing and emergency only
+  def pending_ids_non_cache
+    members.select{|member| member unless member.is_active }
+    members.map(&:id)
+  end
+
+  def filter_members_from_list(member_list)
+    return group_member_ids - member_list
+  end
+
+  def filter_non_members_from_list(member_list)
+    return member_list - group_member_ids
+  end
+
   def members_as_member
     cached_all_members.select{ |member| member unless member.admin }
   end
@@ -55,7 +69,16 @@ class Group::ListMember
 
   def members
     Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
-          .select("DISTINCT members.*, group_members.is_master as admin, group_members.active as is_active, group_members.created_at as joined_at").order("members.fullname asc")
+          .select(
+            "DISTINCT members.*, 
+            group_members.is_master as admin, 
+            group_members.active as is_active, 
+            group_members.created_at as joined_at").order("members.fullname asc")
+
+  end
+
+  def group_member_ids
+    @group.group_members.map(&:member_id)
   end
   
   def cached_members

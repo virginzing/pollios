@@ -47,7 +47,6 @@ class CreateGroupCompany
     Member.where(id: new_list_member_ids).each do |member|
       GroupMember.create!(member_id: member.id, group_id: @group.id, is_master: false, active: true, notification: true)
       CompanyMember.add_member_to_company(member, @company)
-      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
       FlushCached::Member.new(member).clear_list_groups
     end
 

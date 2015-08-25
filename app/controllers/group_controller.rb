@@ -39,7 +39,6 @@ class GroupController < ApplicationController
         @group.remove_old_cover
       end
 
-      Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.company?
       FlushCached::Group.new(@group).clear_list_group_all_member_in_group
       FlushCached::Group.new(@group).clear_list_members
     end

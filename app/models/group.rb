@@ -167,7 +167,6 @@ class Group < ActiveRecord::Base
 
       clear_request_group(@member, @member)
 
-      Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
       JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
 
       FlushCached::Group.new(@group).clear_list_members
@@ -269,8 +268,6 @@ class Group < ActiveRecord::Base
           ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
         end
 
-        Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
-
         FlushCached::Group.new(@group).clear_list_members
 
         clear_request_group(@member, @friend)
@@ -350,14 +347,19 @@ class Group < ActiveRecord::Base
 
     if @group.save!
 
+      # set cover
       if cover && init_cover_group.from_image_url?
         @group.update_column(:cover_preset, "0")
         @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
 
+      # create company group (group_company)
       @group.create_group_company(company: member.get_company) if member.company.present?
+
+      # set admin of group
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
 
+      # add created group to member activity (maybe not needed)
       if @group.public
         Activity.create_activity_group(member, @group, 'Create')
       end
@@ -502,7 +504,7 @@ class Group < ActiveRecord::Base
 
       FlushCached::Group.new(self).clear_list_members
       FlushCached::Member.new(member).clear_list_groups
-      self
+      self 
     end
   end
 
@@ -524,7 +526,6 @@ class Group < ActiveRecord::Base
   def add_user_to_group(list_of_users)
     list_of_users.each do |member|
       group_members.create!(member: member, is_master: false, active: true)
-      Company::TrackActivityFeedGroup.new(member, self, "join").tracking
       FlushCached::Member.new(member).clear_list_groups
     end
   end
