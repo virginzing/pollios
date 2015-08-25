@@ -39,7 +39,7 @@ class Member::GroupService
         end
 
         member_ids = friend_ids.split(",").map(&:to_i)
-        member_ids_to_invite = members_not_in_group_from(member_ids, group)
+        member_ids_to_invite = Group::ListMember.new(group).filter_non_members_from_list(member_ids)
 
         # TODO: Implement this logic.
         # unless member.company?
@@ -59,11 +59,11 @@ class Member::GroupService
         end
     end
 
+private
+
     def members_not_in_group_from(member_list, group)
         return member_list - group.group_members.map(&:member_id)
     end
-
-private
 
     # helper functions for #create
     def set_group_cover(cover)

@@ -45,23 +45,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     end
 
-    context "#create #invite: A member create group with invitation list: 103,104,105,107,108,109" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
-
-        before(:context) do
-            users = FactoryGirl.create_list(:sequence_member, 10)
-        end
-
-        it "- Members id: 103,104,105,107,108,109 are not in group" do
-            expect(Group::ListMember.new(new_group).filter_new_member([103, 104, 105, 107, 108, 109])).to match_array([103, 104, 105, 107, 108, 109])
-        end
-
-        it "- Group has member id: 103,104,105,107,108,109 in inactive members" do
-            expect(Group::ListMember.new(new_group).pending_ids_non_cache).to include(103, 104, 105, 107, 108, 109)
-        end
-    end
-
-
     context "#create: A member create group with cover url" do
         let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_cover_url)) }
 
@@ -83,6 +66,23 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
             expect(new_group.group_company).to be_valid
         end
     end
+
+    context "#create #invite: A member create group with invitation list: 103,104,105,107,108,109" do
+        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
+
+        before(:context) do
+            users = FactoryGirl.create_list(:sequence_member, 10)
+        end
+
+        it "- Members id: 103,104,105,107,108,109 are not in group" do
+            expect(Group::ListMember.new(new_group).filter_non_members_from_list([103, 104, 105, 107, 108, 109])).to match_array([103, 104, 105, 107, 108, 109])
+        end
+
+        it "- Group has member id: 103,104,105,107,108,109 in inactive members" do
+            expect(Group::ListMember.new(new_group).pending_ids_non_cache).to include(103, 104, 105, 107, 108, 109)
+        end
+    end
+
 
     context "#join: A member request joining group that doesn't need approval" do
         let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
