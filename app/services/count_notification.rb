@@ -23,7 +23,7 @@ class CountNotification
 
   def hash_list_member_badge
     @list_member.each do |member|
-      member.update_columns(notification_count: member.notification_count + 1)
+      member.increment!(:notification_count)
       @hash_list_member_badge.merge!( { member.id => member.notification_count } )
     end
     @hash_list_member_badge
@@ -31,7 +31,7 @@ class CountNotification
 
   def hash_list_member_request_count
     @list_member.each do |member|
-      member.update_columns(request_count: member.request_count + 1)
+      member.increment!(:request_count)
       @hash_list_member_request_count.merge!( { member.id => member.request_count } )
     end
     @hash_list_member_request_count

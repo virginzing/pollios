@@ -298,7 +298,7 @@ class MembersController < ApplicationController
   end
 
   def notification_count
-    @member = Member.find_by(id: params[:member_id])
+    @member = Member.find(params[:member_id])
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Member::NOT_FOUND if @member.nil?
   end
 
@@ -328,7 +328,8 @@ class MembersController < ApplicationController
   end
 
   def clear_request_count
-    @current_member.update_columns(request_count: 0)
+    @current_member.request_count = 0
+    @current_member.save!
   end
 
   def is_friend(member_obj, list_compare)
@@ -348,7 +349,8 @@ class MembersController < ApplicationController
   end
 
   def clear_notification_count
-    @current_member.update_columns(notification_count: 0)
+    @current_member.notification_count = 0
+    @current_member.save!
   end
 
   # def stats

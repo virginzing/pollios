@@ -55,7 +55,6 @@ class Member::GroupService
 
             FlushCached::Group.new(group).clear_list_members
             InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, group.id, options) unless Rails.env.test?
-
         end
     end
 

@@ -59,5 +59,4 @@ class AddFriendWorker
       puts "AddFriendWorker => #{e.message}"
   end
 
-
 end
