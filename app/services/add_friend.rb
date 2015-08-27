@@ -23,7 +23,7 @@ class AddFriend
 
   def count_notification
     @friend.increment!(:notification_count)
-    return friend.notification_count
+    return @friend.notification_count
   end
 
   def count_request
