@@ -35,11 +35,15 @@ FactoryGirl.define do
     	active false
     end
 
+    trait :members_list do
+        member_id "100,101,102"
+    end
+
     factory :group_member_that_is_admin, traits: [:is_admin]
     factory :group_member_that_is_member, traits: [:is_member]
   	factory :group_member_that_is_active, traits: [:is_active]
   	factory :group_member_that_is_pending, traits: [:is_pending]
-
+    factory :group_member_with_members_list, traits: [:members_list]
   end
 
 end

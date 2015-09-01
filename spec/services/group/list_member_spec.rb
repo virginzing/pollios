@@ -3,9 +3,10 @@ require 'rails_helper'
 pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Group::ListMember" do
 
+	let(:group_admin) { FactoryGirl.create(:group_member_that_is_admin) }
+
 	context "A member is" do
 
-		let(:group_admin) { FactoryGirl.create(:group_member_that_is_admin) }
 		let(:group_member) { FactoryGirl.create(:group_member_that_is_member) }
 		let(:member_active) { FactoryGirl.create(:group_member_that_is_active) }
 		let(:member_pending) { FactoryGirl.create(:group_member_that_is_pending) }
@@ -29,6 +30,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 	end
 
 	context "Filter" do
+
+		let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:member_list))}
 
 	end
 
