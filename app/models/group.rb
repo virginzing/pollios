@@ -142,39 +142,6 @@ class Group < ActiveRecord::Base
     public_id.present? ? public_id : ""
   end
 
-  def self.accept_group(member, group)
-    group_id = group[:id]
-    member_id = group[:member_id]
-
-    find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
-
-    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." if find_group_member.nil?
-
-    if find_group_member
-      @group = find_group_member.group
-      @member = member
-
-      find_group_member.update_attributes!(active: true)
-
-      if @group.company? && !@group.system_group
-        CompanyMember.add_member_to_company(@member, @group.get_company)
-        Activity.create_activity_group(@member, @group, 'Join')
-      end
-
-      if @group.member.company?
-        Company::FollowOwnerGroup.new(@member, @group.member.id).follow!
-      end
-
-      clear_request_group(@member, @member)
-
-      JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
-
-      FlushCached::Group.new(@group).clear_list_members
-      FlushCached::Member.new(@member).clear_list_groups
-    end
-    @group
-  end
-
   def self.deny_request_join_group_my_self(member, group) ## cancel of myself
     find_group_member = GroupMember.where(group_id: group.id, member_id: member.id).first
 
@@ -233,6 +200,39 @@ class Group < ActiveRecord::Base
     FlushCached::Group.new(group).clear_list_members
 
     group
+  end
+
+  def self.accept_group(member, group)
+    group_id = group[:id]
+    member_id = group[:member_id]
+
+    find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
+
+    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." if find_group_member.nil?
+
+    if find_group_member
+      @group = find_group_member.group
+      @member = member
+
+      find_group_member.update_attributes!(active: true)
+
+      if @group.company? && !@group.system_group
+        CompanyMember.add_member_to_company(@member, @group.get_company)
+        Activity.create_activity_group(@member, @group, 'Join')
+      end
+
+      if @group.member.company?
+        Company::FollowOwnerGroup.new(@member, @group.member.id).follow!
+      end
+
+      clear_request_group(@member, @member)
+
+      JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
+
+      FlushCached::Group.new(@group).clear_list_members
+      FlushCached::Member.new(@member).clear_list_groups
+    end
+    @group
   end
 
   def self.accept_request_group(member, friend, group)
