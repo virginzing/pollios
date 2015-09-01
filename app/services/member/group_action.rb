@@ -6,7 +6,7 @@ class Member::GroupAction
     end
 
     def create(group_params = {})
-        @group = Group.new(
+        group = Group.new(
             member_id: @member.id,
             name: group_params[:name],
             group_type: :normal,                    # not sure about this, should generalize
@@ -20,17 +20,17 @@ class Member::GroupAction
             need_approve: group_params[:need_approve]
             )
 
-        if @group.save!
+        if group.save!
             set_group_cover(group_params[:cover])
-            set_admin_of_group(@group.id)
-            @group.create_group_company(company: @member.get_company) if @member.company.present?
+            set_admin_of_group(group.id)
+            group.create_group_company(company: @member.get_company) if @member.company.present?
 
             FlushCached::Member.new(@member).clear_list_groups
 
-            invite(@group, group_params[:friend_id])
+            invite(group, group_params[:friend_id])
         end
 
-        return @group
+        return group
     end
 
     def invite(group, friend_ids, options = {})
@@ -50,7 +50,7 @@ class Member::GroupAction
         if member_ids_to_invite.size > 0
             members = Member.where(id: member_ids_to_invite)
             members.each do |friend|
-                invite_member(friend)
+                invite_member(group, friend)
             end
 
             FlushCached::Group.new(group).clear_list_members
@@ -78,8 +78,8 @@ private
     end
 
 
-    def invite_member(invitee)
-        GroupMember.create(member_id: invitee.id, group_id: @group.id, is_master: false, invite_id: @member.id, active: invitee.group_active)
+    def invite_member(group, invitee)
+        GroupMember.create(member_id: invitee.id, group_id: group.id, is_master: false, invite_id: @member.id, active: invitee.group_active)
         FlushCached::Member.new(invitee).clear_list_groups
     end
 end
