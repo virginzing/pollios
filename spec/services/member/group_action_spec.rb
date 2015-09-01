@@ -16,7 +16,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
 
         it "- A member is an admin of the created group" do
-            expect(Group::Service.new(new_group).is_admin_of_group?(group_admin.id)).to be true
+            expect(Group::ListMember.new(new_group).is_admin?(group_admin)).to be true
         end
 
         it "- A member does not upload cover photo, should be set between 1-26" do 
@@ -85,14 +85,16 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 
     context "#join: A member request joining group that doesn't need approval" do
-        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
+        let!(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
+        let!(:group_action) { Member::GroupAction.new(group_admin, group) }
 
         it "- A member could join group (exist in group-member list)" do
+            expect(group_action.fuck).to eq("fuck")
         end
     end
 
     context "#join: A member request joining group that needs approval" do
-        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
+        let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
 
         it "- A member is in pending approval list" do
         end
@@ -103,17 +105,17 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 
     context "#invite: Admin member invite user to group" do
-        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+        let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
     end
 
     context "#invite: Non-admin member invite user to group that don't need approve" do
-        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
+        let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
 
     end
 
     context "#invite: Non-admin member invite user to group that needs approve" do
-        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
+        let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
 
     end
 

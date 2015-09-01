@@ -1,12 +1,25 @@
 class Member::GroupAction
 
-    def initialize(member, options = {})
+    def initialize(member, group, options = {})
         @member = member
+        @group = group
         @options = options
     end
 
+    def fuck()
+        "fuck group"
+    end
+
+    def member
+        return @member
+    end
+
+    def group
+        return @group
+    end
+
     def create(group_params = {})
-        group = Group.new(
+        @group = Group.new(
             member_id: @member.id,
             name: group_params[:name],
             group_type: :normal,                    # not sure about this, should generalize
@@ -20,26 +33,26 @@ class Member::GroupAction
             need_approve: group_params[:need_approve]
             )
 
-        if group.save!
+        if @group.save!
             set_group_cover(group_params[:cover])
-            set_admin_of_group(group.id)
+            set_admin_of_group()
             group.create_group_company(company: @member.get_company) if @member.company.present?
 
             FlushCached::Member.new(@member).clear_list_groups
 
-            invite(group, group_params[:friend_id])
+            invite(group_params[:friend_id])
         end
 
-        return group
+        return @group
     end
 
-    def invite(group, friend_ids, options = {})
+    def invite(friend_ids, options = {})
         unless friend_ids
             return
         end
 
         member_ids = friend_ids.split(",").map(&:to_i)
-        member_ids_to_invite = Group::ListMember.new(group).filter_non_members_from_list(member_ids)
+        member_ids_to_invite = Group::ListMember.new(@group).filter_non_members_from_list(member_ids)
 
         # TODO: Implement this logic.
         # unless member.company?
@@ -50,18 +63,32 @@ class Member::GroupAction
         if member_ids_to_invite.size > 0
             members = Member.where(id: member_ids_to_invite)
             members.each do |friend|
-                invite_member(group, friend)
+                invite_member(friend)
             end
 
-            FlushCached::Group.new(group).clear_list_members
-            InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, group.id, options) unless Rails.env.test?
+            FlushCached::Group.new(@group).clear_list_members
+            InviteFriendToGroupWorker.perform_async(@member.id, member_ids_to_invite, @group.id, options) unless Rails.env.test?
         end
+    end
+
+    # TODO: Write test for this. This is not tested and therefore NOT READY
+    def join(options = {})
+        new_request = false
+        joined = false
+
+        if @group.need_approve
+            new_request, joined = request_joining_group()
+        else
+            new_request, joined = joining_group()
+        end
+
+        return new_request, joined
     end
 
 private
 
-    def members_not_in_group(group, member_list)
-        return member_list - group.group_members.map(&:member_id)
+    def members_not_in_group(member_list)
+        return member_list - @group.group_members.map(&:member_id)
     end
 
     # helper functions for #create
@@ -73,13 +100,51 @@ private
         end
     end
 
-    def set_admin_of_group(group_id)
+    def set_admin_of_group()
         @group.group_members.create(member_id: @member.id, is_master: true, active: true)
     end
 
-
-    def invite_member(group, invitee)
-        GroupMember.create(member_id: invitee.id, group_id: group.id, is_master: false, invite_id: @member.id, active: invitee.group_active)
+    def invite_member(invitee)
+        GroupMember.create(member_id: invitee.id, group_id: @group.id, is_master: false, invite_id: @member.id, active: invitee.group_active)
         FlushCached::Member.new(invitee).clear_list_groups
+    end
+
+    # helper function for joining/request
+    def joining_group()
+        new_request = true
+        joined = true
+
+        group_member_action = Group::MemberAction.new(@group)
+        group_member_action.accept(@member)
+
+        return new_request, joined
+    end
+
+    def request_joining_group()
+        new_request = true
+        joined = false
+
+        is_member_active_in_group = Group::ListMember.new(@group).is_active?(member)
+
+        if is_member_active_in_group
+            raise ExceptionHandler::UnprocessableEntity, "You have already joined #{group.name}"
+        end
+
+        if GroupMember.have_request_group?(@group, @member)
+            group_member_action = Group::MemberAction.new(@group)
+            group_member_aciton.accept(@member)
+            joined = true
+        else
+            request_groups = @group.request_groups.where(member_id: @member.id).first_or_create do |each_group|
+                each_group.member_id = @member.id
+                each_group.group_id = @group.id
+                each_group.save!
+                new_request = true
+                @member.flush_cache_ask_join_groups
+                RequestGroupWorker.perform_async(@member.id, @group.id) unless Rails.env.test?
+            end
+        end
+
+        return new_request, joined
     end
 end
