@@ -242,9 +242,9 @@ class Group < ActiveRecord::Base
         @member = member
         @group = group
 
-        if @group.need_approve
-          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has cancelled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
-        end
+        # if @group.need_approve
+        #   raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has cancelled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
+        # end
 
         raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved." if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
 
@@ -264,9 +264,9 @@ class Group < ActiveRecord::Base
           Company::FollowOwnerGroup.new(@friend, @group.member.id).follow!
         end
 
-        if @group.need_approve
-          ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
-        end
+        # if @group.need_approve
+        #   ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
+        # end
 
         FlushCached::Group.new(@group).clear_list_members
 
