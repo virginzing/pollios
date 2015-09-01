@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 pathname = Pathname.new(__FILE__)
-RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::GroupService" do
+RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::GroupAction" do
 
     let(:group_admin) { create(:member, fullname: "GroupAdmin Member") }
     let(:group_member) { create(:member, fullname: "Ordinary GroupMember") }
@@ -9,7 +9,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     context "#create: A member create group, becoming admin of the group" do
 
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
         it "- A member could create a group" do
             expect(new_group).to be_truthy
@@ -29,7 +29,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     context "#create: A member create group that needs approve" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
 
         it "- Group really needs approve" do
             expect(new_group.need_approve).to be true
@@ -37,7 +37,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     context "#create: A member create group that doesn't need approve" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
 
         it "- Group really doesn't need approve" do
             expect(new_group.need_approve).to be false
@@ -46,7 +46,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     context "#create: A member create group with cover url" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_cover_url)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_with_cover_url)) }
 
         it "- A cover URL is given and set to group" do
             expect(new_group.cover.url).to include("v1436275533/mkhzo71kca62y9btz3bd.png")
@@ -60,7 +60,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     # TODO: Later, do a proper Company::Group service for this one
     context "#create: A Member who is a Company create a group" do
         let(:company) { create(:member_is_company, fullname: "A PolliosCompany") }
-        let(:new_group) { Member::GroupService.new(company).create(FactoryGirl.attributes_for(:group)) }
+        let(:new_group) { Member::GroupAction.new(company).create(FactoryGirl.attributes_for(:group)) }
 
         it "- Group-Company got created" do
             expect(new_group.group_company).to be_valid
@@ -68,7 +68,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     context "#create #invite: A member create group with invitation list: 103,104,105,107,108,109" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
 
         before(:context) do
             users = FactoryGirl.create_list(:sequence_member, 10)
@@ -85,14 +85,14 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 
     context "#join: A member request joining group that doesn't need approval" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
 
         it "- A member could join group (exist in group-member list)" do
         end
     end
 
     context "#join: A member request joining group that needs approval" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
 
         it "- A member is in pending approval list" do
         end
@@ -103,17 +103,17 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 
     context "#invite: Admin member invite user to group" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
     end
 
     context "#invite: Non-admin member invite user to group that don't need approve" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_dont_need_approve)) }
 
     end
 
     context "#invite: Non-admin member invite user to group that needs approve" do
-        let(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
+        let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve)) }
 
     end
 
