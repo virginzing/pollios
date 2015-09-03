@@ -30,13 +30,19 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 	context "Filter" do
 
-		let(:group_admin) {create(:member, fullname: "Admin") }
-		let(:group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_list)) }
-		#(:new_group) { Member::GroupService.new(group_admin).create(FactoryGirl.attributes_for(:group_member_with_member_list)) }
+		let(:group_admin) { create(:member, id: 100) }
+		let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
-		it "- members id: 103,104,105,106,107,108,109 are non member form list" do			
-			expect(Group::ListMember.new(group).filter_non_members_from_list([103, 104, 105, 107, 108, 109])).to match_array([103, 104, 105, 107, 108, 109])
-		end
+		let!(:group_member) { create(:group_member, member_id: 103, group_id: 1) }
+		let!(:group_member_2) { create(:group_member, member_id: 109, group_id: 1) }
+
+		it "- members id: 104,105,107,108 are non members from list" do	
+			expect(Group::ListMember.new(new_group).filter_non_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([104, 105, 107, 108])
+        end
+
+        it "- members id: 100 is members from list" do
+        	expect(Group::ListMember.new(new_group).filter_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([])
+        end
 	end
 
 end

@@ -57,6 +57,10 @@ class Group::ListMember
     members_as_admin.map(&:id).include?(member.id) ? true : false  
   end
 
+  def is_active?(member)
+    active.map(&:id).include?(member.id)
+  end
+
   def raise_error_not_member(member)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP unless active.include?(member)
   end
