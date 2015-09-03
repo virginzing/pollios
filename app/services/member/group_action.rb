@@ -6,10 +6,6 @@ class Member::GroupAction
         @options = options
     end
 
-    def fuck()
-        "fuck group"
-    end
-
     def member
         return @member
     end

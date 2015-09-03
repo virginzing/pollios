@@ -76,8 +76,8 @@ FactoryGirl.define do
   factory :sequence_member, class: Member do
     fullname Faker::Name.name
 
-    sequence(:id) { |n| n+100 }
-    sequence(:email) { |n| "mail#{n}@mail.com" }
+    sequence(:id) { |n| n+101 }
+    sequence(:email) { |n| "mail#{n+1}@mail.com" }
   end
 
   factory :one, class: Member do

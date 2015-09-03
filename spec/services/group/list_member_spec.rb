@@ -29,20 +29,25 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 	end
 
 	context "Filter" do
+		let!(:group_admin) { create(:member, id: 100) }
+		let!(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
-		let(:group_admin) { create(:member, id: 100) }
-		let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+		let!(:group_member) { create(:group_member, member_id: 103, group_id: new_group.id) }
+		let!(:group_member_2) { create(:group_member, member_id: 109, group_id: new_group.id) }
 
-		let!(:group_member) { create(:group_member, member_id: 103, group_id: 1) }
-		let!(:group_member_2) { create(:group_member, member_id: 109, group_id: 1) }
+		before(:context) do
+            users = FactoryGirl.create_list(:sequence_member, 10)
+        end
 
 		it "- members id: 104,105,107,108 are non members from list" do	
+			expect(new_group.members.count).to eq(3)
 			expect(Group::ListMember.new(new_group).filter_non_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([104, 105, 107, 108])
-        end
+		end
 
-        it "- members id: 100 is members from list" do
-        	expect(Group::ListMember.new(new_group).filter_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([])
-        end
+		it "- members id: 100, 103, 109 is members from list" do
+			expect(new_group.members.count).to eq(3)
+			expect(Group::ListMember.new(new_group).filter_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([100, 103, 109])
+		end
 	end
 
 end

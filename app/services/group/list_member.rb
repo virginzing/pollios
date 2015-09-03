@@ -30,7 +30,7 @@ class Group::ListMember
   end
 
   def filter_members_from_list(member_list)
-    return group_member_ids - member_list
+    return group_member_ids - filter_non_members_from_list(member_list)
   end
 
   def filter_non_members_from_list(member_list)

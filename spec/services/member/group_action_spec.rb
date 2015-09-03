@@ -89,7 +89,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         let!(:group_action) { Member::GroupAction.new(group_admin, group) }
 
         it "- A member could join group (exist in group-member list)" do
-            expect(group_action.fuck).to eq("fuck")
         end
     end
 
