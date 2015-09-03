@@ -121,6 +121,11 @@ class GroupController < ApplicationController
   end
 
   def request_group
+
+    # TODO: Make this work!
+    # member_group_action = Member::GroupAction.new(@current_member, @group)
+    # @new_request, @joined = member_group_action.join()
+
     unless @group.need_approve
       Group.accept_request_group(@current_member, @current_member, @group)
       @new_request = true
