@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150820053058) do
+ActiveRecord::Schema.define(version: 20150904060133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -757,6 +757,7 @@ ActiveRecord::Schema.define(version: 20150820053058) do
     t.boolean  "show_recommend",             default: false
     t.hstore   "notification",               default: {},    null: false
     t.boolean  "show_search",                default: true
+    t.integer  "polls_count",                default: 0
   end
 
   add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
