@@ -115,7 +115,7 @@ class Poll < ActiveRecord::Base
 
   has_one :poll_company
 
-  belongs_to :member
+  belongs_to :member, counter_cache: true
   belongs_to :poll_series
   belongs_to :campaign
   belongs_to :recurring
