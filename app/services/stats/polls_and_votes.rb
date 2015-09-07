@@ -1,0 +1,2 @@
+class Stats::PollsAndVotes
+end
