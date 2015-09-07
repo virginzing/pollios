@@ -443,7 +443,7 @@ class PollsController < ApplicationController
 
   def load_comment #
     raise_exception_without_group if @poll.in_group
-    init_list_poll ||= Member::ListPoll.new(@current_member)
+    init_list_poll ||= Member::PollList.new(@current_member)
     list_report_comments_ids = init_list_poll.report_comments.map(&:id)
 
     query = Comment.without_deleted.joins(:member)

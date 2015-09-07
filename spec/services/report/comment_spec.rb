@@ -11,7 +11,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     let!(:comment_from_another_member) { create(:comment, poll: poll, member: another_member, message: Faker::Lorem.sentence )}
 
     # using ListPoll class in Member module to fetch list of comments this user has reported
-    let(:comments_reported_by_member) { Member::ListPoll.new(member).report_comments }
+    let(:comments_reported_by_member) { Member::PollList.new(member).report_comments }
 
     context "A User report his own comment" do
         it "- (pre-check) user never report any comment" do

@@ -90,7 +90,7 @@ RSpec.describe "Comment API" do
 
     it "has report count 1 of comment one" do
       expect(comment_one.reload.report_count).to eq(1)
-      expect(Member::ListPoll.new(another_member).report_comments.size).to eq(1)
+      expect(Member::PollList.new(another_member).report_comments.size).to eq(1)
     end
   end
 end

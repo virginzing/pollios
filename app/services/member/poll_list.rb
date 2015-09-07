@@ -1,4 +1,5 @@
-class Member::ListPoll
+class Member::PollList
+  
   def initialize(member)
     @member = member
   end
