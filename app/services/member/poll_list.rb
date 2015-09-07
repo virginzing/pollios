@@ -28,6 +28,15 @@ class Member::PollList
     voted_all.collect{|e| e["poll_id"] }.include?(poll.id)    
   end
 
+  def saved_poll_ids
+    saved_later_query.select { |e| e if e.savable_type == "Poll"}.map(&:savable_id)
+  end
+
+  def saved_questionnaire_ids
+    saved_later_query.select { |e| e if e.savable_type == "PollSeries" }.map(&:savable_id)
+  end
+
+######### PRIVATE METHODS #########
   private
 
   def member_report_polls
@@ -74,5 +83,9 @@ class Member::PollList
   def cached_watch_polls
     Rails.cache.fetch("member/#{@member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
   end
-  
+
+  def saved_later_query
+    SavePollLater.where(member_id: @member.id)
+  end
+
 end

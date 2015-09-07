@@ -8,8 +8,9 @@ class V6::MyPollInProfile
     @member = member
     @options = options
     @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
-    @init_save_poll ||= SavePoll.new( { member_id: member.id} )
     @init_bookmark_poll ||= BookmarkPoll.new( { member_id: member.id } )
+
+    @poll_list ||= Member::PollList.new(@member)
   end
 
   def member_id
@@ -29,11 +30,11 @@ class V6::MyPollInProfile
   end
 
   def saved_poll_ids_later
-    @init_save_poll.get_list_poll_id
+    @poll_list.saved_poll_ids
   end
 
   def saved_questionnaire_ids_later
-    @init_save_poll.get_list_questionnaire_id
+    @poll_list.saved_questionnaire_ids
   end
 
   def bookmarked_poll_ids
