@@ -25,8 +25,8 @@ RSpec.describe SavePollLater, :type => :model do
   describe ".get_only_questionnaire_id" do
     let!(:saved_poll) { create(:save_poll_later, member: member, savable: questionnaire) }
 
-    it "return array ids of poll series" do
-      expect(SavePoll.new({ member_id: member.id}).get_list_questionnaire_id).to eq([questionnaire.id])
+    it "return array ids of poll series/questionnaire" do
+      expect(Member::PollList.new(member).saved_questionnaire_ids).to eq([questionnaire.id])
     end
 
   end
@@ -35,7 +35,7 @@ RSpec.describe SavePollLater, :type => :model do
     let!(:saved_poll) { create(:save_poll_later, member: member, savable: first_poll) }
 
     it "return array ids of poll" do
-      expect(SavePoll.new({ member_id: member.id}).get_list_poll_id).to eq([first_poll.id])  
+      expect(Member::PollList.new(member).saved_poll_ids).to eq([first_poll.id])  
     end
 
   end

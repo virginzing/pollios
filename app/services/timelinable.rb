@@ -15,10 +15,6 @@ module Timelinable
     @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
   end
 
-  def init_save_poll
-    @init_save_poll ||= SavePoll.new({ member_id: member_id})
-  end
-
   def unsee_poll_ids
     init_un_see_poll.get_list_poll_id
   end
@@ -29,12 +25,10 @@ module Timelinable
 
   def saved_poll_ids_later
     member_poll_list.saved_poll_ids
-    # init_save_poll.get_list_poll_id
   end
 
   def saved_questionnaire_ids_later
     member_poll_list.saved_questionnaire_ids
-    # init_save_poll.get_list_questionnaire_id
   end
 
   def vote_all_polls

@@ -10,6 +10,8 @@ class V6::PollOfGroup
     @member = member
     @group = group
     @params = params
+
+    @member_poll_list = Member::PollList.new(@member)
   end
 
   def member_id
@@ -32,10 +34,6 @@ class V6::PollOfGroup
     @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
   end
 
-  def init_save_poll
-    @init_save_poll ||= SavePoll.new({ member_id: member_id})
-  end
-
   def unsee_poll_ids
     init_un_see_poll.get_list_poll_id
   end
@@ -45,11 +43,11 @@ class V6::PollOfGroup
   end
 
   def saved_poll_ids_later
-    init_save_poll.get_list_poll_id
+    @member_poll_list.saved_poll_ids
   end
 
   def saved_questionnaire_ids_later
-    init_save_poll.get_list_questionnaire_id
+    @member_poll_list.saved_questionnaire_ids
   end
 
   def my_vote_questionnaire_ids
