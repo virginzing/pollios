@@ -36,6 +36,14 @@ class Member::PollList
     saved_later_query.select { |e| e if e.savable_type == "PollSeries" }.map(&:savable_id)
   end
 
+  def not_interested_poll_ids
+    
+  end
+
+  def not_interested_questionnaire_ids
+    
+  end
+
 ######### PRIVATE METHODS #########
   private
 
