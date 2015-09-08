@@ -10,7 +10,8 @@ class V6::FriendPollInProfile
     @init_list_group = Member::ListGroup.new(@friend)
     @my_group = Member.list_group_active
     @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
-    @init_save_poll ||= SavePoll.new( { member_id: member.id} )
+
+    @poll_list ||= Member::PollList.new(@member)
   end
 
   def friend_id
@@ -34,11 +35,11 @@ class V6::FriendPollInProfile
   end
 
   def saved_poll_ids_later
-    @init_save_poll.get_list_poll_id
+    @poll_list.saved_poll_ids
   end
 
   def saved_questionnaire_ids_later
-    @init_save_poll.get_list_questionnaire_id
+    @poll_list.saved_questionnaire_ids
   end
 
   def my_group_id
