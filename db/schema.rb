@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150904095239) do
+ActiveRecord::Schema.define(version: 20150910081029) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -804,6 +804,18 @@ ActiveRecord::Schema.define(version: 20150904095239) do
     t.datetime "updated_at"
   end
 
+  create_table "not_interested_polls", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "unseeable_id"
+    t.string   "unseeable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "not_interested_polls", ["member_id", "unseeable_id"], name: "index_not_interested_polls_on_member_id_and_unseeable_id", unique: true, using: :btree
+  add_index "not_interested_polls", ["member_id"], name: "index_not_interested_polls_on_member_id", using: :btree
+  add_index "not_interested_polls", ["unseeable_id", "unseeable_type"], name: "index_not_interested_polls_on_unseeable_id_and_unseeable_type", using: :btree
+
   create_table "notify_logs", force: true do |t|
     t.integer  "sender_id"
     t.integer  "recipient_id"
@@ -1210,18 +1222,6 @@ ActiveRecord::Schema.define(version: 20150904095239) do
 
   add_index "triggers", ["data"], name: "index_triggers_on_data", using: :gist
   add_index "triggers", ["triggerable_id", "triggerable_type"], name: "index_triggers_on_triggerable_id_and_triggerable_type", using: :btree
-
-  create_table "un_see_polls", force: true do |t|
-    t.integer  "member_id"
-    t.integer  "unseeable_id"
-    t.string   "unseeable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "un_see_polls", ["member_id", "unseeable_id"], name: "index_un_see_polls_on_member_id_and_unseeable_id", unique: true, using: :btree
-  add_index "un_see_polls", ["member_id"], name: "index_un_see_polls_on_member_id", using: :btree
-  add_index "un_see_polls", ["unseeable_id", "unseeable_type"], name: "index_un_see_polls_on_unseeable_id_and_unseeable_type", using: :btree
 
   create_table "versions", force: true do |t|
     t.string   "item_type",  null: false

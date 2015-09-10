@@ -23,7 +23,7 @@ RSpec.describe NotInterestedPoll, :type => :model do
   let!(:second_poll) { create(:poll, poll_series: questionnaire, member:member) }
 
   describe ".get_only_questionnaire_id" do
-    let!(:unsee_questionnaire) { create(:un_see_poll, member: member, unseeable: questionnaire) }
+    let!(:unsee_questionnaire) { create(:not_interested_poll, member: member, unseeable: questionnaire) }
 
     it "return array ids of poll series" do
       expect(UnseePoll.new({ member_id: member.id}).get_list_questionnaire_id).to eq([questionnaire.id])
@@ -32,7 +32,7 @@ RSpec.describe NotInterestedPoll, :type => :model do
   end
 
   describe ".get_only_poll_id" do
-    let!(:unsee_poll) { create(:un_see_poll, member: member, unseeable: first_poll) }
+    let!(:unsee_poll) { create(:not_interested_poll, member: member, unseeable: first_poll) }
 
     it "return array ids of poll" do
       expect(UnseePoll.new({ member_id: member.id}).get_list_poll_id).to eq([first_poll.id])  
@@ -42,7 +42,7 @@ RSpec.describe NotInterestedPoll, :type => :model do
 
   describe ".delete_unsee" do
     context 'poll' do
-      let!(:unsee_poll) { create(:un_see_poll, member: member, unseeable: first_poll) }
+      let!(:unsee_poll) { create(:not_interested_poll, member: member, unseeable: first_poll) }
 
       it "delete unsee" do
         expect(NotInterestedPoll.count).to eq(1)

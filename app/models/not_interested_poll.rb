@@ -12,7 +12,7 @@
 
 class NotInterestedPoll < ActiveRecord::Base
 
-    self.table_name = "un_see_polls"
+    # self.table_name = "un_see_polls"
 
     belongs_to :member
     belongs_to :unseeable, polymorphic: true
