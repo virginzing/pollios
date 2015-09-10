@@ -634,9 +634,9 @@ Pollios::Application.routes.draw do
   get 'auth/failure', to: redirect('/')
 
   root to: 'home#index'
-  # authenticate :admin do
-  #   mount Sidekiq::Web => '/sidekiq'
-  # end
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :admin do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+  # mount Sidekiq::Web => '/sidekiq'
 
 end
