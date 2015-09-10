@@ -29,11 +29,11 @@ class Member::PollList
   end
 
   def saved_poll_ids
-    saved_later_query.select { |e| e if e.savable_type == "Poll"}.map(&:savable_id)
+    saved_later_query("Poll")
   end
 
   def saved_questionnaire_ids
-    saved_later_query.select { |e| e if e.savable_type == "PollSeries" }.map(&:savable_id)
+    saved_later_query("PollSeries")
   end
 
   def not_interested_poll_ids
@@ -92,8 +92,8 @@ class Member::PollList
     Rails.cache.fetch("member/#{@member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
   end
 
-  def saved_later_query
-    SavePollLater.where(member_id: @member.id)
+  def saved_later_query(type_name)
+    @member.save_poll_laters.where(savable_type: type_name).map(&:savable_id)
   end
 
 end

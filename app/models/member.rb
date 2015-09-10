@@ -192,6 +192,8 @@ class Member < ActiveRecord::Base
 
   has_many :un_see_polls
 
+  has_many :save_poll_laters
+
   has_many :api_tokens, dependent: :destroy
 
   has_many :invites, dependent: :destroy
