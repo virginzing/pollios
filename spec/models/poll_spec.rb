@@ -57,7 +57,7 @@ RSpec.describe Poll, :type => :model do
 
 
   it { should have_many(:choices) }
-  it { should have_many(:un_see_polls) }
+  it { should have_many(:not_interested_polls) }
   it { should have_many(:save_poll_laters) }
   it { should have_many(:poll_attachments) }
   it { should have_many(:taggings) }

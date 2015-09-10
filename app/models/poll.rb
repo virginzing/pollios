@@ -100,7 +100,8 @@ class Poll < ActiveRecord::Base
 
   has_many :member_report_polls
 
-  has_many :un_see_polls, as: :unseeable
+  # has_many :un_see_polls, as: :unseeable
+  has_many :not_interested_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
 
   has_many :bookmarks, as: :bookmarkable

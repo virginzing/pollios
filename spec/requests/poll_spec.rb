@@ -91,17 +91,17 @@ RSpec.describe "Poll" do
 
       expect(json["response_status"]).to eq("OK")
 
-      expect(UnSeePoll.count).to eq(1)
+      expect(NotInterestedPoll.count).to eq(1)
     end
 
     it "cannot unsee poll" do
-      UnSeePoll.create!(member_id: member.id, unseeable: poll)
+      NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
 
       post "/poll/#{poll.id}/un_see", { member_id: member.id }, { "Accept" => "application/json" }
       expect(response.status).to eq(422)
       expect(json["response_status"]).to eq("ERROR")
       expect(json["response_message"]).to eq("You have already unsee this poll.")
-      expect(UnSeePoll.count).to eq(1)
+      expect(NotInterestedPoll.count).to eq(1)
     end
   end
 
@@ -280,7 +280,7 @@ RSpec.describe "Poll" do
 
     it "has 0 save poll when this poll was unsee" do
       post "/poll/#{poll.id}/un_see.json", { member_id: member.id }, { "Accept" => "application/json" }
-      expect(UnSeePoll.count).to eq(1)
+      expect(NotInterestedPoll.count).to eq(1)
       expect(SavePollLater.count).to eq(0)
     end
   end

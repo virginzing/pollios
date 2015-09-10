@@ -12,7 +12,7 @@
 
 require 'rails_helper'
 
-RSpec.describe UnSeePoll, :type => :model do
+RSpec.describe NotInterestedPoll, :type => :model do
 
   it { should belong_to(:member) }
   it { should belong_to(:unseeable) }
@@ -45,9 +45,9 @@ RSpec.describe UnSeePoll, :type => :model do
       let!(:unsee_poll) { create(:un_see_poll, member: member, unseeable: first_poll) }
 
       it "delete unsee" do
-        expect(UnSeePoll.count).to eq(1)
+        expect(NotInterestedPoll.count).to eq(1)
         expect(UnseePoll.new({member_id: member.id, poll_id: first_poll.id}).delete_unsee_poll).to eq(true)
-        expect(UnSeePoll.count).to eq(0)
+        expect(NotInterestedPoll.count).to eq(0)
       end
     end
 

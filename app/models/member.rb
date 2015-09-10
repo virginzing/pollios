@@ -190,7 +190,7 @@ class Member < ActiveRecord::Base
 
   has_many :activity_feeds, dependent: :destroy
 
-  has_many :un_see_polls
+  has_many :not_interested_polls
 
   has_many :save_poll_laters
 

@@ -379,8 +379,8 @@ namespace :admin do
 
     TypeSearch.delete_all
 
-    UnSeePoll.delete_all
-    UnSeePoll.connection.execute('ALTER SEQUENCE un_see_polls_id_seq RESTART WITH 1')
+    NotInterestedPoll.delete_all
+    NotInterestedPoll.connection.execute('ALTER SEQUENCE un_see_polls_id_seq RESTART WITH 1')
 
     UserStats.delete_all
 

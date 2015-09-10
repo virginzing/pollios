@@ -13,7 +13,7 @@ RailsAdmin.config do |config|
     'PollSeriesCompany', 'LeaveGroupLog', 'GiftLog', 'Trigger', 'CollectionPollSeries', 
     'CollectionPollSeriesBranch', 'ApiToken', 'BranchPollSeries', 'FeedbackRecurring', 
     'Bookmark', 'AccessWeb', 'Branch', 'BranchPoll', 'CompanyMember', 'SavePollLater', 
-    'UnSeePoll', 'HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 
+    'NotInterestedPoll', 'HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 
     'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 
     'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
     'HistoryView', 'HistoryViewQuestionnaire', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 

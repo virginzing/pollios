@@ -56,7 +56,8 @@ class PollSeries < ActiveRecord::Base
   has_many :poll_series_groups
   has_many :groups, through: :poll_series_groups, source: :group
 
-  has_many :un_see_polls, as: :unseeable
+  # has_many :un_see_polls, as: :unseeable
+  has_many :not_interested_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
 
   has_one :branch_poll_series

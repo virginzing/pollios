@@ -11,7 +11,7 @@
 #
 
 FactoryGirl.define do
-  factory :un_see_poll do
+  factory :un_see_poll, class: NotInterestedPoll do
     member nil
   end
 

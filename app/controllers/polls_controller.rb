@@ -16,7 +16,7 @@ class PollsController < ApplicationController
   expose(:hash_priority) { @hash_priority }
 
   def un_see
-    @un_see_poll = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll)
+    @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
       NotifyLog.deleted_with_poll_and_member(@poll, @current_member)

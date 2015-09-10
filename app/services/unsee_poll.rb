@@ -30,27 +30,19 @@ class UnseePoll
     end
   end
 
-  def test_query
-      #TODO: this is a proof that query_unsee_poll and query_unsee_poll_with_except_my_poll should be equal
-      # at least on current version of the app. We don't allow users to 'no-vote' their own poll
-      # two methods in the private area could be removed, as well as property getter above
-      c1 = Poll.joins(:un_see_polls).where("un_see_polls.member_id = ? AND polls.member_id != ?", member_id, member_id).count
-      c2 = query_unsee_poll.count
-
-      return c1 == c2
-  end
-
   private
 
   def query_unsee_poll
-    @query ||= UnSeePoll.where(member_id: member_id)
+    @query ||= NotInterestedPoll.where(member_id: member_id)
   end
 
+  # TODO: Change "un_see_polls" in where expression to actual new not_interested_polls tablename
+  # WHEN: After migration to new tablename
   def query_unsee_poll_with_except_my_poll
-    Poll.joins(:un_see_polls).where("un_see_polls.member_id = ? AND polls.member_id != ?", member_id, member_id)
+    Poll.joins(:not_interested_polls).where("un_see_polls.member_id = ? AND polls.member_id != ?", member_id, member_id)
   end
 
   def query_unsee_poll_with_id
-    UnSeePoll.find_by(member_id: member_id, unseeable_id: poll_id)
+    NotInterestedPoll.find_by(member_id: member_id, unseeable_id: poll_id)
   end
 end

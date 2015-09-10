@@ -10,8 +10,11 @@
 #  updated_at     :datetime
 #
 
-class UnSeePoll < ActiveRecord::Base
-  belongs_to :member
-  belongs_to :unseeable, polymorphic: true
+class NotInterestedPoll < ActiveRecord::Base
+
+    self.table_name = "un_see_polls"
+
+    belongs_to :member
+    belongs_to :unseeable, polymorphic: true
 
 end
