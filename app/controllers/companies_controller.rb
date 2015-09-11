@@ -211,6 +211,7 @@ class CompaniesController < ApplicationController
 
   end
 
+  #TODO: Make a proper service model for Group::PollList with Company::GroupList
   def poll_detail
     @member = @poll.member
     @poll = @poll.decorate

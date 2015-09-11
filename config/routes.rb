@@ -41,45 +41,6 @@ Pollios::Application.routes.draw do
     end
   end
 
-  namespace :api, defaults: {format: 'json'} do
-    scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true) do
-      scope 'group/:group_id' do
-        get 'polls',  to: 'companies#polls'
-        get 'polls/:id/detail', to: 'companies#poll_detail'
-        get 'questionnaires/:id/detail',  to: 'companies#questionnaire_detail'
-        get 'questionnaires/:id/suggests',  to: 'companies#load_suggest'
-      end
-
-      scope 'company' do
-        get 'groups',     to: 'companies#company_groups'
-        get 'members',    to: 'companies#company_members'
-        get 'polls',      to: 'companies#company_polls'
-      end
-
-      scope 'surveyor' do
-        get 'polls',      to: 'surveyors#list_polls'
-        get 'polls/:id/detail', to: 'surveyors#poll_detail'
-        get 'polls/:id/members_surveyable', to: 'surveyors#members_surveyable'
-        get 'questionnaires/:id/members_surveyable',  to: 'surveyors#members_surveyable_questionnaire'
-        post 'polls/:id/survey',  to: 'surveyors#survey'
-        post 'polls/list_of_survey', to: 'surveyors#list_of_survey'
-
-        post 'questionnaires/survey', to: 'surveyors#survey_questionnaire'
-      end
-
-      scope 'campaign' do
-        post 'redeem_code',  to: 'campaigns#redeem_code'
-      end
-
-    end
-
-    scope module: :v2, constraints: ApiConstraints.new(version: 2) do
-      scope 'group/:group_id' do
-        get 'polls',  to: 'companies#polls'
-      end
-    end
-  end
-
   get "password_resets/new"
   devise_for :admins, :controllers => { :registrations => "admin/registrations" }
 
@@ -519,12 +480,6 @@ Pollios::Application.routes.draw do
     end
 
   end
-
-  scope 'api/group/:group_id' do
-    get 'polls',  to: 'companies#polls'
-    get 'polls/:id/detail',  to: 'companies#poll_detail'
-  end
-
 
   scope 'm' do
     get 'home', to: 'mobiles#home', as: :mobile_home
