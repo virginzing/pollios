@@ -201,17 +201,17 @@
   <div id="shortcut">
     <ul>
 
-      <% if current_company.using_service.include?(Company::SURVEY) %>
+      <% if signed_in? && current_company.using_service.include?(Company::SURVEY) %>
         <li>
           <a href="<%= company_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-green"> <span class="iconbox"> <i class="fa fa-edit fa-4x"></i> <span>Internal Survey</span> </span> </a>
         </li>
       <% end %>
-      <% if current_member.get_company.using_service.include?(Company::PUBLIC) %>
+      <% if signed_in? && current_member.get_company.using_service.include?(Company::PUBLIC) %>
         <li>
           <a href="<%= public_survey_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-globe fa-4x"></i> <span>Public Survey</span> </span> </a>
         </li>
       <% end %>
-      <% if current_member.get_company.using_service.include?(Company::FEEDBACK) %>
+      <% if signed_in? && current_member.get_company.using_service.include?(Company::FEEDBACK) %>
         <li>
           <a href="<%= feedback_dashboard_path %>" class="jarvismetro-tile big-cubes bg-color-red"> <span class="iconbox"> <i class="fa fa-location-arrow fa-4x"></i> <span> Feedback Location</span> </span> </a>
         </li>

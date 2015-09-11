@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   include PollsHelper
   include SessionsHelper
 
-  layout :layout_by_resource
+  # layout :layout_by_resource
 
   protect_from_forgery with: :exception
 

@@ -42,14 +42,14 @@ Pollios::Application.routes.draw do
   end
 
   get "password_resets/new"
-  devise_for :admins, :controllers => { :registrations => "admin/registrations" }
+  devise_for :admins #, :controllers => { :registrations => "admin/registrations" }
 
   authenticate :admin do
     mount Sidekiq::Web => '/sidekiq'
   end
 
 
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+  mount RailsAdmin::Engine => '/rails_admin', :as => 'rails_admin'
 
   resources :recurrings
   resources :comments
@@ -597,5 +597,5 @@ Pollios::Application.routes.draw do
   #   mount Sidekiq::Web => '/sidekiq'
   # end
   # mount Sidekiq::Web => '/sidekiq'
-
+  get '*path' => redirect('/')
 end
