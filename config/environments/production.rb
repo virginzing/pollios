@@ -96,5 +96,5 @@ Pollios::Application.configure do
   # end
 
   # config.cache_store = :dalli_store, nil,  { compress: true }
-
+  config.relative_url_root = "/"
 end

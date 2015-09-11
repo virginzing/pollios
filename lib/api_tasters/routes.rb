@@ -1,5 +1,5 @@
 if Rails.env.development?
-  member_id = 179
+  member_id = 3
   api_version = 6
 
   ApiTaster.routes do

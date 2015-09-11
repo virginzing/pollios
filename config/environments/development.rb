@@ -34,4 +34,6 @@ Pollios::Application.configure do
   #   Bullet.enable = true
   #   Bullet.raise = true
   # end  
+
+  config.relative_url_root = "/"
 end
