@@ -379,21 +379,6 @@ class PollsController < ApplicationController
     @watch = @init_watch.unwatch
   end
 
-  def hide
-    new_hidden_poll = false
-    @hide = @current_member.hidden_polls.where(poll_id: params[:id]).first_or_initialize do |hd|
-            hd.member_id = @current_member.id
-            hd.poll_id = params[:id]
-            hd.save!
-            new_hidden_poll = true
-    end
-
-    if new_hidden_poll
-      SavePollLater.delete_save_later(@current_member.id, @poll)
-      Rails.cache.delete([@current_member.id, 'hidden_polls'])
-    end
-  end
-
   def report
     @init_report = Report::Poll.new(@current_member, @poll, { message: params[:message], message_preset: params[:message_preset] })
     @report = @init_report.reporting

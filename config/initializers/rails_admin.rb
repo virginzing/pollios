@@ -15,7 +15,7 @@ RailsAdmin.config do |config|
     'Bookmark', 'AccessWeb', 'Branch', 'BranchPoll', 'CompanyMember', 'SavePollLater', 
     'NotInterestedPoll', 'HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 
     'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 
-    'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
+    'SharePoll', 'PollGroup', 'PollMember',
     'HistoryView', 'HistoryViewQuestionnaire', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 
     'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
     'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode','MemberReportComment', 'Reward', 'Invite', 

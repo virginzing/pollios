@@ -4,7 +4,6 @@ class HashtagTimeline
   def initialize(member_obj, options)
     @member = member_obj
     @options = options
-    @hidden_poll = HiddenPoll.my_hidden_poll(member_obj.id)
     @report_poll = Member.current_member.cached_report_poll
     @block_member = Member.list_friend_block
 
@@ -61,7 +60,6 @@ class HashtagTimeline
       order("count desc").limit(10)
 
     query = report_poll_filter(query)
-    query = hidden_poll_filter(query)
     query = block_poll_filter(query)
 
     return query
@@ -69,11 +67,6 @@ class HashtagTimeline
 
   def report_poll_filter(query)
     query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.size > 0
-    query
-  end
-
-  def hidden_poll_filter(query)
-    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.size > 0
     query
   end
 

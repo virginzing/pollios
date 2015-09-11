@@ -117,8 +117,6 @@ class Member < ActiveRecord::Base
   has_many :following, -> { where("following = 't' AND status != 1") }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
   has_many :get_following, -> { where('members.member_type = 1 OR members.member_type = 2') } ,through: :following, source: :followed
 
-  has_many :hidden_polls, dependent: :destroy
-
   has_many :history_views, dependent: :destroy
 
   has_many :history_votes, dependent: :destroy
@@ -606,12 +604,6 @@ class Member < ActiveRecord::Base
     Rails.cache.fetch([ self.id, 'watcheds' ]) do
       @init_poll = MyPollInProfile.new(self)
       @init_poll.my_watched.to_a
-    end
-  end
-
-  def cached_hidden_polls
-    Rails.cache.fetch([ self.id, 'hidden_polls']) do
-      hidden_polls.to_a
     end
   end
 

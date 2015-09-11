@@ -260,9 +260,6 @@ namespace :admin do
     GroupSurveyor.delete_all
     GroupSurveyor.connection.execute('ALTER SEQUENCE group_surveyors_id_seq RESTART WITH 1')
 
-    HiddenPoll.delete_all
-    HiddenPoll.connection.execute('ALTER SEQUENCE hidden_polls_id_seq RESTART WITH 1')
-
     HistoryPurchase.delete_all
     HistoryPurchase.connection.execute('ALTER SEQUENCE history_purchases_id_seq RESTART WITH 1')
 

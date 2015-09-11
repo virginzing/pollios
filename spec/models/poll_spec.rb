@@ -66,7 +66,6 @@ RSpec.describe Poll, :type => :model do
   it { should have_many(:comments) }
   it { should have_many(:history_votes) }
   it { should have_many(:history_views) }
-  it { should have_many(:hidden_polls) }
   it { should have_many(:branches) }
 
   it { should belong_to(:member) }

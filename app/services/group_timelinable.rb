@@ -7,7 +7,6 @@ class GroupTimelinable
   def initialize(member, options)
     @member = member
     @options = options
-    @hidden_poll = HiddenPoll.my_hidden_poll(@member.id)
     @type = options["type"] || "all"
     @poll_series = []
     @poll_nonseries = []
@@ -31,11 +30,6 @@ class GroupTimelinable
     cached_poll_ids_of_poll_group.size
   end
 
-
-  # def group_poll
-  #   @group_poll ||= group_of_poll
-  # end
-
   def test_poll
     find_poll_in_my_group
   end
@@ -51,19 +45,10 @@ class GroupTimelinable
     "polls.expire_date > '#{Time.now}'"
   end
 
-  # def group_of_poll
-  #   query_group_poll = "poll_groups.group_id IN (?)"
-
-  #   query =  Poll.joins(:poll_groups).uniq.
-  #                 includes(:member, :poll_series, :campaign).
-  #                 where("(#{query_group_poll} AND #{poll_unexpire})", your_group_ids)
-  # end
-
   def find_poll_in_my_group
     query_poll_in_group = "group_id IN (?) AND share_poll_of_id = 0"
 
     poll_group = PollGroup.joins(:poll).where("polls.expire_status = 'f'").where("(#{query_poll_in_group} AND #{poll_unexpire}) OR (#{query_poll_in_group} AND #{poll_expire_have_vote})", your_group_ids, your_group_ids).limit(LIMIT_TIMELINE)
-    # puts "poll_group => #{poll_group.to_a.uniq_by {|e| e.poll_id } }"
     poll_group = poll_group.to_a.uniq {|poll| poll.poll_id }
 
     ids, poll_ids = poll_group.map(&:id), poll_group.map(&:poll_id)
@@ -71,9 +56,7 @@ class GroupTimelinable
 
   def find_poll_share_in_group
     query_poll_shared_in_group = "poll_groups.group_id IN (?) AND share_poll_of_id <> 0"
-
     poll_group = PollGroup.joins(:poll).where("polls.expire_status = 'f'").where("#{query_poll_shared_in_group} AND #{poll_unexpire}", your_group_ids)
-
     poll_group.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
 

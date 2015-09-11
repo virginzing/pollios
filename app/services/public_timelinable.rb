@@ -8,10 +8,6 @@ class PublicTimelinable
     @member = member
   end
 
-  def my_hidden
-    HiddenPoll.my_hidden_poll(member_id)
-  end
-
   def my_vote_questionnaire_ids
     Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
   end
@@ -22,9 +18,9 @@ class PublicTimelinable
 
   def filter_type(query, type)
     case type
-      when "active" then query.where("poll_members.expire_date > ?", Time.now)
-      when "inactive" then query.where("poll_members.expire_date < ?", Time.now)
-      else query
+    when "active" then query.where("poll_members.expire_date > ?", Time.now)
+    when "inactive" then query.where("poll_members.expire_date < ?", Time.now)
+    else query
     end
   end
 
@@ -34,13 +30,8 @@ class PublicTimelinable
 
     query_poll_public_with_hidden = "poll_members.public = 't' AND poll_members.share_poll_of_id = 0 AND poll_members.poll_id NOT IN (?) AND poll_members.in_group = 'f'"
 
-    if my_hidden.empty?
-      query = Poll.available.unexpire.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                   where("(#{query_poll_public} AND #{poll_unexpire})")
-    else
-      query = Poll.available.unexpire.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
-                  where("(#{query_poll_public_with_hidden} AND #{poll_unexpire})", my_hidden)
-    end
+    query = Poll.available.unexpire.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign).
+    where("(#{query_poll_public} AND #{poll_unexpire})")
 
     query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.size > 0
 

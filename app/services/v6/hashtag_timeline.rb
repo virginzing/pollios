@@ -50,18 +50,6 @@ class V6::HashtagTimeline
 
   private
 
-  # def tag_popular
-  #   query = Tag.joins(:taggings => [:poll => :poll_members]).
-  #     where("polls.in_group_ids = '0'").
-  #     where("polls.vote_all > 0").
-  #     where("(polls.public = ?) OR (poll_members.member_id IN (?) AND poll_members.share_poll_of_id = 0 AND poll_members.series = 'f')", true, your_friend_ids).
-  #     select("tags.*, count(taggings.tag_id) as count").
-  #     group("taggings.tag_id, tags.id").
-  #     order("count desc").limit(5)
-
-  #   query
-  # end
-
   def tags_popular
     Tag.joins(:taggings => [:poll => :poll_members]).select("tags.*, count(taggings.tag_id) as count") \
         .where("polls.expire_status = 'f' AND polls.vote_all > 0 AND polls.in_group_ids = '0' AND polls.series = 'f'") \
@@ -85,11 +73,6 @@ class V6::HashtagTimeline
 
   def report_poll_filter(query)
     query.where("polls.id NOT IN (?)", @report_poll.map(&:id)) if @report_poll.size > 0
-    query
-  end
-
-  def hidden_poll_filter(query)
-    query.where("polls.id NOT IN (?)", @hidden_poll.map(&:id)) if @hidden_poll.size > 0
     query
   end
 
