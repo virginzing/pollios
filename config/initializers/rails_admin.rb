@@ -21,7 +21,7 @@ RailsAdmin.config do |config|
     'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode','MemberReportComment', 'Reward', 'Invite', 
     'MemberReportPoll', 'MemberUnRecomment', 'MemberReportMember', 'Activity', 'Comment','Suggest', 'Company', 
     'UserStats', 'PollStats', 'Role','GroupSurveyor', 'RequestGroup', 'GroupCompany', 
-    'CoverPreset']
+    'CoverPreset', 'MemberActiveRecord']
 
 
   config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }
