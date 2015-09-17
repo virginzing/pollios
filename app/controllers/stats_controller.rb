@@ -17,10 +17,10 @@ class StatsController < ApplicationController
       redirect_to stats_dashboard_path(filter_by: FilterByStats::TODAY)
     end
 
-    @stats_poll_record = Stats::PollRecord.new(filter_by: dashboard_params[:filter_by])
-    @stats_vote_record = Stats::VoteRecord.new(filter_by: dashboard_params[:filter_by])
-    @stats_user_record = Stats::UserRecord.new(filter_by: dashboard_params[:filter_by])
-    @stats_group_record = Stats::GroupRecord.new(filter_by: dashboard_params[:filter_by])
+    @stats_poll_record = Stats::PollRecord.new(filter_by: filtering)
+    @stats_vote_record = Stats::VoteRecord.new(filter_by: filtering)
+    @stats_user_record = Stats::UserRecord.new(filter_by: filtering)
+    @stats_group_record = Stats::GroupRecord.new(filter_by: filtering)
   end
 
   # NOTE: CURRENTLY UNUSED. NO LINK.

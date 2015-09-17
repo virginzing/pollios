@@ -569,28 +569,4 @@ class Group < ActiveRecord::Base
       group_type: group_type_text.downcase
     }
   end
-
-  #### deprecated ####
-
-  # def self.cached_member_active(group_id)
-  #   Rails.cache.fetch([ 'group', group_id, 'member_active']) do
-  #     Group.find(group_id).get_member_active.to_a.map(&:id)
-  #   end
-  # end
-
-  # def self.flush_cached_member_active(group_id)
-  #   Rails.cache.delete([ 'group', group_id, 'member_active' ])
-  # end
-
-  # def company?
-  #   group_company.present?
-  # end
-
-  # def is_company?
-  #   self.group_type == "company"
-  # end
-
-  # def set_notification(member_id)
-  #   group_member = group_members.where("member_id = ?", member_id)
-  # end
 end

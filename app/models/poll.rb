@@ -477,13 +477,13 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.vote_poll(poll, member, data_options = {})
-    member_id = poll[:member_id]
-    surveyor_id = poll[:surveyor_id]
-    poll_id = poll[:id]
-    choice_id = poll[:choice_id]
-    guest_id = poll[:guest_id]
-    show_result = poll[:show_result]
+  def self.vote_poll(params, member, data_options = {})
+    member_id = params[:member_id]
+    surveyor_id = params[:surveyor_id]
+    poll_id = params[:id]
+    choice_id = params[:choice_id]
+    guest_id = params[:guest_id]
+    show_result = params[:show_result]
 
     find_poll = Poll.find_by(id: poll_id)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
@@ -511,9 +511,9 @@ class Poll < ActiveRecord::Base
 
     Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
-    UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
+    UnseePoll.new({member_id: member.id, poll_id: poll_id}).delete_unsee_poll
 
-    SavePollLater.delete_save_later(member_id, find_poll)
+    SavePollLater.delete_save_later(member.id, find_poll)
 
     unless show_result.nil?
       check_show_result = show_result
