@@ -6,6 +6,7 @@ class MemberActiveRecord
   field :stats_created_at, type: Date, default: Date.current
   field :list_member_ids, type: Array, default: []
   field :app_id, type: String
+  field :action, type: String
 
   index( { stats_created_at: 1 }, { unique: true } )
 

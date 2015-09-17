@@ -79,23 +79,7 @@ class Stats::UserRecord
     list_members.flatten.uniq.size
   end
 
-  def user_active_total
-    list_members = []
-    user_active_all.to_a.each do |member_active|
-      list_members << member_active.list_member_ids
-    end
-    list_members.flatten.uniq.size
-  end
-
   def passive
-    list_members = []
-    user_passive_all.to_a.each do |member_active|
-      list_members << member_active.list_member_ids
-    end
-    list_members.flatten.uniq.size
-  end
-
-  def user_passive_total
     list_members = []
     user_passive_all.to_a.each do |member_active|
       list_members << member_active.list_member_ids
@@ -126,6 +110,7 @@ class Stats::UserRecord
   end
 
   def user_passive_total
+    puts "FUCK 2"
     MemberActiveRecord.where(action: "passive")
   end
 
