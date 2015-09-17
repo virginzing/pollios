@@ -2,21 +2,17 @@ class Stats::UserRecord
   include FilterByStats
 
   def initialize(options = {})
-    @options = options
-  end
-
-  def filter_by
-    @options[:filter_by] || TODAY
+    @filter_by = options[:filter_by] || TODAY
   end
 
   def query_all
-    @query_all ||= if filter_by == TODAY
+    @query_all ||= if @filter_by == TODAY
       user_with_range(Date.current, Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       user_with_range(1.days.ago.to_date, 1.days.ago.to_date)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       user_with_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       user_with_range(1.month.ago.to_date)
     else
       user_total
@@ -24,13 +20,13 @@ class Stats::UserRecord
   end
 
   def user_active_all
-    @user_active_all ||= if filter_by == TODAY
+    @user_active_all ||= if @filter_by == TODAY
       user_active_range(Date.current, Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       user_active_range(1.days.ago.to_date, 1.days.ago.to_date)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       user_active_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       user_active_range(1.month.ago.to_date)
     else
       user_active_total
@@ -38,13 +34,13 @@ class Stats::UserRecord
   end
 
   def user_passive_all
-    @user_passive_all ||= if filter_by == TODAY
+    @user_passive_all ||= if @filter_by == TODAY
       user_passive_range(Date.current, Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       user_passive_range(1.days.ago.to_date, 1.days.ago.to_date)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       user_passive_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       user_passive_range(1.month.ago.to_date)
     else
       user_passive_total
@@ -110,7 +106,6 @@ class Stats::UserRecord
   end
 
   def user_passive_total
-    puts "FUCK 2"
     MemberActiveRecord.where(action: "passive")
   end
 
