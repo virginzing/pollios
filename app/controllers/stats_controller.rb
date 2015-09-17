@@ -21,22 +21,19 @@ class StatsController < ApplicationController
     @stats_vote_record = Stats::VoteRecord.new(filter_by: dashboard_params[:filter_by])
     @stats_user_record = Stats::UserRecord.new(filter_by: dashboard_params[:filter_by])
     @stats_group_record = Stats::GroupRecord.new(filter_by: dashboard_params[:filter_by])
-
-    if filtering == 'yesterday'
-      @poll_per_hour = PollStats.poll_per_hour(Date.current - 1.day)
-    else
-      @poll_per_hour = PollStats.poll_per_hour
-    end
   end
 
+  # NOTE: CURRENTLY UNUSED. NO LINK.
   def polls
-    @poll_public_all_total = PublicPollSummary.new().get_poll_public_all_total
-    @poll_public_citizen_total = PublicPollSummary.new().get_poll_public_citizen_total
-    @poll_public_brand_celebrity_total = PublicPollSummary.new().get_poll_public_brand_celebrity_total
+    poll_summary = Stats::PublicPolls.new()
 
-    @poll_public_all = PublicPollSummary.new().get_poll_public_all
-    @poll_public_citizen = PublicPollSummary.new().get_poll_public_citizen
-    @poll_public_brand_celebrity = PublicPollSummary.new().get_poll_public_brand_celebrity
+    @poll_public_all_total = poll_summary.get_poll_public_all_total
+    @poll_public_citizen_total = poll_summary.get_poll_public_citizen_total
+    @poll_public_brand_celebrity_total = poll_summary.get_poll_public_brand_celebrity_total
+
+    @poll_public_all = poll_summary.get_poll_public_all
+    @poll_public_citizen = poll_summary.get_poll_public_citizen
+    @poll_public_brand_celebrity = poll_summary.get_poll_public_brand_celebrity
   end
 
   def votes

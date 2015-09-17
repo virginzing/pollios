@@ -1,4 +1,5 @@
-class PublicPollSummary
+class Stats::PublicPolls
+  
   def initialize
     
   end

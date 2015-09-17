@@ -55,14 +55,6 @@ class PollStats
     new_amount_poll
   end
 
-  def self.poll_per_hour(date = Date.current)
-    new_hash = {}
-    @hash_poll = Poll.where(created_at: (date).beginning_of_day..(date).end_of_day).order('created_at asc').group_by(&:hour).each do |k, v|
-      new_hash.merge!({ k => v.size })
-    end
-    new_hash
-  end
-
   ## today or this week or this month
 
   def self.poll_popular(end_date, start_date = Date.current)
