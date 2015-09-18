@@ -27,11 +27,11 @@ class V6::FriendPollInProfile
   end
 
   def unsee_poll_ids
-    @init_unsee_poll.get_list_poll_id
+    @poll_list.not_interested_poll_ids
   end
 
   def unsee_questionnaire_ids
-    @init_unsee_poll.get_list_questionnaire_id
+    @poll_list.not_interested_questionnaire_ids
   end
 
   def saved_poll_ids_later

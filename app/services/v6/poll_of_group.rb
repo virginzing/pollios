@@ -35,11 +35,11 @@ class V6::PollOfGroup
   end
 
   def unsee_poll_ids
-    init_un_see_poll.get_list_poll_id
+    @member_poll_list.not_interested_poll_ids
   end
 
   def unsee_questionnaire_ids
-    init_un_see_poll.get_list_questionnaire_id
+    @member_poll_list.not_interested_questionnaire_ids
   end
 
   def saved_poll_ids_later
