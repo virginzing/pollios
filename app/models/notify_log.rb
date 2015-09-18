@@ -12,6 +12,7 @@
 #  deleted_at        :datetime
 #
 
+#TODO: Refactor this to 1) scope-ify it, 2) Member::NotificationList
 class NotifyLog < ActiveRecord::Base
   serialize :custom_properties, Hash
 

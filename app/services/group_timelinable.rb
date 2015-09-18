@@ -26,6 +26,7 @@ class GroupTimelinable
     @group_timeline ||= split_poll_and_filter
   end
 
+  # TODO: Chanage method name to one not crashing with will-paginate's total_entries
   def total_entries
     cached_poll_ids_of_poll_group.size
   end
