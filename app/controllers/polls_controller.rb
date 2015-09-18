@@ -24,7 +24,7 @@ class PollsController < ApplicationController
       render status: :created
     rescue => e
       @un_see_poll = nil
-      @response_message = "You have already unsee this poll."
+      @response_message = "You already chose not to vote this poll."
       render status: :unprocessable_entity
     end
   end
@@ -36,7 +36,7 @@ class PollsController < ApplicationController
       render status: 201
     rescue => e
       @save_later = nil
-      @response_message = "You have already saved for latar"
+      @response_message = "You already saved this poll for vote latar"
       render status: 422
     end
   end
@@ -58,7 +58,7 @@ class PollsController < ApplicationController
       render status: 201
     rescue => e
       @bookmark = nil
-      @response_message = "You have already bookmarked this poll"
+      @response_message = "You already bookmarked this poll"
       render status: 422
     end
   end
@@ -140,7 +140,7 @@ class PollsController < ApplicationController
   end
 
   def delete_my_poll
-    raise ExceptionHandler::UnprocessableEntity, "You're not creator poll" unless @poll.member_id == @member_id
+    raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" unless @poll.member_id == @member_id
     @poll.destroy
     NotifyLog.check_update_poll_deleted(@poll)
     DeletePoll.create_log(@poll)
@@ -161,7 +161,7 @@ class PollsController < ApplicationController
   end
 
   def set_close
-    raise ExceptionHandler::UnprocessableEntity, "You're not owner this poll" if @poll.member_id != @current_member.id
+    raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" if @poll.member_id != @current_member.id
 
     respond_to do |format|
       if @poll.update!(close_status: true)
