@@ -57,8 +57,9 @@ class V6::MyPollInProfile
     not_interested_poll_ids | saved_poll_ids_later
   end
 
-  def with_out_poll_ids_of_poll_created
-    @init_unsee_poll.get_list_poll_id_with_except_my_poll
+  def without_poll_ids_of_own_poll_created
+    # @init_unsee_poll.get_list_poll_id_with_except_my_poll
+    @poll_list.not_interested_poll_ids
   end
 
   def with_out_questionnaire_id
@@ -159,7 +160,7 @@ class V6::MyPollInProfile
     query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(#{query_poll_member} OR #{query_group_together} OR #{query_public} )", your_group_ids).references(:poll_groups)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids_of_poll_created) if with_out_poll_ids_of_poll_created.size > 0
+    # query = query.where("polls.id NOT IN (?)", without_poll_ids_of_own_poll_created) if without_poll_ids_of_own_poll_created.size > 0
     query = query.limit(limit_poll)
     query
   end
