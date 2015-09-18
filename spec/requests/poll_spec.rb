@@ -100,7 +100,7 @@ RSpec.describe "Poll" do
       post "/poll/#{poll.id}/un_see", { member_id: member.id }, { "Accept" => "application/json" }
       expect(response.status).to eq(422)
       expect(json["response_status"]).to eq("ERROR")
-      expect(json["response_message"]).to eq("You have already unsee this poll.")
+      expect(json["response_message"]).to eq("You already chose not to vote this poll.")
       expect(NotInterestedPoll.count).to eq(1)
     end
   end
