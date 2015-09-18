@@ -26,11 +26,11 @@ class V6::FriendPollInProfile
     @original_next_cursor = @options[:next_cursor]
   end
 
-  def unsee_poll_ids
+  def not_interested_poll_ids
     @poll_list.not_interested_poll_ids
   end
 
-  def unsee_questionnaire_ids
+  def not_interested_questionnaire_ids
     @poll_list.not_interested_questionnaire_ids
   end
 
@@ -71,11 +71,11 @@ class V6::FriendPollInProfile
   end
 
   def with_out_poll_ids
-    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
+    my_vote_questionnaire_ids | not_interested_poll_ids | saved_poll_ids_later
   end
 
   def with_out_questionnaire_id
-    unsee_questionnaire_ids | saved_questionnaire_ids_later
+    not_interested_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   def get_poll_friend
