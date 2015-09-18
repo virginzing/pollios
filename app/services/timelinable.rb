@@ -11,16 +11,18 @@ module Timelinable
     @member_poll_list ||= Member::PollList.new(@member)
   end
 
-  def init_un_see_poll
-    @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
-  end
+  # def init_un_see_poll
+  #   @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
+  # end
 
   def unsee_poll_ids
-    init_un_see_poll.get_list_poll_id
+    # init_un_see_poll.get_list_poll_id
+    member_poll_list.not_interested_poll_ids
   end
 
   def unsee_questionnaire_ids
-    init_un_see_poll.get_list_questionnaire_id
+    # init_un_see_poll.get_list_questionnaire_id
+    member_poll_list.not_interested_questionnaire_ids
   end
 
   def saved_poll_ids_later

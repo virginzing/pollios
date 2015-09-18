@@ -37,11 +37,11 @@ class Member::PollList
   end
 
   def not_interested_poll_ids
-    
+    not_interested_query("Poll")
   end
 
   def not_interested_questionnaire_ids
-    
+    not_interested_query("PollSeries")
   end
 
 ######### PRIVATE METHODS #########
@@ -94,6 +94,10 @@ class Member::PollList
 
   def saved_later_query(type_name)
     @member.save_poll_laters.where(savable_type: type_name).map(&:savable_id)
+  end
+
+  def not_interested_query(type_name)
+    @member.not_interested_polls.where(unseeable_type: type_name).map(&:unseeable_id)
   end
 
 end
