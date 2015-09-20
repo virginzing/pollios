@@ -78,9 +78,15 @@ class Member::PollList
   def member_voted_all_polls
     Poll.joins(:history_votes => :choice)
         .select("polls.*, history_votes.choice_id as choice_id")
-        .where("(history_votes.member_id = #{@member.id} AND history_votes.poll_series_id = 0) " \
-               "OR (history_votes.member_id = #{@member.id} AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
-        .collect! { |poll| Hash["poll_id" => poll.id, "choice_id" => poll.choice_id, "poll_series_id" => poll.poll_series_id, "show_result" => poll.show_result, "system_poll" => poll.system_poll ] }.to_a
+        .where("(history_votes.member_id = #{@member.id} " \
+               "AND history_votes.poll_series_id = 0)" \
+               "OR (history_votes.member_id = #{@member.id} " \
+               "AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
+        .collect! { |poll| Hash["poll_id" => poll.id, 
+                           "choice_id" => poll.choice_id, 
+                           "poll_series_id" => poll.poll_series_id, 
+                           "show_result" => poll.show_result, 
+                           "system_poll" => poll.system_poll ] }.to_a
 
   end
 
