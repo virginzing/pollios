@@ -346,7 +346,8 @@ class Poll < ActiveRecord::Base
 
   def get_in_groups(groups_by_name)
     group = []
-    split_group_id ||= in_group_ids.split(",").map(&:to_i)
+    # split_group_id ||= in_group_ids.split(",").map(&:to_i)
+    split_group_id ||= groups.map(&:id)
     split_group_id.each do |id|
       if groups_by_name.has_key?(id)
         group << groups_by_name.fetch(id)
@@ -365,10 +366,10 @@ class Poll < ActiveRecord::Base
     group
   end
 
-  def get_within(options = {}, action_timeline = {}, group_id = nil)
+  def get_within(groups_by_name = {}, action_timeline = {}, group_id = nil)
     @group_id = group_id
     if public && in_group
-      Hash["in" => "Group", "group_detail" => get_in_groups(options)]
+      Hash["in" => "Group", "group_detail" => get_in_groups(groups_by_name)]
     elsif public
       if action_timeline["friend_following_poll"]
         PollType.to_hash(PollType::WHERE[:friend_following])
@@ -377,20 +378,31 @@ class Poll < ActiveRecord::Base
       end
     else
       if in_group
-        Hash["in" => "Group", "group_detail" => get_in_groups(options)]
+        Hash["in" => "Group", "group_detail" => get_in_groups(groups_by_name)]
       else
         PollType.to_hash(PollType::WHERE[:friend_following])
       end
     end
   end
 
-  def posted_to
+  def feed_name_for_member(member)
     posted_to_hash = poll_is_where
 
     if in_group
-      tmp = []
-      groups.each { |e| tmp << GroupDetailSerializer.new(e).as_json }
-      posted_to_hash["group_detail"] = tmp
+      member_group_ids = member.groups.map(&:id)
+
+      tmp_member = []
+      tmp_non_member = []
+      groups.each do |group| 
+        group_as_json = GroupDetailSerializer.new(group).as_json
+        if member_group_ids.include?(group.id)
+          tmp_member << group_as_json
+        else
+          tmp_non_member << group_as_json
+        end
+      end
+
+      posted_to_hash["group_detail"] = tmp_member | tmp_non_member
     end
 
     posted_to_hash
