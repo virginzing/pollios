@@ -7,6 +7,10 @@ class Group::ListMember
     @list_members ||= members
   end
 
+  def count
+    @list_members.count
+  end
+
   def cached_all_members
     @cached_all_members ||= cached_members
   end
@@ -21,6 +25,10 @@ class Group::ListMember
 
   def pending
     cached_all_members.select{|member| member unless member.is_active }
+  end
+
+  def requesting
+    cached_requests
   end
 
    # for testing and emergency only
@@ -60,6 +68,14 @@ class Group::ListMember
     active.map(&:id).include?(member.id)
   end
 
+  def is_requesting?(member)
+    requesting.map(&:id).include?(member.id)
+  end
+
+  def is_pending?(member)
+    pending.map(&:id).include?(member.id)
+  end
+
   def raise_error_not_member(member)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_IN_GROUP unless active.include?(member)
   end
@@ -70,6 +86,10 @@ class Group::ListMember
 
   private
 
+  def group_member_query(member)
+    GroupMember.where("group_id = ? AND member_id = ?", @group.id, member.id)
+  end
+
   def members
     Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
           .select(
@@ -78,6 +98,10 @@ class Group::ListMember
             group_members.active as is_active, 
             group_members.created_at as joined_at").order("members.fullname asc")
 
+  end
+
+  def requests
+    @group.members_request
   end
 
   def group_member_ids
@@ -90,4 +114,9 @@ class Group::ListMember
     end
   end
   
+  def cached_requests
+    Rails.cache.fetch("group/#{@group.id}/requests") do
+      requests.to_a
+    end
+  end
 end
