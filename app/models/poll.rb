@@ -384,6 +384,18 @@ class Poll < ActiveRecord::Base
     end
   end
 
+  def posted_to
+    posted_to_hash = poll_is_where
+
+    if in_group
+      tmp = []
+      groups.each { |e| tmp << GroupDetailSerializer.new(e).as_json }
+      posted_to_hash["group_detail"] = tmp
+    end
+
+    posted_to_hash
+  end
+
   def poll_is_where
     if public
       PollType.to_hash(PollType::WHERE[:public])
