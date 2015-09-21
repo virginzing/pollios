@@ -25,8 +25,7 @@ class Group::ListMember
 
    # for testing and emergency only
   def pending_ids_non_cache
-    members.select{|member| member unless member.is_active }
-    members.map(&:id)
+    members.select{|member| member unless member.is_active }.map(&:id)
   end
 
   def filter_members_from_list(member_list)
