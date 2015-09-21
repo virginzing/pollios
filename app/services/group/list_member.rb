@@ -7,9 +7,9 @@ class Group::ListMember
     @list_members ||= members
   end
 
-  def count
-    @list_members.count
-  end
+  # def count
+  #   @list_members.count
+  # end
 
   def cached_all_members
     @cached_all_members ||= cached_members
