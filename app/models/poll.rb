@@ -344,6 +344,7 @@ class Poll < ActiveRecord::Base
     poll_expired.collect {|poll| poll.update!(close_status: true, expire_status: true) }
   end
 
+  # TODO: Get rid of this
   def get_in_groups(groups_by_name)
     group = []
     # split_group_id ||= in_group_ids.split(",").map(&:to_i)
@@ -366,6 +367,7 @@ class Poll < ActiveRecord::Base
     group
   end
 
+  # TODO: Get rid of this
   def get_within(groups_by_name = {}, action_timeline = {}, group_id = nil)
     @group_id = group_id
     if public && in_group
@@ -398,7 +400,9 @@ class Poll < ActiveRecord::Base
         if member_group_ids.include?(group.id)
           tmp_member << group_as_json
         else
-          tmp_non_member << group_as_json
+          if group.public
+            tmp_non_member << group_as_json
+          end
         end
       end
 
