@@ -391,26 +391,14 @@ class Poll < ActiveRecord::Base
     posted_to_hash = poll_is_where
 
     if in_group
-      member_group_ids = member.groups.map(&:id)
+      groups_available = Member::ListGroup.new(member).groups_available_for_poll(self, group_id)
 
-      tmp_member = []
-      tmp_non_member = []
-      groups.each do |group| 
-        group_as_json = GroupDetailSerializer.new(group).as_json
-        if (member_group_ids.include?(group.id))
-          if group_id == group.id
-            tmp_member.insert(0, group_as_json)
-          else
-            tmp_member << group_as_json
-          end
-        else
-          if group.public
-            tmp_non_member << group_as_json
-          end
-        end
+      groups_as_json = []
+      groups_available.each do |group|
+        groups_as_json << GroupDetailSerializer.new(group).as_json
       end
 
-      posted_to_hash["group_detail"] = tmp_member | tmp_non_member
+      posted_to_hash["group_detail"] = groups_as_json
     end
 
     posted_to_hash
