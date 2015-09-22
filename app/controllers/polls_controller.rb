@@ -262,6 +262,7 @@ class PollsController < ApplicationController
   def posted_in_groups
     @member = Member.find(params[:member_id])
     @posted_in_groups = @poll.groups
+    @group_id = nil
   end
 
   def hashtag
