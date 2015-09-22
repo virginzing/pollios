@@ -268,7 +268,6 @@ class PollsController < ApplicationController
   def hashtag
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
     @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_timeline
-    @group_by_name = @init_hash_tag.group_by_name
     @total_entries = @init_hash_tag.total_entries
 
     TypeSearch.create_log_search_tags(@current_member, hashtag_params[:name])
