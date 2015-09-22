@@ -261,7 +261,7 @@ class PollsController < ApplicationController
 
   def posted_in_groups
     @member = Member.find(params[:member_id])
-    @posted_in_groups = @poll.groups
+    @posted_in_groups = Member::ListGroup.new(@member).groups_available_for_poll(@poll)
     @group_id = nil
   end
 
