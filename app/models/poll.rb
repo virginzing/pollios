@@ -387,7 +387,7 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def feed_name_for_member(member, group_id = {})
+  def feed_name_for_member(member, group_id = nil)
     posted_to_hash = poll_is_where
 
     if in_group
