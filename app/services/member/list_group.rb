@@ -25,7 +25,7 @@ class Member::ListGroup
     list_groups
   end
 
-  def groups_available_for_poll(poll, requesting_group_id = {})
+  def groups_available_for_poll(poll, requesting_group_id = nil)
     member_groups_ids = @member.groups.map(&:id)
 
     tmp_member = []
