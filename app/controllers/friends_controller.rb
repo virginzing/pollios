@@ -141,7 +141,7 @@ class FriendsController < ApplicationController
   def list_of_bookmark
     @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
     @list_polls, @next_cursor = @init_poll.get_my_bookmark
-    @group_by_name = @init_poll.group_by_name
+    # @group_by_name = @init_poll.group_by_name
   end
 
   # def check_my_vote_flush_cache?(member, vote_poll_count)
