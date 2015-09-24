@@ -257,13 +257,8 @@ namespace :admin do
     GroupMember.delete_all
     GroupMember.connection.execute('ALTER SEQUENCE group_members_id_seq RESTART WITH 1')
 
-    GroupStats.delete_all
-
     GroupSurveyor.delete_all
     GroupSurveyor.connection.execute('ALTER SEQUENCE group_surveyors_id_seq RESTART WITH 1')
-
-    HiddenPoll.delete_all
-    HiddenPoll.connection.execute('ALTER SEQUENCE hidden_polls_id_seq RESTART WITH 1')
 
     HistoryPurchase.delete_all
     HistoryPurchase.connection.execute('ALTER SEQUENCE history_purchases_id_seq RESTART WITH 1')
@@ -381,8 +376,8 @@ namespace :admin do
 
     TypeSearch.delete_all
 
-    UnSeePoll.delete_all
-    UnSeePoll.connection.execute('ALTER SEQUENCE un_see_polls_id_seq RESTART WITH 1')
+    NotInterestedPoll.delete_all
+    NotInterestedPoll.connection.execute('ALTER SEQUENCE not_interested_polls_id_seq RESTART WITH 1')
 
     UserStats.delete_all
 

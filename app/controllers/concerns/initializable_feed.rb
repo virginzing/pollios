@@ -3,7 +3,7 @@ module InitializableFeed
   def initialize_poll_feed!
     return unless @current_member.present?
     init_list_friend = Member::ListFriend.new(Member.current_member)
-    init_list_poll = Member::ListPoll.new(Member.current_member)
+    init_list_poll = Member::PollList.new(Member.current_member)
     init_list_group = Member::ListGroup.new(Member.current_member)
 
     Member.list_friend_active = init_list_friend.active

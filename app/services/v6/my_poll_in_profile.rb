@@ -8,8 +8,9 @@ class V6::MyPollInProfile
     @member = member
     @options = options
     @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
-    @init_save_poll ||= SavePoll.new( { member_id: member.id} )
     @init_bookmark_poll ||= BookmarkPoll.new( { member_id: member.id } )
+
+    @poll_list ||= Member::PollList.new(@member)
   end
 
   def member_id
@@ -20,20 +21,20 @@ class V6::MyPollInProfile
     @original_next_cursor = @options[:next_cursor]
   end
 
-  def unsee_poll_ids
-    @init_unsee_poll.get_list_poll_id
+  def not_interested_poll_ids
+    @poll_list.not_interested_poll_ids
   end
 
-  def unsee_questionnaire_ids
-    @init_unsee_poll.get_list_questionnaire_id
+  def not_interested_questionnaire_ids
+    @poll_list.not_interested_questionnaire_ids
   end
 
   def saved_poll_ids_later
-    @init_save_poll.get_list_poll_id
+    @poll_list.saved_poll_ids
   end
 
   def saved_questionnaire_ids_later
-    @init_save_poll.get_list_questionnaire_id
+    @poll_list.saved_questionnaire_ids
   end
 
   def bookmarked_poll_ids
@@ -53,15 +54,16 @@ class V6::MyPollInProfile
   end
 
   def with_out_poll_ids
-    unsee_poll_ids | saved_poll_ids_later
+    not_interested_poll_ids | saved_poll_ids_later
   end
 
-  def with_out_poll_ids_of_poll_created
-    @init_unsee_poll.get_list_poll_id_with_except_my_poll
+  def without_poll_ids_of_own_poll_created
+    # @init_unsee_poll.get_list_poll_id_with_except_my_poll
+    @poll_list.not_interested_poll_ids
   end
 
   def with_out_questionnaire_id
-    unsee_questionnaire_ids
+    not_interested_questionnaire_ids
   end
 
   # Filter with out poll & questionnaire
@@ -158,7 +160,7 @@ class V6::MyPollInProfile
     query = Poll.load_more(next_cursor).available.joins(:poll_members).includes(:choices, :member, :poll_series, :campaign, :poll_groups)
                 .where("(#{query_poll_member} OR #{query_group_together} OR #{query_public} )", your_group_ids).references(:poll_groups)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids_of_poll_created) if with_out_poll_ids_of_poll_created.size > 0
+    # query = query.where("polls.id NOT IN (?)", without_poll_ids_of_own_poll_created) if without_poll_ids_of_own_poll_created.size > 0
     query = query.limit(limit_poll)
     query
   end
@@ -198,7 +200,7 @@ class V6::MyPollInProfile
                   "OR (polls.id IN (?) AND polls.series = 'f')", saved_questionnaire_ids_later, saved_poll_ids_later)
 
     query = query.where("polls.id NOT IN (?)", my_vote_poll_ids) if my_vote_poll_ids.size > 0
-    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.size > 0
+    query = query.where("polls.id NOT IN (?)", not_interested_poll_ids) if not_interested_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query
@@ -209,7 +211,7 @@ class V6::MyPollInProfile
                 .where("(polls.poll_series_id IN (?) AND polls.order_poll = 1 AND polls.series = 't') " \
                   "OR (polls.id IN (?) AND polls.series = 'f')", bookmarked_questionnaire_ids, bookmarked_poll_ids)
 
-    query = query.where("polls.id NOT IN (?)", unsee_poll_ids) if unsee_poll_ids.size > 0
+    query = query.where("polls.id NOT IN (?)", not_interested_poll_ids) if not_interested_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     query = query.limit(limit_poll)
     query

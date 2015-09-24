@@ -7,7 +7,6 @@ class OverallTimeline
   def initialize(member, options)
     @member = member
     @options = options
-    @hidden_poll = HiddenPoll.my_hidden_poll(member.id)
     @pull_request = options["pull_request"] || "no"
     @poll_series = []
     @poll_nonseries = []
@@ -66,6 +65,7 @@ class OverallTimeline
     @overall_timeline ||= split_poll_and_filter
   end
 
+  # TODO: Chanage method name to one not crashing with will-paginate's total_entries
   def total_entries
     cached_poll_ids_of_poll_member.size
   end
@@ -112,10 +112,8 @@ class OverallTimeline
                                                              new_your_friend_ids,
                                                              new_find_poll_in_my_group, new_find_poll_series_in_group)
 
-    # puts "my_vote_questionnaire_ids => #{my_vote_questionnaire_ids}"
     query = query.where("poll_id NOT IN (?)", my_vote_questionnaire_ids) if my_vote_questionnaire_ids.size > 0
     query = query.limit(LIMIT_TIMELINE)
-    # query = check_new_pull_request(query)
     ids, poll_ids = query.map(&:id), query.map(&:poll_id)
   end
 
@@ -150,22 +148,8 @@ class OverallTimeline
                                                     new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)
 
-    # query = check_new_pull_request(query)
-    # poll_member = check_hidden_poll(query)
     query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
   end
-
-
-  # def check_new_pull_request(query)
-  #   if to_bool(@pull_request)
-  #     query = query.joins(:poll).where("polls.updated_at > ? AND polls.id > ?", @member.poll_overall_req_at, since_id)
-  #   end
-  #   query
-  # end
-
-  # def check_hidden_poll(query)
-  #   @hidden_poll.empty? ? query : query.hidden(@hidden_poll)
-  # end
 
   def overall_timeline
     ids, poll_ids = find_poll_me_and_friend_and_group_and_public

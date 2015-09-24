@@ -142,40 +142,6 @@ class Group < ActiveRecord::Base
     public_id.present? ? public_id : ""
   end
 
-  def self.accept_group(member, group)
-    group_id = group[:id]
-    member_id = group[:member_id]
-
-    find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
-
-    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." if find_group_member.nil?
-
-    if find_group_member
-      @group = find_group_member.group
-      @member = member
-
-      find_group_member.update_attributes!(active: true)
-
-      if @group.company? && !@group.system_group
-        CompanyMember.add_member_to_company(@member, @group.get_company)
-        Activity.create_activity_group(@member, @group, 'Join')
-      end
-
-      if @group.member.company?
-        Company::FollowOwnerGroup.new(@member, @group.member.id).follow!
-      end
-
-      clear_request_group(@member, @member)
-
-      Company::TrackActivityFeedGroup.new(@member, @group, "join").tracking
-      JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
-
-      FlushCached::Group.new(@group).clear_list_members
-      FlushCached::Member.new(@member).clear_list_groups
-    end
-    @group
-  end
-
   def self.deny_request_join_group_my_self(member, group) ## cancel of myself
     find_group_member = GroupMember.where(group_id: group.id, member_id: member.id).first
 
@@ -236,6 +202,39 @@ class Group < ActiveRecord::Base
     group
   end
 
+  def self.accept_group(member, group)
+    group_id = group[:id]
+    member_id = group[:member_id]
+
+    find_group_member = GroupMember.where(member_id: member_id, group_id: group_id).first
+
+    raise ExceptionHandler::UnprocessableEntity, "This request had already cancelled." if find_group_member.nil?
+
+    if find_group_member
+      @group = find_group_member.group
+      @member = member
+
+      find_group_member.update_attributes!(active: true)
+
+      if @group.company? && !@group.system_group
+        CompanyMember.add_member_to_company(@member, @group.get_company)
+        Activity.create_activity_group(@member, @group, 'Join')
+      end
+
+      if @group.member.company?
+        Company::FollowOwnerGroup.new(@member, @group.member.id).follow!
+      end
+
+      clear_request_group(@member, @member)
+
+      JoinGroupWorker.perform_async(member_id, group_id) unless Rails.env.test?
+
+      FlushCached::Group.new(@group).clear_list_members
+      FlushCached::Member.new(@member).clear_list_groups
+    end
+    @group
+  end
+
   def self.accept_request_group(member, friend, group)
     GroupMember.transaction do
       begin
@@ -243,9 +242,9 @@ class Group < ActiveRecord::Base
         @member = member
         @group = group
 
-        if @group.need_approve
-          raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has cancelled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
-        end
+        # if @group.need_approve
+        #   raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} has cancelled to request this group." unless @friend.cached_ask_join_groups.map(&:id).include?(@group.id)
+        # end
 
         raise ExceptionHandler::UnprocessableEntity, "#{@friend.get_name} had approved." if Member::ListGroup.new(@friend).active.map(&:id).include?(@group.id)
 
@@ -265,11 +264,9 @@ class Group < ActiveRecord::Base
           Company::FollowOwnerGroup.new(@friend, @group.member.id).follow!
         end
 
-        if @group.need_approve
-          ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
-        end
-
-        Company::TrackActivityFeedGroup.new(@friend, @group, "join").tracking
+        # if @group.need_approve
+        #   ApproveRequestGroupWorker.perform_async(@member.id, @friend.id, @group.id) unless Rails.env.test?
+        # end
 
         FlushCached::Group.new(@group).clear_list_members
 
@@ -333,23 +330,36 @@ class Group < ActiveRecord::Base
     name = group_params[:name]
     friend_id = group_params[:friend_id]
 
-    init_cover_group = ImageUrl.new(cover)
 
-    @group = new(member_id: member.id, name: name, photo_group: photo_group, authorize_invite: :everyone, description: description, public: set_privacy, cover: cover, cover_preset: cover_preset, group_type: :normal, admin_post_only: set_admin_post_only)
+    @group = new(
+      member_id: member.id, 
+      name: name, 
+      photo_group: photo_group, 
+      authorize_invite: :everyone, 
+      description: description, 
+      public: set_privacy, 
+      cover: cover, 
+      cover_preset: cover_preset, 
+      group_type: :normal, 
+      admin_post_only: set_admin_post_only)
+
+    init_cover_group = ImageUrl.new(cover)
 
     if @group.save!
 
+      # set cover
       if cover && init_cover_group.from_image_url?
         @group.update_column(:cover_preset, "0")
         @group.update_column(:cover, init_cover_group.split_cloudinary_url)
       end
 
-      @group.create_group_company(company: member.get_company) if member.company?
+      # create company group (group_company)
+      @group.create_group_company(company: member.get_company) if member.company.present?
+
+      # set admin of group
       @group.group_members.create(member_id: member_id, is_master: true, active: true)
 
-      Company::TrackActivityFeedGroup.new(member, @group, "join").tracking
-      GroupStats.create_group_stats(@group)
-
+      # add created group to member activity (maybe not needed)
       if @group.public
         Activity.create_activity_group(member, @group, 'Create')
       end
@@ -494,7 +504,7 @@ class Group < ActiveRecord::Base
 
       FlushCached::Group.new(self).clear_list_members
       FlushCached::Member.new(member).clear_list_groups
-      self
+      self 
     end
   end
 
@@ -516,7 +526,6 @@ class Group < ActiveRecord::Base
   def add_user_to_group(list_of_users)
     list_of_users.each do |member|
       group_members.create!(member: member, is_master: false, active: true)
-      Company::TrackActivityFeedGroup.new(member, self, "join").tracking
       FlushCached::Member.new(member).clear_list_groups
     end
   end
@@ -560,28 +569,4 @@ class Group < ActiveRecord::Base
       group_type: group_type_text.downcase
     }
   end
-
-  #### deprecated ####
-
-  # def self.cached_member_active(group_id)
-  #   Rails.cache.fetch([ 'group', group_id, 'member_active']) do
-  #     Group.find(group_id).get_member_active.to_a.map(&:id)
-  #   end
-  # end
-
-  # def self.flush_cached_member_active(group_id)
-  #   Rails.cache.delete([ 'group', group_id, 'member_active' ])
-  # end
-
-  # def company?
-  #   group_company.present?
-  # end
-
-  # def is_company?
-  #   self.group_type == "company"
-  # end
-
-  # def set_notification(member_id)
-  #   group_member = group_members.where("member_id = ?", member_id)
-  # end
 end

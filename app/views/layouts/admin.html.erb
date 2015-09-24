@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+<head>
+  <meta charset="utf-8">
+  <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-    <title><%= full_title(yield(:title)) %></title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
+  <title><%= full_title(yield(:title)) %></title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <!-- Use the correct meta names below for your web application
        Ref: http://davidbcalhoun.com/2010/viewport-metatag
 
@@ -36,18 +36,18 @@
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <style type="text/css">
-    #ajaxLoader {
-      z-index: 100;
-      position: absolute;
-      top: 50%;
-      left: 40%;
-      background-color: #333;
-      background-color: rgba(0,0,0,0.7);
-      border-radius: 15px;
-      -webkit-border-radius: 15px;
-      -moz-border-radius: 15px;
-      padding: 50px;
-    }
+      #ajaxLoader {
+        z-index: 100;
+        position: absolute;
+        top: 50%;
+        left: 40%;
+        background-color: #333;
+        background-color: rgba(0,0,0,0.7);
+        border-radius: 15px;
+        -webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
+        padding: 50px;
+      }
     </style>
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css' data-turbolinks-track="true">
@@ -98,88 +98,93 @@
         </h1>
         <!-- END LOGO PLACEHOLDER -->
 
-        </div>
-        <!-- END AJAX-DROPDOWN -->
       </div>
+      <!-- END AJAX-DROPDOWN -->
+    </div>
 
-      <!-- pulled right: nav area -->
-      <div class="pull-right">
+    <!-- pulled right: nav area -->
+    <div class="pull-right">
 
-        <!-- collapse menu button -->
-        <div id="hide-menu" class="btn-header pull-right">
-          <span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
-        </div>
-        <!-- end collapse menu -->
-
-        <!-- logout button -->
-        <div id="logout" class="btn-header transparent pull-right">
-          <span> <a href="<%= admin_signout_path %>" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
-        </div>
-        <!-- end logout button -->
-
-        <!-- search mobile button (this is hidden till mobile view port) -->
-        <div id="search-mobile" class="btn-header transparent pull-right">
-          <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
-        </div>
-        <!-- end search mobile button -->
-
+      <!-- collapse menu button -->
+      <div id="hide-menu" class="btn-header pull-right">
+        <span> <a href="javascript:void(0);" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
       </div>
-      <!-- end pulled right: nav area -->
+      <!-- end collapse menu -->
 
-    </header>
-    <!-- END HEADER -->
-
-    <!-- Left panel : Navigation area -->
-    <!-- Note: This width of the aside area can be adjusted through LESS variables -->
-    <aside id="left-panel">
-
-      <!-- User info -->
-      <div class="login-info">
-        <span> <!-- User image size is adjusted inside CSS, it should stay as it -->
-          <% if current_admin %>
-          <a href="javascript:void(0);" id="show-shortcut">
-            <span>
-              <%= current_admin.email %>
-            </span>
-
-          </a>
-          <% end %>
-        </span>
+      <!-- logout button -->
+      <div id="logout" class="btn-header transparent pull-right">
+        <span> <a href="<%= admin_signout_path %>" title="Sign Out"><i class="fa fa-sign-out"></i></a> </span>
       </div>
-      <!-- end user info -->
+      <!-- end logout button -->
+
+      <!-- search mobile button (this is hidden till mobile view port) -->
+      <div id="search-mobile" class="btn-header transparent pull-right">
+        <span> <a href="javascript:void(0)" title="Search"><i class="fa fa-search"></i></a> </span>
+      </div>
+      <!-- end search mobile button -->
+
+    </div>
+    <!-- end pulled right: nav area -->
+
+  </header>
+  <!-- END HEADER -->
+
+  <!-- Left panel : Navigation area -->
+  <!-- Note: This width of the aside area can be adjusted through LESS variables -->
+  <aside id="left-panel">
+
+    <!-- User info -->
+    <div class="login-info">
+      <span> <!-- User image size is adjusted inside CSS, it should stay as it -->
+        <% if current_admin %>
+        <a href="javascript:void(0);" id="show-shortcut">
+          <span>
+            <%= current_admin.email %>
+          </span>
+
+        </a>
+        <% end %>
+      </span>
+    </div>
+    <!-- end user info -->
 
       <!-- NAVIGATION : This navigation is also responsive
 
       To make this navigation dynamic please make sure to link the node
       (the reference to the nav > ul) after page load. Or the navigation
       will not initialize.
-      -->
-      <nav>
+    -->
+    <nav>
         <!-- NOTE: Notice the gaps after each icon usage <i></i>..
         Please note that these links work a bit different than
         traditional hre="" links. See documentation for details.
-        -->
+      -->
 
-        <ul>
+      <ul>
         <li class="<%= is_active_2nd_level('admin', 'dashboard') %>">
-            <a href="<%= admin_management_dashboard_path %>" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
-          </li>
+          <a href="<%= admin_management_dashboard_path %>" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+        </li>
 
-          <li class="<%= is_active?('commercials') %>">
-            <a href="<%= commercials_path %>" title="Commercials"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Commercial</span></a>
-          </li>
+        <li class="<%= is_active?('commercials') %>">
+          <a href="<%= commercials_path %>" title="Commercials"><i class="fa fa-lg fa-fw fa-building"></i> <span class="menu-item-parent">Commercial</span></a>
+        </li>
 
-          <li class="<%= is_active?('suggest_groups') %>">
-            <a href="<%= admin_suggest_groups_path %>" title="Suggest Groups"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Suggest Group</span></a>
-          </li>
+        <li class="<%= is_active?('suggest_groups') %>">
+          <a href="<%= admin_suggest_groups_path %>" title="Suggest Groups"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">Suggest Group</span></a>
+        </li>
 
-          <li class="<%= is_active?('add_user_to_group') %>">
-            <a href="<%= user_to_group_path %>" title="User to Group"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">User to Group</span></a>
-          </li>
+        <li class="<%= is_active?('add_user_to_group') %>">
+          <a href="<%= user_to_group_path %>" title="User to Group"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">User to Group</span></a>
+        </li>
 
-          <li class="<%= is_active?('triggers') %>">
-            <a href="<%= triggers_path %>" title="Triggers"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">Trigger</span></a>
-          </li>
+        <li class="<%= is_active?('triggers') %>">
+          <a href="<%= triggers_path %>" title="Triggers"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">Trigger</span></a>
+        </li>
+
+        <li class="<%= is_active?('poll_voters') %>">
+          <a href="<%= poll_voters_path %>" title="Poll Voters"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">Poll Voters</span></a>
+        </li>
+
 
 <!--           <li class="<%= is_active?('system_campaigns') %>">
             <a href="<%= system_campaigns_path %>" title="System Campaign"><i class="fa fa-lg fa-fw fa-thumb-tack"></i> <span class="menu-item-parent">System Campaign</span></a>
@@ -209,47 +214,47 @@
 <!--           <li class="<%= is_active?('invites') %>">
             <a href="/manage/dashboard/invites" title="Invite"><i class="fa fa-lg fa-fw fa-info"></i> <span class="menu-item-parent">Invite</span></a>
           </li>
- -->
-          <li class="<%= is_active_2nd_level('admin', 'report') %>">
-            <a href="<%= admin_report_dashboard_path %>" title="Report"><i class="fa fa-lg fa-fw fa-warning"></i> <span class="menu-item-parent">Report</span>
+        -->
+        <li class="<%= is_active_2nd_level('admin', 'report') %>">
+          <a href="<%= admin_report_dashboard_path %>" title="Report"><i class="fa fa-lg fa-fw fa-warning"></i> <span class="menu-item-parent">Report</span>
             <span class="badge bg-color-redLight pull-right inbox-badge">
               <%= Admin::ListReportPoll.new.get_report_poll.size + Member.with_status_account(:normal).where("report_count != 0").size %>
             </span>
-            </a>
-          </li>
+          </a>
+        </li>
 
-          <li class="">
-            <a href="/admin" title="Invite"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Admin Panel</span></a>
-          </li>
+        <li class="">
+          <a href="/rails_admin" title="Admin Panel"><i class="fa fa-lg fa-fw fa-lock"></i> <span class="menu-item-parent">Admin Panel</span></a>
+        </li>
 
-          <li class="">
-            <a href="<%= stats_dashboard_path %>" title="Stats"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Stats Dashboard</span></a>
-          </li>
+        <li class="">
+          <a href="<%= stats_dashboard_path %>" title="Stats"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Stats Dashboard</span></a>
+        </li>
 
-          <li class="<%= is_active_2nd_level('system_setting', 'index') %>">
-            <a href="<%= system_setting_path %>" title="System"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">System</span></a>
-          </li>
+        <li class="<%= is_active_2nd_level('system_setting', 'index') %>">
+          <a href="<%= system_setting_path %>" title="System"><i class="fa fa-lg fa-fw fa-cog"></i> <span class="menu-item-parent">System</span></a>
+        </li>
 
-        </ul>
-      </nav>
-      <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+      </ul>
+    </nav>
+    <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 
-    </aside>
-    <!-- END NAVIGATION -->
+  </aside>
+  <!-- END NAVIGATION -->
 
-    <!-- MAIN PANEL -->
-    <div id="main" role="main">
+  <!-- MAIN PANEL -->
+  <div id="main" role="main">
 
-      <!-- RIBBON -->
-      <div id="ribbon">
+    <!-- RIBBON -->
+    <div id="ribbon">
 
-        <span class="ribbon-button-alignment"> <span id="refresh" class="btn btn-ribbon" data-title="refresh"  rel="tooltip" data-placement="bottom" data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings." data-html="true"><i class="fa fa-refresh"></i></span> </span>
+      <span class="ribbon-button-alignment"> <span id="refresh" class="btn btn-ribbon" data-title="refresh"  rel="tooltip" data-placement="bottom" data-original-title="<i class='text-warning fa fa-warning'></i> Warning! This will reset all your widget settings." data-html="true"><i class="fa fa-refresh"></i></span> </span>
 
-        <!-- breadcrumb -->
-        <ol class="breadcrumb">
+      <!-- breadcrumb -->
+      <ol class="breadcrumb">
 
-        </ol>
-        <!-- end breadcrumb -->
+      </ol>
+      <!-- end breadcrumb -->
 
         <!-- You can also add more buttons to the
         ribbon for further usability
@@ -260,36 +265,36 @@
         <span id="search" class="btn btn-ribbon hidden-xs" data-title="search"><i class="fa-grid"></i> Change Grid</span>
         <span id="add" class="btn btn-ribbon hidden-xs" data-title="add"><i class="fa-plus"></i> Add</span>
         <span id="search" class="btn btn-ribbon" data-title="search"><i class="fa-search"></i> <span class="hidden-mobile">Search</span></span>
-        </span> -->
-
-      </div>
-      <!-- END RIBBON -->
-
-      <!-- MAIN CONTENT -->
-      <div id="content">
-        <% flash.each do |key, value| %>
-          <div data-alert class="<%= flash_class(key) %> fade in">
-              <%= get_icon_from_value(key) %>
-              <%= value %>
-            <button class="close" data-dismiss="alert">×</button>
-          </div>
-        <% end %>
-        <div id="ajaxLoader" class="animated" style="display: none;">
-          <img alt="loading" src="/smartadmin/img/loading_1.gif">
-        </div>
-        <%= yield %>
-        <%= yield(:javascript) %>
-      </div>
-      <!-- END MAIN CONTENT -->
+      </span> -->
 
     </div>
-    <!-- END MAIN PANEL -->
+    <!-- END RIBBON -->
 
-    <div class="page-footer">
-      <div class="row">
-        <div class="col-xs-12 col-sm-6">
-          <span class="txt-color-white">Pollios © 2014</span>
-        </div>
+    <!-- MAIN CONTENT -->
+    <div id="content">
+      <% flash.each do |key, value| %>
+      <div data-alert class="<%= flash_class(key) %> fade in">
+        <%= get_icon_from_value(key) %>
+        <%= value %>
+        <button class="close" data-dismiss="alert">×</button>
+      </div>
+      <% end %>
+      <div id="ajaxLoader" class="animated" style="display: none;">
+        <img alt="loading" src="/smartadmin/img/loading_1.gif">
+      </div>
+      <%= yield %>
+      <%= yield(:javascript) %>
+    </div>
+    <!-- END MAIN CONTENT -->
+
+  </div>
+  <!-- END MAIN PANEL -->
+
+  <div class="page-footer">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <span class="txt-color-white">Pollios © 2014</span>
+      </div>
 
 <!--         <div class="col-xs-6 col-sm-6 text-right hidden-xs">
           <div class="txt-color-white inline-block">
@@ -425,23 +430,23 @@
               match: /(^|\s)#([a-zA-Z0-9ก-๙_]{1,})$/,
               search: function (term, callback) {
                 $.getJSON('/search_autocmp_tags.json', { q: term })
-                  .done(function (resp) { callback(resp); })
-                  .fail(function ()     { callback([]);   });
+                .done(function (resp) { callback(resp); })
+                .fail(function ()     { callback([]);   });
               },
               replace: function (value) {
                 return ' #' + value + " ";
               }
             }
-        ]).overlay([
+            ]).overlay([
             {
               match: /(^|\s)#([a-zA-Z0-9ก-๙_]+)/g,
               css: {
-                  'background-color': '#d8dfea'
+                'background-color': '#d8dfea'
               }
             }
-      ]);
+            ]);
 
-      $(document).on('page:change', function() {
+            $(document).on('page:change', function() {
         // DO NOT REMOVE : GLOBAL FUNCTIONS!
         pageSetUp();
         drawBreadCrumb();
@@ -452,10 +457,10 @@
 
         var searchFunc = function (term, callback) {
           $.getJSON('/search_autocmp_tags.json', { search: "nuttapon" })
-            .done(function (resp) {
+          .done(function (resp) {
               callback(resp); // `resp` must be an Array
             })
-            .fail(function () {
+          .fail(function () {
               callback([]); // Callback must be invoked even if something went wrong.
             });
         };
@@ -464,7 +469,7 @@
          * PAGE RELATED SCRIPTS
          */
 
-        $(".js-status-update a").click(function() {
+         $(".js-status-update a").click(function() {
           var selText = $(this).text();
           var $this = $(this);
           $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
@@ -517,20 +522,20 @@
 
         }
       });
-    </script>
+</script>
 
-    <!-- Your GOOGLE ANALYTICS CODE Below -->
-    <script>
+<!-- Your GOOGLE ANALYTICS CODE Below -->
+<script>
 
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-50947005-1', 'codeapp-pollios.herokuapp.com');
-      ga('send', 'pageview');
+  ga('create', 'UA-50947005-1', 'codeapp-pollios.herokuapp.com');
+  ga('send', 'pageview');
 
-    </script>
-  </body>
+</script>
+</body>
 
 </html>

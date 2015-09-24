@@ -64,6 +64,20 @@ class Friend < ActiveRecord::Base
           find_invite_new_record = true
         end
 
+        if find_invite_new_record
+          AddFriendWorker.perform_async(@member.id, @friend.id, { action: ACTION[:request_friend] } ) unless Rails.env.test?
+        else
+          if find_invite.invitee?
+            find_invite.update!(status: :friend)
+            find_invitee.update!(status: :friend)
+
+            AddFriendWorker.perform_async(@member.id, @friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
+          else
+            find_invite.update!(status: :invite)
+            AddFriendWorker.perform_async(@member.id, @friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test? ## option
+          end
+        end
+
         find_invitee = where(follower: @friend, followed: @member).first_or_initialize do |friend|
           friend.follower = @friend
           friend.followed = @member
@@ -72,25 +86,11 @@ class Friend < ActiveRecord::Base
           find_invitee_new_record = true
         end
 
-        unless find_invite_new_record
-          if find_invite.invitee?
-            find_invite.update!(status: :friend)
-            find_invitee.update!(status: :friend)
-            Activity.create_activity_friend( @member, @friend , ACTION[:become_friend])
-            Activity.create_activity_friend( @friend, @member , ACTION[:become_friend])
-            AddFriendWorker.perform_async(@member.id, @friend.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
-          else
-            find_invite.update!(status: :invite)
-            AddFriendWorker.perform_async(@member.id, @friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test? ## option
-          end
-        end
-
         unless find_invitee_new_record
           if find_invitee.invitee?
             find_invitee.update!(status: :friend)
             find_invite.update!(status: :friend)
-            Activity.create_activity_friend( @member, @friend , ACTION[:become_friend])
-            Activity.create_activity_friend( @friend, @member , ACTION[:become_friend])
+
             AddFriendWorker.perform_async(@friend.id, @member.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
           else
             unless find_invitee.friend?
@@ -99,9 +99,6 @@ class Friend < ActiveRecord::Base
           end
         end
 
-        if find_invite_new_record
-          AddFriendWorker.perform_async(@member.id, @friend.id, { action: ACTION[:request_friend] } ) unless Rails.env.test?
-        end
 
         FlushCached::Member.new(@member).clear_list_friends
         FlushCached::Member.new(@friend).clear_list_friends

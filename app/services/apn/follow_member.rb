@@ -9,7 +9,7 @@ class Apn::FollowMember
 
   def count_notification
     if @friend.apn_devices.present?
-      @friend.update_columns(notification_count: @friend.notification_count + 1)
+      @friend.increment!(:notification_count)
       return @friend.notification_count
     end
   end

@@ -298,7 +298,7 @@ class MembersController < ApplicationController
   end
 
   def notification_count
-    @member = Member.find_by(id: params[:member_id])
+    @member = Member.find(params[:member_id])
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Member::NOT_FOUND if @member.nil?
   end
 
@@ -328,7 +328,8 @@ class MembersController < ApplicationController
   end
 
   def clear_request_count
-    @current_member.update_columns(request_count: 0)
+    @current_member.request_count = 0
+    @current_member.save!
   end
 
   def is_friend(member_obj, list_compare)
@@ -348,7 +349,8 @@ class MembersController < ApplicationController
   end
 
   def clear_notification_count
-    @current_member.update_columns(notification_count: 0)
+    @current_member.notification_count = 0
+    @current_member.save!
   end
 
   # def stats
@@ -451,7 +453,6 @@ class MembersController < ApplicationController
     return false if find_my_group.include?(@group.id)
 
     @group.group_members.create!(member_id: @current_member.id, is_master: false, active: true)
-    Company::TrackActivityFeedGroup.new(@current_member, @group, "join").tracking
     if @group.company? && !@group.system_group
       CompanyMember.add_member_to_company(@current_member, @group.get_company)
       Activity.create_activity_group(@current_member, @group, 'Join')

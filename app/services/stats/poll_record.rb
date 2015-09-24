@@ -2,21 +2,17 @@ class Stats::PollRecord
   include FilterByStats
 
   def initialize(options = {})
-    @options = options
-  end
-
-  def filter_by
-    @options[:filter_by] || TODAY
+    @filter_by = options[:filter_by] || TODAY
   end
 
   def query_all
-    @query_all ||= if filter_by == TODAY
+    @query_all ||= if @filter_by == TODAY
       poll_today
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       poll_yesterday
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       poll_with_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       poll_with_range(1.month.ago.to_date)
     else
       poll_total
@@ -24,13 +20,13 @@ class Stats::PollRecord
   end
 
   def poll_popular
-    if filter_by == TODAY
+    if @filter_by == TODAY
       poll_popular_with_range(Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       poll_popular_with_range(Date.current.yesterday, Date.current.yesterday)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       poll_popular_with_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       poll_popular_with_range(30.days.ago.to_date)
     else
       poll_popular_total
@@ -38,13 +34,13 @@ class Stats::PollRecord
   end
 
   def top_voter
-    if filter_by == TODAY
+    if @filter_by == TODAY
       top_voter_with_range(Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       top_voter_with_range(Date.current.yesterday, Date.current.yesterday)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       top_voter_with_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       top_voter_with_range(30.days.ago.to_date)
     else
       top_voter_total
@@ -52,13 +48,13 @@ class Stats::PollRecord
   end
 
   def top_voted
-    top_voted = if filter_by == TODAY
+    top_voted = if @filter_by == TODAY
       top_voted_with_range(Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       top_voted_with_range(Date.current.yesterday, Date.current.yesterday)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       top_voted_with_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       top_voted_with_range(30.days.ago.to_date)
     else
       top_voted_total

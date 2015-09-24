@@ -2,21 +2,17 @@ class Stats::VoteRecord
   include FilterByStats
   
   def initialize(options = {})
-    @options = options
-  end
-
-  def filter_by
-    @options[:filter_by] || TODAY
+    @filter_by = options[:filter_by] || TODAY
   end
 
   def query_all
-    @query_all ||= if filter_by == TODAY
+    @query_all ||= if @filter_by == TODAY
       vote_with_range(Date.current, Date.current)
-    elsif filter_by == YESTERDAY
+    elsif @filter_by == YESTERDAY
       vote_with_range(1.days.ago.to_date, 1.days.ago.to_date)
-    elsif filter_by == WEEK
+    elsif @filter_by == WEEK
       vote_with_range(7.days.ago.to_date)
-    elsif filter_by == MONTH
+    elsif @filter_by == MONTH
       vote_with_range(1.month.ago.to_date)
     else
       vote_total

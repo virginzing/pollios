@@ -16,7 +16,7 @@
 
 class HistoryVote < ActiveRecord::Base
 
-  belongs_to :member, touch: true
+  belongs_to :member, touch: true, counter_cache: true
   belongs_to :poll
   belongs_to :poll_series
   belongs_to :choice

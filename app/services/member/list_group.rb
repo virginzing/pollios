@@ -25,6 +25,30 @@ class Member::ListGroup
     list_groups
   end
 
+  def groups_available_for_poll(poll, requesting_group_id = nil)
+    member_groups_ids = @member.groups.map(&:id)
+
+    tmp_member = []
+    tmp_non_member = []
+
+    poll_groups = cached_groups_for_poll(poll)
+    poll_groups.each do |group|
+      if member_groups_ids.include?(group.id)
+        if requesting_group_id == group.id
+          tmp_member.insert(0, group)
+        else
+          tmp_member << group
+        end
+      else
+        if group.public
+          tmp_non_member << group
+        end
+      end
+    end
+
+    tmp_member | tmp_non_member
+  end
+
   def active_with_public
     cached_all_groups.select{|group| group if group.member_is_active && group.public == false }
   end
@@ -55,4 +79,9 @@ class Member::ListGroup
     end
   end
 
+  def cached_groups_for_poll(poll)
+    Rails.cache.fetch("poll/#{poll.id}/groups") do
+      poll.groups
+    end
+  end
 end

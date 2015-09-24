@@ -1,14 +1,19 @@
 class PollsController < ApplicationController
 
   before_action :authenticate_with_token!
-  before_action :initialize_poll_feed!, only: [:member_voted, :random_poll, :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, :reward_poll_timeline,
-                                                 :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, :my_watched, :hashtag_popular]
+  before_action :initialize_poll_feed!, only: [:member_voted, :random_poll,
+                                               :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, 
+                                               :reward_poll_timeline,
+                                               :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, 
+                                               :my_watched, :hashtag_popular]
 
-  before_action :set_poll, except: [:count_preset, :random_poll, :my_poll, :my_vote, :my_watched, :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
+  before_action :set_poll, except: [:count_preset, :random_poll, :my_poll, :my_vote, :my_watched, 
+                                    :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, 
+                                    :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
 
   before_action :list_groups, only: [:detail, :create_poll]
 
-  before_action :collect_active_user, only: [:create_poll, :vote, :comment]
+  before_action :collect_active_user, only: [:create_poll, :vote, :comment, :posted_in_groups]
 
   expose(:list_recurring) { current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
@@ -16,7 +21,7 @@ class PollsController < ApplicationController
   expose(:hash_priority) { @hash_priority }
 
   def un_see
-    @un_see_poll = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll)
+    @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
       NotifyLog.deleted_with_poll_and_member(@poll, @current_member)
@@ -24,7 +29,7 @@ class PollsController < ApplicationController
       render status: :created
     rescue => e
       @un_see_poll = nil
-      @response_message = "You have already unsee this poll."
+      @response_message = "You already chose not to vote this poll."
       render status: :unprocessable_entity
     end
   end
@@ -36,7 +41,7 @@ class PollsController < ApplicationController
       render status: 201
     rescue => e
       @save_later = nil
-      @response_message = "You have already saved for latar"
+      @response_message = "You already saved this poll for vote latar"
       render status: 422
     end
   end
@@ -58,7 +63,7 @@ class PollsController < ApplicationController
       render status: 201
     rescue => e
       @bookmark = nil
-      @response_message = "You have already bookmarked this poll"
+      @response_message = "You already bookmarked this poll"
       render status: 422
     end
   end
@@ -140,7 +145,7 @@ class PollsController < ApplicationController
   end
 
   def delete_my_poll
-    raise ExceptionHandler::UnprocessableEntity, "You're not creator poll" unless @poll.member_id == @member_id
+    raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" unless @poll.member_id == @member_id
     @poll.destroy
     NotifyLog.check_update_poll_deleted(@poll)
     DeletePoll.create_log(@poll)
@@ -161,7 +166,7 @@ class PollsController < ApplicationController
   end
 
   def set_close
-    raise ExceptionHandler::UnprocessableEntity, "You're not owner this poll" if @poll.member_id != @current_member.id
+    raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" if @poll.member_id != @current_member.id
 
     respond_to do |format|
       if @poll.update!(close_status: true)
@@ -232,14 +237,6 @@ class PollsController < ApplicationController
     @total_entries = group_timeline.total_entries
   end
 
-  #### deprecated ####
-
-  # def reward_poll_timeline
-  #   @init_poll = PollRewardTimeline.new(@current_member, public_poll_params)
-  #   @polls = @init_poll.reward_poll.paginate(page: params[:next_cursor])
-  #   poll_helper
-  # end
-
   def my_poll
     @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
     @list_polls, @next_cursor = @init_poll.get_my_poll
@@ -262,61 +259,15 @@ class PollsController < ApplicationController
     @promote_poll = Poll::PromotePublic.new(@current_member, set_poll).create!
   end
 
-  #### deprecated ####
-
-  # def poll_helper
-  #   @poll_series, @poll_nonseries = Poll.split_poll(@polls)
-  #   @group_by_name ||= @init_poll.group_by_name
-  #   @next_cursor = @polls.next_page.nil? ? 0 : @polls.next_page
-  #   @total_entries = @polls.total_entries
-  # end
-
-  #### deprecated ####
-
-  # def guest_poll
-  #   if params[:type] == "active"
-  #     query_poll = Poll.active_poll
-  #   elsif params[:type] == "inactive"
-  #     query_poll = Poll.inactive_poll
-  #   else
-  #     query_poll = Poll.all
-  #   end
-
-  #   if params[:next_cursor]
-  #     @poll = query_poll.includes(:poll_series, :member).where("id < ? AND public = ?)", params[:next_cursor], true).order("created_at desc")
-  #   else
-  #     @poll = query_poll.includes(:poll_series, :member).where("public = ?", true).order("created_at desc")
-  #   end
-
-  #   @poll_series, @poll_nonseries, @next_cursor = Poll.split_poll(@poll)
-  # end
-
-  #### deprecated ####
-
-  # def tags
-  #   @find_tag = Tag.find_by(name: params[:name])
-  #   friend_list = @current_member.get_friend_active.map(&:id) << @current_member.id
-
-  #   if params[:type] == "series"
-  #     query_poll = @find_tag.poll_series
-  #   else
-  #     query_poll = @find_tag.polls.where(series: false)
-  #   end
-  #   if params[:next_cursor]
-  #     @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-  #     .where("poll_members.poll_id < ? AND (poll_members.member_id IN (?) OR public = ?)", params[:next_cursor], friend_list, true)
-  #     .order("poll_members.created_at desc")
-  #   else
-  #     @poll = query_poll.joins(:poll_members).includes(:poll_series, :member)
-  #     .where("poll_members.member_id IN (?) OR public = ?", friend_list, true)
-  #     .order("poll_members.created_at desc")
-  #   end
-  # end
+  def posted_in_groups
+    @member = Member.find(params[:member_id])
+    @posted_in_groups = Member::ListGroup.new(@member).groups_available_for_poll(@poll)
+    @group_id = nil
+  end
 
   def hashtag
     @init_hash_tag = V6::HashtagTimeline.new(@current_member, hashtag_params)
     @list_polls, @list_shared, @order_ids, @next_cursor = @init_hash_tag.get_timeline
-    @group_by_name = @init_hash_tag.group_by_name
     @total_entries = @init_hash_tag.total_entries
 
     TypeSearch.create_log_search_tags(@current_member, hashtag_params[:name])
@@ -379,21 +330,6 @@ class PollsController < ApplicationController
     @watch = @init_watch.unwatch
   end
 
-  def hide
-    new_hidden_poll = false
-    @hide = @current_member.hidden_polls.where(poll_id: params[:id]).first_or_initialize do |hd|
-            hd.member_id = @current_member.id
-            hd.poll_id = params[:id]
-            hd.save!
-            new_hidden_poll = true
-    end
-
-    if new_hidden_poll
-      SavePollLater.delete_save_later(@current_member.id, @poll)
-      Rails.cache.delete([@current_member.id, 'hidden_polls'])
-    end
-  end
-
   def report
     @init_report = Report::Poll.new(@current_member, @poll, { message: params[:message], message_preset: params[:message_preset] })
     @report = @init_report.reporting
@@ -443,7 +379,7 @@ class PollsController < ApplicationController
 
   def load_comment #
     raise_exception_without_group if @poll.in_group
-    init_list_poll ||= Member::ListPoll.new(@current_member)
+    init_list_poll ||= Member::PollList.new(@current_member)
     list_report_comments_ids = init_list_poll.report_comments.map(&:id)
 
     query = Comment.without_deleted.joins(:member)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819064645) do
+ActiveRecord::Schema.define(version: 20150911041354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -507,16 +507,6 @@ ActiveRecord::Schema.define(version: 20150819064645) do
     t.datetime "updated_at"
   end
 
-  create_table "hidden_polls", force: true do |t|
-    t.integer  "member_id"
-    t.integer  "poll_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "hidden_polls", ["member_id"], name: "index_hidden_polls_on_member_id", using: :btree
-  add_index "hidden_polls", ["poll_id"], name: "index_hidden_polls_on_poll_id", using: :btree
-
   create_table "history_promote_polls", force: true do |t|
     t.integer  "member_id"
     t.integer  "poll_id"
@@ -636,6 +626,16 @@ ActiveRecord::Schema.define(version: 20150819064645) do
   add_index "leave_group_logs", ["group_id"], name: "index_leave_group_logs_on_group_id", using: :btree
   add_index "leave_group_logs", ["member_id"], name: "index_leave_group_logs_on_member_id", using: :btree
 
+  create_table "member_agree_comments", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "comment_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_agree_comments", ["comment_id"], name: "index_member_agree_comments_on_comment_id", using: :btree
+  add_index "member_agree_comments", ["member_id"], name: "index_member_agree_comments_on_member_id", using: :btree
+
   create_table "member_invite_codes", force: true do |t|
     t.integer  "member_id"
     t.integer  "invite_code_id"
@@ -747,6 +747,8 @@ ActiveRecord::Schema.define(version: 20150819064645) do
     t.boolean  "show_recommend",             default: false
     t.hstore   "notification",               default: {},    null: false
     t.boolean  "show_search",                default: true
+    t.integer  "polls_count",                default: 0
+    t.integer  "history_votes_count",        default: 0
   end
 
   add_index "members", ["fb_id"], name: "index_members_on_fb_id", using: :btree
@@ -791,6 +793,18 @@ ActiveRecord::Schema.define(version: 20150819064645) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "not_interested_polls", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "unseeable_id"
+    t.string   "unseeable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "not_interested_polls", ["member_id", "unseeable_id"], name: "index_not_interested_polls_on_member_id_and_unseeable_id", unique: true, using: :btree
+  add_index "not_interested_polls", ["member_id"], name: "index_not_interested_polls_on_member_id", using: :btree
+  add_index "not_interested_polls", ["unseeable_id", "unseeable_type"], name: "index_not_interested_polls_on_unseeable_id_and_unseeable_type", using: :btree
 
   create_table "notify_logs", force: true do |t|
     t.integer  "sender_id"
@@ -1198,18 +1212,6 @@ ActiveRecord::Schema.define(version: 20150819064645) do
 
   add_index "triggers", ["data"], name: "index_triggers_on_data", using: :gist
   add_index "triggers", ["triggerable_id", "triggerable_type"], name: "index_triggers_on_triggerable_id_and_triggerable_type", using: :btree
-
-  create_table "un_see_polls", force: true do |t|
-    t.integer  "member_id"
-    t.integer  "unseeable_id"
-    t.string   "unseeable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "un_see_polls", ["member_id", "unseeable_id"], name: "index_un_see_polls_on_member_id_and_unseeable_id", unique: true, using: :btree
-  add_index "un_see_polls", ["member_id"], name: "index_un_see_polls_on_member_id", using: :btree
-  add_index "un_see_polls", ["unseeable_id", "unseeable_type"], name: "index_un_see_polls_on_unseeable_id_and_unseeable_type", using: :btree
 
   create_table "versions", force: true do |t|
     t.string   "item_type",  null: false

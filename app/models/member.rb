@@ -117,8 +117,6 @@ class Member < ActiveRecord::Base
   has_many :following, -> { where("following = 't' AND status != 1") }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
   has_many :get_following, -> { where('members.member_type = 1 OR members.member_type = 2') } ,through: :following, source: :followed
 
-  has_many :hidden_polls, dependent: :destroy
-
   has_many :history_views, dependent: :destroy
 
   has_many :history_votes, dependent: :destroy
@@ -190,7 +188,9 @@ class Member < ActiveRecord::Base
 
   has_many :activity_feeds, dependent: :destroy
 
-  has_many :un_see_polls
+  has_many :not_interested_polls
+
+  has_many :save_poll_laters
 
   has_many :api_tokens, dependent: :destroy
 
@@ -368,6 +368,15 @@ class Member < ActiveRecord::Base
   end
 
   def get_company
+    # if company
+    #     company
+    # else
+    #   if company_member
+    #       company_member.company
+    #   else
+    #     nil
+    #   end
+    # end
     company ? company : company_member ? company_member.company : nil
   end
 
@@ -417,19 +426,11 @@ class Member < ActiveRecord::Base
     find_group_surveyor.destroy if find_group_surveyor.present?
   end
 
-  #### deprecated ####
-
-  # def get_poll_count
-  #   Poll.where("(polls.member_id = #{self.id} AND polls.series = 'f')").size
-  # end
-
-  # def get_questionnaire_count
-  #   PollSeries.where("(poll_series.member_id = #{self.id})").size
-  # end
 
   def new_avatar
     avatar.url(:thumbnail)
   end
+
 
   def get_activity_count
     find_activify = Activity.find_by(member_id: id)
@@ -444,12 +445,6 @@ class Member < ActiveRecord::Base
   def get_key_color
     key_color || ""
   end
-
-  #### deprecated ####
-
-  # def get_first_setting_anonymous
-  #   first_setting_anonymous.present? ? true : false
-  # end
 
   def Member.check_image_avatar(avatar)
     for_campare_url_image = /\.(gif|jpg|png)\z/i
@@ -475,10 +470,6 @@ class Member < ActiveRecord::Base
   def get_recent_history_subscription
     recent_history_subscription.present? ? recent_history_subscription.map(&:product_id).first : ""
   end
-
-  # def get_sentai_id
-  #   providers.where(name: 'sentai').first.pid
-  # end
 
   def get_name
     fullname.presence || ""
@@ -591,11 +582,6 @@ class Member < ActiveRecord::Base
   #   end
   # end
 
-  # def cached_my_questionnaire
-  #   Rails.cache.fetch([self.id, 'my_questionnaire']) do
-  #     PollSeries.where(member_id: id).to_a
-  #   end
-  # end
 
   def cached_my_voted
     Rails.cache.fetch([self.id, 'my_voted']) do
@@ -618,12 +604,6 @@ class Member < ActiveRecord::Base
     Rails.cache.fetch([ self.id, 'watcheds' ]) do
       @init_poll = MyPollInProfile.new(self)
       @init_poll.my_watched.to_a
-    end
-  end
-
-  def cached_hidden_polls
-    Rails.cache.fetch([ self.id, 'hidden_polls']) do
-      hidden_polls.to_a
     end
   end
 
@@ -846,16 +826,6 @@ class Member < ActiveRecord::Base
 
   ################ Friend ###############
 
-  # def mute_or_unmute_friend(friend, type_mute)
-  #   friend_id = friend[:friend_id]
-  #   begin
-  #     find_friend = friends.where(followed_id: friend_id).first
-  #     find_friend.update_attributes!(mute: type_mute)
-  #   rescue => e
-  #     puts "error => #{e}"
-  #     nil
-  #   end
-  # end
 
   def delete_group(group_id)
     find_group_member = group_members.where(group_id: group_id).first
@@ -1055,7 +1025,6 @@ class Member < ActiveRecord::Base
   end
 
   def get_avatar
-    # detect_image(avatar)
     if avatar.present?
       avatar.url(:thumbnail)
     else

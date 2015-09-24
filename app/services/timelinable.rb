@@ -7,28 +7,30 @@ module Timelinable
     @member.id
   end
 
-  def init_un_see_poll
-    @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
+  def member_poll_list
+    @member_poll_list ||= Member::PollList.new(@member)
   end
 
-  def init_save_poll
-    @init_save_poll ||= SavePoll.new({ member_id: member_id})
+  # def init_un_see_poll
+  #   @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
+  # end
+
+  def not_interested_poll_ids
+    # init_un_see_poll.get_list_poll_id
+    member_poll_list.not_interested_poll_ids
   end
 
-  def unsee_poll_ids
-    init_un_see_poll.get_list_poll_id
-  end
-
-  def unsee_questionnaire_ids
-    init_un_see_poll.get_list_questionnaire_id
+  def not_interested_questionnaire_ids
+    # init_un_see_poll.get_list_questionnaire_id
+    member_poll_list.not_interested_questionnaire_ids
   end
 
   def saved_poll_ids_later
-    init_save_poll.get_list_poll_id
+    member_poll_list.saved_poll_ids
   end
 
   def saved_questionnaire_ids_later
-    init_save_poll.get_list_questionnaire_id
+    member_poll_list.saved_questionnaire_ids
   end
 
   def vote_all_polls
@@ -43,10 +45,6 @@ module Timelinable
     Member.voted_polls.select{|e| e if e["system_poll"] }.collect{|e| e["poll_id"] }
   end
 
-  def hidden_polls
-    @member.cached_hidden_polls.collect{|e| e.poll_id }
-  end
-
   def block_users
     Member::ListFriend.new(@member).block.map(&:id)
   end
@@ -58,11 +56,11 @@ module Timelinable
   # Filter with out poll & questionnaire
 
   def with_out_poll_ids
-    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later | history_vote_system_poll | hidden_polls
+    my_vote_questionnaire_ids | not_interested_poll_ids | saved_poll_ids_later | history_vote_system_poll
   end
 
   def with_out_questionnaire_id
-    unsee_questionnaire_ids | saved_questionnaire_ids_later
+    not_interested_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   def with_out_member_ids

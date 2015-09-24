@@ -71,7 +71,6 @@ namespace :poll do
     SharePoll.delete_all
     Provider.delete_all
     GroupMember.delete_all
-    HiddenPoll.delete_all
     HistoryVote.delete_all
     HistoryView.delete_all
     Friend.delete_all
@@ -91,7 +90,6 @@ namespace :poll do
 
     UserStats.delete_all
     VoteStats.delete_all
-    GroupStats.delete_all
     Template.delete_all
     Company.delete_all
     GroupCompany.delete_all

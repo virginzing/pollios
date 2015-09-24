@@ -12,6 +12,7 @@
 #  deleted_at        :datetime
 #
 
+#TODO: Refactor this to 1) scope-ify it, 2) Member::NotificationList
 class NotifyLog < ActiveRecord::Base
   serialize :custom_properties, Hash
 
@@ -20,7 +21,7 @@ class NotifyLog < ActiveRecord::Base
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :less_than_3_days, -> { where("#{table_name}.created_at > ?", 3.days.ago) }
 
-  self.per_page = 20
+  self.per_page = 40
 
   belongs_to :recipient, class_name: 'Member'
   belongs_to :sender, class_name: 'Member'

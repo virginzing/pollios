@@ -33,14 +33,14 @@ class UnseePoll
   private
 
   def query_unsee_poll
-    @query ||= UnSeePoll.where(member_id: member_id)
+    @query ||= NotInterestedPoll.where(member_id: member_id)
   end
 
   def query_unsee_poll_with_except_my_poll
-    Poll.joins(:un_see_polls).where("un_see_polls.member_id = ? AND polls.member_id != ?", member_id, member_id)
+    Poll.joins(:not_interested_polls).where("not_interested_polls.member_id = ? AND polls.member_id != ?", member_id, member_id)
   end
 
   def query_unsee_poll_with_id
-    UnSeePoll.find_by(member_id: member_id, unseeable_id: poll_id)
+    NotInterestedPoll.find_by(member_id: member_id, unseeable_id: poll_id)
   end
 end

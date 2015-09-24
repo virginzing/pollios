@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   include PollsHelper
   include SessionsHelper
 
-  layout :layout_by_resource
+  # layout :layout_by_resource
 
   protect_from_forgery with: :exception
 
@@ -120,7 +120,7 @@ class ApplicationController < ActionController::Base
   def render_unsupported_version
     headers['API-Version-Supported'] = 'false'
     respond_to do |format|
-      format.json { render json: { response_message: "You requested an unsupported version (#{requested_version})"}, status: :unprocessable_entity }
+      format.json { render json: { response_message: "You requested from an unsupported API version (#{requested_version})"}, status: :unprocessable_entity }
     end
   end
 

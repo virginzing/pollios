@@ -9,9 +9,19 @@ RailsAdmin.config do |config|
 
   config.current_user_method(&:current_admin)
 
-  config.included_models = ['HistoryPromotePoll', 'PolliosApp','PollPreset', 'PollAttachment', 'PollCompany', 'PollSeriesCompany', 'LeaveGroupLog', 'GiftLog', 'Trigger', 'CollectionPollSeries', 'CollectionPollSeriesBranch', 'ApiToken', 'BranchPollSeries', 'FeedbackRecurring', 'Bookmark', 'AccessWeb', 'Branch', 'BranchPoll', 'CompanyMember', 'SavePollLater', 'UnSeePoll', 'HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 'SharePoll', 'PollGroup', 'PollMember', 'HiddenPoll',
-    'HistoryView', 'HistoryViewQuestionnaire', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
-    'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode','MemberReportComment', 'Reward', 'Invite', 'MemberReportPoll', 'MemberUnRecomment', 'MemberReportMember', 'Activity', 'Comment','Suggest', 'Company', 'UserStats', 'PollStats', 'GroupStats', 'Role','GroupSurveyor', 'RequestGroup', 'GroupCompany', 'CoverPreset']
+  config.included_models = ['HistoryPromotePoll', 'PolliosApp','PollPreset', 'PollAttachment', 'PollCompany', 
+    'PollSeriesCompany', 'LeaveGroupLog', 'GiftLog', 'Trigger', 'CollectionPollSeries', 
+    'CollectionPollSeriesBranch', 'ApiToken', 'BranchPollSeries', 'FeedbackRecurring', 
+    'Bookmark', 'AccessWeb', 'Branch', 'BranchPoll', 'CompanyMember', 'SavePollLater', 
+    'NotInterestedPoll', 'HistoryPurchase', 'Admin', 'Poll', 'PollSeries', 'Choice', 'Member', 
+    'Provider', 'Friend', 'Campaign', 'Tag', 'Tagging', 'Guest', 'Group', 'Recurring', 
+    'SharePoll', 'PollGroup', 'PollMember',
+    'HistoryView', 'HistoryViewQuestionnaire', 'HistoryVote', 'Province', 'GroupMember', 'CampaignMember', 
+    'Apn::Device', 'Apn::App', 'Apn::Notification', 'Template', 'Watched',
+    'SharePoll', 'NotifyLog', 'InviteCode', 'MemberInviteCode','MemberReportComment', 'Reward', 'Invite', 
+    'MemberReportPoll', 'MemberUnRecomment', 'MemberReportMember', 'Activity', 'Comment','Suggest', 'Company', 
+    'UserStats', 'PollStats', 'Role','GroupSurveyor', 'RequestGroup', 'GroupCompany', 
+    'CoverPreset', 'MemberActiveRecord']
 
 
   config.main_app_name = Proc.new { |controller| [ "Pollios - #{controller.params[:action].try(:titleize)}" ] }

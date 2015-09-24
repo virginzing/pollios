@@ -22,12 +22,12 @@ class AddFriend
   end
 
   def count_notification
-    @friend.update_columns(notification_count: @friend.notification_count + 1)
+    @friend.increment!(:notification_count)
     return @friend.notification_count
   end
 
   def count_request
-    @friend.update_columns(request_count: @friend.request_count + 1)
+    @friend.increment!(:request_count)
     return @friend.request_count
   end
 

@@ -63,8 +63,21 @@ require 'faker'
 FactoryGirl.define do
 
   factory :member do
-    fullname "Nuttapon"
+    fullname "A Pollios Member"
     email Faker::Internet.email
+
+    trait :is_company do
+      association :company, factory: :company
+    end
+
+    factory :member_is_company, traits: [:is_company]
+  end
+
+  factory :sequence_member, class: Member do
+    fullname Faker::Name.name
+
+    sequence(:id) { |n| n+101 }
+    sequence(:email) { |n| "mail#{n+1}@mail.com" }
   end
 
   factory :one, class: Member do

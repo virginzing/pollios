@@ -15,7 +15,7 @@ RSpec.describe "PollSeries" do
 
       expect(json["response_status"]).to eq("OK")
 
-      expect(UnSeePoll.count).to eq(1)
+      expect(NotInterestedPoll.count).to eq(1)
     end
   end
 

@@ -10,6 +10,8 @@ class V6::PollOfGroup
     @member = member
     @group = group
     @params = params
+
+    @member_poll_list = Member::PollList.new(@member)
   end
 
   def member_id
@@ -32,24 +34,20 @@ class V6::PollOfGroup
     @init_un_see_poll ||= UnseePoll.new({ member_id: member_id})
   end
 
-  def init_save_poll
-    @init_save_poll ||= SavePoll.new({ member_id: member_id})
+  def not_interested_poll_ids
+    @member_poll_list.not_interested_poll_ids
   end
 
-  def unsee_poll_ids
-    init_un_see_poll.get_list_poll_id
-  end
-
-  def unsee_questionnaire_ids
-    init_un_see_poll.get_list_questionnaire_id
+  def not_interested_questionnaire_ids
+    @member_poll_list.not_interested_questionnaire_ids
   end
 
   def saved_poll_ids_later
-    init_save_poll.get_list_poll_id
+    @member_poll_list.saved_poll_ids
   end
 
   def saved_questionnaire_ids_later
-    init_save_poll.get_list_questionnaire_id
+    @member_poll_list.saved_questionnaire_ids
   end
 
   def my_vote_questionnaire_ids
@@ -61,11 +59,11 @@ class V6::PollOfGroup
   end
 
   def with_out_poll_ids
-    my_vote_questionnaire_ids | unsee_poll_ids | saved_poll_ids_later
+    my_vote_questionnaire_ids | not_interested_poll_ids | saved_poll_ids_later
   end
 
   def with_out_questionnaire_id
-    unsee_questionnaire_ids | saved_questionnaire_ids_later
+    not_interested_questionnaire_ids | saved_questionnaire_ids_later
   end
 
   def get_poll_of_group

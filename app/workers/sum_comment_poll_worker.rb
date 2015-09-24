@@ -51,7 +51,8 @@ class SumCommentPollWorker
 
           @list_apn_notification << @notf
         end
-        member.update_columns(notification_count: (get_hash_list_member_badge[member.id] + 1))
+        member.notification_count = get_hash_list_member_badge[member.id] + 1
+        member.save!
       end
 
       Apn::App.first.send_notifications

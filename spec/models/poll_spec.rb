@@ -57,7 +57,7 @@ RSpec.describe Poll, :type => :model do
 
 
   it { should have_many(:choices) }
-  it { should have_many(:un_see_polls) }
+  it { should have_many(:not_interested_polls) }
   it { should have_many(:save_poll_laters) }
   it { should have_many(:poll_attachments) }
   it { should have_many(:taggings) }
@@ -66,7 +66,6 @@ RSpec.describe Poll, :type => :model do
   it { should have_many(:comments) }
   it { should have_many(:history_votes) }
   it { should have_many(:history_views) }
-  it { should have_many(:hidden_polls) }
   it { should have_many(:branches) }
 
   it { should belong_to(:member) }

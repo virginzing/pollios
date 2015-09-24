@@ -68,7 +68,7 @@ RSpec.describe Member, :type => :model do
 
   it { should enumerize(:member_type).in(:citizen, :celebrity, :brand, :company).with_default(:citizen) }
 
-  it { should have_many(:un_see_polls) }
+  it { should have_many(:not_interested_polls) }
 
   it "return a member's name as a string" do
     member = create(:member, fullname: "Nutty")

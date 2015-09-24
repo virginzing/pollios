@@ -15,6 +15,7 @@ Pollios::Application.routes.draw do
   get 'list_members', to: 'members#list_members'
 
   get 'load_choice',  to: 'choices#load_choice'
+  get 'load_choices_as_checkbox', to: 'choices#load_choices_as_checkbox'
 
   mount ApiTaster::Engine => "/api_taster"
 
@@ -40,49 +41,15 @@ Pollios::Application.routes.draw do
     end
   end
 
-  namespace :api, defaults: {format: 'json'} do
-    scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true) do
-      scope 'group/:group_id' do
-        get 'polls',  to: 'companies#polls'
-        get 'polls/:id/detail', to: 'companies#poll_detail'
-        get 'questionnaires/:id/detail',  to: 'companies#questionnaire_detail'
-        get 'questionnaires/:id/suggests',  to: 'companies#load_suggest'
-      end
+  get "password_resets/new"
+  devise_for :admins #, :controllers => { :registrations => "admin/registrations" }
 
-      scope 'company' do
-        get 'groups',     to: 'companies#company_groups'
-        get 'members',    to: 'companies#company_members'
-        get 'polls',      to: 'companies#company_polls'
-      end
-
-      scope 'surveyor' do
-        get 'polls',      to: 'surveyors#list_polls'
-        get 'polls/:id/detail', to: 'surveyors#poll_detail'
-        get 'polls/:id/members_surveyable', to: 'surveyors#members_surveyable'
-        get 'questionnaires/:id/members_surveyable',  to: 'surveyors#members_surveyable_questionnaire'
-        post 'polls/:id/survey',  to: 'surveyors#survey'
-        post 'polls/list_of_survey', to: 'surveyors#list_of_survey'
-
-        post 'questionnaires/survey', to: 'surveyors#survey_questionnaire'
-      end
-
-      scope 'campaign' do
-        post 'redeem_code',  to: 'campaigns#redeem_code'
-      end
-
-    end
-
-    scope module: :v2, constraints: ApiConstraints.new(version: 2) do
-      scope 'group/:group_id' do
-        get 'polls',  to: 'companies#polls'
-      end
-    end
+  authenticate :admin do
+    mount Sidekiq::Web => '/sidekiq'
   end
 
-  get "password_resets/new"
-  devise_for :admins, :controllers => { :registrations => "admin/registrations" }
 
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+  mount RailsAdmin::Engine => '/rails_admin', :as => 'rails_admin'
 
   resources :recurrings
   resources :comments
@@ -316,12 +283,14 @@ Pollios::Application.routes.draw do
     # get 'tags',             to: 'polls#tags'
     get 'qrcode',           to: 'polls#qrcode'
     get 'my_poll',          to: 'polls#my_poll'
+
+    get ':id/groups',       to: 'polls#posted_in_groups'
+
     get 'my_vote',          to: 'polls#my_vote'
     get 'my_watched',       to: 'polls#my_watched'
     get   ':id/choices',    to: 'polls#choices'
     post  ':id/vote',       to: 'polls#vote'
     post  ':id/view',       to: 'polls#view'
-    post ':id/hide',        to: 'polls#hide'
     post ':id/watch',       to: 'polls#watch'
     post ':id/unwatch',     to: 'polls#unwatch'
     post ':id/report',      to: 'polls#report'
@@ -418,6 +387,7 @@ Pollios::Application.routes.draw do
     resources :commercials
     resources :gifts
     resources :messages, only: [:index, :new, :create]
+    resources :poll_voters, only: [:index]
     resources :triggers
     resources :system_campaigns
   end
@@ -518,12 +488,6 @@ Pollios::Application.routes.draw do
     end
 
   end
-
-  scope 'api/group/:group_id' do
-    get 'polls',  to: 'companies#polls'
-    get 'polls/:id/detail',  to: 'companies#poll_detail'
-  end
-
 
   scope 'm' do
     get 'home', to: 'mobiles#home', as: :mobile_home
@@ -632,7 +596,9 @@ Pollios::Application.routes.draw do
   get 'auth/failure', to: redirect('/')
 
   root to: 'home#index'
-  authenticate :admin do
-    mount Sidekiq::Web => '/sidekiq'
-  end
+  # authenticate :admin do
+  #   mount Sidekiq::Web => '/sidekiq'
+  # end
+  # mount Sidekiq::Web => '/sidekiq'
+  get '*path' => redirect('/')
 end

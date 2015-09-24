@@ -18,7 +18,7 @@ class PollSeriesController < ApplicationController
   end
 
   def un_see
-    @un_see_questionnaire = UnSeePoll.new(member_id: @current_member.id, unseeable: @poll_series)
+    @un_see_questionnaire = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll_series)
     begin
       @un_see_questionnaire.save
       render :status => :created

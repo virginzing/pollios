@@ -17,12 +17,12 @@ class Activity
     create_or_update_activity(manange_action_with_poll)
   end
 
-  def self.create_activity_poll_series(member, poll_series, action)
-    @member = member
-    @poll_series = poll_series
-    @action = action
-    create_or_update_activity(manange_action_with_poll_series)
-  end
+  # def self.create_activity_poll_series(member, poll_series, action)
+  #   @member = member
+  #   @poll_series = poll_series
+  #   @action = action
+  #   create_or_update_activity(manange_action_with_poll_series)
+  # end
 
   def self.create_activity_friend(member, friend, action)
     @member = member
@@ -105,11 +105,11 @@ class Activity
     end
   end
 
-  def self.manange_action_with_poll_series
-    if @action == ACTION[:vote]
-      poll_questionnnaire
-    end
-  end
+  # def self.manange_action_with_poll_series
+  #   if @action == ACTION[:vote]
+  #     poll_questionnnaire
+  #   end
+  # end
 
   def self.poll_normal
     {
@@ -132,26 +132,26 @@ class Activity
     }
   end
 
-  def self.poll_questionnnaire
-    {
-      poll: {
-        id: @poll_series.id,
-        title: @poll_series.description,
-        created_at: @poll_series.created_at.to_i,
-        public: @poll_series.public,
-        series: true
-      },
-      creator: {
-        member_id: @poll_series.member.id,
-        name: @poll_series.member.fullname,
-        avatar: @poll_series.member.get_avatar
-      },
-      authority: check_authority_poll_series,
-      action: ACTION[:vote],
-      type: TYPE[:poll],
-      activity_at: Time.zone.now.to_i
-    }
-  end
+  # def self.poll_questionnnaire
+  #   {
+  #     poll: {
+  #       id: @poll_series.id,
+  #       title: @poll_series.description,
+  #       created_at: @poll_series.created_at.to_i,
+  #       public: @poll_series.public,
+  #       series: true
+  #     },
+  #     creator: {
+  #       member_id: @poll_series.member.id,
+  #       name: @poll_series.member.fullname,
+  #       avatar: @poll_series.member.get_avatar
+  #     },
+  #     authority: check_authority_poll_series,
+  #     action: ACTION[:vote],
+  #     type: TYPE[:poll],
+  #     activity_at: Time.zone.now.to_i
+  #   }
+  # end
 
 
   def self.manange_action_with_friend
@@ -281,16 +281,16 @@ class Activity
     end
   end
 
-  def self.check_authority_poll_series
-    unless @poll_series.in_group
-      if @poll_series.public
-        AUTHORITY[:public]
-      else
-        AUTHORITY[:friend_following]
-      end
-    else
-      AUTHORITY[:group]
-    end
-  end
+  # def self.check_authority_poll_series
+  #   unless @poll_series.in_group
+  #     if @poll_series.public
+  #       AUTHORITY[:public]
+  #     else
+  #       AUTHORITY[:friend_following]
+  #     end
+  #   else
+  #     AUTHORITY[:group]
+  #   end
+  # end
 
 end

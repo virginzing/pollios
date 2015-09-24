@@ -39,7 +39,6 @@ class GroupController < ApplicationController
         @group.remove_old_cover
       end
 
-      Company::TrackActivityFeedGroup.new(@current_member, @group, "update").tracking if @group.company?
       FlushCached::Group.new(@group).clear_list_group_all_member_in_group
       FlushCached::Group.new(@group).clear_list_members
     end
@@ -52,6 +51,7 @@ class GroupController < ApplicationController
   end
 
   def accept_group
+#    GroupService.new(@current_member, Group.find(params[:id]).accept_invitation
     @group = Group.accept_group(@current_member, group_params)
   end
 
@@ -121,6 +121,11 @@ class GroupController < ApplicationController
   end
 
   def request_group
+
+    # TODO: Make this work!
+    # member_group_action = Member::GroupAction.new(@current_member, @group)
+    # @new_request, @joined = member_group_action.join()
+
     unless @group.need_approve
       Group.accept_request_group(@current_member, @current_member, @group)
       @new_request = true

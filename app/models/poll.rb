@@ -96,11 +96,10 @@ class Poll < ActiveRecord::Base
 
   has_many :history_views
   has_many :share_polls
-  has_many :hidden_polls
 
   has_many :member_report_polls
 
-  has_many :un_see_polls, as: :unseeable
+  has_many :not_interested_polls, as: :unseeable
   has_many :save_poll_laters, as: :savable
 
   has_many :bookmarks, as: :bookmarkable
@@ -115,7 +114,7 @@ class Poll < ActiveRecord::Base
 
   has_one :poll_company
 
-  belongs_to :member
+  belongs_to :member, counter_cache: true
   belongs_to :poll_series
   belongs_to :campaign
   belongs_to :recurring
@@ -308,7 +307,7 @@ class Poll < ActiveRecord::Base
   end
 
   def voted?(member)
-    Member::ListPoll.new(member).voted_poll?(self)
+    Member::PollList.new(member).voted_poll?(self)
   end
 
   def generate_qrcode_key
@@ -345,9 +344,11 @@ class Poll < ActiveRecord::Base
     poll_expired.collect {|poll| poll.update!(close_status: true, expire_status: true) }
   end
 
+  # TODO: Get rid of this
   def get_in_groups(groups_by_name)
     group = []
-    split_group_id ||= in_group_ids.split(",").map(&:to_i)
+    # split_group_id ||= in_group_ids.split(",").map(&:to_i)
+    split_group_id ||= groups.map(&:id)
     split_group_id.each do |id|
       if groups_by_name.has_key?(id)
         group << groups_by_name.fetch(id)
@@ -366,10 +367,11 @@ class Poll < ActiveRecord::Base
     group
   end
 
-  def get_within(options = {}, action_timeline = {}, group_id = nil)
+  # TODO: Get rid of this
+  def get_within(groups_by_name = {}, action_timeline = {}, group_id = nil)
     @group_id = group_id
     if public && in_group
-      Hash["in" => "Group", "group_detail" => get_in_groups(options)]
+      Hash["in" => "Group", "group_detail" => get_in_groups(groups_by_name)]
     elsif public
       if action_timeline["friend_following_poll"]
         PollType.to_hash(PollType::WHERE[:friend_following])
@@ -378,11 +380,28 @@ class Poll < ActiveRecord::Base
       end
     else
       if in_group
-        Hash["in" => "Group", "group_detail" => get_in_groups(options)]
+        Hash["in" => "Group", "group_detail" => get_in_groups(groups_by_name)]
       else
         PollType.to_hash(PollType::WHERE[:friend_following])
       end
     end
+  end
+
+  def feed_name_for_member(member, group_id = nil)
+    posted_to_hash = poll_is_where
+
+    if in_group
+      groups_available = Member::ListGroup.new(member).groups_available_for_poll(self, group_id)
+
+      groups_as_json = []
+      groups_available.each do |group|
+        groups_as_json << GroupDetailSerializer.new(group).as_json
+      end
+
+      posted_to_hash["group_detail"] = groups_as_json
+    end
+
+    posted_to_hash
   end
 
   def poll_is_where
@@ -478,13 +497,13 @@ class Poll < ActiveRecord::Base
     end
   end
 
-  def self.vote_poll(poll, member, data_options = {})
-    member_id = poll[:member_id]
-    surveyor_id = poll[:surveyor_id]
-    poll_id = poll[:id]
-    choice_id = poll[:choice_id]
-    guest_id = poll[:guest_id]
-    show_result = poll[:show_result]
+  def self.vote_poll(params, member, data_options = {})
+    member_id = params[:member_id]
+    surveyor_id = params[:surveyor_id]
+    poll_id = params[:id]
+    choice_id = params[:choice_id]
+    guest_id = params[:guest_id]
+    show_result = params[:show_result]
 
     find_poll = Poll.find_by(id: poll_id)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND if find_poll.nil?
@@ -492,7 +511,7 @@ class Poll < ActiveRecord::Base
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
-    ever_vote = Member::ListPoll.new(member).voted_poll?(find_poll)
+    ever_vote = Member::PollList.new(member).voted_poll?(find_poll)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
 
     find_choice = Choice.find_by(id: choice_id)
@@ -512,9 +531,9 @@ class Poll < ActiveRecord::Base
 
     Company::TrackActivityFeedPoll.new(member, find_poll.in_group_ids, find_poll, "vote").tracking if find_poll.in_group
 
-    UnseePoll.new({member_id: member_id, poll_id: poll_id}).delete_unsee_poll
+    UnseePoll.new({member_id: member.id, poll_id: poll_id}).delete_unsee_poll
 
-    SavePollLater.delete_save_later(member_id, find_poll)
+    SavePollLater.delete_save_later(member.id, find_poll)
 
     unless show_result.nil?
       check_show_result = show_result
@@ -720,447 +739,5 @@ class Poll < ActiveRecord::Base
     end
     hash
   end
-
-  #### deprecated ####
-
-  # def get_poll_in_groups(group_ids)
-  #   groups.includes(:groups).where("poll_groups.group_id IN (?)", group_ids)
-  # end
-
-  # def set_new_title_with_tag
-  #   poll_title = self.title
-  #   tags.pluck(:name).each do |tag|
-  #     poll_title = poll_title + " " + "#" + tag
-  #   end
-  #   update_attributes!(title: poll_title)
-  # end
-
-  #### deprecated ####
-
-  # def self.get_public_poll(member, option = {})
-  #   list_friend = member.whitish_friend.map(&:followed_id) << member.id
-  #   query_poll = Poll.includes(:member, :choices).where("member_id IN (?) OR public = ?", list_friend, true)
-
-  #   if option[:next_poll]
-  #     if option[:type] == "active"
-  #       query_poll.active_poll.load_more(option[:next_poll])
-  #     elsif option[:type] == "inactive"
-  #       query_poll.inactive_poll.load_more(option[:next_poll])
-  #     else
-  #       query_poll.load_more(option[:next_poll])
-  #     end
-  #   else
-  #     if option[:type] == "active"
-  #       query_poll.active_poll
-  #     elsif option[:type] == "inactive"
-  #       query_poll.inactive_poll
-  #     else
-  #       query_poll
-  #     end
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def self.get_my_vote_my_poll(member_obj, status, options = {})
-  #   next_cursor = options[:next_cursor]
-  #   type = options[:type]
-  #   if status == ENV["MY_POLL"]
-  #     query_poll = member_obj.get_my_poll
-  #   end
-
-  #   @poll = filter_type(query_poll, type)
-
-  #   if next_cursor.presence && status == ENV["MY_POLL"]
-  #     @poll = @poll.load_more(next_cursor)
-  #   end
-
-  #   if @poll.size == LIMIT_POLL
-  #     if status == ENV["MY_POLL"]
-  #       next_cursor = @poll.to_a.last.id
-  #     end
-  #   else
-  #     next_cursor = 0
-  #   end
-
-  #   [@poll, next_cursor]
-  # end
-
-  #### deprecated ####
-
-  # def self.cached_find_poll(member_obj, status)
-  #   puts "status => #{status}"
-
-  #   Rails.cache.fetch([ status, member_obj.id, @type ]) do
-  #     if status == ENV["PUBLIC_POLL"]
-  #       PollMember.timeline(member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
-  #     elsif status == ENV["FRIEND_FOLLOWING_POLL"]
-  #       PollMember.friend_following_timeline(member_obj, member_obj.id, member_obj.whitish_friend.map(&:followed_id), @type)
-  #     elsif status == ENV["MY_POLL"]
-  #       PollMember.find_my_poll(member_obj.id, @type)
-  #     else
-
-  #     end
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def self.list_of_poll(member_obj, status, options = {})
-  #   # puts "options =>  #{options}"
-  #   next_cursor = options[:next_cursor]
-  #   @type = options[:type]
-
-  #   if next_cursor.presence && next_cursor != "0"
-  #     next_cursor = next_cursor.to_i
-  #     @cache_polls = cached_find_poll(member_obj, status)
-  #     index = @cache_polls.index(next_cursor)
-  #     index = -1 if index.nil?
-  #     poll = @cache_polls[(index+1)..(LIMIT_POLL+index)]
-  #   else
-  #     Rails.cache.delete([status, member_obj.id, @type])
-  #     @cache_polls = cached_find_poll(member_obj, status)
-  #     poll = @cache_polls[0..(LIMIT_POLL - 1)]
-  #   end
-
-  #   if @cache_polls.size > LIMIT_POLL
-  #     if poll.size == LIMIT_POLL
-  #       if @cache_polls[-1] == poll.last
-  #         next_cursor = 0
-  #       else
-  #         next_cursor = poll.last
-  #       end
-  #     else
-  #       next_cursor = 0
-  #     end
-  #   else
-  #     next_cursor = 0
-  #   end
-
-  #   if status == ENV["PUBLIC_POLL"]
-  #     filter_poll(poll, next_cursor)
-  #   elsif status == ENV["FRIEND_FOLLOWING_POLL"]
-  #     filter_poll(poll, next_cursor)
-  #   elsif status == ENV["MY_POLL"]
-  #     filter_my_poll_my_vote(poll, next_cursor)
-  #   else
-
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def self.filter_poll(poll_ids, next_cursor)
-  #   poll_series = []
-  #   poll_nonseries = []
-  #   series_shared = []
-  #   nonseries_shared = []
-  #   poll_member = PollMember.includes([{:poll => [:choices, :campaign, :poll_series, :member]}]).where("id IN (?)", poll_ids).order("id desc")
-
-  #   poll_member.each do |poll_member|
-  #     if poll_member.share_poll_of_id == 0
-  #       not_shared = Hash["shared" => false]
-  #       if poll_member.poll.series
-  #         poll_series << poll_member.poll
-  #         series_shared << not_shared
-  #       else
-  #         poll_nonseries << poll_member.poll
-  #         nonseries_shared << not_shared
-  #       end
-  #     else
-  #       find_poll = Poll.find_by(id: poll_member.share_poll_of_id)
-  #       shared = Hash["shared" => true, "shared_by" => poll_member.member.as_json()]
-  #       if find_poll.present?
-  #         if find_poll.series
-  #           poll_series << find_poll
-  #           series_shared << shared
-  #         else
-  #           poll_nonseries << find_poll
-  #           nonseries_shared << shared
-  #         end
-  #       end
-  #     end
-  #   end
-  #   # puts "poll nonseries : #{poll_nonseries}"
-  #   # puts "share nonseries: #{nonseries_shared}"
-  #   [poll_series, series_shared, poll_nonseries, nonseries_shared, next_cursor]
-  # end
-
-  #### deprecated ####
-
-  # def self.filter_my_poll_my_vote(poll_ids, next_cursor)
-  #   poll_series = []
-  #   poll_nonseries = []
-
-  #   Poll.includes(:member).where("id IN (?)", poll_ids).order("id desc").each do |poll|
-  #     if poll.series
-  #       poll_series << poll
-  #     else
-  #       poll_nonseries << poll
-  #     end
-  #   end
-
-  #   [poll_series, poll_nonseries, next_cursor]
-  # end
-
-  #### deprecated ####
-
-  # def self.split_poll(list_of_poll)
-  #   poll_series = []
-  #   poll_nonseries = []
-
-  #   list_of_poll.each do |poll|
-  #     if poll.series
-  #       poll_series << poll
-  #     else
-  #       poll_nonseries << poll
-  #     end
-  #   end
-
-  #   [poll_series, poll_nonseries]
-  # end
-
-  #### deprecated ####
-
-  # def find_poll_series(member_id, series_id)
-  #   Poll.where(member_id: member_id, poll_series_id: series_id).order("id asc")
-  # end
-
-  #### deprecated ####
-
-  # def self.get_group_poll(member, option = {})
-  #   list_group = member.groups.map(&:id)
-  #   if option[:next_poll]
-  #     Poll.joins(:groups).where("groups.id IN (?)", list_group).includes(:member, :choices).where("id < ?", option[:next_poll])
-  #   else
-  #     Poll.joins(:groups).where("groups.id IN (?)", list_group).includes(:member, :choices)
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def self.create_poll(poll_params, member) ## create poll for API is deprecated...
-  #   Poll.transaction do
-  #     begin
-  #       title = poll_params[:title]
-  #       expire_date = poll_params[:expire_within]
-  #       choices = poll_params[:choices]
-  #       group_id = poll_params[:group_id]
-  #       member_id = poll_params[:member_id]
-  #       friend_id = poll_params[:friend_id]
-  #       type_poll = poll_params[:type_poll]
-  #       is_public = poll_params[:is_public].to_b
-  #       photo_poll = poll_params[:photo_poll]
-  #       original_images = poll_params[:original_images]
-  #       allow_comment = poll_params[:allow_comment].present? ? true : false
-  #       creator_must_vote = poll_params[:creator_must_vote].present? ? true : false
-  #       require_info = poll_params[:require_info].present? ? true : false
-  #       show_result = poll_params[:show_result].present? ? true : false
-  #       qr_only = poll_params[:qr_only].present? ? true : false
-  #       quiz = poll_params[:quiz].present? ? true : false
-  #       thumbnail_type = poll_params[:thumbnail_type] || 0
-  #       choices = check_type_of_choice(choices)
-  #       choice_count = get_choice_count(choices)
-  #       list_group_id = []
-  #       in_group_ids = group_id
-  #       in_group = group_id.present? ? true : false
-
-  #       init_photo_poll = ImageUrl.new(photo_poll)
-
-  #       if expire_date.present?
-  #         convert_expire_date = Time.now + expire_date.to_i.day
-  #       else
-  #         convert_expire_date = Time.now + 100.years.to_i
-  #       end
-
-  #       raise ArgumentError, ExceptionHandler::Message::Poll::POINT_ZERO if (member.citizen? && is_public) && (member.point <= 0)
-
-  #       if in_group
-  #         list_group_id = in_group_ids.split(",").map(&:to_i)
-  #         unless member.company?
-  #           remain_group = member.post_poll_in_group(in_group_ids)
-  #           if (remain_group.size > 0)
-  #             if remain_group != list_group_id
-  #               group_names = Group.where(id: (list_group_id - remain_group)).map(&:name).join(', ')
-  #               alert_message = "This poll don't show in #{group_names} because you're no longer these group."
-  #             end
-  #             list_group_id = remain_group
-  #           else
-  #             group_names = Group.where(id: list_group_id).map(&:name).join(', ')
-  #             alert_message = "You're no longer #{group_names}."
-  #             raise ArgumentError, "You're no longer #{group_names}."
-  #           end
-  #         end
-  #       end
-
-  #       if group_id.present?
-  #         @set_public = false
-  #       else
-  #         if (member.celebrity? || member.brand?)
-  #           @set_public = true
-  #           @set_public = false unless is_public
-  #         else
-  #           @set_public = is_public
-  #         end
-  #       end
-
-  #       new_in_group_ids = list_group_id.join(",").presence || "0"
-
-  #       @poll = Poll.new(member_id: member_id, title: title, expire_date: convert_expire_date, public: @set_public, poll_series_id: 0, series: false, choice_count: choice_count, in_group_ids: new_in_group_ids,
-  #                       type_poll: type_poll, photo_poll: photo_poll, status_poll: 0, allow_comment: allow_comment, member_type: member.member_type_text, creator_must_vote: creator_must_vote, require_info: require_info, quiz: quiz, in_group: in_group, qr_only: qr_only, thumbnail_type: thumbnail_type)
-
-  #       @poll.qrcode_key = @poll.generate_qrcode_key
-
-  #       if @poll.valid? && choices
-  #         @poll.save!
-  #         PollCompany.create_poll(@poll, member.get_company, :mobile) if member.company?
-
-  #         if photo_poll && init_photo_poll.from_image_url?
-  #           @poll.update_column(:photo_poll, init_photo_poll.split_cloudinary_url)
-  #         end
-
-  #         @poll.add_attachment_image(original_images) if original_images.present?
-
-  #         @choices = Choice.create_choices(@poll.id, choices)
-
-  #         if @choices.present?
-  #           @poll.create_tag(title)
-
-  #           @poll.create_watched(member, @poll.id)
-
-  #           if group_id
-  #             Group.add_poll(member, @poll, list_group_id)
-  #             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date, in_group: true)
-  #             Company::TrackActivityFeedPoll.new(member, @poll.in_group_ids, @poll, "create").tracking if @poll.in_group
-  #           else
-  #             @poll.poll_members.create!(member_id: member_id, share_poll_of_id: 0, public: @set_public, series: false, expire_date: convert_expire_date)
-  #           end
-
-  #           if member.citizen? && is_public
-  #             if member.point > 0
-  #               member.with_lock do
-  #                 member.point -= 1
-  #                 member.save!
-  #               end
-  #             end
-  #           end
-
-  #           MemberActiveRecord.record_member_active(member)
-
-  #           PollStats.create_poll_stats(@poll)
-
-  #           Activity.create_activity_poll(member, @poll, 'Create')
-
-  #           @poll.flush_cache
-
-  #           [@poll, nil, alert_message]
-  #         end
-  #       else
-  #         [nil, @poll.errors.full_messages.join(", "), alert_message]
-  #       end
-
-  #     rescue ArgumentError => detail
-  #       [@poll = nil, detail.message, alert_message]
-  #     end
-
-  #   end ## transaction
-  # end
-
-  #### deprecated ####
-
-  # def add_attachment_image(original_images)
-  #   init_original_images = ImageUrl.new(original_images.first)
-
-  #   if init_original_images.from_image_url?
-  #     new_original_images = original_images.collect!{|image_url| ImageUrl.new(image_url).split_cloudinary_url }
-
-  #     new_original_images.each_with_index do |url_attachment, index|
-  #       poll = poll_attachments.create!(image: url_attachment, order_image: index+1)
-  #       poll.update_column(:image, url_attachment)
-  #     end
-  #   else
-  #     original_images.each_with_index do |attachment, index|
-  #       poll_attachments.create!(image: attachment, order_image: index+1)
-  #     end
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def should_generate_new_friendly_id?
-  #   title_changed? || super
-  # end
-
-  #### deprecated ####
-
-  # def self.check_type_of_choice(choices)
-  #   raise ExceptionHandler::UnprocessableEntity, "You must have choices attribuites." unless choices.present?
-  #   unless choices.class == Array
-  #     choices = choices.split(",")
-  #   end
-  #   choices
-  # end
-
-  #### deprecated ####
-
-  # def self.new_hash_for_analysis(hash_analysis)
-  #   if hash_analysis.present?
-  #     new_hash = {}
-  #     list_gender ||= Member.gender.values.collect{|e| [e.value, e.text]}
-  #     list_salary ||= Member.salary.values.collect{|e| [e.value, e.text]}
-  #     list_provice ||= Member.province.values.collect{|e| [e.value, e.text]}
-
-  #     hash_analysis.each do |key, value|
-  #       if key == "gender"
-  #         compare = list_gender.select{|e| e.first == value.to_i }.first.last
-  #         new_hash.merge!(key => compare)
-  #       elsif key == "salary"
-  #         compare = list_salary.select{|e| e.first == value.to_i }.first.last
-  #         new_hash.merge!(key => compare)
-  #       elsif key == "province"
-  #         compare = list_provice.select{|e| e.first == value.to_i }.first.last
-  #         new_hash.merge!(key => compare)
-  #       elsif key == "birthday"
-  #         new_hash.merge!(key => value)
-  #       end
-  #     end
-  #     return new_hash
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def get_choice_scroll
-  #   cached_choices.sort { |x,y| y.id <=> x.id }.map(&:vote)
-  # end
-
-  #### deprecated ####
-
-  # def self.filter_type(query, type)
-  #   case type
-  #   when "active" then query.active_poll
-  #   when "inactive" then query.inactive_poll
-  #   else query
-  #   end
-  # end
-
-  #### deprecated ####
-
-  # def get_expire_date
-  #   expire_date.present? ? expire_date.to_i : ""
-  # end
-
-  #### deprecated ####
-
-  # def self.total_grouped_by_date(start)
-  #   polls = where(created_at: start.beginning_of_day..Time.zone.now)
-  #   polls = polls.select("date(created_at) as created_at, count(*) as total_poll")
-  #   polls = polls.group("date(created_at)")
-
-  #   polls.each_with_object({}) do |poll, hsh|
-  #     hsh[poll.created_at.to_date] = poll.total_poll
-  #   end
-
-  # end
 
 end
