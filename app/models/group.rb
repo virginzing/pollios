@@ -202,6 +202,7 @@ class Group < ActiveRecord::Base
     group
   end
 
+  # TODO: move to Service
   def self.accept_group(member, group)
     group_id = group[:id]
     member_id = group[:member_id]
@@ -231,6 +232,7 @@ class Group < ActiveRecord::Base
 
       FlushCached::Group.new(@group).clear_list_members
       FlushCached::Member.new(@member).clear_list_groups
+      Rails.cache.delete("group/#{@group.id}/requests")
     end
     @group
   end
