@@ -232,7 +232,7 @@ class Group < ActiveRecord::Base
 
       FlushCached::Group.new(@group).clear_list_members
       FlushCached::Member.new(@member).clear_list_groups
-      Rails.cache.delete("group/#{@group.id}/requests")
+      Rails.cache.delete("group/#{group_id}/requests")
     end
     @group
   end
