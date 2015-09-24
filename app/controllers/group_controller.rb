@@ -122,8 +122,8 @@ class GroupController < ApplicationController
 
   def detail_group
     @member = Member.find(params[:member_id])
-    @group_members ||= Group::ListMember.new(@group)
-    @member_active = @group_members.join_recently
+    @group_member ||= Group::ListMember.new(@group)
+    @member_active = @group_member.join_recently
   end
 
   def request_group

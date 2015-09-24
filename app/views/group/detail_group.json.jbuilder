@@ -1,8 +1,13 @@
 if @group.present?
   json.response_status "OK"
-  
+
   json.group do
     json.partial! 'response_helper/group/full_info', group: @group
+    json.viewing_member do
+      json.is_member @group_member.is_active?(@member)
+      json.is_pending @group_member.is_pending?(@member)
+      json.is_requesting @group_member.is_requesting?(@member)
+    end
   end
 
   json.member_group do
