@@ -1,4 +1,5 @@
 class Member::ListGroup
+  
   def initialize(member)
     @member = member
   end
@@ -31,7 +32,7 @@ class Member::ListGroup
     tmp_member = []
     tmp_non_member = []
 
-    poll_groups = cached_groups_for_poll(poll)
+    poll_groups = poll.groups.sort
     poll_groups.each do |group|
       if member_groups_ids.include?(group.id)
         if requesting_group_id == group.id
@@ -79,9 +80,9 @@ class Member::ListGroup
     end
   end
 
-  def cached_groups_for_poll(poll)
-    Rails.cache.fetch("poll/#{poll.id}/groups") do
-      poll.groups
-    end
-  end
+  # def cached_groups_for_poll(poll)
+  #   Rails.cache.fetch("poll/#{poll.id}/groups") do
+  #     poll.groups
+  #   end
+  # end
 end

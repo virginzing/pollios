@@ -56,39 +56,12 @@ class FriendsController < ApplicationController
     render status: @friend ? :created : :unprocessable_entity
   end
 
-  # def mute_friend
-  #   @friend = @current_member.mute_or_unmute_friend(friend_params, true)
-  # end
-
-  # def unmute_friend
-  #   @friend = @current_member.mute_or_unmute_friend(friend_params, false)
-  # end
-
   def search_friend
     @search = Member.search_member(friend_params)
     init_list_friend ||= Member::ListFriend.new(@current_member)
     @is_friend = Friend.check_add_friend?(@current_member, @search, init_list_friend.check_is_friend)
     TypeSearch.create_log_search_users_and_groups(@current_member, friend_params[:q])
   end
-
-  #### deprecated ####
-
-  # def friend_of_friend
-  #   @friend = Friend.friend_of_friend(friend_params)
-  #   is_friend(@friend) if @friend.present?
-  # end
-
-  # def following_of_friend
-  #   find_user = Member.cached_find(friend_params[:friend_id])
-  #   init_list_friend ||= Member::ListFriend.new(find_user)
-  #   @list_following = init_list_friend.following
-  #   @is_friend = Friend.check_add_friend?(find_user, @list_following, init_list_friend.check_is_friend) if @list_following.present?
-  # end
-
-  # def follower_of_friend
-  #   @friend = Friend.follower_of_friend(friend_params)
-  #   is_friend(@friend) if @friend.present?
-  # end
 
   def list_of_poll
     if derived_version == 6
@@ -141,7 +114,6 @@ class FriendsController < ApplicationController
   def list_of_bookmark
     @init_poll = V6::MyPollInProfile.new(@current_member, options_params)
     @list_polls, @next_cursor = @init_poll.get_my_bookmark
-    @group_by_name = @init_poll.group_by_name
   end
 
   # def check_my_vote_flush_cache?(member, vote_poll_count)
