@@ -10,9 +10,12 @@ json.groups @posted_in_groups do |group|
         json.partial! 'response_helper/group/default', group: group
         json.member_count group.get_member_count
 
-        json.is_member is_active_member
-        json.is_pending is_pending
-        json.is_requesting is_requesting
+        json.viewing_member do
+            json.is_member is_active_member
+            json.is_pending is_pending
+            json.is_requesting is_requesting
+        end
+
         count += 1
     end
 end
