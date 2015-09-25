@@ -174,3 +174,6 @@ gem 'settingslogic'
 gem 'unscoped_associations'
 
 # gem 'oink'
+
+gem 'grape'
+gem 'hashie-forbidden_attributes'
