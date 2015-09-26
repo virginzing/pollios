@@ -1,10 +1,16 @@
-class Member::ListFriend
+class Member::MemberList
+# Service for listing member's social linkages (friends, followings, etc)
+
   def initialize(member)
     @member = member
   end
 
   def all
     @all ||= all_friend
+  end
+
+  def friends
+    @cached_all_friends ||= cached_friends
   end
 
   def cached_all_friends

@@ -7,7 +7,7 @@ class Request::Search
     @params = params
 
     @init_list_group = Member::ListGroup.new(@member)
-    @init_list_friend = Member::ListFriend.new(@member)
+    @init_list_friend = Member::MemberList.new(@member)
   end
 
   def search

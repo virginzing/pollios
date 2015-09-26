@@ -6,7 +6,7 @@ class Apn::FeedbackPublic
   def initialize(member, poll_series)
     @member = member
     @poll_series = poll_series
-    @init_member_list_friend = Member::ListFriend.new(@member)
+    @init_member_list_friend = Member::MemberList.new(@member)
   end
 
   def recipient_ids

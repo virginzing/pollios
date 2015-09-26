@@ -53,7 +53,7 @@ class HistoryPurchase < ActiveRecord::Base
               end
             end
 
-            Member::ListFriend.new(member).follower.each do |follower|
+            Member::MemberList.new(member).follower.each do |follower|
               FlushCached::Member.new(follower).clear_list_friends
             end
 

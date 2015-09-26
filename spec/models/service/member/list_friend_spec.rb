@@ -8,7 +8,7 @@ RSpec.describe "Member List Friend" do
   describe "#active" do
     
     before do
-      @init_list_friend_of_member = Member::ListFriend.new(member)
+      @init_list_friend_of_member = Member::MemberList.new(member)
     end
 
     it "has zero friend's active" do
@@ -25,7 +25,7 @@ RSpec.describe "Member List Friend" do
 
   describe "#block" do
     before do
-      @init_list_friend_of_member = Member::ListFriend.new(member)
+      @init_list_friend_of_member = Member::MemberList.new(member)
     end
 
     it "has zero friend's blck" do
@@ -41,7 +41,7 @@ RSpec.describe "Member List Friend" do
 
   describe "#your_request" do
     before do
-      @init_list_friend_of_member = Member::ListFriend.new(member)
+      @init_list_friend_of_member = Member::MemberList.new(member)
     end
 
     it "has zero friend's your request" do
@@ -58,7 +58,7 @@ RSpec.describe "Member List Friend" do
 
   describe "#friend_request" do
     before do 
-      @init_list_friend_of_member = Member::ListFriend.new(member)
+      @init_list_friend_of_member = Member::MemberList.new(member)
     end
 
     it "has zero friend's request" do

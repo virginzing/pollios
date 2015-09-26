@@ -5,7 +5,7 @@ class ApnPollPublic
   def initialize(member, poll)
     @member = member
     @poll = poll
-    @init_member_list_friend = Member::ListFriend.new(@member)
+    @init_member_list_friend = Member::MemberList.new(@member)
   end
 
   def member

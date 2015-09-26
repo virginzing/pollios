@@ -7,7 +7,7 @@ class HashtagTimeline
     @report_poll = Member.current_member.cached_report_poll
     @block_member = Member.list_friend_block
 
-    @init_list_friend = Member::ListFriend.new(@member)
+    @init_list_friend = Member::MemberList.new(@member)
     @init_list_group = Member::ListGroup.new(@member)
   end
 

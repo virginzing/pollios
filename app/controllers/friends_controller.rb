@@ -58,7 +58,7 @@ class FriendsController < ApplicationController
 
   def search_friend
     @search = Member.search_member(friend_params)
-    init_list_friend ||= Member::ListFriend.new(@current_member)
+    init_list_friend ||= Member::MemberList.new(@current_member)
     @is_friend = Friend.check_add_friend?(@current_member, @search, init_list_friend.check_is_friend)
     TypeSearch.create_log_search_users_and_groups(@current_member, friend_params[:q])
   end
@@ -170,14 +170,14 @@ class FriendsController < ApplicationController
   end
 
   def profile
-    init_list_friend ||= Member::ListFriend.new(@current_member)
+    init_list_friend ||= Member::MemberList.new(@current_member)
     @is_friend = Friend.check_add_friend?(@current_member, [@find_friend], init_list_friend.check_is_friend)
   end
 
   def collection_profile
     if friend_params[:member_id] == friend_params[:friend_id]  # me
 
-      init_list_friend ||= Member::ListFriend.new(@current_member)
+      init_list_friend ||= Member::MemberList.new(@current_member)
 
       @list_friend = init_list_friend.active
       @list_friend_is_friend = Friend.check_add_friend?(@current_member, @list_friend, init_list_friend.check_is_friend) if @list_friend.present?
@@ -194,8 +194,8 @@ class FriendsController < ApplicationController
 
       find_user = Member.cached_find(friend_params[:friend_id])
 
-      init_list_friend ||= Member::ListFriend.new(find_user)
-      init_list_friend_of_member ||= Member::ListFriend.new(@current_member)
+      init_list_friend ||= Member::MemberList.new(find_user)
+      init_list_friend_of_member ||= Member::MemberList.new(@current_member)
 
       @list_friend = init_list_friend.active
       @list_friend_is_friend = Friend.check_add_friend?(@current_member, @list_friend, init_list_friend_of_member.check_is_friend) if @list_friend.present?
@@ -224,7 +224,7 @@ class FriendsController < ApplicationController
   end
 
   def find_via_facebook
-    init_list_friend ||= Member::ListFriend.new(@current_member)
+    init_list_friend ||= Member::MemberList.new(@current_member)
     init_find_friend_via_facebook = Friend::FindFacebook.new(@current_member, params[:list_fb_id])
 
     @list_friend = init_find_friend_via_facebook.get_friend_facebook

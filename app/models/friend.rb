@@ -48,7 +48,7 @@ class Friend < ActiveRecord::Base
         @member = Member.cached_find(friend_params[:member_id])
         @friend = Member.cached_find(friend_params[:friend_id])
 
-        init_member_list_friend ||= Member::ListFriend.new(@member)
+        init_member_list_friend ||= Member::MemberList.new(@member)
         member_friend_active = init_member_list_friend.active.map(&:id)
         member_invite_friend = init_member_list_friend.your_request.map(&:id)
 
@@ -145,7 +145,7 @@ class Friend < ActiveRecord::Base
 
     friend = Member.cached_find(friend_id)
 
-    init_list_member = Member::ListFriend.new(member)
+    init_list_member = Member::MemberList.new(member)
 
     find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).first
 
@@ -171,7 +171,7 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
-    init_list_member = Member::ListFriend.new(member)
+    init_list_member = Member::MemberList.new(member)
 
     fail ExceptionHandler::UnprocessableEntity, "You're not follow this official before." unless init_list_member.following.map(&:id).include?(friend.id)
 
@@ -197,7 +197,7 @@ class Friend < ActiveRecord::Base
       member = Member.cached_find(member_id)
       friend = Member.cached_find(friend_id)
 
-      init_member_list_friend = Member::ListFriend.new(member)
+      init_member_list_friend = Member::MemberList.new(member)
 
       raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} not friends." unless init_member_list_friend.active.map(&:id).include?(friend.id)
 
@@ -222,7 +222,7 @@ class Friend < ActiveRecord::Base
       member = Member.cached_find(member_id)
       friend = Member.cached_find(friend_id)
 
-      init_member_list_friend ||= Member::ListFriend.new(member)
+      init_member_list_friend ||= Member::MemberList.new(member)
 
       if accept
         active_status = true
@@ -231,7 +231,7 @@ class Friend < ActiveRecord::Base
         raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} has cancelled to request friends." unless find_member.present?
         raise ExceptionHandler::UnprocessableEntity, "This request was cancelled." unless find_friend.present?
         raise ExceptionHandler::UnprocessableEntity, "My friend has over 500 people." if (init_member_list_friend.friend_count >= member.friend_limit)
-        raise ExceptionHandler::UnprocessableEntity, "Your friend has over 500 people." if (Member::ListFriend.new(friend).friend_count >= friend.friend_limit)
+        raise ExceptionHandler::UnprocessableEntity, "Your friend has over 500 people." if (Member::MemberList.new(friend).friend_count >= friend.friend_limit)
         raise ExceptionHandler::UnprocessableEntity, "You and #{friend.get_name} is friends." if init_member_list_friend.active.map(&:id).include?(friend.id)
 
         find_member.update_attributes!(active: active_status, status: :friend)
@@ -299,8 +299,8 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
-    fail ExceptionHandler::UnprocessableEntity, "You had already blocked #{friend.get_name}" if Member::ListFriend.new(member).block.map(&:id).include?(friend.id)
-    fail ExceptionHandler::UnprocessableEntity, "You're not friend with #{friend.get_name}" unless Member::ListFriend.new(member).active.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You had already blocked #{friend.get_name}" if Member::MemberList.new(member).block.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You're not friend with #{friend.get_name}" unless Member::MemberList.new(member).active.map(&:id).include?(friend.id)
 
     if find_member && find_friend
       find_member.update_attributes!(block: true)
@@ -326,7 +326,7 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
-    fail ExceptionHandler::UnprocessableEntity, "You're not used to block #{friend.get_name}" unless Member::ListFriend.new(member).block.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You're not used to block #{friend.get_name}" unless Member::MemberList.new(member).block.map(&:id).include?(friend.id)
 
     if find_member && find_friend
       find_member.update_attributes!(block: false)
@@ -344,7 +344,7 @@ class Friend < ActiveRecord::Base
 
   def self.add_friend?(member_obj, search_member)
     check_my_friend = []
-    init_list_friend ||= Member::ListFriend.new(member_obj)
+    init_list_friend ||= Member::MemberList.new(member_obj)
 
     my_friend = init_list_friend.active.map(&:id)
     your_request = init_list_friend.your_request.map(&:id)

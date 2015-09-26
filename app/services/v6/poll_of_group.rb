@@ -23,7 +23,7 @@ class V6::PollOfGroup
   end
 
   def block_users
-    Member::ListFriend.new(@member).block.map(&:id)
+    Member::MemberList.new(@member).block.map(&:id)
   end
 
   def original_next_cursor

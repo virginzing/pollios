@@ -50,7 +50,7 @@ class GroupController < ApplicationController
   end
 
   def add_friend_to_group
-    init_list_friend ||= Member::ListFriend.new(@current_member)
+    init_list_friend ||= Member::MemberList.new(@current_member)
     @group = Group.add_friend_to_group(@group, @current_member, group_params[:friend_id])
     @is_friend = Friend.check_add_friend?(@current_member, @group.get_member_inactive, init_list_friend.check_is_friend)
   end
@@ -76,7 +76,7 @@ class GroupController < ApplicationController
   end
 
   def members
-    init_list_friend ||= Member::ListFriend.new(@current_member)
+    init_list_friend ||= Member::MemberList.new(@current_member)
     @group_members ||= Group::ListMember.new(@group)
 
     @member_active = @group_members.active

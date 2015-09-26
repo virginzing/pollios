@@ -9,7 +9,7 @@ class Friend::FindFacebook
   end
 
   def init_list_friend
-    @init_list_friend ||= Member::ListFriend.new(@member)
+    @init_list_friend ||= Member::MemberList.new(@member)
   end
 
   def list_all_friend

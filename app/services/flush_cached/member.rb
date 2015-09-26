@@ -4,7 +4,7 @@ class FlushCached::Member
   end
 
   def clear_list_friends_all_members
-    Member::ListFriend.new(@member).cached_all_friends.each do |member|
+    Member::MemberList.new(@member).cached_all_friends.each do |member|
       Rails.cache.delete("member/#{member.id}/friends")
     end
   end

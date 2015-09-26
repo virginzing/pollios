@@ -46,7 +46,7 @@ module Timelinable
   end
 
   def block_users
-    Member::ListFriend.new(@member).block.map(&:id)
+    Member::MemberList.new(@member).block.map(&:id)
   end
 
   # def check_poll_not_show_result

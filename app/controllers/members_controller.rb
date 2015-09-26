@@ -20,7 +20,7 @@ class MembersController < ApplicationController
   respond_to :json
 
   def recommendations
-    init_list_friend = Member::ListFriend.new(@current_member)
+    init_list_friend = Member::MemberList.new(@current_member)
 
     @init_recommendation = Recommendation.new(@current_member)
     @recommendations_official = @init_recommendation.get_recommendations_official.sample(2)
@@ -58,7 +58,7 @@ class MembersController < ApplicationController
       render status: :not_found
     else
       @member_from_special_qrcode = Member.cached_find(@special_code.info["member_id"])
-      init_list_friend_of_member ||= Member::ListFriend.new(@current_member)
+      init_list_friend_of_member ||= Member::MemberList.new(@current_member)
       @is_friend = Friend.check_add_friend?(@current_member, [@member_from_special_qrcode], init_list_friend_of_member.check_is_friend)
     end
   end
@@ -303,7 +303,7 @@ class MembersController < ApplicationController
   end
 
   def all_request
-    init_list_friend = Member::ListFriend.new(@current_member)
+    init_list_friend = Member::MemberList.new(@current_member)
 
     @your_request = init_list_friend.your_request
     @friend_request = init_list_friend.friend_request
@@ -463,7 +463,7 @@ class MembersController < ApplicationController
   end
 
   def list_block
-    @list_block = Member::ListFriend.new(current_member).block
+    @list_block = Member::MemberList.new(current_member).block
   end
 
   def clear
