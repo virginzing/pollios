@@ -413,7 +413,7 @@ RSpec.describe "Friend" do
       end
 
       it "have 2 group of member" do
-        expect(Member::ListGroup.new(member).active.size).to eq(2)
+        expect(Member::GroupList.new(member).active.size).to eq(2)
       end
     end
 

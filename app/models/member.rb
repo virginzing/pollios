@@ -1108,7 +1108,7 @@ class Member < ActiveRecord::Base
   end
 
   def post_poll_in_group(in_group_ids)
-    init_list_group = Member::ListGroup.new(self)
+    init_list_group = Member::GroupList.new(self)
 
     get_list_group_ids = init_list_group.active.map(&:id)
     split_group_ids = in_group_ids.split(",").collect{|e| e.to_i }

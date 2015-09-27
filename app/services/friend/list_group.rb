@@ -68,12 +68,12 @@ class Friend::ListGroup
   end
 
   def my_group
-    init_list_group = Member::ListGroup.new(@member)
+    init_list_group = Member::GroupList.new(@member)
     init_list_group.active
   end
 
   def friend_group
-    init_list_group = Member::ListGroup.new(@friend)
+    init_list_group = Member::GroupList.new(@friend)
     init_list_group.active_with_public
   end
   

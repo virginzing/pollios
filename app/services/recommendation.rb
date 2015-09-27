@@ -2,7 +2,7 @@ class Recommendation
   def initialize(member)
     @member = member
     @init_list_friend = Member::MemberList.new(@member)
-    @init_list_group = Member::ListGroup.new(@member)
+    @init_list_group = Member::GroupList.new(@member)
     @list_member_active = @init_list_friend.active
     @list_member_block = @init_list_friend.block
     @list_member_follower = @init_list_friend.follower

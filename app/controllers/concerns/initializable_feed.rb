@@ -4,7 +4,7 @@ module InitializableFeed
     return unless @current_member.present?
     init_list_friend = Member::MemberList.new(Member.current_member)
     init_list_poll = Member::PollList.new(Member.current_member)
-    init_list_group = Member::ListGroup.new(Member.current_member)
+    init_list_group = Member::GroupList.new(Member.current_member)
 
     Member.list_friend_active = init_list_friend.active
     Member.list_friend_block = init_list_friend.block

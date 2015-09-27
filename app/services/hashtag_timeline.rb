@@ -8,7 +8,7 @@ class HashtagTimeline
     @block_member = Member.list_friend_block
 
     @init_list_friend = Member::MemberList.new(@member)
-    @init_list_group = Member::ListGroup.new(@member)
+    @init_list_group = Member::GroupList.new(@member)
   end
 
   def member_id

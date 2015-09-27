@@ -5,7 +5,7 @@ class Group::CheckUserInGroup
   end
 
   def member_list_group
-    @member_list_group ||= Member::ListGroup.new(@member).active.map(&:id)
+    @member_list_group ||= Member::GroupList.new(@member).active.map(&:id)
   end
 
   def exists?

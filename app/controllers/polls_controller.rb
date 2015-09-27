@@ -261,7 +261,7 @@ class PollsController < ApplicationController
 
   def posted_in_groups
     @member = Member.find(params[:member_id])
-    @posted_in_groups = Member::ListGroup.new(@member).groups_available_for_poll(@poll)
+    @posted_in_groups = Member::GroupList.new(@member).groups_available_for_poll(@poll)
     @group_id = nil
   end
 
@@ -459,7 +459,7 @@ class PollsController < ApplicationController
   end
 
   def raise_exception_without_group
-    init_list_group = Member::ListGroup.new(@current_member)
+    init_list_group = Member::GroupList.new(@current_member)
     poll_in_group = @poll.in_group_ids.split(',').map(&:to_i)
     fail ExceptionHandler::UnprocessableEntity, "You're not in group. Please join this group then you can see this poll."  if ((poll_in_group & init_list_group.active.map(&:id)).size == 0)
   end

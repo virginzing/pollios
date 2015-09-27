@@ -391,7 +391,7 @@ class Poll < ActiveRecord::Base
     posted_to_hash = poll_is_where
 
     if in_group
-      groups_available = Member::ListGroup.new(member).groups_available_for_poll(self, group_id)
+      groups_available = Member::GroupList.new(member).groups_available_for_poll(self, group_id)
 
       groups_as_json = []
       groups_available.each do |group|

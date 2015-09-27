@@ -308,7 +308,7 @@ class MembersController < ApplicationController
     @your_request = init_list_friend.your_request
     @friend_request = init_list_friend.friend_request
 
-    init_list_group = Member::ListGroup.new(@current_member)
+    init_list_group = Member::GroupList.new(@current_member)
 
     @group_inactive = init_list_group.inactive
 
@@ -324,7 +324,7 @@ class MembersController < ApplicationController
   end
 
   def all_request_groups
-    @all_request_groups = Member::ListGroup.new(@current_member).as_admin
+    @all_request_groups = Member::GroupList.new(@current_member).as_admin
   end
 
   def clear_request_count
@@ -448,7 +448,7 @@ class MembersController < ApplicationController
   end
 
   def add_to_group_at_invite
-    init_list_group = Member::ListGroup.new(@current_member)
+    init_list_group = Member::GroupList.new(@current_member)
     find_my_group = init_list_group.active.map(&:id)
     return false if find_my_group.include?(@group.id)
 

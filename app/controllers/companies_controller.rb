@@ -279,13 +279,13 @@ class CompaniesController < ApplicationController
 
   def list_group
     @member = Member.cached_find(params[:member_id])
-    init_list_group = Member::ListGroup.new(@member)
+    init_list_group = Member::GroupList.new(@member)
 
     @company = Company.find(params[:company_id])
     @member_group_active = init_list_group.active.map(&:id)
     @member_group_inactive = init_list_group.inactive.map(&:id)
 
-    @list_groups = Company::ListGroup.new(@company).all
+    @list_groups = Company::GroupList.new(@company).all
     render layout: false
   end
 
@@ -506,7 +506,7 @@ class CompaniesController < ApplicationController
     find_user = Member.cached_find(params[:member_id])
     find_group = Group.cached_find(params[:group_id])
 
-    list_group_of_user = Member::ListGroup.new(find_user)
+    list_group_of_user = Member::GroupList.new(find_user)
 
     respond_to do |format|
 

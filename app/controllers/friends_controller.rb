@@ -134,7 +134,7 @@ class FriendsController < ApplicationController
 
   def list_of_group
     if params[:member_id] == params[:friend_id]
-      init_list_group = Member::ListGroup.new(@current_member)
+      init_list_group = Member::GroupList.new(@current_member)
       @groups = init_list_group.active_non_virtual
       @hash_member_count = init_list_group.hash_member_count
     else

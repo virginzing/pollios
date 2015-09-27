@@ -144,7 +144,7 @@ class CreatePollService
   private
 
   def list_groups_active
-    @list_groups_active ||= Member::ListGroup.new(creator).active
+    @list_groups_active ||= Member::GroupList.new(creator).active
   end
 
   def add_poll_to_feed!

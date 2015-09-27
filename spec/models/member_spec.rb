@@ -183,7 +183,7 @@ RSpec.describe Member, :type => :model do
     let!(:group_member_two) {  create(:group_member, member: member, group: group_two, is_master: true, active: true) }
 
     it "has group active" do
-      init_list_group_active = Member::ListGroup.new(member).active.map(&:id)
+      init_list_group_active = Member::GroupList.new(member).active.map(&:id)
       expect(init_list_group_active.size).to eq(2)
     end
 

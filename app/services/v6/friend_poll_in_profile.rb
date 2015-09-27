@@ -7,7 +7,7 @@ class V6::FriendPollInProfile
     @member = member
     @friend = friend
     @options = options
-    @init_list_group = Member::ListGroup.new(@friend)
+    @init_list_group = Member::GroupList.new(@friend)
     @my_group = Member.list_group_active
     @init_unsee_poll ||= UnseePoll.new( { member_id: member.id} )
 

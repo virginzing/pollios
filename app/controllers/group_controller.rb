@@ -16,7 +16,7 @@ class GroupController < ApplicationController
   expose(:hash_member_count) { @hash_member_count }
 
   def my_group
-    init_list_group = Member::ListGroup.new(@current_member)
+    init_list_group = Member::GroupList.new(@current_member)
     @group_active = init_list_group.active
     @group_inactive = init_list_group.inactive
     @hash_member_count = init_list_group.hash_member_count

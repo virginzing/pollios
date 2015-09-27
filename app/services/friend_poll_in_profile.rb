@@ -8,7 +8,7 @@ class FriendPollInProfile
   end
   
   def friend_group
-    init_list_group ||= Member::ListGroup.new(@friend)
+    init_list_group ||= Member::GroupList.new(@friend)
     init_list_group.active  
   end
 
