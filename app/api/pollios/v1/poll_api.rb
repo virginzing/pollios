@@ -4,11 +4,15 @@ module Pollios::V1
 
     desc 'Hello World!!!'
     params do
-      requires :message, type: String
+      # requires :message, type: String
+    end
+
+    get :all_count do
+      { count: Poll.count }
     end
 
     get :say do
-      { m: params[:message] }
+      # { m: params[:message] }
     end 
   end
 end
