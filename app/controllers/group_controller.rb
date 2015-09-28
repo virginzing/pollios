@@ -121,7 +121,7 @@ class GroupController < ApplicationController
   end
 
   def detail_group
-    @member = Member.find(params[:member_id])
+    @member = Member.cached_find(params[:member_id])
     @group_member ||= Group::ListMember.new(@group)
     @member_active = @group_member.join_recently
   end

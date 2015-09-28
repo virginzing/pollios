@@ -260,7 +260,7 @@ class PollsController < ApplicationController
   end
 
   def posted_in_groups
-    @member = Member.find(params[:member_id])
+    @member = Member.cached_find(params[:member_id])
     @posted_in_groups = Member::GroupList.new(@member).groups_available_for_poll(@poll)
     @group_id = nil
   end

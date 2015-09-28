@@ -7,6 +7,7 @@ if @group.present?
       json.is_member @group_member.is_active?(@member)
       json.is_pending @group_member.is_pending?(@member)
       json.is_requesting @group_member.is_requesting?(@member)
+      json.is_admin @group_member.is_admin?(@member)
     end
   end
 
