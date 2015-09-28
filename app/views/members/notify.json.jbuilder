@@ -1,7 +1,7 @@
-if @notify
+if @notifications
   json.response_status "OK"
   
-  json.notify @notify do |notify|
+  json.notify @notifications do |notify|
     json.notify_id notify.id
 
     if notify.sender.nil?

@@ -342,9 +342,9 @@ class MembersController < ApplicationController
   end
 
   def notify
-    @notify = @current_member.received_notifies.without_deleted.order('created_at DESC').paginate(page: params[:next_cursor])
-    @total_entries =  @notify.total_entries
-    @next_cursor = @notify.next_page.nil? ? 0 : @notify.next_page
+    @notifications = @current_member.received_notifies.without_deleted.order('created_at DESC').paginate(page: params[:next_cursor])
+    @total_entries =  @notifications.total_entries
+    @next_cursor = @notifications.next_page.nil? ? 0 : @notifications.next_page
     clear_notification_count if params[:clear_notification]
   end
 
