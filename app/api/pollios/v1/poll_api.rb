@@ -20,11 +20,11 @@ module Pollios::V1
         { count: Poll.count }
       end
 
-      desc "return: requesting member's home timeline"
+      desc "/personal_timeline: returns requesting member's home timeline"
       get :personal_timeline do
       end
 
-      desc "return: poll detail for requesting member"
+      desc "/:id: returns poll detail for requesting member"
       params do
         requires :id, type: Integer, desc: "poll id" 
       end

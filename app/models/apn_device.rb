@@ -31,7 +31,7 @@ class ApnDevice
 
   def self.check_device?(member, device_token)
     if device_token.present?
-      @member_device = MemberDevise.new(member, device_token)
+      @member_device = MemberDevice.new(member, device_token)
       @device = @member_device.check_device
       @member_device.get_access_api
     else

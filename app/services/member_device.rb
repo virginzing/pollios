@@ -1,4 +1,4 @@
-class MemberDevise
+class MemberDevice
   def initialize(member, device_token)
     @member = member
     @device_token = device_token
@@ -15,7 +15,7 @@ class MemberDevise
   def check_device
     if member_of_device.present?
       update_device
-    elsif current_devise.present?
+    elsif current_device.present?
       change_device
     else
       new_device
@@ -49,8 +49,8 @@ class MemberDevise
     @member.apn_devices.find_by(token: device_token)
   end
 
-  def current_devise
-    current_devise = Apn::Device.find_by(token: device_token)
+  def current_device
+    current_device = Apn::Device.find_by(token: device_token)
   end
 
   
