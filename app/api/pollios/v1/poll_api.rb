@@ -7,8 +7,10 @@ module Pollios::V1
       # requires :message, type: String
     end
 
-    get :all_count do
-      { count: Poll.count }
+    resource :polls do
+      get :all_count do
+        { count: Poll.count }
+      end
     end
 
     get :say do
