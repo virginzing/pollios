@@ -97,4 +97,6 @@ Pollios::Application.configure do
 
   # config.cache_store = :dalli_store, nil,  { compress: true }
   config.relative_url_root = "/"
+
+  Mongo::Logger.logger.level = ::Logger::FATAL
 end

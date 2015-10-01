@@ -36,4 +36,6 @@ Pollios::Application.configure do
   # end  
 
   config.relative_url_root = "/"
+
+  Mongo::Logger.logger.level = ::Logger::FATAL
 end

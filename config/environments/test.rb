@@ -35,4 +35,6 @@ Pollios::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.cache_store = :null_store
+
+  Mongo::Logger.logger.level = ::Logger::FATAL
 end
