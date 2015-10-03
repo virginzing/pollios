@@ -17,7 +17,7 @@ module Pollios::V1
       end
       route_param :id do
         get do
-          { id:  Poll.find(params[:id]) }
+          { poll: Poll.find(params[:id]) }
         end
       end
 
