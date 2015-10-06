@@ -1,6 +1,7 @@
 module Pollios::V1
   class MemberAPI < Grape::API
     version 'v1', using: :path
+    desc "Member API"
 
     resource :members do
 
@@ -10,13 +11,13 @@ module Pollios::V1
 
       route_param :id do
 
-        desc "GET /:id return member detail for profile screen of member"
+        desc "returns member detail for profile screen of member"
         get do
           { member: Member.find(params[:id]) }
         end
 
-      end # route_param
-    end # resource :member
+      end 
+    end 
 
-  end # class MemberAPI
-end # module
+  end
+end 
