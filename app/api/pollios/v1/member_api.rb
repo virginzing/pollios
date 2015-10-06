@@ -16,6 +16,24 @@ module Pollios::V1
           { member: Member.find(params[:id]) }
         end
 
+        resource :friends do
+          desc "returns list of member's friends & followings"
+          get do
+            m = Member.find(params[:id])
+            { followings: [m],
+              friends: [m] }
+          end
+        end
+
+        resource :groups do
+          desc "returns list of member's groups"
+          get do
+            m = Member.find(params[:id])
+            { admin: [m],
+              active: [m]}
+          end
+        end
+        
       end 
     end 
 
