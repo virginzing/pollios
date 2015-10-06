@@ -176,4 +176,5 @@ gem 'unscoped_associations'
 # gem 'oink'
 
 gem 'grape'
+gem 'grape-jbuilder'
 gem 'hashie-forbidden_attributes'
