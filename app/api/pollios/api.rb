@@ -3,7 +3,7 @@ module Pollios
     format :json
     prefix :api
 
-    formatter :json, Grape::Formatter::Jbuilder
+  #  formatter :json, Grape::Formatter::Jbuilder
 
     before do
       error!("401 Unauthorized", 401) unless current_member
