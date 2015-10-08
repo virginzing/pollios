@@ -13,6 +13,10 @@ class Member::GroupList
     cached_all_groups.select{|group| group if group.member_is_active }
   end
 
+  def as_member
+    active.select{|group| group if group.member_is_active && !group.member_admin}
+  end
+
   def as_admin
     active.select{|group| group if group.member_admin }
   end

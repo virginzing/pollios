@@ -27,9 +27,9 @@ module Pollios::V1::Member
 
         desc "returns list of member's groups"
         get '/groups' do
-          m = Member.find(params[:id])
-          { admin: [m],
-            active: [m]}
+          group_list = Member::GroupList.new(Member.find(params[:id]))
+          { admin: group_list.as_admin,
+            member: group_list.as_member }
         end
         
       end 
