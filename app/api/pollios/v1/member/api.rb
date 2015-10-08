@@ -17,12 +17,8 @@ module Pollios::V1::Member
         end
 
         desc "returns list of member's friends & followings"
-        get '/friends' do
+        get '/friends', root: false, serializer: FriendSerializer do
           member_list = Member::MemberList.new(Member.find(params[:id]))
-           { friends: member_list.friends,
-             followers: member_list.follower,
-             followings: member_list.following,
-             blocks: member_list.block }
         end
 
         desc "returns list of member's groups"
