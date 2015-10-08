@@ -9,10 +9,7 @@ module Pollios::V1
     end
 
     resource :polls do
-      get :all_count do
-        { count: Poll.count }
-      end
-
+      
       desc "returns requesting member's home timeline"
       get :personal_timeline do
       end

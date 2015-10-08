@@ -19,7 +19,7 @@ module Pollios::V1
         desc "returns list of member's friends & followings"
         get '/friends' do
           m = Member.find(params[:id])
-          { followings: [m],
+          { followings: [m, m],
             friends: [m] }
         end
 
