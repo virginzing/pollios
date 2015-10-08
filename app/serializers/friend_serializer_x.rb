@@ -16,7 +16,7 @@
 #  close_friend :boolean          default(FALSE)
 #
 
-class FriendSerializer < ActiveModel::Serializer
+class FriendSerializerX < ActiveModel::Serializer
   self.root false
 
   def initialize(object, options={})

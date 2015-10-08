@@ -1,5 +1,5 @@
-module Pollios::V1
-  class MemberAPI < Grape::API
+module Pollios::V1::Member
+  class API < Grape::API
     version 'v1', using: :path
     desc "Member API"
 
@@ -17,10 +17,9 @@ module Pollios::V1
         end
 
         desc "returns list of member's friends & followings"
-        get '/friends' do
+        get '/friends', each_serializer: FriendSerializer do
           m = Member.find(params[:id])
-          { followings: [m, m],
-            friends: [m] }
+          @friends = [m, m]
         end
 
         desc "returns list of member's groups"
