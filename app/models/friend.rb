@@ -173,7 +173,7 @@ class Friend < ActiveRecord::Base
 
     init_list_member = Member::MemberList.new(member)
 
-    fail ExceptionHandler::UnprocessableEntity, "You're not follow this official before." unless init_list_member.following.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You're not follow this official before." unless init_list_member.followings.map(&:id).include?(friend.id)
 
     find_following = where(follower_id: member_id, followed_id: friend_id, status: -1).first
 
@@ -349,7 +349,7 @@ class Friend < ActiveRecord::Base
     my_friend = init_list_friend.active.map(&:id)
     your_request = init_list_friend.your_request.map(&:id)
     friend_request = init_list_friend.friend_request.map(&:id)
-    my_following = init_list_friend.following.map(&:id)
+    my_following = init_list_friend.followings.map(&:id)
     block_friend = init_list_friend.block.map(&:id)
 
     search_member.each do |member|

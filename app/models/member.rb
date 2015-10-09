@@ -790,7 +790,7 @@ class Member < ActiveRecord::Base
     list_member_subscribe_expiration_member_ids = list_member_subscribe_expiration.map(&:id).uniq
 
     list_member_subscribe_expiration.each do |member|
-      Member::MemberList.new(member).follower.each do |follower|
+      Member::MemberList.new(member).followers.each do |follower|
          FlushCached::Member.new(follower).clear_list_friends
       end
       member.update!(subscription: false, subscribe_expire: nil, member_type: :citizen)
@@ -993,7 +993,7 @@ class Member < ActiveRecord::Base
     @my_friend ||= init_list_friend.active.map(&:id)
     @your_request ||= init_list_friend.your_request.map(&:id)
     @friend_request ||= init_list_friend.friend_request.map(&:id)
-    @my_following ||= init_list_friend.following.map(&:id)
+    @my_following ||= init_list_friend.followings.map(&:id)
     @block_friend ||= init_list_friend.block.map(&:id)
 
     if @my_friend.include?(id)

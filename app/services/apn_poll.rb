@@ -44,11 +44,11 @@ class ApnPoll
   private
 
   def following_ids
-    to_map_member_ids(@init_member_list_friend.following)
+    to_map_member_ids(@init_member_list_friend.followings)
   end
 
   def follower_ids
-    to_map_member_ids(@init_member_list_friend.follower)
+    to_map_member_ids(@init_member_list_friend.followers)
   end
 
   def apn_friend_ids

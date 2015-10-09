@@ -13,12 +13,28 @@ class Member::MemberList
     @cached_all_friends ||= cached_friends
   end
 
+  def followings
+    cached_all_friends.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
+  end
+
+  def followers
+    cached_followers.select{|user| user if user.member_following == true && user.member_status != 1}
+  end
+
   def cached_all_friends
     @cached_all_friends ||= cached_friends
   end
 
   def cached_followers
     @cached_followers ||= cached_followers
+  end
+
+  def following_with_no_cache
+    all.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
+  end
+
+  def follower_with_no_cache
+    all_followers.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
   def using_app_via_fb
@@ -43,22 +59,6 @@ class Member::MemberList
 
   def your_request
     cached_all_friends.select{|user| user if user.member_status == 0 && user.member_active == true }
-  end
-
-  def following
-    cached_all_friends.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
-  end
-
-  def following_with_no_cache
-    all.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
-  end
-
-  def follower
-    cached_followers.select{|user| user if user.member_following == true && user.member_status != 1}
-  end
-
-  def follower_with_no_cache
-    all_followers.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
   def friend_count

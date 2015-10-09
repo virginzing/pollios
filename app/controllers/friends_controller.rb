@@ -182,10 +182,10 @@ class FriendsController < ApplicationController
       @list_friend = init_list_friend.active
       @list_friend_is_friend = Friend.check_add_friend?(@current_member, @list_friend, init_list_friend.check_is_friend) if @list_friend.present?
 
-      @list_following = init_list_friend.following
+      @list_following = init_list_friend.followings
       @list_following_is_friend = Friend.check_add_friend?(@current_member, @list_following, init_list_friend.check_is_friend) if @list_following.present?
 
-      @list_follower = (@current_member.celebrity? || @current_member.company?) ? init_list_friend.follower : []
+      @list_follower = (@current_member.celebrity? || @current_member.company?) ? init_list_friend.followers : []
       @list_follower_is_friend = Friend.check_add_friend?(@current_member, @list_follower, init_list_friend.check_is_friend) if @list_follower.present?
 
       @list_block = init_list_friend.block
@@ -200,10 +200,10 @@ class FriendsController < ApplicationController
       @list_friend = init_list_friend.active
       @list_friend_is_friend = Friend.check_add_friend?(@current_member, @list_friend, init_list_friend_of_member.check_is_friend) if @list_friend.present?
 
-      @list_following = init_list_friend.following
+      @list_following = init_list_friend.followings
       @list_following_is_friend = Friend.check_add_friend?(@current_member, @list_following, init_list_friend_of_member.check_is_friend) if @list_following.present?
 
-      @list_follower = (find_user.celebrity? || find_user.company?) ? init_list_friend.follower : []
+      @list_follower = (find_user.celebrity? || find_user.company?) ? init_list_friend.followers : []
       @list_follower_is_friend = Friend.check_add_friend?(@current_member, @list_follower, init_list_friend_of_member.check_is_friend) if @list_follower.present?
     end
   end
