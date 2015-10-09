@@ -149,7 +149,7 @@ class Friend < ActiveRecord::Base
 
     find_is_friend = where(follower_id: member_id, followed_id: friend_id, following: false).first
 
-    fail ExceptionHandler::UnprocessableEntity, "You had followed this official account already." if init_list_member.following.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You had followed this official account already." if init_list_member.followings.map(&:id).include?(friend.id)
 
     if find_is_friend.present?
       find_is_friend.update(following: true)

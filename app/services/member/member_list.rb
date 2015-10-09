@@ -75,7 +75,7 @@ class Member::MemberList
       block: block.map(&:id),
       friend_request: friend_request.map(&:id),
       your_request: your_request.map(&:id),
-      following: following.map(&:id)
+      following: followings.map(&:id)
     }
   end
 
