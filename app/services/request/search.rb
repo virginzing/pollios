@@ -31,7 +31,7 @@ class Request::Search
   end
 
   def my_friend_block
-    @my_friend_block ||= @init_list_friend.block
+    @my_friend_block ||= @init_list_friend.blocks
   end
 
   def check_is_friend

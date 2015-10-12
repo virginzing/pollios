@@ -188,7 +188,7 @@ class FriendsController < ApplicationController
       @list_follower = (@current_member.celebrity? || @current_member.company?) ? init_list_friend.followers : []
       @list_follower_is_friend = Friend.check_add_friend?(@current_member, @list_follower, init_list_friend.check_is_friend) if @list_follower.present?
 
-      @list_block = init_list_friend.block
+      @list_block = init_list_friend.blocks
       @list_block_is_friend = Friend.check_add_friend?(@current_member, @list_block, init_list_friend.check_is_friend) if @list_block.present?
     else # friend
 

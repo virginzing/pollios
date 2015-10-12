@@ -994,7 +994,7 @@ class Member < ActiveRecord::Base
     @your_request ||= init_list_friend.your_request.map(&:id)
     @friend_request ||= init_list_friend.friend_request.map(&:id)
     @my_following ||= init_list_friend.followings.map(&:id)
-    @block_friend ||= init_list_friend.block.map(&:id)
+    @block_friend ||= init_list_friend.blocks.map(&:id)
 
     if @my_friend.include?(id)
       hash = Hash["add_friend_already" => true, "status" => :friend]

@@ -463,7 +463,7 @@ class MembersController < ApplicationController
   end
 
   def list_block
-    @list_block = Member::MemberList.new(current_member).block
+    @list_block = Member::MemberList.new(current_member).blocks
   end
 
   def clear

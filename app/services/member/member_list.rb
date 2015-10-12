@@ -21,6 +21,10 @@ class Member::MemberList
     cached_followers.select{|user| user if user.member_following == true && user.member_status != 1}
   end
 
+  def blocks
+    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
+  end
+
   def cached_all_friends
     @cached_all_friends ||= cached_friends
   end
@@ -49,10 +53,6 @@ class Member::MemberList
     all.select{|user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
   end
 
-  def block
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
-  end
-
   def friend_request
     cached_all_friends.select{|user| user if user.member_status == 2 && user.member_active == true }
   end
@@ -72,7 +72,7 @@ class Member::MemberList
   def check_is_friend
     {
       active: active.map(&:id),
-      block: block.map(&:id),
+      block: blocks.map(&:id),
       friend_request: friend_request.map(&:id),
       your_request: your_request.map(&:id),
       following: followings.map(&:id)

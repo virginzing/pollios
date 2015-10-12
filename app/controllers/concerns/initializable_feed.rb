@@ -7,7 +7,7 @@ module InitializableFeed
     init_list_group = Member::GroupList.new(Member.current_member)
 
     Member.list_friend_active = init_list_friend.active
-    Member.list_friend_block = init_list_friend.block
+    Member.list_friend_block = init_list_friend.blocks
     Member.list_friend_request = init_list_friend.friend_request
     Member.list_your_request = init_list_friend.your_request
     Member.list_friend_following = init_list_friend.followings

@@ -299,7 +299,7 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
-    fail ExceptionHandler::UnprocessableEntity, "You had already blocked #{friend.get_name}" if Member::MemberList.new(member).block.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You had already blocked #{friend.get_name}" if Member::MemberList.new(member).blocks.map(&:id).include?(friend.id)
     fail ExceptionHandler::UnprocessableEntity, "You're not friend with #{friend.get_name}" unless Member::MemberList.new(member).active.map(&:id).include?(friend.id)
 
     if find_member && find_friend
@@ -326,7 +326,7 @@ class Friend < ActiveRecord::Base
     member = Member.cached_find(member_id)
     friend = Member.cached_find(friend_id)
 
-    fail ExceptionHandler::UnprocessableEntity, "You're not used to block #{friend.get_name}" unless Member::MemberList.new(member).block.map(&:id).include?(friend.id)
+    fail ExceptionHandler::UnprocessableEntity, "You're not blocking #{friend.get_name}" unless Member::MemberList.new(member).blocks.map(&:id).include?(friend.id)
 
     if find_member && find_friend
       find_member.update_attributes!(block: false)
@@ -350,7 +350,7 @@ class Friend < ActiveRecord::Base
     your_request = init_list_friend.your_request.map(&:id)
     friend_request = init_list_friend.friend_request.map(&:id)
     my_following = init_list_friend.followings.map(&:id)
-    block_friend = init_list_friend.block.map(&:id)
+    block_friend = init_list_friend.blocks.map(&:id)
 
     search_member.each do |member|
       if my_friend.include?(member.id)
