@@ -2,10 +2,14 @@ module Pollios::V1::Shared
   class MemberForListSerializer < ActiveModel::Serializer
     delegate :current_member, to: :scope
 
-    attributes :member_id, :fullname, :description, :avatar, :type, :status
+    attributes :member_id, :name, :description, :avatar, :type, :status
 
     def member_id
       object.id
+    end
+
+    def name
+      object.fullname
     end
 
     def type
