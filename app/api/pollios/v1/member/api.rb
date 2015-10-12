@@ -1,7 +1,6 @@
 module Pollios::V1::Member
   class API < Grape::API
     version 'v1', using: :path
-    desc "Member API"
 
     resource :members do
 

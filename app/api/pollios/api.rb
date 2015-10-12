@@ -30,7 +30,7 @@ module Pollios
 
     end
 
-    mount V1::PollAPI
+    mount V1::Poll::API
     mount V1::Member::API
   end
 end

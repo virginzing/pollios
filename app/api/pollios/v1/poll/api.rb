@@ -1,5 +1,5 @@
-module Pollios::V1
-  class PollAPI < Grape::API
+module Pollios::V1::Poll
+  class API < Grape::API
     version 'v1', using: :path
 
     helpers do
