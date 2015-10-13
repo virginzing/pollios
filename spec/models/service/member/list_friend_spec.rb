@@ -29,12 +29,12 @@ RSpec.describe "Member List Friend" do
     end
 
     it "has zero friend's blck" do
-      expect(@init_list_friend_of_member.block.to_a.size).to eq(0)
+      expect(@init_list_friend_of_member.blocks.to_a.size).to eq(0)
     end
 
     it "has one friend's block" do
       create(:friend, follower: member, followed: friend, block: true, active: true, status: 1)
-      expect(@init_list_friend_of_member.block.to_a.size).to eq(1)
+      expect(@init_list_friend_of_member.blocks.to_a.size).to eq(1)
     end
 
   end
