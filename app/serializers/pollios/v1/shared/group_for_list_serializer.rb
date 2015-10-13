@@ -5,7 +5,7 @@ module Pollios::V1::Shared
 
     delegate :current_member, to: :scope
 
-    attributes :group_id, :member_count, :name, :description
+    attributes :id, :group_id, :member_count, :name, :description
     attributes :cover, :cover_preset
 
     def initialize(object, options = {})

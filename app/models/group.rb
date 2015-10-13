@@ -366,9 +366,11 @@ class Group < ActiveRecord::Base
         Activity.create_activity_group(member, @group, 'Create')
       end
 
-      FlushCached::Member.new(member).clear_list_groups
 
       add_friend_to_group(@group, member, friend_id) if friend_id
+
+      FlushCached::Member.new(member).clear_list_groups
+      FlushCached::Group.new(@group).clear_list_members
     end
 
     @group
