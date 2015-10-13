@@ -25,6 +25,11 @@ module Pollios::V1::Member
           options = {:viewing_member => current_member }
           groups_for_member = Member::GroupList.new(Member.find(params[:id]), options)
         end
+
+        desc "returns list of memebr's rewards"
+        get '/rewards', root: false, serializer: RewardListSerializer do
+          rewards_of_member = Member::RewardList.new(Member.find(params[:id]))
+        end
         
       end 
     end 
