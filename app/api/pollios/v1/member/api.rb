@@ -17,12 +17,13 @@ module Pollios::V1::Member
 
         desc "returns list of member's friends & followings"
         get '/friends', root: false, serializer: FriendListSerializer do
-          member_list = Member::MemberList.new(Member.find(params[:id]))
+          friends_of_member = Member::MemberList.new(Member.find(params[:id]))
         end
 
         desc "returns list of member's groups"
         get '/groups', root: false, serializer: GroupListSerializer do
-          group_list = Member::GroupList.new(Member.find(params[:id]))
+          options = {:viewing_member => current_member }
+          groups_for_member = Member::GroupList.new(Member.find(params[:id]), options)
         end
         
       end 

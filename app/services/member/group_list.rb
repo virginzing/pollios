@@ -1,12 +1,36 @@
 class Member::GroupList
 # Service for listing groups association with member
   
-  def initialize(member)
+  def initialize(member, options = {})
     @member = member
+
+    viewing_member = options[:viewing_member]
+    if viewing_member && viewing_member.id != member.id
+      @viewing_member = viewing_member
+    end
+  end
+
+  def member
+    @member
   end
 
   def cached_all_groups
-    @cached_all_groups ||= cached_groups
+    if @viewing_member
+      @cached_all_groups ||= cached_groups.select do |group| 
+        if group.public?
+          group
+        else 
+          member_groups_ids = Member::GroupList.new(@viewing_member).groups_ids
+          group if member_groups_ids.include?(group.id)
+        end
+      end
+    else
+      @cached_all_groups ||= cached_groups
+    end
+  end
+
+  def groups_ids
+    cached_all_groups.map(&:id)
   end
 
   def active

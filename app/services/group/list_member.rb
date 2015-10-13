@@ -1,4 +1,5 @@
 class Group::ListMember
+
   def initialize(group)
     @group = group
   end
@@ -54,6 +55,10 @@ class Group::ListMember
 
   def join_recently
     active.sort {|x,y| y.joined_at <=> x.joined_at }[0..4]
+  end
+
+  def is_member_or_admin?(member)
+    cached_all_members.map(&:id).include?(member.id) ? true : false
   end
 
   def is_member?(member)

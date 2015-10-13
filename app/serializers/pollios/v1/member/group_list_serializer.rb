@@ -3,7 +3,9 @@ module Pollios::V1::Member
 
       include Pollios::V1::Shared::APIHelpers
 
-      has_many :admin_of, :member_of, each_serializer: Pollios::V1::Shared::GroupForListSerializer
+      delegate :current_member, to: :scope
+
+      has_many :admin_of, :member_of, :pending, each_serializer: Pollios::V1::Shared::GroupForListSerializer
 
       def admin_of
         object.as_admin
@@ -12,5 +14,10 @@ module Pollios::V1::Member
       def member_of
         object.as_member
       end
+
+      def pending
+        object.inactive 
+      end
+
     end
 end
