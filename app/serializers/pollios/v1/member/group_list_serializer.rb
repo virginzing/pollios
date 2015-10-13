@@ -1,5 +1,8 @@
 module Pollios::V1::Member
     class GroupListSerializer < ActiveModel::Serializer
+
+      include Pollios::V1::Shared::APIHelpers
+
       has_many :admin_of, :member_of, each_serializer: Pollios::V1::Shared::GroupForListSerializer
 
       def admin_of

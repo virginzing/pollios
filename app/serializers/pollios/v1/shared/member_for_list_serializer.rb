@@ -1,5 +1,8 @@
 module Pollios::V1::Shared
   class MemberForListSerializer < ActiveModel::Serializer
+    
+    include Pollios::V1::Shared::APIHelpers
+
     delegate :current_member, to: :scope
 
     attributes :member_id, :name, :description, :avatar, :type, :status

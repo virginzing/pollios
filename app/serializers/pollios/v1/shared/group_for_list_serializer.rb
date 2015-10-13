@@ -1,5 +1,8 @@
 module Pollios::V1::Shared
   class GroupForListSerializer < ActiveModel::Serializer
+
+    include Pollios::V1::Shared::APIHelpers
+
     delegate :current_member, to: :scope
 
     attributes :group_id, :member_count, :name, :description
