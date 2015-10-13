@@ -3,6 +3,11 @@ module Pollios::V1::Shared
     
     attributes :member_id, :name, :description, :avatar, :type, :status
 
+    def initialize(object, options = {})
+      super(object, options)
+      @viewing_member_list = Member::MemberList.new(current_member)
+    end
+
     def member_id
       object.id
     end
@@ -16,7 +21,7 @@ module Pollios::V1::Shared
     end
 
     def status
-      object.is_friend(current_member)
+      @viewing_member_list.friendship_status_hash_with_member(object)
     end
 
     def avatar

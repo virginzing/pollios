@@ -1,7 +1,6 @@
 class Member::MemberList
-# Service for listing member's social linkages (friends, followings, etc)
 
-  def initialize(member)
+  def initialize(member, options = {})
     @member = member
   end
 
@@ -23,6 +22,38 @@ class Member::MemberList
 
   def blocks
     cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
+  end
+
+  def friendship_status_hash_with_member(a_member)
+    a_member_id = a_member.id
+
+    hash = {:add_friend_already => false, :status => :nofriend, :following => "" }
+
+    is_friend = active.map(&:id).include?(a_member_id)
+    is_requesting = your_request.map(&:id).include?(a_member_id)
+    is_being_requested = friend_request.map(&:id).include?(a_member_id)
+    is_blocking = blocks.map(&:id).include?(a_member_id)
+
+    if is_friend || is_requesting || is_being_requested || is_blocking
+      hash[:add_friend_already] = true
+    end
+
+    if is_friend
+      hash[:status] = :friend
+    elsif is_requesting
+      hash[:status] = :invite
+    elsif is_being_requested
+      hash[:status] = :invitee
+    elsif is_blocking
+      hash[:status] = :block
+    end
+
+    if a_member.celebrity? || a_member.brand?
+      is_following = followings.map(&:id).include?(a_member_id)
+      hash[:following] = is_following ? true : false
+    end
+
+    hash
   end
 
   def cached_all_friends

@@ -11,7 +11,7 @@ module Pollios
 
     helpers do
 
-      def current_member
+      def authenticate_member
         member = member_if_allowed
         authen_token = headers['X-Api-Key']
         error!("401 Unauthorized: no token", 401) unless authen_token.present?
@@ -19,7 +19,11 @@ module Pollios
         member_access_token = member.api_tokens.where('token = ?', authen_token)
         error!("401 Unauthorized: invalid token", 401) unless member_access_token.present?
 
-        @current_member = member
+        member
+      end
+
+      def current_member
+        @current_member ||= authenticate_member
       end
 
       def member_if_allowed
