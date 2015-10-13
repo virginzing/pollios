@@ -29,10 +29,11 @@ class Member::MemberList
 
     hash = {:add_friend_already => false, :status => :nofriend, :following => "" }
 
-    is_friend = active.map(&:id).include?(a_member_id)
-    is_requesting = your_request.map(&:id).include?(a_member_id)
-    is_being_requested = friend_request.map(&:id).include?(a_member_id)
-    is_blocking = blocks.map(&:id).include?(a_member_id)
+    is_friend = ids_include?(active, a_member_id)
+    is_requesting = ids_include?(your_request, a_member_id)
+    is_being_requested = ids_include?(friend_request, a_member_id)
+    is_blocking = ids_include?(blocks, a_member_id)
+
 
     if is_friend || is_requesting || is_being_requested || is_blocking
       hash[:add_friend_already] = true
@@ -77,7 +78,7 @@ class Member::MemberList
   end
 
   def active
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
+    cached_all_friends.select{ |user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
   end
 
   def active_with_no_cache
@@ -85,15 +86,15 @@ class Member::MemberList
   end
 
   def friend_request
-    cached_all_friends.select{|user| user if user.member_status == 2 && user.member_active == true }
+    cached_all_friends.select{ |user| user if user.member_status == 2 && user.member_active == true }
   end
 
   def your_request
-    cached_all_friends.select{|user| user if user.member_status == 0 && user.member_active == true }
+    cached_all_friends.select{ |user| user if user.member_status == 0 && user.member_active == true }
   end
 
   def friend_count
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_status == 1 }.to_a.size
+    cached_all_friends.select{ |user| user if user.member_active == true && user.member_status == 1 }.to_a.size
   end
 
   def blocked_by_someone
@@ -111,6 +112,10 @@ class Member::MemberList
   end
 
   private
+
+  def ids_include?(ids_list, id)
+    ids_list.map(&:id).include?(id)
+  end
 
   def all_friend
     Member.joins("inner join friends on members.id = friends.followed_id")

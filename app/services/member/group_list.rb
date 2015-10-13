@@ -1,5 +1,4 @@
 class Member::GroupList
-# Service for listing groups association with member
   
   def initialize(member, options = {})
     @member = member
