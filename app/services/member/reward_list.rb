@@ -8,7 +8,7 @@ class Member::RewardList
     @member
   end
 
-  def list_reward
+  def rewards
     @rewards = CampaignMember.without_deleted.list_reward(@member)
   end
   

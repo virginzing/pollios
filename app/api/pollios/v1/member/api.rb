@@ -29,8 +29,9 @@ module Pollios::V1::Member
         end
 
         desc "returns list of memebr's rewards"
-        get '/rewards', root: false, serializer: RewardListSerializer do
+        get '/rewards' do
           rewards_of_member = Member::RewardList.new(Member.find(params[:id]))
+          present rewards_of_member, with: Pollios::V1::Member::RewardListEntity, current_member: current_member
         end
         
       end 
