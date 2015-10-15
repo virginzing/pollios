@@ -24,7 +24,7 @@ module Pollios::V1::Shared
     end
 
     def reward_info
-		  {
+      {
         id: object.id,
         reward_status: object.reward_status,
         serial_code: object.serial_code || "",
@@ -36,8 +36,8 @@ module Pollios::V1::Shared
         detail: object.campaign.get_reward_detail,
         expire: object.campaign.get_reward_expire,
         redeem_myself: object.campaign.redeem_myself
-		  }
+      }
     end
 
-	end
+  end
 end
