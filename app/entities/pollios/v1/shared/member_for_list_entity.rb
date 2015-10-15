@@ -13,7 +13,8 @@ module Pollios::V1::Shared
     def status
       current_member_linkage = options[:current_member_linkage]
 
-      hash = {:add_friend_already => false, :status => :nofriend, :following => "" }
+      # hash = {:add_friend_already => false, :status => :nofriend}
+      hash = {:status => :nofriend}
 
       is_friend = current_member_linkage[:friends_ids].include?(object.id)
       is_requesting = current_member_linkage[:requesting_ids].include?(object.id)
@@ -21,9 +22,9 @@ module Pollios::V1::Shared
       is_blocking = current_member_linkage[:blocks_ids].include?(object.id)
 
 
-      if is_friend || is_requesting || is_being_requested || is_blocking
-        hash[:add_friend_already] = true
-      end
+      # if is_friend || is_requesting || is_being_requested || is_blocking
+      #   hash[:add_friend_already] = true
+      # end
 
       if is_friend
         hash[:status] = :friend
@@ -35,7 +36,7 @@ module Pollios::V1::Shared
         hash[:status] = :block
       end
 
-      if object.celebrity? || object.brand?
+      if object.celebrity? || object.brand? || object.company?
         is_following = current_member_linkage[:followings_ids].include?(object.id)
         hash[:following] = is_following ? true : false
       end

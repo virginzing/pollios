@@ -15,12 +15,6 @@ module Pollios::V1::Member
           { member: Member.find(params[:id]) }
         end
 
-        # desc "returns list of member's friends & followings"
-        # get '/friends', root: false, serializer: FriendListSerializer do
-        #    friends_of_member = Member::MemberList.new(Member.find(params[:id]))
-        #    present friends_of_member, with: Pollios::V1::Member::FriendListEntity, current_member: current_member
-        # end
-
         desc "returns list of member's friends & followings"
         get '/friends' do
            friends_of_member = Member::MemberList.new(Member.find(params[:id]))
@@ -28,18 +22,11 @@ module Pollios::V1::Member
         end
 
         desc "returns list of member's groups"
-        get '/groups', root: false, serializer: GroupListSerializer do
+        get '/groups' do
           options = {:viewing_member => current_member }
           groups_for_member = Member::GroupList.new(Member.find(params[:id]), options)
-        end
-
-        get '/groups2' do
-          options = {:viewing_member => current_member }
-          groups_for_member = Member::GroupList.new(Member.find(params[:id]), options)
-
           present groups_for_member, with: Pollios::V1::Member::GroupListEntity, current_member: current_member
         end
-
 
         desc "returns list of memebr's rewards"
         get '/rewards', root: false, serializer: RewardListSerializer do
