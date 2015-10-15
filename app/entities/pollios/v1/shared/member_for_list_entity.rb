@@ -3,6 +3,9 @@ module Pollios::V1::Shared
 
     expose :id, as: :member_id
     expose :fullname, as: :name
+    expose :description
+    expose :get_avatar, as: :avatar
+    expose :member_type_text, as: :type
 
     expose :status
 
