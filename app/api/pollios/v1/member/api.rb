@@ -20,6 +20,11 @@ module Pollios::V1::Member
           friends_of_member = Member::MemberList.new(Member.find(params[:id]))
         end
 
+        get '/friends2' do
+           friends_of_member = Member::MemberList.new(Member.find(params[:id]))
+           present friends_of_member, with: Pollios::V1::Member::FriendListEntity, current_member: current_member
+        end
+
         desc "returns list of member's groups"
         get '/groups', root: false, serializer: GroupListSerializer do
           options = {:viewing_member => current_member }

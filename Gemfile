@@ -177,5 +177,6 @@ gem 'unscoped_associations'
 
 gem 'grape'
 #gem 'grape-jbuilder'
+gem 'grape-entity'
 gem 'grape-active_model_serializers'
 gem 'hashie-forbidden_attributes'

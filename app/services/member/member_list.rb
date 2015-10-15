@@ -24,6 +24,21 @@ class Member::MemberList
     cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
   end
 
+  def social_linkage_ids
+    friends_ids = ids_for(friends)
+    requesting_ids = ids_for(your_request)
+    being_requested_ids = ids_for(friend_request)
+    followings_ids = ids_for(followings)
+    blocks_ids = ids_for(blocks)
+
+    hash = { :friends_ids => friends_ids, 
+             :requesting_ids => requesting_ids,
+             :being_requested_ids => being_requested_ids,
+             :followings_ids => followings_ids,
+             :blocks_ids => blocks_ids }
+    hash
+  end
+
   def friendship_status_hash_with_member(a_member)
     a_member_id = a_member.id
 
@@ -113,8 +128,12 @@ class Member::MemberList
 
   private
 
+  def ids_for(list)
+    list.map(&:id)
+  end
+
   def ids_include?(ids_list, id)
-    ids_list.map(&:id).include?(id)
+    ids_for(ids_list).include?(id)
   end
 
   def all_friend
