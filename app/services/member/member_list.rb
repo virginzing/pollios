@@ -8,20 +8,24 @@ class Member::MemberList
     @all ||= all_friend
   end
 
+  # def friends
+  #   @cached_all_friends ||= cached_friends
+  # end
+
   def friends
-    @cached_all_friends ||= cached_friends
+    cached_all_friends.select { |user| user if user.member_status == 1 }
   end
 
   def followings
-    cached_all_friends.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
+    cached_all_friends.select{ |user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
   end
 
   def followers
-    cached_followers.select{|user| user if user.member_following == true && user.member_status != 1}
+    cached_followers.select{ |user| user if user.member_following == true && user.member_status != 1}
   end
 
   def blocks
-    cached_all_friends.select{|user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
+    cached_all_friends.select{ |user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
   end
 
   def social_linkage_ids
@@ -48,7 +52,7 @@ class Member::MemberList
   end
 
   def following_with_no_cache
-    all.select{|user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
+    all.select{ |user| user if user.member_following == true && user.member_status != 1 }.select{| member | member unless member.citizen? }
   end
 
   def follower_with_no_cache
@@ -93,7 +97,7 @@ class Member::MemberList
     }
   end
 
-  private
+  # private
 
   def ids_for(list)
     list.map(&:id)
@@ -104,8 +108,8 @@ class Member::MemberList
   end
 
   def all_friend
-    Member.joins("inner join friends on members.id = friends.followed_id")
-          .where("friends.follower_id = #{@member.id}")
+    Member.joins("inner join friends on members.id = friends.followed_id") \
+          .where("friends.follower_id = #{@member.id}") \
           .select("members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following")
 
   end
