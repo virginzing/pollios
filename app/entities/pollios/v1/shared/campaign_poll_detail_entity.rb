@@ -1,5 +1,5 @@
 module Pollios::V1::Shared
-	class PollDetailEntity < Grape::Entity
+	class CampaignPollDetailEntity < Grape::Entity
 		expose :id
 		expose :title
 	end

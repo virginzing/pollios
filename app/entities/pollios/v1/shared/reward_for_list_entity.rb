@@ -28,7 +28,7 @@ module Pollios::V1::Shared
     end
 
     expose :campaign, using: Pollios::V1::Shared::CampaignDetailEntity
-    expose :poll, using: Pollios::V1::Shared::PollDetailEntity
+    expose :poll, using: Pollios::V1::Shared::CampaignPollDetailEntity
 
   end
 end

@@ -20,11 +20,9 @@ module Pollios::V1::Shared
 		expose :get_original_photo_campaign,as: :original_photo_campaign
 		expose :used
 		expose :limit
-		expose :member, using: Pollios::V1::Shared::MemberDetailEntity, as: :owner_info
-	
-		# expose :owner_info do |object|
-		# 	object.member.present? ? MemberInfoFeedSerializer.new(object.member) : System::DefaultMember.new.to_json
-		# end
+
+		expose :owner_info
+
 		expose :created_at do |object|
 			object.created_at.to_i
 		end
@@ -35,6 +33,21 @@ module Pollios::V1::Shared
 		expose :random_reward do |object|
 			object.begin_sample == object.end_sample ? false : true
 		end
+
+		private
+
+			def owner_info
+				object.member.present? ? CampaignOwnerDetailEntity.represent(object.member) : default_owner_info
+			end
+
+			def default_owner_info
+				{
+     			member_id: 0,
+     			name: "Pollios System",
+    	  	avatar: "http://pollios.com/images/logo/pollios_system_notification.png",
+      		description: "Pollios Office"
+    		}
+			end
 
 	end
 end
