@@ -1,43 +1,34 @@
 module Pollios::V1::Shared
   class RewardForListEntity < Grape::Entity
 
-    expose :campaign_detail
-    expose :reward_info
-
-    def campaign_detail
-      {
-        id: object.campaign.id,
-        name: object.campaign.name.presence || "",
-        description: object.campaign.description.presence || "",
-        how_to_redeem: object.campaign.how_to_redeem.presence || "",
-        expire: object.campaign.expire.to_i,
-        photo_campaign: object.campaign.get_photo_campaign,
-        original_photo_campaign: object.campaign.get_original_photo_campaign,
-        used: object.campaign.used,
-        limit: object.campaign.limit,
-        owner_info: object.campaign.member.present? ? MemberInfoFeedSerializer.new(object.campaign.member) : System::DefaultMember.new.to_json,
-        created_at: object.campaign.created_at.to_i,
-        type_campaign: object.campaign.type_campaign,
-        announce_on: object.campaign.announce_on.to_i,
-        random_reward: object.campaign.begin_sample == object.campaign.end_sample ? false : true
-      }
+    expose :id, as: :reward_id
+    expose :reward_status
+    expose :serial_code do |object|
+      object.serial_code.to_s
+    end
+    expose :redeem
+    expose :redeem_at do |object|
+      object.redeem_at.to_i
+    end
+    expose :ref_no
+    expose :created_at do |object| 
+      object.created_at.to_i
+    end
+    expose :title do |object|
+      object.campaign.get_reward_title
+    end
+    expose :detail do |object|
+      object.campaign.get_reward_detail
+    end
+    expose :expire do |object|
+      object.campaign.get_reward_expire
+    end
+    expose :redeem_myself do |object|
+      object.campaign.redeem_myself
     end
 
-    def reward_info
-      {
-        id: object.id,
-        reward_status: object.reward_status,
-        serial_code: object.serial_code || "",
-        redeem: object.redeem,
-        redeem_at: object.redeem_at.to_i.presence || "",
-        ref_no: object.ref_no || "",
-        created_at: object.created_at.to_i,
-        title: object.campaign.get_reward_title,
-        detail: object.campaign.get_reward_detail,
-        expire: object.campaign.get_reward_expire,
-        redeem_myself: object.campaign.redeem_myself
-      }
-    end
+    expose :campaign, using: Pollios::V1::Shared::CampaignDetailEntity
+    expose :poll, using: Pollios::V1::Shared::PollDetailEntity
 
   end
 end

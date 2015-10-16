@@ -9,7 +9,7 @@ class Member::RewardList
   end
 
   def rewards
-    @rewards = CampaignMember.without_deleted.list_reward(@member)
+    @rewards ||= CampaignMember.without_deleted.list_reward(@member)
   end
   
 end
