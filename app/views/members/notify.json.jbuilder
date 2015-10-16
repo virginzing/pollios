@@ -14,7 +14,7 @@ def construct_messasge_for(notify_log)
         action = "asked"
       end
 
-      return "#{sender} #{action} #{properties[:poll][:title]}"
+      return "#{sender} #{action} \"#{properties[:poll][:title]}\""
     end
 
     return notify_log.message
