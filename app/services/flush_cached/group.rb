@@ -14,6 +14,10 @@ class FlushCached::Group
   def clear_list_members
     Rails.cache.delete("group/#{@group.id}/members")
   end
+
+  def clear_list_requests
+    Rails.cache.delete("group/#{@group.id}/requests")
+  end
   
 end
 

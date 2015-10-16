@@ -164,6 +164,9 @@ class GroupController < ApplicationController
           RequestGroupWorker.perform_async(member_id, @group.id) unless Rails.env.test?
         end
       end
+
+      FlushCached::Group.new(@group).clear_list_members
+      FlushCached::Group.new(@group).clear_list_requests
     end
 
   end

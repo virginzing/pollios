@@ -20,7 +20,7 @@ module Pollios::V1::Shared
 		expose :get_original_photo_campaign,as: :original_photo_campaign
 		expose :used
 		expose :limit
-		expose :member, as: :owner_info
+		expose :member, using: Pollios::V1::Shared::MemberDetailEntity, as: :owner_info
 	
 		# expose :owner_info do |object|
 		# 	object.member.present? ? MemberInfoFeedSerializer.new(object.member) : System::DefaultMember.new.to_json
