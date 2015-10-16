@@ -32,8 +32,10 @@ if @notifications
     if notify.sender.nil?
       json.sender System::DefaultMember.new.to_json  
     else
-      json.sender do
-        json.partial! 'response_helper/member/short_info_feed', member: notify.sender
+      if notify.custom_properties[:anonymous] == false
+        json.sender do
+          json.partial! 'response_helper/member/short_info_feed', member: notify.sender
+        end
       end
     end
 
