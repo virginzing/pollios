@@ -1,4 +1,4 @@
-module Pollios::V1::Shared
+module Pollios::V1::Member
 	class CampaignPollDetailEntity < Grape::Entity
 		expose :id
 		expose :title

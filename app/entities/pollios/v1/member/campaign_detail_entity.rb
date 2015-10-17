@@ -1,4 +1,4 @@
-module Pollios::V1::Shared
+module Pollios::V1::Member
 	class CampaignDetailEntity < Grape::Entity
 
 		expose :id, as: :campaign_id

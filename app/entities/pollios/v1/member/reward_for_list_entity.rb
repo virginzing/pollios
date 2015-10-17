@@ -1,4 +1,4 @@
-module Pollios::V1::Shared
+module Pollios::V1::Member
   class RewardForListEntity < Grape::Entity
 
     expose :id, as: :reward_id
@@ -27,8 +27,8 @@ module Pollios::V1::Shared
       object.campaign.redeem_myself
     end
 
-    expose :campaign, with: Pollios::V1::Shared::CampaignDetailEntity
-    expose :poll, with: Pollios::V1::Shared::CampaignPollDetailEntity
+    expose :campaign, with: CampaignDetailEntity
+    expose :poll, with: CampaignPollDetailEntity
 
   end
 end
