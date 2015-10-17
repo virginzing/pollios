@@ -27,8 +27,8 @@ module Pollios::V1::Shared
       object.campaign.redeem_myself
     end
 
-    expose :campaign, using: Pollios::V1::Shared::CampaignDetailEntity
-    expose :poll, using: Pollios::V1::Shared::CampaignPollDetailEntity
+    expose :campaign, with: Pollios::V1::Shared::CampaignDetailEntity
+    expose :poll, with: Pollios::V1::Shared::CampaignPollDetailEntity
 
   end
 end
