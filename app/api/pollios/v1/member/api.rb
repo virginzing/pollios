@@ -40,7 +40,8 @@ module Pollios::V1::Member
         
         desc "returns list of member's notifications"
         get '/notifications' do
-#          notifications_for_member = Member::NotificationList.new(Member.find(params[:id]))
+          notifications_for_member = Member::NotificationList.new(@member)
+          present notifications_for_member, with: Pollios::V1::Member::NotificationListEntity, current_member: current_member
         end
       end 
     end 
