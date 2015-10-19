@@ -1,14 +1,7 @@
 module Pollios::V1::Shared
-  class MemberForListEntity < Grape::Entity
-
-    expose :id, as: :member_id
-    expose :fullname, as: :name
-    expose :description
-    expose :get_avatar, as: :avatar
-    expose :member_type_text, as: :type
+  class MemberForListEntity < Pollios::V1::Shared::MemberEntity
 
     expose :status
-
 
     def status
       relation = options[:current_member_linkage]

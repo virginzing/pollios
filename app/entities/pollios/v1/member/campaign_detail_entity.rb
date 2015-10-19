@@ -36,18 +36,9 @@ module Pollios::V1::Member
 
 		private
 
-			def owner_info
-				object.member.present? ? CampaignOwnerDetailEntity.represent(object.member) : default_owner_info
-			end
-
-			def default_owner_info
-				{
-     			member_id: 0,
-     			name: "Pollios System",
-    	  	avatar: "http://pollios.com/images/logo/pollios_system_notification.png",
-      		description: "Pollios Office"
-    		}
-			end
-
-	end
+		def owner_info
+			object.member.present? ? CampaignOwnerDetailEntity.represent(object.member) : CampaignOwnerDetailEntity.default_pollios_member
+    end
+    
+  end
 end
