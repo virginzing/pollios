@@ -4,6 +4,7 @@ module Pollios::V1::Member
     expose :sender, if: -> (object, options) { is_not_anonymous_vote? }
     expose :message
     expose :custom_properties, as: :info
+    expose :created_at
 
     def sender
       if object.sender.nil?
@@ -34,6 +35,10 @@ module Pollios::V1::Member
       else
         return object.message
       end
+    end
+
+    def created_at
+      object.created_at.to_i
     end
 
     private
