@@ -40,8 +40,7 @@ module Pollios::V1::Member
     end
 
     def info
-      [:worker, :notify, :friend_id, :member_id].each { |key| object.custom_properties.delete(key) }
-      object.custom_properties
+      object.custom_properties.except(:worker, :notify, :friend_id, :member_id)
     end
 
     def created_at
