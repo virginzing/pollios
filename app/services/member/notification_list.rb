@@ -7,6 +7,10 @@ class Member::NotificationList
     else
       @page_index = 1
     end
+
+    if options[:clear_new_count]
+      reset_new_notification_count
+    end
   end
 
   def notifications_at_current_page

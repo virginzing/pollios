@@ -54,10 +54,11 @@ module Pollios::V1::Member
         resource :notifications do
           params do
             optional :page_index, type: Integer, desc: "page index for notification's pagination"
+            optional :clear_new_count, type: Boolean, desc: "should clear member's new notification count"
           end
           get do
             verify_viewing_member_right
-            notifications_for_member = Member::NotificationList.new(@member, {:page_index => params[:page_index]})
+            notifications_for_member = Member::NotificationList.new(@member, {:page_index => params[:page_index], :clear_new_count => params[:clear_new_count]})
             present notifications_for_member, with: Pollios::V1::Member::NotificationListEntity, current_member: current_member
           end
         end
