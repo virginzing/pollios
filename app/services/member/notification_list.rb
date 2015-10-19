@@ -2,10 +2,10 @@ class Member::NotificationList
 
   def initialize(member, options = {})
     @member = member
-    if options[:next_cursor]
-      @page_cursor = options[:next_cursor]
+    if options[:page_index]
+      @page_index = options[:page_index]
     else
-      @page_cursor = 1
+      @page_index = 1
     end
   end
 
@@ -17,7 +17,7 @@ class Member::NotificationList
     notifications.total_entries
   end
 
-  def next_page_cursor
+  def next_page_index
     notifications.next_page.nil? ? 0 : notifications.next_page
   end
 
@@ -29,7 +29,7 @@ class Member::NotificationList
   private
 
   def notifications
-    @notifications ||= @member.received_notifies.without_deleted.order('created_at DESC').paginate(page: @page_cursor)
+    @notifications ||= @member.received_notifies.without_deleted.order('created_at DESC').paginate(page: @page_index)
   end
 
 end

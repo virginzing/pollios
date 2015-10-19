@@ -53,11 +53,11 @@ module Pollios::V1::Member
         desc "returns list of member's notifications"
         resource :notifications do
           params do
-            optional :next_cursor, type: Integer, desc: "page index for notification's pagination"
+            optional :page_index, type: Integer, desc: "page index for notification's pagination"
           end
           get do
             verify_viewing_member_right
-            notifications_for_member = Member::NotificationList.new(@member, {:next_cursor => params[:next_cursor]})
+            notifications_for_member = Member::NotificationList.new(@member, {:page_index => params[:page_index]})
             present notifications_for_member, with: Pollios::V1::Member::NotificationListEntity, current_member: current_member
           end
         end
