@@ -4,12 +4,18 @@ module Pollios::V1::Member
 
     resource :members do
 
+      params do
+        requires :id, type: Integer, desc: "member id"
+      end
+
       before do
         @member = Member.cached_find(params[:id])
       end
 
-      params do
-        requires :id, type: Integer, desc: "member id"
+      helpers do
+        def verify_viewing_member_right
+          error!("403 Forbidden: not allowing this operation on other member", 403) unless @member.id == current_member.id
+        end
       end
 
       route_param :id do
@@ -20,28 +26,40 @@ module Pollios::V1::Member
         end
 
         desc "returns list of member's friends & followings"
-        get '/friends' do
-           friends_of_member = Member::MemberList.new(@member)
-           present friends_of_member, with: Pollios::V1::Member::FriendListEntity, current_member: current_member
+        resource :friends do
+          get do
+             friends_of_member = Member::MemberList.new(@member)
+             present friends_of_member, with: Pollios::V1::Member::FriendListEntity, current_member: current_member
+          end
         end
 
         desc "returns list of member's groups"
-        get '/groups' do
-          options = {:viewing_member => current_member }
-          groups_for_member = Member::GroupList.new(@member, options)
-          present groups_for_member, with: Pollios::V1::Member::GroupListEntity, current_member: current_member
+        resource :groups do
+          get do
+            options = {:viewing_member => current_member }
+            groups_for_member = Member::GroupList.new(@member, options)
+            present groups_for_member, with: Pollios::V1::Member::GroupListEntity, current_member: current_member
+          end
         end
 
         desc "returns list of member's rewards"
-        get '/rewards' do
-          rewards_of_member = Member::RewardList.new(@member)
-          present rewards_of_member, with: Pollios::V1::Member::RewardListEntity, current_member: current_member
+        resource :rewards do
+          get do
+            rewards_of_member = Member::RewardList.new(@member)
+            present rewards_of_member, with: Pollios::V1::Member::RewardListEntity, current_member: current_member
+          end
         end
         
         desc "returns list of member's notifications"
-        get '/notifications' do
-          notifications_for_member = Member::NotificationList.new(@member)
-          present notifications_for_member, with: Pollios::V1::Member::NotificationListEntity, current_member: current_member
+        resource :notifications do
+          params do
+            optional :next_cursor, type: Integer, desc: "page index for notification's pagination"
+          end
+          get do
+            verify_viewing_member_right
+            notifications_for_member = Member::NotificationList.new(@member, {:next_cursor => params[:next_cursor]})
+            present notifications_for_member, with: Pollios::V1::Member::NotificationListEntity, current_member: current_member
+          end
         end
       end 
     end 
