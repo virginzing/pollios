@@ -1,6 +1,6 @@
 module Pollios::V1::Member
   class NotificationEntity < Grape::Entity
-    expose :id, as: :notify_id
+    expose :id, as: :notification_id
     expose :sender
     expose :message
     expose :info
