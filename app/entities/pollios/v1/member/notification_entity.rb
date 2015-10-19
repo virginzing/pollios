@@ -1,7 +1,7 @@
 module Pollios::V1::Member
   class NotificationEntity < Grape::Entity
     expose :id, as: :notify_id
-    expose :sender, if: -> (object, options) { is_not_anonymous_vote? }
+    expose :sender
     expose :message
     expose :custom_properties, as: :info
     expose :created_at
@@ -9,7 +9,9 @@ module Pollios::V1::Member
     def sender
       if object.sender.nil?
         Pollios::V1::Shared::MemberEntity.default_pollios_member
-      elsif is_not_anonymous_vote?
+      elsif is_anonymous_vote?
+      
+      else
         Pollios::V1::Shared::MemberEntity.represent(object.sender)
       end
     end
@@ -42,8 +44,8 @@ module Pollios::V1::Member
     end
 
     private
-    def is_not_anonymous_vote?
-      object.custom_properties[:anonymous] == false && object.custom_properties[:action] == "Vote"
+    def is_anonymous_vote?
+      object.custom_properties[:anonymous] == true && object.custom_properties[:action] == "Vote"
     end
 
     def type
