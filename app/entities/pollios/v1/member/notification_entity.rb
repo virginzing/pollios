@@ -3,6 +3,7 @@ module Pollios::V1::Member
     expose :id, as: :notify_id
     expose :sender, if: -> (object, options) { is_not_anonymous_vote? }
     expose :message
+    expose :custom_properties, as: :info
 
     def sender
       if object.sender.nil?
