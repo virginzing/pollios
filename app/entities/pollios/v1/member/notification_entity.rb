@@ -3,7 +3,7 @@ module Pollios::V1::Member
     expose :id, as: :notify_id
     expose :sender
     expose :message
-    expose :custom_properties, as: :info
+    expose :info
     expose :created_at
 
     def sender
@@ -37,6 +37,11 @@ module Pollios::V1::Member
       else
         return object.message
       end
+    end
+
+    def info
+      [:worker, :notify, :friend_id, :member_id].each { |key| object.custom_properties.delete(key) }
+      object.custom_properties
     end
 
     def created_at
