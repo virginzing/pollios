@@ -1,19 +1,18 @@
 module Pollios::V1::Member
-  class RewardForListEntity < Grape::Entity
+  class RewardForListEntity < Pollios::V1::BaseEntity
 
     expose :id, as: :reward_id
     expose :reward_status
-    expose :serial_code do |object|
-      object.serial_code.to_s
-    end
+    expose :serial_code 
     expose :redeem
-    expose :redeem_at do |object|
-      object.redeem_at.to_i
+
+    with_options(format_with: :as_integer) do
+      expose :redeem_at
+      expose :created_at
     end
+
     expose :ref_no
-    expose :created_at do |object| 
-      object.created_at.to_i
-    end
+
     expose :title do |object|
       object.campaign.get_reward_title
     end

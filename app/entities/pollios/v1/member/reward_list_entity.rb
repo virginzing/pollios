@@ -1,5 +1,5 @@
 module Pollios::V1::Member
-	class RewardListEntity < Grape::Entity
+	class RewardListEntity < Pollios::V1::BaseEntity
 		expose :rewards, with: RewardForListEntity
 	end
 end

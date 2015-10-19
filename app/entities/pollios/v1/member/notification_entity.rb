@@ -1,10 +1,13 @@
 module Pollios::V1::Member
-  class NotificationEntity < Grape::Entity
+  class NotificationEntity < Pollios::V1::BaseEntity
     expose :id, as: :notification_id
     expose :sender
     expose :message
     expose :info
-    expose :created_at
+
+    with_options(format_with: :as_integer) do
+      expose :created_at
+    end
 
     def sender
       if object.sender.nil?
@@ -41,10 +44,6 @@ module Pollios::V1::Member
 
     def info
       object.custom_properties.except(:worker, :notify, :friend_id, :member_id)
-    end
-
-    def created_at
-      object.created_at.to_i
     end
 
     private

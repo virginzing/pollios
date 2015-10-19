@@ -1,5 +1,6 @@
 module Pollios::V1::Shared
-  class MemberEntity < Grape::Entity
+  class MemberEntity < Pollios::V1::BaseEntity
+    
     expose :id, as: :member_id
     expose :fullname, as: :name
     expose :description

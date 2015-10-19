@@ -1,5 +1,5 @@
 module Pollios::V1::Member
-  class FriendListEntity < Grape::Entity
+  class FriendListEntity < Pollios::V1::BaseEntity
 
     expose :friends do |object, options|
       Pollios::V1::Shared::MemberForListEntity.represent object.friends, current_member_linkage: current_member_linkage
