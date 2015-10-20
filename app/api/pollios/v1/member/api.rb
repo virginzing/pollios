@@ -60,7 +60,7 @@ module Pollios::V1::Member
         desc "returns list of member's rewards"
         resource :rewards do
           get do
-            rewards_of_member = Member::RewardList.new(member)
+            rewards_of_member = Member::RewardList.new(member, {:page_index => params[:page_index]})
             present rewards_of_member, with: RewardListEntity, current_member: current_member
           end
         end
