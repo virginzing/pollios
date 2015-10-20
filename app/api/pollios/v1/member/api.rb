@@ -22,11 +22,13 @@ module Pollios::V1::Member
         end
         get do
           notifications_for_member = Member::NotificationList.new(current_member, {:page_index => params[:page_index], :clear_new_count => params[:clear_new_count]})
-          present notifications_for_member, with: Pollios::V1::Member::NotificationListEntity
+          present notifications_for_member, with: NotificationListEntity
         end
       end
 
 
+      # from here, we're requiring :id parameter in the route
+      # since we're accessing sub-resource related to a member_id
       params do
         requires :id, type: Integer, desc: "member id"
       end
@@ -42,7 +44,7 @@ module Pollios::V1::Member
         resource :friends do
           get do
              friends_of_member = Member::MemberList.new(member)
-             present friends_of_member, with: Pollios::V1::Member::FriendListEntity, current_member: current_member
+             present friends_of_member, with: FriendListEntity, current_member: current_member
           end
         end
 
@@ -51,7 +53,7 @@ module Pollios::V1::Member
           get do
             options = {:viewing_member => current_member }
             groups_for_member = Member::GroupList.new(member, options)
-            present groups_for_member, with: Pollios::V1::Member::GroupListEntity, current_member: current_member
+            present groups_for_member, with: GroupListEntity, current_member: current_member
           end
         end
 
@@ -59,7 +61,7 @@ module Pollios::V1::Member
         resource :rewards do
           get do
             rewards_of_member = Member::RewardList.new(member)
-            present rewards_of_member, with: Pollios::V1::Member::RewardListEntity, current_member: current_member
+            present rewards_of_member, with: RewardListEntity, current_member: current_member
           end
         end
 
