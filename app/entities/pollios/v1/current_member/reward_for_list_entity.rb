@@ -1,4 +1,4 @@
-module Pollios::V1::Me
+module Pollios::V1::CurrentMember
   class RewardForListEntity < Pollios::V1::BaseEntity
 
     expose :id, as: :reward_id

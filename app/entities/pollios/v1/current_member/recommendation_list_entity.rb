@@ -1,4 +1,4 @@
-module Pollios::V1::Me
+module Pollios::V1::CurrentMember
   class RecommendationListEntity < Pollios::V1::BaseEntity
     expose :officials
     expose :groups

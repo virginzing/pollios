@@ -1,4 +1,4 @@
-module Pollios::V1::Me
+module Pollios::V1::CurrentMember
   class RequestListEntity < Pollios::V1::BaseEntity
     expose :group_requests, with: GroupRequestListEntity
     expose :friend_requests, with: FriendRequestListEntity

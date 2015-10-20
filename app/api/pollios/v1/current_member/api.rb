@@ -1,8 +1,8 @@
-module Pollios::V1::Me
+module Pollios::V1::CurrentMember
   class API < Grape::API
     version 'v1', using: :path
     
-    resource :me do
+    resource :current_member do
       desc "returns list of member's notifications"
       resource :notifications do
         params do

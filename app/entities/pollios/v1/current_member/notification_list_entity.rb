@@ -1,4 +1,4 @@
-module Pollios::V1::Me
+module Pollios::V1::CurrentMember
   class NotificationListEntity < Pollios::V1::BaseEntity
     expose :notifications_count, as: :total_entries
     expose :next_page_index

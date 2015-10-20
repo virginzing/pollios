@@ -1,4 +1,4 @@
-module Pollios::V1::Me
+module Pollios::V1::CurrentMember
 	class CampaignDetailEntity < Pollios::V1::BaseEntity
 
 		expose :id, as: :campaign_id
