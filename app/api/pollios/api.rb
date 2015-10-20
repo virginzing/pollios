@@ -33,7 +33,8 @@ module Pollios
     end
 
     mount V1::Poll::API
-    mount V1::Request::API # we have to mount this before V1::Member::API since we have colliding namespace and Member::API requires :id in route
+    mount V1::Me::API
     mount V1::Member::API
+
   end
 end

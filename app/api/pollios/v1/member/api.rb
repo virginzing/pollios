@@ -13,29 +13,6 @@ module Pollios::V1::Member
     end
 
     resource :members do
-
-      desc "returns list of member's notifications"
-      resource :notifications do
-        params do
-          optional :page_index, type: Integer, desc: "page index for notification's pagination"
-          optional :clear_new_count, type: Boolean, desc: "should clear member's new notification count"
-        end
-        get do
-          notifications_for_member = Member::NotificationList.new(current_member, {:page_index => params[:page_index], :clear_new_count => params[:clear_new_count]})
-          present notifications_for_member, with: NotificationListEntity
-        end
-      end
-
-      desc "returns list of member's rewards"
-      resource :rewards do
-        get do
-          rewards_of_member = Member::RewardList.new(current_member, {:page_index => params[:page_index]})
-          present rewards_of_member, with: RewardListEntity
-        end
-      end
-
-      # from here, we're requiring :id parameter in the route
-      # since we're accessing sub-resource related to a member_id
       params do
         requires :id, type: Integer, desc: "member id"
       end
