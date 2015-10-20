@@ -26,6 +26,13 @@ module Pollios::V1::Member
         end
       end
 
+      desc "returns list of member's rewards"
+      resource :rewards do
+        get do
+          rewards_of_member = Member::RewardList.new(current_member, {:page_index => params[:page_index]})
+          present rewards_of_member, with: RewardListEntity
+        end
+      end
 
       # from here, we're requiring :id parameter in the route
       # since we're accessing sub-resource related to a member_id
@@ -54,14 +61,6 @@ module Pollios::V1::Member
             options = {:viewing_member => current_member }
             groups_for_member = Member::GroupList.new(member, options)
             present groups_for_member, with: GroupListEntity, current_member: current_member
-          end
-        end
-
-        desc "returns list of member's rewards"
-        resource :rewards do
-          get do
-            rewards_of_member = Member::RewardList.new(member, {:page_index => params[:page_index]})
-            present rewards_of_member, with: RewardListEntity, current_member: current_member
           end
         end
 
