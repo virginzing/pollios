@@ -4,10 +4,16 @@ class Member::RequestList
     @member = member
   end
 
+  def member
+    @member
+  end
+
   def incoming_requests
+    member_list.friend_request
   end
 
   def outgoing_requests
+    member_list.your_request
   end
 
   def group_invitations
@@ -15,8 +21,6 @@ class Member::RequestList
 
   def group_requests
   end
-
-  private
 
   def member_list
     @member_list ||= Member::MemberList.new(@member)
