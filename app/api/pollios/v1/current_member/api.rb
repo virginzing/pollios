@@ -3,6 +3,7 @@ module Pollios::V1::CurrentMember
     version 'v1', using: :path
     
     resource :current_member do
+
       desc "returns list of member's notifications"
       resource :notifications do
         params do
@@ -29,10 +30,12 @@ module Pollios::V1::CurrentMember
           optional :clear_new_request_count, type: Boolean, desc: "should clear member's new request count"
         end
         get do
-          requests_for_member = Member::RequestList.new(current_member)
+          requests_for_member =  Member::RequestList.new(current_member)
           present requests_for_member, with: RequestListEntity
         end
       end
+
     end
+    
   end
 end

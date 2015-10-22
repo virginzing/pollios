@@ -5,7 +5,14 @@ module Pollios::V1::CurrentMember
 
 		expose :name 
 		expose :description 
-		expose :how_to_redeem 
+		expose :how_to_redeem
+
+    expose :reward_details do
+      expose :get_reward_title, as: :title
+      expose :get_reward_detail, as: :detail
+      expose :get_reward_expire, as: :expire
+      expose :redeem_myself
+    end
 
 		expose :get_photo_campaign, as: :photo_campaign
 

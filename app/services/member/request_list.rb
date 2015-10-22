@@ -4,16 +4,26 @@ class Member::RequestList
     @member = member
   end
 
+  def incoming_requests
+  end
+
+  def outgoing_requests
+  end
+
+  def group_invitations
+  end
+
   def group_requests
-    Group.all
   end
 
-  def friend_requests
-    ["test"]
+  private
+
+  def member_list
+    @member_list ||= Member::MemberList.new(@member)
   end
 
-  def recommendations
-    ["test", "test"]
+  def current_member_linkage
+    @current_member_linkage ||= Member::MemberList.new(options[:current_member]).social_linkage_ids
   end
 
 end
