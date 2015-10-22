@@ -261,7 +261,14 @@ class Campaign < ActiveRecord::Base
       created_at: created_at.to_i,
       type_campaign: type_campaign,
       announce_on: announce_on.to_i,
-      random_reward: begin_sample == end_sample ? false : true
+      random_reward: begin_sample == end_sample ? false : true,
+
+      reward_details: {
+        title: get_reward_title,
+        detail: get_reward_detail,
+        expire: get_reward_expire,
+        redeem_myself: redeem_myself
+      }
     }
   end
   

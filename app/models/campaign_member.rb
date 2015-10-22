@@ -62,6 +62,7 @@ class CampaignMember < ActiveRecord::Base
   def as_json(options={})
     {
       id: id,
+      reward_id: id,
       reward_status: reward_status,
       serial_code: serial_code || "",
       redeem: redeem,
