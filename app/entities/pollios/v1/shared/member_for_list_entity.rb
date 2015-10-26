@@ -1,7 +1,7 @@
 module Pollios::V1::Shared
   class MemberForListEntity < Pollios::V1::Shared::MemberEntity
 
-    expose :status
+    expose :status, if: -> (object, options) { options[:current_member_linkage].present? }
 
     def status
       relation = options[:current_member_linkage]
