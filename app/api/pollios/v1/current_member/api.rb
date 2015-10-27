@@ -4,7 +4,7 @@ module Pollios::V1::CurrentMember
     
     resource :current_member do
 
-      desc "returns list of member's notifications"
+      desc "returns list of current member's notifications"
       resource :notifications do
         params do
           optional :page_index, type: Integer, desc: "page index for notification's pagination"
@@ -16,7 +16,7 @@ module Pollios::V1::CurrentMember
         end
       end
 
-      desc "returns list of member's rewards"
+      desc "returns list of current member's rewards"
       resource :rewards do
         get do
           rewards_of_member = Member::RewardList.new(current_member, {:page_index => params[:page_index]})
@@ -24,7 +24,7 @@ module Pollios::V1::CurrentMember
         end
       end
 
-      desc "returns all requests related to member"
+      desc "returns all requests related to current member"
       resource :requests do
         params do
           optional :clear_new_request_count, type: Boolean, desc: "should clear member's new request count"
