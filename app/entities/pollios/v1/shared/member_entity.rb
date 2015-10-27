@@ -15,5 +15,6 @@ module Pollios::V1::Shared
         description: "Pollios Office"
       }
     end
+
   end
 end

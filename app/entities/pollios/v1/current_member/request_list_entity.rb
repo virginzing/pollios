@@ -7,16 +7,12 @@ module Pollios::V1::CurrentMember
     end
 
     expose :groups do
-      expose :group_invitations, as: :incoming
-      expose :group_requests, as: :outgoing
+      expose :group_invitations, as: :incoming, with: Pollios::V1::Shared::GroupEntity
+      expose :group_requests, as: :outgoing, with: Pollios::V1::Shared::GroupEntity
     end
 
-    expose :admin_groups 
+    expose :admin_groups, with: Pollios::V1::Shared::GroupForAdminListEntity
     expose :recommendations 
-
-    def admin_groups
-      []
-    end
 
     def recommendations
       []

@@ -28,7 +28,6 @@
 
 class Group < ActiveRecord::Base
   acts_as_paranoid
-  # extend FriendlyId
   resourcify
   include GroupHelper
 

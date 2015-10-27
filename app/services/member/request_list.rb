@@ -24,6 +24,10 @@ class Member::RequestList
     group_list.requesting_to_joins
   end
 
+  def admin_groups
+    group_list.as_admin
+  end
+
 private
   def member_list
     @member_list ||= Member::MemberList.new(@member)
