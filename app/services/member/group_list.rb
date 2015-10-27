@@ -86,6 +86,14 @@ class Member::GroupList
     cached_all_groups.select{|group| group unless group.member_is_active }
   end
 
+  def got_invitations
+    cached_all_groups.select{|group| group unless group.member_is_active }
+  end
+
+  def requesting_to_joins
+    @member.cached_ask_join_groups
+  end
+
   def hash_member_count
     @group_member_count ||= group_member_count.inject({}) { |h,v| h[v.id] = v.member_count; h }
   end

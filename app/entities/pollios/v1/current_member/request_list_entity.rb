@@ -11,6 +11,17 @@ module Pollios::V1::CurrentMember
       expose :group_requests, as: :outgoing
     end
 
+    expose :admin_groups 
+    expose :recommendations 
+
+    def admin_groups
+      []
+    end
+
+    def recommendations
+      []
+    end
+
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(object.member).social_linkage_ids
     end
