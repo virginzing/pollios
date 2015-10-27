@@ -12,11 +12,15 @@ module Pollios::V1::CurrentMember
     end
 
     expose :admin_groups, with: Pollios::V1::Shared::GroupForAdminListEntity
-    expose :recommendations 
 
-    def recommendations
-      []
+    expose :recommendations do
+      expose_members :recommended_officials, as: :officials, without_linkage: true
+      expose_members :recommended_friends, as: :friends, without_linkage: true
+      expose_members :recommended_via_facebooks, as: :facebooks, without_linkage: true
+
+      expose :recommended_groups, as: :groups, with: Pollios::V1::Shared::GroupEntity
     end
+
 
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(object.member).social_linkage_ids

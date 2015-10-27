@@ -8,6 +8,25 @@ class Recommendation
     @list_member_follower = @init_list_friend.followers
   end
 
+  # conforming to the new api-service-convention/standard 
+  def officials
+    @officials ||= find_officials
+  end
+
+  def friends
+    @friends ||= get_people_you_may_know
+  end
+
+  def groups
+    @groups ||= get_group
+  end
+
+  def facebooks
+    @facebooks ||= get_member_using_facebook
+  end
+
+  #ends
+
   def list_all_friends
     @init_list_friend.cached_all_friends.map(&:id)
   end
@@ -33,7 +52,7 @@ class Recommendation
   end
 
   def get_recommendations_official
-    @recommendations ||= find_office_account
+    @recommendations ||= find_officials
   end
 
   def get_follower_recommendations
@@ -82,7 +101,7 @@ class Recommendation
     @list_member_block.map(&:id)
   end
 
-  def find_office_account
+  def find_officials
     following = Friend.where(follower_id: @member.id, following: true, active: true, block: false).map(&:followed_id)
     # query = Member.with_member_type(:company, :celebrity).where(show_recommend: true).order("created_at desc").limit(500)
     query = Member.where("(member_type = 3 AND show_recommend = 't') OR (member_type = 1)").order("created_at desc").limit(500)

@@ -28,6 +28,22 @@ class Member::RequestList
     group_list.as_admin_with_requests
   end
 
+  def recommended_friends
+    recommendations.friends.sample(20)
+  end
+
+  def recommended_groups
+    recommendations.groups.sample(10)
+  end
+
+  def recommended_officials
+    recommendations.officials.sample(5)
+  end
+
+  def recommended_via_facebooks
+    recommendations.facebooks.sample(10)
+  end
+
 private
   def member_list
     @member_list ||= Member::MemberList.new(@member)
@@ -35,6 +51,10 @@ private
 
   def group_list
     @group_list ||= Member::GroupList.new(@member)
+  end
+
+  def recommendations
+    @recommendations ||= Recommendation.new(@member)
   end
 
   def current_member_linkage

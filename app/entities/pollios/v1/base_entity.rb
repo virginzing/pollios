@@ -19,7 +19,11 @@ module Pollios::V1
           entity = local_options[:entity]
         end
 
-        entity.represent members, current_member_linkage: current_member_linkage
+        if local_options[:without_linkage]
+          entity.represent members
+        else
+          entity.represent members, current_member_linkage: current_member_linkage
+        end
       end
     end
 
