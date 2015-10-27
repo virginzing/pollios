@@ -37,11 +37,15 @@ class Member::GroupList
   end
 
   def as_member
-    active.select{|group| group if group.member_is_active && !group.member_admin}
+    active.select { |group| group if group.member_is_active && !group.member_admin}
   end
 
   def as_admin
-    active.select{|group| group if group.member_admin }
+    active.select { |group| group if group.member_admin }
+  end
+
+  def as_admin_with_requests
+    active.select { |group| group if group.member_admin && group.members_request.size > 0 }
   end
 
   def active_non_virtual

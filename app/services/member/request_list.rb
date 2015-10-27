@@ -25,7 +25,7 @@ class Member::RequestList
   end
 
   def admin_groups
-    group_list.as_admin
+    group_list.as_admin_with_requests
   end
 
 private
