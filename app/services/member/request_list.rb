@@ -8,11 +8,11 @@ class Member::RequestList
     @member
   end
 
-  def incoming_requests
+  def friends_incoming
     member_list.friend_request
   end
 
-  def outgoing_requests
+  def friends_outgoing
     member_list.your_request
   end
 
