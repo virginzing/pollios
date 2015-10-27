@@ -28,7 +28,7 @@ class Member::RequestList
     group_list.requesting_to_joins
   end
 
-  def admin_groups
+  def group_admins
     group_list.as_admin_with_requests
   end
 

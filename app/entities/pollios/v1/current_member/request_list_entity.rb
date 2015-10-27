@@ -11,7 +11,7 @@ module Pollios::V1::CurrentMember
       expose :group_requests, as: :outgoing, with: Pollios::V1::Shared::GroupEntity
     end
 
-    expose :admin_groups, with: Pollios::V1::Shared::GroupForAdminListEntity
+    expose :group_admins, with: Pollios::V1::Shared::GroupForAdminListEntity
 
     expose :recommendations do
       expose_members :recommended_officials, as: :officials, without_linkage: true

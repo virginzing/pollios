@@ -33,6 +33,12 @@ module Pollios::V1::CurrentMember
           requests_for_member =  Member::RequestList.new(current_member, {:clear_new_request_count => params[:clear_new_request_count]})
           present requests_for_member, with: RequestListEntity
         end
+
+        desc "return all requests to groups which current member is admin"
+        get '/group_admins' do
+          requests_for_member =  Member::RequestList.new(current_member, {:clear_new_request_count => params[:clear_new_request_count]})
+          present requests_for_member, with: RequestListEntity, only: [:group_admins]
+        end
       end
 
       desc "returns notification and request counts for current member"
