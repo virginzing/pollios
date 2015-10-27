@@ -30,11 +30,18 @@ module Pollios::V1::CurrentMember
           optional :clear_new_request_count, type: Boolean, desc: "should clear member's new request count"
         end
         get do
-          requests_for_member =  Member::RequestList.new(current_member)
+          requests_for_member =  Member::RequestList.new(current_member, {:clear_new_request_count => params[:clear_new_request_count]})
           present requests_for_member, with: RequestListEntity
         end
       end
 
+      desc "returns notification and request counts for current member"
+      get '/badges' do
+        { 
+          notifications: current_member.notification_count, 
+          requests: current_member.request_count
+        }
+      end
     end
     
   end

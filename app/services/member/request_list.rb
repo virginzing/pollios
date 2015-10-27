@@ -2,6 +2,10 @@ class Member::RequestList
 
   def initialize(member, options = {})
     @member = member
+
+    if options[:clear_new_request_count]
+      reset_new_request_count
+    end
   end
 
   def member
@@ -59,6 +63,11 @@ private
 
   def current_member_linkage
     @current_member_linkage ||= Member::MemberList.new(options[:current_member]).social_linkage_ids
+  end
+
+  def reset_new_request_count    
+    @member.request_count = 0
+    @member.save!
   end
 
 end
