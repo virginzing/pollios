@@ -22,6 +22,20 @@ module Pollios::V1::CurrentMember
           rewards_of_member = Member::RewardList.new(current_member, {:page_index => params[:page_index]})
           present rewards_of_member, with: RewardListEntity
         end
+
+        desc "returns reward at id for current member"
+        params do
+          requires :id, type: Integer, desc: "reward id" 
+        end
+        route_param :id do
+          get do
+            reward = CampaignMember.cached_find(params[:id])
+            { 
+              campaign: reward.campaign,
+              reward: reward 
+            }
+          end
+        end
       end
 
       desc "returns all requests related to current member"
