@@ -3,28 +3,25 @@ module Pollios::V1::Poll
     version 'v1', using: :path
 
     helpers do
-      def set_poll
-        @poll = Poll.find(params[:id])
+      def poll
+        @poll ||= Poll.find(params[:id])
       end
     end
 
     resource :polls do
-      
-      desc "returns requesting member's home timeline"
-      get :personal_timeline do
+      params do 
+        requires :id, type: Integer, desc: "poll id"
       end
 
-      desc "returns poll detail for requesting member"
-      params do
-        requires :id, type: Integer, desc: "poll id" 
-      end
       route_param :id do
+
+        desc "returns member detail for profile screen of member"
         get do
-          { poll: Poll.find(params[:id]) }
+          { poll: poll }
         end
       end
 
     end
 
-  end
+  end 
 end

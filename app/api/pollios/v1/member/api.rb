@@ -6,10 +6,6 @@ module Pollios::V1::Member
       def member
         @member ||= Member.cached_find(params[:id])
       end
-
-      def verify_viewing_member_right
-        error!("403 Forbidden: not allowing this operation on other member", 403) unless member.id == current_member.id
-      end
     end
 
     resource :members do

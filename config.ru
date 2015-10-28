@@ -26,3 +26,6 @@ run Rails.application
 require 'newrelic_rpm'
 require 'new_relic/rack/developer_mode'
 use NewRelic::Rack::DeveloperMode
+
+use ActiveRecord::ConnectionAdapters::ConnectionManagement
+run Pollios::API
