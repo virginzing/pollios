@@ -1,5 +1,5 @@
 module Pollios::V1::CurrentMember
-  class RewardForListEntity < Pollios::V1::BaseEntity
+  class RewardEntity < Pollios::V1::BaseEntity
 
     expose :reward_info do
       expose :id, as: :reward_id
