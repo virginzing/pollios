@@ -2,10 +2,10 @@ class Member::NotificationList
 
   def initialize(member, options = {})
     @member = member
-    if options[:next_notifications]
-      @next_notifications = options[:next_notifications]
+    if options[:page_index]
+      @page_index = options[:page_index]
     else
-      @next_notifications = 0
+      @page_index = 1
     end
 
     if options[:clear_new_count]
@@ -18,11 +18,11 @@ class Member::NotificationList
   end
 
   def notifications_count
-    @member.received_notifies.without_deleted.count
+    notifications.total_entries
   end
 
-  def next_notifications
-    notifications.last.nil? ? 0 : notifications.last.id
+  def next_page_index
+    notifications.next_page.nil? ? 0 : notifications.next_page
   end
 
   def reset_new_notification_count
@@ -33,8 +33,7 @@ class Member::NotificationList
   private
 
   def notifications
-    @notifications ||= @member.received_notifies.without_deleted.order("created_at DESC").order("id DESC").limit(ENV["LIMIT_NOTIFICATION"])
-    @next_notifications == 0 ? @notifications : @notifications.next_notifications(@next_notifications)
+    @notifications ||= @member.received_notifies.without_deleted.order('created_at DESC').paginate(page: @page_index)
   end
 
 end
