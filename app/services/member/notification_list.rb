@@ -1,28 +1,40 @@
 class Member::NotificationList
 
+  module ListType
+    BY_PAGE = 0
+    BY_ID = 1
+  end
+
   def initialize(member, options = {})
     @member = member
-    if options[:page_index]
-      @page_index = options[:page_index]
+
+    if options[:index]
+      @index = options[:index]
     else
-      @page_index = 1
+      @index = 1
     end
 
     if options[:clear_new_count]
       reset_new_notification_count
     end
+
+    @list_type = ListType::BY_PAGE
   end
 
   def notifications_at_current_page
-    notifications
+    if @list_type == ListType::BY_PAGE
+      notifications_by_page
+    else
+      notifications_by_page
+    end
   end
 
-  def notifications_count
-    notifications.total_entries
-  end
-
-  def next_page_index
-    notifications.next_page.nil? ? 0 : notifications.next_page
+  def next_index
+    if @list_type == ListType::BY_PAGE
+      next_page_index
+    else
+      next_page_index
+    end
   end
 
   def reset_new_notification_count
@@ -32,8 +44,12 @@ class Member::NotificationList
 
   private
 
-  def notifications
-    @notifications ||= @member.received_notifies.without_deleted.order('created_at DESC').paginate(page: @page_index)
+  def next_page_index
+    notifications_by_page.next_page.nil? ? 0 : notifications_by_page.next_page
+  end
+
+  def notifications_by_page
+    @notifications_by_page ||= @member.received_notifies.without_deleted.order('created_at DESC').paginate(page: @index)
   end
 
 end

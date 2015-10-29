@@ -36,12 +36,8 @@ module Pollios::V1
       end
 
       expose object_groups, as: key do |obj, opts|
-
         groups = obj.send object_groups
-
-        entity = Pollios::V1::Shared::GroupEntity
-
-        entity.represent groups
+        Pollios::V1::Shared::GroupEntity.represent groups
       end
     end
 

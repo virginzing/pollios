@@ -7,11 +7,11 @@ module Pollios::V1::CurrentMemberAPI
       desc "returns list of current member's notifications"
       resource :notifications do
         params do
-          optional :page_index, type: Integer, desc: "page index for notification's pagination"
+          optional :index, type: Integer, desc: "starting index for notification's list in this request"
           optional :clear_new_count, type: Boolean, desc: "should clear member's new notification count"
         end
         get do
-          notifications_for_member = Member::NotificationList.new(current_member, {:page_index => params[:page_index], :clear_new_count => params[:clear_new_count]})
+          notifications_for_member = Member::NotificationList.new(current_member, {:index => params[:index], :clear_new_count => params[:clear_new_count]})
           present notifications_for_member, with: NotificationListEntity
         end
       end
