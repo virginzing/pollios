@@ -27,5 +27,23 @@ module Pollios::V1
       end
     end
 
+    def self.expose_groups(object_groups, local_options = {})
+
+      if local_options[:as]
+        key = local_options[:as]
+      else
+        key = object_groups
+      end
+
+      expose object_groups, as: key do |obj, opts|
+
+        groups = obj.send object_groups
+
+        entity = Pollios::V1::Shared::GroupEntity
+
+        entity.represent groups
+      end
+    end
+
   end
 end
