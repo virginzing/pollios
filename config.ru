@@ -22,10 +22,8 @@ end
 
 require ::File.expand_path('../config/environment',  __FILE__)
 use Rack::Deflater
-run Rails.application
 require 'newrelic_rpm'
 require 'new_relic/rack/developer_mode'
 use NewRelic::Rack::DeveloperMode
 
-use ActiveRecord::ConnectionAdapters::ConnectionManagement
-run Pollios::API
+run Rails.application

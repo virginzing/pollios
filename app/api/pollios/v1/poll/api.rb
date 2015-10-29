@@ -4,7 +4,7 @@ module Pollios::V1::Poll
 
     helpers do
       def poll
-        @poll ||= Poll.find(params[:id])
+        @poll ||= ActiveRecord::Base::Poll.find(params[:id])
       end
     end
 
