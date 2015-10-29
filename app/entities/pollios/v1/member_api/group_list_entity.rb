@@ -1,7 +1,7 @@
 module Pollios::V1::MemberAPI
   class GroupListEntity < Pollios::V1::BaseEntity
-    expose :as_admin, as: :admin_of, with: Pollios::V1::Shared::GroupEntity
-    expose :as_member, as: :member_of, with: Pollios::V1::Shared::GroupEntity
-    expose :inactive, as: :pending, with: Pollios::V1::Shared::GroupEntity
+    expose_groups :as_admin, as: :admin_of
+    expose_groups :as_member, as: :member_of
+    expose_groups :inactive, as: :pending
   end
 end

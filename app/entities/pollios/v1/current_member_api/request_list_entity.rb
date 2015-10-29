@@ -7,8 +7,8 @@ module Pollios::V1::CurrentMemberAPI
     end
 
     expose :groups do
-      expose :group_invitations, as: :incoming, with: Pollios::V1::Shared::GroupEntity
-      expose :group_requests, as: :outgoing, with: Pollios::V1::Shared::GroupEntity
+      expose_groups :group_invitations, as: :incoming
+      expose_groups :group_requests, as: :outgoing
     end
 
     expose :group_admins, with: Pollios::V1::Shared::GroupForAdminListEntity
@@ -18,7 +18,7 @@ module Pollios::V1::CurrentMemberAPI
       expose_members :recommended_friends, as: :friends, without_linkage: true
       expose_members :recommended_via_facebooks, as: :facebooks, without_linkage: true
 
-      expose :recommended_groups, as: :groups, with: Pollios::V1::Shared::GroupEntity
+      expose_groups :recommended_groups, as: :groups
     end
 
 

@@ -20,6 +20,7 @@ class NotifyLog < ActiveRecord::Base
 
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :less_than_3_days, -> { where("#{table_name}.created_at > ?", 3.days.ago) }
+  scope :next_notifications, -> (next_notification) { where("id < ?", next_notification) }
 
   self.per_page = 40
 
