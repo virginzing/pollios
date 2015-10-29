@@ -1,10 +1,10 @@
-module Pollios::V1::Poll
-  class API < Grape::API
+module Pollios::V1::PollAPI
+  class Get < Grape::API
     version 'v1', using: :path
 
     helpers do
       def poll
-        @poll ||= ActiveRecord::Base::Poll.find(params[:id])
+        @poll ||= Poll.find(params[:id])
       end
     end
 

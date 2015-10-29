@@ -1,4 +1,4 @@
-module Pollios::V1::Member
+module Pollios::V1::MemberAPI
   class FriendListEntity < Pollios::V1::BaseEntity
 
     expose_members :friends

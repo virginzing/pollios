@@ -1,4 +1,4 @@
-module Pollios::V1::CurrentMember
+module Pollios::V1::CurrentMemberAPI
   class RequestListEntity < Pollios::V1::BaseEntity
 
     expose :friends do

@@ -1,5 +1,5 @@
-module Pollios::V1::CurrentMember
-  class API < Grape::API
+module Pollios::V1::CurrentMemberAPI
+  class Get < Grape::API
     version 'v1', using: :path
     
     resource :current_member do

@@ -1,4 +1,4 @@
-module Pollios::V1::CurrentMember
+module Pollios::V1::CurrentMemberAPI
   class NotificationEntity < Pollios::V1::BaseEntity
     expose :id, as: :notification_id
     expose :sender

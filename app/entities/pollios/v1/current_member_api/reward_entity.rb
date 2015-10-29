@@ -1,4 +1,4 @@
-module Pollios::V1::CurrentMember
+module Pollios::V1::CurrentMemberAPI
   class RewardEntity < Pollios::V1::BaseEntity
 
     expose :reward_info do
