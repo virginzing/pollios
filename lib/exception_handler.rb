@@ -41,8 +41,8 @@ module ExceptionHandler
       NOT_FOUND = "Poll not found."
       UNDER_INSPECTION = "Many users had reported this poll to us. We've temporary removed it."
       DELETED = "This poll was deleted from Pollios."
-      CLOSED = "Poll had closed already."
-      EXPIRED = "Poll had expired already."
+      CLOSED = "This poll is closed for voting."
+      EXPIRED = "This poll was already expired."
       POINT_ZERO = "Poll to public 0 left."
       VOTED = "You had already voted this poll."
     end
@@ -54,10 +54,10 @@ module ExceptionHandler
     end
 
     module Member
-      BAN = "Your account is was terminated."
-      BLACKLIST = "Your account is being suspended."
+      BAN = "This account is permanently banned from Pollios."
+      BLACKLIST = "This account is being suspended."
       NOT_FOUND = "Member not found."
-      POINT_ZERO = "You have 0 Poll to Public."
+      POINT_ZERO = "You don't have any public poll quota"
     end
 
     module Comment
