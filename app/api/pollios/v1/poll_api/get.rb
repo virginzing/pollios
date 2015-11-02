@@ -4,7 +4,7 @@ module Pollios::V1::PollAPI
 
     helpers do
       def poll
-        @poll ||= Poll.find(params[:id])
+        @poll ||= Poll.cached_find(params[:id])
       end
     end
 
@@ -15,9 +15,14 @@ module Pollios::V1::PollAPI
 
       route_param :id do
 
-        desc "returns member detail for profile screen of member"
+        desc "returns poll details for requesting member"
         get do
-          { poll: poll }
+          poll, error_message = Member::PollList.new(current_member).poll(params[:id])
+          if !poll
+            error! error_message, 401
+          else
+            { poll: poll }
+          end
         end
       end
 

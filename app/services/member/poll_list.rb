@@ -12,6 +12,11 @@ class Member::PollList
     @history_viewed ||= cached_history_viewed_polls
   end
 
+  def poll(poll_id)
+    return nil, ExceptionHandler::Message::Poll::UNDER_INSPECTION
+    # @poll ||= Poll.cached_find(poll_id)
+  end
+
   def voted_all
     @voted_all ||= cached_voted_all_polls
   end
