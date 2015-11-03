@@ -22,7 +22,7 @@ private
 
     HistoryView.transaction do
       HistoryView.create! member_id: member.id, poll_id: poll.id
-      create_company_group_tracking_record_for(poll, "view")
+      create_company_group_action_tracking_record_for(poll, "view")
 
       poll.with_lock do
         poll.view_all += 1
@@ -33,7 +33,7 @@ private
     end
   end
 
-  def create_company_group_tracking_record_for(poll, action)
+  def create_company_group_action_tracking_record_for(poll, action)
     return unless poll.in_group
 
     group_ids = poll.in_group_ids.split(',').map(&:to_i)
