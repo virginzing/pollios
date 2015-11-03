@@ -18,11 +18,8 @@ module Pollios::V1::PollAPI
         desc "returns poll details for requesting member"
         get do
           poll, error_message = Member::PollList.new(current_member).poll(params[:id])
-          if !poll
-            error! error_message, 401
-          else
-            { poll: poll }
-          end
+          error! error_message, 401 unless poll
+          { poll: poll }
         end
       end
 

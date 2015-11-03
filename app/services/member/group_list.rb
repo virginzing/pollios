@@ -32,6 +32,10 @@ class Member::GroupList
     cached_all_groups.map(&:id)
   end
 
+  def active_ids
+    active.map(&:id)
+  end
+
   def active
     cached_all_groups.select{|group| group if group.member_is_active }
   end

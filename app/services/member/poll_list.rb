@@ -13,8 +13,16 @@ class Member::PollList
   end
 
   def poll(poll_id)
-    return nil, ExceptionHandler::Message::Poll::UNDER_INSPECTION
-    # @poll ||= Poll.cached_find(poll_id)
+    poll ||= Poll.cached_find(poll_id)
+
+    is_visible, error_message = Poll::Listing.new(poll).is_visible_to_member_with_error(member)
+    if is_visible
+      Member::PollAction.new(member).view_poll(poll)
+      return poll, nil
+    else
+      return nil, error_message
+    end
+
   end
 
   def voted_all
@@ -49,8 +57,11 @@ class Member::PollList
     not_interested_query("PollSeries")
   end
 
-######### PRIVATE METHODS #########
-  private
+private
+
+  def member
+    @member
+  end
 
   def member_report_polls
     @member.poll_reports.to_a

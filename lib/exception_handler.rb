@@ -45,6 +45,7 @@ module ExceptionHandler
       EXPIRED = "This poll was already expired."
       POINT_ZERO = "Poll to public 0 left."
       VOTED = "You had already voted this poll."
+      OUTSIDE_GROUP = "You're not in group. Please join this group then you can see this poll."
     end
 
     module PollSeries
