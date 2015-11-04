@@ -14,7 +14,7 @@ module Pollios::V1
 
         members = obj.send object_members
 
-        entity = Pollios::V1::Shared::MemberForListEntity
+        entity = Pollios::V1::Shared::MemberEntity
         if local_options[:entity]
           entity = local_options[:entity]
         end

@@ -19,7 +19,7 @@ module Pollios::V1::PollAPI
         get do
           poll, error_message = Member::PollList.new(current_member).poll(params[:id])
           error! error_message, 401 unless poll
-          { poll: poll }
+          present poll, with: PollDetailEntity, current_member: current_member
         end
       end
 
