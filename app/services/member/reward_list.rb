@@ -10,7 +10,7 @@ class Member::RewardList
   end
 
   def rewards_at_current_page
-  	rewards
+  	rewards_paginated
   end
 
   def next_page_index
@@ -24,7 +24,11 @@ class Member::RewardList
   end
 
   def rewards
-    @rewards ||= CampaignMember.without_deleted.list_reward(member).paginate(page: @page_index)
+    @rewards ||= CampaignMember.without_deleted.list_reward(member)
+  end
+
+  def rewards_paginated
+    rewards.paginate(page: @page_index)
   end
   
 end
