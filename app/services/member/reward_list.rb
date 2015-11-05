@@ -14,9 +14,9 @@ class Member::RewardList
   end
 
   def next_page_index
-  	rewards.next_page.nil? ? 0 : rewards.next_page
+  	rewards_paginated.next_page.nil? ? 0 : rewards_paginated.next_page
   end
-
+#
   private
 
   def member
