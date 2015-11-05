@@ -7,11 +7,8 @@ module Pollios::V1::CurrentMemberAPI
 		expose :description 
 		expose :how_to_redeem
 
-    expose :reward_details do
-      expose :get_reward_title, as: :title
-      expose :get_reward_detail, as: :detail
-      expose :get_reward_expire, as: :expire
-      expose :redeem_myself
+    expose :reward_detail, if: -> (object, options) { object.rewards.present? } do |object, options|
+      Pollios::V1::Shared::RewardDetailEntity.represent object.rewards.first, redeem_myself: object.redeem_myself
     end
 
 		expose :get_photo_campaign, as: :photo_campaign
@@ -33,7 +30,7 @@ module Pollios::V1::CurrentMemberAPI
 			object.begin_sample == object.end_sample ? false : true
 		end
 
-		private
+	private
 
 		def owner_info
 			object.member.present? ? CampaignOwnerDetailEntity.represent(object.member) : CampaignOwnerDetailEntity.default_pollios_member

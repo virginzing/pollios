@@ -25,6 +25,8 @@ class HistoryVote < ActiveRecord::Base
 
   validates :poll_id, :member_id, :choice_id, presence: true
 
+  scope :member_voted_poll, -> (member_id, poll_id) { where(member_id: member_id).where(poll_id: poll_id) }
+
   default_scope { order("#{table_name}.id desc") }
 
   %w[gender province].each do |key|

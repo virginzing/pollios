@@ -41,4 +41,8 @@ class FlushCached::Member
     Rails.cache.delete("member/#{@member.id}/watch_polls")
   end
 
+  def clear_voting_detail_for_poll(poll_id)
+    Rails.cache.delete("member/#{@member.id}/voting/#{poll_id}")
+  end
+
 end

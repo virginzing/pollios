@@ -8,7 +8,7 @@ class Poll::Listing
   def is_visible_to_member_with_error(member)
     return false, ExceptionHandler::Message::Poll::UNDER_INSPECTION if poll.black?
     return false, ExceptionHandler::Message::Member::BAN if poll.member.ban?
-    return false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP if group_ids_visible_to_member(member).size == 0
+    return false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP if !poll.public && group_ids_visible_to_member(member).size == 0
 
     return true, nil
   end

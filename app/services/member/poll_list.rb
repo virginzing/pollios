@@ -29,6 +29,16 @@ class Member::PollList
     @voted_all ||= cached_voted_all_polls
   end
 
+  def voting_detail(poll_id)
+    voting = cached_voting_detail_for_poll(poll_id)
+
+    if voting.empty?
+      return Hash["voted" => false]
+    else
+      return Hash["voted" => true, "choice_id" => voting.first.choice_id]
+    end
+  end
+
   def watched_poll_ids
     @watches ||= cached_watch_polls
   end
@@ -57,7 +67,7 @@ class Member::PollList
     not_interested_query("PollSeries")
   end
 
-private
+# private
 
   def member
     @member
@@ -104,6 +114,14 @@ private
                            "show_result" => poll.show_result, 
                            "system_poll" => poll.system_poll ] }.to_a
 
+  end
+
+  def voting_detail_for_poll(poll_id)
+    HistoryVote.member_voted_poll(member.id, poll_id).to_a
+  end
+
+  def cached_voting_detail_for_poll(poll_id)
+    Rails.cache.fetch("member/#{@member.id}/voting/#{poll_id}") { voting_detail_for_poll(poll_id) }
   end
 
   def cached_voted_all_polls

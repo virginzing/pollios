@@ -1,6 +1,8 @@
 module Pollios::V1
   class BaseEntity < Grape::Entity
+
     format_with(:as_integer) { |elem| elem.to_i }
+    format_with(:as_string) { |elem| elem.to_s }
 
     def self.expose_members(object_members, local_options = {})
       

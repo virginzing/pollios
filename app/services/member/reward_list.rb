@@ -19,8 +19,12 @@ class Member::RewardList
 
   private
 
+  def member
+    @member
+  end
+
   def rewards
-    @rewards ||= CampaignMember.without_deleted.list_reward(@member).paginate(page: @page_index)
+    @rewards ||= CampaignMember.without_deleted.list_reward(member).paginate(page: @page_index)
   end
   
 end

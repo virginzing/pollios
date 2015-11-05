@@ -20,7 +20,7 @@ module Pollios::V1::Shared
     def status
       relation = options[:current_member_linkage]
 
-      hash = {:status => :nofriend}
+      hash = { :status => :nofriend }
 
       is_friend = relation[:friends_ids].include?(object.id)
       is_requesting = relation[:requesting_ids].include?(object.id)
