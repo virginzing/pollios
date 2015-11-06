@@ -28,6 +28,7 @@ class MemberReward < ActiveRecord::Base
   # TODO: GET RID OF THIS SHIT!!!!
   enumerize :reward_status, :in => { waiting_announce: 0, receive: 1, not_receive: -1 }, predicates: true, scope: true
 
+  belongs_to :campaign
   belongs_to :reward
   belongs_to :member
   belongs_to :poll
@@ -37,8 +38,11 @@ class MemberReward < ActiveRecord::Base
   validates_uniqueness_of :serial_code, allow_nil: true, allow_blank: true
   validates_uniqueness_of :ref_no, allow_nil: true, allow_blank: true
 
-  scope :without_deleted, -> { where(deleted_at: nil).includes( {:reward => :campaign}, :poll, :poll_series ) }
+  scope :with_all_relations, -> { includes( {:reward => :campaign}, {:campaign => :rewards}, :poll, :poll_series ) }
+
+  scope :without_deleted, -> { where(deleted_at: nil) }
   scope :for_member_id, -> (member_id) { where(member_id: member_id).order(created_at: :desc) }
+
   default_scope { with_deleted }
   
   after_commit :flush_cache

@@ -20,12 +20,11 @@ class Reward < ActiveRecord::Base
   attr_accessor :no_expiration
   
   def no_expiration
-    # ((reward_expire - created_at) / 1.year) > 80 ? true : false
     ((expire_at - created_at) / 1.year) > 80 ? true : false
   end
 
   def can_expire?
     !no_expiration
   end
-  
+
 end

@@ -24,7 +24,7 @@ class Member::RewardList
   end
 
   def rewards
-    @rewards ||= MemberReward.without_deleted.for_member_id(member.id)
+    @rewards ||= MemberReward.without_deleted.for_member_id(member.id).with_all_relations
   end
 
   def rewards_paginated
