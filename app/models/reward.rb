@@ -15,6 +15,7 @@
 
 class Reward < ActiveRecord::Base
   belongs_to :campaign
+  belongs_to :campaign_member
 
   attr_accessor :unexpire
   

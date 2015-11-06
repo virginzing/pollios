@@ -20,26 +20,26 @@
 #  gift_log_id    :integer
 #
 
-class CampaignMember < ActiveRecord::Base
+class MemberReward < ActiveRecord::Base
+  extend Enumerize
   acts_as_paranoid
-  include CampaignMembersHelper
+  self.table_name = "campaign_members"
 
-  belongs_to :campaign # TODO: remove this later
+  enumerize :reward_status, :in => { waiting_announce: 0, receive: 1, not_receive: -1 }, predicates: true, scope: true
+
   belongs_to :reward
   belongs_to :member
   belongs_to :poll
   belongs_to :poll_series
+  attr_accessor :message
 
   validates_uniqueness_of :serial_code, allow_nil: true, allow_blank: true
   validates_uniqueness_of :ref_no, allow_nil: true, allow_blank: true
 
   scope :without_deleted, -> { where(deleted_at: nil) }
-
   default_scope { with_deleted }
   
   after_commit :flush_cache
-
-  attr_accessor :message
 
   self.per_page = 10
 
@@ -57,23 +57,7 @@ class CampaignMember < ActiveRecord::Base
   end
 
   def self.list_reward(member_id)
-    where("member_id = ?", member_id).order('created_at desc').includes(:poll, :poll_series, {:campaign => :rewards})
+    where("member_id = ?", member_id).order('created_at desc')
   end
 
-  def as_json(options={})
-    {
-      id: id,
-      reward_id: id,
-      reward_status: reward_status,
-      serial_code: serial_code || "",
-      redeem: redeem,
-      redeem_at: redeem_at.to_i.presence || "",
-      ref_no: ref_no || "",
-      created_at: created_at.to_i,
-      title: campaign.get_reward_title,
-      detail: campaign.get_reward_detail,
-      expire: campaign.get_reward_expire,
-      redeem_myself: campaign.redeem_myself
-    }
-  end
 end
