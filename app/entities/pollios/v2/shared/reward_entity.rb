@@ -13,7 +13,7 @@ module Pollios::V2::Shared
     expose :no_expiration
 
     expose :campaign do |obj|
-      Pollios::V2::CurrentMemberAPI::CampaignEntity.represent obj.campaign, except: [:expire]
+      Pollios::V2::CurrentMemberAPI::CampaignEntity.represent obj.campaign, except: [:expire, :rewards]
     end
   end
 
