@@ -7,7 +7,7 @@ module Pollios::V1::CurrentMemberAPI
 		expose :description 
 		expose :how_to_redeem
 
-    expose :reward_detail, if: -> (object, options) { object.rewards.present? } do |object, options|
+    expose :reward_detail, as: :reward_details, if: -> (object, options) { object.rewards.present? } do |object, options|
       Pollios::V1::Shared::RewardDetailEntity.represent object.rewards.first, redeem_myself: object.redeem_myself
     end
 
