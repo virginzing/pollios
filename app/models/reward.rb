@@ -17,10 +17,15 @@ class Reward < ActiveRecord::Base
   belongs_to :campaign
   belongs_to :campaign_member
 
-  attr_accessor :unexpire
+  attr_accessor :no_expiration
   
-  def unexpired?
-    ((reward_expire - created_at) / 1.year) > 80 ? true : false
+  def no_expiration
+    # ((reward_expire - created_at) / 1.year) > 80 ? true : false
+    ((expire_at - created_at) / 1.year) > 80 ? true : false
   end
 
+  def can_expire?
+    !no_expiration
+  end
+  
 end

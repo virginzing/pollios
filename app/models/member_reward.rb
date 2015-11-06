@@ -25,6 +25,7 @@ class MemberReward < ActiveRecord::Base
   acts_as_paranoid
   self.table_name = "campaign_members"
 
+  # TODO: GET RID OF THIS SHIT!!!!
   enumerize :reward_status, :in => { waiting_announce: 0, receive: 1, not_receive: -1 }, predicates: true, scope: true
 
   belongs_to :reward
@@ -43,6 +44,10 @@ class MemberReward < ActiveRecord::Base
   after_commit :flush_cache
 
   self.per_page = 10
+
+  def received?
+    reward_status == "receive"
+  end
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
