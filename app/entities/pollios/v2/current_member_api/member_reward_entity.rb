@@ -21,8 +21,7 @@ module Pollios::V2::CurrentMemberAPI
     expose :reward, with: Pollios::V2::Shared::RewardEntity, if: -> (obj, opts) { obj.received? }
 
     # if user not getting reward or still waiting annoucement, showing campaign info
-    expose :campaign, if: -> (obj, opts) { !obj.received? } do
-    end
+    expose :campaign, with: CampaignEntity, if: -> (obj, opts) { !obj.received? }
 
     # always show poll if poll information present
     expose :poll, if: -> (obj, opts) { obj.poll.present? } do |obj|
