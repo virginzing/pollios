@@ -32,8 +32,9 @@ module Pollios::V1::CurrentMemberAPI
 
 	private
 
-		def owner_info
-			object.member.present? ? CampaignOwnerDetailEntity.represent(object.member) : CampaignOwnerDetailEntity.default_pollios_member
+    def owner_info
+      entity = Pollios::V1::Shared::MemberEntity
+      object.member.present? ? entity.represent(object.member) : entity.default_pollios_member
     end
     
   end

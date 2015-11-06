@@ -6,6 +6,7 @@ module Pollios::V1::Shared
     expose :description
     expose :get_avatar, as: :avatar
     expose :member_type_text, as: :type
+    expose :get_key_color, as: :key_color, if: -> (obj, opts) { obj.get_key_color.present? }
     expose :status, if: -> (object, options) { options[:current_member_linkage].present? }
 
     def self.default_pollios_member

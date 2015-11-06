@@ -33,6 +33,7 @@ module Pollios
     end
 
     mount V1::API
+    mount V2::API
 
   end
 end

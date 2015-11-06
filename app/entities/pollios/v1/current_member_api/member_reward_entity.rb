@@ -1,5 +1,5 @@
 module Pollios::V1::CurrentMemberAPI
-  class RewardEntity < Pollios::V1::BaseEntity
+  class MemberRewardEntity < Pollios::V1::BaseEntity
 
     expose :reward_info do
       expose :id, as: :reward_id
@@ -17,6 +17,10 @@ module Pollios::V1::CurrentMemberAPI
 
     expose :campaign, with: CampaignDetailEntity, as: :campaign_detail
     expose :poll, with: CampaignPollDetailEntity, if: -> (object, options) { object.poll.present? }
+
+    def campaign
+      object.reward.campaign
+    end
 
   end
 end

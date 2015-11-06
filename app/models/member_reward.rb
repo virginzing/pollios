@@ -36,7 +36,8 @@ class MemberReward < ActiveRecord::Base
   validates_uniqueness_of :serial_code, allow_nil: true, allow_blank: true
   validates_uniqueness_of :ref_no, allow_nil: true, allow_blank: true
 
-  scope :without_deleted, -> { where(deleted_at: nil) }
+  scope :without_deleted, -> { where(deleted_at: nil).includes( {:reward => :campaign}, :poll, :poll_series ) }
+  scope :for_member_id, -> (member_id) { where(member_id: member_id).order(created_at: :desc) }
   default_scope { with_deleted }
   
   after_commit :flush_cache
@@ -54,10 +55,6 @@ class MemberReward < ActiveRecord::Base
       raise ExceptionHandler::Deleted, ExceptionHandler::Message::Reward::DELETED unless @reward.deleted_at.nil?
       @reward
     end
-  end
-
-  def self.list_reward(member_id)
-    where("member_id = ?", member_id).order('created_at desc')
   end
 
 end

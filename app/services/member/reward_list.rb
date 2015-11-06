@@ -16,7 +16,7 @@ class Member::RewardList
   def next_page_index
   	rewards_paginated.next_page.nil? ? 0 : rewards_paginated.next_page
   end
-#
+
   private
 
   def member
@@ -24,7 +24,7 @@ class Member::RewardList
   end
 
   def rewards
-    @rewards ||= CampaignMember.without_deleted.list_reward(member)
+    @rewards ||= MemberReward.without_deleted.for_member_id(member.id)
   end
 
   def rewards_paginated
