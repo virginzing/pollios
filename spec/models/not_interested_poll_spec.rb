@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: un_see_polls
+# Table name: not_interested_polls
 #
 #  id             :integer          not null, primary key
 #  member_id      :integer

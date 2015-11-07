@@ -18,6 +18,7 @@
 #  reward_status  :integer
 #  deleted_at     :datetime
 #  gift_log_id    :integer
+#  reward_id      :integer
 #
 
 require 'test_helper'

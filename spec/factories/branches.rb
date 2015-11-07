@@ -11,6 +11,7 @@
 #  slug       :string(255)
 #  note       :text
 #
+
 require 'faker'
 
 FactoryGirl.define do

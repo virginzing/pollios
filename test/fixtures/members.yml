@@ -56,6 +56,9 @@
 #  list_fb_id                 :string(255)      default([]), is an Array
 #  show_recommend             :boolean          default(FALSE)
 #  notification               :hstore           default({}), not null
+#  show_search                :boolean          default(TRUE)
+#  polls_count                :integer          default(0)
+#  history_votes_count        :integer          default(0)
 #
 
 one:

@@ -29,7 +29,7 @@ module Pollios::V1::CurrentMemberAPI
         end
         route_param :id do
           get do
-            reward = CampaignMember.cached_find(params[:id])
+            reward = MemberReward.cached_find(params[:id])
             present reward, with: MemberRewardEntity
           end
         end
