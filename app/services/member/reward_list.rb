@@ -22,7 +22,7 @@ class Member::RewardList
   def member
     @member
   end
-
+  
   def rewards
     @rewards ||= MemberReward.without_deleted.with_all_relations.for_member_id(member.id)
   end

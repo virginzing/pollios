@@ -39,9 +39,6 @@ class Campaign < ActiveRecord::Base
 
   validates_uniqueness_of :name, :on => :create, scope: :company_id
 
-  # has_one :poll
-  # has_one :poll_series
-
   has_many :polls
   has_many :poll_series
 
