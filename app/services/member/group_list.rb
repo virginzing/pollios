@@ -1,4 +1,6 @@
 class Member::GroupList
+
+  attr_reader :member
   
   def initialize(member, options = {})
     @member = member
@@ -7,10 +9,6 @@ class Member::GroupList
     if viewing_member && viewing_member.id != member.id
       @viewing_member = viewing_member
     end
-  end
-
-  def member
-    @member
   end
 
   def cached_all_groups
