@@ -12,19 +12,19 @@ class Member::MemberList
   end
 
   def friends
-    cached_all_friends.select { |member| member if is_friend_with(member) }
+    cached_all_friends.select { |member| member if friend_with?(member) }
   end
 
   def followings
-    cached_all_friends.select { |member| member if is_following(member) }
+    cached_all_friends.select { |member| member if following?(member) }
   end
 
   def followers
-    cached_followers.select { |member| member if is_followed_by(member) }
+    cached_followers.select { |member| member if followed_by?(member) }
   end
 
   def blocks
-    cached_all_friends.select { |member| member if is_blocking(member) }
+    cached_all_friends.select { |member| member if blocked_friend?(member) }
   end
 
   def social_linkage_ids
@@ -48,12 +48,12 @@ class Member::MemberList
 
   # TODO: safely remove this
   def following_with_no_cache
-    all.select { |member| member if is_following(member) }
+    all.select { |member| member if following?(member) }
   end
 
   # TODO: safely remove this
   def follower_with_no_cache
-    all_followers.select { |member| member if is_followed_by(member) }
+    all_followers.select { |member| member if followed_by?(member) }
   end
 
   def using_app_via_fb
@@ -61,19 +61,19 @@ class Member::MemberList
   end
 
   def active
-    cached_all_friends.select { |member| member if is_active_friend_with(member) }
+    cached_all_friends.select { |member| member if active_friend_with?(member) }
   end
 
   def active_with_no_cache
-    all.select { |member| member if is_active_friend_with(member) }
+    all.select { |member| member if active_friend_with?(member) }
   end
 
   def friend_request
-    cached_all_friends.select { |member| member if is_being_requested_by(member) }
+    cached_all_friends.select { |member| member if being_requested_friend_by?(member) }
   end
 
   def your_request
-    cached_all_friends.select { |member| member if is_requesting(member) }
+    cached_all_friends.select { |member| member if requesting_friend_with?(member) }
   end
 
   def friend_count
@@ -96,36 +96,40 @@ class Member::MemberList
 
   # private
 
-  def is_active(member)
+  def active?(member)
     member.member_active == true
   end
 
-  def is_friend_with(member)
+  def friend_with?(member)
     member.member_status == 1
   end
 
-  def is_active_friend_with(member)
-    is_active(member) && member.member_block == false && is_friend_with(member)
+  def blocked?(member)
+    member.member_block == true
   end
 
-  def is_requesting(member)
-    member.member_status == 0 && is_active(member)
+  def active_friend_with?(member)
+    active?(member) && !blocked(member) && friend_with?(member)
   end
 
-  def is_following(member)
-    member.member_following == true && !is_friend_with(member) && !member.citizen?
+  def requesting_friend_with?(member)
+    member.member_status == 0 && active?(member)
   end
 
-  def is_followed_by(member)
-    member.member_following == true && !is_friend_with(member)
+  def following?(member)
+    member.member_following == true && !friend_with?(member) && !member.citizen?
   end
 
-  def is_being_requested_by(member)
-    member.member_status == 2 && is_active(member)
+  def followed_by?(member)
+    member.member_following == true && !friend_with?(member)
   end
 
-  def is_blocking(member)
-    is_active(member) && member.member_block == true && is_friend_with(member)
+  def being_requested_friend_by?(member)
+    member.member_status == 2 && active?(member)
+  end
+
+  def blocked_friend?(member)
+    active?(member) && blocked?(member) && friend_with?(member)
   end
 
   def ids_for(list)
