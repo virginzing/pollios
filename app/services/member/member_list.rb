@@ -8,7 +8,7 @@ class Member::MemberList
   end
 
   def all
-    @all ||= all_friend
+    @all ||= all_friends
   end
 
   def friends
@@ -20,7 +20,7 @@ class Member::MemberList
   end
 
   def followers
-    cached_followers.select { |member| member if followed_by?(member) }
+    cached_all_followers.select { |member| member if followed_by?(member) }
   end
 
   def blocks
@@ -38,12 +38,21 @@ class Member::MemberList
   end
 
   def cached_all_friends
-    @cached_all_friends ||= cached_friends
+    @cached_all_friends ||= Rails.cache.fetch("member/#{@member.id}/friends") do
+      all_friends
+    end
   end
 
-  # TODO: rename this or cached_all_friends to match one another
-  def cached_followers
-    @cached_followers ||= cached_all_followers
+  def cached_all_followers
+    @cached_all_followers ||= Rails.cache.fetch("member/#{@member.id}/followers") do
+      all_followers
+    end
+  end
+
+  def delete_all_member_caches
+    member_cache = FlushCached::Member.new(member)
+    member_cache.clear_list_friends
+    member_cache.clear_list_followers
   end
 
   # TODO: safely remove this
@@ -94,7 +103,9 @@ class Member::MemberList
     }
   end
 
-  # private
+  private
+
+  # query function for relationship between @member and member
 
   def active?(member)
     member.member_active == true
@@ -109,7 +120,7 @@ class Member::MemberList
   end
 
   def active_friend_with?(member)
-    active?(member) && !blocked(member) && friend_with?(member)
+    active?(member) && !blocked?(member) && friend_with?(member)
   end
 
   def requesting_friend_with?(member)
@@ -140,32 +151,24 @@ class Member::MemberList
     ids_for(ids_list).include?(id)
   end
 
-  def all_friend
+  def all_friends
     Member.joins('inner join friends on members.id = friends.followed_id') \
       .where("friends.follower_id = #{@member.id}") \
-      .select('members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following')
+      .select('members.*, friends.active as member_active, friends.block as member_block, 
+        friends.status as member_status, friends.following as member_following')
+      .to_a
   end
 
   def all_followers
     Member.joins('inner join friends on members.id = friends.follower_id') \
       .where("friends.followed_id = #{@member.id}") \
-      .select('members.*, friends.active as member_active, friends.block as member_block, friends.status as member_status, friends.following as member_following')
+      .select('members.*, friends.active as member_active, friends.block as member_block, 
+        friends.status as member_status, friends.following as member_following')
+      .to_a
   end
 
   def query_friend_using_facebook
     Member.with_status_account(:normal).where(fb_id: @member.list_fb_id).order('fullname asc')
-  end
-
-  def cached_friends
-    Rails.cache.fetch("member/#{@member.id}/friends") do
-      all_friend.to_a
-    end
-  end
-
-  def cached_all_followers
-    Rails.cache.fetch("member/#{@member.id}/followers") do
-      all_followers.to_a
-    end
   end
   
 end
