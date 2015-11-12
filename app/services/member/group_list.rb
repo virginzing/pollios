@@ -1,29 +1,22 @@
 class Member::GroupList
 
-  attr_reader :member
+  attr_reader :member, :viewing_member
   
   def initialize(member, options = {})
-    @member = member
+    @member = @viewing_member = member
 
-    viewing_member = options[:viewing_member]
-    if viewing_member && viewing_member.id != member.id
-      @viewing_member = viewing_member
-    end
+    return unless options[:viewing_member]
+    @viewing_member = options[:viewing_member]
   end
 
   def cached_all_groups
-    if @viewing_member
-      @cached_all_groups ||= cached_groups.select do |group| 
-        if group.public?
-          group
-        else 
-          member_groups_ids = Member::GroupList.new(@viewing_member).groups_ids
-          group if member_groups_ids.include?(group.id)
-        end
-      end
-    else
-      @cached_all_groups ||= cached_groups
-    end
+    return @cached_all_groups ||= cached_groups if viewing_own_profile
+
+    @cached_all_groups ||= groups_for_viewing_member
+  end
+
+  def member_of?(group)
+    groups_ids.include?(group.id)
   end
 
   def groups_ids
@@ -35,11 +28,11 @@ class Member::GroupList
   end
 
   def active
-    cached_all_groups.select{|group| group if group.member_is_active }
+    cached_all_groups.select { |group| group if group.member_is_active }
   end
 
   def as_member
-    active.select { |group| group if group.member_is_active && !group.member_admin}
+    active.select { |group| group if group.member_is_active && !group.member_admin }
   end
 
   def as_admin
@@ -50,34 +43,33 @@ class Member::GroupList
     active.select { |group| group if group.member_admin && group.members_request.size > 0 }
   end
 
+  def public_groups_for_company_available?
+    member.get_company.using_public? && !member.get_company.using_internal?
+  end
+
+  # TODO: this should be broken. it works basically because we have no virtual group.
+  # TODO: refactor or remove. either way.
   def active_non_virtual
-    list_groups = cached_all_groups.select{|group| group if group.member_is_active && !group.virtual_group }
-    if @member.company? 
-      if @member.get_company.using_public? && !@member.get_company.using_internal?
-        list_groups.select! {|elem| elem if elem.public }
-      end
+    list_groups = cached_all_groups.select { |group| group if group.member_is_active && !group.virtual_group }
+    if member.company? 
+      list_groups.select! { |elem| elem if elem.public } if public_groups_for_company_available?
     end
     list_groups
   end
 
   def groups_available_for_poll(poll, requesting_group_id = nil)
-    member_groups_ids = @member.groups.map(&:id)
-
-    tmp_member = []
-    tmp_non_member = []
+    tmp_member = tmp_non_member = []
 
     poll_groups = poll.groups.sort
     poll_groups.each do |group|
-      if member_groups_ids.include?(group.id)
+      if member_of?(group)
         if requesting_group_id == group.id
-          tmp_member.insert(0, group)
+          tmp_member.unshift(group)
         else
           tmp_member << group
         end
       else
-        if group.public
-          tmp_non_member << group
-        end
+        tmp_non_member << group if group.public
       end
     end
 
@@ -85,15 +77,15 @@ class Member::GroupList
   end
 
   def active_with_public
-    cached_all_groups.select{|group| group if group.member_is_active && group.public == false }
+    cached_all_groups.select { |group| group if group.member_is_active && group.public == false }
   end
 
   def inactive
-    cached_all_groups.select{|group| group unless group.member_is_active }
+    cached_all_groups.select { |group| group unless group.member_is_active }
   end
 
   def got_invitations
-    cached_all_groups.select{|group| group unless group.member_is_active }
+    cached_all_groups.select { |group| group unless group.member_is_active }
   end
 
   def requesting_to_joins
@@ -101,19 +93,32 @@ class Member::GroupList
   end
 
   def hash_member_count
-    @group_member_count ||= group_member_count.inject({}) { |h,v| h[v.id] = v.member_count; h }
+    @group_member_count ||= group_member_count.inject({}) { |hash, group| hash[group.id] = group.member_count; hash }
   end
 
   private
 
+  def viewing_own_profile
+    viewing_member.id == member.id
+  end
+
+  def viewing_member_visibility_for_group(group)
+    group.public? || Member::GroupList.new(viewing_member).member_of?(group)
+  end
+
+  def groups_for_viewing_member
+    cached_groups.select { |group| group if viewing_member_visibility_for_group(group) }
+  end
+
+
   def groups
     Group.joins(:group_members).without_deleted.select("groups.*, group_members.is_master as member_admin, group_members.active as member_is_active, group_members.invite_id as member_invite_id") \
-          .where("group_members.member_id = #{@member.id}").group("groups.id, member_admin, member_is_active, member_invite_id")
+      .where("group_members.member_id = #{@member.id}").group("groups.id, member_admin, member_is_active, member_invite_id")
   end
 
   def group_member_count
     Group.joins(:group_members_active).without_deleted.select("groups.*, count(group_members) as member_count").group("groups.id") \
-          .where("groups.id IN (?)", cached_all_groups.map(&:id))
+      .where("groups.id IN (?)", cached_all_groups.map(&:id))
   end
 
   def cached_groups

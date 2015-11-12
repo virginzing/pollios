@@ -10,19 +10,19 @@ class Member::MemberList
   end
 
   def friends
-    cached_all_friends.select { |user| user if user.member_status == 1 }
+    cached_all_friends.select { |member| member if member.member_status == 1 }
   end
 
   def followings
-    cached_all_friends.select { |user| user if user.member_following == true && user.member_status != 1 }.select { |member| member unless member.citizen? }
+    cached_all_friends.select { |member| member if member.member_following == true && member.member_status != 1 }.select { |member| member unless member.citizen? }
   end
 
   def followers
-    cached_followers.select { |user| user if user.member_following == true && user.member_status != 1 }
+    cached_followers.select { |member| member if member.member_following == true && member.member_status != 1 }
   end
 
   def blocks
-    cached_all_friends.select { |user| user if user.member_active == true && user.member_block == true && user.member_status == 1 }
+    cached_all_friends.select { |member| member if member.member_active == true && member.member_block == true && member.member_status == 1 }
   end
 
   def social_linkage_ids
@@ -44,11 +44,11 @@ class Member::MemberList
   end
 
   def following_with_no_cache
-    all.select { |user| user if user.member_following == true && user.member_status != 1 }.select { |member| member unless member.citizen? }
+    all.select { |member| member if member.member_following == true && member.member_status != 1 }.select { |member| member unless member.citizen? }
   end
 
   def follower_with_no_cache
-    all_followers.select { |user| user if user.member_following == true && user.member_status != 1 }
+    all_followers.select { |member| member if member.member_following == true && member.member_status != 1 }
   end
 
   def using_app_via_fb
@@ -56,23 +56,23 @@ class Member::MemberList
   end
 
   def active
-    cached_all_friends.select { |user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
+    cached_all_friends.select { |member| member if member.member_active == true && member.member_block == false && member.member_status == 1 }
   end
 
   def active_with_no_cache
-    all.select { |user| user if user.member_active == true && user.member_block == false && user.member_status == 1 }
+    all.select { |member| member if member.member_active == true && member.member_block == false && member.member_status == 1 }
   end
 
   def friend_request
-    cached_all_friends.select { |user| user if user.member_status == 2 && user.member_active == true }
+    cached_all_friends.select { |member| member if member.member_status == 2 && member.member_active == true }
   end
 
   def your_request
-    cached_all_friends.select { |user| user if user.member_status == 0 && user.member_active == true }
+    cached_all_friends.select { |member| member if member.member_status == 0 && member.member_active == true }
   end
 
   def friend_count
-    cached_all_friends.select { |user| user if user.member_active == true && user.member_status == 1 }.to_a.size
+    cached_all_friends.select { |member| member if member.member_active == true && member.member_status == 1 }.to_a.size
   end
 
   def blocked_by_someone
