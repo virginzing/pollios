@@ -1,4 +1,6 @@
 class Member::PollList
+
+  attr_reader :member
   
   def initialize(member)
     @member = member
@@ -33,9 +35,9 @@ class Member::PollList
     voting = cached_voting_detail_for_poll(poll_id)
 
     if voting.empty?
-      return Hash["voted" => false]
+      return Hash['voted' => false]
     else
-      return Hash["voted" => true, "choice_id" => voting.first.choice_id]
+      return Hash['voted' => true, 'choice_id' => voting.first.choice_id]
     end
   end
 
@@ -48,37 +50,33 @@ class Member::PollList
   end
 
   def voted_poll?(poll)
-    voted_all.collect{|e| e["poll_id"] }.include?(poll.id)    
+    voted_all.collect { |e| e['poll_id'] }.include?(poll.id)    
   end
 
   def saved_poll_ids
-    saved_later_query("Poll")
+    saved_later_query('Poll')
   end
 
   def saved_questionnaire_ids
-    saved_later_query("PollSeries")
+    saved_later_query('PollSeries')
   end
 
   def not_interested_poll_ids
-    not_interested_query("Poll")
+    not_interested_query('Poll')
   end
 
   def not_interested_questionnaire_ids
-    not_interested_query("PollSeries")
+    not_interested_query('PollSeries')
   end
 
-# private
-
-  def member
-    @member
-  end
+  # private
 
   def member_report_polls
     @member.poll_reports.to_a
   end
   
   def cached_report_polls
-    Rails.cache.fetch("member/#{@member.id}/report_polls") { member_report_polls }
+    Rails.cache.fetch("member/#{member.id}/report_polls") { member_report_polls }
   end
 
   def member_report_commments
@@ -86,7 +84,7 @@ class Member::PollList
   end
 
   def cached_report_comments
-    Rails.cache.fetch("member/#{@member.id}/report_comments") { member_report_commments }
+    Rails.cache.fetch("member/#{member.id}/report_comments") { member_report_commments }
   end
 
   def member_history_viewed_polls
@@ -121,15 +119,15 @@ class Member::PollList
   end
 
   def cached_voting_detail_for_poll(poll_id)
-    Rails.cache.fetch("member/#{@member.id}/voting/#{poll_id}") { voting_detail_for_poll(poll_id) }
+    Rails.cache.fetch("member/#{member.id}/voting/#{poll_id}") { voting_detail_for_poll(poll_id) }
   end
 
   def cached_voted_all_polls
-    Rails.cache.fetch("member/#{@member.id}/voted_all_polls") { member_voted_all_polls }
+    Rails.cache.fetch("member/#{member.id}/voted_all_polls") { member_voted_all_polls }
   end
 
   def cached_watch_polls
-    Rails.cache.fetch("member/#{@member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
+    Rails.cache.fetch("member/#{member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
   end
 
   def saved_later_query(type_name)

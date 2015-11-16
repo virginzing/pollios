@@ -71,24 +71,6 @@ class Member::MemberList
     @using_app_via_fb ||= query_friend_using_facebook
   end
 
-  def cached_all_friends
-    @cached_all_friends ||= Rails.cache.fetch("member/#{member.id}/friends") do
-      all_friends
-    end
-  end
-
-  def cached_all_followers
-    @cached_all_followers ||= Rails.cache.fetch("member/#{member.id}/followers") do
-      all_followers
-    end
-  end
-
-  def delete_all_member_caches
-    member_cache = FlushCached::Member.new(member)
-    member_cache.clear_list_friends
-    member_cache.clear_list_followers
-  end
-
   # TODO: Consider moving this into future's LEGACY namespace
   def check_is_friend
     {
@@ -98,6 +80,12 @@ class Member::MemberList
       your_request: your_request.map(&:id),
       following: followings.map(&:id)
     }
+  end
+
+  def delete_all_member_caches
+    member_cache = FlushCached::Member.new(member)
+    member_cache.clear_list_friends
+    member_cache.clear_list_followers
   end
 
   private def active?(a_member)
@@ -142,6 +130,19 @@ class Member::MemberList
 
   private def ids_include?(ids_list, id)
     ids_for(ids_list).include?(id)
+  end
+
+  # TODO: Privatize these two cached-methods.
+  def cached_all_friends
+    @cached_all_friends ||= Rails.cache.fetch("member/#{member.id}/friends") do
+      all_friends
+    end
+  end
+
+  def cached_all_followers
+    @cached_all_followers ||= Rails.cache.fetch("member/#{member.id}/followers") do
+      all_followers
+    end
   end
 
   private def all_friends

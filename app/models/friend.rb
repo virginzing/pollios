@@ -29,6 +29,7 @@ class Friend < ActiveRecord::Base
   # scope :search_member, -> (member_id, friend_id) { find_by(follower_id: member_id, followed_id: friend_id) }
   # scope :search_friend, -> (friend_id, member_id) { find_by(follower_id: friend_id, followed_id: member_id) }
 
+  # TODO: Move this logic to Member::MemberList
   def self.following_of_friend(friend)
     friend_id = friend[:friend_id]
     begin
@@ -39,6 +40,7 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.add_friend(friend_params)
     begin
       Friend.transaction do
@@ -109,6 +111,7 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.add_or_un_close_friend(friend, status)
     friend_id = friend[:friend_id]
     member_id = friend[:member_id]
@@ -120,7 +123,7 @@ class Friend < ActiveRecord::Base
     end
   end
 
-
+  # TODO: Move this logic to Member::MemberList
   def self.check_been_friend(is_friend, member_id, friend_id)
     find_no_friend = where(follower_id: member_id, followed_id: friend_id).having_status(:nofriend).first
     if find_no_friend.present? && is_friend
@@ -139,6 +142,7 @@ class Friend < ActiveRecord::Base
     status
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.add_following(member, options)
     friend_id = options[:friend_id]
     member_id = options[:member_id]
@@ -164,6 +168,7 @@ class Friend < ActiveRecord::Base
     friend
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.unfollow(options)
     friend_id = options[:friend_id]
     member_id = options[:member_id]
@@ -186,6 +191,7 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.unfriend(friend)
     begin
       friend_id = friend[:friend_id]
@@ -211,6 +217,7 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.accept_or_deny_freind(friend, accept)
     begin
       friend_id = friend[:friend_id]
@@ -259,6 +266,7 @@ class Friend < ActiveRecord::Base
     end
   end
 
+  # TODO: Move this logic to Member::MemberList
   def self.check_that_follow(member_object, find_member, friend_object, find_friend)
     if find_member.present?
       unless find_member.following
@@ -289,6 +297,7 @@ class Friend < ActiveRecord::Base
     true
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.block_friend(params)
     friend_id = params[:friend_id]
     member_id = params[:member_id]
@@ -316,6 +325,7 @@ class Friend < ActiveRecord::Base
     friend
   end
 
+  # TODO: Move this logic to Member::MemberAction
   def self.unblock_friend(params)
     friend_id = params[:friend_id]
     member_id = params[:member_id]
@@ -342,6 +352,7 @@ class Friend < ActiveRecord::Base
     friend
   end
 
+  # TODO: Move this logic to Member::MemberList
   def self.add_friend?(member_obj, search_member)
     check_my_friend = []
     init_list_friend ||= Member::MemberList.new(member_obj)
@@ -376,6 +387,7 @@ class Friend < ActiveRecord::Base
     return check_my_friend
   end
 
+  # TODO: Move this logic to Member::MemberList
   def self.check_add_friend?(member, list_members, check_is_friend)
     check_my_friend = []
 
