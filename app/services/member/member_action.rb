@@ -1,4 +1,5 @@
 class Member::MemberAction
+  include SymbolHash
 
   attr_reader :member
 
@@ -21,35 +22,58 @@ class Member::MemberAction
     can_add_friend, message = can_add_friend_with?(a_member)
     fail message unless can_add_friend
 
-    do_add_friend(a_member)
-    # do_accept_friend_from(a_member)
-  end
-
-  private def do_add_friend(a_member)
-    need_to_invite, member_relation = query_relationship_between(member, a_member)
-    if need_to_invite
-      send_friend_request_to(a_member, action: ACTION[:request_friend])
-    else
-      if member_relation.invitee?
-      else
+    @outgoing_relation ||= query_relationship_between(member, a_member, :invite)
+    @incoming_relation ||= query_relationship_between(a_member, member, :invitee)
+    begin
+      Friend.transaction do
+        do_add_friend(a_member)
       end
     end
   end
 
-  private def send_add_friend_request_to(a_member, options = {})
-    AddFriendWorker.perform_async(member.id, a_member.id, options) unless Rails.env.test?
+  private def accept_friendship(src_member, dst_member)
+    @outgoing_relation.update!(status: :friend)
+    @incoming_relation.update!(status: :friend)
+
+    send_add_friend_request(src_member, dst_member, accept_friend: true, action: ACTION[:become_friend])
   end
 
-  private def query_relationship_between(src_member, dst_member)
-    is_new_relationship = false
-    relation = Friend.where(follower: src_member, followed: dst_member).first_or_initialize do |member_relation|
+  private def do_add_friend(a_member)
+    if @outgoing_relation.id.nil?
+      send_add_friend_request(member, a_member)
+    else
+      if @outgoing_relation.invitee?
+        accept_friendship(member, a_member)
+      else
+        @outgoing_relation.update!(status: :invite)
+        send_add_friend_request(member, a_member)
+      end
+    end
+
+    unless @incoming_relation.id.nil?
+      if @incoming_relation.invitee?
+        accept_friendship(a_member, member)
+      else
+        unless @incoming_relation.friend?
+          @incoming_relation.update!(status: :invitee)
+        end
+      end
+    end
+    FlushCached::Member.new(member).clear_list_friends
+    FlushCached::Member.new(a_member).clear_list_friends
+  end
+
+  private def send_add_friend_request(src_member, dst_member, options = { action: ACTION[:request_friend] })
+    AddFriendWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
+  end
+
+  def query_relationship_between(src_member, dst_member, status)
+    Friend.where(follower: src_member, followed: dst_member).first_or_initialize do |member_relation|
       member_relation.follower = src_member
       member_relation.followed = dst_member
-      member_relation.status = :invite
-      # member_relation.save!
-      is_new_relationship = true
+      member_relation.status = status
+      member_relation.save!
     end
-    [is_new_relationship, relation]
   end
 
   def unfriend(a_member)

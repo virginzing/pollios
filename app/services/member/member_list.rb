@@ -121,13 +121,13 @@ class Member::MemberList
 
   # TODO: Privatize these two cached-methods.
   def cached_all_friends
-    @cached_all_friends ||= Rails.cache.fetch("member/#{member.id}/friends") do
+    Rails.cache.fetch("member/#{member.id}/friends") do
       all_friends
     end
   end
 
   def cached_all_followers
-    @cached_all_followers ||= Rails.cache.fetch("member/#{member.id}/followers") do
+    Rails.cache.fetch("member/#{member.id}/followers") do
       all_followers
     end
   end
