@@ -7,10 +7,6 @@ class Member::MemberList
     @options = options
   end
 
-  def all
-    @all ||= all_friends
-  end
-
   def friends
     cached_all_friends.select { |member| member if friend_with?(member) }
   end
@@ -57,7 +53,7 @@ class Member::MemberList
 
   # TODO: safely remove this
   def following_with_no_cache
-    all.select { |member| member if following?(member) }
+    all_friends.select { |member| member if following?(member) }
   end
 
   # TODO: safely remove this
@@ -74,7 +70,7 @@ class Member::MemberList
   end
 
   def active_with_no_cache
-    all.select { |member| member if active_friend_with?(member) }
+    all_friends.select { |member| member if active_friend_with?(member) }
   end
 
   def friend_request
@@ -86,13 +82,14 @@ class Member::MemberList
   end
 
   def friend_count
-    cached_all_friends.select { |member| member if member.member_active == true && member.member_status == 1 }.to_a.size
+    cached_all_friends.count { |member| member if active?(member) && friend_with?(member) }
   end
 
   def blocked_by_someone
     Friend.where(followed_id: @member.id, block: true).map(&:follower_id)
   end
 
+  # TODO: Consider moving this into future's LEGACY namespace
   def check_is_friend
     {
       active: active.map(&:id),
@@ -103,7 +100,7 @@ class Member::MemberList
     }
   end
 
-  private
+  # private
 
   # query function for relationship between @member and member
 
@@ -152,19 +149,19 @@ class Member::MemberList
   end
 
   def all_friends
-    Member.joins('inner join friends on members.id = friends.followed_id') \
-      .where("friends.follower_id = #{@member.id}") \
-      .select('members.*, friends.active as member_active, friends.block as member_block, 
-        friends.status as member_status, friends.following as member_following')
-      .to_a
+    @all_friends ||= Member.joins('inner join friends on members.id = friends.followed_id') \
+                     .where("friends.follower_id = #{@member.id}") \
+                     .select('members.*, friends.active as member_active, friends.block as member_block, 
+                      friends.status as member_status, friends.following as member_following')
+                     .to_a
   end
 
   def all_followers
-    Member.joins('inner join friends on members.id = friends.follower_id') \
-      .where("friends.followed_id = #{@member.id}") \
-      .select('members.*, friends.active as member_active, friends.block as member_block, 
-        friends.status as member_status, friends.following as member_following')
-      .to_a
+    @all_followers ||= Member.joins('inner join friends on members.id = friends.follower_id') \
+                       .where("friends.followed_id = #{@member.id}") \
+                       .select('members.*, friends.active as member_active, friends.block as member_block, 
+                        friends.status as member_status, friends.following as member_following')
+                       .to_a
   end
 
   def query_friend_using_facebook
