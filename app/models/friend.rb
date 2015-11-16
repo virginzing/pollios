@@ -20,25 +20,14 @@ class Friend < ActiveRecord::Base
   include FriendsHelper
   include SymbolHash
 
-  belongs_to :follower, class_name: "Member", touch: true
-  belongs_to :followed, class_name: "Member", touch: true
+  belongs_to :follower, class_name: 'Member', touch: true
+  belongs_to :followed, class_name: 'Member', touch: true
 
   validates :follower_id, presence: true
   validates :followed_id, presence: true
 
   # scope :search_member, -> (member_id, friend_id) { find_by(follower_id: member_id, followed_id: friend_id) }
   # scope :search_friend, -> (friend_id, member_id) { find_by(follower_id: friend_id, followed_id: member_id) }
-
-  # TODO: Move this logic to Member::MemberList
-  def self.following_of_friend(friend)
-    friend_id = friend[:friend_id]
-    begin
-      find_friend = Member.find(friend_id)
-      following_from_cached = find_friend.cached_get_following
-    rescue => e
-      []
-    end
-  end
 
   # TODO: Move this logic to Member::MemberAction
   def self.add_friend(friend_params)
@@ -55,8 +44,8 @@ class Friend < ActiveRecord::Base
         member_invite_friend = init_member_list_friend.your_request.map(&:id)
 
         fail ExceptionHandler::UnprocessableEntity, "You can't add yourself as a friend." if @member.id == @friend.id
-        fail ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} is friends." if member_friend_active.include?(@friend.id)
-        fail ExceptionHandler::UnprocessableEntity, "You had already added friend with #{@friend.get_name}" if member_invite_friend.include?(@friend.id)
+        fail ExceptionHandler::UnprocessableEntity, "You and #{@friend.get_name} are already friends." if member_friend_active.include?(@friend.id)
+        fail ExceptionHandler::UnprocessableEntity, "You already sent friend request to #{@friend.get_name}" if member_invite_friend.include?(@friend.id)
 
         find_invite = where(follower: @member, followed: @friend).first_or_initialize do |friend|
           friend.follower = @member

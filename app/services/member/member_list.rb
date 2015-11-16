@@ -1,4 +1,5 @@
 class Member::MemberList
+  include Member::FriendRelationHelper
 
   attr_reader :member
 
@@ -17,6 +18,14 @@ class Member::MemberList
     }
   end
 
+  def already_friend_with?(a_member)
+    ids_include?(active_friends, a_member.id)
+  end
+
+  def already_sent_request_to?(a_member)
+    ids_include?(outgoing_requests, a_member.id)
+  end
+
   def friends
     cached_all_friends.select { |a_member| a_member if friend_with?(a_member) }
   end
@@ -33,16 +42,30 @@ class Member::MemberList
     cached_all_friends.select { |a_member| a_member if blocked_friend?(a_member) }
   end
 
-  def active
+  def active_friends
     cached_all_friends.select { |a_member| a_member if active_friend_with?(a_member) }
   end
 
-  def friend_request
+  def incoming_requests
     cached_all_friends.select { |a_member| a_member if being_requested_friend_by?(a_member) }
   end
 
-  def your_request
+  def outgoing_requests
     cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) }
+  end
+
+  # NOTE: The following getters are for compatibility with legacy code
+  # TODO: Remove them to use proper getter methods above
+  def active
+    active_friends
+  end
+
+  def friend_request
+    incoming_requests
+  end
+
+  def your_request
+    outgoing_requests
   end
 
   def friend_count
@@ -86,42 +109,6 @@ class Member::MemberList
     member_cache = FlushCached::Member.new(member)
     member_cache.clear_list_friends
     member_cache.clear_list_followers
-  end
-
-  private def active?(a_member)
-    a_member.member_active == true
-  end
-
-  private def friend_with?(a_member)
-    a_member.member_status == 1
-  end
-
-  private def blocked?(a_member)
-    a_member.member_block == true
-  end
-
-  private def active_friend_with?(a_member)
-    active?(a_member) && !blocked?(a_member) && friend_with?(a_member)
-  end
-
-  private def requesting_friend_with?(a_member)
-    a_member.member_status == 0 && active?(a_member)
-  end
-
-  private def following?(a_member)
-    a_member.member_following == true && !friend_with?(a_member) && !a_member.citizen?
-  end
-
-  private def followed_by?(a_member)
-    a_member.member_following == true && !friend_with?(a_member)
-  end
-
-  private def being_requested_friend_by?(a_member)
-    a_member.member_status == 2 && active?(a_member)
-  end
-
-  private def blocked_friend?(a_member)
-    active?(a_member) && blocked?(a_member) && friend_with?(a_member)
   end
 
   private def ids_for(list)
