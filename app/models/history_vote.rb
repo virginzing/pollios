@@ -16,6 +16,8 @@
 
 class HistoryVote < ActiveRecord::Base
 
+  include HistoryVoteAdmin
+
   belongs_to :member, touch: true, counter_cache: true
   belongs_to :poll
   belongs_to :poll_series
@@ -35,38 +37,6 @@ class HistoryVote < ActiveRecord::Base
 
   def self.get_gender_analysis(poll_id, choice_id, gender_type)
     HistoryVote.where("poll_id = ? AND choice_id = ?", poll_id, choice_id).has_gender(gender_type)
-  end
-
-  rails_admin do
-    list do
-      filters [:member, :poll, :choice]
-      field :id
-
-      field :member do
-        searchable :fullname
-        pretty_value do
-          %{<a href="/admin/member/#{value.id}">#{value.fullname}</a>}.html_safe
-        end
-      end
-
-      field :poll
-
-      field :choice do
-        searchable :answer
-        pretty_value do
-          %{<a href="/admin/choice/#{value.id}">#{value.answer}</a>}.html_safe
-        end
-      end
-      field :data_analysis
-      field :surveyor_id
-      field :show_result
-      
-      field :created_at do
-        pretty_value do
-          ActionController::Base.helpers.time_ago_in_words(bindings[:object].created_at) + ' ago'
-        end
-      end
-    end
   end
 
 end

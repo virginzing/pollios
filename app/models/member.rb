@@ -66,6 +66,7 @@ class Member < ActiveRecord::Base
   # extend FriendlyId
   include PgSearch
   include MemberHelper
+  include MemberAdmin
   attr_accessor :list_email, :file, :company_id, :redeemer, :feedback
 
   rolify
@@ -73,10 +74,7 @@ class Member < ActiveRecord::Base
   # has_paper_trail
 
   # multisearchable :against => [:fullname, :username, :email]
-  pg_search_scope :searchable_member, :against => [:fullname, :email],
-                  :using => {
-                    :trigram => { :threshold => 0.1 }
-                  }
+  pg_search_scope :searchable_member, against: [:fullname, :email], using: { trigram: { threshold: 0.1 } }
 
   mount_uploader :avatar, MemberUploader
   mount_uploader :cover, MemberUploader
@@ -92,7 +90,7 @@ class Member < ActiveRecord::Base
   has_many :member_invite_codes, dependent: :destroy
   has_many :member_un_recomments, dependent: :destroy
 
-  has_many :history_view_questionnaires, -> { order("history_view_questionnaires.created_at DESC") }, dependent: :destroy
+  has_many :history_view_questionnaires, -> { order('history_view_questionnaires.created_at DESC') }, dependent: :destroy
   has_many :questionnaire_viewed, through: :history_view_questionnaires, source: :poll_series
 
   has_one :company, dependent: :destroy
@@ -107,18 +105,18 @@ class Member < ActiveRecord::Base
   has_many :apn_devices, class_name: 'Apn::Device', dependent: :destroy
 
   has_many :sent_notifies, class_name: 'NotifyLog', foreign_key: 'sender_id', dependent: :destroy
-  has_many :received_notifies, -> { includes :sender }, class_name: 'NotifyLog',  foreign_key: 'recipient_id', dependent: :destroy
+  has_many :received_notifies, -> { includes :sender }, class_name: 'NotifyLog', foreign_key: 'recipient_id', dependent: :destroy
 
   has_many :sent_reports, class_name: 'MemberReportMember', foreign_key: 'reporter_id', dependent: :destroy
   has_many :get_reportee, -> { includes :reporter }, class_name: 'MemberReportMember', foreign_key: 'reportee_id', dependent: :destroy
 
   # belongs_to :province, inverse_of: :members
 
-  has_many :follower , -> { where("following = 't' AND status != 1") }, foreign_key: "followed_id", class_name: "Friend"
+  has_many :follower, -> { where("following = 't' AND status != 1") }, foreign_key: 'followed_id', class_name: 'Friend'
   has_many :get_follower, through: :follower, source: :follower
 
-  has_many :following, -> { where("following = 't' AND status != 1") }, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
-  has_many :get_following, -> { where('members.member_type = 1 OR members.member_type = 2') } ,through: :following, source: :followed
+  has_many :following, -> { where("following = 't' AND status != 1") }, foreign_key: 'follower_id', class_name: 'Friend', dependent: :destroy
+  has_many :get_following, -> { where('members.member_type = 1 OR members.member_type = 2') }, through: :following, source: :followed
 
   has_many :history_views, dependent: :destroy
 
@@ -128,21 +126,21 @@ class Member < ActiveRecord::Base
   has_many :groups, through: :group_members, source: :group
   # has_many :groups, through: :group_members, source: :group, dependent: :destroy
 
-  has_many :group_active, -> { where("group_members.active = ?", true) } , dependent: :destroy, class_name: "GroupMember"
-  has_many :get_group_active , through: :group_active, source: :group
+  has_many :group_active, -> { where('group_members.active = ?', true) }, dependent: :destroy, class_name: 'GroupMember'
+  has_many :get_group_active, through: :group_active, source: :group
 
-  has_many :group_inactive, -> { where("group_members.active = ?", false) } , dependent: :destroy, class_name: "GroupMember"
-  has_many :get_group_inactive , through: :group_inactive, source: :group
+  has_many :group_inactive, -> { where('group_members.active = ?', false) }, dependent: :destroy, class_name: 'GroupMember'
+  has_many :get_group_inactive, through: :group_inactive, source: :group
 
 
-  has_many :your_request, -> { where(status: 0, active: true) }, foreign_key: "follower_id", class_name: "Friend"
+  has_many :your_request, -> { where(status: 0, active: true) }, foreign_key: 'follower_id', class_name: 'Friend'
   has_many :get_your_request, through: :your_request, source: :followed
 
-  has_many :friend_request, -> { where(status: 2, active: true) }, foreign_key: "follower_id", class_name: "Friend"
+  has_many :friend_request, -> { where(status: 2, active: true) }, foreign_key: 'follower_id', class_name: 'Friend'
   has_many :get_friend_request, through: :friend_request, source: :followed
 
-  has_many :friends, foreign_key: "follower_id", class_name: "Friend", dependent: :destroy
-  has_many :get_friends,  through: :friends, source: :followed
+  has_many :friends, foreign_key: 'follower_id', class_name: 'Friend', dependent: :destroy
+  has_many :get_friends, through: :friends, source: :followed
 
   has_many :friend_active, -> { where(status: 1, active: true, block: false) }, foreign_key: "follower_id", class_name: "Friend"
   has_many :get_friend_active, through: :friend_active , source: :followed
@@ -235,92 +233,6 @@ class Member < ActiveRecord::Base
   FRIEND_LIMIT = 1000
 
   self.per_page = 20
-
-  rails_admin do
-
-    configure :new_avatar do
-      pretty_value do
-        bindings[:view].tag(:img, { :src => Member.check_image_avatar(bindings[:object].avatar), :class => 'img-polaroid', width: "50px", height: "50px"})
-      end
-    end
-
-    list do
-      filters [:gender, :member_type, :fullname, :email]
-      field :id
-      field :new_avatar
-      field :fullname
-      field :username
-      field :email
-      field :gender do
-        filterable true
-        queryable false
-      end
-      field :member_type do
-        filterable true
-        queryable false
-      end
-      field :created_at
-    end
-
-    configure :follower do
-      visible(false)
-    end
-
-    create do
-      field :email
-      field :fullname
-      field :username
-      field :gender
-      field :member_type
-      field :friend_limit
-      field :birthday
-      field :province
-      field :avatar
-      field :key_color
-    end
-
-    edit do
-      field :email do
-       read_only true
-      end
-      field :fullname
-      field :username
-      field :gender
-      field :member_type
-      field :friend_limit
-      field :birthday
-      field :province
-      field :avatar, :carrierwave
-      field :cover, :carrierwave
-      field :cover_preset
-      field :description
-      field :status_account
-      field :blacklist_last_at
-      field :blacklist_count
-      field :ban_last_at
-      field :point
-      field :subscription
-      field :subscribe_last
-      field :subscribe_expire
-      field :bypass_invite
-      field :approve_brand
-      field :approve_company
-      field :waiting
-      field :first_signup
-      field :public_id
-      field :fb_id
-      field :sync_facebook
-      field :show_recommend
-      field :key_color
-      field :show_search
-    end
-
-    show do
-      include_all_fields
-      exclude_fields :avatar
-    end
-
-  end
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
