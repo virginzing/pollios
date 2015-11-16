@@ -77,14 +77,14 @@ class Friend < ActiveRecord::Base
           find_invitee_new_record = true
         end
 
-        unless find_invitee_new_record
+        if !find_invitee_new_record
           if find_invitee.invitee?
             find_invitee.update!(status: :friend)
             find_invite.update!(status: :friend)
 
             AddFriendWorker.perform_async(@friend.id, @member.id, { accept_friend: true, action: ACTION[:become_friend] } ) unless Rails.env.test?
           else
-            unless find_invitee.friend?
+            if !find_invitee.friend?
               find_invitee.update!(status: :invitee)
             end
           end
