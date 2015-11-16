@@ -7,20 +7,22 @@ class Member::MemberAction
     @options = options
   end
 
+  private def can_add_friend_with?(a_member)
+    return false, "You can't add yourself as a friend." if member.id == a_member.id
+
+    list = Member::MemberList.new(member)
+    return false, "You and #{a_member.get_name} are already friends." if list.already_friend_with?(a_member)
+    return false, "You already sent friend request to #{a_member.get_name}" if list.already_sent_request_to?(a_member)
+
+    [true, '']
+  end
+
   def add_friend(a_member)
-    if member.id == a_member.id
-      fail ExceptionHandler::UnprocessableEntity, "You can't add yourself as a friend."
-    end
-    
-    member_list = Member::MemberList.new(member)
+    can_add_friend, message = can_add_friend_with?(a_member)
+    fail message unless can_add_friend
 
-    if member_list.already_friend_with?(a_member)
-      fail ExceptionHandler::UnprocessableEntity, "You and #{a_member.get_name} are already friends."
-    elsif member_list.already_sent_request_to?(a_member)
-      fail ExceptionHandler::UnprocessableEntity, "You already sent friend request to #{a_member.get_name}"
-    end
-
-    do_add_friend(a_member)
+    # do_add_friend(a_member)
+    # do_accept_friend_from(a_member)
   end
 
   private def do_add_friend(a_member)
