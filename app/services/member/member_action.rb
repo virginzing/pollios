@@ -21,25 +21,35 @@ class Member::MemberAction
     can_add_friend, message = can_add_friend_with?(a_member)
     fail message unless can_add_friend
 
-    # do_add_friend(a_member)
+    do_add_friend(a_member)
     # do_accept_friend_from(a_member)
   end
 
   private def do_add_friend(a_member)
-    need_to_invite = !invitation_already_exists?(a_member)
-    need_to_invite
+    need_to_invite, member_relation = query_relationship_between(member, a_member)
+    if need_to_invite
+      send_friend_request_to(a_member, action: ACTION[:request_friend])
+    else
+      if member_relation.invitee?
+      else
+      end
+    end
   end
 
-  private def invitation_already_exists?(a_member)
-    invitation_exists = true
-    Friend.where(follower: member, followed: a_member).first_or_initialize do |member_relation|
-      member_relation.follower = member
-      member_relation.followed = a_member
+  private def send_add_friend_request_to(a_member, options = {})
+    AddFriendWorker.perform_async(member.id, a_member.id, options) unless Rails.env.test?
+  end
+
+  private def query_relationship_between(src_member, dst_member)
+    is_new_relationship = false
+    relation = Friend.where(follower: src_member, followed: dst_member).first_or_initialize do |member_relation|
+      member_relation.follower = src_member
+      member_relation.followed = dst_member
       member_relation.status = :invite
-      member_relation.save!
-      invitation_exists = false
+      # member_relation.save!
+      is_new_relationship = true
     end
-    invitation_exists
+    [is_new_relationship, relation]
   end
 
   def unfriend(a_member)

@@ -55,6 +55,14 @@ class Friend < ActiveRecord::Base
           find_invite_new_record = true
         end
 
+        find_invitee = where(follower: @friend, followed: @member).first_or_initialize do |friend|
+          friend.follower = @friend
+          friend.followed = @member
+          friend.status = :invitee
+          friend.save!
+          find_invitee_new_record = true
+        end
+
         if find_invite_new_record
           AddFriendWorker.perform_async(@member.id, @friend.id, { action: ACTION[:request_friend] } ) unless Rails.env.test?
         else
@@ -67,14 +75,6 @@ class Friend < ActiveRecord::Base
             find_invite.update!(status: :invite)
             AddFriendWorker.perform_async(@member.id, @friend.id, {action: ACTION[:request_friend]} ) unless Rails.env.test? ## option
           end
-        end
-
-        find_invitee = where(follower: @friend, followed: @member).first_or_initialize do |friend|
-          friend.follower = @friend
-          friend.followed = @member
-          friend.status = :invitee
-          friend.save!
-          find_invitee_new_record = true
         end
 
         if !find_invitee_new_record
