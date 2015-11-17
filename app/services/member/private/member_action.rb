@@ -31,10 +31,10 @@ module Member::Private::MemberAction
 
   def process_outgoing_friend_request(a_member)
     if @new_outgoing
-      puts '@LOG NEW_OUTGOING'
+      # puts '@LOG NEW_OUTGOING'
       send_add_friend_request(member, a_member)
     else
-      puts '@LOG EXISTING_OUTGOING'
+      # puts '@LOG EXISTING_OUTGOING'
       if @outgoing_relation.invitee?
         accept_friendship(member, a_member)
       else
@@ -46,7 +46,7 @@ module Member::Private::MemberAction
 
   def process_incoming_friend_request(a_member)
     return if @new_incoming
-    puts '@LOG EXISTING_INCOMING'
+    # puts '@LOG EXISTING_INCOMING'
     if @incoming_relation.invitee?
       accept_friendship(a_member, member)
     else

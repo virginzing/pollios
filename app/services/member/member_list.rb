@@ -1,4 +1,5 @@
 class Member::MemberList
+  include Member::Private::MemberList
   include Member::FriendRelationHelper
 
   attr_reader :member
@@ -120,14 +121,6 @@ class Member::MemberList
     member_cache.clear_list_followers
   end
 
-  private def ids_for(list)
-    list.map(&:id)
-  end
-
-  private def ids_include?(ids_list, id)
-    ids_for(ids_list).include?(id)
-  end
-
   # TODO: Privatize these two cached-methods.
   def cached_all_friends
     Rails.cache.fetch("member/#{member.id}/friends") do
@@ -139,26 +132,6 @@ class Member::MemberList
     Rails.cache.fetch("member/#{member.id}/followers") do
       all_followers
     end
-  end
-
-  private def all_friends
-    Member.joins('inner join friends on members.id = friends.followed_id') \
-          .where("friends.follower_id = #{member.id}") \
-          .select('members.*, friends.active as member_active, friends.block as member_block, 
-                      friends.status as member_status, friends.following as member_following')
-          .to_a
-  end
-
-  private def all_followers
-    Member.joins('inner join friends on members.id = friends.follower_id') \
-          .where("friends.followed_id = #{member.id}") \
-          .select('members.*, friends.active as member_active, friends.block as member_block, 
-                        friends.status as member_status, friends.following as member_following')
-          .to_a
-  end
-
-  private def query_friend_using_facebook
-    Member.with_status_account(:normal).where(fb_id: member.list_fb_id).order('fullname asc')
   end
   
 end
