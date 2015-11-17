@@ -8,7 +8,7 @@ module Pollios::V1::MemberAPI
       end
 
       def current_member_action
-        @current_member_action ||= Member::MemberAction.new(current_member)
+        @current_member_action ||= Member::MemberAction.new(current_member, member)
       end
     end
 
@@ -21,7 +21,7 @@ module Pollios::V1::MemberAPI
 
         desc 'send add friend request to member_id'
         post '/add_friend' do
-          current_member_action.add_friend(member)
+          current_member_action.add_friend
         end
       end
     end
