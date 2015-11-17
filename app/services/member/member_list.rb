@@ -142,19 +142,19 @@ class Member::MemberList
   end
 
   private def all_friends
-    @all_friends ||= Member.joins('inner join friends on members.id = friends.followed_id') \
-                     .where("friends.follower_id = #{member.id}") \
-                     .select('members.*, friends.active as member_active, friends.block as member_block, 
+    Member.joins('inner join friends on members.id = friends.followed_id') \
+          .where("friends.follower_id = #{member.id}") \
+          .select('members.*, friends.active as member_active, friends.block as member_block, 
                       friends.status as member_status, friends.following as member_following')
-                     .to_a
+          .to_a
   end
 
   private def all_followers
-    @all_followers ||= Member.joins('inner join friends on members.id = friends.follower_id') \
-                       .where("friends.followed_id = #{member.id}") \
-                       .select('members.*, friends.active as member_active, friends.block as member_block, 
+    Member.joins('inner join friends on members.id = friends.follower_id') \
+          .where("friends.followed_id = #{member.id}") \
+          .select('members.*, friends.active as member_active, friends.block as member_block, 
                         friends.status as member_status, friends.following as member_following')
-                       .to_a
+          .to_a
   end
 
   private def query_friend_using_facebook

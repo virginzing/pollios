@@ -1,4 +1,6 @@
-module Member::MemberActionPrivate
+module Member::Private::MemberAction
+  include SymbolHash
+
   private
   def can_add_friend_with?(a_member)
     return false, "You can't add yourself as a friend." if member.id == a_member.id

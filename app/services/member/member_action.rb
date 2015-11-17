@@ -1,6 +1,5 @@
 class Member::MemberAction
-  include SymbolHash
-  include Member::MemberActionPrivate
+  include Member::Private::MemberAction
 
   attr_reader :member
 
