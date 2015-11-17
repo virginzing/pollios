@@ -10,7 +10,7 @@ class Member::MemberAction
 
   def add_friend(a_member)
     can_add_friend, message = can_add_friend_with?(a_member)
-    fail message unless can_add_friend
+    fail ExceptionHandler::UnprocessableEntity, message unless can_add_friend
 
     @new_outgoing, @outgoing_relation = query_relationship_between(member, a_member, :invite)
     @new_incoming, @incoming_relation = query_relationship_between(a_member, member, :invitee)
