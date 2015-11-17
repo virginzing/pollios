@@ -26,32 +26,39 @@ module Pollios::V1::MemberAPI
 
         desc 'unfriend member_id'
         post '/unfriend' do
+          current_member_action.unfriend
         end
 
         desc 'block member_id'
         post '/block' do
+          current_member_action.block
         end
 
         desc 'unblock member_id'
         post '/unblock' do
+          current_member_action.unblock
         end
 
         desc 'follow member_id'
         post '/follow' do
+          current_member_action.follow
         end
 
         desc 'unfollow member_id'
         post '/unfollow' do
+          current_member_action.unfollow
         end
 
         # Maybe these two should really belong to 'request'-api ....
         # but putting them here will do for now
         desc 'accept friend request from member_id'
         post '/accept_friend' do
+          current_member_action.accept_friend
         end
 
         desc 'deny friend request from member_id'
         post '/deny_friend' do
+          current_member_action.deny_friend
         end
 
       end
