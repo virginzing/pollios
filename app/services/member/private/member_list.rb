@@ -1,6 +1,7 @@
 module Member::Private::MemberList
 
   private
+  
   def ids_for(list)
     list.map(&:id)
   end

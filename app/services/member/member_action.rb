@@ -1,4 +1,5 @@
 class Member::MemberAction
+  include Member::Private::MemberActionGuard
   include Member::Private::MemberAction
 
   attr_reader :member, :a_member
@@ -12,9 +13,6 @@ class Member::MemberAction
   def add_friend
     can_add_friend, message = can_add_friend?
     fail ExceptionHandler::UnprocessableEntity, message unless can_add_friend
-
-    @new_outgoing, @outgoing_relation = first_or_initialize_relationship_between(member, a_member, :invite)
-    @new_incoming, @incoming_relation = first_or_initialize_relationship_between(a_member, member, :invitee)
 
     process_friend_requests_transaction
   end
