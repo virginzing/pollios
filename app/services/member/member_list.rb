@@ -54,6 +54,15 @@ class Member::MemberList
     cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) }
   end
 
+  # NOTE: For debuggings and loggings Member::MemberAction's methods
+  def friends_ids
+    ids_for(friends).sort
+  end
+
+  def outgoing_requests_ids
+    ids_for(outgoing_requests).sort
+  end
+
   # NOTE: The following getters are for compatibility with legacy code
   # TODO: Remove them to use proper getter methods above
   def active
