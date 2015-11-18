@@ -56,8 +56,8 @@ module Member::Private::MemberAction
   end
 
   def process_unfriend_request_with
-    outgoing_friendship = find_relationship_between(member, a_member)
-    incoming_friendship = find_relationship_between(a_member, member)
+    @outgoing_friendship = find_relationship_between(member, a_member)
+    @incoming_friendship = find_relationship_between(a_member, member)
 
     return unless outgoing_friendship && incoming_friendship
 
@@ -68,12 +68,27 @@ module Member::Private::MemberAction
     clear_followers_caches_for_members
   end
 
-  # TODO: Finish this.
   def process_outgoing_unfriend_relation
+    if !@outgoing_friendship.following
+      @incoming_friendship.update!(status: :nofriend)
+      @outgoing_friendship.destroy
+    else
+      @outgoing_friendship.update!(status: :nofriend)
+    end
   end
 
-  # TODO: Finish this.
   def process_incoming_unfriend_relation
+    if !@incoming_friendship.following
+      existing_friendship = Friend.where(follower: member, followed: a_member).first
+
+      if existing_friendship.present?
+        existing_friendship.update!(status: :nofriend)
+      end
+
+      @incoming_friendship.destroy
+    else
+      @incoming_friendship.update!(status: :nofriend)
+    end
   end
 
   def send_add_friend_request(src_member, dst_member, options = { action: ACTION[:request_friend] })
