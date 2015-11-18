@@ -7,6 +7,10 @@ module Member::Private::MemberAction
     @member_list ||= Member::MemberList.new(member)
   end
 
+  def both_members
+    [member, a_member]
+  end
+
   def process_friend_requests_transaction
     @new_outgoing, @outgoing_relation = first_or_initialize_relationship_between(member, a_member, :invite)
     @new_incoming, @incoming_relation = first_or_initialize_relationship_between(a_member, member, :invitee)
@@ -77,11 +81,11 @@ module Member::Private::MemberAction
   end
 
   def clear_friends_caches_for_members
-    [member, a_member].each { |m| FlushCached::Member.new(m).clear_list_friends }
+    both_members.each { |m| FlushCached::Member.new(m).clear_list_friends }
   end
 
   def clear_followers_caches_for_members
-    [member, a_member].each { |m| FlushCached::Member.new(m).clear_list_followers }
+    both_members.each { |m| FlushCached::Member.new(m).clear_list_followers }
   end
 
   def find_relationship_between(src_member, dst_member)
