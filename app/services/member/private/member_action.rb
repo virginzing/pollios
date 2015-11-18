@@ -91,6 +91,9 @@ module Member::Private::MemberAction
     end
   end
 
+  def process_following
+  end
+
   def send_add_friend_request(src_member, dst_member, options = { action: ACTION[:request_friend] })
     AddFriendWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
   end

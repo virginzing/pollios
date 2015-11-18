@@ -18,6 +18,10 @@ module Member::Private::MemberActionGuard
     member_list.not_friend_with?(a_member)
   end
 
+  def already_follow
+    true
+  end
+
   def can_add_friend?
     return false, "You can't add yourself as a friend." if same_member
     return false, "You and #{a_member.get_name} are already friends." if already_friend
@@ -27,6 +31,11 @@ module Member::Private::MemberActionGuard
 
   def can_unfriend?
     return false, "You are not friends with #{friend.get_name}." if not_friend
+    [true, '']
+  end
+
+  def can_follow?
+    return false, 'You already followed this account.' if already_follow
     [true, '']
   end
 

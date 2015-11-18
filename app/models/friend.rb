@@ -153,7 +153,7 @@ class Friend < ActiveRecord::Base
     FlushCached::Member.new(member).clear_list_friends
     FlushCached::Member.new(friend).clear_list_followers
 
-    Activity.create_activity_friend( member, friend ,'Follow')
+    Activity.create_activity_friend(member, friend, 'Follow')
     friend
   end
 

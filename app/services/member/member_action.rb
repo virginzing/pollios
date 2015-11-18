@@ -31,6 +31,10 @@ class Member::MemberAction
   end
 
   def follow
+    can_follow, message = can_follow?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+
+    process_following
   end
 
   def unfollow
