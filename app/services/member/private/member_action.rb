@@ -97,11 +97,17 @@ module Member::Private::MemberAction
     if outgoing_following.present?
       outgoing_following.update(following: true)
     else
-      Friend.create!(follower_id: member, followed_id: a_member, status: :nofriend, following: true)
+      Friend.create!(follower_id: member.id, followed_id: a_member.id, status: :nofriend, following: true)
     end
 
-    FlushCached::Member.new(member).clear_list_friends
-    FlushCached::Member.new(a_member).clear_list_followers
+    clear_following_caches_for_members
+  end
+
+  def process_unfollow
+    outgoing_following = find_relationship_between(member, a_member)
+    outgoing_following.destroy
+
+    clear_following_caches_for_members
   end
 
   def send_add_friend_request(src_member, dst_member, options = { action: ACTION[:request_friend] })
@@ -114,6 +120,11 @@ module Member::Private::MemberAction
 
   def clear_followers_caches_for_members
     both_members.each { |m| FlushCached::Member.new(m).clear_list_followers }
+  end
+
+  def clear_following_caches_for_members
+    FlushCached::Member.new(member).clear_list_friends
+    FlushCached::Member.new(a_member).clear_list_followers
   end
 
   def find_relationship_between(src_member, dst_member)

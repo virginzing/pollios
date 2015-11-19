@@ -38,6 +38,10 @@ class Member::MemberAction
   end
 
   def unfollow
+    can_unfollow, message = can_unfollow?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_unfollow
+      
+    process_unfollow
   end
 
   def accept_friend

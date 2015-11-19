@@ -22,6 +22,14 @@ module Member::Private::MemberActionGuard
     member_list.already_follow_with?(a_member)
   end
 
+  def not_following
+    member_list.not_following_with?(a_member)
+  end
+
+  def not_official_account
+    a_member.member_type == 'citizen'
+  end
+
   def can_add_friend?
     return false, "You can't add yourself as a friend." if same_member
     return false, "You and #{a_member.get_name} are already friends." if already_friend
@@ -36,6 +44,12 @@ module Member::Private::MemberActionGuard
 
   def can_follow?
     return false, 'You already followed this account.' if already_follow
+    return false, 'This member is not official account.' if not_official_account
+    [true, '']
+  end
+
+  def can_unfollow?
+    return false, 'You are not following this account.' if not_following
     [true, '']
   end
 

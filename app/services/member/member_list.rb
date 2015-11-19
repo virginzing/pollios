@@ -28,11 +28,15 @@ class Member::MemberList
   end
 
   def not_friend_with?(a_member)
-    !already_friend_with(a_member)
+    !already_friend_with?(a_member)
   end
 
   def already_follow_with?(a_member)
     ids_include?(followings, a_member.id)
+  end
+
+  def not_following_with?(a_member)
+    !already_follow_with?(a_member)
   end
 
   def friends
