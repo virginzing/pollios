@@ -19,7 +19,7 @@ module Member::Private::MemberActionGuard
   end
 
   def already_follow
-    true
+    member_list.already_follow_with?(a_member)
   end
 
   def can_add_friend?

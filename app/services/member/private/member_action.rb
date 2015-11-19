@@ -92,6 +92,16 @@ module Member::Private::MemberAction
   end
 
   def process_following
+    outgoing_following = find_relationship_between(member, a_member)
+
+    if outgoing_following.present?
+      outgoing_following.update(following: true)
+    else
+      Friend.create!(follower_id: member, followed_id: a_member, status: :nofriend, following: true)
+    end
+
+    FlushCached::Member.new(member).clear_list_friends
+    FlushCached::Member.new(a_member).clear_list_followers
   end
 
   def send_add_friend_request(src_member, dst_member, options = { action: ACTION[:request_friend] })

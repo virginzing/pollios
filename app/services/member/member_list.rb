@@ -31,6 +31,10 @@ class Member::MemberList
     !already_friend_with(a_member)
   end
 
+  def already_follow_with?(a_member)
+    ids_include?(followings, a_member.id)
+  end
+
   def friends
     cached_all_friends.select { |a_member| a_member if friend_with?(a_member) }
   end
