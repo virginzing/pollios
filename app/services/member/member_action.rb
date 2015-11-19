@@ -40,20 +40,36 @@ class Member::MemberAction
   def unfollow
     can_unfollow, message = can_unfollow?
     fail ExceptionHandler::UnprocessableEntity, message unless can_unfollow
-      
+
     process_unfollow
   end
 
   def accept_friend
+    can_follow, message = can_follow?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+
+    process_following
   end
 
   def deny_friend
+    can_follow, message = can_follow?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+
+    process_following
   end
 
   def block
+    can_follow, message = can_follow?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+
+    process_following
   end
 
   def unblock
+    can_follow, message = can_follow?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+
+    process_following
   end
 
 end
