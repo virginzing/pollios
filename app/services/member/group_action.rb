@@ -14,16 +14,16 @@ class Member::GroupAction
     @group = Group.new(
       member_id: @member.id,
       name: group_params[:name],
-            group_type: :normal,                   # not sure about this, should generalize
-            photo_group: group_params[:photo_group],
-            description: group_params[:description],
-            cover: group_params[:cover],
-            cover_preset: group_params[:cover_preset],
-            public: group_params[:public].to_b,
-            admin_post_only: group_params[:admin_post_only].to_b,
-            authorize_invite: :everyone,
-            need_approve: group_params[:need_approve]
-            )
+      group_type: :normal, # not sure about this, should generalize
+      photo_group: group_params[:photo_group],
+      description: group_params[:description],
+      cover: group_params[:cover],
+      cover_preset: group_params[:cover_preset],
+      public: group_params[:public].to_b,
+      admin_post_only: group_params[:admin_post_only].to_b,
+      authorize_invite: :everyone,
+      need_approve: group_params[:need_approve]
+    )
 
     if @group.save!
       set_group_cover(group_params[:cover])
