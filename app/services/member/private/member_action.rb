@@ -18,27 +18,27 @@ module Member::Private::MemberAction
     Friend.transaction do
       process_outgoing_friend_request
       process_incoming_friend_request
-
-      clear_friends_caches_for_members
     end
+
+    clear_friends_caches_for_members
   end
 
   def accept_friendship(src_member, dst_member)
     @outgoing_relation.update!(status: :friend)
     @incoming_relation.update!(status: :friend)
 
-    send_add_friend_request(src_member, dst_member, accept_friend: true, action: ACTION[:become_friend])
+    send_friends_notification(src_member, dst_member, accept_friend: true, action: ACTION[:become_friend])
   end
 
   def process_outgoing_friend_request
     if @new_outgoing
-      send_add_friend_request(member, a_member)
+      send_friends_notification(member, a_member)
     else
       if @outgoing_relation.invitee?
         accept_friendship(member, a_member)
       else
         @outgoing_relation.update!(status: :invite)
-        send_add_friend_request(member, a_member)
+        send_friends_notification(member, a_member)
       end
     end
   end
@@ -94,7 +94,7 @@ module Member::Private::MemberAction
   def process_following
   end
 
-  def send_add_friend_request(src_member, dst_member, options = { action: ACTION[:request_friend] })
+  def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
     AddFriendWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
   end
 
