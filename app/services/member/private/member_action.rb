@@ -137,6 +137,17 @@ module Member::Private::MemberAction
     end
   end
 
+  def process_unblock
+    outgoing_relation = find_relationship_between(member, a_member)
+    incoming_relation = find_relationship_between(a_member, member)
+
+    outgoing_relation.update(block: false)
+    incoming_relation.update(visible_poll: true)
+
+    clear_friends_caches_for_members
+    clear_followers_caches_for_members
+  end
+
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
     AddFriendWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
   end

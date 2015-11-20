@@ -43,6 +43,10 @@ class Member::MemberList
     ids_include?(blocks, a_member.id)
   end
 
+  def not_blocking_with?(a_member)
+    !already_block_with?(a_member)
+  end
+    
   def friends
     cached_all_friends.select { |a_member| a_member if friend_with?(a_member) }
   end

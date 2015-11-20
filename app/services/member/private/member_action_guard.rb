@@ -34,6 +34,10 @@ module Member::Private::MemberActionGuard
     member_list.already_block_with?(a_member)
   end
 
+  def not_blocking
+    member_list.not_blocking_with?(a_member)
+  end
+
   def can_add_friend?
     return false, "You can't add yourself as a friend." if same_member
     return false, "You and #{a_member.get_name} are already friends." if already_friend
@@ -60,6 +64,11 @@ module Member::Private::MemberActionGuard
   def can_block?
     return false, "You can't block yourself." if same_member
     return false, "You already blocked #{a_member.get_name}." if already_block
+    [true, '']
+  end
+
+  def can_unblock?
+    return false, "You are not blocking #{a_member.get_name}." if not_blocking
     [true, '']
   end
 
