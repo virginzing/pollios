@@ -46,17 +46,20 @@ module Member::Private::MemberActionGuard
   end
 
   def can_unfriend?
+    return false, "You can't unfriend yourself." if same_member
     return false, "You are not friends with #{a_member.get_name}." if not_friend
     [true, '']
   end
 
   def can_follow?
+    return false, "You can't follow yourself." if same_member
     return false, 'You already followed this account.' if already_follow
     return false, 'This member is not official account.' if not_official_account
     [true, '']
   end
 
   def can_unfollow?
+    return false, "You can't unfollow yourself." if same_member
     return false, 'You are not following this account.' if not_following
     [true, '']
   end
@@ -68,6 +71,7 @@ module Member::Private::MemberActionGuard
   end
 
   def can_unblock?
+    return false, "You can't unblock yourself." if same_member
     return false, "You are not blocking #{a_member.get_name}." if not_blocking
     [true, '']
   end
