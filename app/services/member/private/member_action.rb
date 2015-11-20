@@ -55,17 +55,19 @@ module Member::Private::MemberAction
     end
   end
 
-  def process_unfriend_request_with
+  def process_unfriend_request
     @outgoing_friendship = find_relationship_between(member, a_member)
     @incoming_friendship = find_relationship_between(a_member, member)
 
-    return unless outgoing_friendship && incoming_friendship
+    return unless @outgoing_friendship && @incoming_friendship
 
     process_outgoing_unfriend_relation
     process_incoming_unfriend_relation
 
     clear_friends_caches_for_members
     clear_followers_caches_for_members
+
+    return
   end
 
   def process_outgoing_unfriend_relation
