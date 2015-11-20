@@ -121,6 +121,8 @@ module Member::Private::MemberAction
     
     clear_friends_caches_for_members
     clear_followers_caches_for_members
+
+    return
   end
 
   def process_outgoing_block
@@ -148,6 +150,8 @@ module Member::Private::MemberAction
 
     clear_friends_caches_for_members
     clear_followers_caches_for_members
+
+    return
   end
 
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
