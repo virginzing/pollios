@@ -39,6 +39,10 @@ class Member::MemberList
     !already_follow_with?(a_member)
   end
 
+  def already_block_with?(a_member)
+    ids_include?(blocks, a_member.id)
+  end
+
   def friends
     cached_all_friends.select { |a_member| a_member if friend_with?(a_member) }
   end
@@ -52,7 +56,7 @@ class Member::MemberList
   end
 
   def blocks
-    cached_all_friends.select { |a_member| a_member if blocked_friend?(a_member) }
+    cached_all_friends.select { |a_member| a_member if blocked?(a_member) }
   end
 
   def active_friends
