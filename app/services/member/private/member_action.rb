@@ -156,14 +156,29 @@ module Member::Private::MemberAction
     return
   end
 
-  def process_accept_friend
-    outgoing_friendship = find_relationship_between(member, a_member)
-    incoming_friendship = find_relationship_between(a_member, member)
+  def process_accept_friend_request
+    outgoing_relation = find_relationship_between(member, a_member)
+    incoming_relation = find_relationship_between(a_member, member)
 
-    outgoing_friendship.update(active: true, status: :friend)
-    incoming_friendship.update(active: true, status: :friend)
+    outgoing_relation.update(active: true, status: :friend)
+    incoming_relation.update(active: true, status: :friend)
 
     send_friends_notification(member, a_member, action: ACTION[:become_friend])
+
+    clear_friends_caches_for_members
+    clear_followers_caches_for_members
+
+    return
+  end
+
+  def process_deny_friend_request
+    outgoing_relation = find_relationship_between(member, a_member)
+    incoming_relation = find_relationship_between(a_member, member)
+
+    outgoing_relation.update(status: :nofriend)
+    incoming_relation.update(status: :nofriend)
+
+    NotifyLog.check_update_cancel_request_friend_deleted(member, a_member)
 
     clear_friends_caches_for_members
     clear_followers_caches_for_members

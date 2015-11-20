@@ -44,18 +44,18 @@ class Member::MemberAction
     process_unfollow
   end
 
-  def accept_friend
-    can_accept_friend, message = can_accept_friend?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_accept_friend
+  def accept_friend_request
+    can_accept_friend_request, message = can_accept_friend_request?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_accept_friend_request
 
-    process_accept_friend
+    process_accept_friend_request
   end
 
-  def deny_friend
-    can_deny_friend, message = can_deny_friend?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_deny_friend
+  def deny_friend_request
+    can_deny_friend_request, message = can_deny_friend_request?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_deny_friend_request
 
-    process_deny_friend
+    process_deny_friend_request
   end
 
   def block

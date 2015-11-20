@@ -49,16 +49,16 @@ module Pollios::V1::MemberAPI
           current_member_action.unfollow
         end
 
-        # Maybe these two should really belong to 'request'-api ....
-        # but putting them here will do for now
-        desc 'accept friend request from member_id'
-        post '/accept_friend' do
-          current_member_action.accept_friend
-        end
+        resource :request do
+          desc 'accept friend request from member_id'
+          post '/accept' do
+            current_member_action.accept_friend_request
+          end
 
-        desc 'deny friend request from member_id'
-        post '/deny_friend' do
-          current_member_action.deny_friend
+          desc 'deny friend request from member_id'
+          post '/deny' do
+            current_member_action.deny_friend_request
+          end
         end
 
       end
