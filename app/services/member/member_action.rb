@@ -59,17 +59,17 @@ class Member::MemberAction
   end
 
   def block
-    can_follow, message = can_follow?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+    can_block, message = can_block?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_block
 
-    process_following
+    process_block
   end
 
   def unblock
-    can_follow, message = can_follow?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+    can_unblock, message = can_unblock?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_unblock
 
-    process_following
+    process_unblock
   end
 
 end
