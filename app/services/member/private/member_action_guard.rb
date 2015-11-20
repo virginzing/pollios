@@ -41,7 +41,8 @@ module Member::Private::MemberActionGuard
   def can_add_friend?
     return false, "You can't add yourself as a friend." if same_member
     return false, "You and #{a_member.get_name} are already friends." if already_friend
-    return false, "You already sent friend request to #{a_member.get_name}" if already_sent_request
+    return false, "You already sent friend request to #{a_member.get_name}." if already_sent_request
+    return false, "You are currently blocking #{a_member.get_name}." if already_block
     [true, '']
   end
 
@@ -55,6 +56,7 @@ module Member::Private::MemberActionGuard
     return false, "You can't follow yourself." if same_member
     return false, 'You already followed this account.' if already_follow
     return false, 'This member is not official account.' if not_official_account
+    return false, "You are currently blocking #{a_member.get_name}." if already_block
     [true, '']
   end
 

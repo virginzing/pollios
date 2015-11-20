@@ -45,17 +45,17 @@ class Member::MemberAction
   end
 
   def accept_friend
-    can_follow, message = can_follow?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+    can_accept_friend, message = can_accept_friend?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_accept_friend
 
-    process_following
+    process_accept_friend
   end
 
   def deny_friend
-    can_follow, message = can_follow?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_follow
+    can_deny_friend, message = can_deny_friend?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_deny_friend
 
-    process_following
+    process_deny_friend
   end
 
   def block
