@@ -21,6 +21,8 @@ module Member::Private::MemberAction
     end
 
     clear_friends_caches_for_members
+
+    return
   end
 
   def accept_friendship(src_member, dst_member)
@@ -147,6 +149,21 @@ module Member::Private::MemberAction
 
     outgoing_relation.update(block: false)
     incoming_relation.update(visible_poll: true)
+
+    clear_friends_caches_for_members
+    clear_followers_caches_for_members
+
+    return
+  end
+
+  def process_accept_friend
+    outgoing_friendship = find_relationship_between(member, a_member)
+    incoming_friendship = find_relationship_between(a_member, member)
+
+    outgoing_friendship.update(active: true, status: :friend)
+    incoming_friendship.update(active: true, status: :friend)
+
+    send_friends_notification(member, a_member, action: ACTION[:become_friend])
 
     clear_friends_caches_for_members
     clear_followers_caches_for_members

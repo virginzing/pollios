@@ -46,6 +46,14 @@ class Member::MemberList
   def not_blocking_with?(a_member)
     !already_block_with?(a_member)
   end
+
+  def not_exist_request?(a_member)
+    !ids_include?(incoming_requests, a_member.id)
+  end
+
+  def friends_over_limit?
+    friend_count >= @member.friend_limit
+  end
     
   def friends
     cached_all_friends.select { |a_member| a_member if friend_with?(a_member) }

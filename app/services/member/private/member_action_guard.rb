@@ -38,6 +38,22 @@ module Member::Private::MemberActionGuard
     member_list.not_blocking_with?(a_member)
   end
 
+  def incoming_friends_over_limit
+    member_list.friends_over_limit?
+  end
+
+  def outgoing_friends_over_limit
+    Member::MemberList.new(a_member).friends_over_limit?
+  end
+
+  def incoming_block
+    Member::MemberList.new(a_member).already_block_with?(member)
+  end
+
+  def not_exist_request
+    member_list.not_exist_request?(a_member)
+  end
+
   def can_add_friend?
     return false, "You can't add yourself as a friend." if same_member
     return false, "You and #{a_member.get_name} are already friends." if already_friend
@@ -75,6 +91,15 @@ module Member::Private::MemberActionGuard
   def can_unblock?
     return false, "You can't unblock yourself." if same_member
     return false, "You are not blocking #{a_member.get_name}." if not_blocking
+    [true, '']
+  end
+
+  def can_accept_friend?
+    return false, 'This request is not existing' if not_exist_request
+    return false, "Your friends has over #{member.friend_limit} people." if incoming_friends_over_limit
+    return false, "#{a_member.get_name} friends has over #{member.friend_limit} people." if outgoing_friends_over_limit
+    return false, "You are currently blocking #{a_member.get_name}." if already_block
+    return false, "You can't accept request at this moment." if incoming_block
     [true, '']
   end
 
