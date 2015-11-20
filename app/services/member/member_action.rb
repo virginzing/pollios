@@ -58,6 +58,13 @@ class Member::MemberAction
     process_deny_friend_request
   end
 
+  def cancel_friend_request
+    can_cancel_friend_request, message = can_cancel_friend_request?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_friend_request
+      
+    process_cancel_friend_request
+  end
+
   def block
     can_block, message = can_block?
     fail ExceptionHandler::UnprocessableEntity, message unless can_block

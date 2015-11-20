@@ -59,6 +59,11 @@ module Pollios::V1::MemberAPI
           post '/deny' do
             current_member_action.deny_friend_request
           end
+
+          desc 'cancel friend request'
+          post '/cancel' do
+            current_member_action.cancel_friend_request
+          end
         end
 
       end

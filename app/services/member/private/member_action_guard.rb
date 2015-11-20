@@ -50,8 +50,12 @@ module Member::Private::MemberActionGuard
     Member::MemberList.new(a_member).already_block_with?(member)
   end
 
-  def not_exist_request
-    member_list.not_exist_request?(a_member)
+  def not_exist_incoming_request
+    member_list.not_exist_incoming_request?(a_member)
+  end
+
+  def not_exist_outgoing_request
+    member_list.not_exist_outgoing_request?(a_member)
   end
 
   def can_add_friend?
@@ -104,7 +108,12 @@ module Member::Private::MemberActionGuard
   end
 
   def can_deny_friend_request?
-    return false, 'This request is not existing.' if not_exist_request
+    return false, 'This request is not existing.' if not_exist_incoming_request
+    [true, '']
+  end
+
+  def can_cancel_friend_request?
+    return false, 'This request is not existing.' if not_exist_outgoing_request
     [true, '']
   end
 

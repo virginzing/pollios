@@ -47,8 +47,12 @@ class Member::MemberList
     !already_block_with?(a_member)
   end
 
-  def not_exist_request?(a_member)
+  def not_exist_incoming_request?(a_member)
     !ids_include?(incoming_requests, a_member.id)
+  end
+
+  def not_exist_outgoing_request?(a_member)
+    !ids_include?(outgoing_requests, a_member.id)
   end
 
   def friends_over_limit?

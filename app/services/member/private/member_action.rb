@@ -186,6 +186,10 @@ module Member::Private::MemberAction
     return
   end
 
+  def process_cancel_friend_request
+    process_deny_friend_request
+  end
+
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
     AddFriendWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
   end
