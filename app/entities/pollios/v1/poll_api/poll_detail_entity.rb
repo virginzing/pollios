@@ -1,7 +1,7 @@
 module Pollios::V1::PollAPI
   class PollDetailEntity < Pollios::V1::BaseEntity
 
-    expose :creator do |obj, opts|
+    expose :creator do |_, _|
       Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
     end
 
@@ -14,7 +14,7 @@ module Pollios::V1::PollAPI
       expose :created_at
     end
 
-    expose :get_vote_max, as: :vote_max, if: -> (object, options) { object.vote_all > 0}
+    expose :get_vote_max, as: :vote_max, if: -> (object, _) { object.vote_all > 0 }
     expose :get_choice_detail, as: :choices
     expose :current_member_voting_detail, as: :voted_detail
 
@@ -39,7 +39,7 @@ module Pollios::V1::PollAPI
     expose :get_creator_must_vote, as: :creator_must_vote
     expose :show_result
     expose :close_status
-    expose :get_original_images, as: :original_images, if: -> (object, options) { object.photo_poll.present? }
+    expose :get_original_images, as: :original_images, if: -> (object, _) { object.photo_poll.present? }
   
     def current_member
       @current_member ||= options[:current_member]
