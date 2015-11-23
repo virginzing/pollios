@@ -15,12 +15,8 @@ module Pollios::V1::CurrentMemberAPI
       expose :ref_no
     end
 
-    expose :campaign, with: CampaignDetailEntity, as: :campaign_detail, if: -> (object, _) { object.reward.present? }
+    expose :campaign, with: CampaignDetailEntity, as: :campaign_detail
     expose :poll, with: CampaignPollDetailEntity, if: -> (object, _) { object.poll.present? }
-
-    def campaign
-      object.reward.campaign
-    end
 
   end
 end
