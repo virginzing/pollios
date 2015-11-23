@@ -9,10 +9,11 @@ module Pollios::V1::CurrentMemberAPI
       expose :created_at
     end
 
+    private
     def sender
       if object.sender.nil?
         Pollios::V1::Shared::MemberEntity.default_pollios_member
-      elsif is_anonymous_vote?
+      elsif voted_as_anonymous?
       
       else
         Pollios::V1::Shared::MemberEntity.represent(object.sender)
@@ -20,35 +21,35 @@ module Pollios::V1::CurrentMemberAPI
     end
 
     def message
-      if type == "Poll"
-        sender_name = object.sender.fullname
-        if action == "Vote" || action == "Create"
-          if is_anonymous?
-            sender_name = "Anonymous"
-          end
+      return poll_message if type == 'Poll'
+      object.message
+    end
 
-          if action == "Vote"
-            action_message = "voted on"
-          else
-            action_message = "asked"
-          end
+    def poll_message
+      return "#{sender_name} #{action_message} \"#{poll_title}\"" if voted_or_asked?
+      object.message 
+    end
 
-          return "#{sender_name} #{action_message} \"#{poll_title}\""
-        end
+    def action_message
+      return 'voted on' if action == 'Vote'
+      'asked'
+    end
 
-        return object.message
-      else
-        return object.message
-      end
+    def sender_name
+      return 'Anonymous' if voted_as_anonymous?
+      object.sender.fullname
     end
 
     def info
       object.custom_properties.except(:worker, :notify, :friend_id, :member_id)
     end
 
-    private
-    def is_anonymous_vote?
-      object.custom_properties[:anonymous] == true && object.custom_properties[:action] == "Vote"
+    def voted_or_asked?
+      action == 'Vote' || action == 'Create'
+    end
+
+    def voted_as_anonymous?
+      object.custom_properties[:anonymous] == true && object.custom_properties[:action] == 'Vote'
     end
 
     def type
@@ -59,7 +60,7 @@ module Pollios::V1::CurrentMemberAPI
       object.custom_properties[:action]
     end
 
-    def is_anonymous?
+    def as_anonymous?
       object.custom_properties[:anonymous] == true
     end
 

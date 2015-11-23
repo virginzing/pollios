@@ -30,20 +30,15 @@ module Pollios::V1::Shared
       hash
     end
 
-    private def hash_status
+    private
+    def hash_status
       relation = options[:current_member_linkage]
-      case 
-      when relation[:friends_ids].include?(object.id)
-        :friend
-      when relation[:requesting_ids].include?(object.id)
-        :invite
-      when relation[:being_requested_ids].include?(object.id)
-        :invitee
-      when relation[:blocks_ids].include?(object.id)
-        :block
-      else
-        :nofriend
-      end
+      return :friend if relation[:friends_ids].include?(object.id)
+      return :invite if relation[:requesting_ids].include?(object.id)
+      return :invitee if relation[:being_requested_ids].include?(object.id)
+      return :block if relation[:blocks_ids].include?(object.id)
+
+      :nofriend
     end
 
   end

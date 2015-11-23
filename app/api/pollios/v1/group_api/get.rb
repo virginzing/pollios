@@ -17,7 +17,7 @@ module Pollios::V1::GroupAPI
         
         desc 'returns group details for group_id'
         get do
-          { group: group }
+          present group, with: GroupDetailEntity
         end
 
         desc 'returns members of group_id'
