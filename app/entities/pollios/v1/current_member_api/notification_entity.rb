@@ -11,13 +11,9 @@ module Pollios::V1::CurrentMemberAPI
 
     private
     def sender
-      if object.sender.nil?
-        Pollios::V1::Shared::MemberEntity.default_pollios_member
-      elsif voted_as_anonymous?
-      
-      else
-        Pollios::V1::Shared::MemberEntity.represent(object.sender)
-      end
+      return Pollios::V1::Shared::MemberEntity.default_pollios_member if object.sender.nil?
+      return nil if voted_as_anonymous?
+      Pollios::V1::Shared::MemberEntity.represent(object.sender)
     end
 
     def message
