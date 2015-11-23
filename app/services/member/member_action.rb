@@ -25,9 +25,11 @@ class Member::MemberAction
   end
 
   def add_close_friend
+    # not using at this moment
   end
 
   def remove_close_friend
+    # not using at this moment
   end
 
   def follow
