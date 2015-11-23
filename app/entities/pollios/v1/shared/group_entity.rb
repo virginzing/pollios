@@ -3,16 +3,16 @@ module Pollios::V1::Shared
 
     expose :id, as: :group_id
 
-    expose :member_count do |object|
-      Group::ListMember.new(object).active.count
+    expose :member_count do |obj|
+      Group::ListMember.new(obj).active.count
     end
 
     expose :name
-    expose :description, if: -> (object, options) { object.description.present? }
-    expose :get_cover_group, as: :cover, if: -> (object, options) { object.get_cover_group.present? }
-    expose :cover_preset, unless: -> (object, options) { object.get_cover_group.present? }
-    expose :type, if: -> (object, options) { object.company? } do |object|
-      object.group_type.downcase
+    expose :description, if: -> (obj, _) { obj.description.present? }
+    expose :get_cover_group, as: :cover, if: -> (obj, _) { obj.get_cover_group.present? }
+    expose :cover_preset, unless: -> (obj, _) { obj.get_cover_group.present? }
+    expose :type, if: -> (obj, _) { obj.company? } do |obj|
+      obj.group_type.downcase
     end
 
   end
