@@ -2,17 +2,33 @@ module Pollios::V1::GroupAPI
   class Get < Grape::API
     version 'v1', using: :path
 
+    helpers do
+      def group
+        @group ||= Group.cached_find(params[:id])
+      end
+    end
+
     resource :groups do
-
-      desc "returns 10 groups"
-      get do
-        # gl = Group::ListMember.new(ActiveRecord::Base::Group.find(10))
-
-        puts Module.nesting
-
-        { groups: Group.limit(10) }
+      params do
+        requires :id, type: Integer, desc: 'group_id'
       end
 
+      route_param :id do
+        
+        desc 'returns group details for group_id'
+        get do
+          { group: group }
+        end
+
+        desc 'returns members of group_id'
+        get '/members' do
+        end
+
+        desc 'returns polls in group_id'
+        get '/polls' do
+        end
+
+      end
     end
 
   end 

@@ -7,7 +7,7 @@ module Pollios::V2::Shared
     expose :self_redeem
 
     with_options(format_with: :as_integer) do
-      expose :expire_at, if: -> (obj, opts) { obj.can_expire? }
+      expose :expire_at, if: -> (obj, _) { obj.can_expire? }
     end
 
     expose :no_expiration

@@ -24,10 +24,10 @@
 class MemberReward < ActiveRecord::Base
   extend Enumerize
   acts_as_paranoid
-  self.table_name = "campaign_members"
+  self.table_name = 'campaign_members'
 
   # TODO: GET RID OF THIS SHIT!!!!
-  enumerize :reward_status, :in => { waiting_announce: 0, receive: 1, not_receive: -1 }, predicates: true, scope: true
+  enumerize :reward_status, in: { waiting_announce: 0, receive: 1, not_receive: -1 }, predicates: true, scope: true
 
   belongs_to :campaign
   belongs_to :reward
@@ -39,7 +39,7 @@ class MemberReward < ActiveRecord::Base
   validates_uniqueness_of :serial_code, allow_nil: true, allow_blank: true
   validates_uniqueness_of :ref_no, allow_nil: true, allow_blank: true
 
-  scope :with_all_relations, -> { includes( {:reward => :campaign}, {:campaign => :rewards}, :poll, :poll_series ) }
+  scope :with_all_relations, -> { includes({reward: :campaign}, {campaign: :rewards}, :poll, :poll_series) }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :for_member_id, -> (member_id) { where(member_id: member_id).order(created_at: :desc) }
@@ -51,7 +51,7 @@ class MemberReward < ActiveRecord::Base
   self.per_page = 10
 
   def received?
-    reward_status == "receive"
+    reward_status == 'receive'
   end
 
   def flush_cache
