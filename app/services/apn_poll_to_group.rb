@@ -32,11 +32,11 @@ class ApnPollToGroup
   private
 
   def group_member_ids
-    to_map_member_ids(Group::ListMember.new(@group).active) - [@member.id]
+    to_map_member_ids(Group::MemberList.new(@group).active) - [@member.id]
   end
 
   def group_member_ids_open_notification
-    getting_notification(Group::ListMember.new(@group).active_with_no_cache, "group") - [@member.id]
+    getting_notification(Group::MemberList.new(@group).active_with_no_cache, "group") - [@member.id]
   end
 
 end

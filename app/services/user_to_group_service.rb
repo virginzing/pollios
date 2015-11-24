@@ -41,7 +41,7 @@ class UserToGroupService
   end
 
   def members_in_group_active
-    init = Group::ListMember.new(find_group)
+    init = Group::MemberList.new(find_group)
     init.active
   end
 

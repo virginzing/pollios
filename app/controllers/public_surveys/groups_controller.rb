@@ -35,7 +35,7 @@ class PublicSurveys::GroupsController < ApplicationController
     init_poll = Company::Groups::ListPolls.new(@group)
     @polls = init_poll.all
 
-    @member_all = Group::ListMember.new(@group)
+    @member_all = Group::MemberList.new(@group)
     @members = @member_all.active
     @members_inactive = @member_all.pending
     @list_surveyor = @group.surveyor

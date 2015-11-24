@@ -42,7 +42,7 @@ class Member::GroupAction
     return unless friend_ids
 
     member_ids = friend_ids.split(',').map(&:to_i)
-    member_ids_to_invite = Group::ListMember.new(@group).filter_non_members_from_list(member_ids)
+    member_ids_to_invite = Group::MemberList.new(@group).filter_non_members_from_list(member_ids)
 
     # TODO: Implement this logic.
     # unless member.company?
@@ -114,7 +114,7 @@ class Member::GroupAction
       new_request = true
       joined = false
 
-      is_member_active_in_group = Group::ListMember.new(@group).is_active?(member)
+      is_member_active_in_group = Group::MemberList.new(@group).active?(member)
 
       if is_member_active_in_group
         raise ExceptionHandler::UnprocessableEntity, "You have already joined #{group.name}"

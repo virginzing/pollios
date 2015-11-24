@@ -61,7 +61,7 @@ class GroupTest < ActiveSupport::TestCase
 
   def test_build_group_that_there_is_one_member
     @group = Group.build_group(@member, @params)
-    assert_equal(Group::ListMember.new(@group).active.size, 1)
+    assert_equal(Group::MemberList.new(@group).active.size, 1)
   end
 
   def test_build_group_when_group_is_public
@@ -85,6 +85,6 @@ class GroupTest < ActiveSupport::TestCase
 
     group = Group.build_group(@member, params)
     assert group.present?
-    assert_equal(Group::ListMember.new(group).pending.size, 2)
+    assert_equal(Group::MemberList.new(group).pending.size, 2)
   end
 end

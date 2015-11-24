@@ -77,7 +77,7 @@ class GroupController < ApplicationController
 
   def members
     init_list_friend ||= Member::MemberList.new(@current_member)
-    @group_members ||= Group::ListMember.new(@group)
+    @group_members ||= Group::MemberList.new(@group)
 
     @member_active = @group_members.active
     @check_status_friend_of_member_active = Friend.check_add_friend?(@current_member, @member_active, init_list_friend.check_is_friend) if @member_active.present?
@@ -122,7 +122,7 @@ class GroupController < ApplicationController
 
   def detail_group
     @member = Member.cached_find(params[:member_id])
-    @group_member ||= Group::ListMember.new(@group)
+    @group_member ||= Group::MemberList.new(@group)
     @member_active = @group_member.join_recently
   end
 
@@ -143,7 +143,7 @@ class GroupController < ApplicationController
       @new_req
       uest = false
 
-      @group_members ||= Group::ListMember.new(@group)
+      @group_members ||= Group::MemberList.new(@group)
       @member_active = @group_members.active
 
       find_member_in_group = @member_active.map(&:id)
@@ -213,7 +213,7 @@ class GroupController < ApplicationController
   private
 
   def only_admin_of_group
-    Group::ListMember.new(set_group).raise_error_not_admin(@current_member)
+    Group::MemberList.new(set_group).raise_error_not_admin(@current_member)
   end
 
   def set_group

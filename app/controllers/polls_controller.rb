@@ -106,7 +106,7 @@ class PollsController < ApplicationController
 
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
-            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless Group::ListMember.new(set_group).is_admin?(@current_member) || @poll.member_id == @member_id
+            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless Group::MemberList.new(set_group).admin?(@current_member) || @poll.member_id == @member_id
             if @poll.groups.size > 1
               delete_poll_in_more_group
             else

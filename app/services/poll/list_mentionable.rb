@@ -28,7 +28,7 @@ class Poll::ListMentionable
     member_ids = []
 
     @poll.groups.each do |group|
-      member_ids << Group::ListMember.new(group).active.map(&:id)
+      member_ids << Group::MemberList.new(group).active.map(&:id)
     end
 
     member_ids.uniq

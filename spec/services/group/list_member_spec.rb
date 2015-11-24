@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 pathname = Pathname.new(__FILE__)
-RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Group::ListMember" do
+RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Group::MemberList" do
 
 	context "A member is" do
 
@@ -41,12 +41,12 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 		it "- members id: 104,105,107,108 are non members from list" do	
 			expect(new_group.members.count).to eq(3)
-			expect(Group::ListMember.new(new_group).filter_non_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([104, 105, 107, 108])
+			expect(Group::MemberList.new(new_group).filter_non_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([104, 105, 107, 108])
 		end
 
 		it "- members id: 100, 103, 109 is members from list" do
 			expect(new_group.members.count).to eq(3)
-			expect(Group::ListMember.new(new_group).filter_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([100, 103, 109])
+			expect(Group::MemberList.new(new_group).filter_members_from_list([100, 103, 104, 105, 107, 108, 109])).to match_array([100, 103, 109])
 		end
 	end
 

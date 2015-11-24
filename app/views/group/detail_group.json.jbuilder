@@ -4,10 +4,10 @@ if @group.present?
   json.group do
     json.partial! 'response_helper/group/full_info', group: @group
     json.viewing_member do
-      json.is_member @group_member.is_active?(@member)
-      json.is_pending @group_member.is_pending?(@member)
-      json.is_requesting @group_member.is_requesting?(@member)
-      json.is_admin @group_member.is_admin?(@member)
+      json.is_member @group_member.active?(@member)
+      json.is_pending @group_member.pending?(@member)
+      json.is_requesting @group_member.requesting?(@member)
+      json.is_admin @group_member.admin?(@member)
     end
   end
 

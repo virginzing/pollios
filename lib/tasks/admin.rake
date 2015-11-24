@@ -410,7 +410,7 @@ namespace :admin do
       p "find owner group is #{find_owner_group.get_name}"
       p "#{find_owner_group.get_name} not Company Account" unless find_owner_group.company?
       p "All users in groups is following #{find_owner_group.get_name}. Process..."
-      list_members = Group::ListMember.new(find_group).active.select{|m| m unless m.company? }
+      list_members = Group::MemberList.new(find_group).active.select{|m| m unless m.company? }
       list_members.each do |member|
         begin
           Friend.add_following(member, {member_id: member.id, friend_id: find_owner_group.id})

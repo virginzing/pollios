@@ -4,7 +4,7 @@ class FlushCached::Group
   end
 
   def clear_list_group_all_member_in_group
-    list_member_in_group = Group::ListMember.new(@group)
+    list_member_in_group = Group::MemberList.new(@group)
 
     list_member_in_group.cached_all_members.each do |member|
       FlushCached::Member.new(member).clear_list_groups

@@ -4,7 +4,7 @@ module Pollios::V1::Shared
     expose :id, as: :group_id
 
     expose :member_count do |obj|
-      Group::ListMember.new(obj).active.count
+      Group::MemberList.new(obj).active.count
     end
 
     expose :name

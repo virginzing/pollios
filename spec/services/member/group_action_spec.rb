@@ -16,7 +16,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
 
         it "- A member is an admin of the created group" do
-            expect(Group::ListMember.new(new_group).is_admin?(group_admin)).to be true
+            expect(Group::MemberList.new(new_group).admin?(group_admin)).to be true
         end
 
         it "- A member does not upload cover photo, should be set between 1-26" do 
@@ -75,11 +75,11 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
 
         it "- Members id: 103,104,105,107,108,109 are not in group" do
-            expect(Group::ListMember.new(new_group).filter_non_members_from_list([103, 104, 105, 107, 108, 109])).to match_array([103, 104, 105, 107, 108, 109])
+            expect(Group::MemberList.new(new_group).filter_non_members_from_list([103, 104, 105, 107, 108, 109])).to match_array([103, 104, 105, 107, 108, 109])
         end
 
         it "- Group has member id: 103,104,105,107,108,109 in inactive members" do
-            expect(Group::ListMember.new(new_group).pending_ids_non_cache).to include(103, 104, 105, 107, 108, 109)
+            expect(Group::MemberList.new(new_group).pending_ids_non_cache).to include(103, 104, 105, 107, 108, 109)
         end
     end
 

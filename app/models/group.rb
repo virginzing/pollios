@@ -161,8 +161,8 @@ class Group < ActiveRecord::Base
   end
 
   def self.cancel_group(member, friend, group) ## cancel to another people
-    raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(group).is_admin?(member)
-    raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} had already accepted your request." if Group::ListMember.new(group).active.map(&:id).include?(friend.id)
+    raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberList.new(group).admin?(member)
+    raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} had already accepted your request." if Group::MemberList.new(group).active.map(&:id).include?(friend.id)
 
     find_group_member = GroupMember.where(group_id: group.id, member_id: friend.id).first
 
@@ -288,7 +288,7 @@ class Group < ActiveRecord::Base
 
   def self.cancel_ask_join_group(member, friend_id = nil, group)
     if friend_id.nil? ## cancel request myself
-      raise ExceptionHandler::UnprocessableEntity, "Your request had approved by administrator." if Group::ListMember.new(group).active.map(&:id).include?(member.id)
+      raise ExceptionHandler::UnprocessableEntity, "Your request had approved by administrator." if Group::MemberList.new(group).active.map(&:id).include?(member.id)
 
       find_current_ask_group = group.request_groups.find_by(member_id: member.id)
       raise ExceptionHandler::UnprocessableEntity,  "There isn't your request to this group." unless find_current_ask_group.present?
@@ -430,7 +430,7 @@ class Group < ActiveRecord::Base
   def kick_member_out_group(kicker, friend_id)
     begin
 
-      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(kicker)
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberList.new(self).admin?(kicker)
 
       member = Member.cached_find(friend_id)
 
@@ -456,9 +456,9 @@ class Group < ActiveRecord::Base
     begin
       member = Member.cached_find(friend_id)
 
-      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::ListMember.new(self).is_admin?(promoter)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberList.new(self).admin?(promoter)
       if admin_status
-        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::ListMember.new(self).is_admin?(member)
+        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::MemberList.new(self).admin?(member)
       end
 
       if find_member_in_group = group_members.find_by(member_id: friend_id)
@@ -534,7 +534,7 @@ class Group < ActiveRecord::Base
   end
 
   def get_member_count
-    Group::ListMember.new(self).active.to_a.size
+    Group::MemberList.new(self).active.to_a.size
   end
 
   def get_all_member_count
