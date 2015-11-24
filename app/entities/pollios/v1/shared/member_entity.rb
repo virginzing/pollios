@@ -18,9 +18,10 @@ module Pollios::V1::Shared
       }
     end
 
-    def status
-      hash = { status: hash_status }
+    private
 
+    def status
+      hash = { status: friendship_status_with_current_member }
       if object.celebrity? || object.brand? || object.company?
         relation = options[:current_member_linkage]
         is_following = relation[:followings_ids].include?(object.id)
@@ -30,16 +31,32 @@ module Pollios::V1::Shared
       hash
     end
 
-    private
-    def hash_status
-      relation = options[:current_member_linkage]
-      return :friend if relation[:friends_ids].include?(object.id)
-      return :invite if relation[:requesting_ids].include?(object.id)
-      return :invitee if relation[:being_requested_ids].include?(object.id)
-      return :block if relation[:blocks_ids].include?(object.id)
-
+    def friendship_status_with_current_member
+      return :friend if friend?
+      return :invite if requesting?
+      return :invitee if being_requested?
+      return :block if blocked?
       :nofriend
     end
 
+    def relation
+      options[:current_member_linkage]
+    end
+
+    def friend?
+      relation[:friends_ids].include?(object.id)
+    end
+
+    def requesting?
+      relation[:requesting_ids].include?(object.id)
+    end
+
+    def being_requested?
+      relation[:being_requested_ids].include?(object.id)
+    end
+
+    def blocked?
+      relation[:blocks_ids].include?(object.id)
+    end
   end
 end
