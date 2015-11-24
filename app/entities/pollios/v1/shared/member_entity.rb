@@ -23,15 +23,15 @@ module Pollios::V1::Shared
     def status
       hash = {}
       hash[:status] = friendship_status_with_current_member
-      hash[:following] = following? if followable_member?
+      hash[:following] = followings? if followable_member?
       hash
     end
 
     def friendship_status_with_current_member
-      return :friend if friend?
+      return :friend if friends?
       return :invite if requesting?
       return :invitee if being_requested?
-      return :block if blocked?
+      return :block if blocks?
       :nofriend
     end
 
@@ -43,11 +43,11 @@ module Pollios::V1::Shared
       options[:current_member_linkage]
     end
 
-    def friend?
+    def friends?
       relation[:friends_ids].include?(object.id)
     end
 
-    def following?
+    def followings?
       relation[:followings_ids].include?(object.id)
     end
 
@@ -59,8 +59,20 @@ module Pollios::V1::Shared
       relation[:being_requested_ids].include?(object.id)
     end
 
-    def blocked?
+    def blocks?
       relation[:blocks_ids].include?(object.id)
     end
+
+    # Could use some metaprogramming. This actually works.
+    #
+    # def relation_lists
+    #   %('friends', 'followings', 'requesting', 'being_requested', 'blocks')
+    # end
+
+    # relation_lists.each do |list_name|
+    #   define_method("#{list_name}?") do 
+    #     relation["#{list_name}_ids".to_sym].include?(object.id)
+    #   end
+    # end
   end
 end
