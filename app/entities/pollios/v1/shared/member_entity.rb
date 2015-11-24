@@ -21,13 +21,9 @@ module Pollios::V1::Shared
     private
 
     def status
-      hash = { status: friendship_status_with_current_member }
-      if object.celebrity? || object.brand? || object.company?
-        relation = options[:current_member_linkage]
-        is_following = relation[:followings_ids].include?(object.id)
-        hash[:following] = is_following ? true : false
-      end
-
+      hash = {}
+      hash[:status] = friendship_status_with_current_member
+      hash[:following] = following? if followable_member?
       hash
     end
 
@@ -39,12 +35,20 @@ module Pollios::V1::Shared
       :nofriend
     end
 
+    def followable_member?
+      object.celebrity? || object.brand? || object.company?
+    end
+
     def relation
       options[:current_member_linkage]
     end
 
     def friend?
       relation[:friends_ids].include?(object.id)
+    end
+
+    def following?
+      relation[:followings_ids].include?(object.id)
     end
 
     def requesting?
