@@ -640,7 +640,9 @@ class Member < ActiveRecord::Base
   end
 
   def list_voted?(poll)
-    history_voted = Member.voted_polls
+    history_voted = Member::PollList.new(self).voted_all
+
+    # history_voted = Member.voted_polls
     select_poll = history_voted.select {|his_vote| his_vote["poll_id"] == poll.id }.first
 
     if select_poll.present?
