@@ -99,11 +99,11 @@ module Member::Private::MemberActionGuard
   end
 
   def can_accept_friend_request?
-    return false, 'This request is not existing.' if not_exist_request
-    return false, "Your friends has over #{member.friend_limit} people." if incoming_friends_over_limit
-    return false, "#{a_member.get_name} friends has over #{member.friend_limit} people." if outgoing_friends_over_limit
+    return false, "You don't have friend request from #{a_member.get_name}" if not_exist_request
+    return false, "Your have over #{member.friend_limit} friends." if incoming_friends_over_limit
+    return false, "#{a_member.get_name} has over #{member.friend_limit} friends." if outgoing_friends_over_limit
     return false, "You are currently blocking #{a_member.get_name}." if already_block
-    return false, "You can't accept request at this moment." if incoming_block
+    return false, "You can't accept this request at this moment." if incoming_block
     [true, '']
   end
 
