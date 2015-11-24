@@ -117,4 +117,8 @@ module Member::Private::MemberActionGuard
     [true, '']
   end
 
+  def can_report?
+    return false, "You can't report yourself." if same_member
+    [true, '']
+  end
 end
