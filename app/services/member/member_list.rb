@@ -11,10 +11,10 @@ class Member::MemberList
 
   def social_linkage_ids
     { 
-      friends_ids: ids_for(friends_without_block), 
-      requesting_ids: ids_for(outgoing_requests_without_block),
-      being_requested_ids: ids_for(incoming_requests_without_block),
-      followings_ids: ids_for(followings_without_block),
+      friends_ids: ids_for(friends), 
+      requesting_ids: ids_for(outgoing_requests),
+      being_requested_ids: ids_for(incoming_requests),
+      followings_ids: ids_for(followings),
       blocks_ids: ids_for(blocks)
     }
   end
@@ -85,22 +85,6 @@ class Member::MemberList
 
   def outgoing_requests
     cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) }
-  end
-
-  def friends_without_block
-    without_block(friends)
-  end
-
-  def followings_without_block
-    without_block(followings)
-  end
-
-  def outgoing_requests_without_block
-    without_block(outgoing_requests)
-  end
-
-  def incoming_requests_without_block
-    without_block(incoming_requests)
   end
 
   # NOTE: For debuggings and loggings Member::MemberAction's methods
