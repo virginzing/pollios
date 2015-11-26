@@ -39,7 +39,7 @@ class MemberReward < ActiveRecord::Base
   validates_uniqueness_of :serial_code, allow_nil: true, allow_blank: true
   validates_uniqueness_of :ref_no, allow_nil: true, allow_blank: true
 
-  scope :with_all_relations, -> { includes({reward: :campaign}, {campaign: :rewards}, :poll, :poll_series) }
+  scope :with_all_relations, -> { includes({ reward: :campaign }, { campaign: :rewards }, :poll, :poll_series) }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :for_member_id, -> (member_id) { where(member_id: member_id).order(created_at: :desc) }
@@ -61,10 +61,26 @@ class MemberReward < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @reward = find_by(id: id)
-      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Reward::NOT_FOUND unless @reward.present?
-      raise ExceptionHandler::Deleted, ExceptionHandler::Message::Reward::DELETED unless @reward.deleted_at.nil?
+      fail ExceptionHandler::NotFound, ExceptionHandler::Message::Reward::NOT_FOUND unless @reward.present?
+      fail ExceptionHandler::Deleted, ExceptionHandler::Message::Reward::DELETED unless @reward.deleted_at.nil?
       @reward
     end
   end
 
+  def as_json
+    {
+      id: id,
+      reward_id: id,
+      reward_status: reward_status,
+      serial_code: serial_code || '',
+      redeem: redeem,
+      redeem_at: redeem_at.to_i.presence || '',
+      ref_no: ref_no || '',
+      created_at: created_at.to_i,
+      title: campaign.get_reward_title,
+      detail: campaign.get_reward_detail,
+      expire: campaign.get_reward_expire,
+      redeem_myself: campaign.redeem_myself
+    }
+  end
 end

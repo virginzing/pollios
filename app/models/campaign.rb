@@ -138,9 +138,9 @@ class Campaign < ActiveRecord::Base
   end
 
   def prediction(member_id, poll_id)
-    raise ExceptionHandler::UnprocessableEntity, "This campaign was expired." if expire < Time.now
-    raise ExceptionHandler::UnprocessableEntity, "This campaign was limit." if used >= limit
-    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll." if member_rewards.find_by(member_id: member_id, poll_id: poll_id).present?
+    raise ExceptionHandler::UnprocessableEntity, 'This campaign was expired.' if expire < Time.now
+    raise ExceptionHandler::UnprocessableEntity, 'This campaign was limit.' if used >= limit
+    raise ExceptionHandler::UnprocessableEntity, 'You used to get this reward of poll.' if member_rewards.find_by(member_id: member_id, poll_id: poll_id).present?
     
     if random_later?
       @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :waiting_announce, poll_id: poll_id, ref_no: generate_ref_no)
@@ -217,14 +217,14 @@ class Campaign < ActiveRecord::Base
   def generate_serial_code
     begin
       serial_code = ('S' + SecureRandom.hex(6)).upcase
-    end while CampaignMember.exists?(serial_code: serial_code)
+    end while MemberReward.exists?(serial_code: serial_code)
     serial_code
   end
 
   def generate_ref_no
     begin
       ref_no = ('R' + SecureRandom.hex(6)).upcase
-    end while CampaignMember.exists?(ref_no: ref_no)
+    end while MemberReward.exists?(ref_no: ref_no)
     ref_no
   end
 
@@ -263,7 +263,7 @@ class Campaign < ActiveRecord::Base
       original_photo_campaign: get_original_photo_campaign,
       used: used,
       limit: limit,
-      owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json() : System::DefaultMember.new.to_json,
+      owner_info: member.present? ? MemberInfoFeedSerializer.new(member).as_json : System::DefaultMember.new.to_json,
       created_at: created_at.to_i,
       type_campaign: type_campaign,
       announce_on: announce_on.to_i,

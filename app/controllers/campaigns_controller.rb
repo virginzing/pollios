@@ -31,7 +31,8 @@ class CampaignsController < ApplicationController
   end
 
   def list_reward
-    @rewards = CampaignMember.without_deleted.list_reward(@current_member.id).paginate(page: params[:next_cursor])
+    # @rewards = CampaignMember.without_deleted.list_reward(@current_member.id).paginate(page: params[:next_cursor])
+    @rewards = MemberReward.without_deleted.for_member_id(@current_member.id).with_all_relations.paginate(page: params[:next_cursor])
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page
   end
 
