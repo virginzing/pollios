@@ -37,13 +37,15 @@ class Campaign < ActiveRecord::Base
   # validates :limit, presence: true, numericality: { greater_than: 0 }
   validates :name, :limit, presence: true
 
-  validates_uniqueness_of :name, :on => :create, scope: :company_id
+  validates_uniqueness_of :name, on: :create, scope: :company_id
 
   has_many :polls
   has_many :poll_series
 
-  has_many :campaign_members, dependent: :destroy
-  has_many :members, through: :campaign_members, source: :member
+  has_many :rewards
+
+  has_many :member_rewards, dependent: :destroy
+  has_many :members, through: :member_rewards, source: :member
 
   has_many :gift_logs, dependent: :destroy
   
@@ -61,7 +63,7 @@ class Campaign < ActiveRecord::Base
 
   accepts_nested_attributes_for :polls
 
-  accepts_nested_attributes_for :rewards, :reject_if => lambda { |a| a[:title].blank? }, :allow_destroy => true
+  accepts_nested_attributes_for :rewards, reject_if: lambda { |a| a[:title].blank? }, allow_destroy: true
 
   self.per_page = 10
 
