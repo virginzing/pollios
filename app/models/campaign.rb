@@ -191,12 +191,12 @@ class Campaign < ActiveRecord::Base
     raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of feedback." if member_rewards.find_by(member_id: member_id, poll_series_id: poll_series_id).present?
 
     if random_later?
-      @reward = member_rewards.create!(member_id: member_id, reward_status: :waiting_announce, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+      @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :waiting_announce, poll_series_id: poll_series_id, ref_no: generate_ref_no)
     else
       sample = (begin_sample..end_sample).to_a.sample
 
       if sample % end_sample == 0
-        @reward = member_rewards.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
         
         self.with_lock do
           self.used += 1
@@ -208,7 +208,7 @@ class Campaign < ActiveRecord::Base
           RewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
       else
-        @reward = member_rewards.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
       end
     end
     @reward
