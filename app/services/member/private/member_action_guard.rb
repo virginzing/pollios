@@ -38,12 +38,8 @@ module Member::Private::MemberActionGuard
     member_list.not_blocking_with?(a_member)
   end
 
-  def incoming_friends_over_limit
-    member_list.friends_over_limit?
-  end
-
-  def outgoing_friends_over_limit
-    Member::MemberList.new(a_member).friends_over_limit?
+  def friends_limit_exist(member)
+    Member::MemberList.new(member).friends_limit_exist?
   end
 
   def incoming_block
@@ -100,8 +96,8 @@ module Member::Private::MemberActionGuard
 
   def can_accept_friend_request?
     return false, "You don't have friend request from #{a_member.get_name}" if not_exist_incoming_request
-    return false, "Your have over #{member.friend_limit} friends." if incoming_friends_over_limit
-    return false, "#{a_member.get_name} has over #{member.friend_limit} friends." if outgoing_friends_over_limit
+    return false, "Your have over #{member.friend_limit} friends." if friends_limit_exist(member)
+    return false, "#{a_member.get_name} has over #{member.friend_limit} friends." if friends_limit_exist(a_member)
     return false, "You are currently blocking #{a_member.get_name}." if already_block
     return false, "You can't accept this request at this moment." if incoming_block
     [true, '']
