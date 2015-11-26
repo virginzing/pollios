@@ -11,6 +11,19 @@ module Member::Private::MemberAction
     [member, a_member]
   end
 
+  def outgoing_relation
+    @outgoing_relation ||= find_relationship_between(member, a_member)
+  end
+
+  def incoming_relation
+    @incoming_relation ||= find_relationship_between(a_member, member)
+  end
+
+  def update_both_relations(relation_status_hash)
+    outgoing_relation.update!(relation_status_hash)
+    incoming_relation.update!(relation_status_hash)
+  end
+
   def process_friend_requests_transaction
     @new_outgoing, @outgoing_relation = first_or_initialize_relationship_between(member, a_member, :invite)
     @new_incoming, @incoming_relation = first_or_initialize_relationship_between(a_member, member, :invitee)
@@ -26,9 +39,7 @@ module Member::Private::MemberAction
   end
 
   def accept_friendship(src_member, dst_member)
-    @outgoing_relation.update!(status: :friend)
-    @incoming_relation.update!(status: :friend)
-
+    update_both_relations(status: :friend)
     send_friends_notification(src_member, dst_member, accept_friend: true, action: ACTION[:become_friend])
   end
 
@@ -36,10 +47,10 @@ module Member::Private::MemberAction
     if @new_outgoing
       send_friends_notification(member, a_member)
     else
-      if @outgoing_relation.invitee?
+      if outgoing_relation.invitee?
         accept_friendship(member, a_member)
       else
-        @outgoing_relation.update!(status: :invite)
+        outgoing_relation.update!(status: :invite)
         send_friends_notification(member, a_member)
       end
     end
@@ -48,35 +59,31 @@ module Member::Private::MemberAction
   def process_incoming_friend_request
     return if @new_incoming
 
-    if @incoming_relation.invitee?
+    if incoming_relation.invitee?
       accept_friendship(a_member, member)
     else
-      unless @incoming_relation.friend?
-        @incoming_relation.update!(status: :invitee)
+      unless incoming_relation.friend?
+        incoming_relation.update!(status: :invitee)
       end
     end
   end
 
-  def process_unfriend_request
-    @outgoing_friendship = find_relationship_between(member, a_member)
-    @incoming_friendship = find_relationship_between(a_member, member)
+  def process_unfriend_request(options = { clear_cached: true })
+    return unless outgoing_relation && incoming_relation
 
-    return unless @outgoing_friendship && @incoming_friendship
+    update_both_relations(status: :nofriend)
 
-    @incoming_friendship.update!(status: :nofriend)
-    @outgoing_friendship.update!(status: :nofriend)
-
-    clear_friends_caches_for_members
-    clear_followers_caches_for_members
+    if options[:clear_cached]
+      clear_friends_caches_for_members
+      clear_followers_caches_for_members
+    end
 
     return
   end
 
   def process_following
-    outgoing_following = find_relationship_between(member, a_member)
-
-    if outgoing_following.present?
-      outgoing_following.update(following: true)
+    if outgoing_relation.present?
+      outgoing_relation.update(following: true)
     else
       Friend.create!(follower_id: member.id, followed_id: a_member.id, status: :nofriend, following: true)
     end
@@ -87,17 +94,15 @@ module Member::Private::MemberAction
   end
 
   def process_unfollow
-    outgoing_following = find_relationship_between(member, a_member)
-    outgoing_following.update(block: true)
-
+    return unless outgoing_relation
+    outgoing_relation.update(following: false)
     clear_following_caches_for_members
-
     return
   end
 
   def process_block
-    @outgoing_relation = find_relationship_between(member, a_member)
-    @incoming_relation = find_relationship_between(a_member, member)
+    process_unfriend_request(clear_cached: false)
+    process_unfollow
 
     process_outgoing_block
     process_incoming_block
@@ -109,25 +114,22 @@ module Member::Private::MemberAction
   end
 
   def process_outgoing_block
-    if @outgoing_relation.present?
-      @outgoing_relation.update(block: true)
+    if outgoing_relation.present?
+      outgoing_relation.update(block: true)
     else
       Friend.create!(follower_id: member.id, followed_id: a_member.id, block: true)
     end
   end
 
   def process_incoming_block
-    if @incoming_relation.present?
-      @incoming_relation.update(visible_poll: false)
+    if incoming_relation.present?
+      incoming_relation.update(visible_poll: false)
     else
       Friend.create!(follower_id: a_member.id, followed_id: member.id, visible_poll: false)
     end
   end
 
   def process_unblock
-    outgoing_relation = find_relationship_between(member, a_member)
-    incoming_relation = find_relationship_between(a_member, member)
-
     outgoing_relation.update(block: false)
     incoming_relation.update(visible_poll: true)
 
@@ -138,12 +140,7 @@ module Member::Private::MemberAction
   end
 
   def process_accept_friend_request
-    outgoing_relation = find_relationship_between(member, a_member)
-    incoming_relation = find_relationship_between(a_member, member)
-
-    outgoing_relation.update(active: true, status: :friend)
-    incoming_relation.update(active: true, status: :friend)
-
+    update_both_relations(active: true, status: :friend)
     send_friends_notification(member, a_member, action: ACTION[:become_friend])
 
     clear_friends_caches_for_members
@@ -153,12 +150,7 @@ module Member::Private::MemberAction
   end
 
   def process_deny_friend_request
-    outgoing_relation = find_relationship_between(member, a_member)
-    incoming_relation = find_relationship_between(a_member, member)
-
-    outgoing_relation.update(status: :nofriend)
-    incoming_relation.update(status: :nofriend)
-
+    update_both_relations(status: :nofriend)
     NotifyLog.check_update_cancel_request_friend_deleted(member, a_member)
 
     clear_friends_caches_for_members
