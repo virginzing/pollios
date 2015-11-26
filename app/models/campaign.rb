@@ -93,17 +93,17 @@ class Campaign < ActiveRecord::Base
   end
 
   def update_reward_random_of_poll(poll, list_member)
-    list_reward_with_member_ids = campaign_members.where(poll: poll).pluck(:member_id)
+    list_reward_with_member_ids = member_rewards.where(poll: poll).pluck(:member_id)
     members_receive_reward = list_member
     members_not_receive_reward = list_reward_with_member_ids - members_receive_reward
 
     #receive
-    campaign_members.with_reward_status(:waiting_announce).where(poll: poll, member_id: members_receive_reward).find_each do |reward|
+    member_rewards.with_reward_status(:waiting_announce).where(poll: poll, member_id: members_receive_reward).find_each do |reward|
       reward.update!(serial_code: generate_serial_code, reward_status: :receive)
     end
 
     #not receive
-    campaign_members.with_reward_status(:waiting_announce).where(poll: poll, member_id: members_not_receive_reward).find_each do |reward|
+    member_rewards.with_reward_status(:waiting_announce).where(poll: poll, member_id: members_not_receive_reward).find_each do |reward|
       reward.update!(reward_status: :not_receive)
     end
 
@@ -130,18 +130,25 @@ class Campaign < ActiveRecord::Base
     end
   end
 
+  def reward_id
+    # TODO: write a decision-making logic determining what reward a member is getting
+    # now, since a campaign has only 1 reward (not because of model, but data), we
+    # can safely assume that member will always get a first one from the list
+    rewards.first.id
+  end
+
   def prediction(member_id, poll_id)
     raise ExceptionHandler::UnprocessableEntity, "This campaign was expired." if expire < Time.now
     raise ExceptionHandler::UnprocessableEntity, "This campaign was limit." if used >= limit
-    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll." if campaign_members.find_by(member_id: member_id, poll_id: poll_id).present?
+    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of poll." if member_rewards.find_by(member_id: member_id, poll_id: poll_id).present?
     
     if random_later?
-      @reward = campaign_members.create!(member_id: member_id, reward_status: :waiting_announce, poll_id: poll_id, ref_no: generate_ref_no)
+      @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :waiting_announce, poll_id: poll_id, ref_no: generate_ref_no)
     else
       sample = (begin_sample..end_sample).to_a.sample
 
       if sample % end_sample == 0
-        @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :receive, serial_code: generate_serial_code, poll_id: poll_id, ref_no: generate_ref_no)
 
         self.with_lock do
           self.used += 1
@@ -153,7 +160,7 @@ class Campaign < ActiveRecord::Base
           RewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
       else
-        @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward: reward_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
         poll = Poll.cached_find(poll_id)
         NotReceiveRandomRewardPollWorker.perform_async(member.id, poll_id, [member_id], "Sorry! You don't get reward from poll: #{poll.title}") if @reward
       end
@@ -163,9 +170,9 @@ class Campaign < ActiveRecord::Base
 
   def free_reward(member_id, gift_log = nil)
     if gift_log.nil?
-      @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
+      @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true)
     else
-      @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true, gift_log_id: gift_log.id)
+      @reward = member_rewards.create!(member_id: member_id, reward_id: reward_id, reward_status: :receive, serial_code: generate_serial_code, ref_no: generate_ref_no, gift: true, gift_log_id: gift_log.id)
     end
     
     self.with_lock do
@@ -181,15 +188,15 @@ class Campaign < ActiveRecord::Base
 
     raise ExceptionHandler::UnprocessableEntity, "This campaign was expired." if expire < Time.now
     raise ExceptionHandler::UnprocessableEntity, "This campaign was limit." if used >= limit
-    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of feedback." if campaign_members.find_by(member_id: member_id, poll_series_id: poll_series_id).present?
+    raise ExceptionHandler::UnprocessableEntity, "You used to get this reward of feedback." if member_rewards.find_by(member_id: member_id, poll_series_id: poll_series_id).present?
 
     if random_later?
-      @reward = campaign_members.create!(member_id: member_id, reward_status: :waiting_announce, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+      @reward = member_rewards.create!(member_id: member_id, reward_status: :waiting_announce, poll_series_id: poll_series_id, ref_no: generate_ref_no)
     else
       sample = (begin_sample..end_sample).to_a.sample
 
       if sample % end_sample == 0
-        @reward = campaign_members.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward_status: :receive, serial_code: generate_serial_code, poll_series_id: poll_series_id, ref_no: generate_ref_no)
         
         self.with_lock do
           self.used += 1
@@ -201,7 +208,7 @@ class Campaign < ActiveRecord::Base
           RewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
       else
-        @reward = campaign_members.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward_status: :not_receive, poll_series_id: poll_series_id, ref_no: generate_ref_no)
       end
     end
     @reward
