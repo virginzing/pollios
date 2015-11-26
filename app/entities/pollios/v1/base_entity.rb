@@ -5,7 +5,6 @@ module Pollios::V1
     format_with(:as_string, &:to_s)
 
     def self.expose_members(object_members, local_options = {})
-      
       if local_options[:as]
         key_name = local_options[:as]
       else
@@ -14,7 +13,11 @@ module Pollios::V1
 
       expose object_members, as: key_name do |obj, _|
 
-        members = obj.send object_members
+        if methods.include?(object_members)
+          members = send object_members
+        else
+          members = obj.send object_members
+        end
 
         if local_options[:entity]
           entity = local_options[:entity]
