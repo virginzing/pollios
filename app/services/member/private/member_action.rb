@@ -63,36 +63,13 @@ module Member::Private::MemberAction
 
     return unless @outgoing_friendship && @incoming_friendship
 
-    process_outgoing_unfriend_relation
-    process_incoming_unfriend_relation
+    @incoming_friendship.update!(status: :nofriend)
+    @outgoing_friendship.update!(status: :nofriend)
 
     clear_friends_caches_for_members
     clear_followers_caches_for_members
 
     return
-  end
-
-  def process_outgoing_unfriend_relation
-    if !@outgoing_friendship.following
-      @incoming_friendship.update!(status: :nofriend)
-      @outgoing_friendship.destroy
-    else
-      @outgoing_friendship.update!(status: :nofriend)
-    end
-  end
-
-  def process_incoming_unfriend_relation
-    if !@incoming_friendship.following
-      existing_friendship = Friend.where(follower: member, followed: a_member).first
-
-      if existing_friendship.present?
-        existing_friendship.update!(status: :nofriend)
-      end
-
-      @incoming_friendship.destroy
-    else
-      @incoming_friendship.update!(status: :nofriend)
-    end
   end
 
   def process_following
@@ -105,13 +82,17 @@ module Member::Private::MemberAction
     end
 
     clear_following_caches_for_members
+
+    return
   end
 
   def process_unfollow
     outgoing_following = find_relationship_between(member, a_member)
-    outgoing_following.destroy
+    outgoing_following.update(block: true)
 
     clear_following_caches_for_members
+
+    return
   end
 
   def process_block
