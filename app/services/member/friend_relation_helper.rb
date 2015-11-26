@@ -36,4 +36,8 @@ module Member::FriendRelationHelper
   private def blocked_friend?(a_member)
     active?(a_member) && blocked?(a_member) && friend_with?(a_member)
   end
+
+  private def without_block(list)
+    list.select { |a_member| a_member unless blocked?(a_member) }
+  end
 end
