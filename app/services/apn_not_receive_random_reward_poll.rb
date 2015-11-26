@@ -23,8 +23,10 @@ class ApnNotReceiveRandomRewardPoll
   end 
 
   def list_hash_reward_with_member_ids
-    CampaignMember.joins(:member).with_reward_status(:not_receive).where(poll: @poll).inject({}) {|h,v| h[v.member_id] = v.id; h }
+    MemberReward.joins(:member).with_reward_status(:not_receive).where(poll: @poll).inject ({}) do |hash, val| 
+      hash[val.member_id] = val.id
+      hash
+    end
   end
-  
-  
+
 end

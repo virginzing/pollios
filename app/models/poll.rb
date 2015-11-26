@@ -412,7 +412,7 @@ class Poll < ActiveRecord::Base
   end
 
   def get_reward_info(member, campaign)
-    campaign.campaign_members.find_by(poll: self, member: member).presence || {}
+    campaign.member_rewards.find_by(poll: self, member: member).presence || {}
   end
 
   def get_campaign_detail(member)
@@ -615,7 +615,7 @@ class Poll < ActiveRecord::Base
   end
 
   def find_campaign_for_predict?(member)
-    campaign.prediction(member.id, self.id) if (campaign.expire > Time.now) && (campaign.used < campaign.limit) && (campaign.campaign_members.find_by(member_id: member.id, poll_id: self.id).nil?)
+    campaign.prediction(member.id, self.id) if (campaign.expire > Time.now) && (campaign.used < campaign.limit) && (campaign.member_rewards.find_by(member_id: member.id, poll_id: self.id).nil?)
   end
 
   def self.view_poll(poll, member)

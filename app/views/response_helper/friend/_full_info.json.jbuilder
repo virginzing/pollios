@@ -16,6 +16,6 @@ if friend.id == member.id
 
   json.count do
     json.point member.point
-    json.reward member.cached_get_my_reward.count
+    json.reward member.cached_get_my_rewards.count
   end
 end

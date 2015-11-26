@@ -187,7 +187,7 @@ class PollSeries < ActiveRecord::Base
   end
 
   def find_campaign_for_predict?(member)
-    campaign.prediction_questionnaire(member.id, id) if (campaign.expire > Time.now) && (campaign.used < campaign.limit) && (campaign.campaign_members.find_by(member_id: member.id, poll_series_id: id).nil?)
+    campaign.prediction_questionnaire(member.id, id) if (campaign.expire > Time.now) && (campaign.used < campaign.limit) && (campaign.member_rewards.find_by(member_id: member.id, poll_series_id: id).nil?)
   end
 
   def get_campaign

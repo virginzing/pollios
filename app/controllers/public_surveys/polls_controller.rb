@@ -97,7 +97,7 @@ class PublicSurveys::PollsController < ApplicationController
 
   def campaigns
     @campaign = @poll.campaign
-    @list_reward = CampaignMember.joins(:poll).includes(:member).where(poll: @poll, campaign: @campaign)
+    @list_reward = MemberReward.joins(:poll).includes(:member).where(poll: @poll, campaign: @campaign)
   end
 
   private

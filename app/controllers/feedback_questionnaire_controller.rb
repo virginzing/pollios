@@ -38,7 +38,7 @@ class FeedbackQuestionnaireController < ApplicationController
     @collection = CollectionPollSeries.find(params[:id])
     @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
 
-    @campaign_members = CampaignMember.where(poll_series_id: @questionnaire_ids)
+    @member_rewards = MemberReward.where(poll_series_id: @questionnaire_ids)
   end
 
   def qrcode

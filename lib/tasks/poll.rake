@@ -64,7 +64,7 @@ namespace :poll do
     Campaign.delete_all
     HistoryVoteGuest.delete_all
     HistoryViewGuest.delete_all
-    CampaignMember.delete_all
+    MemberReward.delete_all
     CampaignGuest.delete_all
     Group.delete_all
     Recurring.delete_all

@@ -6,7 +6,7 @@ class OneGiftWorker
 
   def perform(receive_id, reward_id, custom_data = nil)
     @receive = Member.cached_find(receive_id)
-    @reward = CampaignMember.cached_find(reward_id)
+    @reward = MemberReward.cached_find(reward_id)
     member_id = 0 # default by system account
     @apn_gift = Apn::Gift.new(@receive, custom_data["message"])
 

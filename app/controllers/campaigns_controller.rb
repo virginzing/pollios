@@ -12,26 +12,20 @@ class CampaignsController < ApplicationController
   expose(:poll) { @poll }
 
   def claim_reward
-    @claim = false
-    init_reward = Campaign::ClaimReward.new(@current_member, @campaign_member)
-
-    if init_reward.claim
-      @claim = true
-    end
+    @claim = Campaign::ClaimReward.new(@current_member, @member_reward).claim
   end
 
   def detail_reward
-    @reward = CampaignMember.joins(:campaign, :member).cached_find(reward_params[:id])
+    @reward = MemberReward.joins(:campaign, :member).cached_find(reward_params[:id])
   end
 
   def delete_reward
-    @reward = CampaignMember.cached_find(reward_params[:id])
+    @reward = MemberReward.cached_find(reward_params[:id])
     @reward.destroy
     render status: @reward ? :created : :unprocessable_entity
   end
 
   def list_reward
-    # @rewards = CampaignMember.without_deleted.list_reward(@current_member.id).paginate(page: params[:next_cursor])
     @rewards = MemberReward.without_deleted.for_member_id(@current_member.id).with_all_relations.paginate(page: params[:next_cursor])
     @next_cursor = @rewards.next_page.nil? ? 0 : @rewards.next_page
   end
@@ -39,7 +33,7 @@ class CampaignsController < ApplicationController
   def poll_with_campaign
     @poll = Poll.find(params[:id])
     @campaign = @poll.campaign
-    @list_reward = CampaignMember.joins(:poll).includes(:member).where(poll: @poll, campaign: @campaign)
+    @list_reward = MemberReward.joins(:poll).includes(:member).where(poll: @poll, campaign: @campaign)
   end
 
   def random_later_of_poll
@@ -69,12 +63,12 @@ class CampaignsController < ApplicationController
     @campaign = Campaign.find(params[:id])
 
     if params[:date_poll].present?
-      @campaign_members = @campaign.campaign_members.where("poll_id = ? AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date)
+      @member_rewards = @campaign.member_rewards.where("poll_id = ? AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", params[:campaign_poll], params[:date_poll].to_date, params[:date_poll].to_date)
     else
-      @campaign_members = @campaign.campaign_members.where("poll_id = ?", params[:campaign_poll])
+      @member_rewards = @campaign.member_rewards.where("poll_id = ?", params[:campaign_poll])
     end
 
-    @campaign_members = @campaign_members || []
+    @member_rewards = @member_rewards || []
 
     respond_to do |wants|
       wants.js
@@ -86,12 +80,12 @@ class CampaignsController < ApplicationController
     @campaign = Campaign.find(params[:id])
     @questionnaire_ids = @campaign.poll_series.pluck(:id)
 
-    @campaign_members = CampaignMember.where("campaign_id = #{@campaign.id} AND poll_series_id IN (?) AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", @questionnaire_ids, params[:date_questionnaire].to_date, params[:date_questionnaire].to_date)
+    @member_rewards = MemberReward.where("campaign_id = #{@campaign.id} AND poll_series_id IN (?) AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", @questionnaire_ids, params[:date_questionnaire].to_date, params[:date_questionnaire].to_date)
 
-    if @campaign_members.present?
-      @campaign_members = @campaign_members
+    if @member_rewards.present?
+      @member_rewards = @member_rewards
     else
-      @campaign_members = []
+      @member_rewards = []
     end
 
     respond_to do |wants|
@@ -105,12 +99,12 @@ class CampaignsController < ApplicationController
     @collection = CollectionPollSeries.find(params[:campaign_questionnaire])
     @questionnaire_ids = @collection.collection_poll_series_branches.pluck(:poll_series_id)
 
-    @campaign_members = CampaignMember.where("campaign_id = #{@campaign.id} AND poll_series_id IN (?) AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", @questionnaire_ids, params[:date_questionnaire].to_date, params[:date_questionnaire].to_date)
+    @member_rewards = MemberReward.where("campaign_id = #{@campaign.id} AND poll_series_id IN (?) AND date(campaign_members.created_at + interval '7 hour') BETWEEN ? AND ?", @questionnaire_ids, params[:date_questionnaire].to_date, params[:date_questionnaire].to_date)
 
-    if @campaign_members.present?
-      @campaign_members = @campaign_members
+    if @member_rewards.present?
+      @member_rewards = @member_rewards
     else
-      @campaign_members = []
+      @member_rewards = []
     end
 
     respond_to do |wants|
@@ -141,8 +135,6 @@ class CampaignsController < ApplicationController
 
     if params[:member_id].present?
       member_id = params[:member_id].split(" ")
-
-
     end
 
     respond_to do |wants|
@@ -253,9 +245,9 @@ class CampaignsController < ApplicationController
     end
 
     def set_reward
-      @campaign_member = CampaignMember.find_by(id: params[:reward_id], member_id: params[:member_id], ref_no: params[:ref_no])
-      raise ExceptionHandler::NotFound, "Reward not found" unless @campaign_member.present?
-      @campaign_member
+      @member_reward = MemberReward.find_by(id: params[:reward_id], member_id: params[:member_id], ref_no: params[:ref_no])
+      raise ExceptionHandler::NotFound, "Reward not found" unless @member_reward.present?
+      @member_reward
     end
 
     def redeem_code_params

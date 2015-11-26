@@ -28,6 +28,10 @@ class Apn::AllGift
   end
 
   def hash_member_ids_with_reward
-    CampaignMember.joins(:member, :campaign).with_reward_status(:receive).where(gift_log_id: @gift_log.id).inject({}) {|h,v| h[v.member_id] = v.id; h }
-  end
+    MemberReward.joins(:member, :campaign).with_reward_status(:receive).where(gift_log_id: @gift_log.id).inject ({}) do |hash, val| 
+      hash[val.member_id] = val.id
+      hash
+    end
+  end  
+
 end

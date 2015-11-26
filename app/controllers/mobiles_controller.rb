@@ -69,7 +69,7 @@ class MobilesController < ApplicationController
 
         @list_poll = Poll.unscoped.where("poll_series_id = ?", @questionnaire.id).order("polls.order_poll asc")
 
-        @reward = CampaignMember.joins(:member).where("member_id = ? AND campaign_members.poll_series_id = ?", current_member.id, @questionnaire.id).first
+        @reward = MemberReward.joins(:member).where("member_id = ? AND campaign_members.poll_series_id = ?", current_member.id, @questionnaire.id).first
         # puts "#{@reward}"
         # puts "#{@list_poll_first}"
         render 'questionnaire'

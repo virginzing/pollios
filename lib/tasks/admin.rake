@@ -205,8 +205,8 @@ namespace :admin do
     BranchPoll.delete_all
     BranchPoll.connection.execute('ALTER SEQUENCE branch_polls_id_seq RESTART WITH 1')
 
-    CampaignMember.delete_all
-    CampaignMember.connection.execute('ALTER SEQUENCE campaign_members_id_seq RESTART WITH 1')
+    MemberReward.delete_all
+    MemberReward.connection.execute('ALTER SEQUENCE campaign_members_id_seq RESTART WITH 1')    
 
     GiftLog.delete_all
     GiftLog.connection.execute('ALTER SEQUENCE gift_logs_id_seq RESTART WITH 1')

@@ -67,7 +67,7 @@ class MemberReward < ActiveRecord::Base
     end
   end
 
-  def as_json
+  def as_json(options = {})
     {
       id: id,
       reward_id: id,

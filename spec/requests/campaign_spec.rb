@@ -18,7 +18,7 @@ RSpec.describe "Campaign" do
       end
 
       it "have 0 reward" do
-        expect(CampaignMember.with_reward_status(:receive).count).to eq(0)
+        expect(MemberReward.with_reward_status(:receive).count).to eq(0)
         expect(json["list_reward"].count).to eq(0)
       end
     end
@@ -35,7 +35,7 @@ RSpec.describe "Campaign" do
       end
 
       it "have 1 reward" do
-        expect(CampaignMember.with_reward_status(:receive).count).to eq(1)
+        expect(MemberReward.with_reward_status(:receive).count).to eq(1)
         expect(json["list_reward"].count).to eq(1)
       end
     end

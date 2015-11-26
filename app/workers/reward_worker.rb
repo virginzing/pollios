@@ -5,7 +5,7 @@ class RewardWorker
   sidekiq_options unique: true
   
   def perform(reward_id)
-    @reward = CampaignMember.cached_find(reward_id)
+    @reward = MemberReward.cached_find(reward_id)
     @member = @reward.campaign.member
 
     @apn_reward = Apn::Reward.new(@reward)

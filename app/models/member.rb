@@ -163,8 +163,8 @@ class Member < ActiveRecord::Base
 
   has_many :campaigns, dependent: :destroy
 
-  has_many :campaign_members, dependent: :destroy, class_name: "CampaignMember"
-  has_many :have_campaigns, through: :campaign_members, source: :campaign
+  has_many :member_rewards, dependent: :destroy, class_name: "MemberReward"
+  has_many :rewards, through: :member_rewards, source: :reward
 
   has_many :share_polls, dependent: :destroy
   has_many :recurrings, dependent: :destroy
@@ -563,9 +563,9 @@ class Member < ActiveRecord::Base
     end
   end
 
-  def cached_get_my_reward
+  def cached_get_my_rewards
     Rails.cache.fetch([self.id, 'reward']) do
-      CampaignMember.list_reward(self.id).to_a
+      MemberReward.for_member_id(self.id).to_a
     end
   end
 

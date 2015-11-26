@@ -18,5 +18,5 @@ json.count do
   json.friend Member::MemberList.new(member).active.size
   json.friend_limit Member::FRIEND_LIMIT
   json.point member.point
-  json.reward member.cached_get_my_reward.size
+  json.reward member.cached_get_my_rewards.count
 end

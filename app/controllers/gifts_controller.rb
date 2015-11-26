@@ -9,7 +9,7 @@ class GiftsController < ApplicationController
 
   def new
     @campaigns = Campaign.where(system_campaign: true)
-    @gift = CampaignMember.new
+    @gift = MemberReward.new
   end
 
   def create
@@ -30,6 +30,6 @@ class GiftsController < ApplicationController
   private
 
   def gift_params
-    params.require(:campaign_member).permit(:campaign_id, :list_member, :message)
+    params.require(:member_reward).permit(:campaign_id, :list_member, :message)
   end
 end
