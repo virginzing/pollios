@@ -6,12 +6,14 @@ module Pollios::V1::MemberAPI
     expose_members :followings
     expose_members :blocks
 
+    private
+
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(current_member).social_linkage_ids
     end
 
     def blocks
-      return object.blocks if object.member.id == current_member.id
+      return object.blocks if viewing_own_friends?
       []
     end
 
@@ -19,5 +21,8 @@ module Pollios::V1::MemberAPI
       options[:current_member]
     end
 
+    def viewing_own_friends?
+      object.member.id == current_member.id
+    end
   end
 end
