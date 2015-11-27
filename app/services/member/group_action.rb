@@ -1,6 +1,8 @@
 # WARNING: NOT ENTIRELY WORKING. DOUBLE CHECK EVERYTHING!!!
 # TODO: Really test this. Also, make all the logic works.
 class Member::GroupAction
+  include Member::Private::GroupActionGuard
+  include Member::Private::GroupAction
 
   attr_reader :member, :group
 
