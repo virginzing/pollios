@@ -1,59 +1,7 @@
 module Member::Private::MemberActionGuard
 
   private
-
-  def same_member
-    member.id == a_member.id
-  end
-
-  def already_friend
-    member_list.already_friend_with?(a_member)
-  end
-
-  def already_sent_request
-    member_list.already_sent_request_to?(a_member)
-  end
-
-  def not_friend
-    member_list.not_friend_with?(a_member)
-  end
-
-  def already_follow
-    member_list.already_follow_with?(a_member)
-  end
-
-  def not_following
-    member_list.not_following_with?(a_member)
-  end
-
-  def not_official_account
-    a_member.member_type == 'citizen'
-  end
-
-  def already_block
-    member_list.already_block_with?(a_member)
-  end
-
-  def not_blocking
-    member_list.not_blocking_with?(a_member)
-  end
-
-  def friends_limit_exist(member)
-    Member::MemberList.new(member).friends_limit_exist?
-  end
-
-  def incoming_block
-    Member::MemberList.new(a_member).already_block_with?(member)
-  end
-
-  def not_exist_incoming_request
-    member_list.not_exist_incoming_request?(a_member)
-  end
-
-  def not_exist_outgoing_request
-    member_list.not_exist_outgoing_request?(a_member)
-  end
-
+  
   def can_add_friend?
     return false, "You can't add yourself as a friend." if same_member
     return false, "You and #{a_member.get_name} are already friends." if already_friend
@@ -117,4 +65,57 @@ module Member::Private::MemberActionGuard
     return false, "You can't report yourself." if same_member
     [true, '']
   end
+
+  def same_member
+    member.id == a_member.id
+  end
+
+  def already_friend
+    member_list.already_friend_with?(a_member)
+  end
+
+  def already_sent_request
+    member_list.already_sent_request_to?(a_member)
+  end
+
+  def not_friend
+    member_list.not_friend_with?(a_member)
+  end
+
+  def already_follow
+    member_list.already_follow_with?(a_member)
+  end
+
+  def not_following
+    member_list.not_following_with?(a_member)
+  end
+
+  def not_official_account
+    a_member.member_type == 'citizen'
+  end
+
+  def already_block
+    member_list.already_block_with?(a_member)
+  end
+
+  def not_blocking
+    member_list.not_blocking_with?(a_member)
+  end
+
+  def friends_limit_exist(member)
+    Member::MemberList.new(member).friends_limit_exist?
+  end
+
+  def incoming_block
+    Member::MemberList.new(a_member).already_block_with?(member)
+  end
+
+  def not_exist_incoming_request
+    member_list.not_exist_incoming_request?(a_member)
+  end
+
+  def not_exist_outgoing_request
+    member_list.not_exist_outgoing_request?(a_member)
+  end
+
 end
