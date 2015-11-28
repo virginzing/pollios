@@ -30,7 +30,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
 	context "Filter" do
 		let!(:group_admin) { create(:member, id: 100) }
-		let!(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+		let!(:new_group) { Member::GroupActionLegacy.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
 		let!(:group_member) { create(:group_member, member_id: 103, group_id: new_group.id) }
 		let!(:group_member_2) { create(:group_member, member_id: 109, group_id: new_group.id) }

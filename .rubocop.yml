@@ -19,6 +19,9 @@ Metrics/ClassLength:
 Metrics/ModuleLength:
   Max: 200
 
+Metrics/AbcSize:
+  Max: 20
+
 Style/TrailingBlankLines:
   Enabled: false
 

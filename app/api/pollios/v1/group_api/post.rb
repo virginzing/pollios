@@ -4,11 +4,16 @@ module Pollios::V1::GroupAPI
 
     helpers do
       def group
-        @group ||= Group.cached_find(params[:id])       
+        @group ||= group_or_nil       
+      end
+
+      def group_or_nil
+        return nil unless params[:id].present?
+        Group.cached_find(params[:id])
       end
 
       def curent_member_action
-        @curent_member_action ||= Member::GroupAction.new(current_member)
+        @curent_member_action ||= Member::GroupAction.new(current_member, group)
       end
     end
 
@@ -17,14 +22,15 @@ module Pollios::V1::GroupAPI
       params do
         requires :name, type: String, desc: 'group name'
         optional :description, type: String, desc: 'group description'
-        optional :cover_preset, type: String, desc: 'group cover preset'
+        optional :cover_preset, type: Integer, desc: 'group cover preset id'
         optional :cover, type: String, desc: 'group cover url'
         optional :friend_ids, type: Array[Integer], desc: 'list of friend id add to group after created'
 
         exactly_one_of :cover_preset, :cover
       end
-      post do
 
+      post do
+        curent_member_action.create(params)
       end
 
       params do
