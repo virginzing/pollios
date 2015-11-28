@@ -33,7 +33,7 @@ module Pollios::V1::GroupAPI
 
       route_param :id do
 
-        desc 'ask to join group'
+        desc 'request to join group'
         post '/join' do
 
         end
@@ -44,17 +44,17 @@ module Pollios::V1::GroupAPI
         end
 
         resource :request do
-          desc 'accept request to join group'
+          desc 'accept group invitation'
           post '/accept' do
 
           end
 
-          desc 'reject request to join group'
+          desc 'reject group invitation'
           post '/reject' do
 
           end
 
-          desc 'cancel invite friend to group'
+          desc 'cancel outgoing group request'
           post '/cancel' do
 
           end
@@ -75,27 +75,27 @@ module Pollios::V1::GroupAPI
 
           route_param :id do
 
-            desc 'admin approve request to join group'
+            desc "approve member's request to join group"
             post '/approve' do
 
             end
 
-            desc 'admin deny request to join group'
+            desc "deny member's request to join group"
             post '/deny' do
 
             end
 
-            desc 'admin remove member in group'
+            desc 'remove member from group'
             post '/remove' do
 
             end
 
-            desc 'creator promote member in group to member'
+            desc 'promote member to group administrator'
             post '/promote' do
 
             end
 
-            desc 'creator demote member in group to member'
+            desc 'demote member from administrator'
             post '/demote' do
 
             end
