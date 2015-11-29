@@ -8,6 +8,7 @@ class Member::GroupAdminAction < Member::GroupAction
 
   def initialize(admin_member, group, a_member)
     super(admin_member, group)
+    fail ExceptionHandler::UnprocessableEntity, 'Only group admin allows' unless admin_of_group?
     @a_member = a_member
   end
 
@@ -24,6 +25,12 @@ class Member::GroupAdminAction < Member::GroupAction
   end
 
   def demote
+  end
+
+  # refactor this into private module later
+  private
+  def admin_of_group?
+    Group::MemberList.new(group).admin?(admin_member)
   end
 
 end

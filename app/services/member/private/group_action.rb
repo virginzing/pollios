@@ -34,11 +34,13 @@ module Member::Private::GroupAction
     process_set_group_cover
     process_set_creator_as_admin
     process_create_group_company
-    process_clear_member_group_cache
     process_invite_friends
+
+    clear_group_cache_for_member
   end
 
   def process_set_group_cover
+    cover = group_params[:cover]
     cover_group_url = ImageUrl.new(cover)
     return unless cover && cover_group_url.from_image_url?
 

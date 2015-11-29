@@ -12,7 +12,7 @@ module Pollios::V1::GroupAPI
         Group.cached_find(params[:id])
       end
 
-      def curent_member_group_action
+      def current_member_group_action
         @current_member_group_action ||= Member::GroupAction.new(current_member, group)
       end
     end
@@ -24,7 +24,7 @@ module Pollios::V1::GroupAPI
         optional :description, type: String, desc: 'group description'
         optional :cover_preset, type: Integer, desc: 'group cover preset id'
         optional :cover, type: String, desc: 'group cover url'
-        optional :friend_ids, type: Array[Integer], desc: 'list of friend id add to group after created'
+        optional :friend_ids, type: Array[Integer], desc: 'list of friend (ids) to invite to group after created'
 
         exactly_one_of :cover_preset, :cover
       end
