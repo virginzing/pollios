@@ -15,4 +15,22 @@ class Member::GroupAction
     process_create_group
   end
 
+  def join
+  end
+
+  def leave
+  end
+
+  def accept_request
+  end
+
+  def reject_request
+  end
+
+  def cancel_request
+  end
+
+  def invite(friend_ids)
+  end
+
 end
