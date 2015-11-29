@@ -12,13 +12,13 @@ module Pollios::V1::GroupAPI
         Group.cached_find(params[:id])
       end
 
-      def curent_member_action
-        @curent_member_action ||= Member::GroupAction.new(current_member, group)
+      def curent_member_group_action
+        @current_member_group_action ||= Member::GroupAction.new(current_member, group)
       end
     end
 
     resource :groups do
-      desc 'create group by current member'
+      desc 'create a new group'
       params do
         requires :name, type: String, desc: 'group name'
         optional :description, type: String, desc: 'group description'
@@ -30,7 +30,7 @@ module Pollios::V1::GroupAPI
       end
 
       post do
-        curent_member_action.create(params)
+        current_member_group_action.create(params)
       end
 
       params do
@@ -41,28 +41,28 @@ module Pollios::V1::GroupAPI
 
         desc 'request to join group'
         post '/join' do
-
+          current_member_group_action.join
         end
 
         desc 'leave group'
         post '/leave' do
-
+          current_member_group_action.leave
         end
 
         resource :request do
           desc 'accept group invitation'
           post '/accept' do
-
+            current_member_group_action.accept_request
           end
 
           desc 'reject group invitation'
           post '/reject' do
-
+            current_member_group_action.reject_request
           end
 
           desc 'cancel outgoing group request'
           post '/cancel' do
-
+            current_member_group_action.cancel_request
           end
         end
 
@@ -72,7 +72,7 @@ module Pollios::V1::GroupAPI
             requires :friend_ids, type: Array[Integer], desc: 'list of friend id invite to group'
           end
           post '/invite' do
-
+            current_member_group_action.invite(friend_ids)
           end
 
           params do
@@ -81,29 +81,39 @@ module Pollios::V1::GroupAPI
 
           route_param :id do
 
+            helpers do
+              def member
+                @member ||= Member.cached_find(params[:id])
+              end
+
+              def current_member_group_member_action
+                @current_member_group_member_action ||= Member::GroupAdminAction.new(current_member, group, member)
+              end
+            end
+
             desc "approve member's request to join group"
             post '/approve' do
-
+              current_member_group_member_action.approve
             end
 
             desc "deny member's request to join group"
             post '/deny' do
-
+              current_member_group_member_action.deny
             end
 
             desc 'remove member from group'
             post '/remove' do
-
+              current_member_group_member_action.remove
             end
 
             desc 'promote member to group administrator'
             post '/promote' do
-
+              current_member_group_member_action.promote
             end
 
             desc 'demote member from administrator'
             post '/demote' do
-
+              current_member_group_member_action.demote
             end
           end
         end
