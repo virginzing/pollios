@@ -32,7 +32,7 @@ class Group::MemberList
     cached_requests
   end
 
-   # for testing and emergency only
+  # for testing and emergency only
   def pending_ids_non_cache
     members.select { |member| member unless member.is_active }.map(&:id)
   end

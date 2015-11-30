@@ -40,5 +40,9 @@ module Pollios
     mount V1::API
     mount V2::API
 
+    get '/apis' do
+      present Pollios::API.routes, with: APIEntity
+    end
+
   end
 end
