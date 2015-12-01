@@ -39,35 +39,35 @@ module Pollios::V1::GroupAPI
 
       route_param :id do
 
-        desc 'request to join group'
+        desc '[x] request to join group'
         post '/join' do
           current_member_group_action.join
         end
 
-        desc 'leave group'
+        desc '[x] leave group'
         post '/leave' do
           current_member_group_action.leave
         end
 
         resource :request do
-          desc 'accept group invitation'
+          desc '[x] accept group invitation'
           post '/accept' do
             current_member_group_action.accept_request
           end
 
-          desc 'reject group invitation'
+          desc '[x] reject group invitation'
           post '/reject' do
             current_member_group_action.reject_request
           end
 
-          desc 'cancel outgoing group request'
+          desc '[x] cancel outgoing group request'
           post '/cancel' do
             current_member_group_action.cancel_request
           end
         end
 
         resource :members do
-          desc 'invite friends to group'
+          desc '[x] invite friends to group'
           params do
             requires :friend_ids, type: Array[Integer], desc: 'list of friend id invite to group'
           end
@@ -91,27 +91,27 @@ module Pollios::V1::GroupAPI
               end
             end
 
-            desc "approve member's request to join group"
+            desc "[x] approve member's request to join group"
             post '/approve' do
               current_member_group_member_action.approve
             end
 
-            desc "deny member's request to join group"
+            desc "[x] deny member's request to join group"
             post '/deny' do
               current_member_group_member_action.deny
             end
 
-            desc 'remove member from group'
+            desc '[x] remove member from group'
             post '/remove' do
               current_member_group_member_action.remove
             end
 
-            desc 'promote member to group administrator'
+            desc '[x] promote member to group administrator'
             post '/promote' do
               current_member_group_member_action.promote
             end
 
-            desc 'demote member from administrator'
+            desc '[x] demote member from administrator'
             post '/demote' do
               current_member_group_member_action.demote
             end

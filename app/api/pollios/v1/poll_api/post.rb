@@ -10,12 +10,13 @@ module Pollios::V1::PollAPI
       route_param :id do
 
         resource :choices do
-          desc 'vote choide_id on poll_id'
+          desc '[x] vote choide_id on poll_id'
           params do
             requires :choice_id, type: Integer, desc: 'choice_id to vote on'
           end
           route_param :choice_id do
             post '/vote' do
+              { choice: params[:choice_id] }
             end 
           end
         end

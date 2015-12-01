@@ -26,7 +26,7 @@ module Pollios::V1::GroupAPI
           present members_of_group, with: MemberListEntity, current_member: current_member
         end
 
-        desc 'returns polls in group_id'
+        desc '[x] returns polls in group_id'
         get '/polls' do
         end
 

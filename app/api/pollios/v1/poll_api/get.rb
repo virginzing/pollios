@@ -15,7 +15,7 @@ module Pollios::V1::PollAPI
 
       route_param :id do
 
-        desc "returns poll details for requesting member"
+        desc "[x] returns poll details for requesting member"
         get do
           poll, error_message = Member::PollList.new(current_member).poll(params[:id])
           error! error_message, 401 unless poll
