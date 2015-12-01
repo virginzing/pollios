@@ -36,13 +36,13 @@ module Pollios
       error!(e.message, 422)
     end
 
-
-    mount V1::API
-    mount V2::API
-
+    desc 'return list of all currently available apis'
     get '/apis' do
       present Pollios::API.routes, with: APIEntity
     end
+
+    mount V1::API
+    mount V2::API
 
   end
 end

@@ -4,6 +4,7 @@ module Pollios::V1
     mount MemberAPI::Get
     mount MemberAPI::Post
     mount PollAPI::Get
+    mount PollAPI::Post
     mount GroupAPI::Get
     mount GroupAPI::Post
   end
