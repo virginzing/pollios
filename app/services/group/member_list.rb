@@ -1,4 +1,5 @@
 class Group::MemberList
+  include Group::Private::MemberList
 
   def initialize(group)
     @group = group
@@ -12,16 +13,12 @@ class Group::MemberList
   #   @list_members.count
   # end
 
-  def cached_all_members
-    @cached_all_members ||= cached_members
-  end
-
   def active
     cached_all_members.select { |member| member if member.is_active }
   end
 
   def active_with_no_cache
-    members.select { |member| member if member.is_active }
+    all_members.select { |member| member if member.is_active }
   end
 
   def pending
@@ -29,12 +26,12 @@ class Group::MemberList
   end
 
   def requesting
-    cached_requests
+    cached_all_requests
   end
 
   # for testing and emergency only
   def pending_ids_non_cache
-    members.select { |member| member unless member.is_active }.map(&:id)
+    all_members.select { |member| member unless member.is_active }.map(&:id)
   end
 
   def filter_members_from_list(member_list)
@@ -89,39 +86,15 @@ class Group::MemberList
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless admin?(member)
   end
 
-  private
-
-  def group_member_query(member)
-    GroupMember.where('group_id = ? AND member_id = ?', @group.id, member.id)
-  end
-
-  def members
-    Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
-      .select(
-        "DISTINCT members.*, 
-        group_members.is_master as admin, 
-        group_members.active as is_active, 
-        group_members.created_at as joined_at")
-      .order('members.fullname asc')
-  end
-
-  def requests
-    @group.members_request
-  end
-
-  def group_member_ids
-    @group.group_members.map(&:member_id)
-  end
-  
-  def cached_members
+  def cached_all_members
     Rails.cache.fetch("group/#{@group.id}/members") do
-      members.to_a
+      all_members
     end
   end
   
-  def cached_requests
+  def cached_all_requests
     Rails.cache.fetch("group/#{@group.id}/requests") do
-      requests.to_a
+      all_requests
     end
   end
 end
