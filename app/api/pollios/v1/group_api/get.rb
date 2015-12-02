@@ -28,6 +28,7 @@ module Pollios::V1::GroupAPI
 
         desc '[x] returns polls in group_id'
         get '/polls' do
+          polls_of_groups = Group::PollList.new(group)
         end
 
       end

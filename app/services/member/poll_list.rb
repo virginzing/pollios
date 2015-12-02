@@ -19,7 +19,7 @@ class Member::PollList
 
     is_visible, error_message = Poll::Listing.new(poll).is_visible_to_member_with_error(member)
     if is_visible
-      Member::PollAction.new(member).view_poll(poll)
+      Member::PollAction.new(member, poll).view
       return poll, nil
     else
       return nil, error_message

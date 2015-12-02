@@ -103,7 +103,6 @@ class Group::MemberList
         group_members.active as is_active, 
         group_members.created_at as joined_at")
       .order('members.fullname asc')
-
   end
 
   def requests
