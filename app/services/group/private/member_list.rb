@@ -7,11 +7,11 @@ module Group::Private::MemberList
   end
 
   def group_member_query(member)
-    GroupMember.where('group_id = ? AND member_id = ?', @group.id, member.id)
+    GroupMember.where('group_id = ? AND member_id = ?', group.id, member.id)
   end
 
   def all_members
-    Member.joins(:group_members).where("group_members.group_id = #{@group.id}")
+    Member.joins(:group_members).where("group_members.group_id = #{group.id}")
       .select(
         "DISTINCT members.*, 
         group_members.is_master as admin, 
@@ -22,10 +22,10 @@ module Group::Private::MemberList
   end
 
   def all_requests
-    @group.members_request.to_a
+    group.members_request.to_a
   end
 
   def group_member_ids
-    @group.group_members.map(&:member_id)
+    group.group_members.map(&:member_id)
   end
 end

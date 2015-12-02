@@ -1,6 +1,8 @@
 class Group::MemberList
   include Group::Private::MemberList
 
+  attr_reader :group
+
   def initialize(group)
     @group = group
   end
@@ -79,13 +81,13 @@ class Group::MemberList
   end
 
   def cached_all_members
-    Rails.cache.fetch("group/#{@group.id}/members") do
+    Rails.cache.fetch("group/#{group.id}/members") do
       all_members
     end
   end
   
   def cached_all_requests
-    Rails.cache.fetch("group/#{@group.id}/requests") do
+    Rails.cache.fetch("group/#{group.id}/requests") do
       all_requests
     end
   end
