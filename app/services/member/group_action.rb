@@ -16,21 +16,45 @@ class Member::GroupAction
   end
 
   def join
+    can_join, message = can_join?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_join
+      
+    process_join
   end
 
   def leave
+    can_leave, message = can_leave?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_leave
+      
+    process_leave
   end
 
   def accept_request
+    can_accept_request, message = can_accept_request?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_accept_request
+      
+    process_accept_request
   end
 
   def reject_request
+    can_reject_request, message = can_reject_request?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_reject_request
+      
+    process_reject_request
   end
 
   def cancel_request
+    can_cancel_request, message = can_cancel_request?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_request
+
+    process_cancel_request
   end
 
   def invite(friend_ids)
+    can_invite_friends, message = can_invite_friends?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_invite_friends
+
+    process_invite_friends(friend_ids)
   end
 
 end

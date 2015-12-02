@@ -72,7 +72,7 @@ module Pollios::V1::GroupAPI
             requires :friend_ids, type: Array[Integer], desc: 'list of friend id invite to group'
           end
           post '/invite' do
-            current_member_group_action.invite(friend_ids)
+            current_member_group_action.invite(params[:friend_ids])
           end
 
           params do
