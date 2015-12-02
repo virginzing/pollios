@@ -2,6 +2,10 @@ module Member::Private::GroupAction
 
   private
 
+  def member_list
+    Group::MemberList.new(group)
+  end
+
   def process_create_group
     @group = build_new_group
     initialize_new_group
@@ -18,15 +22,9 @@ module Member::Private::GroupAction
     {
       member_id: member.id,
       name: group_params[:name],
-      group_type: :normal, # not sure about this, should generalize
-      photo_group: group_params[:photo_group],
       description: group_params[:description],
       cover: group_params[:cover],
-      cover_preset: group_params[:cover_preset],
-      public: group_params[:public].to_b,
-      admin_post_only: group_params[:admin_post_only].to_b,
-      authorize_invite: :everyone,
-      need_approve: group_params[:need_approve]
+      cover_preset: group_params[:cover_preset]
     }    
   end
 
@@ -34,7 +32,7 @@ module Member::Private::GroupAction
     process_set_group_cover
     process_set_creator_as_admin
     process_create_group_company
-    process_invite_friends
+    process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
 
     clear_group_cache_for_member
   end
@@ -57,11 +55,30 @@ module Member::Private::GroupAction
     group.create_group_company(company: member.get_company)
   end
 
+  def process_invite_friends(friend_ids)
+    friend_ids = member_list.filter_non_members_from_list(friend_ids)
+    
+    friend_ids.each do |friend_id|
+      group.group_members.create(member_id: friend_id, is_master: false, active: false, invite_id: member.id)
+      FlushCached::Member.new(Member.find(friend_id)).clear_list_groups
+    end
+
+    clear_member_cache_for_group
+    send_invite_friends_to_group_notification(friend_ids)
+
+    group
+  end
+
   def clear_group_cache_for_member
     FlushCached::Member.new(member).clear_list_groups
   end
 
-  def process_invite_friends
+  def clear_member_cache_for_group
+    FlushCached::Group.new(group).clear_list_members
+  end
+
+  def send_invite_friends_to_group_notification(friend_ids)
+    InviteFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
   end
 
 end

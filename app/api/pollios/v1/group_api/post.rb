@@ -67,7 +67,7 @@ module Pollios::V1::GroupAPI
         end
 
         resource :members do
-          desc '[x] invite friends to group'
+          desc 'invite friends to group'
           params do
             requires :friend_ids, type: Array[Integer], desc: 'list of friend id invite to group'
           end
