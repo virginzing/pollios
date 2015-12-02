@@ -73,10 +73,7 @@ module Member::Private::MemberAction
 
     update_both_relations(status: :nofriend)
 
-    if options[:clear_cached]
-      clear_friends_caches_for_members
-      clear_followers_caches_for_members
-    end
+    clear_friends_and_follwers_caches_for_members if options[:clear_cached]
 
     return
   end
@@ -107,8 +104,7 @@ module Member::Private::MemberAction
     process_outgoing_block
     process_incoming_block
     
-    clear_friends_caches_for_members
-    clear_followers_caches_for_members
+    clear_friends_and_follwers_caches_for_members
 
     return
   end
@@ -133,8 +129,7 @@ module Member::Private::MemberAction
     outgoing_relation.update(block: false)
     incoming_relation.update(visible_poll: true)
 
-    clear_friends_caches_for_members
-    clear_followers_caches_for_members
+    clear_friends_and_follwers_caches_for_members
 
     return
   end
@@ -143,8 +138,7 @@ module Member::Private::MemberAction
     update_both_relations(active: true, status: :friend)
     send_friends_notification(member, a_member, action: ACTION[:become_friend])
 
-    clear_friends_caches_for_members
-    clear_followers_caches_for_members
+    clear_friends_and_follwers_caches_for_members
 
     return
   end
@@ -153,8 +147,7 @@ module Member::Private::MemberAction
     update_both_relations(status: :nofriend)
     NotifyLog.check_update_cancel_request_friend_deleted(member, a_member)
 
-    clear_friends_caches_for_members
-    clear_followers_caches_for_members
+    clear_friends_and_follwers_caches_for_members
 
     return
   end
@@ -176,6 +169,11 @@ module Member::Private::MemberAction
 
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
     AddFriendWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
+  end
+
+  def clear_friends_and_follwers_caches_for_members
+    clear_friends_caches_for_members
+    clear_followers_caches_for_members
   end
 
   def clear_friends_caches_for_members
