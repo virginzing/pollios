@@ -39,17 +39,22 @@ module Pollios::V1::GroupAPI
 
       route_param :id do
 
-        desc '[x] request to join group'
-        post '/join' do
-          current_member_group_action.join
-        end
-
         desc '[x] leave group'
         post '/leave' do
           current_member_group_action.leave
         end
 
         resource :request do
+          desc '[x] request to join group'
+          post '/join' do
+            current_member_group_action.join_request
+          end
+
+          desc '[x] cancel outgoing group request'
+          post '/cancel' do
+            current_member_group_action.cancel_request
+          end
+
           desc '[x] accept group invitation'
           post '/accept' do
             current_member_group_action.accept_request
@@ -58,11 +63,6 @@ module Pollios::V1::GroupAPI
           desc '[x] reject group invitation'
           post '/reject' do
             current_member_group_action.reject_request
-          end
-
-          desc '[x] cancel outgoing group request'
-          post '/cancel' do
-            current_member_group_action.cancel_request
           end
         end
 
