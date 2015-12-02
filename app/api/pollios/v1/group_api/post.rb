@@ -60,7 +60,7 @@ module Pollios::V1::GroupAPI
             current_member_group_action.accept_request
           end
 
-          desc '[x] reject group invitation'
+          desc 'reject group invitation'
           post '/reject' do
             current_member_group_action.reject_request
           end

@@ -6,6 +6,10 @@ module Member::Private::GroupAction
     Group::MemberList.new(group)
   end
 
+  def group_member
+    group.group_members.find_by(member_id: member.id)
+  end
+
   def process_create_group
     @group = build_new_group
     initialize_new_group
@@ -67,6 +71,27 @@ module Member::Private::GroupAction
     send_invite_friends_to_group_notification(friend_ids)
 
     group
+  end
+
+  def process_reject_request
+    delete_group_invitation_notification
+    remove_role_group_admin
+    
+    group_member.destroy
+
+    clear_group_cache_for_member
+    clear_member_cache_for_group
+
+    group
+  end
+
+  def delete_group_invitation_notification
+    a_member = Member.find(group_member.invite_id)
+    NotifyLog.check_update_cancel_invite_friend_to_group_deleted(a_member, member, group)
+  end
+
+  def remove_role_group_admin
+    member.remove_role :group_admin, group if group.company?
   end
 
   def clear_group_cache_for_member
