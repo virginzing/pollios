@@ -5,14 +5,6 @@ class Group::MemberList
     @group = group
   end
 
-  def list_members
-    @list_members ||= members
-  end
-
-  # def count
-  #   @list_members.count
-  # end
-
   def active
     cached_all_members.select { |member| member if member.is_active }
   end
@@ -43,7 +35,7 @@ class Group::MemberList
   end
 
   def members_as_member
-    cached_all_members.select { |member| member unless member.admin }
+    cached_all_members.select { |member| member if member.is_active && !member.admin }
   end
 
   def members_as_admin
@@ -55,27 +47,27 @@ class Group::MemberList
   end
 
   def member_or_admin?(member)
-    cached_all_members.map(&:id).include?(member.id) ? true : false
+    ids_include?(cached_all_members, member.id)
   end
 
   def member?(member)
-    members_as_member.map(&:id).include?(member.id) ? true : false
+    ids_include?(members_as_member, member.id)
   end
 
   def admin?(member)
-    members_as_admin.map(&:id).include?(member.id) ? true : false  
+    ids_include?(members_as_admin, member.id)  
   end
 
   def active?(member)
-    active.map(&:id).include?(member.id)
+    ids_include?(active, member.id)
   end
 
   def requesting?(member)
-    requesting.map(&:id).include?(member.id)
+    ids_include?(requesting, member.id)
   end
 
   def pending?(member)
-    pending.map(&:id).include?(member.id)
+    ids_include?(pending, member.id)
   end
 
   def raise_error_not_member(member)

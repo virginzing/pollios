@@ -2,6 +2,10 @@ module Group::Private::MemberList
 
   private
 
+  def ids_include?(ids_list, id)
+    ids_list.map(&:id).include?(id)
+  end
+
   def group_member_query(member)
     GroupMember.where('group_id = ? AND member_id = ?', @group.id, member.id)
   end
