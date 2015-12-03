@@ -37,7 +37,7 @@ module Member::Private::GroupActionGuard
   end
 
   def already_member
-    member_list.member_or_admin?(member)
+    member_list.active?(member)
   end
 
   def already_sent_request
