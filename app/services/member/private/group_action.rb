@@ -73,6 +73,17 @@ module Member::Private::GroupAction
     group
   end
 
+  def process_leave
+    remove_role_group_admin
+    group_member.destroy
+
+    LeaveGroupLog.leave_group_log(member, group)
+
+    clear_group_member_relation_cache
+
+    group
+  end
+
   def process_join_request
     (invitation? && invite_by_admin?) ? process_join_group : process_sent_join_request
 

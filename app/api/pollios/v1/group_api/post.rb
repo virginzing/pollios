@@ -39,7 +39,7 @@ module Pollios::V1::GroupAPI
 
       route_param :id do
 
-        desc '[x] leave group'
+        desc 'leave group'
         post '/leave' do
           current_member_group_action.leave
         end
