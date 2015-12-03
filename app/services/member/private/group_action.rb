@@ -74,8 +74,17 @@ module Member::Private::GroupAction
   end
 
   def process_join_request
-    have_invitation = GroupMember.have_request_group?(group, member)
-    (have_invitation && invite_by_admin?) ? process_join_group : process_sent_join_request
+    (invitation? && invite_by_admin?) ? process_join_group : process_sent_join_request
+
+    group
+  end
+
+  def process_cancel_request
+    group.request_groups.find_by(member_id: member.id).destroy
+    process_reject_request if invitation?
+
+    clear_group_member_relation_cache
+    clear_request_cache_for_group
 
     group
   end
@@ -86,6 +95,10 @@ module Member::Private::GroupAction
     group
   end
 
+  def invitation?
+    GroupMember.have_request_group?(group, member)
+  end
+
   def invite_by_admin?
     member_list.admin?(Member.find(group_member.invite_id))
   end
@@ -93,8 +106,8 @@ module Member::Private::GroupAction
   def process_sent_join_request ### PENDING
     group.request_groups.create(member_id: member.id)
 
-    clear_both_cache
-    FlushCached::Group.new(group).clear_list_requests
+    clear_group_member_relation_cache
+    clear_request_cache_for_group
 
     send_join_group_request_notification
   end
@@ -105,7 +118,7 @@ module Member::Private::GroupAction
     process_add_member_to_company
     process_set_member_following_company
 
-    clear_both_cache
+    clear_group_member_relation_cache
 
     send_join_group_notification
   end
@@ -126,7 +139,7 @@ module Member::Private::GroupAction
     
     group_member.destroy
 
-    clear_both_cache
+    clear_group_member_relation_cache
 
     group
   end
@@ -148,7 +161,11 @@ module Member::Private::GroupAction
     FlushCached::Group.new(group).clear_list_members
   end
 
-  def clear_both_cache
+  def clear_request_cache_for_group
+    FlushCached::Group.new(group).clear_list_requests
+  end
+
+  def clear_group_member_relation_cache
     clear_group_cache_for_member
     clear_member_cache_for_group
   end
