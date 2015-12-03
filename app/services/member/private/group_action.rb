@@ -103,8 +103,8 @@ module Member::Private::GroupAction
     member_list.admin?(Member.find(group_member.invite_id))
   end
 
-  def process_sent_join_request ### PENDING
-    group.request_groups.create(member_id: member.id)
+  def process_sent_join_request
+    group.need_approve ? group.request_groups.create(member_id: member.id) : process_join_group
 
     clear_group_member_relation_cache
     clear_request_cache_for_group
@@ -112,7 +112,8 @@ module Member::Private::GroupAction
     send_join_group_request_notification
   end
 
-  def process_join_group ### IN
+  def process_join_group
+    group.group_members.create(member_id: member.id, is_master: false) unless group_member.present?
     group_member.update!(active: true)
 
     process_add_member_to_company
