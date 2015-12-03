@@ -73,14 +73,60 @@ module Member::Private::GroupAction
     group
   end
 
+  def process_join_request
+    have_invitation = GroupMember.have_request_group?(group, member)
+    (have_invitation && invite_by_admin?) ? process_join_group : process_sent_join_request
+
+    group
+  end
+
+  def process_accept_request
+    invite_by_admin? ? process_join_group : process_join_request
+
+    group
+  end
+
+  def invite_by_admin?
+    member_list.admin?(Member.find(group_member.invite_id))
+  end
+
+  def process_sent_join_request ### PENDING
+    group.request_groups.create(member_id: member.id)
+
+    clear_both_cache
+    FlushCached::Group.new(group).clear_list_requests
+
+    send_join_group_request_notification
+  end
+
+  def process_join_group ### IN
+    group_member.update!(active: true)
+
+    process_add_member_to_company
+    process_set_member_following_company
+
+    clear_both_cache
+
+    send_join_group_notification
+  end
+
+  def process_add_member_to_company
+    return unless group.company? && !group.system_group
+    CompanyMember.add_member_to_company(member, group.get_company)
+  end
+
+  def process_set_member_following_company
+    return unless group.member.company?
+    Company::FollowOwnerGroup.new(member, group.member.id).follow!
+  end
+
   def process_reject_request
     delete_group_invitation_notification
     remove_role_group_admin
     
     group_member.destroy
 
-    clear_group_cache_for_member
-    clear_member_cache_for_group
+    clear_both_cache
 
     group
   end
@@ -102,8 +148,21 @@ module Member::Private::GroupAction
     FlushCached::Group.new(group).clear_list_members
   end
 
+  def clear_both_cache
+    clear_group_cache_for_member
+    clear_member_cache_for_group
+  end
+
   def send_invite_friends_to_group_notification(friend_ids)
     InviteFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
+  end
+
+  def send_join_group_notification
+    JoinGroupWorker.perform_async(member.id, group.id) unless Rails.env.test?
+  end
+
+  def send_join_group_request_notification
+    RequestGroupWorker.perform_async(member.id, group.id) unless Rails.env.test?
   end
 
 end

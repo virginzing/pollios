@@ -45,7 +45,7 @@ module Pollios::V1::GroupAPI
         end
 
         resource :request do
-          desc '[x] request to join group'
+          desc 'request to join group'
           post '/join' do
             current_member_group_action.join_request
           end
@@ -55,7 +55,7 @@ module Pollios::V1::GroupAPI
             current_member_group_action.cancel_request
           end
 
-          desc '[x] accept group invitation'
+          desc 'accept group invitation'
           post '/accept' do
             current_member_group_action.accept_request
           end
