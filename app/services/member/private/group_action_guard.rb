@@ -8,7 +8,7 @@ module Member::Private::GroupActionGuard
     [true, '']
   end
 
-  def can_join_request?
+  def can_join?
     return false, "You are already member of #{group.name}." if already_member
     return false, "You already sent join request to #{group.name}." if already_sent_request
     [true, '']

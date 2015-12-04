@@ -44,12 +44,12 @@ module Pollios::V1::GroupAPI
           current_member_group_action.leave
         end
 
-        resource :request do
-          desc 'request to join group'
-          post '/join' do
-            current_member_group_action.join_request
-          end
+        desc 'join group'
+        post '/join' do
+          current_member_group_action.join
+        end
 
+        resource :request do
           desc 'cancel outgoing group request'
           post '/cancel' do
             current_member_group_action.cancel_request

@@ -22,9 +22,9 @@ class Member::GroupAction
     process_leave
   end
 
-  def join_request
-    can_join_request, message = can_join_request?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_join_request
+  def join
+    can_join, message = can_join?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_join
       
     process_join_request
   end
