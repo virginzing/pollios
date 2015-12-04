@@ -76,18 +76,18 @@ module Pollios::V1::GroupAPI
           end
 
           params do
-            requires :id, type: Integer, desc: 'member id in group'
+            requires :a_member_id, type: Integer, desc: 'member id in group'
           end
 
-          route_param :id do
+          route_param :a_member_id do
 
             helpers do
-              def member
-                @member ||= Member.cached_find(params[:id])
+              def a_member
+                @a_member ||= Member.cached_find(params[:a_member_id])
               end
 
               def current_member_group_member_action
-                @current_member_group_member_action ||= Member::GroupAdminAction.new(current_member, group, member)
+                @current_member_group_member_action ||= Member::GroupAdminAction.new(current_member, group, a_member)
               end
             end
 
