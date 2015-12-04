@@ -34,7 +34,7 @@ module Member::Private::GroupAction
 
   def initialize_new_group
     process_set_group_cover
-    process_set_creator_as_admin
+    process_create_creator_as_admin
     process_create_group_company
     process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
 
@@ -50,7 +50,7 @@ module Member::Private::GroupAction
     group.update_column(:cover, cover_group_url.split_cloudinary_url)
   end
 
-  def process_set_creator_as_admin
+  def process_create_creator_as_admin
     group.group_members.create(member_id: member.id, is_master: true, active: true)
   end
 
