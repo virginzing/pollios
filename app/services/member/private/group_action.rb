@@ -2,11 +2,11 @@ module Member::Private::GroupAction
 
   private
 
-  def member_list
-    Group::MemberList.new(group)
+  def member_listing_service
+    @member_listing_service ||= Group::MemberList.new(group)
   end
 
-  def group_member
+  def relationship_to_group
     group.group_members.find_by(member_id: member.id)
   end
 
@@ -60,11 +60,11 @@ module Member::Private::GroupAction
   end
 
   def process_invite_friends(friend_ids)
-    friend_ids = member_list.filter_non_members_from_list(friend_ids)
+    friend_ids = member_listing_service.filter_non_members_from_list(friend_ids)
     
     friend_ids.each do |friend_id|
       group.group_members.create(member_id: friend_id, is_master: false, active: false, invite_id: member.id)
-      FlushCached::Member.new(Member.find(friend_id)).clear_list_groups
+      FlushCached::Member.new(Member.cached_find(friend_id)).clear_list_groups
     end
 
     clear_member_cache_for_group
@@ -75,7 +75,7 @@ module Member::Private::GroupAction
 
   def process_leave
     remove_role_group_admin
-    group_member.destroy
+    relationship_to_group.destroy
 
     LeaveGroupLog.leave_group_log(member, group)
 
@@ -85,14 +85,13 @@ module Member::Private::GroupAction
   end
 
   def process_join_request
-    (invitation? && invite_by_admin?) ? process_join_group : process_sent_join_request
-
+    being_invited_by_admin? ? process_join_group : process_send_join_request
     group
   end
 
   def process_cancel_request
     group.request_groups.find_by(member_id: member.id).destroy
-    process_reject_request if invitation?
+    process_reject_request if being_invited?
 
     clear_group_member_relation_cache
     clear_request_cache_for_group
@@ -101,20 +100,20 @@ module Member::Private::GroupAction
   end
 
   def process_accept_request
-    invite_by_admin? ? process_join_group : process_join_request
-
+    being_invited_by_admin? ? process_join_group : process_join_request
     group
   end
 
-  def invitation?
-    GroupMember.have_request_group?(group, member)
+  def being_invited?
+    member_listing_service.pending?(member)
   end
 
-  def invite_by_admin?
-    member_list.admin?(Member.find(group_member.invite_id))
+  def being_invited_by_admin?
+    return false unless being_invited?
+    member_listing_service.admin?(Member.cached_find(relationship_to_group.invite_id))
   end
 
-  def process_sent_join_request
+  def process_send_join_request
     group.need_approve ? group.request_groups.create(member_id: member.id) : process_join_group
 
     clear_group_member_relation_cache
@@ -124,8 +123,8 @@ module Member::Private::GroupAction
   end
 
   def process_join_group
-    group.group_members.create(member_id: member.id, is_master: false) unless group_member.present?
-    group_member.update!(active: true)
+    group.group_members.create(member_id: member.id, is_master: false) unless relationship_to_group.present?
+    relationship_to_group.update!(active: true)
 
     process_add_member_to_company
     process_set_member_following_company
@@ -146,18 +145,18 @@ module Member::Private::GroupAction
   end
 
   def process_reject_request
-    delete_group_invitation_notification
+    delete_group_being_invited_notification
     remove_role_group_admin
     
-    group_member.destroy
+    relationship_to_group.destroy
 
     clear_group_member_relation_cache
 
     group
   end
 
-  def delete_group_invitation_notification
-    a_member = Member.find(group_member.invite_id)
+  def delete_group_being_invited_notification
+    a_member = Member.find(relationship_to_group.invite_id)
     NotifyLog.check_update_cancel_invite_friend_to_group_deleted(a_member, member, group)
   end
 

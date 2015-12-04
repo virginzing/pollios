@@ -15,7 +15,7 @@ class PollsController < ApplicationController
 
   before_action :collect_active_user, only: [:create_poll, :vote, :comment, :posted_in_groups]
 
-  expose(:list_recurring) { current_member.get_recurring_available }
+  expose(:list_recurring) { @current_member.get_recurring_available }
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:hash_priority) { @hash_priority }
