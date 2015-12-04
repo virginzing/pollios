@@ -63,14 +63,18 @@ module Member::Private::GroupAction
     member_ids_to_invite = member_listing_service.filter_non_members_from_list(friend_ids)
     
     member_ids_to_invite.each do |id_to_invite|
-      group.group_members.create(member_id: id_to_invite, is_master: false, active: false, invite_id: member.id)
-      FlushCached::Member.new(Member.cached_find(id_to_invite)).clear_list_groups
+      invite_friend_id(id_to_invite)
     end
 
     clear_member_cache_for_group
     send_invite_friends_to_group_notification(member_ids_to_invite)
 
     group
+  end
+
+  def invite_friend_id(friend_id)
+    group.group_members.create(member_id: friend_id, is_master: false, active: false, invite_id: member.id)
+    FlushCached::Member.new(Member.cached_find(friend_id)).clear_list_groups
   end
 
   def process_leave
@@ -156,8 +160,8 @@ module Member::Private::GroupAction
   end
 
   def delete_group_being_invited_notification
-    a_member = Member.find(relationship_to_group.invite_id)
-    NotifyLog.check_update_cancel_invite_friend_to_group_deleted(a_member, member, group)
+    invitation_sender = Member.cached_find(relationship_to_group.invite_id)
+    NotifyLog.check_update_cancel_invite_friend_to_group_deleted(invitation_sender, member, group)
   end
 
   def remove_role_group_admin
