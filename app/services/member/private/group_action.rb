@@ -60,15 +60,15 @@ module Member::Private::GroupAction
   end
 
   def process_invite_friends(friend_ids)
-    friend_ids = member_listing_service.filter_non_members_from_list(friend_ids)
+    member_ids_to_invite = member_listing_service.filter_non_members_from_list(friend_ids)
     
-    friend_ids.each do |friend_id|
-      group.group_members.create(member_id: friend_id, is_master: false, active: false, invite_id: member.id)
-      FlushCached::Member.new(Member.cached_find(friend_id)).clear_list_groups
+    member_ids_to_invite.each do |id_to_invite|
+      group.group_members.create(member_id: id_to_invite, is_master: false, active: false, invite_id: member.id)
+      FlushCached::Member.new(Member.cached_find(id_to_invite)).clear_list_groups
     end
 
     clear_member_cache_for_group
-    send_invite_friends_to_group_notification(friend_ids)
+    send_invite_friends_to_group_notification(member_ids_to_invite)
 
     group
   end
