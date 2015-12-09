@@ -33,7 +33,7 @@ class Member::GroupAction
     can_cancel_request, message = can_cancel_request?
     fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_request
 
-    process_cancel_request
+    process_cancel_request(member)
   end
 
   def accept_request
@@ -47,7 +47,7 @@ class Member::GroupAction
     can_reject_request, message = can_reject_request?
     fail ExceptionHandler::UnprocessableEntity, message unless can_reject_request
       
-    process_reject_request
+    process_reject_request(member)
   end
 
   def invite(friend_ids)

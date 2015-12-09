@@ -93,9 +93,9 @@ module Member::Private::GroupAction
     group
   end
 
-  def process_cancel_request
+  def process_cancel_request(member)
     group.request_groups.find_by(member_id: member.id).destroy
-    process_reject_request if being_invited?
+    process_reject_request(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
     clear_request_cache_for_group
@@ -108,12 +108,12 @@ module Member::Private::GroupAction
     group
   end
 
-  def being_invited?
-    member_listing_service.pending?(member)
+  def being_invited?(member)
+    !relationship_to_group(member).active
   end
 
   def being_invited_by_admin?
-    return false unless being_invited?
+    return false unless being_invited?(member)
     member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
   end
 
@@ -148,9 +148,9 @@ module Member::Private::GroupAction
     Company::FollowOwnerGroup.new(member, group.member.id).follow!
   end
 
-  def process_reject_request
-    delete_group_being_invited_notification
-    remove_role_group_admin
+  def process_reject_request(member)
+    delete_group_being_invited_notification(member)
+    remove_role_group_admin(member)
     
     relationship_to_group(member).destroy
 
@@ -159,13 +159,17 @@ module Member::Private::GroupAction
     group
   end
 
-  def delete_group_being_invited_notification
+  def delete_group_being_invited_notification(member)
     invitation_sender = Member.cached_find(relationship_to_group(member).invite_id)
     NotifyLog.check_update_cancel_invite_friend_to_group_deleted(invitation_sender, member, group)
   end
 
-  def remove_role_group_admin
-    member.remove_role :group_admin, group if group.company?
+  def remove_role_group_admin(member)
+    member.remove_role :group_admin if group.company?
+  end
+
+  def process_deny
+    process_cancel_request(a_member)
   end
 
   def process_promote
