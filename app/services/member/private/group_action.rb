@@ -6,7 +6,7 @@ module Member::Private::GroupAction
     @member_listing_service ||= Group::MemberList.new(group)
   end
 
-  def relationship_to_group
+  def relationship_to_group(member)
     group.group_members.find_by(member_id: member.id)
   end
 
@@ -38,7 +38,7 @@ module Member::Private::GroupAction
     process_create_group_company
     process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
 
-    clear_group_cache_for_member
+    clear_group_cache_for_member(member)
   end
 
   def process_set_group_cover
@@ -79,11 +79,11 @@ module Member::Private::GroupAction
 
   def process_leave
     remove_role_group_admin
-    relationship_to_group.destroy
+    relationship_to_group(member).destroy
 
     LeaveGroupLog.leave_group_log(member, group)
 
-    clear_group_member_relation_cache
+    clear_group_member_relation_cache(member)
 
     group
   end
@@ -97,7 +97,7 @@ module Member::Private::GroupAction
     group.request_groups.find_by(member_id: member.id).destroy
     process_reject_request if being_invited?
 
-    clear_group_member_relation_cache
+    clear_group_member_relation_cache(member)
     clear_request_cache_for_group
 
     group
@@ -114,26 +114,26 @@ module Member::Private::GroupAction
 
   def being_invited_by_admin?
     return false unless being_invited?
-    member_listing_service.admin?(Member.cached_find(relationship_to_group.invite_id))
+    member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
   end
 
   def process_send_join_request
     group.need_approve ? group.request_groups.create(member_id: member.id) : process_join_group
 
-    clear_group_member_relation_cache
+    clear_group_member_relation_cache(member)
     clear_request_cache_for_group
 
     send_join_group_request_notification
   end
 
   def process_join_group
-    group.group_members.create(member_id: member.id, is_master: false) unless relationship_to_group.present?
-    relationship_to_group.update!(active: true)
+    group.group_members.create(member_id: member.id, is_master: false) unless relationship_to_group(member).present?
+    relationship_to_group(member).update!(active: true)
 
     process_add_member_to_company
     process_set_member_following_company
 
-    clear_group_member_relation_cache
+    clear_group_member_relation_cache(member)
 
     send_join_group_notification
   end
@@ -152,15 +152,15 @@ module Member::Private::GroupAction
     delete_group_being_invited_notification
     remove_role_group_admin
     
-    relationship_to_group.destroy
+    relationship_to_group(member).destroy
 
-    clear_group_member_relation_cache
+    clear_group_member_relation_cache(member)
 
     group
   end
 
   def delete_group_being_invited_notification
-    invitation_sender = Member.cached_find(relationship_to_group.invite_id)
+    invitation_sender = Member.cached_find(relationship_to_group(member).invite_id)
     NotifyLog.check_update_cancel_invite_friend_to_group_deleted(invitation_sender, member, group)
   end
 
@@ -168,7 +168,36 @@ module Member::Private::GroupAction
     member.remove_role :group_admin, group if group.company?
   end
 
-  def clear_group_cache_for_member
+  def process_promote
+    relationship_to_group(a_member).update!(is_master: true)
+    process_promote_company_admin
+
+    clear_group_member_relation_cache(a_member)
+    send_promote_group_admin_notification
+
+    group
+  end
+
+  def process_promote_company_admin
+    return unless group.company?
+    a_member.add_role :group_admin, group
+  end
+
+  def process_demote
+    relationship_to_group(a_member).update!(is_master: false)
+    process_demote_company_admin
+
+    clear_group_member_relation_cache(a_member)
+
+    group
+  end
+
+  def process_demote_company_admin
+    return unless group.company?
+    a_member.remove_role :group_admin, group
+  end
+
+  def clear_group_cache_for_member(member)
     FlushCached::Member.new(member).clear_list_groups
   end
 
@@ -180,8 +209,8 @@ module Member::Private::GroupAction
     FlushCached::Group.new(group).clear_list_requests
   end
 
-  def clear_group_member_relation_cache
-    clear_group_cache_for_member
+  def clear_group_member_relation_cache(member)
+    clear_group_cache_for_member(member)
     clear_member_cache_for_group
   end
 
@@ -195,6 +224,10 @@ module Member::Private::GroupAction
 
   def send_join_group_request_notification
     RequestGroupWorker.perform_async(member.id, group.id) unless Rails.env.test?
+  end
+
+  def send_promote_group_admin_notification
+    PromoteAdminWorker.perform_async(member.id, a_member.id, group.id) unless Rails.env.test?
   end
 
 end

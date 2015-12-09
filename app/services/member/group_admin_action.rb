@@ -50,7 +50,7 @@ class Member::GroupAdminAction < Member::GroupAction
   # refactor this into private module later
   private
   def admin_of_group?
-    Group::MemberList.new(group).admin?(admin_member)
+    member_listing_service.admin?(admin_member)
   end
 
 end

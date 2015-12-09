@@ -106,12 +106,12 @@ module Pollios::V1::GroupAPI
               current_member_group_member_action.remove
             end
 
-            desc '[x] promote member to group administrator'
+            desc 'promote member to group administrator'
             post '/promote' do
               current_member_group_member_action.promote
             end
 
-            desc '[x] demote member from administrator'
+            desc 'demote member from administrator'
             post '/demote' do
               current_member_group_member_action.demote
             end
