@@ -91,12 +91,12 @@ module Pollios::V1::GroupAPI
               end
             end
 
-            desc "[x] approve member's request to join group"
+            desc "approve member's request to join group"
             post '/approve' do
               current_member_group_member_action.approve
             end
 
-            desc "[x] deny member's request to join group"
+            desc "deny member's request to join group"
             post '/deny' do
               current_member_group_member_action.deny
             end

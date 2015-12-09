@@ -89,7 +89,7 @@ module Member::Private::GroupAction
   end
 
   def process_join_request
-    being_invited_by_admin? ? process_join_group : process_send_join_request
+    being_invited_by_admin? ? process_join_group(member) : process_send_join_request
     group
   end
 
@@ -104,11 +104,12 @@ module Member::Private::GroupAction
   end
 
   def process_accept_request
-    being_invited_by_admin? ? process_join_group : process_join_request
+    being_invited_by_admin? ? process_join_group(member) : process_join_request
     group
   end
 
   def being_invited?(member)
+    return false unless relationship_to_group(member).present?
     !relationship_to_group(member).active
   end
 
@@ -118,7 +119,7 @@ module Member::Private::GroupAction
   end
 
   def process_send_join_request
-    group.need_approve ? group.request_groups.create(member_id: member.id) : process_join_group
+    group.need_approve ? group.request_groups.create(member_id: member.id) : process_join_group(member)
 
     clear_group_member_relation_cache(member)
     clear_request_cache_for_group
@@ -126,26 +127,26 @@ module Member::Private::GroupAction
     send_join_group_request_notification
   end
 
-  def process_join_group
+  def process_join_group(member)
     group.group_members.create(member_id: member.id, is_master: false) unless relationship_to_group(member).present?
     relationship_to_group(member).update!(active: true)
 
-    process_add_member_to_company
-    process_set_member_following_company
+    process_add_member_to_company(member)
+    process_set_member_following_company(member)
 
     clear_group_member_relation_cache(member)
 
-    send_join_group_notification
+    send_join_group_notification(member)
   end
 
-  def process_add_member_to_company
+  def process_add_member_to_company(member)
     return unless group.company? && !group.system_group
     CompanyMember.add_member_to_company(member, group.get_company)
   end
 
-  def process_set_member_following_company
+  def process_set_member_following_company(member)
     return unless group.member.company?
-    Company::FollowOwnerGroup.new(member, group.member.id).follow!
+    Company::FollowOwnerGroup.new(member, group.member_id).follow!
   end
 
   def process_reject_request(member)
@@ -166,6 +167,12 @@ module Member::Private::GroupAction
 
   def remove_role_group_admin(member)
     member.remove_role :group_admin if group.company?
+  end
+
+  def process_approve
+    process_join_group(a_member)
+
+    group
   end
 
   def process_deny
@@ -222,7 +229,7 @@ module Member::Private::GroupAction
     InviteFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
   end
 
-  def send_join_group_notification
+  def send_join_group_notification(member)
     JoinGroupWorker.perform_async(member.id, group.id) unless Rails.env.test?
   end
 
