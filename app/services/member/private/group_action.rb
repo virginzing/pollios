@@ -94,7 +94,7 @@ module Member::Private::GroupAction
   end
 
   def process_cancel_request(member)
-    group.request_groups.find_by(member_id: member.id).destroy
+    group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
     process_reject_request(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
@@ -106,6 +106,10 @@ module Member::Private::GroupAction
   def process_accept_request
     being_invited_by_admin? ? process_join_group(member) : process_join_request
     group
+  end
+
+  def being_sent_join_request?(member)
+    group.request_groups.find_by(member_id: member.id).present?
   end
 
   def being_invited?(member)
@@ -171,12 +175,16 @@ module Member::Private::GroupAction
 
   def process_approve
     process_join_group(a_member)
+    clear_request_cache_for_group
 
     group
   end
 
   def process_deny
     process_cancel_request(a_member)
+    clear_request_cache_for_group
+
+    group
   end
 
   def process_promote
