@@ -101,7 +101,7 @@ module Pollios::V1::GroupAPI
               current_member_group_member_action.deny
             end
 
-            desc '[x] remove member from group'
+            desc 'remove member from group'
             post '/remove' do
               current_member_group_member_action.remove
             end

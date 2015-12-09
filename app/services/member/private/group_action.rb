@@ -77,11 +77,9 @@ module Member::Private::GroupAction
     FlushCached::Member.new(Member.cached_find(friend_id)).clear_list_groups
   end
 
-  def process_leave
-    remove_role_group_admin
+  def process_leave(member)
+    remove_role_group_admin(member)
     relationship_to_group(member).destroy
-
-    LeaveGroupLog.leave_group_log(member, group)
 
     clear_group_member_relation_cache(member)
 
@@ -185,6 +183,10 @@ module Member::Private::GroupAction
     clear_request_cache_for_group
 
     group
+  end
+
+  def process_remove
+    process_leave(a_member)
   end
 
   def process_promote

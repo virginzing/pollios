@@ -19,7 +19,7 @@ class Member::GroupAction
     can_leave, message = can_leave?
     fail ExceptionHandler::UnprocessableEntity, message unless can_leave
       
-    process_leave
+    process_leave(member)
   end
 
   def join
