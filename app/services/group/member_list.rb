@@ -29,7 +29,7 @@ class Group::MemberList
   end
 
   def filter_members_from_list(member_list)
-    group_member_ids - filter_non_members_from_list(member_list)
+    member_list - filter_non_members_from_list(member_list)
   end
 
   def filter_non_members_from_list(member_list)
