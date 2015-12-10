@@ -97,9 +97,9 @@ module Member::Private::GroupActionGuard
   end
 
   def not_exist_join_or_invite_request(member)
-    return false if not_exist_join_request(member)
-    return false if not_exist_invite_request(member)
-    true
+    return if not_exist_join_request(member)
+    return if not_exist_invite_request(member)
+    false
   end
 
   def already_admin
