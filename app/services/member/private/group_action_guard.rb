@@ -43,8 +43,8 @@ module Member::Private::GroupActionGuard
   end
 
   def can_deny?
-    return false, "#{a_member.get_name} doesn't have any request to #{group.name}." if not_exist_join_or_invite_request(a_member)
     return false, "#{a_member.get_name} is already in #{group.name}." if already_member(a_member)
+    return false, "#{a_member.get_name} doesn't have any request to #{group.name}." if not_exist_any_request(a_member)
     [true, '']
   end
 
@@ -96,10 +96,15 @@ module Member::Private::GroupActionGuard
     !member_listing_service.pending?(member)
   end
 
+<<<<<<< HEAD
   def not_exist_join_or_invite_request(member)
     return if not_exist_join_request(member)
     return if not_exist_invite_request(member)
     false
+=======
+  def not_exist_any_request(member)
+    not_exist_join_request(member) && not_exist_invite_request(member)
+>>>>>>> 2019133f5389c124fee4b9b360a06705c90830a6
   end
 
   def already_admin

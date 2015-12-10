@@ -3,12 +3,16 @@ module Pollios::V1::PollAPI
     version 'v1', using: :path
 
     resource :polls do
+
+      desc '[x] create a new poll'
+      post do
+      end
+
       params do
-        requires :id, type: Integer, desc: 'poll id'
+        optional :id, type: Integer, desc: 'poll id'
       end
 
       route_param :id do
-
         resource :choices do
           desc '[x] vote choide_id on poll_id'
           params do
