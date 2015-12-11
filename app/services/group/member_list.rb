@@ -28,19 +28,19 @@ class Group::MemberList
     all_members.select { |member| member unless member.is_active }.map(&:id)
   end
 
-  def filter_members_from_list(member_list)
-    member_list - filter_non_members_from_list(member_list)
+  def filter_members_from_list(member_ids)
+    member_ids - filter_non_members_from_list(member_ids)
   end
 
-  def filter_non_members_from_list(member_list)
-    member_list - group_member_ids
+  def filter_non_members_from_list(member_ids)
+    member_ids - group_member_ids
   end
 
-  def members_as_member
+  def members
     cached_all_members.select { |member| member if member.is_active && !member.admin }
   end
 
-  def members_as_admin
+  def admins
     cached_all_members.select { |member| member if member.admin }
   end
 
@@ -53,11 +53,11 @@ class Group::MemberList
   end
 
   def member?(member)
-    ids_include?(members_as_member, member.id)
+    ids_include?(members, member.id)
   end
 
   def admin?(member)
-    ids_include?(members_as_admin, member.id)  
+    ids_include?(admins, member.id)  
   end
 
   def active?(member)

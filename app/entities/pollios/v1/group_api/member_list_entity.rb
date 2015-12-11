@@ -1,8 +1,8 @@
 module Pollios::V1::GroupAPI
   class MemberListEntity < Pollios::V1::BaseEntity
 
-    expose_members :members_as_admin, as: :admin
-    expose_members :members_as_member, as: :member
+    expose_members :admins, as: :admin
+    expose_members :members, as: :member
     expose_members :requesting
     expose_members :pending
 

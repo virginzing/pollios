@@ -27,7 +27,7 @@ class AskJoinGroup
   private
 
   def member_as_admin_ids
-    Group::MemberList.new(@group).members_as_admin.map(&:id)
+    Group::MemberList.new(@group).admins.map(&:id)
   end
 
   def group_member_ids
