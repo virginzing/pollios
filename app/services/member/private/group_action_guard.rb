@@ -96,15 +96,8 @@ module Member::Private::GroupActionGuard
     !member_listing_service.pending?(member)
   end
 
-<<<<<<< HEAD
-  def not_exist_join_or_invite_request(member)
-    return if not_exist_join_request(member)
-    return if not_exist_invite_request(member)
-    false
-=======
   def not_exist_any_request(member)
     not_exist_join_request(member) && not_exist_invite_request(member)
->>>>>>> 2019133f5389c124fee4b9b360a06705c90830a6
   end
 
   def already_admin

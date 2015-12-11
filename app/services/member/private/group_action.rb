@@ -173,9 +173,15 @@ module Member::Private::GroupAction
 
   def process_approve
     process_join_group(a_member)
+    update_member_group_requesting
     clear_request_cache_for_group
 
     group
+  end
+
+  def update_member_group_requesting
+    member_group_requesting = group.request_groups.find_by(member_id: a_member.id)
+    member_group_requesting.update!(accepted: true, accepter_id: member.id)
   end
 
   def process_deny
