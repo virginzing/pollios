@@ -17,7 +17,7 @@ module Pollios::V1::MemberAPI
 
         desc 'returns member detail for profile screen of member'
         get do
-          { member: member }
+          present member, with: MemberDetailEntity, current_member_linkage: Member::MemberList.new(current_member).social_linkage_ids
         end
 
         desc "returns list of member's friends & followings"
