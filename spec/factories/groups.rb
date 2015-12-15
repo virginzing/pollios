@@ -47,10 +47,15 @@ FactoryGirl.define do
       friend_id "103,104,105,107,108,109"
     end
 
+    trait :with_invitation_friend_ids do
+      friend_ids [103, 104, 105, 107, 108, 109]
+    end
+
     factory :group_with_cover_url, traits: [:with_cover_url]
     factory :group_that_need_approve, traits: [:need_approve]
     factory :group_that_dont_need_approve, traits: [:dont_need_approve]
     factory :group_with_invitation_list, traits: [:with_invitation_list]
+    factory :group_with_invitation_friend_ids, traits: [:with_invitation_friend_ids]
   end
 
   factory :group_required, class: Group do
