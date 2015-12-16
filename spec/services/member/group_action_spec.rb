@@ -75,14 +75,14 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- A member is requesting in group' do
-      group_action.join
-
-      expect(group_action.join).to eq [group, status: :requesting]
-      expect(group.request_groups.find_by(member_id: a_member.id)).to be_valid
-      expect(group.members_request).to match_array [a_member]
-      # expect(Group::MemberList.new(group).requesting).to match_array [a_member]
+      expect(group_action.join).to eq group: group, status: :requesting
+      expect(group.members_request.count).to eq 1
+      expect(Group::MemberList.new(group).requesting).to match_array [a_member]
     end
 
+    it '- Admins of group got notification' do
+      # expect(group_admin.received_notifies.without_deleted.order('created_at DESC')).to eq []
+    end
   end
 
 end

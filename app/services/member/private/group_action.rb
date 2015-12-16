@@ -88,7 +88,6 @@ module Member::Private::GroupAction
 
   def process_join_request
     being_invited_by_admin? ? process_join_group(member) : process_send_join_request
-    group
   end
 
   def process_cancel_request(member)
@@ -127,6 +126,8 @@ module Member::Private::GroupAction
     clear_request_cache_for_group
 
     send_join_group_request_notification
+
+    { group: group, status: :requesting }
   end
 
   def process_join_group(member)
@@ -139,6 +140,8 @@ module Member::Private::GroupAction
     clear_group_member_relation_cache(member)
 
     send_join_group_notification(member)
+
+    { group: group, status: :member }
   end
 
   def process_add_member_to_company(member)

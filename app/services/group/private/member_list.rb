@@ -22,7 +22,7 @@ module Group::Private::MemberList
   end
 
   def all_requests
-    group.members_request.to_a
+    group.members_request.all.to_a
   end
 
   def group_member_ids
