@@ -3,7 +3,7 @@ module Member::Private::GroupActionGuard
   private
 
   def can_leave?
-    return false, "You are not member in #{group.name}." if not_member(member)
+    return false, "You aren't member in #{group.name}." if not_member(member)
     return false, "You can't leave #{group.name} company." if company_group
     [true, '']
   end
@@ -31,7 +31,7 @@ module Member::Private::GroupActionGuard
   end
 
   def can_invite_friends?
-    return false, "You are not member in #{group.name}." if not_member(member)
+    return false, "You aren't member in #{group.name}." if not_member(member)
     return false, "You can't invite friends to #{group.name} company." if company_group
     [true, '']
   end
