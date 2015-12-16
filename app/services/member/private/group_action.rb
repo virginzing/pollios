@@ -74,7 +74,7 @@ module Member::Private::GroupAction
 
   def invite_friend_id(friend_id)
     group.group_members.create(member_id: friend_id, is_master: false, active: false, invite_id: member.id)
-    FlushCached::Member.new(Member.cached_find(friend_id)).clear_list_groups
+    clear_group_cache_for_member(Member.cached_find(friend_id))
   end
 
   def process_leave(member)
@@ -87,7 +87,7 @@ module Member::Private::GroupAction
   end
 
   def process_join_request
-    being_invited_by_admin? ? process_join_group(member) : process_send_join_request
+    being_invited_by_admin? ? process_join_group(member) : process_ask_join_request
   end
 
   def process_cancel_request(member)
@@ -119,8 +119,12 @@ module Member::Private::GroupAction
     member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
   end
 
-  def process_send_join_request
-    group.need_approve ? group.request_groups.create(member_id: member.id) : process_join_group(member)
+  def process_ask_join_request
+    group.need_approve ? process_sent_join_request : process_join_group(member)
+  end
+
+  def process_sent_join_request
+    group.request_groups.create(member_id: member.id)
 
     clear_group_member_relation_cache(member)
     clear_request_cache_for_group
