@@ -65,7 +65,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context '#join: A member request joining group that need approve' do
+  context '#join: A member request to join group that need approve' do
 
     let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
     let(:group_action) { Member::GroupAction.new(a_member, group) }
@@ -75,13 +75,10 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(group.members_request.count).to eq 1
       expect(Group::MemberList.new(group).requesting).to match_array [a_member]
     end
-
-    it '- Admins of group got notification' do
-    end
   end
 
   context "#join: A member request to join group that doesn't need approve" do
-    
+
     let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
     let!(:setting_group_doesnt_need_approve) { group.update!(need_approve: false) }
     let(:group_action) { Member::GroupAction.new(a_member, group) }
@@ -90,6 +87,28 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(group_action.join).to eq group: group, status: :member
       expect(group.members.count).to eq 2
       expect(Group::MemberList.new(group).members).to match_array [a_member]
+    end
+  end
+
+  context '#invite: A member invite friends to group' do
+
+    before(:context) do
+      FactoryGirl.create_list(:sequence_member, 10)
+    end
+
+    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+    let(:group_action) { Member::GroupAction.new(group_admin, group) }
+    let!(:invite) { group_action.invite([103, 104, 105, 107, 108, 109]) }
+
+    it '- Members id: 103,104,105,107,108,109 are pending in group' do
+      expect(Group::MemberList.new(group).pending.map(&:id)).to match_array([103, 104, 105, 107, 108, 109])
+    end
+
+    it '- Members id: 108,109 are already member in group and Members id: 103,104,105,107 are pending in group' do
+      new_group.group_members.find_by(member_id: 108).update(active: true)
+      new_group.group_members.find_by(member_id: 109).update(active: true)
+
+      expect(Group::MemberList.new(group).pending.map(&:id)).to match_array([103, 104, 105, 107])
     end
   end
 
