@@ -70,10 +70,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
     let(:group_action) { Member::GroupAction.new(a_member, group) }
 
-    it '- Group setting default is need approve' do
-      expect(group.need_approve).to be true
-    end
-
     it '- A member is requesting in group' do
       expect(group_action.join).to eq group: group, status: :requesting
       expect(group.members_request.count).to eq 1
@@ -81,7 +77,19 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- Admins of group got notification' do
-      # expect(group_admin.received_notifies.without_deleted.order('created_at DESC')).to eq []
+    end
+  end
+
+  context "#join: A member request to join group that doesn't need approve" do
+    
+    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+    let!(:setting_group_doesnt_need_approve) { group.update!(need_approve: false) }
+    let(:group_action) { Member::GroupAction.new(a_member, group) }
+
+    it '- A member is member in group' do
+      expect(group_action.join).to eq group: group, status: :member
+      expect(group.members.count).to eq 2
+      expect(Group::MemberList.new(group).members).to match_array [a_member]
     end
   end
 
