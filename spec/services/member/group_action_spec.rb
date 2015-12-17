@@ -105,8 +105,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- Members id: 108,109 are already member in group and Members id: 103,104,105,107 are pending in group' do
-      new_group.group_members.find_by(member_id: 108).update(active: true)
-      new_group.group_members.find_by(member_id: 109).update(active: true)
+      group.group_members.find_by(member_id: 108).update(active: true)
+      group.group_members.find_by(member_id: 109).update(active: true)
 
       expect(Group::MemberList.new(group).pending.map(&:id)).to match_array([103, 104, 105, 107])
     end
