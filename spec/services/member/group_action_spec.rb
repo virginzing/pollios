@@ -77,6 +77,25 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#join: A member request to join group that need approve and being invited by admin' do
+
+    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+    let(:admin_group_action) { Member::GroupAction.new(group_admin, group) }
+    let!(:invite) { admin_group_action.invite([a_member.id]) }
+    let(:group_action) { Member::GroupAction.new(a_member, group) }
+
+    it '- A member being invited by admin' do
+      expect(Group::MemberList.new(group).pending).to match_array [a_member]
+      expect(group.group_members.find_by(member_id: a_member.id).invite_id).to eq group_admin.id
+    end
+
+    it '- A member is member in group' do
+      expect(group_action.join).to eq group: group, status: :member
+      expect(group.members.count).to eq 2
+      expect(Group::MemberList.new(group).members).to match_array [a_member]
+    end
+  end
+
   context "#join: A member request to join group that doesn't need approve" do
 
     let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
