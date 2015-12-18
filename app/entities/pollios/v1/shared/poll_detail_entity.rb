@@ -1,6 +1,7 @@
-module Pollios::V1::PollAPI
+module Pollios::V1::Shared
   class PollDetailEntity < Pollios::V1::BaseEntity
-
+    
+    expose :bookmarked
     expose :creator do |_, _|
       Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
     end
@@ -68,6 +69,10 @@ module Pollios::V1::PollAPI
 
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(current_member).social_linkage_ids
+    end
+
+    def bookmarked
+      Member::PollList.new(current_member).bookmarked?(object)
     end
   end
 end
