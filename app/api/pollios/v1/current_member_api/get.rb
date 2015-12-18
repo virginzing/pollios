@@ -61,6 +61,14 @@ module Pollios::V1::CurrentMemberAPI
           requests: current_member.request_count
         }
       end
+
+      resource :polls do
+        desc "returns list of member's bookmarked poll "
+        get '/bookmarks' do
+          polls_of_member = Member::PollList.new(current_member)
+          present polls_of_member, with: PollListEntity, current_member: current_member
+        end
+      end
     end
     
   end
