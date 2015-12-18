@@ -69,6 +69,14 @@ class Member::PollList
     not_interested_query('PollSeries')
   end
 
+  def bookmarkeds
+    cached_all_bookmarked
+  end
+
+  def bookmarked?(poll)
+    bookmarkeds.map(&:id).include?(poll.id)
+  end
+
   # private
 
   def member_report_polls
@@ -114,6 +122,11 @@ class Member::PollList
 
   end
 
+  def all_bookmarked
+    Poll.joins('inner join bookmarks on polls.id = bookmarks.bookmarkable_id')
+      .where("bookmarks.member_id = #{member.id}")
+  end
+
   def voting_detail_for_poll(poll_id)
     HistoryVote.member_voted_poll(member.id, poll_id).to_a
   end
@@ -128,6 +141,12 @@ class Member::PollList
 
   def cached_watch_polls
     Rails.cache.fetch("member/#{member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
+  end
+
+  def cached_all_bookmarked
+    Rails.cache.fetch("member/#{member.id}/polls/bookmarks") do
+      all_bookmarked
+    end
   end
 
   def saved_later_query(type_name)
