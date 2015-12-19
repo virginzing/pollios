@@ -37,7 +37,7 @@ class Member::PollAction
 
     group_ids = poll.in_group_ids.split(',').map(&:to_i)
     group_ids.each do |group_id|
-      member.activity_feed.create! action: action, trackable: poll, group_id: group_id
+      member.activity_feeds.create! action: action, trackable: poll, group_id: group_id
     end
   end
 end
