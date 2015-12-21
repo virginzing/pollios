@@ -69,7 +69,7 @@ module Pollios::V1::Shared
     end
 
     def voting
-      poll_list_service.voting_detail(poll.id)
+      poll_inquiry_service.voting_info
     end
 
     def poll_within

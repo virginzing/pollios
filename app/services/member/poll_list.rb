@@ -32,26 +32,12 @@ class Member::PollList
     @voted_all ||= cached_voted_all_polls
   end
 
-  def voting_detail(poll_id)
-    voting = cached_voting_detail_for_poll(poll_id)
-
-    if voting.empty?
-      return { voted: false, can_vote: true, message: 'test message' }
-    else
-      return { voted: true, choice_id: voting.first.choice_id }
-    end
-  end
-
   def watched_poll_ids
     @watches ||= cached_watch_polls
   end
 
   def report_comments
     @report_comments ||= cached_report_comments
-  end
-
-  def voted_poll?(poll)
-    voted_all.collect { |e| e['poll_id'] }.include?(poll.id)    
   end
 
   def saved_poll_ids
@@ -126,14 +112,6 @@ class Member::PollList
   def all_bookmarked
     Poll.joins('inner join bookmarks on polls.id = bookmarks.bookmarkable_id')
       .where("bookmarks.member_id = #{member.id}")
-  end
-
-  def voting_detail_for_poll(poll_id)
-    HistoryVote.member_voted_poll(member.id, poll_id).to_a
-  end
-
-  def cached_voting_detail_for_poll(poll_id)
-    Rails.cache.fetch("member/#{member.id}/voting/#{poll_id}") { voting_detail_for_poll(poll_id) }
   end
 
   def cached_voted_all_polls

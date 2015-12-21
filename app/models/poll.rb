@@ -265,7 +265,7 @@ class Poll < ActiveRecord::Base
   end
 
   def voted?(member)
-    Member::PollList.new(member).voted_poll?(self)
+    Member::PollInquiry.new(member, self).voted?
   end
 
   def generate_qrcode_key
@@ -469,7 +469,7 @@ class Poll < ActiveRecord::Base
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::CLOSED if find_poll.closed?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::EXPIRED if find_poll.expire_date < Time.zone.now
 
-    ever_vote = Member::PollList.new(member).voted_poll?(find_poll)
+    ever_vote = Member::PollInquiry.new(member, find_poll).voted?
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::VOTED if ever_vote
 
     find_choice = Choice.find_by(id: choice_id)
