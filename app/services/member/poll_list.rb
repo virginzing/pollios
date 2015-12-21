@@ -1,4 +1,5 @@
 class Member::PollList
+  include Member::Private::PollList
 
   attr_reader :member
   
@@ -35,9 +36,9 @@ class Member::PollList
     voting = cached_voting_detail_for_poll(poll_id)
 
     if voting.empty?
-      return Hash['voted' => false]
+      return { voted: false, can_vote: true, message: 'test message' }
     else
-      return Hash['voted' => true, 'choice_id' => voting.first.choice_id]
+      return { voted: true, choice_id: voting.first.choice_id }
     end
   end
 
@@ -69,12 +70,12 @@ class Member::PollList
     not_interested_query('PollSeries')
   end
 
-  def bookmarkeds
+  def bookmarks
     cached_all_bookmarked
   end
 
   def bookmarked?(poll)
-    bookmarkeds.map(&:id).include?(poll.id)
+    bookmarks.map(&:id).include?(poll.id)
   end
 
   # private

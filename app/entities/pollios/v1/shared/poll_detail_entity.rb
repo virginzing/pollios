@@ -1,7 +1,6 @@
 module Pollios::V1::Shared
   class PollDetailEntity < Pollios::V1::BaseEntity
     
-    expose :bookmarked
     expose :creator do |_, _|
       Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
     end
@@ -17,7 +16,13 @@ module Pollios::V1::Shared
 
     expose :get_vote_max, as: :vote_max, if: -> (object, _) { object.vote_all > 0 }
     expose :get_choice_detail, as: :choices
-    expose :current_member_voting_detail, as: :voted_detail
+
+    expose :member_states do
+      expose :bookmarked
+      expose :saved_for_later
+      expose :watching
+      expose :voting
+    end
 
     expose :choice_count
     expose :series
@@ -54,7 +59,7 @@ module Pollios::V1::Shared
       object.thumbnail_type || 0
     end
 
-    def current_member_voting_detail
+    def voting
       poll_list_service.voting_detail(object.id)
     end
 
@@ -72,7 +77,16 @@ module Pollios::V1::Shared
     end
 
     def bookmarked
-      Member::PollList.new(current_member).bookmarked?(object)
+      poll_list_service.bookmarked?(object)
     end
+
+    def saved_for_later
+      true
+    end
+
+    def watching
+      true
+    end
+
   end
 end
