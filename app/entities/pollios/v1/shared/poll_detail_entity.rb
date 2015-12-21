@@ -1,10 +1,6 @@
 module Pollios::V1::Shared
   class PollDetailEntity < Pollios::V1::BaseEntity
     
-    expose :creator do |_, _|
-      Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
-    end
-
     expose :id, as: :poll_id
     expose :title
     expose :vote_all, as: :vote_count
@@ -17,25 +13,15 @@ module Pollios::V1::Shared
     expose :get_vote_max, as: :vote_max, if: -> (object, _) { object.vote_all > 0 }
     expose :get_choice_detail, as: :choices
 
-    expose :member_states do
-      expose :bookmarked
-      expose :saved_for_later
-      expose :watching
-      expose :voting
-    end
-
     expose :choice_count
     expose :series
     expose :cached_tags, as: :tags
-    expose :get_campaign, as: :campaign
 
-    expose :campaign, as: :campaign_detail, with: Pollios::V1::CurrentMemberAPI::CampaignDetailEntity
+    expose :campaign, with: Pollios::V1::CurrentMemberAPI::CampaignDetailEntity, if: -> (object, _) { object.get_campaign }
 
     expose :public, as: :is_public
     expose :type_poll
     expose :poll_within
-
-    # expose :check_watch
 
     expose :get_photo, as: :photo
     expose :thumbnail_type
@@ -46,6 +32,18 @@ module Pollios::V1::Shared
     expose :show_result
     expose :close_status
     expose :get_original_images, as: :original_images, if: -> (object, _) { object.photo_poll.present? }
+
+    expose :creator do |_, _|
+      Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
+    end
+
+    expose :member_states do
+      expose :bookmarked
+      expose :saved_for_later
+      expose :watching
+      expose :voting
+    end
+
   
     def current_member
       @current_member ||= options[:current_member]
