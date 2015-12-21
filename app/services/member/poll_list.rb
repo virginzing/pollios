@@ -74,14 +74,14 @@ class Member::PollList
     cached_all_bookmarked
   end
 
-  def bookmarked?(poll)
-    bookmarks.map(&:id).include?(poll.id)
+  def bookmarks_ids
+    bookmarks.map(&:id)
   end
 
   # private
 
   def member_report_polls
-    @member.poll_reports.to_a
+    member.poll_reports.to_a
   end
   
   def cached_report_polls
@@ -89,7 +89,7 @@ class Member::PollList
   end
 
   def member_report_commments
-    @member.comment_reports.to_a  
+    member.comment_reports.to_a  
   end
 
   def cached_report_comments
@@ -97,23 +97,23 @@ class Member::PollList
   end
 
   def member_history_viewed_polls
-    @member.history_views.map(&:poll_id)
+    member.history_views.map(&:poll_id)
   end
 
   def member_watched_polls
-    @member.watcheds.where(poll_notify: true, comment_notify: true)
+    member.watcheds.where(poll_notify: true, comment_notify: true)
   end
 
   def cached_history_viewed_polls
-    Rails.cache.fetch("member/#{@member.id}/history_viewed_polls") { member_history_viewed_polls }
+    Rails.cache.fetch("member/#{member.id}/history_viewed_polls") { member_history_viewed_polls }
   end
 
   def member_voted_all_polls
     Poll.joins(:history_votes => :choice)
         .select("polls.*, history_votes.choice_id as choice_id")
-        .where("(history_votes.member_id = #{@member.id} " \
+        .where("(history_votes.member_id = #{member.id} " \
                "AND history_votes.poll_series_id = 0)" \
-               "OR (history_votes.member_id = #{@member.id} " \
+               "OR (history_votes.member_id = #{member.id} " \
                "AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)")
         .collect! { |poll| Hash["poll_id" => poll.id, 
                            "choice_id" => poll.choice_id, 
@@ -151,11 +151,11 @@ class Member::PollList
   end
 
   def saved_later_query(type_name)
-    @member.save_poll_laters.where(savable_type: type_name).map(&:savable_id)
+    member.save_poll_laters.where(savable_type: type_name).map(&:savable_id)
   end
 
   def not_interested_query(type_name)
-    @member.not_interested_polls.where(unseeable_type: type_name).map(&:unseeable_id)
+    member.not_interested_polls.where(unseeable_type: type_name).map(&:unseeable_id)
   end
 
 end

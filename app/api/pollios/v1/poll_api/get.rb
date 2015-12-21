@@ -10,6 +10,10 @@ module Pollios::V1::PollAPI
       def member_poll_lister
         @member_poll_lister ||= Member::PollList.new(current_member)
       end
+
+      def member_poll_inqury
+        @member_poll_inqury ||= Member::PollInquiry.new(current_member, poll)
+      end
     end
 
     resource :polls do

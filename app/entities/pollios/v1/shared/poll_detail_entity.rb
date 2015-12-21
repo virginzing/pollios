@@ -10,14 +10,12 @@ module Pollios::V1::Shared
       expose :created_at
     end
 
-    expose :get_vote_max, as: :vote_max, if: -> (object, _) { object.vote_all > 0 }
+    expose :get_vote_max, as: :vote_max, if: -> (_, _) { poll.vote_all > 0 }
     expose :get_choice_detail, as: :choices
 
     expose :choice_count
     expose :series
     expose :cached_tags, as: :tags
-
-    expose :campaign, with: Pollios::V1::CurrentMemberAPI::CampaignDetailEntity, if: -> (object, _) { object.get_campaign }
 
     expose :public, as: :is_public
     expose :type_poll
@@ -31,7 +29,9 @@ module Pollios::V1::Shared
     expose :get_creator_must_vote, as: :creator_must_vote
     expose :show_result
     expose :close_status
-    expose :get_original_images, as: :original_images, if: -> (object, _) { object.photo_poll.present? }
+    expose :get_original_images, as: :original_images, if: -> (_, _) { poll.photo_poll.present? }
+
+    expose :campaign, with: Pollios::V1::CurrentMemberAPI::CampaignDetailEntity, if: -> (_, _) { poll.get_campaign }
 
     expose :creator do |_, _|
       Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
@@ -44,6 +44,9 @@ module Pollios::V1::Shared
       expose :voting
     end
 
+    def poll
+      object
+    end
   
     def current_member
       @current_member ||= options[:current_member]
@@ -53,37 +56,41 @@ module Pollios::V1::Shared
       @poll_list_service ||= Member::PollList.new(current_member)
     end
 
-    def thumbnail_type
-      object.thumbnail_type || 0
-    end
-
-    def voting
-      poll_list_service.voting_detail(object.id)
-    end
-
-    def poll_within
-      # TODO: Make a proper service method in Poll::Listing
-      object.feed_name_for_member(current_member)
-    end
-
-    def creator
-      Member.cached_find(object.member_id)
+    def poll_inquiry_service
+      @poll_inquiry_service ||= Member::PollInquiry.new(current_member, poll)
     end
 
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(current_member).social_linkage_ids
     end
 
+    def thumbnail_type
+      poll.thumbnail_type || 0
+    end
+
+    def voting
+      poll_list_service.voting_detail(poll.id)
+    end
+
+    def poll_within
+      # TODO: Make a proper service method in Poll::Listing
+      poll.feed_name_for_member(current_member)
+    end
+
+    def creator
+      Member.cached_find(poll.member_id)
+    end
+
     def bookmarked
-      poll_list_service.bookmarked?(object)
+      poll_inquiry_service.bookmarked?
     end
 
     def saved_for_later
-      true
+      poll_inquiry_service.saved_for_later?
     end
 
     def watching
-      true
+      poll_inquiry_service.watching?
     end
 
   end
