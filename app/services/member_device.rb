@@ -1,4 +1,7 @@
 class MemberDevice
+
+  attr_reader :device_token
+
   def initialize(member, device_token)
     @member = member
     @device_token = device_token
@@ -6,10 +9,6 @@ class MemberDevice
 
   def member_id
     @member.id  
-  end
-
-  def device_token
-    @device_token
   end
 
   def check_device
@@ -50,7 +49,7 @@ class MemberDevice
   end
 
   def current_device
-    current_device = Apn::Device.find_by(token: device_token)
+    @current_device ||= Apn::Device.find_by(token: device_token)
   end
 
   
