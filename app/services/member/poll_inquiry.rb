@@ -41,6 +41,6 @@ class Member::PollInquiry < Member::PollList
   end
 
   def cached_voting_detail
-    Rails.cache.fetch("member/#{member.id}/voting/#{poll.id}") { voting_detail_for_poll(poll.id) }
+    Rails.cache.fetch("member/#{member.id}/voting/#{poll.id}") { voting_detail }
   end
 end
