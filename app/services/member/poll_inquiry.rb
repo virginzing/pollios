@@ -31,14 +31,18 @@ class Member::PollInquiry < Member::PollList
     voting_not_allowed_with_reason_hash(message)
   end
 
-  def can_vote?
-    return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
+  def can_view?
     return [false, ExceptionHandler::Message::Member::BAN] if poll.member.ban?
-    return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
+    return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
     return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
     return [false, ExceptionHandler::Message::Poll::EXPIRED] if poll.expire_date < Time.zone.now
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
-    # need one more case: member & creator not friends
+
+    [true, nil]
+  end
+
+  def can_vote?
+    return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
 
     [true, nil]
   end
