@@ -1,4 +1,5 @@
 module Member::Private::PollList
+
   private
 
   def member_report_polls
@@ -34,6 +35,15 @@ module Member::Private::PollList
         ]
       end
       .to_a
+  end
+
+  def all_created
+    Poll.where("polls.member_id = #{member.id}")
+  end
+
+  def all_voted
+    Poll.joins('inner join history_votes on polls.id = history_votes.poll_id')
+      .where("history_votes.member_id = #{member.id}")
   end
 
   def all_bookmarked

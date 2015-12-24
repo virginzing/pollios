@@ -56,8 +56,16 @@ class Member::PollList
     not_interested_query('PollSeries')
   end
 
+  def created
+    @created ||= cached_all_created
+  end
+
+  def voted
+    @voted ||= cached_all_voted
+  end
+
   def bookmarks
-    cached_all_bookmarked
+    @bookmarks ||= cached_all_bookmarked
   end
 
   def bookmarks_ids
@@ -86,8 +94,20 @@ class Member::PollList
     Rails.cache.fetch("member/#{member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
   end
 
+  def cached_all_created
+    Rails.cache.fetch("members/#{member.id}/polls/created") do
+      all_created
+    end
+  end
+
+  def cached_all_voted
+    Rails.cache.fetch("members/#{member.id}/polls/voted") do
+      all_voted
+    end
+  end
+
   def cached_all_bookmarked
-    Rails.cache.fetch("member/#{member.id}/polls/bookmarks") do
+    Rails.cache.fetch("members/#{member.id}/polls/bookmarks") do
       all_bookmarked
     end
   end

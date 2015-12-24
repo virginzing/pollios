@@ -36,6 +36,21 @@ module Pollios::V1::MemberAPI
           end
         end
 
+        resource :polls do
+
+          desc "returns list of member's created poll"
+          get '/created' do
+            polls_for_member = Member::PollList.new(member)
+            present :created, polls_for_member.created, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          end
+
+          desc "returns list of member's voted poll"
+          get '/voted' do
+            polls_for_member = Member::PollList.new(member)
+            present :voted, polls_for_member.voted, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          end
+        end
+
       end
 
     end
