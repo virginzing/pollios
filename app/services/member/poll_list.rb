@@ -72,6 +72,10 @@ class Member::PollList
     bookmarks.map(&:id)
   end
 
+  def saved
+    @saved ||= cached_all_saved_vote_later
+  end
+
   # private
   
   def cached_report_polls
@@ -112,4 +116,9 @@ class Member::PollList
     end
   end
 
+  def cached_all_saved_vote_later
+    Rails.cache.fetch("members/#{member.id}/polls/saved") do
+      all_saved_vote_later
+    end
+  end
 end

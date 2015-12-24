@@ -42,13 +42,21 @@ module Member::Private::PollList
   end
 
   def all_voted
-    Poll.joins('inner join history_votes on polls.id = history_votes.poll_id')
+    Poll.unscoped.joins('inner join history_votes on polls.id = history_votes.poll_id')
       .where("history_votes.member_id = #{member.id}")
+      .order('history_votes.created_at desc')
   end
 
   def all_bookmarked
-    Poll.joins('inner join bookmarks on polls.id = bookmarks.bookmarkable_id')
+    Poll.unscoped.joins('inner join bookmarks on polls.id = bookmarks.bookmarkable_id')
       .where("bookmarks.member_id = #{member.id}")
+      .order('bookmarks.created_at desc')
+  end
+
+  def all_saved_vote_later
+    Poll.unscoped.joins('inner join save_poll_laters on polls.id = save_poll_laters.savable_id')
+      .where("save_poll_laters.member_id = #{member.id}")
+      .order('save_poll_laters.created_at desc')
   end
 
   def saved_later_query(type_name)

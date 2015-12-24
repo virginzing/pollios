@@ -63,10 +63,17 @@ module Pollios::V1::CurrentMemberAPI
       end
 
       resource :polls do
-        desc "returns list of member's bookmarked poll "
+
+        desc "returns list of member's bookmarked poll"
         get '/bookmarks' do
           polls_of_member = Member::PollList.new(current_member)
-          present polls_of_member, with: PollListEntity, current_member: current_member
+          present polls_of_member.bookmarks, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+        end
+
+        desc "returns list of member's saved vote later poll"
+        get '/saved' do
+          polls_of_member = Member::PollList.new(current_member)
+          present polls_of_member.saved, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
       end
     end
