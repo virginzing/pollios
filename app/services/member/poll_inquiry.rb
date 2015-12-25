@@ -8,8 +8,19 @@ class Member::PollInquiry < Member::PollList
     @poll = poll
   end
 
+  def view
+    can_view, message = can_view?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_view
+
+    process_view
+  end
+
+  def viewed?
+    HistoryView.exists?(member_id: member.id, poll_id: poll.id)
+  end
+
   def voted?
-    voted_all.collect { |e| e['poll_id'] }.include?(poll.id)
+    HistoryVote.exists?(member_id: member.id, poll_id: poll.id)
   end
 
   def bookmarked?

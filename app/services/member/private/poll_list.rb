@@ -1,6 +1,6 @@
 module Member::Private::PollList
 
-  private
+  # private
 
   def member_report_polls
     member.poll_reports.to_a

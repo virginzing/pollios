@@ -8,36 +8,23 @@ class Member::PollList
   end
 
   def reports
-    @report ||= cached_report_polls
+    cached_report_polls
   end
 
   def history_viewed
-    @history_viewed ||= cached_history_viewed_polls
-  end
-
-  def poll(poll_id)
-    poll ||= Poll.cached_find(poll_id)
-
-    is_visible, error_message = Poll::Listing.new(poll).is_visible_to_member_with_error(member)
-    if is_visible
-      Member::PollAction.new(member, poll).view
-      return poll, nil
-    else
-      return nil, error_message
-    end
-
+    cached_history_viewed_polls
   end
 
   def voted_all
-    @voted_all ||= cached_voted_all_polls
+    cached_voted_all_polls
   end
 
   def watched_poll_ids
-    @watches ||= cached_watch_polls
+    cached_watch_polls
   end
 
   def report_comments
-    @report_comments ||= cached_report_comments
+    cached_report_comments
   end
 
   def saved_poll_ids
@@ -57,15 +44,19 @@ class Member::PollList
   end
 
   def created
-    @created ||= cached_all_created
+    cached_all_created
+  end
+
+  def viewed
+    cached_history_viewed_polls  
   end
 
   def voted
-    @voted ||= cached_all_voted
+    cached_all_voted
   end
 
   def bookmarks
-    @bookmarks ||= cached_all_bookmarked
+    cached_all_bookmarked
   end
 
   def bookmarks_ids
@@ -73,7 +64,7 @@ class Member::PollList
   end
 
   def saved
-    @saved ||= cached_all_saved_vote_later
+    cached_all_saved_vote_later
   end
 
   # private

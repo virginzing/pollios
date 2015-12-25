@@ -191,9 +191,9 @@ class Poll < ActiveRecord::Base
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
-      @poll = find_by(id: id)
-      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
-      raise ExceptionHandler::Deleted, ExceptionHandler::Message::Poll::DELETED unless @poll.deleted_at.nil?
+      @poll = find(id)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::DELETED unless @poll.deleted_at.nil?
       @poll
     end
   end

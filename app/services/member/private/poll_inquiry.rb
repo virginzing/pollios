@@ -1,6 +1,6 @@
 module Member::Private::PollInquiry
 
-  private
+  # private
 
   def can_view?
     return [false, ExceptionHandler::Message::Member::BAN] if poll.member.ban?
@@ -10,6 +10,11 @@ module Member::Private::PollInquiry
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
 
     [true, nil]
+  end
+
+  def process_view
+    Member::PollAction.new(member, poll).view
+    poll
   end
 
   def can_vote?

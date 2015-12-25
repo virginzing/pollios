@@ -16,9 +16,12 @@ class Member::PollAction
 
   def create_poll_viewing_record
     return if HistoryView.exists?(member_id: member.id, poll_id: poll.id)
+    
+    create_history_view_for_member
+    FlushCached::Member.new(member).clear_list_history_viewed_polls
+  end
 
-    poll.reload
-
+  def create_history_view_for_member
     HistoryView.transaction do
       HistoryView.create! member_id: member.id, poll_id: poll.id
       create_company_group_action_tracking_record_for_action('view')
@@ -27,8 +30,6 @@ class Member::PollAction
         poll.view_all += 1
         poll.save!
       end
-
-      FlushCached::Member.new(member).clear_list_history_viewed_polls
     end
   end
 
