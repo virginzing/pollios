@@ -40,11 +40,8 @@ module Pollios::V1::PollAPI
 
       route_param :id do
 
-        desc '[x] returns poll details for requesting member'
+        desc 'returns poll details for requesting member'
         get do
-          # poll, error_message = member_poll_lister.poll(params[:id])
-          # error! error_message, 422 unless poll
-          # present poll, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
           poll_detail = member_poll_inqury.view
           present poll_detail, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
