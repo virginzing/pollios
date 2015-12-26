@@ -11,6 +11,10 @@ class Member::PollList
     cached_report_polls
   end
 
+  def reports_ids
+    reports.map(&:id)
+  end
+
   def history_viewed
     cached_history_viewed_polls
   end
@@ -90,9 +94,7 @@ class Member::PollList
   end
 
   def cached_all_created
-    Rails.cache.fetch("members/#{member.id}/polls/created") do
-      all_created
-    end
+    Rails.cache.fetch("members/#{member.id}/polls/created") { all_created }
   end
 
   def cached_all_voted

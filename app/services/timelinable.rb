@@ -1,6 +1,6 @@
 module Timelinable
 
-  LIMIT_TIMELINE = 500
+  LIMIT_TIMELINE = 1000
   LIMIT_POLL = 30
 
   def member_id
@@ -35,17 +35,17 @@ module Timelinable
 
   def vote_all_polls
     # @vote_all_polls ||= Member.voted_polls.collect {|e| e[:poll_id] }
-    @vote_all_polls ||= member_poll_list.voted_all.collect {|e| e[:poll_id] }
+    @vote_all_polls ||= member_poll_list.voted_all.collect { |e| e[:poll_id] }
   end
 
   def my_vote_questionnaire_ids
     # @my_vote_questionnaire_ids ||= Member.voted_polls.select{|e| e[:poll_series_id] != 0 }.collect{|e| e[:poll_id] }
-    @my_vote_questionnaire_ids ||= member_poll_list.voted_all.select{|e| e[:poll_series_id] != 0 }.collect{|e| e[:poll_id] }
+    @my_vote_questionnaire_ids ||= member_poll_list.voted_all.select { |e| e[:poll_series_id] != 0 }.collect { |e| e[:poll_id] }
   end
 
   def history_vote_system_poll
     # Member.voted_polls.select{|e| e if e[:system_poll] }.collect{|e| e[:poll_id] }
-    member_poll_list.voted_all.select{|e| e if e[:system_poll] }.collect{|e| e[:poll_id] }
+    member_poll_list.voted_all.select{|e| e if e[:system_poll] }.collect{ |e| e[:poll_id] }
   end
 
   def block_users
@@ -97,7 +97,7 @@ module Timelinable
 
 
   def cached_poll_ids_of_poll_member(type_timeline)
-    @cache_poll_ids ||= Rails.cache.fetch([ type_timeline, member_id]) do
+    @cache_poll_ids ||= Rails.cache.fetch([type_timeline, member_id]) do
       main_timeline
     end
   end

@@ -96,6 +96,10 @@ class Member::MemberList
     ids_for(followings)
   end
 
+  def blocks_ids
+    ids_for(blocks)
+  end
+
   def outgoing_requests_ids
     ids_for(outgoing_requests).sort
   end
