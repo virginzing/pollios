@@ -308,7 +308,7 @@ class CompaniesController < ApplicationController
 
     @init_poll = PollOfGroup.new(current_member,member_with_group, options_params, true)
 
-    list_voted_poll_ids = @member.cached_my_voted_all.collect{|e| e["poll_id"] }
+    list_voted_poll_ids = @member.cached_my_voted_all.collect{ |e| e[:poll_id] }
 
     if member_with_group.present?
       query = @init_poll.get_poll_of_group_company

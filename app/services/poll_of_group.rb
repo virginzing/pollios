@@ -36,7 +36,7 @@ class PollOfGroup
   end
 
   def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+    Member.voted_polls.select{|e| e[:poll_series_id] != 0 }.collect{|e| e[:poll_id] }
   end
 
   private

@@ -522,7 +522,7 @@ class Group < ActiveRecord::Base
 
   def get_poll_not_vote_count
     poll_groups_ids = Poll.available.joins(:groups).where("poll_groups.group_id = #{self.id}").uniq.map(&:id)
-    my_vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
+    my_vote_poll_ids = Member.voted_polls.collect{|e| e[:poll_id] }
     return (poll_groups_ids - my_vote_poll_ids).size
   end
 

@@ -20,7 +20,7 @@ class MyPollInProfile
   end
 
   def my_vote_poll_ids
-    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e["poll_series_id"] == 0 }.collect{|e| e["poll_id"] }
+    @poll_voted_ids ||= @member.cached_my_voted.select{|e| e[:poll_series_id] == 0 }.collect{|e| e[:poll_id] }
   end
 
   def my_poll
