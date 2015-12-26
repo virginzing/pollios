@@ -89,7 +89,11 @@ class Member::MemberList
 
   # NOTE: For debuggings and loggings Member::MemberAction's methods
   def friends_ids
-    ids_for(friends).sort
+    ids_for(friends)
+  end
+
+  def following_ids
+    ids_for(followings)
   end
 
   def outgoing_requests_ids

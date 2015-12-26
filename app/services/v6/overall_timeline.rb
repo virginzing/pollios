@@ -18,6 +18,14 @@ class V6::OverallTimeline
     @order_ids = []
   end
 
+  def member_list_service
+    @member_list_service ||= Member::MemberList.new(@member)
+  end
+
+  def member_group_list_service
+    @member_group_list_service ||= Member::GroupList.new(@member)
+  end
+
   def filter_my_poll
     @options[:my_poll].presence || "0"
   end
@@ -51,11 +59,13 @@ class V6::OverallTimeline
   # end
 
   def your_friend_ids
-    @friend_ids ||= Member.list_friend_active.map(&:id)
+    # @friend_ids ||= Member.list_friend_active.map(&:id)
+    @friend_ids ||= member_list_service.friends_ids
   end
 
   def your_following_ids
-    @following_ids ||= Member.list_friend_following.map(&:id)
+    # @following_ids ||= Member.list_friend_following.map(&:id)
+    @following_ids ||= member_list_service.following_ids
   end
 
   def get_timeline
@@ -74,7 +84,11 @@ class V6::OverallTimeline
     @friend_group_public ||= find_poll_me_and_friend_and_group_and_public
   end
 
-  private
+  # private
+
+  def your_group_ids
+    @your_group_ids ||= member_group_list_service.active
+  end
 
   def find_poll_me_and_friend_and_group_and_public
     feed = []

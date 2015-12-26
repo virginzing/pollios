@@ -7,7 +7,8 @@ class FeedAlgorithm
     @poll_ids = poll_ids
     @feed = feed
     @priority = priority
-    @vote_poll_ids = Member.voted_polls.collect{|e| e["poll_id"] }
+    # TODO: still needs to fix this
+    @vote_poll_ids = Member::PollList.new(Member.current_member).voted_all.collect{|e| e[:poll_id] }
     @created_time = created_time
     @updated_time = updated_time
     @filter_timeline_ids = []

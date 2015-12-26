@@ -34,15 +34,18 @@ module Timelinable
   end
 
   def vote_all_polls
-    @vote_all_polls ||= Member.voted_polls.collect {|e| e["poll_id"] }
+    # @vote_all_polls ||= Member.voted_polls.collect {|e| e["poll_id"] }
+    @vote_all_polls ||= member_poll_list.voted_all.collect {|e| e[:poll_id] }
   end
 
   def my_vote_questionnaire_ids
-    @my_vote_questionnaire_ids ||= Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+    # @my_vote_questionnaire_ids ||= Member.voted_polls.select{|e| e[:poll_series_id] != 0 }.collect{|e| e[:poll_id] }
+    @my_vote_questionnaire_ids ||= member_poll_list.voted_all.select{|e| e[:poll_series_id] != 0 }.collect{|e| e[:poll_id] }
   end
 
   def history_vote_system_poll
-    Member.voted_polls.select{|e| e if e["system_poll"] }.collect{|e| e["poll_id"] }
+    # Member.voted_polls.select{|e| e if e["system_poll"] }.collect{|e| e["poll_id"] }
+    member_poll_list.voted_all.select{|e| e if e[:system_poll] }.collect{|e| e[:poll_id] }
   end
 
   def block_users
@@ -121,7 +124,7 @@ module Timelinable
 
     if @cache_polls.size > LIMIT_POLL
       if @poll_ids.size == LIMIT_POLL
-        if  @cache_polls[-1] == @poll_ids.last
+        if @cache_polls[-1] == @poll_ids.last
           next_cursor = 0
         else
           next_cursor = @poll_ids.last

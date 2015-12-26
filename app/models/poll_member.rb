@@ -21,8 +21,8 @@ class PollMember < ActiveRecord::Base
   belongs_to :poll, -> { having_status_poll(:gray, :white) }
 
   scope :available, -> {
-    member_report_poll = Member.reported_polls.map(&:id)  ## poll ids
-    member_block_and_banned = Member.list_friend_block.map(&:id) | Admin::BanMember.cached_member_ids
+    member_report_poll = member_reported_polls #= Member.reported_polls.map(&:id)  ## poll ids
+    member_block_and_banned = member_blocked_and_banned #= Member.list_friend_block.map(&:id) | Admin::BanMember.cached_member_ids
 
     query = where("polls.draft = 'f' AND polls.deleted_at IS NULL")
     query = query.where("#{table_name}.poll_id NOT IN (?)", member_report_poll) if member_report_poll.size > 0
@@ -35,5 +35,13 @@ class PollMember < ActiveRecord::Base
   }
 
   scope :without_closed, -> { where("polls.close_status = 'f'") }
+
+  def self.member_reported_polls
+    []
+  end
+
+  def self.member_blocked_and_banned
+    []
+  end
 
 end
