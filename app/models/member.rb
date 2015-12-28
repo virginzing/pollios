@@ -486,7 +486,7 @@ class Member < ActiveRecord::Base
   end
 
   def my_vote_poll_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] == 0 }.collect{|e| e["poll_id"] }
+    Member.voted_polls.select{|e| e[:poll_series_id] == 0 }.collect{|e| e[:poll_id] }
   end
 
   # def cached_my_poll
@@ -643,13 +643,13 @@ class Member < ActiveRecord::Base
     history_voted = Member::PollList.new(self).voted_all
 
     # history_voted = Member.voted_polls
-    select_poll = history_voted.select {|his_vote| his_vote["poll_id"] == poll.id }.first
+    select_poll = history_voted.select { |his_vote| his_vote[:poll_id] == poll.id }.first
 
     if select_poll.present?
       choice_list ||= poll.cached_choices
-      choice_voted = choice_list.select {|e| e.id == select_poll["choice_id"] }.first.vote
-      choice_answer = choice_list.select {|e| e.id == select_poll["choice_id"] }.first.answer
-      return Hash["voted" => true, "choice_id" => select_poll["choice_id"], "answer" => choice_answer, "vote" => choice_voted]
+      choice_voted = choice_list.select  {|e| e.id == select_poll[:choice_id] }.first.vote
+      choice_answer = choice_list.select { |e| e.id == select_poll[:choice_id] }.first.answer
+      return Hash["voted" => true, "choice_id" => select_poll[:choice_id], "answer" => choice_answer, "vote" => choice_voted]
     else
       return Hash["voted" => false]
     end
@@ -659,7 +659,7 @@ class Member < ActiveRecord::Base
     history_voted = Member.voted_polls
 
     history_voted.each do |poll|
-      if poll["poll_series_id"] == poll_series.id
+      if poll[:poll_series_id] == poll_series.id
         return Hash["voted" => true]
       end
     end

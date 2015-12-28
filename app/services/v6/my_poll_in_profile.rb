@@ -46,11 +46,11 @@ class V6::MyPollInProfile
   end
 
   def my_vote_questionnaire_ids
-    Member.voted_polls.select{|e| e["poll_series_id"] != 0 }.collect{|e| e["poll_id"] }
+    Member.voted_polls.select{|e| e[:poll_series_id] != 0 }.collect{|e| e[:poll_id] }
   end
 
   def my_vote_poll_ids
-    Member.voted_polls.collect{|e| e["poll_id"] }
+    Member.voted_polls.collect{|e| e[:poll_id] }
   end
 
   def with_out_poll_ids

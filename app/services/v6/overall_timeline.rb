@@ -55,7 +55,7 @@ class V6::OverallTimeline
   end
 
   # def vote_all_polls
-  #   @vote_all_polls ||= Member.voted_polls.collect{|e| e["poll_id"] }
+  #   @vote_all_polls ||= Member.voted_polls.collect{|e| e[:poll_id] }
   # end
 
   def your_friend_ids
