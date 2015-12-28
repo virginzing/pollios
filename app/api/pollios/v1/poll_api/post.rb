@@ -2,10 +2,21 @@ module Pollios::V1::PollAPI
   class Post < Grape::API
     version 'v1', using: :path
 
+    helpers do
+      def poll
+        @poll ||= Poll.cached_find(params[:id])
+      end
+
+      def current_member_poll_action
+        @current_member_poll_action ||= Member::PollAction.new(current_member, poll)
+      end
+    end
+
     resource :polls do
 
       desc '[x] create a new poll'
       post do
+        current_member_poll_action.create
       end
 
       params do
@@ -16,6 +27,7 @@ module Pollios::V1::PollAPI
 
         desc '[x] close for voting poll'
         post '/close' do
+          current_member_poll_action.close
         end
 
         resource :choices do
@@ -25,46 +37,56 @@ module Pollios::V1::PollAPI
           end
           route_param :choice_id do
             post '/vote' do
-              { choice: params[:choice_id] }
+              current_member_poll_action.vote
+              # { choice: params[:choice_id] }
             end 
           end
         end
 
         desc '[x] add to bookmark'
         post '/bookmark' do
+          current_member_poll_action.bookmark
         end
 
         desc '[x] remove from bookmark'
         post '/unbookmark' do
+          current_member_poll_action.unbookmark
         end
 
         desc '[x] save for vote later'
         post '/save' do
+          current_member_poll_action.save
         end
 
         desc '[x] turn on notification'
         post '/watch' do
+          current_member_poll_action.watch
         end
 
         desc '[x] turn off notification'
         post '/unwatch' do
+          current_member_poll_action.unwatch
         end
 
         desc '[x] not interested'
         post '/not_interest' do
+          current_member_poll_action.not_interest
         end
 
         desc '[x] promote to public poll'
         post '/promote' do
+          current_member_poll_action.promote
         end
 
         desc '[x] report poll_id'
         post '/report' do
+          current_member_poll_action.report
         end
 
         resource :comments do
           desc '[x] add comment to poll_id'
           post do
+            current_member_poll_action.comment
           end
 
           params do
