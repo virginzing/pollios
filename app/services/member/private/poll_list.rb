@@ -2,6 +2,14 @@ module Member::Private::PollList
 
   # private
 
+  def ids_for(list)
+    list.map(&:id)
+  end
+
+  def ids_include?(list, id)
+    ids_for(list).include?(id)
+  end
+
   def member_report_polls
     member.poll_reports.to_a
   end
@@ -39,6 +47,10 @@ module Member::Private::PollList
 
   def all_created
     Poll.where("polls.member_id = #{member.id}")
+  end
+
+  def all_closed
+    Poll.where("polls.member_id = #{member.id}").where("polls.close_status = 't'")
   end
 
   def all_voted

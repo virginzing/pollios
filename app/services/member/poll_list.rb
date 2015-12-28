@@ -51,6 +51,10 @@ class Member::PollList
     cached_all_created
   end
 
+  def closed
+    cached_all_closed
+  end
+
   def viewed
     cached_history_viewed_polls  
   end
@@ -97,21 +101,19 @@ class Member::PollList
     Rails.cache.fetch("members/#{member.id}/polls/created") { all_created }
   end
 
+  def cached_all_closed
+    Rails.cache.fetch("members/#{member.id}/polls/closed") { all_closed }
+  end
+
   def cached_all_voted
-    Rails.cache.fetch("members/#{member.id}/polls/voted") do
-      all_voted
-    end
+    Rails.cache.fetch("members/#{member.id}/polls/voted") { all_voted }
   end
 
   def cached_all_bookmarked
-    Rails.cache.fetch("members/#{member.id}/polls/bookmarks") do
-      all_bookmarked
-    end
+    Rails.cache.fetch("members/#{member.id}/polls/bookmarks") { all_bookmarked }
   end
 
   def cached_all_saved_vote_later
-    Rails.cache.fetch("members/#{member.id}/polls/saved") do
-      all_saved_vote_later
-    end
+    Rails.cache.fetch("members/#{member.id}/polls/saved") { all_saved_vote_later }
   end
 end

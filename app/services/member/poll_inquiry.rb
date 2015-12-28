@@ -19,6 +19,10 @@ class Member::PollInquiry < Member::PollList
     HistoryView.exists?(member_id: member.id, poll_id: poll.id)
   end
 
+  def closed?
+    ids_include?(closed, poll.id)
+  end
+
   def voted?
     HistoryVote.exists?(member_id: member.id, poll_id: poll.id)
   end
