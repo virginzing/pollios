@@ -1,5 +1,8 @@
 class Member::PollAction
 
+  include Member::Private::PollActionGuard
+  include Member::Private::PollAction
+
   attr_reader :member, :poll
 
   def initialize(member, poll = nil, options = {})
