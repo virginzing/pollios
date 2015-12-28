@@ -67,10 +67,6 @@ class Member::PollList
     cached_all_bookmarked
   end
 
-  def bookmarks_ids
-    bookmarks.map(&:id)
-  end
-
   def saved
     cached_all_saved_vote_later
   end

@@ -28,7 +28,7 @@ class Member::PollInquiry < Member::PollList
   end
 
   def bookmarked?
-    bookmarks_ids.include?(poll.id)
+    ids_include?(bookmarks, poll.id)
   end
 
   def saved_for_later?
