@@ -3,7 +3,7 @@ class Member::PollAction
   include Member::Private::PollActionGuard
   include Member::Private::PollAction
 
-  attr_reader :member, :poll
+  attr_reader :member, :poll, :poll_params
 
   def initialize(member, poll = nil, options = {})
     @member = member
@@ -15,7 +15,8 @@ class Member::PollAction
     create_poll_viewing_record
   end
 
-  def create
+  def create(params)
+    @poll_params = params
     can_create, message = can_create?
     fail ExceptionHandler::UnprocessableEntity, message unless can_create
       

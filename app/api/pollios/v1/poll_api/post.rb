@@ -4,7 +4,12 @@ module Pollios::V1::PollAPI
 
     helpers do
       def poll
-        @poll ||= Poll.cached_find(params[:id])
+        @poll ||= poll_or_nil
+      end
+
+      def poll_or_nil
+        return nil unless params[:id].present?
+        Poll.cached_find(params[:id])
       end
 
       def current_member_poll_action
@@ -15,8 +20,22 @@ module Pollios::V1::PollAPI
     resource :polls do
 
       desc '[x] create a new poll'
+      params do
+        requires :title, type: String, desc: 'poll title'
+        requires :choices, type: Array[String], desc: 'poll choices'
+        requires :type_poll, type: String, values: %w(rating freeform), desc: 'poll choices type'
+
+        optional :allow_comment, type: Boolean, default: true, desc: 'poll allow comments'
+        optional :creator_must_vote, type: Boolean, default: true, desc: 'creator must vote poll'
+        optional :public, type: Boolean, desc: 'poll post in public' 
+        optional :group_ids, type: Array[Integer], desc: 'poll post in group (ids)'
+        optional :photo_poll, type: String, desc: 'photo url'
+        optional :original_images, type: Array[String], desc: 'original photos url'
+        exactly_one_of :public, :group_ids
+      end
+
       post do
-        current_member_poll_action.create
+        current_member_poll_action.create(params)
       end
 
       params do

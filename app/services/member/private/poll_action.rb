@@ -1,6 +1,10 @@
 module Member::Private::PollAction
 
   private
+  
+  def poll_inquiry_service
+    @poll_inquiry_service ||= Member::PollInquiry.new(member, poll)
+  end
 
   def create_poll_viewing_record
     return if HistoryView.exists?(member_id: member.id, poll_id: poll.id)
