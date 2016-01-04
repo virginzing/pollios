@@ -49,14 +49,30 @@ module Member::Private::PollAction
     end
 
     HistoryPromotePoll.create!(member: member, poll: poll)
-
     poll.update!(public: true)
+    poll
+  end
 
+  def process_bookmark
+    Bookmark.create!(member_id: member.id, bookmarkable_id: poll.id)
+    clear_bookmark_cached_for_member
+    poll
+  end
+
+  def process_unbookmark
+    bookmark = Bookmark.find_by(member_id: member.id, bookmarkable_id: poll.id)
+    bookmark.destroy
+
+    clear_bookmark_cached_for_member
     poll
   end
 
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
+  end
+
+  def clear_bookmark_cached_for_member
+    FlushCached::Member.new(member).clear_list_bookmark_polls
   end
 
 end

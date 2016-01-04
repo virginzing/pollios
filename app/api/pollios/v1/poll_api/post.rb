@@ -62,12 +62,12 @@ module Pollios::V1::PollAPI
           end
         end
 
-        desc '[x] add to bookmark'
+        desc 'add to bookmark'
         post '/bookmark' do
           current_member_poll_action.bookmark
         end
 
-        desc '[x] remove from bookmark'
+        desc 'remove from bookmark'
         post '/unbookmark' do
           current_member_poll_action.unbookmark
         end
