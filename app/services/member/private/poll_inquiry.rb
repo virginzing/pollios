@@ -7,6 +7,7 @@ module Member::Private::PollInquiry
     return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
     return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
+    return [false, 'You are already not interested this poll.'] if not_interested?
 
     [true, nil]
   end

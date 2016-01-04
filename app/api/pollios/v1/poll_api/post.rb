@@ -87,7 +87,7 @@ module Pollios::V1::PollAPI
           current_member_poll_action.unwatch
         end
 
-        desc '[x] not interested'
+        desc 'not interested'
         post '/not_interest' do
           current_member_poll_action.not_interest
         end

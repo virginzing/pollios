@@ -39,6 +39,14 @@ class Member::PollInquiry < Member::PollList
     watched_poll_ids.include?(poll.id)
   end
 
+  def not_interested?
+    if !poll.series
+      not_interested_poll_ids.include?(poll.id)
+    else
+      not_interested_questionnaire_ids.include?(poll.id)
+    end
+  end
+
   def voting_info
     return voted_hash if cached_voting_detail.present?
 

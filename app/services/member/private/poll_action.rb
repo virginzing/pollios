@@ -39,22 +39,9 @@ module Member::Private::PollAction
     poll.update!(close_status: true)
     poll
   end
-  
-  def process_promote
-    if member.citizen?
-      member.with_lock do
-        member.point -= 1
-        member.save!
-      end
-    end
-
-    HistoryPromotePoll.create!(member: member, poll: poll)
-    poll.update!(public: true)
-    poll
-  end
 
   def process_bookmark
-    Bookmark.create!(member_id: member.id, bookmarkable_id: poll.id)
+    Bookmark.create!(member_id: member.id, bookmarkable: poll)
     clear_bookmarked_cached_for_member
     poll
   end
@@ -68,7 +55,7 @@ module Member::Private::PollAction
   end
 
   def process_save
-    SavePollLater.create!(member_id: member.id, savable_id: poll.id)
+    SavePollLater.create!(member_id: member.id, savable: poll)
 
     clear_saved_cached_for_member
     poll
@@ -80,7 +67,7 @@ module Member::Private::PollAction
     if watch_poll.present?
       watch_poll.update!(poll_notify: true, comment_notify: true)
     else
-      member.watcheds.create!(poll_id: poll.id, poll_notify: true, comment_notify: true)
+      member.watcheds.create!(poll: poll, poll_notify: true, comment_notify: true)
     end
 
     clear_watched_cached_for_member
@@ -92,6 +79,37 @@ module Member::Private::PollAction
     watch_poll.update!(poll_notify: false, comment_notify: false)
 
     clear_watched_cached_for_member
+    poll
+  end
+
+  def process_not_interest
+    NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
+    NotifyLog.deleted_with_poll_and_member(poll, member)
+
+    process_unbookmark
+    delete_saved_poll
+    process_unwatch
+
+    poll
+  end
+
+  def delete_saved_poll
+    saved_poll = SavePollLater.find_by(member_id: member.id, savable: poll)
+    return unless saved_poll.present?
+    saved_poll.destroy
+    clear_saved_cached_for_member
+  end
+
+  def process_promote
+    if member.citizen?
+      member.with_lock do
+        member.point -= 1
+        member.save!
+      end
+    end
+
+    HistoryPromotePoll.create!(member: member, poll: poll)
+    poll.update!(public: true)
     poll
   end
 
