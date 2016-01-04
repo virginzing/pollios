@@ -44,7 +44,7 @@ module Pollios::V1::PollAPI
 
       route_param :id do
 
-        desc '[x] close for voting poll'
+        desc 'close for voting poll'
         post '/close' do
           current_member_poll_action.close
         end
@@ -92,7 +92,7 @@ module Pollios::V1::PollAPI
           current_member_poll_action.not_interest
         end
 
-        desc '[x] promote to public poll'
+        desc 'promote to public poll'
         post '/promote' do
           current_member_poll_action.promote
         end

@@ -5,7 +5,7 @@ module Member::Private::PollActionGuard
   def can_create?
     return [false, 'Poll must be have 2 choices at least.'] if less_choices
     return [false, 'Wrong type of choices.'] if wrong_type_choices
-    return [false, "You don't have public quota."] if public_quota_limit_exist
+    return [false, "You don't have any public poll quota."] if poll_params[:public] && public_quota_limit_exist
     return [false, "You aren't member in group."] if out_of_group 
 
     [true, nil]
@@ -15,6 +15,7 @@ module Member::Private::PollActionGuard
     return [false, "You aren't owner of this poll."] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
+    return [false, 'This poll is already closed for voting.'] if already_close
 
     [true, nil]
   end
@@ -69,7 +70,11 @@ module Member::Private::PollActionGuard
 
   def can_promote?
     return [false, "You aren't owner of this poll."] if not_owner_poll
-    return [false, 'This poll is already closed.'] if already_close
+    can_view, message = poll_inquiry_service.can_view?
+    return [false, message] unless can_view
+    return [false, 'This poll is already closed for voting.'] if already_close
+    return [false, 'This poll is already public.'] if already_public
+    return [false, "You don't have any public poll quota."] if public_quota_limit_exist
 
     [true, nil]
   end
@@ -95,9 +100,7 @@ module Member::Private::PollActionGuard
   end
 
   def public_quota_limit_exist
-    return false unless poll_params[:public]
-    return false unless member.point < 1
-    true 
+    member.point == 0 && member.citizen?
   end
 
   def out_of_group
@@ -140,6 +143,10 @@ module Member::Private::PollActionGuard
 
   def not_watching
     !already_watch
+  end
+
+  def already_public
+    poll.public
   end
 
 end

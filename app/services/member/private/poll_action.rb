@@ -35,6 +35,26 @@ module Member::Private::PollAction
     end
   end
 
+  def process_close
+    poll.update!(close_status: true)
+    poll
+  end
+  
+  def process_promote
+    if member.citizen?
+      member.with_lock do
+        member.point -= 1
+        member.save!
+      end
+    end
+
+    HistoryPromotePoll.create!(member: member, poll: poll)
+
+    poll.update!(public: true)
+
+    poll
+  end
+
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
   end
