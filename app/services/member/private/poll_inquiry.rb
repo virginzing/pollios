@@ -39,7 +39,11 @@ module Member::Private::PollInquiry
   end
 
   def not_allow_your_own_vote?
-    (poll.member_id == member.id) && !poll.creator_must_vote
+    owner_poll && !poll.creator_must_vote
+  end
+
+  def owner_poll
+    poll.member_id == member.id
   end
 
   def need_group_visibility_check?
@@ -47,7 +51,7 @@ module Member::Private::PollInquiry
   end
 
   def need_friends_following_visibility_check?
-    !poll.public && !poll.in_group
+    !owner_poll && !poll.public && !poll.in_group
   end
 
   def poll_only_in_closed_group?

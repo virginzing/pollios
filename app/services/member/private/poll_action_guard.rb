@@ -45,6 +45,7 @@ module Member::Private::PollActionGuard
   def can_save?
     can_vote, message = can_vote?
     return [false, message] unless can_vote
+    return [false, 'You are already saved this poll for vote later.'] if already_save
 
     [true, nil]
   end
@@ -135,6 +136,10 @@ module Member::Private::PollActionGuard
 
   def not_bookmarked
     !already_bookmark
+  end
+
+  def already_save
+    poll_inquiry_service.saved_for_later?
   end
 
   def already_watch

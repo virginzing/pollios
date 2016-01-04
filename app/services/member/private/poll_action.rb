@@ -55,7 +55,7 @@ module Member::Private::PollAction
 
   def process_bookmark
     Bookmark.create!(member_id: member.id, bookmarkable_id: poll.id)
-    clear_bookmark_cached_for_member
+    clear_bookmarked_cached_for_member
     poll
   end
 
@@ -63,7 +63,14 @@ module Member::Private::PollAction
     bookmark = Bookmark.find_by(member_id: member.id, bookmarkable_id: poll.id)
     bookmark.destroy
 
-    clear_bookmark_cached_for_member
+    clear_bookmarked_cached_for_member
+    poll
+  end
+
+  def process_save
+    SavePollLater.create!(member_id: member.id, savable_id: poll.id)
+
+    clear_saved_cached_for_member
     poll
   end
 
@@ -76,7 +83,7 @@ module Member::Private::PollAction
       member.watcheds.create!(poll_id: poll.id, poll_notify: true, comment_notify: true)
     end
 
-    clear_watch_cached_for_member
+    clear_watched_cached_for_member
     poll
   end
 
@@ -84,7 +91,7 @@ module Member::Private::PollAction
     watch_poll = member.watcheds.find_by(poll_id: poll.id)
     watch_poll.update!(poll_notify: false, comment_notify: false)
 
-    clear_watch_cached_for_member
+    clear_watched_cached_for_member
     poll
   end
 
@@ -92,11 +99,15 @@ module Member::Private::PollAction
     FlushCached::Member.new(member).clear_list_history_viewed_polls
   end
 
-  def clear_bookmark_cached_for_member
-    FlushCached::Member.new(member).clear_list_bookmark_polls
+  def clear_bookmarked_cached_for_member
+    FlushCached::Member.new(member).clear_list_bookmarked_polls
   end
 
-  def clear_watch_cached_for_member
+  def clear_saved_cached_for_member
+    FlushCached::Member.new(member).clear_list_saved_polls
+  end
+
+  def clear_watched_cached_for_member
     FlushCached::Member.new(@member).clear_list_watched_polls
   end
 

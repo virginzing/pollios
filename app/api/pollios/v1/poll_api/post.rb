@@ -72,7 +72,7 @@ module Pollios::V1::PollAPI
           current_member_poll_action.unbookmark
         end
 
-        desc '[x] save for vote later'
+        desc 'save for vote later'
         post '/save' do
           current_member_poll_action.save
         end

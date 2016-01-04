@@ -32,7 +32,7 @@ class Member::PollInquiry < Member::PollList
   end
 
   def saved_for_later?
-    saved_poll_ids.include?(poll.id)
+    ids_include?(saved, poll.id)
   end
 
   def watching?
