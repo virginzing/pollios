@@ -5,9 +5,8 @@ module Member::Private::PollInquiry
   def can_view?
     return [false, ExceptionHandler::Message::Member::BAN] if poll.member.ban?
     return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
-    return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
-    return [false, ExceptionHandler::Message::Poll::EXPIRED] if poll.expire_date < Time.zone.now
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
+    return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
 
     [true, nil]
   end
@@ -18,17 +17,46 @@ module Member::Private::PollInquiry
   end
 
   def can_vote?
-    return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
+    return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
+    return [false, ExceptionHandler::Message::Poll::EXPIRED] if poll.expire_date < Time.zone.now
+    return [false, "This poll is allow vote for group's members."] if outside_group?
+    return [false, 'This poll is allow vote for friends or following.'] if only_for_frineds_or_following?
+    return [false, "This poll isn't allow your own vote."] if not_allow_your_own_vote?
 
     [true, nil]
   end
 
   def member_outside_group_visibility?
+    need_group_visibility_check? && poll_only_in_closed_group?
+  end
+
+  def outside_group?
     need_group_visibility_check? && !group_ids_visible_to_member?
+  end
+
+  def only_for_frineds_or_following?
+    need_friends_following_visibility_check? && not_friends_or_following_with_creator
+  end
+
+  def not_allow_your_own_vote?
+    (poll.member_id == member.id) && !poll.creator_must_vote
   end
 
   def need_group_visibility_check?
     !poll.public && poll.in_group
+  end
+
+  def need_friends_following_visibility_check?
+    !poll.public && !poll.in_group
+  end
+
+  def poll_only_in_closed_group?
+    in_group_ids = poll.in_group_ids.split(',').map(&:to_i)
+
+    in_group_ids.each do |group_id|
+      return false if Group.cached_find(group_id).opened
+      return false if Member::GroupList.new(member).active_ids.include?(group_id)
+    end
   end
 
   def group_ids_visible_to_member?
@@ -37,6 +65,12 @@ module Member::Private::PollInquiry
 
     visible_group_ids = in_group_ids & member_active_group_ids
     !visible_group_ids.empty?
+  end
+
+  def not_friends_or_following_with_creator
+    member_listing = Member::MemberList.new(member)
+
+    member_listing.not_friend_with?(poll.member) && member_listing.not_following_with?(poll.member)
   end
 
   def voted_hash
