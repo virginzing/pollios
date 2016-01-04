@@ -77,12 +77,12 @@ module Pollios::V1::PollAPI
           current_member_poll_action.save
         end
 
-        desc '[x] turn on notification'
+        desc 'turn on notification'
         post '/watch' do
           current_member_poll_action.watch
         end
 
-        desc '[x] turn off notification'
+        desc 'turn off notification'
         post '/unwatch' do
           current_member_poll_action.unwatch
         end

@@ -67,12 +67,37 @@ module Member::Private::PollAction
     poll
   end
 
+  def process_watch
+    watch_poll = member.watcheds.find_by(poll_id: poll.id)
+
+    if watch_poll.present?
+      watch_poll.update!(poll_notify: true, comment_notify: true)
+    else
+      member.watcheds.create!(poll_id: poll.id, poll_notify: true, comment_notify: true)
+    end
+
+    clear_watch_cached_for_member
+    poll
+  end
+
+  def process_unwatch
+    watch_poll = member.watcheds.find_by(poll_id: poll.id)
+    watch_poll.update!(poll_notify: false, comment_notify: false)
+
+    clear_watch_cached_for_member
+    poll
+  end
+
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
   end
 
   def clear_bookmark_cached_for_member
     FlushCached::Member.new(member).clear_list_bookmark_polls
+  end
+
+  def clear_watch_cached_for_member
+    FlushCached::Member.new(@member).clear_list_watched_polls
   end
 
 end
