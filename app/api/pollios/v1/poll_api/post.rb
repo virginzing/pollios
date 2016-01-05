@@ -50,15 +50,17 @@ module Pollios::V1::PollAPI
         end
 
         resource :choices do
-          desc '[x] vote choide_id on poll_id'
+          desc 'vote choide_id on poll_id'
           params do
             requires :choice_id, type: Integer, desc: 'choice_id to vote on'
+            optional :anonymous, type: Boolean, default: false, desc: 'vote as anonymous'
+            optional :data_analysis, type: Hash, desc: 'gender and birthday of member_id for survey'
+            optional :surveyor_id, type: Integer, desc: 'surveyor_id'
           end
           route_param :choice_id do
             post '/vote' do
-              current_member_poll_action.vote
-              # { choice: params[:choice_id] }
-            end 
+              current_member_poll_action.vote(params)
+            end
           end
         end
 

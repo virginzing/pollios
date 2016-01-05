@@ -3,7 +3,7 @@ class Member::PollAction
   include Member::Private::PollActionGuard
   include Member::Private::PollAction
 
-  attr_reader :member, :poll, :poll_params, :report_params
+  attr_reader :member, :poll, :poll_params, :vote_params, :report_params
 
   def initialize(member, poll = nil, options = {})
     @member = member
@@ -30,7 +30,8 @@ class Member::PollAction
     process_close
   end
 
-  def vote
+  def vote(params)
+    @vote_params = params
     can_vote, message = can_vote?
     fail ExceptionHandler::UnprocessableEntity, message unless can_vote
 

@@ -26,6 +26,7 @@ module Member::Private::PollActionGuard
     can_vote, message = poll_inquiry_service.can_vote?
     return [false, message] unless can_vote
     return [false, 'You are already voted this poll.'] if already_vote
+    return [false, "This poll haven't your selected choice."] if not_match_choice
 
     [true, nil]
   end
@@ -129,6 +130,10 @@ module Member::Private::PollActionGuard
 
   def already_close
     poll_inquiry_service.closed?
+  end
+
+  def not_match_choice
+    !poll.choices.map(&:id).include?(vote_params[:choice_id])
   end
 
   def already_vote

@@ -40,6 +40,54 @@ module Member::Private::PollAction
     poll
   end
 
+  def process_vote
+    increase_vote_count
+    create_company_group_action_tracking_record_for_action('vote')
+    create_history_vote
+    delete_saved_poll
+    trigger_vote
+
+    claer_voted_cached_for_member
+    clear_voting_poll_cached_for_member
+    send_vote_notification
+
+    poll
+  end
+
+  def choice
+    Choice.cached_find(vote_params[:choice_id])
+  end
+
+  def increase_vote_count
+    choice.with_lock do
+      choice.vote += 1
+      choice.save!  
+    end
+
+    poll.with_lock do
+      poll.vote_all += 1
+      poll.save!
+    end
+  end
+
+  def create_history_vote
+    HistoryVote.create!(member_id: member.id, poll_id: poll.id, choice_id: choice.id \
+      , poll_series_id: poll_series_id, data_analysis: vote_params[:data_analysis], surveyor_id: vote_params[:surveyor_id] \
+      , created_at: Time.zone.now + 0.5.seconds, show_result: show_result)
+  end
+
+  def poll_series_id
+    poll.series ? poll.poll_series_id : 0
+  end
+  
+  def show_result
+    !vote_params[:anonymous]
+  end
+
+  def trigger_vote
+    Trigger::Vote.new(member, poll, choice).trigger!
+  end
+
   def process_bookmark
     Bookmark.create!(member_id: member.id, bookmarkable: poll)
     clear_bookmarked_cached_for_member
@@ -172,8 +220,24 @@ module Member::Private::PollAction
     FlushCached::Member.new(member).clear_list_report_polls
   end
 
-  def send_report_notification
-    ReportPollWorker.perform_async(member.id, poll.id)
+  def clear_voting_poll_cached_for_member
+    FlushCached::Member.new(member).clear_voting_poll_id
   end
 
+  def send_report_notification
+    ReportPollWorker.perform_async(member.id, poll.id) unless Rails.env.test?
+  end
+
+  def send_vote_notification
+    return unless poll.series && not_owner_poll
+    sum_vote_notification
+    Poll::VoteNotifyLog.new(member, poll, show_result).create!
+  end
+
+  def sum_vote_notification
+    return unless poll.notify_state.idle?
+    poll.update!(notify_state: 1)
+    poll.update!(notify_state_at: Time.zone.now)
+    SumVotePollWorker.perform_in(1.minutes, poll.id) unless Rails.env.test?
+  end
 end
