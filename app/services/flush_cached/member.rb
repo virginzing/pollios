@@ -60,4 +60,10 @@ class FlushCached::Member
     Rails.cache.delete("members/#{member.id}/polls/saved")
   end
 
+  # TODO: Refactor cached
+
+  def clear_voting_poll_id
+    Rails.cache.delete("member/#{member.id}/voting")
+  end
+
 end
