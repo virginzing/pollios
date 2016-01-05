@@ -69,7 +69,6 @@ module Member::Private::PollActionGuard
   def can_not_interest?
     can_vote, message = can_vote?
     return [false, message] unless can_vote
-    return [false, 'You are already not interested this poll.'] if already_not_interested
 
     [true, nil]
   end

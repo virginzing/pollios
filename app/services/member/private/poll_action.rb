@@ -47,9 +47,9 @@ module Member::Private::PollAction
   end
 
   def process_unbookmark
-    bookmark = Bookmark.find_by(member_id: member.id, bookmarkable_id: poll.id)
-    return unless bookmark.present?
-    bookmark.destroy
+    bookmarked_poll = Bookmark.find_by(member_id: member.id, bookmarkable_id: poll.id)
+    return unless bookmarked_poll.present?
+    bookmarked_poll.destroy
 
     clear_bookmarked_cached_for_member
     poll
@@ -63,10 +63,10 @@ module Member::Private::PollAction
   end
 
   def process_watch
-    watch_poll = member.watcheds.find_by(poll_id: poll.id)
+    watched_poll = member.watcheds.find_by(poll_id: poll.id)
 
-    if watch_poll.present?
-      watch_poll.update!(poll_notify: true, comment_notify: true)
+    if watched_poll.present?
+      watched_poll.update!(poll_notify: true, comment_notify: true)
     else
       member.watcheds.create!(poll: poll, poll_notify: true, comment_notify: true)
     end
@@ -76,9 +76,9 @@ module Member::Private::PollAction
   end
 
   def process_unwatch
-    watch_poll = member.watcheds.find_by(poll_id: poll.id)
-    return unless watch_poll.present?
-    watch_poll.update!(poll_notify: false, comment_notify: false)
+    watched_poll = member.watcheds.find_by(poll_id: poll.id)
+    return unless watched_poll.present?
+    watched_poll.update!(poll_notify: false, comment_notify: false)
 
     clear_watched_cached_for_member
     poll
