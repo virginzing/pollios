@@ -48,6 +48,10 @@ class FlushCached::Member
     Rails.cache.delete("member/#{member.id}/voting/#{poll_id}")
   end
 
+  def clear_list_voted_polls
+    Rails.cache.delete("members/#{member.id}/polls/voted")
+  end
+
   def clear_list_bookmarked_polls
     Rails.cache.delete("members/#{member.id}/polls/bookmarks")
   end

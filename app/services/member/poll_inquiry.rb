@@ -47,6 +47,10 @@ class Member::PollInquiry < Member::PollList
     end
   end
 
+  def reported?
+    ids_include?(reports, poll.id)
+  end
+
   def voting_info
     return voted_hash if cached_voting_detail.present?
 

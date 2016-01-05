@@ -97,9 +97,13 @@ module Pollios::V1::PollAPI
           current_member_poll_action.promote
         end
 
-        desc '[x] report poll_id'
+        desc 'report poll_id'
+        params do
+          requires :message_preset, type: String, desc: 'as inappropriate because'
+          optional :message, type: String, default: '', desc: 'additional information'
+        end
         post '/report' do
-          current_member_poll_action.report
+          current_member_poll_action.report(params)
         end
 
         resource :comments do

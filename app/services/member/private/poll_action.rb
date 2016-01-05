@@ -77,6 +77,7 @@ module Member::Private::PollAction
 
   def process_unwatch
     watch_poll = member.watcheds.find_by(poll_id: poll.id)
+    return unless watch_poll.present?
     watch_poll.update!(poll_notify: false, comment_notify: false)
 
     clear_watched_cached_for_member
@@ -114,8 +115,45 @@ module Member::Private::PollAction
     poll
   end
 
+  def process_report
+    MemberReportPoll.create!(member_id: member.id, poll_id: poll.id \
+      , message: report_params[:message], message_preset: report_params[:message_preset])
+    reporting
+
+    NotifyLog.deleted_with_poll_and_member(poll, member)
+
+    claer_voted_cached_for_member
+    clear_reported_cached_for_member
+    
+    send_report_notification if poll.in_group
+
+    poll
+  end
+
+  def reporting
+    poll.with_lock do
+      poll.report_count += member.report_power
+      poll.save!
+    end
+
+    process_unbookmark
+    delete_saved_poll
+    process_unwatch
+
+    return unless poll.report_count >= 10
+    poll.update!(status_poll: :black)
+  end
+
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
+  end
+
+  def claer_created_cached_for_member
+    FlushCached::Member.new(member).clear_list_created_polls
+  end
+
+  def claer_voted_cached_for_member
+    FlushCached::Member.new(member).clear_list_voted_polls
   end
 
   def clear_bookmarked_cached_for_member
@@ -128,6 +166,14 @@ module Member::Private::PollAction
 
   def clear_watched_cached_for_member
     FlushCached::Member.new(member).clear_list_watched_polls
+  end
+
+  def clear_reported_cached_for_member
+    FlushCached::Member.new(member).clear_list_report_polls
+  end
+
+  def send_report_notification
+    ReportPollWorker.perform_async(member.id, poll.id)
   end
 
 end

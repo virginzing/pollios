@@ -88,7 +88,9 @@ module Member::Private::PollActionGuard
   def can_report?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    
+    return [false, "You can't report your poll."] if owner_poll
+    return [false, 'You are already reported this poll.'] if already_report
+
     [true, nil]
   end
 
@@ -164,6 +166,10 @@ module Member::Private::PollActionGuard
 
   def already_public
     poll.public
+  end
+
+  def already_report
+    poll_inquiry_service.reported?
   end
 
 end

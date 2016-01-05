@@ -3,7 +3,7 @@ class Member::PollAction
   include Member::Private::PollActionGuard
   include Member::Private::PollAction
 
-  attr_reader :member, :poll, :poll_params
+  attr_reader :member, :poll, :poll_params, :report_params
 
   def initialize(member, poll = nil, options = {})
     @member = member
@@ -86,7 +86,8 @@ class Member::PollAction
     process_promote
   end
 
-  def report
+  def report(params)
+    @report_params = params
     can_report, message = can_report?
     fail ExceptionHandler::UnprocessableEntity, message unless can_report
 
