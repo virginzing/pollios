@@ -31,6 +31,8 @@ module Member::Private::PollActionGuard
   end
 
   def can_bookmark?
+    can_view, message = poll_inquiry_service.can_view?
+    return [false, message] unless can_view
     return [false, 'You are already bookmarked this poll.'] if already_bookmark
 
     [true, nil]
@@ -51,6 +53,8 @@ module Member::Private::PollActionGuard
   end
 
   def can_watch?
+    can_view, message = poll_inquiry_service.can_view?
+    return [false, message] unless can_view
     return [false, 'You are already watching this poll.'] if already_watch
 
     [true, nil]
@@ -82,6 +86,9 @@ module Member::Private::PollActionGuard
   end
 
   def can_report?
+    can_view, message = poll_inquiry_service.can_view?
+    return [false, message] unless can_view
+    
     [true, nil]
   end
 
