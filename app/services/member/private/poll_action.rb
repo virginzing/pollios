@@ -48,6 +48,7 @@ module Member::Private::PollAction
 
   def process_unbookmark
     bookmark = Bookmark.find_by(member_id: member.id, bookmarkable_id: poll.id)
+    return unless bookmark.present?
     bookmark.destroy
 
     clear_bookmarked_cached_for_member
@@ -108,7 +109,7 @@ module Member::Private::PollAction
       end
     end
 
-    HistoryPromotePoll.create!(member: member, poll: poll)
+    HistoryPromotePoll.create!(member_id: member.id, poll: poll)
     poll.update!(public: true)
     poll
   end
@@ -126,7 +127,7 @@ module Member::Private::PollAction
   end
 
   def clear_watched_cached_for_member
-    FlushCached::Member.new(@member).clear_list_watched_polls
+    FlushCached::Member.new(member).clear_list_watched_polls
   end
 
 end
