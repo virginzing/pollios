@@ -221,7 +221,7 @@ module Member::Private::PollAction
   end
 
   def clear_voting_poll_cached_for_member
-    FlushCached::Member.new(member).clear_voting_poll_id
+    FlushCached::Member.new(member, poll).clear_voting_poll_id
   end
 
   def send_report_notification

@@ -1,9 +1,10 @@
 class FlushCached::Member
 
-  attr_reader :member
+  attr_reader :member, :poll
 
-  def initialize(member)
+  def initialize(member, poll = nil)
     @member = member
+    @poll = poll
   end
 
   def clear_list_friends_all_members
@@ -63,7 +64,7 @@ class FlushCached::Member
   # TODO: Refactor cached
 
   def clear_voting_poll_id
-    Rails.cache.delete("member/#{member.id}/voting")
+    Rails.cache.delete("member/#{member.id}/voting/#{poll.id}")
   end
 
 end
