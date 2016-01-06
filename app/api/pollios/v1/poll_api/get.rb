@@ -53,6 +53,14 @@ module Pollios::V1::PollAPI
             present comments, with: CommentDetailEntity, current_member: current_member
           end
         end
+
+        resource :members do
+          desc "returns list of poll's member voted"
+          get '/voted' do
+            members_voted = Poll::MemberList.new(poll)
+            present members_voted, with: MemberVotedDetailEntity, current_member: current_member
+          end
+        end
       end
 
     end
