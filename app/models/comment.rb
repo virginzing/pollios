@@ -40,6 +40,7 @@ class Comment < ActiveRecord::Base
   default_scope { with_deleted }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
+  scope :without_ban, -> { where(ban: false) }
 
   def send_notification
     unless Rails.env.test?

@@ -45,6 +45,14 @@ module Pollios::V1::PollAPI
           poll_detail = member_poll_inqury.view
           present poll_detail, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
+
+        resource :comments do
+          desc "returns list of poll's comment"
+          get do
+            comments = Poll::CommentList.new(poll, current_member).comments
+            present comments, with: CommentDetailEntity, current_member: current_member
+          end
+        end
       end
 
     end
