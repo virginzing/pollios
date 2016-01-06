@@ -35,18 +35,20 @@ module Pollios::V1::PollAPI
       end
 
       post do
-        current_member_poll_action.create(params)
+        create = current_member_poll_action.create(params)
+        present create, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
       end
 
       params do
-        optional :id, type: Integer, desc: 'poll id'
+        requires :id, type: Integer, desc: 'poll id'
       end
 
       route_param :id do
 
         desc 'close for voting poll'
         post '/close' do
-          current_member_poll_action.close
+          close = current_member_poll_action.close
+          present close, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         resource :choices do
@@ -59,44 +61,52 @@ module Pollios::V1::PollAPI
           end
           route_param :choice_id do
             post '/vote' do
-              current_member_poll_action.vote(params)
+              vote = current_member_poll_action.vote(params)
+              present vote, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
             end
           end
         end
 
         desc 'add to bookmark'
         post '/bookmark' do
-          current_member_poll_action.bookmark
+          bookmark = current_member_poll_action.bookmark
+          present bookmark, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'remove from bookmark'
         post '/unbookmark' do
-          current_member_poll_action.unbookmark
+          unbookmark = current_member_poll_action.unbookmark
+          present unbookmark, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'save for vote later'
         post '/save' do
-          current_member_poll_action.save
+          save = current_member_poll_action.save
+          present save, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'turn on notification'
         post '/watch' do
-          current_member_poll_action.watch
+          watch = current_member_poll_action.watch
+          present watch, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'turn off notification'
         post '/unwatch' do
-          current_member_poll_action.unwatch
+          unwatch = current_member_poll_action.unwatch
+          present unwatch, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'not interested'
         post '/not_interest' do
-          current_member_poll_action.not_interest
+          not_interest = current_member_poll_action.not_interest
+          present not_interest, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'promote to public poll'
         post '/promote' do
-          current_member_poll_action.promote
+          promote = current_member_poll_action.promote
+          present promote, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'report poll_id'
@@ -105,7 +115,8 @@ module Pollios::V1::PollAPI
           optional :message, type: String, default: '', desc: 'additional information'
         end
         post '/report' do
-          current_member_poll_action.report(params)
+          report = current_member_poll_action.report(params)
+          present report, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         resource :comments do

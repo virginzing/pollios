@@ -38,6 +38,7 @@ module Pollios::V1::Shared
     end
 
     expose :member_states do
+      expose :reported
       expose :bookmarked
       expose :saved_for_later
       expose :watching
@@ -79,6 +80,10 @@ module Pollios::V1::Shared
 
     def creator
       Member.cached_find(poll.member_id)
+    end
+
+    def reported
+      poll_inquiry_service.reported?
     end
 
     def bookmarked
