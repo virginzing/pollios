@@ -133,6 +133,7 @@ module Member::Private::PollActionGuard
   end
 
   def not_match_choice
+    return false unless vote_params.present?
     !poll.choices.map(&:id).include?(vote_params[:choice_id])
   end
 
