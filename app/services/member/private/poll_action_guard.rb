@@ -95,7 +95,8 @@ module Member::Private::PollActionGuard
   end
 
   def can_comment?
-    return [false, "You aren't vote this poll."] if not_voted
+    return [false, "You aren't vote this poll."] if not_voted_and_poll_not_closed
+    return [false, "This poll isn't allow comment."] if not_allow_comment
 
     [true, nil]
   end
@@ -175,6 +176,14 @@ module Member::Private::PollActionGuard
 
   def already_report
     poll_inquiry_service.reported?
+  end
+
+  def not_voted_and_poll_not_closed
+    not_voted && !poll.close_status
+  end
+
+  def not_allow_comment
+    !poll.allow_comment
   end
 
 end

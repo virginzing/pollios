@@ -121,8 +121,12 @@ module Pollios::V1::PollAPI
 
         resource :comments do
           desc '[x] add comment to poll_id'
+          params do
+            requires :message, type: String, desc: 'comment message'
+            optional :mention_ids, type: Array[Integer], desc: 'list of member (ids) for mention on comment'
+          end
           post do
-            current_member_poll_action.comment
+            current_member_poll_action.comment(params)
           end
 
           params do
