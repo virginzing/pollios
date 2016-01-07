@@ -51,6 +51,8 @@ module Member::Private::PollAction
     clear_voting_poll_cached_for_member
     send_vote_notification
 
+    predict_campaign
+
     poll
   end
 
@@ -86,6 +88,10 @@ module Member::Private::PollAction
 
   def trigger_vote
     Trigger::Vote.new(member, poll, choice).trigger!
+  end
+
+  def predict_campaign
+    poll.find_campaign_for_predict?(member)
   end
 
   def process_bookmark
