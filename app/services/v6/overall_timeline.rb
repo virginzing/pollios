@@ -138,6 +138,7 @@ class V6::OverallTimeline
       query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
     end
 
+    query = query.order('priority').order('polls.created_at desc')
     query = query.limit(LIMIT_TIMELINE)
 
     query.each do |q|
