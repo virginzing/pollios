@@ -47,7 +47,7 @@ module Pollios::V1::PollAPI
         end
 
         resource :comments do
-          desc "returns list of poll's comment"
+          desc "returns list of poll[id]'s comments"
           get do
             comments = Poll::CommentList.new(poll, current_member).comments
             present comments, with: CommentDetailEntity, current_member: current_member
@@ -55,8 +55,8 @@ module Pollios::V1::PollAPI
         end
 
         resource :members do
-          desc "returns list of poll's member voted"
-          get '/voted' do
+          desc "returns list of poll[id]'s voters"
+          get '/voters' do
             members_voted = Poll::MemberList.new(poll)
             present members_voted, with: MemberVotedDetailEntity, current_member: current_member
           end

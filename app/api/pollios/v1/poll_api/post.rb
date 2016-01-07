@@ -25,12 +25,12 @@ module Pollios::V1::PollAPI
         requires :choices, type: Array[String], desc: 'poll choices'
         requires :type_poll, type: String, values: %w(rating freeform), desc: 'poll choices type'
 
-        optional :allow_comment, type: Boolean, default: true, desc: 'poll allow comments'
-        optional :creator_must_vote, type: Boolean, default: true, desc: 'creator must vote poll'
-        optional :public, type: Boolean, desc: 'poll post in public' 
-        optional :group_ids, type: Array[Integer], desc: 'poll post in group (ids)'
-        optional :photo_poll, type: String, desc: 'photo url'
-        optional :original_images, type: Array[String], desc: 'original photos url'
+        optional :allow_comment, type: Boolean, default: true, desc: 'true if allows comments'
+        optional :creator_must_vote, type: Boolean, default: true, desc: 'creator must vote to see result'
+        optional :public, type: Boolean, desc: 'true if public poll' 
+        optional :group_ids, type: Array[Integer], desc: 'group-ids to create/post in'
+        optional :photo_poll, type: String, desc: 'URL for photo to be displayed'
+        optional :original_images, type: Array[String], desc: 'URL for original photos'
         exactly_one_of :public, :group_ids
       end
 
@@ -55,7 +55,7 @@ module Pollios::V1::PollAPI
           desc 'vote choide_id on poll_id'
           params do
             requires :choice_id, type: Integer, desc: 'choice_id to vote on'
-            optional :anonymous, type: Boolean, default: false, desc: 'vote as anonymous'
+            optional :anonymous, type: Boolean, default: false, desc: 'true if voting as anonymous'
             optional :data_analysis, type: Hash, desc: 'gender and birthday of member_id for survey'
             optional :surveyor_id, type: Integer, desc: 'surveyor_id'
           end
