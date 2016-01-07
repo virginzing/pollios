@@ -229,7 +229,7 @@ module Member::Private::PollAction
   end
 
   def send_vote_notification
-    return unless poll.series && not_owner_poll
+    return if poll.series || owner_poll
     sum_vote_notification
     Poll::VoteNotifyLog.new(member, poll, show_result).create!
   end
