@@ -40,8 +40,9 @@ module Pollios::V1::MemberAPI
 
           desc "returns list of member's created poll"
           get '/created' do
-            polls_for_member = Member::PollList.new(member)
-            present :created, polls_for_member.created, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+            polls_for_member = Member::PollList.new(member, viewing_member: current_member)
+            present :created, polls_for_member.created, with: Pollios::V1::Shared::PollDetailEntity \
+              , current_member: current_member
           end
 
           desc "returns list of member's voted poll"

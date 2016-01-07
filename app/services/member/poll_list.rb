@@ -1,10 +1,13 @@
 class Member::PollList
   include Member::Private::PollList
 
-  attr_reader :member
+  attr_reader :member, :viewing_member
   
-  def initialize(member)
-    @member = member
+  def initialize(member, options = {})
+    @member = @viewing_member = member
+
+    return unless options[:viewing_member]
+    @viewing_member = options[:viewing_member]
   end
 
   def reports
@@ -48,7 +51,7 @@ class Member::PollList
   end
 
   def created
-    cached_all_created
+    Member::MemberList.new(viewing_member).blocked_by_someone.include?(member.id) ? [] : cached_all_created
   end
 
   def closed

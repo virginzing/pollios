@@ -8,6 +8,7 @@ module Member::Private::PollInquiry
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
     return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
     return [false, 'You are already not interested this poll.'] if not_interested?
+    return [false, "You can't see this poll at this moment."] if incoming_block
 
     [true, nil]
   end
@@ -72,10 +73,16 @@ module Member::Private::PollInquiry
     !visible_group_ids.empty?
   end
 
-  def not_friends_or_following_with_creator
-    member_listing = Member::MemberList.new(member)
+  def member_listing
+    Member::MemberList.new(member)
+  end
 
+  def not_friends_or_following_with_creator
     member_listing.not_friend_with?(poll.member) && member_listing.not_following_with?(poll.member)
+  end
+
+  def incoming_block
+    member_listing.blocked_by_someone.include?(poll.member_id)
   end
 
   def voted_hash
