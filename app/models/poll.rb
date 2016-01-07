@@ -140,7 +140,7 @@ class Poll < ActiveRecord::Base
 
   accepts_nested_attributes_for :poll_attachments, :reject_if => lambda { |a| a[:image].blank? }, :allow_destroy => true
 
-  default_scope { with_deleted.order("#{table_name}.created_at desc") }
+  default_scope {  with_deleted.order("#{table_name}.created_at desc") }
 
   scope :public_poll, -> { where(public: true) }
   scope :active_poll, -> { where("expire_date > ?", Time.zone.now) }
