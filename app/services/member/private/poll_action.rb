@@ -91,6 +91,7 @@ module Member::Private::PollAction
   end
 
   def predict_campaign
+    return unless poll.get_campaign
     poll.find_campaign_for_predict?(member)
   end
 
