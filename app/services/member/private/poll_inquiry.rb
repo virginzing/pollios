@@ -6,6 +6,7 @@ module Member::Private::PollInquiry
     return [false, ExceptionHandler::Message::Member::BAN] if poll.member.ban?
     return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
+    return [false, "You can't see draft poll."] if poll.draft
     return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
     return [false, 'You are already not interested this poll.'] if not_interested?
     return [false, "You can't see this poll at this moment."] if incoming_block
