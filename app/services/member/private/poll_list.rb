@@ -46,7 +46,7 @@ module Member::Private::PollList
   end
 
   def all_created
-    Poll.where("polls.member_id = #{member.id}")
+    Poll.of_member_id(member.id).viewing_by_member(viewing_member)
   end
 
   def all_closed

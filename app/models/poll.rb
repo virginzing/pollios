@@ -172,6 +172,51 @@ class Poll < ActiveRecord::Base
 
   scope :without_closed, -> { where(close_status: false) }
 
+  scope :of_member_id, ->(member_id) { where('polls.member_id = ?', member_id) }
+
+  scope :viewing_by_member, (lambda do |viewing_member|
+    without_banned_member
+    .without_black_status
+    .without_deleted
+    .without_draft
+    .without_not_interested(viewing_member)
+    .without_incoming_block(viewing_member)
+    .without_group_inivisibility(viewing_member)
+    # .wihtout_reported(viewing_member)
+  end)
+
+  scope :without_banned_member, (lambda do
+    banned_member = Admin::BanMember.cached_member_ids
+    where.not('polls.member_id IN (?)', banned_member) if banned_member.count > 0
+  end)
+
+  scope :without_black_status, -> { where.not('polls.status_poll = -1') }
+
+  scope :without_draft, -> { where.not('polls.draft') }
+
+  scope :without_group_inivisibility, (lambda do |viewing_member|
+    group_active_ids = Member::GroupList.new(viewing_member).active_ids
+
+    joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
+    .where('poll_groups.group_id IN (?) or polls.in_group = false', group_active_ids)
+    .uniq
+  end)
+
+  scope :wihtout_reported, (lambda do |viewing_member|
+    reported_poll_ids = Member::PollList.new(viewing_member).reports_ids
+    where('polls.id NOT IN (?)', reported_poll_ids) if reported_poll_ids.count > 0
+  end)
+
+  scope :without_not_interested, (lambda do |viewing_member|
+    not_interested_poll_ids = Member::PollList.new(viewing_member).not_interested_poll_ids
+    where('polls.id NOT IN (?)', not_interested_poll_ids) if not_interested_poll_ids.count > 0
+  end)
+
+  scope :without_incoming_block, (lambda do |viewing_member|
+    incoming_block_ids = Member::MemberList.new(viewing_member).blocked_by_someone
+    where('polls.member_id NOT IN (?)', incoming_block_ids) if incoming_block_ids.size > 0
+  end)
+
   LIMIT_POLL = 30
   LIMIT_TIMELINE = 500
 

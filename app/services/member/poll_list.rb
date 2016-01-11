@@ -51,7 +51,7 @@ class Member::PollList
   end
 
   def created
-    Member::MemberList.new(viewing_member).blocked_by_someone.include?(member.id) ? [] : cached_all_created
+    all_created
   end
 
   def closed
@@ -94,10 +94,6 @@ class Member::PollList
 
   def cached_watch_polls
     Rails.cache.fetch("member/#{member.id}/watch_polls") { member_watched_polls.map(&:poll_id) }
-  end
-
-  def cached_all_created
-    Rails.cache.fetch("members/#{member.id}/polls/created") { all_created }
   end
 
   def cached_all_closed
