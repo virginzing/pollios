@@ -25,6 +25,7 @@ module Member::Private::PollInquiry
     return [false, "This poll is allow vote for group's members."] if outside_group?
     return [false, 'This poll is allow vote for friends or following.'] if only_for_frineds_or_following?
     return [false, "This poll isn't allow your own vote."] if not_allow_your_own_vote?
+    return [false, "You are already blocked #{poll.member.fullname}."] if outgoing_block
 
     [true, nil]
   end
@@ -84,6 +85,10 @@ module Member::Private::PollInquiry
 
   def incoming_block
     member_listing.blocked_by_someone.include?(poll.member_id)
+  end
+
+  def outgoing_block
+    member_listing.blocks_ids.include?(poll.member_id)
   end
 
   def voted_hash
