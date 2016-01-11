@@ -172,8 +172,6 @@ class Poll < ActiveRecord::Base
 
   scope :without_closed, -> { where(close_status: false) }
 
-  scope :of_member_id, ->(member_id) { where('polls.member_id = ?', member_id) }
-
   scope :viewing_by_member, (lambda do |viewing_member|
     without_banned_member
     .without_black_status
