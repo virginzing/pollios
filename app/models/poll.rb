@@ -180,6 +180,7 @@ class Poll < ActiveRecord::Base
     .without_not_interested(viewing_member)
     .without_incoming_block(viewing_member)
     .without_group_inivisibility(viewing_member)
+    .except_qrcode
     # .wihtout_reported(viewing_member)
   end)
 
