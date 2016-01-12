@@ -20,6 +20,12 @@ class Poll::MemberList
     [true, nil]
   end
 
+  def can_mention?
+    return [false, "You aren't vote this poll. Vote to see comments."] if not_voted_and_poll_not_closed
+
+    [true, nil]
+  end
+
   def voter
     voter_visibility
   end
@@ -29,10 +35,13 @@ class Poll::MemberList
   end
 
   def mentionable
-    all_mentionale
+    can_mention, message = can_mention?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_mention
+
+    all_mentionable
   end
 
-  private
+  # private
 
   def all_voter
     Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
@@ -41,12 +50,44 @@ class Poll::MemberList
       .order('LOWER(members.fullname)')
   end
 
+  def all_commenter
+    Member.joins('LEFT OUTER JOIN comments ON members.id = comments.member_id')
+      .where("comments.poll_id = #{poll.id}")
+      .uniq
+  end
+
+  def all_mentionable
+    return mentionable_member.sort_by { |m| m.fullname.downcase } if poll.creator_must_vote
+    mentionable_member_and_creator.sort_by { |m| m.fullname.downcase }
+  end
+
   def voter_visibility
     return all_voter unless viewing_member
     all_voter.viewing_by_member(viewing_member)
   end
 
+  def commenter_visibility
+    return all_commenter unless viewing_member
+    all_commenter.viewing_by_member(viewing_member)
+  end
+
+  def mentionable_member
+    voter_visibility | commenter_visibility
+  end
+
+  def mentionable_member_and_creator
+    mentionable_member | [poll.member]
+  end
+
   def poll_inquiry_service
     Member::PollInquiry.new(viewing_member, poll)
+  end
+
+  def not_voted_and_poll_not_closed
+    !poll_inquiry_service.voted? && !poll.close_status
+  end
+
+  def sort_by_name(list)
+    list.sort_by { |m| m.fullname.downcase }
   end
 end
