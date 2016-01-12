@@ -21,7 +21,7 @@ class Poll::MemberList
   private
 
   def all_voted
-    Member.joins('inner join history_votes on members.id = history_votes.member_id')
+    Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
       .where("history_votes.poll_id = #{poll.id}")
       .where("history_votes.show_result = 't'")
       .order('LOWER(members.fullname)')

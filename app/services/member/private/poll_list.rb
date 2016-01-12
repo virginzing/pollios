@@ -57,23 +57,23 @@ module Member::Private::PollList
   def all_voted
     Poll.unscoped
       .without_group_inivisibility(viewing_member)
-      .joins('LEFT OUTER JOIN history_votes on polls.id = history_votes.poll_id')
+      .joins('LEFT OUTER JOIN history_votes ON polls.id = history_votes.poll_id')
       .where.not("polls.member_id = #{member.id}")
       .where("history_votes.member_id = #{member.id}")
-      .select('polls.*, history_votes.created_at as voted_at')
-      .order('voted_at desc')
+      .select('polls.*, history_votes.created_at AS voted_at')
+      .order('voted_at DESC')
   end
 
   def all_bookmarked
-    Poll.unscoped.joins('inner join bookmarks on polls.id = bookmarks.bookmarkable_id')
+    Poll.unscoped.joins('LEFT OUTER JOIN bookmarks ON polls.id = bookmarks.bookmarkable_id')
       .where("bookmarks.member_id = #{member.id}")
-      .order('bookmarks.created_at desc')
+      .order('bookmarks.created_at DESC')
   end
 
   def all_saved_vote_later
-    Poll.unscoped.joins('inner join save_poll_laters on polls.id = save_poll_laters.savable_id')
+    Poll.unscoped.joins('LEFT OUTER JOIN save_poll_laters ON polls.id = save_poll_laters.savable_id')
       .where("save_poll_laters.member_id = #{member.id}")
-      .order('save_poll_laters.created_at desc')
+      .order('save_poll_laters.created_at DESC')
   end
 
   def saved_later_query(type_name)
