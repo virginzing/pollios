@@ -21,6 +21,7 @@ class Poll::MemberList
   end
 
   def can_mention?
+    return [true, nil] unless viewing_member
     return [false, "You aren't vote this poll. Vote to see comments."] if not_voted_and_poll_not_closed
 
     [true, nil]
@@ -38,7 +39,7 @@ class Poll::MemberList
     can_mention, message = can_mention?
     fail ExceptionHandler::UnprocessableEntity, message unless can_mention
 
-    all_mentionable
+    mentionable_visibility
   end
 
   # private
@@ -57,8 +58,8 @@ class Poll::MemberList
   end
 
   def all_mentionable
-    return mentionable_member.sort_by { |m| m.fullname.downcase } if poll.creator_must_vote
-    mentionable_member_and_creator.sort_by { |m| m.fullname.downcase }
+    return sort_by_name(mentionable_member) if poll.creator_must_vote
+    sort_by_name(mentionable_member_and_creator)
   end
 
   def voter_visibility
@@ -71,6 +72,11 @@ class Poll::MemberList
     all_commenter.viewing_by_member(viewing_member)
   end
 
+  def mentionable_visibility
+    return all_mentionable if outgoing_block_members.count < 0
+    all_mentionable - outgoing_block_members
+  end
+
   def mentionable_member
     voter_visibility | commenter_visibility
   end
@@ -81,6 +87,11 @@ class Poll::MemberList
 
   def poll_inquiry_service
     Member::PollInquiry.new(viewing_member, poll)
+  end
+
+  def outgoing_block_members
+    return [] unless viewing_member
+    Member::MemberList.new(viewing_member).blocks
   end
 
   def not_voted_and_poll_not_closed
