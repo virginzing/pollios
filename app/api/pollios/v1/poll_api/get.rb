@@ -57,7 +57,7 @@ module Pollios::V1::PollAPI
         resource :members do
           desc "returns list of poll[id]'s voters"
           get '/voters' do
-            members_voted = Poll::MemberList.new(poll)
+            members_voted = Poll::MemberList.new(poll, viewing_member: current_member)
             present members_voted, with: MemberVotedDetailEntity, current_member: current_member
           end
         end

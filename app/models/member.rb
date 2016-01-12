@@ -222,6 +222,11 @@ class Member < ActiveRecord::Base
   scope :with_notification_friend,  -> { where("notification @> hstore(:key, :value) OR notification @> hstore(:key_one, :value_one)", key: "friend", value: "1", key_one: "friend", value_one: "true") }
   scope :with_notification_group,   -> { where("notification @> hstore(:key, :value) OR notification @> hstore(:key_one, :value_one)", key: "group", value: "1", key_one: "group", value_one: "true") }
 
+  scope :viewing_by_member, (lambda do |viewing_member|
+    incoming_block_ids = Member::MemberList.new(viewing_member).blocked_by_someone
+    where('members.id NOT IN (?)', incoming_block_ids) if incoming_block_ids.count > 0
+  end)
+
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
 
