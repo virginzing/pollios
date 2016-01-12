@@ -1,7 +1,7 @@
 module Pollios::V1::PollAPI
   class CommentDetailEntity < Pollios::V1::BaseEntity
 
-    expose :id
+    expose :id, as: :comment_id
     expose :message
     expose :report_count
     expose_members :creator

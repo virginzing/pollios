@@ -42,6 +42,11 @@ class Comment < ActiveRecord::Base
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :without_ban, -> { where(ban: false) }
 
+  scope :viewing_by_member, (lambda do |viewing_member|
+    incoming_block_ids = Member::MemberList.new(viewing_member).blocked_by_someone
+    where('member_id NOT IN (?)', incoming_block_ids) if incoming_block_ids.count > 0
+  end)
+
   def send_notification
     unless Rails.env.test?
       CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message } )

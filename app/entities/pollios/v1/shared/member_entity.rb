@@ -9,7 +9,7 @@ module Pollios::V1::Shared
     expose :get_cover_preset, as: :cover_preset, unless: -> (obj, _) { obj.get_cover_image.present? }
     expose :member_type_text, as: :type
     expose :get_key_color, as: :key_color, if: -> (obj, _) { obj.get_key_color.present? }
-    expose :status, if: -> (_, opts) { opts[:current_member_linkage].present? }
+    expose :status, if: -> (_, opts) { opts[:current_member_linkage].present? || opts[:current_member].present? }
 
     def self.default_pollios_member
       {
@@ -42,7 +42,7 @@ module Pollios::V1::Shared
     end
 
     def relation
-      options[:current_member_linkage]
+      options[:current_member_linkage] ||= Member::MemberList.new(options[:current_member]).social_linkage_ids
     end
 
     def friends?

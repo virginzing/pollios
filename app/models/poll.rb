@@ -180,6 +180,7 @@ class Poll < ActiveRecord::Base
     .without_not_interested(viewing_member)
     .without_incoming_block(viewing_member)
     .without_group_inivisibility(viewing_member)
+    .except_qrcode
     # .wihtout_reported(viewing_member)
   end)
 
@@ -234,7 +235,7 @@ class Poll < ActiveRecord::Base
 
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
-      @poll = find(id)
+      @poll = find_by(id: id)
       fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
       fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::DELETED unless @poll.deleted_at.nil?
       @poll
