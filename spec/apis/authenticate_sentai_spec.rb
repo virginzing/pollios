@@ -15,7 +15,6 @@ describe "POST /authen/sentai", type: :api do
     expect(ApiToken.first.app_id).to eq("com.pollios.polliosapp")
 
     expect(Apn::Device.count).to eq(0)
-
     expect(last_response.status).to eq(200)
 
     expect(json["response_status"]).to eq("OK")
