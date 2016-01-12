@@ -56,7 +56,7 @@ module Member::Private::PollList
 
   def all_voted
     Poll.unscoped
-      .without_group_inivisibility(viewing_member)
+      .viewing_by_member(viewing_member)
       .joins('LEFT OUTER JOIN history_votes ON polls.id = history_votes.poll_id')
       .where.not("polls.member_id = #{member.id}")
       .where("history_votes.member_id = #{member.id}")
