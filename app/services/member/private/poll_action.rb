@@ -186,10 +186,7 @@ module Member::Private::PollAction
   end
 
   def reporting
-    poll.with_lock do
-      poll.report_count += member.report_power
-      poll.save!
-    end
+    increase_report_count
 
     process_unbookmark
     delete_saved_poll
@@ -197,6 +194,13 @@ module Member::Private::PollAction
 
     return unless poll.report_count >= 10
     poll.update!(status_poll: :black)
+  end
+
+  def increase_report_count
+    poll.with_lock do
+      poll.report_count += member.report_power
+      poll.save!
+    end
   end
 
   def process_comment
@@ -232,6 +236,24 @@ module Member::Private::PollAction
     end
   end
 
+  def process_report_comment
+    MemberReportComment.create!(member_id: member.id, poll_id: poll.id, comment_id: comment_report_params[:comment_id] \
+      , message: comment_report_params[:message], message_preset: comment_report_params[:message_preset])
+
+    increase_report_comment_count
+    clear_reported_comment_cached_for_member
+
+    Poll::CommentList.new(poll, viewing_member: member).comments
+  end
+
+  def increase_report_comment_count
+    comment = Comment.cached_find(comment_report_params[:comment_id])
+    comment.with_lock do
+      comment.report_count += member.report_power
+      comment.save!
+    end
+  end
+
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
   end
@@ -262,6 +284,10 @@ module Member::Private::PollAction
 
   def clear_voting_poll_cached_for_member
     FlushCached::Member.new(member, poll).clear_voting_poll_id
+  end
+
+  def clear_reported_comment_cached_for_member
+    FlushCached::Member.new(member).clear_list_report_comments
   end
 
   def send_report_notification
