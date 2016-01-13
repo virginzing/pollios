@@ -199,6 +199,39 @@ module Member::Private::PollAction
     poll.update!(status_poll: :black)
   end
 
+  def process_comment
+    comment = poll.comments.create!(member_id: member.id, message: comment_params[:message])
+    increase_comment_count
+
+    mentioning(comment, comment_params[:mention_ids])
+    process_watch
+
+    MemberActiveRecord.record_member_active(member)
+
+    Poll::CommentList.new(poll, viewing_member: member).comments
+  end
+
+  def increase_comment_count
+    poll.with_lock do
+      poll.comment_count += 1
+      poll.save!
+    end
+  end
+
+  def mentioning(comment, mention_ids)
+    return unless mention_ids.present?
+    mentionable_ids = Poll::MemberList.new(poll, viewing_member: member).filler_mentionable(mention_ids)
+    create_mentions(comment, member, mentionable_ids)
+  end
+
+  def create_mentions(comment, member, mentionable_ids)
+    mentionable_list = Member.where(id: mentionable_ids)
+    mentionable_list.each do |mentionable|
+      comment.mentions.create!(mentioner_id: member.id, mentioner_name: member.fullname \
+        , mentionable_id: mentionable.id, mentionable_name: mentionable.fullname)
+    end
+  end
+
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
   end

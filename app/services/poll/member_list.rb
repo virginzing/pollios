@@ -26,5 +26,16 @@ class Poll::MemberList
     fail ExceptionHandler::UnprocessableEntity, message unless can_mention
 
     mentionable_visibility
-  end 
+  end
+
+  def filler_mentionable(member_ids)
+    fillter_mentionable_ids = []
+    mentionable_ids = mentionable.map(&:id)
+
+    member_ids.each do |member_id|
+      fillter_mentionable_ids << member_id if mentionable_ids.include?(member_id)
+    end
+
+    fillter_mentionable_ids
+  end
 end
