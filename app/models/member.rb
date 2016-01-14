@@ -227,6 +227,8 @@ class Member < ActiveRecord::Base
     where('members.id NOT IN (?)', incoming_block_ids) if incoming_block_ids.count > 0
   end)
 
+  scope :order_by_name, -> { order('LOWER(members.fullname)') }
+
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
 
