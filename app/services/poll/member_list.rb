@@ -1,7 +1,7 @@
 class Poll::MemberList
   include Poll::Private::MemberList
 
-  attr_reader :poll, :viewing_member
+  attr_reader :poll, :viewing_member, :choice
 
   def initialize(poll, options = {})
     @poll = poll
@@ -11,6 +11,11 @@ class Poll::MemberList
 
     can_view, message = can_view?
     fail ExceptionHandler::UnprocessableEntity, message unless can_view
+
+    return unless options[:choice_id]
+    @choice = poll.choices.find_by(id: options[:choice_id])
+
+    fail ExceptionHandler::UnprocessableEntity, "This comment don't exists in poll." unless choice
   end
 
   def voter
@@ -18,7 +23,8 @@ class Poll::MemberList
   end
 
   def anonymous
-    poll.vote_all - all_voter.count
+    return vote_as_anonymous unless choice
+    vote_choice_as_anonymous
   end
 
   def mentionable
