@@ -101,6 +101,16 @@ module Member::Private::PollActionGuard
     [true, nil]
   end
 
+  def can_report_comment?
+    can_comment, message = can_comment?
+    return [false, message] unless can_comment
+    return [false, "This comment don't exists in poll."] if not_match_comment
+    return [false, "You can't report your comment."] if owner_comment
+    return [false, 'You are already reported this comment.'] if already_report_comment
+      
+    [true, nil]
+  end
+
   def less_choices
     poll_params[:choices].count < 2
   end
@@ -184,6 +194,19 @@ module Member::Private::PollActionGuard
 
   def not_allow_comment
     !poll.allow_comment
+  end
+
+  def not_match_comment
+    !Poll::CommentList.new(poll, viewing_member: member).comments.map(&:id).include?(comment_report_params[:comment_id])
+  end
+
+  def owner_comment
+    comment = Comment.cached_find(comment_report_params[:comment_id])
+    comment.member_id == member.id
+  end
+
+  def already_report_comment
+    member.member_report_comments.exists?(comment_id: comment_report_params[:comment_id])
   end
 
 end

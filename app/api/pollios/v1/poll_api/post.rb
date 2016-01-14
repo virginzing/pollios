@@ -120,30 +120,27 @@ module Pollios::V1::PollAPI
         end
 
         resource :comments do
-          desc '[x] add comment to poll_id'
+          desc 'add comment to poll_id'
           params do
             requires :message, type: String, desc: 'comment message'
             optional :mention_ids, type: Array[Integer], desc: 'list of member (ids) for mention on comment'
           end
           post do
-            current_member_poll_action.comment(params)
+            comment = current_member_poll_action.comment(params)
+            present comment, with: CommentDetailEntity, current_member: current_member
           end
 
           params do
             requires :comment_id, type: Integer, desc: 'comment_id in poll_id'
+            requires :message_preset, type: String, desc: 'as inappropriate because'
+            optional :message, type: String, default: '', desc: 'additional information'
           end
 
           route_param :comment_id do
-            desc '[x] reply comment_id'
-            post '/reply' do
-            end
-
-            desc '[x] report comment_id'
+            desc 'report comment_id in poll_id'
             post '/report' do
-            end
-
-            desc '[x] delete comment_id'
-            post '/delete' do
+              report_comment = current_member_poll_action.report_comment(params)
+              present report_comment, with: CommentDetailEntity, current_member: current_member
             end
           end
         end

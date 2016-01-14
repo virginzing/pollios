@@ -37,7 +37,7 @@ class Comment < ActiveRecord::Base
 
   self.per_page = 10
 
-  default_scope { with_deleted }
+  default_scope { with_deleted.order('created_at') }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
   scope :without_ban, -> { where(ban: false) }

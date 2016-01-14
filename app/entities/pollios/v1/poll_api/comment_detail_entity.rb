@@ -3,6 +3,7 @@ module Pollios::V1::PollAPI
 
     expose :id, as: :comment_id
     expose :message
+    expose :mentions, if: -> (obj, _) { obj.mentions.present? }, with: MentionDetailEntity
     expose :report_count
     expose_members :creator
 
@@ -11,7 +12,7 @@ module Pollios::V1::PollAPI
     end
 
     def creator
-      Member.cached_find(comment.member_id)
+      comment.member
     end
 
     def current_member_linkage
