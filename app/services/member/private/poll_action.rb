@@ -35,6 +35,141 @@ module Member::Private::PollAction
     end
   end
 
+  def process_create
+    new_poll = Poll.create!(member_id: member.id \
+      , title: poll_params[:title] \
+      , type_poll: poll_params[:type_poll] \
+      , allow_comment: poll_params[:allow_comment] \
+      , creator_must_vote: poll_params[:creator_must_vote] \
+      , public: poll_params[:public] || false \
+      , thumbnail_type: poll_params[:thumbnail_type])
+
+    poll_set(new_poll)
+    own_poll_action(new_poll)
+    decrease_point
+
+    new_poll
+  end
+
+  def poll_set(new_poll)
+    poll_choice(new_poll)
+    poll_attachments(new_poll)
+    poll_update(new_poll)
+    poll_tag(new_poll)
+    poll_member(new_poll)
+    poll_group(new_poll)
+    poll_company(new_poll)
+  end
+
+  def poll_choice(new_poll)
+    poll_params[:choices].each do |choice|
+      new_poll.choices.create!(answer: choice)
+    end
+  end
+
+  def poll_attachments(new_poll)
+    return unless poll_params[:original_images]
+
+    convert_original_images.each_with_index do |url_attachment, index|
+      new_poll.poll_attachments.create!(order_image: index + 1)
+      new_poll.poll_attachments.find_by(order_image: index + 1).update_column(:image, url_attachment)
+    end
+  end
+
+  def convert_original_images
+    poll_params[:original_images].collect! do |image_url|
+      ImageUrl.new(image_url).split_cloudinary_url
+    end
+  end
+
+  def poll_update(new_poll)
+    new_poll.update_column(:photo_poll, photo_poll)
+    new_poll.update!(expire_date: expire_date \
+      , poll_series_id: 0 \
+      , choice_count: choice_count \
+      , in_group_ids: in_group_ids \
+      , qrcode_key: qrcode_key \
+      , member_type: member_type \
+      , qr_only: false \
+      , require_info: false \
+      , in_group: poll_in_group)
+  end
+
+  def photo_poll
+    return unless poll_params[:photo_poll]
+    ImageUrl.new(poll_params[:photo_poll]).split_cloudinary_url
+  end
+
+  def expire_date
+    Time.zone.now + 100.years
+  end
+
+  def choice_count
+    poll_params[:choices].count
+  end
+
+  def in_group_ids
+    return unless poll_in_group
+    poll_params[:group_ids].join(',')
+  end
+
+  def poll_in_group
+    poll_params[:group_ids].present?
+  end
+
+  def qrcode_key
+    qrcode = SecureRandom.hex(6)
+    return qrcode unless Poll.exists?(qrcode_key: qrcode)
+    qrcode_key
+  end
+
+  def member_type
+    member.member_type.capitalize
+  end
+
+  def poll_tag(new_poll)
+    tags = []
+    poll_params[:title].gsub(/\B#([[:word:]]+)/) do
+      tags << Regexp.last_match[1]
+    end
+    
+    return unless tags.count > 0
+    tags.each do |tag|
+      new_poll.tags << Tag.where(name: tag).first_or_create!
+    end
+  end
+
+  def poll_member(new_poll)
+    member.poll_members.create!(poll_id: new_poll.id, in_group: poll_in_group)
+  end
+
+  def poll_group(new_poll)
+    return unless poll_in_group
+    groups = Group.where(id: poll_params[:group_ids])
+    groups.each do |group|
+      group.poll_groups.create!(poll_id: new_poll.id, member_id: member.id)
+    end
+  end
+
+  def poll_company(new_poll)
+    return unless member.company?
+    PollCompany.create!(poll_id: new_poll.id, company_id: member.company.id, post_from: 'mobile')
+  end
+
+  def own_poll_action(new_poll)
+    @poll = new_poll
+    process_watch
+    create_company_group_action_tracking_record_for_action('create')
+  end
+
+  def decrease_point
+    return unless member.citizen? && poll_params[:public]
+    member.with_lock do
+      member.point -= 1
+      member.save!
+    end
+  end
+
   def process_close
     poll.update!(close_status: true)
     poll
