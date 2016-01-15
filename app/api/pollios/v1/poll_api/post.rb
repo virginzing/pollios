@@ -19,7 +19,7 @@ module Pollios::V1::PollAPI
 
     resource :polls do
 
-      desc '[x] create a new poll'
+      desc 'create a new poll'
       params do
         requires :title, type: String, desc: 'poll title'
         requires :choices, type: Array[String], desc: 'poll choices'
@@ -29,9 +29,13 @@ module Pollios::V1::PollAPI
         optional :creator_must_vote, type: Boolean, default: true, desc: 'creator must vote to see result'
         optional :public, type: Boolean, desc: 'true if public poll' 
         optional :group_ids, type: Array[Integer], desc: 'group-ids to create/post in'
+
         optional :photo_poll, type: String, desc: 'URL for photo to be displayed'
         optional :original_images, type: Array[String], desc: 'URL for original photos'
+        optional :thumbnail_type, type: Integer, values: [0, 1, 2, 3, 4, 5], desc: 'index of layout of display photo_poll'
+
         exactly_one_of :public, :group_ids
+        all_or_none_of :photo_poll, :original_images, :thumbnail_type
       end
 
       post do

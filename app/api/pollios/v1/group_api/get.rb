@@ -10,14 +10,14 @@ module Pollios::V1::GroupAPI
 
     resource :groups do
       params do
-        requires :id, type: Integer, desc: 'group_id'
+        requires :id, type: Integer, desc: 'group id'
       end
 
       route_param :id do
         
         desc 'returns group details for group_id'
         get do
-          present group, with: GroupDetailEntity
+          present group, with: Pollios::V1::Shared::GroupEntity
         end
 
         desc 'returns members of group_id'
@@ -26,9 +26,10 @@ module Pollios::V1::GroupAPI
           present members_of_group, with: MemberListEntity, current_member: current_member
         end
 
-        desc '[x] returns polls in group_id'
+        desc 'returns polls in group_id'
         get '/polls' do
-          polls_of_groups = Group::PollList.new(group)
+          polls_of_groups = Group::PollList.new(group, viewing_member: current_member).polls
+          present polls_of_groups, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
       end

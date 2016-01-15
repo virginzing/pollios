@@ -3,7 +3,7 @@ module Pollios
     expose :method
     expose :path
     expose :description, if: -> (obj, _) { obj.route_description.present? }
-    expose :params
+    expose :params, if: -> (obj, _) { obj.route_params.present? }
 
     def method
       object.route_method
