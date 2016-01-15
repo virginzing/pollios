@@ -14,6 +14,10 @@ module Pollios::V1::PollAPI
       def member_poll_inqury
         @member_poll_inqury ||= Member::PollInquiry.new(current_member, poll)
       end
+
+      def poll_member_listing(choice_id = nil)
+        @poll_member_listing ||= Poll::MemberList.new(poll, viewing_member: current_member, choice_id: choice_id)
+      end
     end
 
     resource :polls do
@@ -57,18 +61,32 @@ module Pollios::V1::PollAPI
         resource :members do
           desc "returns list of poll[id]'s voters"
           get '/voters' do
-            members_voted = Poll::MemberList.new(poll, viewing_member: current_member)
+            members_voted = poll_member_listing
             present members_voted, with: MemberVotedDetailEntity, current_member: current_member
           end
 
           desc "returns list of poll[id]'s mentionable"
           get '/mentionable' do
-            mentionable = Poll::MemberList.new(poll, viewing_member: current_member).mentionable
+            mentionable = poll_member_listing.mentionable
             present mentionable, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
           end
         end
-      end
 
+        resource :choices do
+          desc "returns list of choices[id]'s voters"
+          params do
+            requires :choice_id, type: Integer, desc: 'choice_id in poll_id'
+          end
+
+          route_param :choice_id do
+            get '/voters' do
+              members_voted_choice = poll_member_listing(params[:choice_id])
+              present members_voted_choice, with: MemberVotedDetailEntity, current_member: current_member
+            end
+          end
+        end
+
+      end
     end
 
   end 

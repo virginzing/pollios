@@ -18,10 +18,13 @@ module Poll::Private::MemberList
   end
 
   def all_voter
-    Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
-      .where("history_votes.poll_id = #{poll.id}")
-      .where("history_votes.show_result = 't'")
-      .order('LOWER(members.fullname)')
+    voter = Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
+            .where("history_votes.poll_id = #{poll.id}")
+            .where("history_votes.show_result = 't'")
+            .order_by_name
+
+    return voter unless choice
+    voter.where("history_votes.choice_id = #{choice.id}")
   end
 
   def all_commenter
@@ -33,6 +36,14 @@ module Poll::Private::MemberList
   def all_mentionable
     return sort_by_name(mentionable_member) if poll.creator_must_vote
     sort_by_name(mentionable_member_and_creator)
+  end
+
+  def vote_as_anonymous
+    poll.vote_all - all_voter.count
+  end
+
+  def vote_choice_as_anonymous
+    choice.vote - all_voter.count
   end
 
   def voter_visibility

@@ -52,7 +52,7 @@ module Pollios::V1::PollAPI
         end
 
         resource :choices do
-          desc 'vote choide_id on poll_id'
+          desc 'vote choice_id on poll_id'
           params do
             requires :choice_id, type: Integer, desc: 'choice_id to vote on'
             optional :anonymous, type: Boolean, default: false, desc: 'true if voting as anonymous'
