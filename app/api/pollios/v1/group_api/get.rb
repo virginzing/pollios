@@ -26,9 +26,10 @@ module Pollios::V1::GroupAPI
           present members_of_group, with: MemberListEntity, current_member: current_member
         end
 
-        desc '[x] returns polls in group_id'
+        desc 'returns polls in group_id'
         get '/polls' do
-          polls_of_groups = Group::PollList.new(group)
+          polls_of_groups = Group::PollList.new(group, viewing_member: current_member).polls
+          present polls_of_groups, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
       end
