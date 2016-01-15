@@ -10,14 +10,14 @@ module Pollios::V1::GroupAPI
 
     resource :groups do
       params do
-        requires :id, type: Integer, desc: 'group_id'
+        requires :id, type: Integer, desc: 'group id'
       end
 
       route_param :id do
         
         desc 'returns group details for group_id'
         get do
-          present group, with: GroupDetailEntity
+          present group, with: Pollios::V1::Shared::GroupEntity
         end
 
         desc 'returns members of group_id'
