@@ -21,9 +21,6 @@ module Pollios::V1::PollAPI
     end
 
     resource :polls do
-      params do 
-        optional :id, type: Integer, desc: 'poll id'
-      end
 
       desc '[x] returns default poll-timeline for requesting member'
       get do
@@ -42,6 +39,10 @@ module Pollios::V1::PollAPI
       get '/group' do
       end
 
+      params do 
+        requires :id, type: Integer, desc: 'poll id'
+      end
+      
       route_param :id do
 
         desc 'returns poll details for requesting member'
