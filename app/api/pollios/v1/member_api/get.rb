@@ -4,7 +4,7 @@ module Pollios::V1::MemberAPI
 
     helpers do
       def member
-        @member ||= Member.cached_find(params[:id])
+        @member ||= Member.viewing_by_member(current_member).cached_find(params[:id])
       end
     end
 
