@@ -26,7 +26,8 @@ module Member::Private::PollAction
     end
   end
 
-  def create_company_group_action_tracking_record_for_action(action)
+  def create_company_group_action_tracking_record_for_action(action, new_poll = nil)
+    poll = @poll || new_poll
     return unless poll.in_group
 
     group_ids = poll.in_group_ids.split(',').map(&:to_i)
@@ -157,9 +158,8 @@ module Member::Private::PollAction
   end
 
   def own_poll_action(new_poll)
-    @poll = new_poll
-    process_watch
-    create_company_group_action_tracking_record_for_action('create')
+    process_watch(new_poll)
+    create_company_group_action_tracking_record_for_action('create', new_poll)
   end
 
   def decrease_point
@@ -252,7 +252,8 @@ module Member::Private::PollAction
     poll
   end
 
-  def process_watch
+  def process_watch(new_poll = nil)
+    poll = @poll || new_poll
     watched_poll = member.watcheds.find_by(poll_id: poll.id)
 
     if watched_poll.present?
