@@ -22,7 +22,7 @@ module Pollios::V1::GroupAPI
 
         desc 'returns members of group_id'
         get '/members' do
-          members_of_group = Group::MemberList.new(group)
+          members_of_group = Group::MemberList.new(group, viewing_member: current_member)
           present members_of_group, with: MemberListEntity, current_member: current_member
         end
 

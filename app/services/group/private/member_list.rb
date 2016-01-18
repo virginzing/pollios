@@ -18,11 +18,16 @@ module Group::Private::MemberList
         group_members.active as is_active, 
         group_members.created_at as joined_at")
       .order('members.fullname asc')
-      .to_a
+      #.to_a
   end
 
   def all_requests
     group.members_request.all.to_a
+  end
+
+  def member_visibility
+    return all_members unless viewing_member
+    all_members.viewing_by_member(viewing_member)
   end
 
   def group_member_ids
