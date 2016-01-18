@@ -23,7 +23,7 @@ module Pollios::V1::MemberAPI
         desc "returns list of member's friends & followings"
         resource :friends do
           get do
-            friends_of_member = Member::MemberList.new(member)
+            friends_of_member = Member::MemberList.new(member, viewing_member: current_member)
             present friends_of_member, with: FriendListEntity, current_member: current_member
           end
         end

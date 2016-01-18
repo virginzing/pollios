@@ -2,11 +2,13 @@ class Member::MemberList
   include Member::Private::MemberList
   include Member::FriendRelationHelper
 
-  attr_reader :member
+  attr_reader :member, :viewing_member
 
   def initialize(member, options = {})
     @member = member
-    @options = options
+    
+    return unless options[:viewing_member]
+    @viewing_member = options[:viewing_member]
   end
 
   def social_linkage_ids
@@ -164,13 +166,13 @@ class Member::MemberList
   # TODO: Privatize these two cached-methods.
   def cached_all_friends
     Rails.cache.fetch("member/#{member.id}/friends") do
-      all_friends
+      friend_visibility
     end
   end
 
   def cached_all_followers
     Rails.cache.fetch("member/#{member.id}/followers") do
-      all_followers
+      follower_visibility
     end
   end
   
