@@ -47,7 +47,7 @@ module Pollios::V1::MemberAPI
 
           desc "returns list of member's voted poll"
           get '/voted' do
-            polls_for_member = Member::PollList.new(member)
+            polls_for_member = Member::PollList.new(member, viewing_member: current_member)
             present :voted, polls_for_member.voted, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
           end
         end
