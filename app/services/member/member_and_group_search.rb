@@ -45,7 +45,7 @@ class Member::MemberAndGroupSearch
   def search_members
     Member.viewing_by_member(member)
       .with_status_account(:normal).where(first_signup: false, show_search: true)
-      .where('LOWER(members.fullname) LIKE ? OR LOWER(members.public_id) = ?', "%#{keyword}%", "%#{keyword}%")
+      .where('LOWER(members.fullname) LIKE ? OR LOWER(members.public_id) = ?', "%#{keyword}%", keyword)
       .order_by_name
   end
 
@@ -54,7 +54,7 @@ class Member::MemberAndGroupSearch
       .where("group_members.active = 't'")
       .group('groups.id')
       .select('groups.*, count(group_members.id) AS member_count')
-      .where('LOWER(groups.name) LIKE ? OR LOWER(groups.public_id) = ?', "%#{keyword}%", "%#{keyword}%")
+      .where('LOWER(groups.name) LIKE ? OR LOWER(groups.public_id) = ?', "%#{keyword}%", keyword)
       .order('member_count desc, LOWER(groups.name)')
   end
 
