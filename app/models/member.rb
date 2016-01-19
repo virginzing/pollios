@@ -244,7 +244,7 @@ class Member < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @member = find_by(id: id)
-      raise ExceptionHandler::NotFound, ExceptionHandler::Message::Member::NOT_FOUND unless @member.present?
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Member::NOT_FOUND unless @member.present?
       @member
     end
   end

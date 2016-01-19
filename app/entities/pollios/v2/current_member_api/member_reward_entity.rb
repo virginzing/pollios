@@ -25,7 +25,7 @@ module Pollios::V2::CurrentMemberAPI
 
     # always show poll if poll information present
     expose :poll, if: -> (obj, _s) { obj.poll.present? } do |obj|
-      Pollios::V1::PollAPI::PollDetailEntity.represent obj.poll, only: [:poll_id, :title]
+      Pollios::V1::Shared::PollDetailEntity.represent obj.poll, only: [:poll_id, :title]
     end
 
   end

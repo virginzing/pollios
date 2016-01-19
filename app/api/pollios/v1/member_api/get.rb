@@ -4,7 +4,7 @@ module Pollios::V1::MemberAPI
 
     helpers do
       def member
-        @member ||= Member.cached_find(params[:id])
+        @member ||= Member.viewing_by_member(current_member).cached_find(params[:id])
       end
     end
 
@@ -17,13 +17,13 @@ module Pollios::V1::MemberAPI
 
         desc 'returns member detail for profile screen of member'
         get do
-          present member, with: MemberDetailEntity, current_member_linkage: Member::MemberList.new(current_member).social_linkage_ids
+          present member, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
         end
 
         desc "returns list of member's friends & followings"
         resource :friends do
           get do
-            friends_of_member = Member::MemberList.new(member)
+            friends_of_member = Member::MemberList.new(member, viewing_member: current_member)
             present friends_of_member, with: FriendListEntity, current_member: current_member
           end
         end
@@ -47,7 +47,7 @@ module Pollios::V1::MemberAPI
 
           desc "returns list of member's voted poll"
           get '/voted' do
-            polls_for_member = Member::PollList.new(member)
+            polls_for_member = Member::PollList.new(member, viewing_member: current_member)
             present :voted, polls_for_member.voted, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
           end
         end

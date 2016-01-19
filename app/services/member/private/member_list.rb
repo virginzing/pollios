@@ -16,7 +16,6 @@ module Member::Private::MemberList
       .select('members.*, friends.active AS member_active, friends.block AS member_block, 
               friends.status AS member_status, friends.following AS member_following')
       .order('LOWER(members.fullname)')
-      .to_a
   end
 
   def all_followers
@@ -25,7 +24,16 @@ module Member::Private::MemberList
       .select('members.*, friends.active AS member_active, friends.block AS member_block, 
               friends.status AS member_status, friends.following AS member_following')
       .order('LOWER(members.fullname)')
-      .to_a
+  end
+
+  def friend_visibility
+    return all_friends unless viewing_member
+    all_friends.viewing_by_member(viewing_member)
+  end
+
+  def follower_visibility
+    return all_followers unless viewing_member
+    all_followers.viewing_by_member(viewing_member)
   end
 
   def query_friend_using_facebook

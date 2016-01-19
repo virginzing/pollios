@@ -1,10 +1,13 @@
 class Group::MemberList
   include Group::Private::MemberList
 
-  attr_reader :group
+  attr_reader :group, :viewing_member
 
-  def initialize(group)
+  def initialize(group, options = {})
     @group = group
+
+    return unless options[:viewing_member]
+    @viewing_member = options[:viewing_member]
   end
 
   def active
@@ -82,7 +85,7 @@ class Group::MemberList
 
   def cached_all_members
     Rails.cache.fetch("group/#{group.id}/members") do
-      all_members
+      member_visibility
     end
   end
   

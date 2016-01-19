@@ -1,0 +1,75 @@
+class Member::PollSearch
+
+  attr_reader :member, :hashtag
+
+  def initialize(member, hashtag = nil)
+    @member = member
+
+    return unless hashtag
+    @hashtag = hashtag.downcase
+
+    save_recent_tag
+  end
+
+  def recent
+    cached_recent_tags
+  end
+
+  def popular
+    popular_tags
+  end
+
+  def polls_searched
+    search_polls
+  end
+
+  def clear_searched_tags
+    recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search.update!(search_tags: [])
+
+    clear_searched_tags_cached_for_member
+  
+    return
+  end
+
+  def cached_recent_tags
+    Rails.cache.fetch("members/#{member.id}/searches/tags") { recent_tags }
+  end
+
+  private
+
+  def recent_tags
+    TypeSearch.find_by(member_id: member.id)[:search_tags].map { |tag| tag[:message] }.uniq[0..9]
+  end
+
+  def popular_tags
+    Tag.joins('LEFT OUTER JOIN taggings ON tags.id = taggings.tag_id')
+      .joins('LEFT OUTER JOIN polls ON taggings.poll_id = polls.id')
+      .where("polls.expire_status = 'f' AND polls.vote_all > 0 AND polls.in_group = 'f' AND polls.series = 'f'")
+      .select('tags.*, count(taggings.tag_id) as count')
+      .select('tags.*, max(taggings.created_at) AS tagged')
+      .group('tags.id')
+      .order('count desc, tagged desc')
+      .limit(10)
+  end
+
+  def search_polls
+    Poll.viewing_by_member(member)
+      .joins('LEFT OUTER JOIN taggings ON polls.id = taggings.poll_id')
+      .joins('LEFT OUTER JOIN tags ON taggings.tag_id = tags.id')
+      .where('LOWER(tags.name) = (?)', hashtag)
+  end
+
+  def save_recent_tag
+    recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search.update!(search_tags: TypeSearch.find_by(member_id: member.id)[:search_tags] \
+      .unshift(message: hashtag, created_at: Time.now.utc))
+
+    clear_searched_tags_cached_for_member
+  end
+
+  def clear_searched_tags_cached_for_member
+    FlushCached::Member.new(member).clear_list_searched_tags
+  end
+
+end

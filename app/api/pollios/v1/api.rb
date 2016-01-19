@@ -7,5 +7,7 @@ module Pollios::V1
     mount PollAPI::Post
     mount GroupAPI::Get
     mount GroupAPI::Post
+    mount SearchAPI::Get
+    mount SearchAPI::Post
   end
 end
