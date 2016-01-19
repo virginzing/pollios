@@ -15,7 +15,7 @@ module Pollios::V1::SearchAPI
         end
 
         desc 'returns list of recent and popular hashtag'
-        get '/recent_and_popular' do
+        get '/tags' do
           recent_and_popular = Member::PollSearch.new(current_member)
           present recent_and_popular, with: RecentAndPopularEntity
         end
@@ -32,11 +32,12 @@ module Pollios::V1::SearchAPI
         end
 
         desc 'returns list of recent searched keyword'
-        get '/recent' do
+        get '/keywords' do
           recent_keyword = Member::MemberAndGroupSearch.new(current_member).recent
           present :recent, recent_keyword
         end
       end
+
     end
   end
 end
