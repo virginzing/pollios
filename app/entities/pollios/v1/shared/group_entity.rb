@@ -14,6 +14,36 @@ module Pollios::V1::Shared
     expose :type, if: -> (obj, _) { obj.company? } do |obj|
       obj.group_type.downcase
     end
+    expose :status, if: -> (_, opts) { opts[:current_member_status].present? || opts[:current_member].present? }
 
+    private
+
+    def status
+      return :admin if admin?
+      return :member if member?
+      return :pending if pending?
+      return :requesting if requesting?
+      :outside
+    end
+
+    def relation
+      options[:current_member_status] ||= Member::GroupList.new(options[:current_member]).relation_status_ids
+    end
+
+    def admin?
+      relation[:admin_ids].include?(object.id)
+    end
+
+    def member?
+      relation[:member_ids].include?(object.id)
+    end
+
+    def pending?
+      relation[:pending_ids].include?(object.id)
+    end
+
+    def requesting?
+      relation[:requesting_ids].include?(object.id)
+    end
   end
 end

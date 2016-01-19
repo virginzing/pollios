@@ -42,8 +42,20 @@ module Pollios::V1
       end
 
       expose object_groups, as: key_name do |obj, _|
+
         groups = obj.send object_groups
-        Pollios::V1::Shared::GroupEntity.represent groups
+
+        if local_options[:entity]
+          entity = local_options[:entity]
+        else
+          entity = Pollios::V1::Shared::GroupEntity
+        end
+
+        if local_options[:without_status]
+          entity.represent groups
+        else
+          entity.represent groups, current_member_status: current_member_status
+        end
       end
     end
 
