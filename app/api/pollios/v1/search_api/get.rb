@@ -25,12 +25,16 @@ module Pollios::V1::SearchAPI
         params do
           requires :keyword, type: String, desc: 'keyword(name or public_id) for searching'
         end
-        desc '[x] returns list of member and group searched by keyword'
+        desc 'returns list of member and group searched by keyword'
         get do
+          members_and_groups = Member::MemberAndGroupSearch.new(current_member, params[:keyword])
+          present members_and_groups, with: MemberAndGroupEntity, current_member: current_member
         end
 
-        desc '[x] returns list of recent searched keyword'
+        desc 'returns list of recent searched keyword'
         get '/recent' do
+          recent_keyword = Member::MemberAndGroupSearch.new(current_member).recent
+          present :recent, recent_keyword
         end
       end
     end
