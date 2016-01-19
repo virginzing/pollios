@@ -16,25 +16,25 @@ class Member::MemberAndGroupSearch
   end
 
   def members_searched
-    search_member
+    search_members
   end
 
   def groups_searched
-    search_group
+    search_groups
   end
 
   def recent_keywords
     TypeSearch.find_by(member_id: member.id)[:search_users_and_groups].map { |tag| tag[:message] }.uniq[0..9]
   end
 
-  def search_member
+  def search_members
     Member.viewing_by_member(member)
       .with_status_account(:normal).where(first_signup: false, show_search: true)
       .where('LOWER(members.fullname) LIKE ? OR LOWER(members.public_id) = ?', "%#{keyword}%", "%#{keyword}%")
       .order_by_name
   end
 
-  def search_group
+  def search_groups
     Group.joins('LEFT OUTER JOIN group_members ON groups.id = group_members.group_id')
       .where("group_members.active = 't'")
       .group('groups.id')

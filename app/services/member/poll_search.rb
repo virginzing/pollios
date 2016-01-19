@@ -7,6 +7,8 @@ class Member::PollSearch
 
     return unless hashtag
     @hashtag = hashtag.downcase
+
+    save_recent_tag
   end
 
   def recent
@@ -18,9 +20,7 @@ class Member::PollSearch
   end
 
   def polls_searched
-    save_recent_tags
-
-    search_poll
+    search_polls
   end
 
   def recent_tags
@@ -38,14 +38,14 @@ class Member::PollSearch
       .limit(10)
   end
 
-  def search_poll
+  def search_polls
     Poll.viewing_by_member(member)
       .joins('LEFT OUTER JOIN taggings ON polls.id = taggings.poll_id')
       .joins('LEFT OUTER JOIN tags ON taggings.tag_id = tags.id')
       .where('LOWER(tags.name) = (?)', hashtag)
   end
 
-  def save_recent_tags
+  def save_recent_tag
     recent_search = TypeSearch.find_by(member_id: member.id)
     recent_search.update!(search_tags: TypeSearch.find_by(member_id: member.id)[:search_tags] \
       .unshift(message: hashtag, created_at: Time.now.utc))
