@@ -51,4 +51,11 @@ class Member::PollSearch
       .unshift(message: hashtag, created_at: Time.now.utc))
   end
 
+  def clear_searched_tags
+    recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search.update!(search_tags: [])
+  
+    return
+  end
+
 end

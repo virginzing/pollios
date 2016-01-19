@@ -49,4 +49,11 @@ class Member::MemberAndGroupSearch
       .unshift(message: keyword, created_at: Time.now.utc))
   end
 
+  def clear_searched_keywords
+    recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search.update!(search_users_and_groups: [])
+
+    return
+  end
+
 end
