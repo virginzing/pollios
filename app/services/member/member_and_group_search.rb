@@ -12,7 +12,7 @@ class Member::MemberAndGroupSearch
   end
 
   def recent
-    recent_keywords
+    cached_recent_keywords
   end
 
   def members_searched
@@ -22,6 +22,21 @@ class Member::MemberAndGroupSearch
   def groups_searched
     search_groups
   end
+
+  def clear_searched_keywords
+    recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search.update!(search_users_and_groups: [])
+
+    clear_searched_keywordscached_for_member
+
+    return
+  end
+
+  def cached_recent_keywords
+    Rails.cache.fetch("members/#{member.id}/searches/keywords") { recent_keywords }
+  end
+
+  private
 
   def recent_keywords
     TypeSearch.find_by(member_id: member.id)[:search_users_and_groups].map { |tag| tag[:message] }.uniq[0..9]
@@ -47,13 +62,12 @@ class Member::MemberAndGroupSearch
     recent_search = TypeSearch.find_by(member_id: member.id)
     recent_search.update!(search_users_and_groups: TypeSearch.find_by(member_id: member.id)[:search_users_and_groups] \
       .unshift(message: keyword, created_at: Time.now.utc))
+
+    clear_searched_keywordscached_for_member
   end
 
-  def clear_searched_keywords
-    recent_search = TypeSearch.find_by(member_id: member.id)
-    recent_search.update!(search_users_and_groups: [])
-
-    return
+  def clear_searched_keywordscached_for_member
+    FlushCached::Member.new(member).clear_list_searched_keywords
   end
 
 end

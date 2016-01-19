@@ -12,7 +12,7 @@ class Member::PollSearch
   end
 
   def recent
-    recent_tags
+    cached_recent_tags
   end
 
   def popular
@@ -22,6 +22,21 @@ class Member::PollSearch
   def polls_searched
     search_polls
   end
+
+  def clear_searched_tags
+    recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search.update!(search_tags: [])
+
+    clear_searched_tags_cached_for_member
+  
+    return
+  end
+
+  def cached_recent_tags
+    Rails.cache.fetch("members/#{member.id}/searches/tags") { recent_tags }
+  end
+
+  private
 
   def recent_tags
     TypeSearch.find_by(member_id: member.id)[:search_tags].map { |tag| tag[:message] }.uniq[0..9]
@@ -49,13 +64,12 @@ class Member::PollSearch
     recent_search = TypeSearch.find_by(member_id: member.id)
     recent_search.update!(search_tags: TypeSearch.find_by(member_id: member.id)[:search_tags] \
       .unshift(message: hashtag, created_at: Time.now.utc))
+
+    clear_searched_tags_cached_for_member
   end
 
-  def clear_searched_tags
-    recent_search = TypeSearch.find_by(member_id: member.id)
-    recent_search.update!(search_tags: [])
-  
-    return
+  def clear_searched_tags_cached_for_member
+    FlushCached::Member.new(member).clear_list_searched_tags
   end
 
 end
