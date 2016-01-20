@@ -373,8 +373,8 @@ module Member::Private::PollAction
   end
 
   def process_report_comment
-    MemberReportComment.create!(member_id: member.id, poll_id: poll.id, comment_id: comment_report_params[:comment_id] \
-      , message: comment_report_params[:message], message_preset: comment_report_params[:message_preset])
+    MemberReportComment.create!(member_id: member.id, poll_id: poll.id, comment_id: comment_params[:comment_id] \
+      , message: comment_params[:message], message_preset: comment_params[:message_preset])
 
     increase_report_comment_count
     clear_reported_comment_cached_for_member
@@ -383,10 +383,26 @@ module Member::Private::PollAction
   end
 
   def increase_report_comment_count
-    comment = Comment.cached_find(comment_report_params[:comment_id])
+    comment = Comment.cached_find(comment_params[:comment_id])
     comment.with_lock do
       comment.report_count += member.report_power
       comment.save!
+    end
+  end
+
+  def process_delete_comment
+    comment = poll.comments.cached_find(comment_params[:comment_id])
+    comment.destroy
+
+    decrease_comment_count
+
+    Poll::CommentList.new(poll, viewing_member: member).comments
+  end
+
+  def decrease_comment_count
+    poll.with_lock do
+      poll.comment_count -= 1
+      poll.save!
     end
   end
 

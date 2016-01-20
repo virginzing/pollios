@@ -3,7 +3,7 @@ class Member::PollAction
   include Member::Private::PollActionGuard
   include Member::Private::PollAction
 
-  attr_reader :member, :poll, :poll_params, :vote_params, :report_params, :comment_params, :comment_report_params
+  attr_reader :member, :poll, :poll_params, :vote_params, :report_params, :comment_params
 
   def initialize(member, poll = nil, options = {})
     @member = member
@@ -104,11 +104,18 @@ class Member::PollAction
   end
 
   def report_comment(params)
-    @comment_report_params = params
+    @comment_params = params
     can_report_comment, message = can_report_comment?
     fail ExceptionHandler::UnprocessableEntity, message unless can_report_comment
 
     process_report_comment
   end
 
+  def delete_comment(params)
+    @comment_params = params
+    can_delete_comment, message = can_delete_comment?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_delete_comment
+
+    process_delete_comment
+  end
 end
