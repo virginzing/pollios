@@ -123,11 +123,6 @@ module Pollios::V1::PollAPI
           present report, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
-        desc 'delete poll_id'
-        delete '/delete' do
-          current_member_poll_action.delete
-        end
-
         resource :comments do
           desc 'add comment to poll_id'
           params do
@@ -149,15 +144,6 @@ module Pollios::V1::PollAPI
             post '/report' do
               report_comment = current_member_poll_action.report_comment(params)
               present report_comment, with: CommentDetailEntity, current_member: current_member
-            end
-
-            desc 'delete comment_id in poll_id'
-            params do
-              requires :comment_id, type: Integer, desc: 'comment_id in poll_id'
-            end
-            delete '/delete' do
-              delete_comment = current_member_poll_action.delete_comment(params)
-              present delete_comment, with: CommentDetailEntity, current_member: current_member
             end
           end
         end
