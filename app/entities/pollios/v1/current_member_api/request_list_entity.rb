@@ -18,12 +18,16 @@ module Pollios::V1::CurrentMemberAPI
       expose_members :recommended_friends, as: :friends, without_linkage: true
       expose_members :recommended_via_facebooks, as: :facebooks, without_linkage: true
 
-      expose_groups :recommended_groups, as: :groups
+      expose_groups :recommended_groups, as: :groups, without_status: true
     end
 
 
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(object.member).social_linkage_ids
+    end
+
+    def current_member_status
+      @current_member_status ||= Member::GroupList.new(object.member).relation_status_ids
     end
   end
 end

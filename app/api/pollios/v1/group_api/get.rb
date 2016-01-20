@@ -17,7 +17,7 @@ module Pollios::V1::GroupAPI
         
         desc 'returns group details for group_id'
         get do
-          present group, with: Pollios::V1::Shared::GroupEntity
+          present group, with: Pollios::V1::Shared::GroupEntity, current_member: current_member
         end
 
         desc 'returns members of group_id'

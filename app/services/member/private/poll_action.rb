@@ -419,7 +419,7 @@ module Member::Private::PollAction
   end
 
   def clear_voting_poll_cached_for_member
-    FlushCached::Member.new(member).clear_voting_detail_for_poll(poll)
+    FlushCached::Member.new(member).clear_voting_detail_for_poll(poll.id)
   end
 
   def clear_reported_comment_cached_for_member

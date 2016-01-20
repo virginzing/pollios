@@ -9,6 +9,15 @@ class Member::GroupList
     @viewing_member = options[:viewing_member]
   end
 
+  def relation_status_ids
+    {
+      admin_ids: ids_for(as_admin),
+      member_ids: ids_for(as_member),
+      pending_ids: ids_for(got_invitations),
+      requesting_ids: ids_for(requesting_to_joins)
+    }
+  end
+
   def cached_all_groups
     return @cached_all_groups ||= cached_groups if viewing_own_profile
 
@@ -97,6 +106,10 @@ class Member::GroupList
   end
 
   private
+
+  def ids_for(list)
+    list.map(&:id)
+  end
 
   def viewing_own_profile
     viewing_member.id == member.id
