@@ -95,6 +95,13 @@ class Member::PollAction
     process_report
   end
 
+  def delete
+    can_delete, message = can_delete?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_delete
+
+    process_delete
+  end
+
   def comment(params)
     @comment_params = params
     can_comment, message = can_comment?

@@ -123,6 +123,11 @@ module Pollios::V1::PollAPI
           present report, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
+        desc 'delete poll_id'
+        delete '/delete' do
+          current_member_poll_action.delete
+        end
+
         resource :comments do
           desc 'add comment to poll_id'
           params do

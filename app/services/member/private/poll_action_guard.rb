@@ -94,6 +94,14 @@ module Member::Private::PollActionGuard
     [true, nil]
   end
 
+  def can_delete?
+    can_view, message = poll_inquiry_service.can_view?
+    return [false, message] unless can_view
+    return [false, "You're not owner this poll."] if not_owner_poll
+
+    [true, nil]
+  end
+
   def can_comment?
     return [false, "You aren't vote this poll."] if not_voted_and_poll_not_closed
     return [false, "This poll isn't allow comment."] if not_allow_comment

@@ -279,9 +279,7 @@ module Member::Private::PollAction
     NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
     NotifyLog.deleted_with_poll_and_member(poll, member)
 
-    process_unbookmark
-    delete_saved_poll
-    process_unwatch
+    sever_member_relation_to_poll
 
     poll
   end
@@ -324,9 +322,7 @@ module Member::Private::PollAction
   def reporting
     increase_report_count
 
-    process_unbookmark
-    delete_saved_poll
-    process_unwatch
+    sever_member_relation_to_poll
 
     return unless poll.report_count >= 10
     poll.update!(status_poll: :black)
@@ -337,6 +333,21 @@ module Member::Private::PollAction
       poll.report_count += member.report_power
       poll.save!
     end
+  end
+
+  def process_delete
+    sever_member_relation_to_poll
+    create_company_group_action_tracking_record_for_action('delete')
+
+    poll.destroy
+
+    return
+  end
+
+  def sever_member_relation_to_poll
+    process_unbookmark
+    delete_saved_poll
+    process_unwatch
   end
 
   def process_comment
@@ -408,10 +419,6 @@ module Member::Private::PollAction
 
   def clear_history_viewed_cached_for_member
     FlushCached::Member.new(member).clear_list_history_viewed_polls
-  end
-
-  def claer_created_cached_for_member
-    FlushCached::Member.new(member).clear_list_created_polls
   end
 
   def claer_voted_cached_for_member
