@@ -4,10 +4,10 @@ module Pollios::V1::CurrentMemberAPI
     
     resource :current_member do
 
-      resource :details do
+      resource :settings do
         desc "returns current member's account details"
         get '/account' do
-          present current_member, with: MemberAccountEntity
+          present current_member, with: SettingAccountEntity
         end
 
         desc "returns current member's ppublic id"
@@ -17,12 +17,12 @@ module Pollios::V1::CurrentMemberAPI
 
         desc "returns current member's personal details"
         get '/personal' do
-          present current_member, with: MemberPersonalEntity
+          present current_member, with: SettingPersonalEntity
         end
 
-        desc "returns current member's notification setting"
-        get '/notification' do
-          present notification: current_member.notification
+        desc "returns current member's notifications setting"
+        get '/notifications' do
+          present notifications: current_member.notification
         end
       end
 
@@ -89,13 +89,14 @@ module Pollios::V1::CurrentMemberAPI
         desc "returns list of member's bookmarked poll"
         get '/bookmarks' do
           polls_of_member = Member::PollList.new(current_member)
-          present polls_of_member.bookmarks, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present :bookmark, polls_of_member.bookmarks, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member
         end
 
         desc "returns list of member's saved vote later poll"
         get '/saved' do
           polls_of_member = Member::PollList.new(current_member)
-          present polls_of_member.saved, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present :saved, polls_of_member.saved, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
       end
     end

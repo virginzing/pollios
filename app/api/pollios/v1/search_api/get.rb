@@ -11,7 +11,7 @@ module Pollios::V1::SearchAPI
         end
         get do
           polls = Member::PollSearch.new(current_member, params[:hashtag]).polls_searched
-          present polls, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present :polls, polls, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc 'returns list of recent and popular hashtag'
@@ -45,7 +45,7 @@ module Pollios::V1::SearchAPI
         desc 'returns list of member searched by keyword'
         get do
           members = Member::MemberAndGroupSearch.new(current_member, params[:keyword]).members_searched
-          present members, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
+          present :members, members, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
         end
       end
 
@@ -56,7 +56,7 @@ module Pollios::V1::SearchAPI
         desc 'returns list of group searched by keyword'
         get do
           groups = Member::MemberAndGroupSearch.new(current_member, params[:keyword]).groups_searched
-          present groups, with: Pollios::V1::Shared::GroupEntity, current_member: current_member
+          present :groups, groups, with: Pollios::V1::Shared::GroupEntity, current_member: current_member
         end
       end
 
