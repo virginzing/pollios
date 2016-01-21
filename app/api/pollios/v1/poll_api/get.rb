@@ -55,7 +55,7 @@ module Pollios::V1::PollAPI
           desc "returns list of poll[id]'s comments"
           get do
             comments = Poll::CommentList.new(poll, viewing_member: current_member).comments
-            present comments, with: CommentDetailEntity, current_member: current_member
+            present :comments, comments, with: CommentDetailEntity, current_member: current_member
           end
         end
 
@@ -69,7 +69,7 @@ module Pollios::V1::PollAPI
           desc "returns list of poll[id]'s mentionable"
           get '/mentionable' do
             mentionable = poll_member_listing.mentionable
-            present mentionable, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
+            present :mentionable, mentionable, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
           end
         end
 
