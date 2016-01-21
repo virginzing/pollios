@@ -1,6 +1,7 @@
 module Pollios::V1
   class API < Grape::API
     mount CurrentMemberAPI::Get
+    mount CurrentMemberAPI::Put
     mount MemberAPI::Get
     mount MemberAPI::Post
     mount PollAPI::Get
