@@ -134,14 +134,13 @@ module Pollios::V1::PollAPI
             present comment, with: CommentDetailEntity, current_member: current_member
           end
 
-          params do
-            requires :comment_id, type: Integer, desc: 'comment_id in poll_id'
-            requires :message_preset, type: String, desc: 'as inappropriate because'
-            optional :message, type: String, default: '', desc: 'additional information'
-          end
-
           route_param :comment_id do
             desc 'report comment_id in poll_id'
+            params do
+              requires :comment_id, type: Integer, desc: 'comment_id in poll_id'
+              requires :message_preset, type: String, desc: 'as inappropriate because'
+              optional :message, type: String, default: '', desc: 'additional information'
+            end
             post '/report' do
               report_comment = current_member_poll_action.report_comment(params)
               present report_comment, with: CommentDetailEntity, current_member: current_member

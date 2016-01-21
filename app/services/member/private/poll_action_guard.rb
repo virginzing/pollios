@@ -94,6 +94,14 @@ module Member::Private::PollActionGuard
     [true, nil]
   end
 
+  def can_delete?
+    can_view, message = poll_inquiry_service.can_view?
+    return [false, message] unless can_view
+    return [false, "You're not owner this poll."] if not_owner_poll
+
+    [true, nil]
+  end
+
   def can_comment?
     return [false, "You aren't vote this poll."] if not_voted_and_poll_not_closed
     return [false, "This poll isn't allow comment."] if not_allow_comment
@@ -108,6 +116,15 @@ module Member::Private::PollActionGuard
     return [false, "You can't report your comment."] if owner_comment
     return [false, 'You are already reported this comment.'] if already_report_comment
       
+    [true, nil]
+  end
+
+  def can_delete_comment?
+    can_comment, message = can_comment?
+    return [false, message] unless can_comment
+    return [false, "This comment don't exists in poll."] if not_match_comment
+    return [false, "You aren't owner this comment or this poll."] if not_owner_comment && not_owner_poll 
+
     [true, nil]
   end
 
@@ -197,16 +214,20 @@ module Member::Private::PollActionGuard
   end
 
   def not_match_comment
-    !Poll::CommentList.new(poll, viewing_member: member).comments.map(&:id).include?(comment_report_params[:comment_id])
+    !Poll::CommentList.new(poll, viewing_member: member).comments.map(&:id).include?(comment_params[:comment_id])
   end
 
   def owner_comment
-    comment = Comment.cached_find(comment_report_params[:comment_id])
+    comment = Comment.cached_find(comment_params[:comment_id])
     comment.member_id == member.id
   end
 
+  def not_owner_comment
+    !owner_comment
+  end
+
   def already_report_comment
-    member.member_report_comments.exists?(comment_id: comment_report_params[:comment_id])
+    member.member_report_comments.exists?(comment_id: comment_params[:comment_id])
   end
 
 end

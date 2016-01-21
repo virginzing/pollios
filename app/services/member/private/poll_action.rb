@@ -279,9 +279,7 @@ module Member::Private::PollAction
     NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
     NotifyLog.deleted_with_poll_and_member(poll, member)
 
-    process_unbookmark
-    delete_saved_poll
-    process_unwatch
+    sever_member_relation_to_poll
 
     poll
   end
@@ -324,9 +322,7 @@ module Member::Private::PollAction
   def reporting
     increase_report_count
 
-    process_unbookmark
-    delete_saved_poll
-    process_unwatch
+    sever_member_relation_to_poll
 
     return unless poll.report_count >= 10
     poll.update!(status_poll: :black)
@@ -337,6 +333,21 @@ module Member::Private::PollAction
       poll.report_count += member.report_power
       poll.save!
     end
+  end
+
+  def process_delete
+    sever_member_relation_to_poll
+    create_company_group_action_tracking_record_for_action('delete')
+
+    poll.destroy
+
+    return
+  end
+
+  def sever_member_relation_to_poll
+    process_unbookmark
+    delete_saved_poll
+    process_unwatch
   end
 
   def process_comment
@@ -373,8 +384,8 @@ module Member::Private::PollAction
   end
 
   def process_report_comment
-    MemberReportComment.create!(member_id: member.id, poll_id: poll.id, comment_id: comment_report_params[:comment_id] \
-      , message: comment_report_params[:message], message_preset: comment_report_params[:message_preset])
+    MemberReportComment.create!(member_id: member.id, poll_id: poll.id, comment_id: comment_params[:comment_id] \
+      , message: comment_params[:message], message_preset: comment_params[:message_preset])
 
     increase_report_comment_count
     clear_reported_comment_cached_for_member
@@ -383,19 +394,31 @@ module Member::Private::PollAction
   end
 
   def increase_report_comment_count
-    comment = Comment.cached_find(comment_report_params[:comment_id])
+    comment = Comment.cached_find(comment_params[:comment_id])
     comment.with_lock do
       comment.report_count += member.report_power
       comment.save!
     end
   end
 
-  def clear_history_viewed_cached_for_member
-    FlushCached::Member.new(member).clear_list_history_viewed_polls
+  def process_delete_comment
+    comment = poll.comments.cached_find(comment_params[:comment_id])
+    comment.destroy
+
+    decrease_comment_count
+
+    Poll::CommentList.new(poll, viewing_member: member).comments
   end
 
-  def claer_created_cached_for_member
-    FlushCached::Member.new(member).clear_list_created_polls
+  def decrease_comment_count
+    poll.with_lock do
+      poll.comment_count -= 1
+      poll.save!
+    end
+  end
+
+  def clear_history_viewed_cached_for_member
+    FlushCached::Member.new(member).clear_list_history_viewed_polls
   end
 
   def claer_voted_cached_for_member

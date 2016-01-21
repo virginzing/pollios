@@ -4,6 +4,28 @@ module Pollios::V1::CurrentMemberAPI
     
     resource :current_member do
 
+      resource :details do
+        desc "returns current member's account details"
+        get '/account' do
+          present current_member, with: MemberAccountEntity
+        end
+
+        desc "returns current member's ppublic id"
+        get '/public_id' do
+          present publid_id: current_member.public_id
+        end
+
+        desc "returns current member's personal details"
+        get '/personal' do
+          present current_member, with: MemberPersonalEntity
+        end
+
+        desc "returns current member's notification setting"
+        get '/notification' do
+          present notification: current_member.notification
+        end
+      end
+
       desc "returns list of current member's notifications"
       resource :notifications do
         params do
