@@ -46,8 +46,18 @@ module Pollios::V1::CurrentMemberAPI
           present update_personal, with: SettingPersonalEntity
         end
 
-        desc "update current member's notifications setting"
+        desc "update current member's notifications setting (true is turn on notification when)"
+        params do
+          requires :group, type: Boolean, desc: 'new poll in group'
+          requires :friend, type: Boolean, desc: 'new poll from friends & followings'
+          requires :public, type: Boolean, desc: 'new poll in public'
+          requires :request, type: Boolean, desc: 'new friend or group request'
+          requires :join_group, type: Boolean, desc: 'new member joined groups'
+          requires :watch_poll, type: Boolean, desc: 'new vote or new comment'
+        end
         put '/notifications' do
+          current_member_setting.notifications(params)
+          present notifications: current_member.notification
         end
       end
     end

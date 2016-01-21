@@ -22,7 +22,7 @@ module Pollios::V1::CurrentMemberAPI
 
         desc "returns current member's notifications setting"
         get '/notifications' do
-          present notification: current_member.notification
+          present notifications: current_member.notification
         end
       end
 

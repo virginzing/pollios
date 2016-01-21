@@ -70,6 +70,7 @@ module Member::Private::SettingUpdate
   end
   
   def process_update_notifications
+    member.update!(notification: params_notifications.except(:member_id))
   end
 
   def clear_member_cached_for_friends
