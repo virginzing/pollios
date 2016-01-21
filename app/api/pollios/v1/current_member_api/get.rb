@@ -7,7 +7,7 @@ module Pollios::V1::CurrentMemberAPI
       resource :settings do
         desc "returns current member's account details"
         get '/account' do
-          present current_member, with: MemberAccountEntity
+          present current_member, with: SettingAccountEntity
         end
 
         desc "returns current member's ppublic id"
@@ -17,7 +17,7 @@ module Pollios::V1::CurrentMemberAPI
 
         desc "returns current member's personal details"
         get '/personal' do
-          present current_member, with: MemberPersonalEntity
+          present current_member, with: SettingPersonalEntity
         end
 
         desc "returns current member's notifications setting"

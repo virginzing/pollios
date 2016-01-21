@@ -1,6 +1,7 @@
 module Pollios::V1::CurrentMemberAPI
-  class MemberAccountEntity < Pollios::V1::BaseEntity
+  class SettingAccountEntity < Pollios::V1::BaseEntity
 
+    expose :member_type
     expose :point
     expose :friends
     expose :friends_limit
