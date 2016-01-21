@@ -45,6 +45,10 @@ module Member::Private::SettingUpdate
   end
 
   def process_update_public_id
+    member.update(public_id: params_public_id[:public_id])
+    fail ExceptionHandler::UnprocessableEntity, 'Public ID has already been take' unless member.valid?
+
+    member.save!
   end
 
   def process_update_personal

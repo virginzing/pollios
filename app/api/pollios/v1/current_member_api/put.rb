@@ -4,6 +4,12 @@ module Pollios::V1::CurrentMemberAPI
 
     resource :current_member do
 
+      helpers do
+        def current_member_setting
+          @current_member_setting = Member::SettingUpdate.new(current_member)
+        end
+      end
+
       resource :settings do
 
         desc "update current member's profile details"
@@ -17,12 +23,17 @@ module Pollios::V1::CurrentMemberAPI
           mutually_exclusive :cover_preset, :cover
         end
         put '/profile' do
-          update_profile = Member::SettingUpdate.new(current_member).profile(params)
+          update_profile = current_member_setting.profile(params)
           present update_profile, with: Pollios::V1::Shared::MemberEntity
         end
 
         desc "update current member's public_id"
+        params do
+          requires :public_id, type: String, desc: 'new public id'
+        end
         put '/public_id' do
+          current_member_setting.public_id(params)
+          present publid_id: current_member.public_id
         end
 
         desc "update current member's personal"
