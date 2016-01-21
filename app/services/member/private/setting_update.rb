@@ -52,6 +52,21 @@ module Member::Private::SettingUpdate
   end
 
   def process_update_personal
+    update_birthday
+    updata_gender
+    member.update!(update_personal: true)
+
+    member
+  end
+
+  def update_birthday
+    return unless params_personal[:birthday]
+    member.update!(birthday: params_personal[:birthday])
+  end
+
+  def updata_gender
+    return unless params_personal[:gender]
+    member.update!(gender: params_personal[:gender])
   end
   
   def process_update_notifications

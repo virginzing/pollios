@@ -37,7 +37,13 @@ module Pollios::V1::CurrentMemberAPI
         end
 
         desc "update current member's personal"
+        params do
+          optional :birthday, type: Date, desc: 'date of birth'
+          optional :gender, type: String, values: %w(male female other), desc: 'gender'
+        end
         put '/personal' do
+          update_personal = current_member_setting.personal(params)
+          present update_personal, with: SettingPersonalEntity
         end
 
         desc "update current member's notifications setting"
