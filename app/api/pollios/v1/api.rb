@@ -3,6 +3,7 @@ module Pollios::V1
     mount CurrentMemberAPI::Get
     mount CurrentMemberAPI::Post
     mount CurrentMemberAPI::Put
+    mount CurrentMemberAPI::Delete
     mount MemberAPI::Get
     mount MemberAPI::Post
     mount PollAPI::Get

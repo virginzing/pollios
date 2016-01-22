@@ -11,6 +11,13 @@ module Member::Private::RewardActionGuard
     [true, nil]
   end
 
+  def can_delete?
+    return [false, "This reward doesn't exist in your rewards"] if worng_reward
+    return [false, 'You are already claimed this reward.'] if already_claim
+    return [false, 'You have receive this reward.'] if receive_reward
+    [true, nil]
+  end
+
   def worng_reward
     reward.member_id != member.id
   end
@@ -25,6 +32,10 @@ module Member::Private::RewardActionGuard
 
   def already_claim
     reward.redeem
+  end
+
+  def receive_reward
+    reward.waiting_announce?
   end
 
   def not_receive_reward

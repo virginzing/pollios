@@ -17,4 +17,10 @@ module Member::Private::RewardAction
     campaign.reward_info.present? ? campaign.reward_info['point'].to_i : 0 
   end
 
+  def process_delete
+    reward.destroy
+
+    return
+  end
+
 end
