@@ -6,7 +6,7 @@ class Member::GroupAdminAction < Member::GroupAction
     member
   end
 
-  def initialize(admin_member, group, a_member)
+  def initialize(admin_member, group, a_member = nil)
     super(admin_member, group)
     fail ExceptionHandler::UnprocessableEntity, 'Only group admin allows' unless admin_of_group?
     @a_member = a_member
