@@ -42,6 +42,7 @@ module Member::Private::SettingUpdate
     member.update!(cover_preset: params_profile[:cover_preset])
     return unless member.cover.present?
     member.remove_cover!
+    member.save!
   end
 
   def process_update_public_id
