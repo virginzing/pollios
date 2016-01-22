@@ -19,6 +19,8 @@ module Pollios
           route_param :id do
             get do
               reward = MemberReward.cached_find(params[:id])
+              fail ExceptionHandler::UnprocessableEntity, "This reward doesn't exist in your rewards" \
+                unless reward.member_id == current_member.id
               present reward, with: MemberRewardEntity
             end
           end
