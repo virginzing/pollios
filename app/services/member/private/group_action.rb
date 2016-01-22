@@ -77,6 +77,13 @@ module Member::Private::GroupAction
     clear_group_cache_for_member(Member.cached_find(friend_id))
   end
 
+  def process_cancel_invite_friends
+    group.group_members.find_by(member_id: a_member.id)
+    clear_group_cache_for_member(a_member)
+
+    return
+  end
+
   def process_leave(member)
     remove_role_group_admin(member)
     relationship_to_group(member).destroy

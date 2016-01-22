@@ -2,7 +2,7 @@ class Member::GroupAction
   include Member::Private::GroupActionGuard
   include Member::Private::GroupAction
 
-  attr_reader :member, :group, :group_params
+  attr_reader :member, :group, :group_params, :a_member
 
   def initialize(member, group = nil, options = {})
     @member = member
@@ -55,6 +55,14 @@ class Member::GroupAction
     fail ExceptionHandler::UnprocessableEntity, message unless can_invite_friends
 
     process_invite_friends(friend_ids)
+  end
+
+  def cancal_invite(a_member)
+    @a_member = a_member
+    can_cancel_invite_friends, message = can_cancel_invite_friends?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_invite_friends
+
+    process_cancel_invite_friends
   end
 
 end
