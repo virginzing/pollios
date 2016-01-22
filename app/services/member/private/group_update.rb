@@ -39,7 +39,11 @@ module Member::Private::GroupUpdate
   end
 
   def process_update_privacy
+    group.update(params_privacy)
+    fail ExceptionHandler::UnprocessableEntity, 'Public ID has already been take' unless group.valid?
+    group.save!
 
+    group
   end
 
   def clear_members_and_group_relation_cached

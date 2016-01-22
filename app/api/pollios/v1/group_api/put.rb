@@ -46,7 +46,7 @@ module Pollios::V1::GroupAPI
           end
           put '/privacy' do
             update_privacy = current_member_group_setting.privacy(params)
-            update_privacy
+            present update_privacy, with: PrivacyEntity, current_member: current_member
           end
         end
       end
