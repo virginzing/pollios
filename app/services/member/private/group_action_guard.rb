@@ -36,6 +36,13 @@ module Member::Private::GroupActionGuard
     [true, '']
   end
 
+  def can_cancel_invite_friends?
+    return false, "#{a_member.get_name} is already in #{group.name}." if already_member(a_member)
+    return [false, "#{a_member.get_name} doesn't have invite request to #{group.name}."] if not_exist_invite_request(a_member)
+    return [false, "You aren't invited #{a_member.get_name} to #{group.name}."] if not_invite
+    [true, '']
+  end
+
   def can_approve?
     return false, "#{a_member.get_name} doesn't sent join request to #{group.name}." if not_exist_join_request(a_member)
     return false, "#{a_member.get_name} is already in #{group.name}." if already_member(a_member)
@@ -94,6 +101,10 @@ module Member::Private::GroupActionGuard
 
   def not_exist_invite_request(member)
     !member_listing_service.pending?(member)
+  end
+
+  def not_invite
+    group.group_members.find_by(member_id: a_member.id).invite_id != member.id
   end
 
   def not_exist_any_request(member)

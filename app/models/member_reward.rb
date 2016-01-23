@@ -61,8 +61,8 @@ class MemberReward < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @reward = find_by(id: id)
-      fail ExceptionHandler::NotFound, ExceptionHandler::Message::Reward::NOT_FOUND unless @reward.present?
-      fail ExceptionHandler::Deleted, ExceptionHandler::Message::Reward::DELETED unless @reward.deleted_at.nil?
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Reward::NOT_FOUND unless @reward.present?
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Reward::DELETED unless @reward.deleted_at.nil?
       @reward
     end
   end

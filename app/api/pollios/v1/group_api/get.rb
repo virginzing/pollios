@@ -32,6 +32,10 @@ module Pollios::V1::GroupAPI
           present polls_of_groups, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
+        desc "returns group's settings details"
+        get 'settings' do
+          present group, with: PrivacyEntity, current_member: current_member
+        end
       end
     end
 
