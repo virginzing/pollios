@@ -29,7 +29,7 @@ module Pollios::V1::GroupAPI
         desc 'returns polls in group_id'
         get '/polls' do
           polls_of_groups = Group::PollList.new(group, viewing_member: current_member).polls
-          present polls_of_groups, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present :polls, polls_of_groups, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
         desc "returns group's settings details"
