@@ -33,7 +33,7 @@ module Pollios::V1::GroupAPI
         end
 
         desc "returns group's settings details"
-        get 'settings' do
+        get '/settings' do
           present group, with: PrivacyEntity, current_member: current_member
         end
       end
