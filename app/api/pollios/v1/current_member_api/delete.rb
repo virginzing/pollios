@@ -24,6 +24,22 @@ module Pollios::V1::CurrentMemberAPI
         end
 
       end
+
+      
+      resource :polls do
+        resource :presets do
+          desc 'delete poll preset'
+          params do
+            requires :index, type: Integer, desc: "preset's index"
+          end
+          route_param :index do
+            delete '/delete' do
+              presets = Member::PresetAction.new(current_member).delete(params[:index])
+              present :presets, presets, with: PresetEntity
+            end
+          end
+        end
+      end
     end
 
   end
