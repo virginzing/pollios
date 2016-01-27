@@ -13,7 +13,8 @@ class Member::PresetList
   private
 
   def all_preset
-    Template.where(member_id: member.id).first.poll_template
+    presets = Template.where(member_id: member.id).first
+    presets.present? ? presets.poll_template : []
   end
 
 end
