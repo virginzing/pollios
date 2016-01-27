@@ -98,6 +98,12 @@ module Pollios::V1::CurrentMemberAPI
           polls_of_member = Member::PollList.new(current_member)
           present :saved, polls_of_member.saved, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
+
+        desc "returns list of member's poll presets"
+        get '/preset' do
+          presets = Member::PresetList.new(current_member).presets
+          present :presets, presets, with: PresetEntity
+        end    
       end
     end
     
