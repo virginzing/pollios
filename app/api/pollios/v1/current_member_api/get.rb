@@ -100,7 +100,7 @@ module Pollios::V1::CurrentMemberAPI
         end
 
         desc "returns list of member's poll presets"
-        get '/preset' do
+        get '/presets' do
           presets = Member::PresetList.new(current_member).presets
           present :presets, presets, with: PresetEntity
         end    
