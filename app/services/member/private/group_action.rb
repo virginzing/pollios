@@ -78,10 +78,11 @@ module Member::Private::GroupAction
   end
 
   def process_cancel_invite_friends
-    group.group_members.find_by(member_id: a_member.id)
+    group.group_members.find_by(member_id: a_member.id).destroy
     clear_group_cache_for_member(a_member)
+    clear_member_cache_for_group
 
-    return
+    group
   end
 
   def process_leave(member)
