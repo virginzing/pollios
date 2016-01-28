@@ -3,7 +3,9 @@ module Pollios::V1::PollAPI
 
     expose :id, as: :comment_id
     expose :message
-    expose :created_at
+    with_options(format_with: :as_integer) do
+      expose :created_at
+    end
     expose :mentions, if: -> (obj, _) { obj.mentions.present? }, with: MentionDetailEntity
     expose :report_count
     expose_members :creator

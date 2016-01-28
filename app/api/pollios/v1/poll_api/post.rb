@@ -34,7 +34,7 @@ module Pollios::V1::PollAPI
         optional :original_images, type: Array[String], desc: 'URL for original photos'
         optional :thumbnail_type, type: Integer, values: [0, 1, 2, 3, 4, 5], desc: 'index of layout of display photo_poll'
 
-        exactly_one_of :public, :group_ids
+        mutually_exclusive :public, :group_ids
         all_or_none_of :photo_poll, :original_images, :thumbnail_type
       end
 

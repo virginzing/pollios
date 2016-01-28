@@ -42,7 +42,7 @@ module Member::Private::PollAction
       , type_poll: poll_params[:type_poll] \
       , allow_comment: poll_params[:allow_comment] \
       , creator_must_vote: poll_params[:creator_must_vote] \
-      , public: poll_params[:public] || false \
+      , public: poll_public \
       , thumbnail_type: poll_params[:thumbnail_type])
 
     poll_set(new_poll)
@@ -50,6 +50,10 @@ module Member::Private::PollAction
     decrease_point
 
     new_poll
+  end
+
+  def poll_public
+    poll_params[:public] || false
   end
 
   def poll_set(new_poll)
@@ -141,7 +145,8 @@ module Member::Private::PollAction
   end
 
   def poll_member(new_poll)
-    member.poll_members.create!(poll_id: new_poll.id, in_group: poll_in_group)
+    member.poll_members.create!(poll_id: new_poll.id, share_poll_of_id: 0, public: poll_public \
+      , expire_date: expire_date, series: false, in_group: poll_in_group)
   end
 
   def poll_group(new_poll)

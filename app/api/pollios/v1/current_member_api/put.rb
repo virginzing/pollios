@@ -60,6 +60,24 @@ module Pollios::V1::CurrentMemberAPI
           present notifications: current_member.notification
         end
       end
+
+      resource :polls do
+        resource :presets do
+          desc 'edit poll preset'
+          params do
+            requires :name, type: String, desc: "new preset's name"
+            optional :description, type: String, desc: "new preset's description"
+            requires :choices, type: String, desc: "new preset's choices"
+            requires :index, type: Integer, desc: "preset's index"
+          end
+          route_param :index do
+            put '/edit' do
+              presets = Member::PresetAction.new(current_member).edit(params[:index], params.except(:member_id, :index))
+              present :presets, presets, with: PresetEntity
+            end
+          end
+        end
+      end
     end
 
   end

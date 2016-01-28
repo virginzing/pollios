@@ -22,6 +22,21 @@ module Pollios::V1::CurrentMemberAPI
             present claim_reward, with: Pollios::V2::CurrentMemberAPI::MemberRewardEntity
           end
         end
+      end
+
+      resource :polls do
+        resource :presets do
+          desc 'add new poll preset'
+          params do
+            requires :name, type: String, desc: "new preset's name"
+            optional :description, type: String, desc: "new preset's description"
+            requires :choices, type: String, desc: "new preset's choices"
+          end
+          post do
+            new_preset = Member::PresetAction.new(current_member).add(params.except(:member_id))
+            present :presets, new_preset, with: PresetEntity
+          end
+        end
 
       end
     end
