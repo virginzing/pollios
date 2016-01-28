@@ -75,6 +75,12 @@ module Member::Private::GroupActionGuard
     [true, '']
   end
 
+  def can_delete_poll?
+    return false, "This poll isn't exist in group." if poll_not_in_group
+    return false, 'You are not owner poll.' if not_authority
+    [true, '']
+  end
+
   def same_member
     member.id == a_member.id
   end
@@ -123,4 +129,11 @@ module Member::Private::GroupActionGuard
     group.member_id == a_member.id
   end
 
+  def poll_not_in_group
+    Group::PollList.new(group, viewing_member: member).polls.map(&:id).exclude?(poll_id)
+  end
+
+  def not_authority
+    !((Poll.cached_find(poll_id).member_id == member.id) || Group::MemberList.new(group).admin?(member)) 
+  end
 end

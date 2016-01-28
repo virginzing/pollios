@@ -2,7 +2,7 @@ class Member::GroupAction
   include Member::Private::GroupActionGuard
   include Member::Private::GroupAction
 
-  attr_reader :member, :group, :group_params, :a_member
+  attr_reader :member, :group, :group_params, :a_member, :poll_id
 
   def initialize(member, group = nil, options = {})
     @member = member
@@ -63,6 +63,14 @@ class Member::GroupAction
     fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_invite_friends
 
     process_cancel_invite_friends
+  end
+
+  def delete_poll(poll_id)
+    @poll_id = poll_id
+    can_delete_poll, message = can_delete_poll?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_delete_poll
+
+    precess_delete_poll
   end
 
 end
