@@ -4,7 +4,7 @@ class CommentMentionWorker
 
   sidekiq_options unique: true
 
-  def perform(mentioner_id, poll_id, mentionable_list)
+  def perform(mentioner_id, comment_id, poll_id, mentionable_list)
     mentioner = Member.cached_find(mentioner_id)
     poll = Poll.cached_find(poll_id)
 
@@ -26,6 +26,7 @@ class CommentMentionWorker
 
     @custom_properties = {
       type: TYPE[:comment],
+      comment_id: comment_id,
       poll_id: poll.id,
       series: poll.series
     }
