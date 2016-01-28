@@ -45,7 +45,7 @@ class NotifyLog < ActiveRecord::Base
   end
 
   def self.check_update_comment_deleted(comment)
-    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Comment%", "%action: Comment%", "%comment_id: #{comment.id}%").update_all(deleted_at: Time.now)
+    NotifyLog.without_deleted.where("custom_properties LIKE ? AND custom_properties LIKE ?", "%type: Comment%", "%comment_id: #{comment.id}%").update_all(deleted_at: Time.now)
   end
 
   def self.check_update_cancel_invite_friend_to_group_deleted(sender, recipient, group)

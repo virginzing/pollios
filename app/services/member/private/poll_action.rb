@@ -343,7 +343,7 @@ module Member::Private::PollAction
   def process_delete
     sever_member_relation_to_poll
     create_company_group_action_tracking_record_for_action('delete')
-
+    NotifyLog.check_update_poll_deleted(poll)
     poll.destroy
 
     return
@@ -408,6 +408,7 @@ module Member::Private::PollAction
 
   def process_delete_comment
     comment = poll.comments.cached_find(comment_params[:comment_id])
+    NotifyLog.check_update_comment_deleted(comment)
     comment.destroy
 
     decrease_comment_count
