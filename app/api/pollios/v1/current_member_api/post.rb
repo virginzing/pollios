@@ -30,7 +30,7 @@ module Pollios::V1::CurrentMemberAPI
           params do
             requires :name, type: String, desc: "new preset's name"
             optional :description, type: String, desc: "new preset's description"
-            requires :choices, type: String, desc: "new preset's choices"
+            requires :choices, type: String, desc: "new preset's choices", regexp: /.+,.+/
           end
           post do
             new_preset = Member::PresetAction.new(current_member).add(params.except(:member_id))
