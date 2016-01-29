@@ -10,7 +10,7 @@ class Member::PresetAction
     presets = Template.where(member_id: member.id).first
 
     presets = Template.where(member_id: member.id, poll_template: []).create! if presets.nil?
-    presets.update!(poll_template: (presets.poll_template || []) << params)
+    presets.update!(poll_template: (presets.poll_template || []).unshift(params))
 
     presets.poll_template
   end

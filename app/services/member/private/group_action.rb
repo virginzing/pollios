@@ -78,10 +78,7 @@ module Member::Private::GroupAction
   end
 
   def process_cancel_invite_friends
-    group.group_members.find_by(member_id: a_member.id)
-    clear_group_cache_for_member(a_member)
-
-    return
+    process_cancel_request(a_member)
   end
 
   def process_leave(member)
@@ -236,6 +233,12 @@ module Member::Private::GroupAction
   def process_demote_company_admin
     return unless group.company?
     a_member.remove_role :group_admin, group
+  end
+
+  def precess_delete_poll
+    group.poll_groups.find_by(poll_id: poll_id).update!(deleted_at: Time.now, deleted_by_id: member.id)
+
+    group
   end
 
   def clear_group_cache_for_member(member)
