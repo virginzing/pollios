@@ -247,6 +247,8 @@ module Member::Private::GroupAction
   def precess_delete_poll
     group.poll_groups.find_by(poll_id: poll_id).update!(deleted_at: Time.now, deleted_by_id: member.id)
 
+    NotifyLog.poll_with_group_deleted(Poll.cached_find(poll_id), group)
+
     group
   end
 
