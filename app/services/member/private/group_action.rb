@@ -69,12 +69,21 @@ module Member::Private::GroupAction
     clear_member_cache_for_group
     send_invite_friends_to_group_notification(member_ids_to_invite)
 
-    group
+    friends_can_not_invite(friend_ids, member_ids_to_invite)
   end
 
   def invite_friend_id(friend_id)
     group.group_members.create(member_id: friend_id, is_master: false, active: false, invite_id: member.id)
     clear_group_cache_for_member(Member.cached_find(friend_id))
+  end
+
+  def friends_can_not_invite(friend_ids, invite_ids)
+    can_not_invite_ids = friend_ids - invite_ids
+    return if can_not_invite_ids.count == 0
+    members_can_not_invite = Member.find(can_not_invite_ids).map(&:fullname).join(', ')
+    message = "You can't invite #{members_can_not_invite} to #{group.name}."
+
+    message
   end
 
   def process_cancel_invite_friends
