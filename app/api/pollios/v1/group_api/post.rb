@@ -101,7 +101,7 @@ module Pollios::V1::GroupAPI
               current_member_group_member_action.approve
             end
 
-            desc "deny member's request to join group"
+            desc "deny member's request or being invited to join group"
             post '/deny' do
               current_member_group_member_action.deny
             end
