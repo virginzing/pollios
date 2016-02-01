@@ -181,7 +181,7 @@ class Poll < ActiveRecord::Base
     .without_incoming_block(viewing_member)
     .without_group_inivisibility(viewing_member)
     .except_qrcode
-    # .wihtout_reported(viewing_member)
+    # .without_reported(viewing_member)
   end)
 
   scope :without_banned_member, (lambda do
@@ -201,7 +201,7 @@ class Poll < ActiveRecord::Base
     .uniq
   end)
 
-  scope :wihtout_reported, (lambda do |viewing_member|
+  scope :without_reported, (lambda do |viewing_member|
     reported_poll_ids = Member::PollList.new(viewing_member).reports_ids
     where('polls.id NOT IN (?)', reported_poll_ids) if reported_poll_ids.count > 0
   end)

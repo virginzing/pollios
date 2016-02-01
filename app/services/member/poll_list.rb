@@ -11,12 +11,15 @@ class Member::PollList
   end
 
   def default_timeline
+
   end
 
   def public_timeline
+
   end
 
   def friends_timeline
+    
   end
 
   def group_timeline

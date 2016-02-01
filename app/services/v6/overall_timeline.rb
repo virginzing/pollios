@@ -8,6 +8,7 @@ class V6::OverallTimeline
   FILTER_ALL_POLL = 'all' 
 
   attr_accessor :list_polls, :list_shared, :order_ids, :next_cursor
+  attr_reader :member
 
   def initialize(member, options)
     @member = member
@@ -19,11 +20,11 @@ class V6::OverallTimeline
   end
 
   def member_list_service
-    @member_list_service ||= Member::MemberList.new(@member)
+    @member_list_service ||= Member::MemberList.new(member)
   end
 
   def member_group_list_service
-    @member_group_list_service ||= Member::GroupList.new(@member)
+    @member_group_list_service ||= Member::GroupList.new(member)
   end
 
   def filter_my_poll
@@ -59,12 +60,10 @@ class V6::OverallTimeline
   # end
 
   def your_friend_ids
-    # @friend_ids ||= Member.list_friend_active.map(&:id)
     @friend_ids ||= member_list_service.friends_ids
   end
 
   def your_following_ids
-    # @following_ids ||= Member.list_friend_following.map(&:id)
     @following_ids ||= member_list_service.following_ids
   end
 
@@ -90,13 +89,17 @@ class V6::OverallTimeline
     @your_group_ids ||= member_group_list_service.active
   end
 
+  def poll_available_for_member
+    @poll_available_for_member ||= PollMember.available_for_member(member)
+  end
+
   def find_poll_me_and_friend_and_group_and_public
     feed = []
     priority = []
     created_time = []
     updated_time = []
 
-    poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
+    # poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
 
     poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
 
@@ -108,27 +111,29 @@ class V6::OverallTimeline
 
     poll_series_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id != 0"
 
-    poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
+    # poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
     poll_public_query = filter_public.eql?("1") ? "(poll_members.public = 't' AND #{poll_non_share_non_in_group}) OR (polls.campaign_id != 0 AND #{poll_non_share_non_in_group})" : "NULL"
 
-    new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
+    # TODO: Parameterize these into proper methods/scopes
 
-    # new_find_poll_in_my_group = filter_group.eql?("1") ? find_poll_in_my_group : [0]
-    new_find_poll_in_my_group = filter_group.eql?("1") ? your_group_ids : [0]
+    # new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
+    # new_find_poll_in_my_group = filter_group.eql?("1") ? your_group_ids : [0]
+    # new_find_poll_series_in_group = filter_group.eql?("1") ? your_group_ids : [0]
 
-    # new_find_poll_series_in_group = filter_group.eql?("1") ? find_poll_series_in_group : [0]
+    new_your_friend_ids = (your_friend_ids | your_following_ids) << member_id
+    new_find_poll_in_my_group = your_group_ids
+    new_find_poll_series_in_group = your_group_ids
 
-    new_find_poll_series_in_group = filter_group.eql?("1") ? your_group_ids : [0]
-
-    query = PollMember.available.unexpire.without_closed.joins(:poll).includes(:poll => [:poll_groups])
+    query = poll_available_for_member.unexpire.without_closed.join_polls_table.references(:poll_groups)
                                                       .where("(#{poll_friend_query})" \
                                                              "OR (#{poll_group_query})" \
                                                              "OR (#{poll_public_in_group_query})" \
                                                              "OR (#{poll_series_group_query})" \
                                                              "OR (#{poll_public_query})",
                                                              new_your_friend_ids,
-                                                             new_find_poll_in_my_group, new_find_poll_series_in_group).references(:poll_groups)
+                                                             new_find_poll_in_my_group,
+                                                             new_find_poll_series_in_group)
 
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
@@ -185,7 +190,7 @@ class V6::OverallTimeline
     new_your_friend_ids = filter_public.eql?("1") ? your_friend_ids : [0]
     your_following_ids = filter_public.eql?("1") ? your_following_ids : [0]
 
-    query = PollMember.available.unexpire.without_closed.joins(:poll).where("(#{query_poll_shared})" \
+    query = poll_available_for_member.unexpire.without_closed.joins(:poll).where("(#{query_poll_shared})" \
                                                     "OR (#{query_poll_shared})",
                                                     new_your_friend_ids,
                                                     your_following_ids).limit(LIMIT_TIMELINE)
@@ -193,30 +198,20 @@ class V6::OverallTimeline
     query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
     query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
     
-    query.collect{|poll| [poll.id, poll.share_poll_of_id]}.sort! {|x,y| y.first <=> x.first }.uniq {|s| s.last }
+    query.collect { |poll| [poll.id, poll.share_poll_of_id] }.sort! { |x, y| y.first <=> x.first }.uniq { |s| s.last }
   end
 
   def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
     ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
 
-
-    # shared = find_poll_share
-    # poll_member_ids_sort = (shared.delete_if {|id| id.first if poll_ids.include?(id.last) }.collect {|e| e.first } + ids).sort! { |x,y| y <=> x }
-    # poll_member_ids_sort
-
-    # p "ids => #{ids}"
-    # p "priority => #{priority}"
-    # p "poll_ids => #{poll_ids}"
-
-    ids = FeedAlgorithm.new(ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
 
     ids
-    # ids.sort!{|x,y| y <=> x }
   end
 
   def hash_priority
     ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
-    FeedAlgorithm.new(ids, poll_ids, feed, priority, created_time, updated_time).hash_priority
+    FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).hash_priority
   end
 
 

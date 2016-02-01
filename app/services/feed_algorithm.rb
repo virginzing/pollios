@@ -2,13 +2,14 @@ class FeedAlgorithm
   include ActionView::Helpers::DateHelper
   include FeedSetting
 
-  def initialize(poll_member_ids, poll_ids, feed, priority, created_time, updated_time)
+  def initialize(member, poll_member_ids, poll_ids, feed, priority, created_time, updated_time)
+    @member = member
     @poll_member_ids = poll_member_ids
     @poll_ids = poll_ids
     @feed = feed
     @priority = priority
     # TODO: still needs to fix this
-    @vote_poll_ids = Member::PollList.new(Member.current_member).voted_all.collect{|e| e[:poll_id] }
+    @vote_poll_ids = Member::PollList.new(member).voted_all.collect { |e| e[:poll_id] }
     @created_time = created_time
     @updated_time = updated_time
     @filter_timeline_ids = []
@@ -19,12 +20,12 @@ class FeedAlgorithm
   end
 
   def sort_by_priority
-    sort_by_and_reverse = check_voted.sort_by {|x| [x[:priority], x[:created_at]] }.reverse!
-    sort_by_and_reverse.collect{|e| e[:poll_member_id] }
+    sort_by_and_reverse = check_voted.sort_by { |x| [x[:priority], x[:created_at]] }.reverse!
+    sort_by_and_reverse.collect { |e| e[:poll_member_id] }
   end
 
   def hash_priority
-    check_voted.inject({}) {|h, v| h[ v[:poll_member_id] ] = v[:priority]; h}
+    check_voted.inject({}) { |h, v| h[ v[:poll_member_id] ] = v[:priority]; h}
   end
 
   private
@@ -40,7 +41,9 @@ class FeedAlgorithm
   def check_with_voted
     new_check_with_voted = []
 
-    merge_poll_member_with_poll_id.each_with_index do |e, index|
+    merged_poll_member_with_poll = merge_poll_member_with_poll_id
+
+    merged_poll_member_with_poll.each_with_index do |e, index|
       feed = e[:feed]
 
       vote_status = @vote_poll_ids.include?(e[:poll_id]) ? FeedSetting::VOTED : FeedSetting::NOT_YET_VOTE
