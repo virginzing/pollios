@@ -116,9 +116,9 @@ class V6::HashtagTimeline
   def main_timeline
     ids, poll_ids, feed, priority, created_time, updated_time = tag_friend_group_public
 
-    ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
-
-    ids
+    # ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result = FeedAlgorithm.new(member, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result
   end
 
 

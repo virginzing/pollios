@@ -2,9 +2,8 @@ class FeedAlgorithm
   include ActionView::Helpers::DateHelper
   include FeedSetting
 
-  def initialize(member, poll_member_ids, poll_ids, feed, priority, created_time, updated_time)
+  def initialize(member, poll_ids, feed, priority, created_time, updated_time)
     @member = member
-    @poll_member_ids = poll_member_ids
     @poll_ids = poll_ids
     @feed = feed
     @priority = priority
@@ -21,20 +20,19 @@ class FeedAlgorithm
 
   def sort_by_priority
     sort_by_and_reverse = check_voted.sort_by { |x| [x[:priority], x[:created_at]] }.reverse!
-    sort_by_and_reverse.collect { |e| e[:poll_member_id] }
+    sort_by_and_reverse.collect { |e| e[:poll_id] }
   end
 
   def hash_priority
-    check_voted.inject({}) { |h, v| h[ v[:poll_member_id] ] = v[:priority]; h}
+    check_voted.inject({}) { |h, v| h[ v[:poll_id] ] = v[:priority]; h}
   end
 
   private
 
   def merge_poll_member_with_poll_id # poll_id, poll_member_id, priority 
     @poll_ids.each_with_index do |poll_id, index|
-      @filter_timeline_ids << { poll_id: poll_id, poll_member_id: @poll_member_ids[index], feed: @feed[index], priority: @priority[index], created_at: @created_time[index], updated_at: @updated_time[index] }
+      @filter_timeline_ids << { poll_id: poll_id, feed: @feed[index], priority: @priority[index], created_at: @created_time[index], updated_at: @updated_time[index] }
     end
-    # puts "filter timtline ids => #{@filter_timeline_ids}"
     @filter_timeline_ids
   end
 

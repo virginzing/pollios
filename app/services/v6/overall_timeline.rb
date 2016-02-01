@@ -201,17 +201,18 @@ class V6::OverallTimeline
     query.collect { |poll| [poll.id, poll.share_poll_of_id] }.sort! { |x, y| y.first <=> x.first }.uniq { |s| s.last }
   end
 
-  def main_timeline # must have (ex. [1,2,3,4] poll_member's ids)  # ids is timeline_id or poll_member_id
+  def main_timeline
     ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
 
-    ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
-
-    ids
+    # ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result = FeedAlgorithm.new(member, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result
   end
 
   def hash_priority
     ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
-    FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).hash_priority
+    result = FeedAlgorithm.new(member, poll_ids, feed, priority, created_time, updated_time).hash_priority
+    result
   end
 
 
