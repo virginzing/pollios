@@ -10,6 +10,18 @@ class Member::PollList
     @viewing_member = options[:viewing_member]
   end
 
+  def default_timeline
+  end
+
+  def public_timeline
+  end
+
+  def friends_timeline
+  end
+
+  def group_timeline
+  end
+
   def reports
     cached_report_polls
   end

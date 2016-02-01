@@ -24,19 +24,22 @@ module Pollios::V1::PollAPI
 
       desc '[x] returns default poll-timeline for requesting member'
       get do
-        # member_poll_lister.default_timeline
+        member_poll_lister.default_timeline
       end
 
       desc '[x] returns public poll-timeline for requesting member'
       get '/public' do
+        member_poll_lister.public_timeline
       end
 
       desc '[x] returns friends & followings poll-timeline for requesting member'
       get '/friends' do
+        member_poll_lister.friends_timeline
       end
 
       desc '[x] returns group poll-timeline for requesting member'
       get '/group' do
+        member_poll_lister.group_timeline
       end
 
       params do 

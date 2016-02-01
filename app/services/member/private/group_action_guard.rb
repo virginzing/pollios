@@ -102,7 +102,7 @@ module Member::Private::GroupActionGuard
   end
 
   def company_group
-    group.group_type == 'company'
+    group.group_type == :company
   end
 
   def not_exist_invite_request(member)
