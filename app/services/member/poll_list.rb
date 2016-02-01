@@ -1,13 +1,13 @@
 class Member::PollList
   include Member::Private::PollList
 
-  attr_reader :member, :viewing_member
+  attr_reader :member, :viewing_member, :index
   
   def initialize(member, options = {})
     @member = @viewing_member = member
 
-    return unless options[:viewing_member]
     @viewing_member = options[:viewing_member]
+    @index = options[:index] || 1
   end
 
   def reports
@@ -72,6 +72,10 @@ class Member::PollList
 
   def saved
     cached_all_saved_vote_later
+  end
+  
+  def next_index(list)
+    next_page_index(list)
   end
 
   # private
