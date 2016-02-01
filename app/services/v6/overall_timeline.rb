@@ -99,61 +99,64 @@ class V6::OverallTimeline
     created_time = []
     updated_time = []
 
-    # poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
+    # # poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
 
-    poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
+    # poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
 
-    poll_public_in_group_query = "poll_members.public = 't' AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
+    # poll_public_in_group_query = "poll_members.public = 't' AND poll_members.in_group = 't' AND poll_members.share_poll_of_id = 0"
 
-    poll_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id = 0"
+    # poll_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id = 0"
 
-    # poll_series_group_query = "poll_members.series = 't' AND poll_members.in_group = 't' AND poll_members.poll_series_id IN (?)"
+    # # poll_series_group_query = "poll_members.series = 't' AND poll_members.in_group = 't' AND poll_members.poll_series_id IN (?)"
 
-    poll_series_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id != 0"
+    # poll_series_group_query = "poll_groups.group_id IN (?) AND poll_groups.share_poll_of_id != 0"
 
-    # poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
+    # # poll_my_vote = "poll_members.poll_id IN (?) AND poll_members.share_poll_of_id = 0"
 
-    poll_public_query = filter_public.eql?("1") ? "(poll_members.public = 't' AND #{poll_non_share_non_in_group}) OR (polls.campaign_id != 0 AND #{poll_non_share_non_in_group})" : "NULL"
+    # poll_public_query = filter_public.eql?("1") ? "(poll_members.public = 't' AND #{poll_non_share_non_in_group}) OR (polls.campaign_id != 0 AND #{poll_non_share_non_in_group})" : "NULL"
 
-    # TODO: Parameterize these into proper methods/scopes
+    # # TODO: Parameterize these into proper methods/scopes
 
-    # new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
-    # new_find_poll_in_my_group = filter_group.eql?("1") ? your_group_ids : [0]
-    # new_find_poll_series_in_group = filter_group.eql?("1") ? your_group_ids : [0]
+    # # new_your_friend_ids = filter_friend_following.eql?("1") ? ((your_friend_ids | your_following_ids) << member_id) : [0]
+    # # new_find_poll_in_my_group = filter_group.eql?("1") ? your_group_ids : [0]
+    # # new_find_poll_series_in_group = filter_group.eql?("1") ? your_group_ids : [0]
 
-    new_your_friend_ids = (your_friend_ids | your_following_ids) << member_id
-    new_find_poll_in_my_group = your_group_ids
-    new_find_poll_series_in_group = your_group_ids
+    # new_your_friend_ids = (your_friend_ids | your_following_ids) << member_id
+    # new_find_poll_in_my_group = your_group_ids
+    # new_find_poll_series_in_group = your_group_ids
 
-    query = poll_available_for_member.unexpire.without_closed.join_polls_table.references(:poll_groups)
-                                                      .where("(#{poll_friend_query})" \
-                                                             "OR (#{poll_group_query})" \
-                                                             "OR (#{poll_public_in_group_query})" \
-                                                             "OR (#{poll_series_group_query})" \
-                                                             "OR (#{poll_public_query})",
-                                                             new_your_friend_ids,
-                                                             new_find_poll_in_my_group,
-                                                             new_find_poll_series_in_group)
+    # query = poll_available_for_member.unexpire.without_closed.join_polls_table.references(:poll_groups)
+    #                                                   .where("(#{poll_friend_query})" \
+    #                                                          "OR (#{poll_group_query})" \
+    #                                                          "OR (#{poll_public_in_group_query})" \
+    #                                                          "OR (#{poll_series_group_query})" \
+    #                                                          "OR (#{poll_public_query})",
+    #                                                          new_your_friend_ids,
+    #                                                          new_find_poll_in_my_group,
+    #                                                          new_find_poll_series_in_group)
 
-    query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
-    query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
-    query = query.where("polls.member_id NOT IN (?)", with_out_member_ids) if with_out_member_ids.size > 0
+    # query = query.where("polls.id NOT IN (?)", with_out_poll_ids) if with_out_poll_ids.size > 0
+    # query = query.where("polls.poll_series_id NOT IN (?)", with_out_questionnaire_id) if with_out_questionnaire_id.size > 0
+    # query = query.where("polls.member_id NOT IN (?)", with_out_member_ids) if with_out_member_ids.size > 0
 
-    if only_new_poll?
-      query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
-    end
+    # if only_new_poll?
+    #   query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
+    # end
+
+    query = Poll.timeline(member)
 
     query = query.order('priority').order('polls.created_at desc')
     query = query.limit(LIMIT_TIMELINE)
 
     query.each do |q|
-      priority << check_poll_priority(q.poll)
-      feed << check_feed_type(q.poll)
-      created_time << q.poll.created_at
-      updated_time << q.poll.updated_at
+      priority << check_poll_priority(q)
+      feed << check_feed_type(q)
+      created_time << q.created_at
+      updated_time << q.updated_at
     end
 
-    ids, poll_ids, feed, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, priority, created_time, updated_time
+    # ids, poll_ids, feed, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, priority, created_time, updated_time
+    poll_ids, feed, priority, created_time, updated_time = query.map(&:id), feed, priority, created_time, updated_time
   end
 
   # def check_feed_type(poll)

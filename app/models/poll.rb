@@ -216,6 +216,17 @@ class Poll < ActiveRecord::Base
     where('polls.member_id NOT IN (?)', incoming_block_ids) if incoming_block_ids.size > 0
   end)
 
+  scope :timeline, (lambda do |viewing_member|
+    friends_following_ids = Member::MemberList.new(viewing_member).friends_following_ids
+    group_active_ids = Member::GroupList.new(viewing_member).active_ids
+
+    viewing_by_member(viewing_member)
+    .where('polls.member_id IN (?) OR poll_groups.group_id IN (?) OR polls.public' \
+      , (friends_following_ids << viewing_member.id) \
+      , group_active_ids)
+    .without_closed
+  end)
+
   LIMIT_POLL = 30
   LIMIT_TIMELINE = 500
 

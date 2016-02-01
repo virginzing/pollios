@@ -98,6 +98,10 @@ class Member::MemberList
     ids_for(followings)
   end
 
+  def friends_following_ids
+    friends_ids | following_ids
+  end
+
   def blocks_ids
     ids_for(blocks)
   end
