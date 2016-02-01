@@ -8,7 +8,7 @@ module Timelinable
   end
 
   def member_poll_list
-    @member_poll_list ||= Member::PollList.new(@member)
+    @member_poll_list ||= Member::PollList.new(member)
   end
 
   # def init_un_see_poll

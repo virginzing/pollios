@@ -6,6 +6,7 @@ class V6::HashtagTimeline
   TYPE_TIMELINE = 'hashtag_timeline'
 
   attr_accessor :list_polls, :list_shared, :order_ids, :next_cursor
+  attr_reader :member
 
   def initialize(member, options)
     @member = member
@@ -115,9 +116,9 @@ class V6::HashtagTimeline
   def main_timeline
     ids, poll_ids, feed, priority, created_time, updated_time = tag_friend_group_public
 
-    ids = FeedAlgorithm.new(ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
-
-    ids
+    # ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result = FeedAlgorithm.new(member, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result
   end
 
 

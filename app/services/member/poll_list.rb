@@ -10,6 +10,21 @@ class Member::PollList
     @index = options[:index] || 1
   end
 
+  def default_timeline
+
+  end
+
+  def public_timeline
+
+  end
+
+  def friends_timeline
+    
+  end
+
+  def group_timeline
+  end
+
   def reports
     cached_report_polls
   end
