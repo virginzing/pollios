@@ -6,23 +6,24 @@ class Member::PollList
   def initialize(member, options = {})
     @member = @viewing_member = member
 
-    @viewing_member = options[:viewing_member]
+    @viewing_member = options[:viewing_member] if options[:viewing_member]
     @index = options[:index] || 1
   end
 
   def default_timeline
-
+    overall_timeline_polls
   end
 
   def public_timeline
-
+    public_timeline_polls
   end
 
   def friends_timeline
-    
+    friends_following_timeline_polls
   end
 
   def group_timeline
+    group_timeline_polls
   end
 
   def reports
