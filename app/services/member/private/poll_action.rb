@@ -43,6 +43,7 @@ module Member::Private::PollAction
       , allow_comment: poll_params[:allow_comment] \
       , creator_must_vote: poll_params[:creator_must_vote] \
       , public: poll_public \
+      , in_group_ids: in_group_ids \
       , thumbnail_type: poll_params[:thumbnail_type])
 
     poll_set(new_poll)
@@ -92,7 +93,6 @@ module Member::Private::PollAction
     new_poll.update!(expire_date: expire_date \
       , poll_series_id: 0 \
       , choice_count: choice_count \
-      , in_group_ids: in_group_ids \
       , qrcode_key: qrcode_key \
       , member_type: member_type \
       , qr_only: false \
