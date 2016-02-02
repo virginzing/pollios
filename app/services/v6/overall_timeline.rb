@@ -99,7 +99,7 @@ class V6::OverallTimeline
     created_time = []
     updated_time = []
 
-    # # poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
+    # poll_member_query = "poll_members.member_id = ? AND #{poll_non_share_non_in_group}"
 
     # poll_friend_query = "poll_members.member_id IN (?) AND polls.public = 'f' AND #{poll_non_share_non_in_group}"
 
@@ -143,7 +143,9 @@ class V6::OverallTimeline
     #   query = query.where("polls.id NOT IN (?)", vote_all_polls) if vote_all_polls.size > 0
     # end
 
-    query = Poll.timeline(member)
+    query = Poll.overall_timeline(member)
+
+    query = Poll.unvoted_overall_timeline(member) if only_new_poll?
 
     query = query.order('priority').order('polls.created_at desc')
     query = query.limit(LIMIT_TIMELINE)

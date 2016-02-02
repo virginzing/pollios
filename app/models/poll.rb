@@ -181,7 +181,6 @@ class Poll < ActiveRecord::Base
     .without_incoming_block(viewing_member)
     .without_group_inivisibility(viewing_member)
     .except_qrcode
-    # .without_reported(viewing_member)
   end)
 
   scope :without_banned_member, (lambda do
@@ -216,15 +215,52 @@ class Poll < ActiveRecord::Base
     where('polls.member_id NOT IN (?)', incoming_block_ids) if incoming_block_ids.size > 0
   end)
 
-  scope :timeline, (lambda do |viewing_member|
-    friends_following_ids = Member::MemberList.new(viewing_member).friends_following_ids
-    group_active_ids = Member::GroupList.new(viewing_member).active_ids
+  scope :without_seved_vote_later, (lambda do |viewing_member|
+    seved_vote_later_ids = Member::PollList.new(viewing_member).saved.map(&:id)
+    where('polls.id NOT IN (?)', seved_vote_later_ids) if seved_vote_later_ids.count > 0
+  end)
 
+  scope :friends_following_feed, (lambda do |viewing_member|
+    friends_following_ids = Member::MemberList.new(viewing_member).friends_following_ids
+    where('polls.member_id IN (?)', (friends_following_ids << viewing_member.id))
+  end)
+
+  scope :group_feed, (lambda do |viewing_member|
+    group_active_ids = Member::GroupList.new(viewing_member).active_ids
+    joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
+    .where('poll_groups.group_id IN (?)', group_active_ids)
+  end)
+
+  scope :public_feed, -> { where('polls.public') }
+
+  scope :overall, (lambda do |viewing_member|
+    (public_feed | friends_following_feed(viewing_member) | group_feed(viewing_member))
+  end)
+
+  scope :unvoted, (lambda do |viewing_member|
+    voted_ids = joins('LEFT OUTER JOIN history_votes on polls.id = history_votes.poll_id')
+    .where("history_votes.member_id = #{viewing_member.id}")
+    .map(&:id)
+
+    where('polls.id NOT IN (?)', voted_ids)
+  end)
+
+  scope :overall_timeline, (lambda do |viewing_member|
+    timeline(viewing_member)
+    .overall(viewing_member)
+  end)
+
+  scope :unvoted_overall_timeline, (lambda do |viewing_member|
+    unvoted(viewing_member)
+    .overall_timeline(viewing_member)
+  end)
+
+  scope :timeline, (lambda do |viewing_member|
     viewing_by_member(viewing_member)
-    .where('polls.member_id IN (?) OR poll_groups.group_id IN (?) OR polls.public' \
-      , (friends_following_ids << viewing_member.id) \
-      , group_active_ids)
+    .without_seved_vote_later(viewing_member)
+    .without_reported(viewing_member)
     .without_closed
+    .except_series
   end)
 
   LIMIT_POLL = 30
