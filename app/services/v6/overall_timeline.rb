@@ -147,8 +147,8 @@ class V6::OverallTimeline
 
     query = Poll.unvoted_overall_timeline(member) if only_new_poll?
 
-    query = query.sort_by(&:priority).sort_by(&:created_at).reverse
-    query = query.take(LIMIT_TIMELINE)
+    query = query.order('polls.priority').order('polls.created_at DESC')
+    query = query.limit(LIMIT_TIMELINE)
 
     query.each do |q|
       priority << check_poll_priority(q)

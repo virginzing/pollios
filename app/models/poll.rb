@@ -215,6 +215,11 @@ class Poll < ActiveRecord::Base
     where('polls.member_id NOT IN (?)', incoming_block_ids) if incoming_block_ids.size > 0
   end)
 
+  scope :without_outgoing_block, (lambda do |viewing_member|
+    outgoing_block_ids = Member::MemberList.new(viewing_member).blocks_ids
+    where('polls.member_id NOT IN (?)', outgoing_block_ids) if outgoing_block_ids.size > 0
+  end)
+
   scope :without_seved_vote_later, (lambda do |viewing_member|
     seved_vote_later_ids = Member::PollList.new(viewing_member).saved.map(&:id)
     where('polls.id NOT IN (?)', seved_vote_later_ids) if seved_vote_later_ids.count > 0
@@ -231,10 +236,16 @@ class Poll < ActiveRecord::Base
     .where('poll_groups.group_id IN (?)', group_active_ids)
   end)
 
-  scope :public_feed, -> { where('polls.public') }
+  scope :public_feed, -> { where('polls.public = true') }
 
   scope :overall, (lambda do |viewing_member|
-    (public_feed | friends_following_feed(viewing_member) | group_feed(viewing_member))
+    friends_following_ids = Member::MemberList.new(viewing_member).friends_following_ids
+    group_active_ids = Member::GroupList.new(viewing_member).active_ids
+
+    joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
+    .where('poll_groups.group_id IN (?) OR polls.member_id IN (?) OR polls.public = true' \
+      , group_active_ids \
+      , (friends_following_ids << viewing_member.id))
   end)
 
   scope :unvoted, (lambda do |viewing_member|
@@ -259,6 +270,7 @@ class Poll < ActiveRecord::Base
     viewing_by_member(viewing_member)
     .without_seved_vote_later(viewing_member)
     .without_reported(viewing_member)
+    .without_outgoing_block(viewing_member)
     .without_closed
     .except_series
   end)
