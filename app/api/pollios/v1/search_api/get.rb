@@ -8,10 +8,11 @@ module Pollios::V1::SearchAPI
         desc 'returns list of poll searched by hashtag'
         params do
           requires :hashtag, type: String, desc: 'hashtag for searching'
+          optional :index, type: Integer, desc: "starting index for polls's list in this request"
         end
         get do
-          polls = Member::PollSearch.new(current_member, params[:hashtag]).polls_searched
-          present :polls, polls, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          polls = Member::PollSearch.new(current_member, params[:hashtag], index: params[:index])
+          present polls, poll: :polls_searched, with: Pollios::V1::Shared::PollListEntity, current_member: current_member
         end
 
         desc 'returns list of recent and popular hashtag'

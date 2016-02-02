@@ -1,9 +1,11 @@
 class Member::PollSearch
 
-  attr_reader :member, :hashtag
+  attr_reader :member, :hashtag, :index
 
-  def initialize(member, hashtag = nil)
+  def initialize(member, hashtag = nil, options = {})
     @member = member
+
+    @index = options[:index] || 1
 
     return unless hashtag
     @hashtag = hashtag.downcase
@@ -32,6 +34,10 @@ class Member::PollSearch
     return
   end
 
+  def next_index(_)
+    polls_searched.next_page || 0
+  end
+
   def cached_recent_tags
     Rails.cache.fetch("members/#{member.id}/searches/tags") { recent_tags }
   end
@@ -58,6 +64,7 @@ class Member::PollSearch
       .joins('LEFT OUTER JOIN taggings ON polls.id = taggings.poll_id')
       .joins('LEFT OUTER JOIN tags ON taggings.tag_id = tags.id')
       .where('LOWER(tags.name) = (?)', hashtag)
+      .paginate(page: index)
   end
 
   def save_recent_tag
