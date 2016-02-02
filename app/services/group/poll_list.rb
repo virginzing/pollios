@@ -1,16 +1,20 @@
 class Group::PollList
 
-  attr_reader :group, :viewing_member
+  attr_reader :group, :viewing_member, :index
 
   def initialize(group, options = {})
     @group = group
 
-    return unless options[:viewing_member]
     @viewing_member = options[:viewing_member]
+    @index = options[:index] || 1
   end
 
   def polls
     poll_visibility
+  end
+
+  def next_index(_)
+    polls.next_page || 0
   end
 
   # private
@@ -18,6 +22,7 @@ class Group::PollList
   def all_poll
     Poll.joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
       .where("poll_groups.group_id = #{group.id}")
+      .paginate(page: index)
   end
 
   def poll_visibility
