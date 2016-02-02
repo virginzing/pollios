@@ -38,17 +38,26 @@ module Pollios::V1::MemberAPI
 
         resource :polls do
 
+          helpers do
+            def polls_of_member
+              @polls_of_member ||= Member::PollList.new(member, viewing_member: current_member, index: params[:index])
+            end
+          end
+
+          params do
+            optional :index, type: Integer, desc: "starting index for polls's list in this request"
+          end
+
           desc "returns list of member's created poll"
           get '/created' do
-            polls_for_member = Member::PollList.new(member, viewing_member: current_member)
-            present :created, polls_for_member.created, with: Pollios::V1::Shared::PollDetailEntity \
+            present polls_of_member, poll: :created, with: Pollios::V1::Shared::PollListEntity \
               , current_member: current_member
           end
 
           desc "returns list of member's voted poll"
           get '/voted' do
-            polls_for_member = Member::PollList.new(member, viewing_member: current_member)
-            present :voted, polls_for_member.voted, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+            present polls_of_member, poll: :voted, with: Pollios::V1::Shared::PollListEntity \
+              , current_member: current_member
           end
         end
 

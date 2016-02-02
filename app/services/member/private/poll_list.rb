@@ -53,7 +53,6 @@ module Member::Private::PollList
 
   def all_closed
     Poll.where("polls.member_id = #{member.id}").where("polls.close_status = 't'")
-      .paginate(page: index)
   end
 
   def all_voted

@@ -86,17 +86,26 @@ module Pollios::V1::CurrentMemberAPI
 
       resource :polls do
 
+        helpers do
+          def polls_of_member
+            @polls_of_member ||= Member::PollList.new(current_member, index: params[:index])
+          end
+        end
+
+        params do
+          optional :index, type: Integer, desc: "starting index for polls's list in this request"
+        end
+
         desc "returns list of member's bookmarked poll"
         get '/bookmarks' do
-          polls_of_member = Member::PollList.new(current_member)
-          present :bookmark, polls_of_member.bookmarks, with: Pollios::V1::Shared::PollDetailEntity \
+          present polls_of_member, poll: :bookmarks, with: Pollios::V1::Shared::PollListEntity \
             , current_member: current_member
         end
 
         desc "returns list of member's saved vote later poll"
         get '/saved' do
-          polls_of_member = Member::PollList.new(current_member)
-          present :saved, polls_of_member.saved, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present polls_of_member, poll: :saved, with: Pollios::V1::Shared::PollListEntity \
+            , current_member: current_member
         end
 
         desc "returns list of member's poll presets"
