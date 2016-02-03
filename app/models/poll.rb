@@ -248,6 +248,18 @@ class Poll < ActiveRecord::Base
       , (friends_following_ids << viewing_member.id))
   end)
 
+  scope :without_voted_series, (lambda do |viewing_member|
+    voted_ids = joins('LEFT OUTER JOIN history_votes on polls.id = history_votes.poll_id')
+    .where("history_votes.member_id = #{viewing_member.id}")
+    .map(&:id)
+
+    series_ids = where('polls.series = true').map(&:id)
+
+    voted_series_ids = voted_ids & series_ids
+
+    where('polls.id NOT IN (?)', voted_series_ids)
+  end)
+
   scope :unvoted, (lambda do |viewing_member|
     voted_ids = joins('LEFT OUTER JOIN history_votes on polls.id = history_votes.poll_id')
     .where("history_votes.member_id = #{viewing_member.id}")
@@ -272,7 +284,7 @@ class Poll < ActiveRecord::Base
     .without_reported(viewing_member)
     .without_outgoing_block(viewing_member)
     .without_closed
-    .except_series
+    .without_voted_series(viewing_member)
   end)
 
   LIMIT_POLL = 30
