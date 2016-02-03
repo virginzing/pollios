@@ -93,29 +93,29 @@ module Member::Private::PollList
   end
   
   def overall_timeline_polls
-    Poll.overall_timeline(viewing_member)
+    Poll.unscoped.overall_timeline(viewing_member)
       # .paginate(page: index)
   end
 
   def unvoted_timeline_polls
-    Poll.unvoted_overall_timeline(viewing_member)
+    Poll.unscoped.unvoted_overall_timeline(viewing_member)
       # .paginate(page: index)
   end
   
   def public_timeline_polls
-    Poll.timeline(viewing_member)
+    Poll.unscoped.timeline(viewing_member)
       .public_feed
       # .paginate(page: index)
   end
 
   def friends_following_timeline_polls
-    Poll.timeline(viewing_member)
+    Poll.unscoped.timeline(viewing_member)
       .friends_following_feed(viewing_member)
       # .paginate(page: index)
   end
 
   def group_timeline_polls
-    Poll.timeline(viewing_member)
+    Poll.unscoped.timeline(viewing_member)
       .group_feed(viewing_member)
       # .paginate(page: index)
   end
