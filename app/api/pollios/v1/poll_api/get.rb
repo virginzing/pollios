@@ -56,9 +56,12 @@ module Pollios::V1::PollAPI
 
         resource :comments do
           desc "returns list of poll[id]'s comments"
+          params do
+            optional :index, type: Integer, desc: "starting index for comments's list in this request"
+          end
           get do
-            comments = Poll::CommentList.new(poll, viewing_member: current_member).comments
-            present :comments, comments, with: CommentDetailEntity, current_member: current_member
+            comments_of_poll = Poll::CommentList.new(poll, viewing_member: current_member, index: params[:index])
+            present comments_of_poll, with: CommentListEntity, current_member: current_member
           end
         end
 

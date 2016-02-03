@@ -1,12 +1,12 @@
 class Poll::CommentList
 
-  attr_reader :poll, :viewing_member
+  attr_reader :poll, :viewing_member, :index
 
   def initialize(poll, options = {})
     @poll = poll
 
-    return unless options[:viewing_member]
     @viewing_member = options[:viewing_member]
+    @index = options[:index] || 1
 
     can_view, message = can_view?
     fail ExceptionHandler::UnprocessableEntity, message unless can_view
@@ -25,10 +25,14 @@ class Poll::CommentList
     comment_visibility
   end
 
+  def next_index
+    comments.next_page || 0
+  end
+
   private
 
   def all_comment
-    poll.comments.without_ban.without_deleted
+    poll.comments.without_ban.without_deleted.paginate(page: index)
   end
 
   def comment_visibility
