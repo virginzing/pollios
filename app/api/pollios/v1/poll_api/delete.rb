@@ -35,8 +35,7 @@ module Pollios::V1::PollAPI
               requires :comment_id, type: Integer, desc: 'comment_id in poll_id'
             end
             delete '/delete' do
-              delete_comment = current_member_poll_action.delete_comment(params)
-              present delete_comment, with: CommentDetailEntity, current_member: current_member
+              current_member_poll_action.delete_comment(params)
             end
           end
         end

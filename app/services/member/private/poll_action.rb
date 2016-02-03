@@ -364,7 +364,7 @@ module Member::Private::PollAction
 
     MemberActiveRecord.record_member_active(member)
 
-    Poll::CommentList.new(poll, viewing_member: member).comments
+    return
   end
 
   def increase_comment_count
@@ -395,7 +395,7 @@ module Member::Private::PollAction
     increase_report_comment_count
     clear_reported_comment_cached_for_member
 
-    Poll::CommentList.new(poll, viewing_member: member).comments
+    return
   end
 
   def increase_report_comment_count
@@ -413,7 +413,7 @@ module Member::Private::PollAction
 
     decrease_comment_count
 
-    Poll::CommentList.new(poll, viewing_member: member).comments
+    return
   end
 
   def decrease_comment_count

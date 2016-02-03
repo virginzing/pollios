@@ -119,8 +119,7 @@ module Pollios::V1::PollAPI
           optional :message, type: String, default: '', desc: 'additional information'
         end
         post '/report' do
-          report = current_member_poll_action.report(params)
-          present report, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          current_member_poll_action.report(params)
         end
 
         resource :comments do
@@ -130,8 +129,7 @@ module Pollios::V1::PollAPI
             optional :mention_ids, type: Array[Integer], desc: 'list of member (ids) for mention on comment'
           end
           post do
-            comment = current_member_poll_action.comment(params)
-            present comment, with: CommentDetailEntity, current_member: current_member
+            current_member_poll_action.comment(params)
           end
 
           route_param :comment_id do
@@ -142,8 +140,7 @@ module Pollios::V1::PollAPI
               optional :message, type: String, default: '', desc: 'additional information'
             end
             post '/report' do
-              report_comment = current_member_poll_action.report_comment(params)
-              present report_comment, with: CommentDetailEntity, current_member: current_member
+              current_member_poll_action.report_comment(params)
             end
           end
         end
