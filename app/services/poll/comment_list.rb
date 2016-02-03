@@ -25,14 +25,18 @@ class Poll::CommentList
     comment_visibility
   end
 
+  def comments_by_page
+    comment_visibility.paginate(page: index)
+  end
+
   def next_index
-    comments.next_page || 0
+    comments_by_page.next_page || 0
   end
 
   private
 
   def all_comment
-    poll.comments.without_ban.without_deleted.paginate(page: index)
+    poll.comments.without_ban.without_deleted
   end
 
   def comment_visibility
