@@ -1,5 +1,6 @@
 class Member::PollList
   include Member::Private::PollList
+  include Member::Private::PollFeedAlgorithm
 
   attr_reader :member, :viewing_member, :index
   
@@ -11,23 +12,23 @@ class Member::PollList
   end
 
   def default_timeline
-    overall_timeline_polls
+    sort_by_priority(overall_timeline_polls)
   end
 
   def unvoted_timeline
-    unvoted_timeline_polls
+    sort_by_priority(unvoted_timeline_polls)
   end
 
   def public_timeline
-    public_timeline_polls
+    sort_by_priority(public_timeline_polls)
   end
 
   def friends_timeline
-    friends_following_timeline_polls
+    sort_by_priority(friends_following_timeline_polls)
   end
 
   def group_timeline
-    group_timeline_polls
+    sort_by_priority(group_timeline_polls)
   end
 
   def reports
