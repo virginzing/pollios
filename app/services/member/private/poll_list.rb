@@ -96,6 +96,11 @@ module Member::Private::PollList
     Poll.overall_timeline(viewing_member)
       .paginate(page: index)
   end
+
+  def unvoted_timeline_polls
+    Poll.unvoted_overall_timeline(viewing_member)
+      .paginate(page: index)
+  end
   
   def public_timeline_polls
     Poll.timeline(viewing_member)

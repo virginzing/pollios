@@ -14,6 +14,10 @@ class Member::PollList
     overall_timeline_polls
   end
 
+  def unvoted_timeline
+    unvoted_timeline_polls
+  end
+
   def public_timeline
     public_timeline_polls
   end
