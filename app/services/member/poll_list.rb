@@ -93,6 +93,10 @@ class Member::PollList
   def saved
     cached_all_saved_vote_later
   end
+
+  def polls_by_page(list)
+    list.paginate(page: index)
+  end
   
   def next_index(list)
     next_page_index(list)

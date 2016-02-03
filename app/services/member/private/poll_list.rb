@@ -48,7 +48,7 @@ module Member::Private::PollList
   def all_created
     Poll.viewing_by_member(viewing_member)
       .where('polls.member_id = ?', member.id)
-      .paginate(page: index)
+      # .paginate(page: index)
   end
 
   def all_closed
@@ -63,21 +63,21 @@ module Member::Private::PollList
       .where("history_votes.member_id = #{member.id}")
       .select('polls.*, history_votes.created_at AS voted_at')
       .order('voted_at DESC')
-      .paginate(page: index)
+      # .paginate(page: index)
   end
 
   def all_bookmarked
     Poll.unscoped.joins('LEFT OUTER JOIN bookmarks ON polls.id = bookmarks.bookmarkable_id')
       .where("bookmarks.member_id = #{member.id}")
       .order('bookmarks.created_at DESC')
-      .paginate(page: index)
+      # .paginate(page: index)
   end
 
   def all_saved_vote_later
     Poll.unscoped.joins('LEFT OUTER JOIN save_poll_laters ON polls.id = save_poll_laters.savable_id')
       .where("save_poll_laters.member_id = #{member.id}")
       .order('save_poll_laters.created_at DESC')
-      .paginate(page: index)
+      # .paginate(page: index)
   end
 
   def saved_later_query(type_name)

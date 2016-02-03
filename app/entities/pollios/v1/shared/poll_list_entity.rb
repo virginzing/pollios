@@ -5,7 +5,7 @@ module Pollios::V1::Shared
     expose :polls, with: PollDetailEntity
 
     def polls
-      object.send(type)
+      object.polls_by_page(object.send(type))
     end
 
     def type
