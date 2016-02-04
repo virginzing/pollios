@@ -34,6 +34,10 @@ class Member::PollSearch
     return
   end
 
+  def polls_by_page(list)
+    list.paginate(page: index)
+  end
+
   def next_index(_)
     polls_searched.next_page || 0
   end

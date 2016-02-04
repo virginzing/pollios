@@ -13,6 +13,10 @@ class Group::PollList
     poll_visibility
   end
 
+  def polls_by_page(list)
+    list.paginate(page: index)
+  end
+
   def next_index(_)
     polls.next_page || 0
   end
