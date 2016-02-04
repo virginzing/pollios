@@ -10,23 +10,31 @@ class Member::PollFeed
   end
 
   def default_timeline
-    pagination(cached_overall_timeline_polls, index)
+    cached_overall_timeline_polls
   end
 
   def unvoted_timeline
-    sort_by_priority(unvoted_timeline_polls)
+    cached_unvoted_timeline_polls
   end
 
   def public_timeline
-    sort_by_priority(public_timeline_polls)
+    cached_public_timeline_polls
   end
 
   def friends_timeline
-    sort_by_priority(friends_following_timeline_polls)
+    cached_friends_following_timeline_polls
   end
 
   def group_timeline
-    sort_by_priority(group_timeline_polls)
+    cached_group_timeline_polls
+  end
+
+  def polls_by_page(list)
+    pagination(list, index)
+  end
+
+  def next_index(list)
+    next_cursor_index(list)
   end
 
   def cached_overall_timeline_polls

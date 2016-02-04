@@ -18,28 +18,46 @@ module Pollios::V1::PollAPI
       def poll_member_listing(choice_id = nil)
         @poll_member_listing ||= Poll::MemberList.new(poll, viewing_member: current_member, choice_id: choice_id)
       end
+
+      def member_poll_feed
+        @member_poll_feed ||= Member::PollFeed.new(current_member, index: params[:index])
+      end
     end
 
     resource :polls do
 
-      desc '[x] returns default poll-timeline for requesting member'
+      params do
+        optional :index, type: Integer, desc: "starting index for polls's list in this request"
+      end
+
+      desc 'returns default poll-timeline for requesting member'
       get do
-        member_poll_lister.default_timeline
+        present member_poll_feed, poll: :default_timeline, with: Pollios::V1::Shared::PollListEntity \
+          , current_member: current_member
+      end
+
+      desc '[x] returns unvoted poll-timeline for requesting member'
+      get '/unvoted' do
+        present member_poll_feed, poll: :unvoted_timeline, with: Pollios::V1::Shared::PollListEntity \
+          , current_member: current_member
       end
 
       desc '[x] returns public poll-timeline for requesting member'
       get '/public' do
-        member_poll_lister.public_timeline
+        present member_poll_feed, poll: :public_timeline, with: Pollios::V1::Shared::PollListEntity \
+          , current_member: current_member
       end
 
       desc '[x] returns friends & followings poll-timeline for requesting member'
       get '/friends' do
-        member_poll_lister.friends_timeline
+        present member_poll_feed, poll: :friends_timeline, with: Pollios::V1::Shared::PollListEntity \
+          , current_member: current_member
       end
 
       desc '[x] returns group poll-timeline for requesting member'
       get '/group' do
-        member_poll_lister.group_timeline
+        present member_poll_feed, poll: :group_timeline, with: Pollios::V1::Shared::PollListEntity \
+          , current_member: current_member
       end
 
       params do 

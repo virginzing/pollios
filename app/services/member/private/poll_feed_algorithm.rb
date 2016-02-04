@@ -22,17 +22,13 @@ module Member::Private::PollFeedAlgorithm
     Rails.cache.delete('current_member/timeline/default')
     list = cached_overall_timeline_polls
     list = list[0..(LIMIT_POLL - 1)]
-    fucking_next_index = next_cursor_index(list)
-
-    [polls: list, next_index: fucking_next_index]
+    list
   end
 
   def next_pagination(list, index)
     index = cached_overall_timeline_polls.map(&:id).index(index) + 1
-    list = list[index..(LIMIT_POLL + index)]
-    fucking_next_index = next_cursor_index(list)
-
-    [polls: list, next_index: fucking_next_index]
+    list = list[index..(LIMIT_POLL + index - 1)]
+    list
   end
 
   def next_cursor_index(list)
