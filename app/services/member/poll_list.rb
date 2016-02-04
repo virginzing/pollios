@@ -11,26 +11,6 @@ class Member::PollList
     @index = options[:index] || 1
   end
 
-  def default_timeline
-    sort_by_priority(overall_timeline_polls)
-  end
-
-  def unvoted_timeline
-    sort_by_priority(unvoted_timeline_polls)
-  end
-
-  def public_timeline
-    sort_by_priority(public_timeline_polls)
-  end
-
-  def friends_timeline
-    sort_by_priority(friends_following_timeline_polls)
-  end
-
-  def group_timeline
-    sort_by_priority(group_timeline_polls)
-  end
-
   def reports
     cached_report_polls
   end

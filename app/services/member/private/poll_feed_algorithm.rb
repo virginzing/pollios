@@ -1,6 +1,7 @@
 module Member::Private::PollFeedAlgorithm
 
   LIMIT_TIMELINE = 500
+  LIMIT_POLL = 30
 
   PUBLIC_FEED = 5
   GROUP_FEED = 4
@@ -12,6 +13,35 @@ module Member::Private::PollFeedAlgorithm
   RECENT_ACTIVE = 2
   RANGE_CREATED_TIME = 300
   RANGE_CREATED_DATE = 30
+
+  def pagination(list, index)
+    index == 0 ? new_pagination(list) : next_pagination(list, index)
+  end
+
+  def new_pagination(list)
+    Rails.cache.delete('current_member/timeline/default')
+    list = cached_overall_timeline_polls
+    list = list[0..(LIMIT_POLL - 1)]
+    fucking_next_index = next_cursor_index(list)
+
+    [polls: list, next_index: fucking_next_index]
+  end
+
+  def next_pagination(list, index)
+    index = cached_overall_timeline_polls.map(&:id).index(index) + 1
+    list = list[index..(LIMIT_POLL + index)]
+    fucking_next_index = next_cursor_index(list)
+
+    [polls: list, next_index: fucking_next_index]
+  end
+
+  def next_cursor_index(list)
+    # TODO: cached_timeline(type)
+    return 0 if cached_overall_timeline_polls.count < LIMIT_POLL
+    return 0 if list.count < LIMIT_POLL
+    return 0 if list.last.id == cached_overall_timeline_polls.last.id
+    list.last.id
+  end
 
   def sort_by_priority(list)
     calculate_priority(list)
@@ -27,8 +57,6 @@ module Member::Private::PollFeedAlgorithm
     end
 
     list.order('polls.priority DESC').order('polls.created_at DESC').limit(LIMIT_TIMELINE)
-
-    # list.sort_by { |poll| [poll[:priority], poll[:created_at]] }.reverse!.take(LIMIT_TIMELINE)
   end
 
   def feed_priority(poll)
