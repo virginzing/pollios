@@ -34,7 +34,7 @@ module Pollios::V1::Shared
     expose :campaign, with: Pollios::V1::CurrentMemberAPI::CampaignDetailEntity, if: -> (_, _) { poll.get_campaign }
 
     expose :creator do |_, _|
-      Pollios::V1::Shared::MemberEntity.represent creator, current_member_linkage: current_member_linkage
+      Pollios::V1::Shared::MemberForListEntity.represent creator, current_member_linkage: current_member_linkage
     end
 
     expose :member_states do

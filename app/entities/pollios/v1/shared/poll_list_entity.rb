@@ -2,7 +2,7 @@ module Pollios::V1::Shared
   class PollListEntity < Pollios::V1::BaseEntity
 
     expose :next_index
-    expose :polls, with: PollDetailEntity
+    expose :polls, with: PollForListEntity
 
     def polls
       object.polls_by_page(object.send(type))
