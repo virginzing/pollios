@@ -22,7 +22,7 @@ module Pollios::V1
         if local_options[:entity]
           entity = local_options[:entity]
         else
-          entity = Pollios::V1::Shared::MemberEntity
+          entity = Pollios::V1::Shared::MemberForListEntity
         end
 
         if local_options[:without_linkage]
