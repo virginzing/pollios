@@ -6,6 +6,7 @@ module Pollios::V1::Shared
     unexpose :public
     unexpose :get_creator_must_vote
     unexpose :get_original_images
+    unexpose :thumbnail_type
 
   end
 end
