@@ -1,8 +1,8 @@
 module Pollios::V1::SearchAPI
   class MemberAndGroupEntity < Pollios::V1::BaseEntity
 
-    expose_members :members_searched, as: :members
-    expose_groups :groups_searched, as: :groups
+    expose_members :first_5_members_searched, as: :members
+    expose_groups :first_5_groups_searched, as: :groups
 
     def current_member_linkage 
       @current_member_linkage ||= Member::MemberList.new(options[:current_member]).social_linkage_ids
