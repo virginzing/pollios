@@ -42,10 +42,11 @@ module Pollios::V1::SearchAPI
       resource :members do
         params do
           requires :keyword, type: String, desc: 'keyword(name or public_id) for searching'
+          optional :index, type: Integer, desc: "starting index for members's list in this request"
         end
         desc 'returns list of member searched by keyword'
         get do
-          searched = Member::MemberAndGroupSearch.new(current_member, params[:keyword])
+          searched = Member::MemberAndGroupSearch.new(current_member, params[:keyword], index: params[:index])
           present searched, member: :members_searched, with: Pollios::V1::Shared::MemberListEntity \
             , current_member: current_member
         end

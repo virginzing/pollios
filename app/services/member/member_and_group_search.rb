@@ -1,9 +1,10 @@
 class Member::MemberAndGroupSearch
 
-  attr_reader :member, :keyword
+  attr_reader :member, :keyword, :index
 
-  def initialize(member, keyword = nil)
+  def initialize(member, keyword = nil, options = {})
     @member = member
+    @index = options[:index] || 1
 
     return unless keyword
     @keyword = keyword.downcase
@@ -23,8 +24,16 @@ class Member::MemberAndGroupSearch
     search_groups
   end
 
+  def first_5_members_searched
+    search_members.limit(5)
+  end
+
+  def first_5_groups_searched
+    search_groups.limit(5)
+  end
+
   def members_by_page(_)
-    members_searched.paginate(page: 1)
+    members_searched.paginate(page: index)
   end
 
   def next_index(list)
