@@ -1,12 +1,7 @@
 module Pollios::V1::PollAPI
-  class MemberVotedDetailEntity < Pollios::V1::BaseEntity
+  class MemberVotedDetailEntity < Pollios::V1::Shared::MemberListEntity
     
-    expose :anonymous
-    expose_members :voter
-
-    def current_member_linkage
-      @current_member_linkage ||= Member::MemberList.new(options[:current_member]).social_linkage_ids
-    end
+    expose :anonymous, if: -> (obj, _) { obj.index == 1 }
 
   end
 end

@@ -1,10 +1,12 @@
 class Poll::MemberList
   include Poll::Private::MemberList
 
-  attr_reader :poll, :viewing_member, :choice
+  attr_reader :poll, :viewing_member, :choice, :index
 
   def initialize(poll, options = {})
     @poll = poll
+
+    @index = options[:index] || 1
 
     return unless options[:viewing_member]
     @viewing_member = options[:viewing_member]
@@ -32,6 +34,14 @@ class Poll::MemberList
     fail ExceptionHandler::UnprocessableEntity, message unless can_mention
 
     mentionable_visibility
+  end
+
+  def members_by_page(list)
+    list.paginate(page: index)
+  end
+
+  def next_index(list)
+    list.next_page || 0
   end
 
   def filler_mentionable(member_ids)

@@ -16,7 +16,8 @@ module Pollios::V1::PollAPI
       end
 
       def poll_member_listing(choice_id = nil)
-        @poll_member_listing ||= Poll::MemberList.new(poll, viewing_member: current_member, choice_id: choice_id)
+        @poll_member_listing ||= Poll::MemberList.new(poll, viewing_member: current_member \
+          , index: params[:index], choice_id: choice_id)
       end
 
       def member_poll_feed
@@ -84,17 +85,19 @@ module Pollios::V1::PollAPI
           end
         end
 
+        params do
+          optional :index, type: Integer, desc: "starting index for members's list in this request"
+        end
         resource :members do
           desc "returns list of poll[id]'s voters"
           get '/voters' do
-            members_voted = poll_member_listing
-            present members_voted, with: MemberVotedDetailEntity, current_member: current_member
+            present poll_member_listing, member: :voter, with: MemberVotedDetailEntity, current_member: current_member
           end
 
           desc "returns list of poll[id]'s mentionable"
           get '/mentionable' do
-            mentionable = poll_member_listing.mentionable
-            present :mentionable, mentionable, with: Pollios::V1::Shared::MemberForListEntity, current_member: current_member
+            present poll_member_listing, member: :mentionable, with: Pollios::V1::Shared::MemberListEntity \
+              , current_member: current_member
           end
         end
 
@@ -106,8 +109,8 @@ module Pollios::V1::PollAPI
 
           route_param :choice_id do
             get '/voters' do
-              members_voted_choice = poll_member_listing(params[:choice_id])
-              present members_voted_choice, with: MemberVotedDetailEntity, current_member: current_member
+              present poll_member_listing(params[:choice_id]), member: :voter, with: MemberVotedDetailEntity \
+                , current_member: current_member
             end
           end
         end
