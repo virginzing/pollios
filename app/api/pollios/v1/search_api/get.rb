@@ -45,8 +45,9 @@ module Pollios::V1::SearchAPI
         end
         desc 'returns list of member searched by keyword'
         get do
-          members = Member::MemberAndGroupSearch.new(current_member, params[:keyword]).members_searched
-          present :members, members, with: Pollios::V1::Shared::MemberForListEntity, current_member: current_member
+          searched = Member::MemberAndGroupSearch.new(current_member, params[:keyword])
+          present searched, member: :members_searched, with: Pollios::V1::Shared::MemberListEntity \
+            , current_member: current_member
         end
       end
 

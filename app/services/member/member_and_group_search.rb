@@ -23,6 +23,14 @@ class Member::MemberAndGroupSearch
     search_groups
   end
 
+  def members_by_page(_)
+    members_searched.paginate(page: 1)
+  end
+
+  def next_index(list)
+    list.next_page || 0
+  end
+
   def clear_searched_keywords
     recent_search = TypeSearch.find_by(member_id: member.id)
     recent_search.update!(search_users_and_groups: [])
