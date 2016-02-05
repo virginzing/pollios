@@ -19,24 +19,21 @@ module Member::Private::PollFeedAlgorithm
   end
 
   def new_pagination(list)
-    Rails.cache.delete('current_member/timeline/default')
-    list = cached_overall_timeline_polls
-    list = list[0..(LIMIT_POLL - 1)]
-    list
+    current_page_list = list[0..(LIMIT_POLL - 1)]
+    current_page_list
   end
 
   def next_pagination(list, index)
-    index = cached_overall_timeline_polls.map(&:id).index(index) + 1
-    list = list[index..(LIMIT_POLL + index - 1)]
-    list
+    index = list.map(&:id).index(index) + 1
+    current_page_list = list[index..(LIMIT_POLL + index - 1)]
+    current_page_list
   end
 
-  def next_cursor_index(list)
-    # TODO: cached_timeline(type)
-    return 0 if cached_overall_timeline_polls.count < LIMIT_POLL
-    return 0 if list.count < LIMIT_POLL
-    return 0 if list.last.id == cached_overall_timeline_polls.last.id
-    list.last.id
+  def next_cursor_index(current_page_list)
+    return 0 if polls_feed.count < LIMIT_POLL
+    return 0 if current_page_list.count < LIMIT_POLL
+    return 0 if current_page_list.last.id == polls_feed.last.id
+    current_page_list.last.id
   end
 
   def sort_by_priority(list)

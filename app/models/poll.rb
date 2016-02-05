@@ -265,7 +265,7 @@ class Poll < ActiveRecord::Base
     .where("history_votes.member_id = #{viewing_member.id}")
     .map(&:id)
 
-    where('polls.id NOT IN (?)', voted_ids) if voted_ids > 0
+    where('polls.id NOT IN (?)', voted_ids) if voted_ids.count > 0
   end)
 
   scope :overall_timeline, (lambda do |viewing_member|

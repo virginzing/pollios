@@ -1,7 +1,7 @@
 class Member::PollFeed
   include Member::Private::PollFeedAlgorithm
 
-  attr_reader :member, :index
+  attr_reader :member, :index, :polls_feed
 
   def initialize(member, options = {})
     @member = member
@@ -10,23 +10,28 @@ class Member::PollFeed
   end
 
   def default_timeline
-    cached_overall_timeline_polls
+    Rails.cache.delete('current_member/timeline/default') if index == 0
+    @polls_feed = cached_overall_timeline_polls
   end
 
   def unvoted_timeline
-    cached_unvoted_timeline_polls
+    Rails.cache.delete('current_member/timeline/unvoted') if index == 0
+    @polls_feed = cached_unvoted_timeline_polls
   end
 
   def public_timeline
-    cached_public_timeline_polls
+    Rails.cache.delete('current_member/timeline/public') if index == 0
+    @polls_feed = cached_public_timeline_polls
   end
 
   def friends_timeline
-    cached_friends_following_timeline_polls
+    Rails.cache.delete('current_member/timeline/friends') if index == 0
+    @polls_feed = cached_friends_following_timeline_polls
   end
 
   def group_timeline
-    cached_group_timeline_polls
+    Rails.cache.delete('current_member/timeline/group') if index == 0
+    @polls_feed = cached_group_timeline_polls
   end
 
   def polls_by_page(list)
