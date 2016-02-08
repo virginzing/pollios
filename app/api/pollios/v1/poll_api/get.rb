@@ -85,11 +85,11 @@ module Pollios::V1::PollAPI
           end
         end
 
-        params do
-          optional :index, type: Integer, desc: "starting index for members's list in this request"
-        end
         resource :members do
           desc "returns list of poll[id]'s voters"
+          params do
+            optional :index, type: Integer, desc: "starting index for members's list in this request"
+          end
           get '/voters' do
             present poll_member_listing, member: :voter, with: MemberVotedDetailEntity, current_member: current_member
           end
