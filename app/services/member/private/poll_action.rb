@@ -364,7 +364,7 @@ module Member::Private::PollAction
 
     MemberActiveRecord.record_member_active(member)
 
-    return
+    Poll::CommentList.new(poll, viewing_member: member)
   end
 
   def increase_comment_count

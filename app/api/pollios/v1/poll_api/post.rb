@@ -129,7 +129,8 @@ module Pollios::V1::PollAPI
             optional :mention_ids, type: Array[Integer], desc: 'list of member (ids) for mention on comment'
           end
           post do
-            current_member_poll_action.comment(params)
+            add_comment = current_member_poll_action.comment(params)
+            present add_comment, with: CommentListEntity, current_member: current_member
           end
 
           route_param :comment_id do
