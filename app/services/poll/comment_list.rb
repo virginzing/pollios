@@ -33,10 +33,14 @@ class Poll::CommentList
     comments_by_page.next_page || 0
   end
 
+  def comment_count
+    comments.count
+  end
+
   private
 
   def all_comment
-    poll.comments.without_ban.without_deleted
+    poll.comments.without_ban.without_deleted.order('comments.created_at DESC')
   end
 
   def comment_visibility
