@@ -79,7 +79,7 @@ module Member::Private::PollFeedAlgorithm
   def range_created_date(poll)
     compare_date = RANGE_CREATED_DATE - (Time.zone.now.to_date - poll.created_at.to_date).to_i
   
-    (compare_date >= 0) ? compare_date : 1
+    (compare_date >= 0) ? compare_date : 0
   end
   
 end
