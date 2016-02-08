@@ -96,7 +96,7 @@ module Pollios::V1::PollAPI
 
           desc "returns list of poll[id]'s mentionable"
           get '/mentionable' do
-            present poll_member_listing.mentionable, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
+            present :members, poll_member_listing.mentionable, with: MemberInPollEntity, current_member: current_member
           end
         end
 
