@@ -3,7 +3,7 @@ module Pollios::V1::PollAPI
 
     expose :next_index
     expose :comment_count, if: -> (obj, _) { obj.index == 1 }
-    expose :comments_by_page, as: :comments, with: CommentDetailEntity
+    expose :sort_comments_by_page, as: :comments, with: CommentDetailEntity
 
   end
 end

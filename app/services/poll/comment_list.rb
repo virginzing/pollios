@@ -29,6 +29,10 @@ class Poll::CommentList
     comment_visibility.paginate(page: index)
   end
 
+  def sort_comments_by_page
+    comments_by_page.sort_by(&:created_at)
+  end
+
   def next_index
     comments_by_page.next_page || 0
   end
