@@ -58,8 +58,12 @@ module Member::Private::PollFeedAlgorithm
     end
   end
 
+  def all_vote_statuses
+    @all_vote_statuses ||= Member::PollList.new(member).voted_all.collect { |e| e[:poll_id] }
+  end
+
   def vote_status(poll)
-    Member::PollInquiry.new(member, poll).voted? ? 0 : poll.priority
+    all_vote_statuses.include?(poll.id) ? 0 : poll.priority
   end
 
   def recent_active(poll)

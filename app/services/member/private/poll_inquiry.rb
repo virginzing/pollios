@@ -104,12 +104,19 @@ module Member::Private::PollInquiry
   end
 
   def voted_choice_for_member
-    HistoryVote.member_voted_poll(member.id, poll.id)
+    # HistoryVote.member_voted_poll(member.id, poll.id)
+    voted_all.find { |vote_info| vote_info[:poll_id] == poll.id }
   end
 
   def voting_detail
-    voted_choice = Choice.cached_find(voted_choice_for_member.first.choice_id)
-    { choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }
+    voting_info = voted_choice_for_member
+
+    if voting_info.present?
+      voted_choice = Choice.cached_find(voted_choice_for_member[:choice_id])
+      { choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }
+    else
+      {}
+    end
   end
   
 end
