@@ -306,6 +306,7 @@ module Member::Private::PollAction
 
     HistoryPromotePoll.create!(member_id: member.id, poll: poll)
     poll.update!(public: true)
+    poll.poll_member.find_by(member_id: member.id).update!(public: true)
     poll
   end
 
