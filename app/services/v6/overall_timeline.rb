@@ -158,7 +158,7 @@ class V6::OverallTimeline
     end
 
     # ids, poll_ids, feed, priority, created_time, updated_time = query.map(&:id), query.map(&:poll_id), feed, priority, created_time, updated_time
-    poll_ids, feed, priority, created_time, updated_time = query.map(&:id), feed, priority, created_time, updated_time
+    poll_member_ids, feed, priority, created_time, updated_time = query.map(&:id), feed, priority, created_time, updated_time
   end
 
   # def check_feed_type(poll)
@@ -207,10 +207,10 @@ class V6::OverallTimeline
   end
 
   def main_timeline
-    poll_ids, feed, priority, created_time, updated_time = friend_group_public
+    poll_member_ids, poll_ids, feed, priority, created_time, updated_time = friend_group_public
 
     # ids = FeedAlgorithm.new(member, ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
-    result = FeedAlgorithm.new(member, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
+    result = FeedAlgorithm.new(member, poll_member_ids, poll_ids, feed, priority, created_time, updated_time).sort_by_priority
     result
   end
 

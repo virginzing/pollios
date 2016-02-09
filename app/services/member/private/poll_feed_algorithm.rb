@@ -6,10 +6,7 @@ module Member::Private::PollFeedAlgorithm
   PUBLIC_FEED = 5
   GROUP_FEED = 4
   FRIENDS_FOLLOWING_FEED = 3
-
-  VOTED = 2
-  UNVOTED = 4
-
+  
   RECENT_ACTIVE = 2
   RANGE_CREATED_TIME = 300
   RANGE_CREATED_DATE = 30
@@ -42,14 +39,13 @@ module Member::Private::PollFeedAlgorithm
 
   def calculate_priority(list)
     list.each do |poll|
-      adjust = poll.priority
-      adjust += ((feed_priority(poll) + vote_status(poll) + recent_active(poll) + range_created_time(poll)) * 
+      adjust = ((feed_priority(poll) + recent_active(poll) + range_created_time(poll)) * 
                 range_created_date(poll))
 
-      poll.priority = adjust
+      poll.priority = vote_status(poll)
+      poll.priority += adjust
     end
-
-    list.order('polls.priority DESC').order('polls.created_at DESC').limit(LIMIT_TIMELINE)
+    list.sort_by { |poll| [poll.priority, poll.created_at] }.reverse!.take(LIMIT_TIMELINE)
   end
 
   def feed_priority(poll)
@@ -63,7 +59,7 @@ module Member::Private::PollFeedAlgorithm
   end
 
   def vote_status(poll)
-    Member::PollInquiry.new(member, poll).voted? ? VOTED : VOTED
+    Member::PollInquiry.new(member, poll).voted? ? 0 : poll.priority
   end
 
   def recent_active(poll)
