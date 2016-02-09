@@ -61,6 +61,7 @@ class Member::PollSearch
       .group('tags.id')
       .order('count desc, tagged desc')
       .limit(10)
+      .map(&:name)
   end
 
   def search_polls
