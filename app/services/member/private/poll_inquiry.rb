@@ -108,7 +108,7 @@ module Member::Private::PollInquiry
   end
 
   def voting_detail
-    voted_choice = Choice.cached_find(cached_voting_detail.first.choice_id)
+    voted_choice = Choice.cached_find(voted_choice_id.first.choice_id)
     { choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }
   end
   
