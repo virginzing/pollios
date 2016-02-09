@@ -45,7 +45,7 @@ module Member::Private::PollFeedAlgorithm
       poll.priority = vote_status(poll)
       poll.priority += adjust
     end
-    list.sort_by { |poll| [poll.priority, poll.created_at] }.reverse!.take(LIMIT_TIMELINE)
+    list.sort_by { |poll| [poll.priority, poll.id] }.reverse!.take(LIMIT_TIMELINE)
   end
 
   def feed_priority(poll)

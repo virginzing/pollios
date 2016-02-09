@@ -76,7 +76,7 @@ module Member::Private::PollInquiry
   end
 
   def member_listing
-    Member::MemberList.new(member)
+    @member_listing ||= Member::MemberList.new(member)
   end
 
   def not_friends_or_following_with_creator
@@ -104,7 +104,6 @@ module Member::Private::PollInquiry
   end
 
   def voted_choice_for_member
-    # HistoryVote.member_voted_poll(member.id, poll.id)
     voted_all.find { |vote_info| vote_info[:poll_id] == poll.id }
   end
 

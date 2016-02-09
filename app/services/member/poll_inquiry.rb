@@ -24,7 +24,7 @@ class Member::PollInquiry < Member::PollList
   end
 
   def voted?
-    voted_all.find { |vote_info| vote_info[:poll_id] == poll.id }
+    voted_all.find { |vote_info| vote_info[:poll_id] == poll.id }.present?
   end
 
   def bookmarked?
