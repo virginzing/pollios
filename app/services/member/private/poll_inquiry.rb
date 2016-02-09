@@ -103,12 +103,12 @@ module Member::Private::PollInquiry
     { voted: false, can_vote: false, reason: message }
   end
 
-  def voted_choice_id
+  def voted_choice_for_member
     HistoryVote.member_voted_poll(member.id, poll.id)
   end
 
   def voting_detail
-    voted_choice = Choice.cached_find(voted_choice_id.first.choice_id)
+    voted_choice = Choice.cached_find(voted_choice_for_member.first.choice_id)
     { choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }
   end
   
