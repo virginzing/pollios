@@ -92,7 +92,7 @@ module Member::Private::PollInquiry
   end
 
   def voted_hash
-    { voted: true, choice: voting_detail }
+    { voted: true, voted_choice_id: voted_choice_for_member[:choice_id] }.merge(voting_detail)
   end
 
   def voting_allows_hash
@@ -108,14 +108,26 @@ module Member::Private::PollInquiry
   end
 
   def voting_detail
-    voting_info = voted_choice_for_member
-
-    if voting_info.present?
-      voted_choice = Choice.cached_find(voted_choice_for_member[:choice_id])
-      { choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }
+    
+    if poll.type_poll == 'freeform'
+      freeform_voting_detail
     else
-      {}
+      rating_voting_detail
     end
+  end
+
+  def freeform_voting_detail
+    voted_choice = Choice.cached_find(voted_choice_for_member[:choice_id])
+    show_choice = poll.get_vote_max | [{ choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }]
+    show_choice -= [poll.get_vote_max[1]] if show_choice.count == 3
+    { choices: show_choice }
+  end
+
+  def rating_voting_detail
+    score = 0.0
+    poll.choices.each { |choice| score += (choice.answer.to_i * choice.vote) }
+    rating = (score / poll.vote_all).round(1)
+    { rating: rating }
   end
   
 end
