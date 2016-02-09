@@ -92,7 +92,7 @@ module Member::Private::PollInquiry
   end
 
   def voted_hash
-    { voted: true, choice_id: cached_voting_detail.first.choice_id }
+    { voted: true, choice: voting_detail }
   end
 
   def voting_allows_hash
@@ -103,8 +103,13 @@ module Member::Private::PollInquiry
     { voted: false, can_vote: false, reason: message }
   end
 
+  def voted_choice_id
+    HistoryVote.member_voted_poll(member.id, poll.id)
+  end
+
   def voting_detail
-    HistoryVote.member_voted_poll(member.id, poll.id).to_a
+    voted_choice = Choice.cached_find(cached_voting_detail.first.choice_id)
+    { choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }
   end
   
 end
