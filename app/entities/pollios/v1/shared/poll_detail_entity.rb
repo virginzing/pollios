@@ -31,7 +31,7 @@ module Pollios::V1::Shared
     expose :close_status
     expose :get_original_images, as: :original_images, if: -> (_, _) { poll.photo_poll.present? }
 
-    expose :campaign, with: Pollios::V1::CurrentMemberAPI::CampaignDetailEntity, if: -> (_, _) { poll.get_campaign }
+    expose :campaign, with: Pollios::V2::CurrentMemberAPI::CampaignEntity, if: -> (_, _) { poll.get_campaign }
 
     expose :creator do |_, _|
       Pollios::V1::PollAPI::MemberInPollEntity.represent creator
