@@ -10,7 +10,7 @@ module Pollios::V1::Shared
       expose :created_at
     end
 
-    expose :get_vote_max, as: :vote_max, if: -> (_, _) { poll.vote_all > 0 }
+    # expose :get_vote_max, as: :vote_max, if: -> (_, _) { poll.vote_all > 0 }
     expose :get_choice_detail, as: :choices
 
     expose :choice_count
