@@ -187,7 +187,7 @@ module Member::Private::PollAction
     delete_saved_poll
     trigger_vote
 
-    claer_voted_cached_for_member
+    claer_voted_all_cached_for_member
     clear_voting_poll_cached_for_member
     send_vote_notification
 
@@ -428,8 +428,8 @@ module Member::Private::PollAction
     FlushCached::Member.new(member).clear_list_history_viewed_polls
   end
 
-  def claer_voted_cached_for_member
-    FlushCached::Member.new(member).clear_list_voted_polls
+  def claer_voted_all_cached_for_member
+    FlushCached::Member.new(member).clear_list_voted_all_polls
   end
 
   def clear_bookmarked_cached_for_member
