@@ -194,9 +194,10 @@ class Poll < ActiveRecord::Base
 
   scope :without_group_inivisibility, (lambda do |viewing_member|
     group_active_ids = Member::GroupList.new(viewing_member).active_ids
+    opend_group = Group.where(opened: true).map(&:id)
 
     joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
-    .where('poll_groups.group_id IN (?) or polls.in_group = false', group_active_ids)
+    .where('poll_groups.group_id IN (?) or polls.in_group = false', group_active_ids | opend_group)
     .uniq
   end)
 
