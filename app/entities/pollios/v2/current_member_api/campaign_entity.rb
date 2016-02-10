@@ -17,7 +17,7 @@ module Pollios::V2::CurrentMemberAPI
     expose :owner
 
     expose :rewards do |obj, opts|
-      Pollios::V2::Shared::RewardEntity.represent obj.rewards, only: [:title, :detail]
+      Pollios::V2::Shared::RewardEntity.represent obj.rewards, only: [:reward_id, :title, :detail]
     end
     
 	private
