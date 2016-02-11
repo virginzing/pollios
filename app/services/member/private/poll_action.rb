@@ -317,7 +317,7 @@ module Member::Private::PollAction
 
     NotifyLog.deleted_with_poll_and_member(poll, member)
 
-    claer_voted_cached_for_member
+    claer_voted_all_cached_for_member
     clear_reported_cached_for_member
     
     send_report_notification if poll.in_group
