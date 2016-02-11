@@ -24,7 +24,7 @@ class Member::PollInquiry < Member::PollList
   end
 
   def voted?
-    voted_all.find { |vote_info| vote_info[:poll_id] == poll.id }.present?
+    member_voted_choice.present?
   end
 
   def bookmarked?
@@ -52,11 +52,15 @@ class Member::PollInquiry < Member::PollList
   end
 
   def voting_info
-    return voted_hash if cached_voted_choice.present?
+    return voted_hash if member_voted_choice.present?
 
     voting_allows, message = can_vote?    
     return voting_allows_hash if voting_allows
     voting_not_allowed_with_reason_hash(message)
+  end
+
+  def member_voted_choice
+    @member_voted_choice ||= cached_voted_choice
   end
 
   def cached_voted_choice

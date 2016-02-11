@@ -117,7 +117,7 @@ module Member::Private::PollInquiry
   end
 
   def freeform_voting_detail
-    voted_choice = Choice.cached_find(voted_choice_for_member[:choice_id])
+    voted_choice = Choice.cached_find(member_voted_choice[:choice_id])
     show_choice = poll.get_vote_max | [{ choice_id: voted_choice.id, answer: voted_choice.answer, vote: voted_choice.vote }]
     show_choice -= [poll.get_vote_max[1]] if show_choice.count == 3
     { choices: show_choice }
