@@ -59,7 +59,7 @@ module Pollios::V1::Shared
     end
 
     def member_states_ids
-      options[:current_member_states]
+      options[:current_member_states] ||= Member::PollList.new(current_member).member_states_ids
     end
 
     def poll_inquiry_service
