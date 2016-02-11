@@ -58,8 +58,8 @@ module Pollios::V1::Shared
       @current_member ||= options[:current_member]
     end
 
-    def poll_list_service
-      @poll_list_service ||= Member::PollList.new(current_member)
+    def member_states_ids
+      options[:current_member_states]
     end
 
     def poll_inquiry_service
@@ -72,10 +72,6 @@ module Pollios::V1::Shared
 
     def thumbnail_type
       poll.thumbnail_type || 0
-    end
-
-    def voting
-      poll_inquiry_service.voting_info
     end
 
     def poll_within
@@ -93,19 +89,23 @@ module Pollios::V1::Shared
     end
 
     def reported
-      poll_inquiry_service.reported?
+      member_states_ids[:reported_ids].include?(poll.id)
     end
 
     def bookmarked
-      poll_inquiry_service.bookmarked?
+      member_states_ids[:bookmarked_ids].include?(poll.id)
     end
 
     def saved_for_later
-      poll_inquiry_service.saved_for_later?
+      member_states_ids[:saved_ids].include?(poll.id)
     end
 
     def watching
-      poll_inquiry_service.watching?
+      member_states_ids[:watching_ids].include?(poll.id)
+    end
+
+    def voting
+      poll_inquiry_service.voting_info
     end
 
   end

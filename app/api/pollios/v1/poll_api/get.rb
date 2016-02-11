@@ -34,31 +34,31 @@ module Pollios::V1::PollAPI
         desc 'returns default poll-timeline for requesting member'
         get do
           present member_poll_feed, poll: :default_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
         end
 
         desc 'returns unvoted poll-timeline for requesting member'
         get '/unvoted' do
           present member_poll_feed, poll: :unvoted_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
         end
 
         desc 'returns public poll-timeline for requesting member'
         get '/public' do
           present member_poll_feed, poll: :public_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
         end
 
         desc 'returns friends & followings poll-timeline for requesting member'
         get '/friends' do
           present member_poll_feed, poll: :friends_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
         end
 
         desc 'returns group poll-timeline for requesting member'
         get '/group' do
           present member_poll_feed, poll: :group_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
         end
       end
 

@@ -11,6 +11,16 @@ class Member::PollList
     @index = options[:index] || 1
   end
 
+  def member_states_ids
+    {
+      reported_ids: ids_for(reports),
+      bookmarked_ids: ids_for(bookmarks),
+      saved_ids: ids_for(saved),
+      watching_ids: watched_poll_ids,
+      voted_ids: voted_all.collect { |poll| poll[:poll_id]}
+    }
+  end
+
   def reports
     cached_report_polls
   end
