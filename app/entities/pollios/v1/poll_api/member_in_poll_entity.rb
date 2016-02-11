@@ -3,6 +3,7 @@ module Pollios::V1::PollAPI
 
     unexpose :description
     unexpose :status
+    unexpose :member_type_text
 
   end
 end
