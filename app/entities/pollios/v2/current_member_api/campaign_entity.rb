@@ -17,13 +17,13 @@ module Pollios::V2::CurrentMemberAPI
     expose :owner
 
     expose :rewards do |obj, opts|
-      Pollios::V2::Shared::RewardEntity.represent obj.rewards, only: [:reward_id, :title, :detail]
+      Pollios::V2::Shared::RewardEntity.represent obj.rewards, only: [:reward_id, :title, :detail, :total]
     end
     
 	private
 
 		def owner
-      entity = Pollios::V1::Shared::MemberEntity
+      entity = Pollios::V1::PollAPI::MemberInPollEntity
 			object.member.present? ? entity.represent(object.member) : entity.default_pollios_member
     end
     

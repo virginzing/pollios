@@ -3,6 +3,7 @@ module Pollios::V2::Shared
     expose :id, as: :reward_id
     expose :title
     expose :detail
+    expose :total
     expose :redeem_instruction
     expose :self_redeem
 

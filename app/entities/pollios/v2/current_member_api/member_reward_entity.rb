@@ -18,7 +18,7 @@ module Pollios::V2::CurrentMemberAPI
 
     end
 
-    expose :reward, with: Pollios::V2::Shared::RewardEntity, if: -> (obj, _) { obj.received? }
+    expose :reward, with: Pollios::V2::Shared::RewardForMemberEntity, if: -> (obj, _) { obj.received? }
 
     # if user not getting reward or still waiting annoucement, showing campaign info
     expose :campaign, with: CampaignEntity, if: -> (obj, _) { !obj.received? }
