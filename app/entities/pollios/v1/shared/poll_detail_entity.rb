@@ -31,7 +31,11 @@ module Pollios::V1::Shared
     expose :close_status
     expose :get_original_images, as: :original_images, if: -> (_, _) { poll.photo_poll.present? }
 
-    expose :campaign, with: Pollios::V2::CurrentMemberAPI::CampaignEntity, if: -> (_, _) { poll.get_campaign }
+    expose :campaign, with: Pollios::V2::CurrentMemberAPI::CampaignEntity, 
+      if: -> (_, _) { poll.get_campaign && member_reward.nil? }
+
+    expose :member_reward, with: Pollios::V2::CurrentMemberAPI::MemberRewardInPollEntity,
+      if: -> (_, _) { poll.get_campaign && member_reward.present? }
 
     expose :creator do |_, _|
       Pollios::V1::PollAPI::MemberInPollEntity.represent creator
@@ -78,6 +82,11 @@ module Pollios::V1::Shared
       # TODO: Make a proper service method in Poll::Listing
       poll.feed_name_for_member(current_member)
     end
+
+    def member_reward
+      member_reward = poll.get_reward_info(current_member, poll.campaign)
+      member_reward == {} ? nil : member_reward
+    end 
 
     def creator
       Member.cached_find(poll.member_id)
