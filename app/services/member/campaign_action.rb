@@ -23,6 +23,7 @@ class Member::CampaignAction
   def new_campaign_params_hash
     {
       member_id: member.id,
+      company_id: member.company.present? ? member.company.id : nil,
       name: campaign_params[:name],
       photo_campaign: campaign_params[:photo],
       end_sample: campaign_params[:end_sample] || 1,

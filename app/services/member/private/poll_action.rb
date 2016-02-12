@@ -44,7 +44,8 @@ module Member::Private::PollAction
       , creator_must_vote: poll_params[:creator_must_vote] \
       , public: poll_public \
       , in_group_ids: in_group_ids \
-      , thumbnail_type: poll_params[:thumbnail_type])
+      , thumbnail_type: poll_params[:thumbnail_type] \
+      , campaign_id: poll_params[:campaign_id])
 
     poll_set(new_poll)
     own_poll_action(new_poll)
