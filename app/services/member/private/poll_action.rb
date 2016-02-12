@@ -45,7 +45,8 @@ module Member::Private::PollAction
       , public: poll_public \
       , in_group_ids: in_group_ids \
       , thumbnail_type: poll_params[:thumbnail_type] \
-      , campaign_id: poll_params[:campaign_id])
+      , campaign_id: poll_params[:campaign_id] \
+      , in_group: poll_in_group)
 
     poll_set(new_poll)
     own_poll_action(new_poll)
@@ -91,14 +92,21 @@ module Member::Private::PollAction
 
   def poll_update(new_poll)
     new_poll.update_column(:photo_poll, photo_poll)
+    # new_poll.update!(expire_date: expire_date \
+    #   , poll_series_id: 0 \
+    #   , choice_count: choice_count \
+    #   , qrcode_key: qrcode_key \
+    #   , member_type: member_type \
+    #   , qr_only: false \
+    #   , require_info: false \
+    #   , in_group: poll_in_group)
     new_poll.update!(expire_date: expire_date \
       , poll_series_id: 0 \
       , choice_count: choice_count \
       , qrcode_key: qrcode_key \
       , member_type: member_type \
       , qr_only: false \
-      , require_info: false \
-      , in_group: poll_in_group)
+      , require_info: false)
   end
 
   def photo_poll
