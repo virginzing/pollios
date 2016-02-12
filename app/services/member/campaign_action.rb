@@ -25,9 +25,9 @@ class Member::CampaignAction
       member_id: member.id,
       name: campaign_params[:name],
       photo_campaign: campaign_params[:photo],
-      type_campaign: campaign_params[:type],
       end_sample: campaign_params[:end_sample] || 1,
-      announce_on: campaign_params[:announce_on] || Time.now,
+      announce_on: campaign_params[:announce_on],
+      type_campaign: campaign_params[:announce_on].present? ? 'random_later' : 'random_immediately',
       reward_expire: campaign_params[:reward_expire] || Time.now + 100.year,
       expire: campaign_params[:expire_at] || Time.now + 100.year
     }

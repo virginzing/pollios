@@ -13,7 +13,6 @@ module Pollios::V1::CampaignAPI
       desc '[x] create new campaign'
       params do
         requires :name, type: String, desc: 'campaign name'
-        requires :type, type: String, desc: 'campaign description'
 
         optional :photo, type: String, desc: 'campaign photo'
         optional :end_sample, type: Integer, desc: 'campaign end_sample'
@@ -33,7 +32,6 @@ module Pollios::V1::CampaignAPI
         end
       end
       post do
-        # params
         present campiagn_creation.create(params), with: Pollios::V2::CurrentMemberAPI::CampaignEntity
       end
     end
