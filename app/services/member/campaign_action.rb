@@ -26,6 +26,7 @@ class Member::CampaignAction
       company_id: member.company.present? ? member.company.id : nil,
       name: campaign_params[:name],
       photo_campaign: campaign_params[:photo],
+      limit: campaign_params[:limit],
       end_sample: campaign_params[:end_sample] || 1,
       announce_on: campaign_params[:announce_on],
       type_campaign: campaign_params[:announce_on].present? ? 'random_later' : 'random_immediately',

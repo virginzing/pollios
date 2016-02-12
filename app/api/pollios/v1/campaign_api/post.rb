@@ -13,6 +13,7 @@ module Pollios::V1::CampaignAPI
       desc '[x] create new campaign'
       params do
         requires :name, type: String, desc: 'campaign name'
+        requires :limit, type: Integer, desc: 'campaign limit'
 
         optional :photo, type: String, desc: 'campaign photo'
         optional :end_sample, type: Integer, desc: 'campaign end_sample'
