@@ -17,7 +17,6 @@ module Pollios::V1::Shared
     expose :series
     expose :cached_tags, as: :tags
 
-    expose :public, as: :is_public
     expose :type_poll
     expose :poll_within
 

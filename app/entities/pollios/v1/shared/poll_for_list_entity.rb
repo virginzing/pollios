@@ -3,7 +3,6 @@ module Pollios::V1::Shared
 
     unexpose :get_choice_detail
     unexpose :choice_count
-    unexpose :public
     unexpose :get_original_images
     unexpose :thumbnail_type
 
