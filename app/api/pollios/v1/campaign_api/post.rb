@@ -21,22 +21,20 @@ module Pollios::V1::CampaignAPI
         optional :reward_expire, type: DateTime, desc: 'campaign reward_expire'
         optional :expire_at, type: DateTime, desc: 'campaign expire_at'
 
-        requires :rewards, type: Array[Hash], desc: 'campaign rewards list' do
-          requires :rewards, type: Hash, desc: 'reward for campaign' do
-            requires :title, type: String, desc: 'reward title'
-            optional :detail, type: String, desc: 'reward deetail'
-            requires :total, type: Integer, desc: 'reward amount'
-            requires :odds, type: Integer, desc: 'reward odds'
-            requires :redeem_instruction, type: String, desc: 'reward redeem instruction'
-            requires :self_redeem, type: Boolean, desc: 'true if can redeem reward by self'
-            optional :reward_expire, type: DateTime, desc: 'reward expire'
-            optional :expire_at, type: DateTime, desc: 'reward expire_at'
-          end
+        requires :rewards, type: Array, desc: 'campaign rewards list' do
+          requires :title, type: String, desc: 'reward title'
+          optional :detail, type: String, desc: 'reward deetail'
+          requires :total, type: Integer, desc: 'reward amount'
+          requires :odds, type: Integer, desc: 'reward odds'
+          requires :redeem_instruction, type: String, desc: 'reward redeem instruction'
+          requires :self_redeem, type: Boolean, desc: 'true if can redeem reward by self'
+          optional :reward_expire, type: DateTime, desc: 'reward expire'
+          optional :expire_at, type: DateTime, desc: 'reward expire_at'
         end
       end
       post do
-        params
-        # campiagn_creation.create(params)
+        # params
+        present campiagn_creation.create(params), with: Pollios::V2::CurrentMemberAPI::CampaignEntity
       end
     end
 

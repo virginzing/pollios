@@ -15,5 +15,6 @@ module Pollios::V1
     mount GroupAPI::Delete
     mount SearchAPI::Get
     mount SearchAPI::Post
+    mount CampaignAPI::Post
   end
 end
