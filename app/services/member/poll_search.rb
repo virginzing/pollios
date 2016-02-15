@@ -75,7 +75,7 @@ class Member::PollSearch
   def save_recent_tag
     recent_search = TypeSearch.find_by(member_id: member.id)
     recent_search = TypeSearch.create!(member_id: member.id) unless recent_search.present?
-    recent_search.update!(search_tags: recent_search[:search_tags] \
+    recent_search.update!(search_tags: TypeSearch.find_by(member_id: member.id)[:search_tags] \
       .unshift(message: hashtag, created_at: Time.now.utc))
 
     clear_searched_tags_cached_for_member
