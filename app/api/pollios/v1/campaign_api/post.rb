@@ -6,7 +6,7 @@ module Pollios::V1::CampaignAPI
       
       helpers do
         def campiagn_creation
-          campiagn_creation = Member::CampaignAction.new(current_member)
+          @campiagn_creation = Member::CampaignAction.new(current_member)
         end
       end
 

@@ -7,8 +7,8 @@ module Pollios::V1::CurrentMemberAPI
       resource :rewards do
 
         helpers do
-          def reward
-            @reward = MemberReward.cached_find(params[:id])
+          def member_reward
+            @member_reward = MemberReward.cached_find(params[:id])
           end
         end
 
@@ -18,7 +18,7 @@ module Pollios::V1::CurrentMemberAPI
         end
         route_param :id do
           post '/claim' do
-            claim_reward = Member::RewardAction.new(current_member, reward).claim
+            claim_reward = Member::RewardAction.new(current_member, member_reward).claim
             present claim_reward, with: Pollios::V2::CurrentMemberAPI::MemberRewardEntity
           end
         end

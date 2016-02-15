@@ -3,12 +3,12 @@ class Member::RewardAction
   include Member::Private::RewardActionGuard
   include Member::Private::RewardAction
 
-  attr_reader :member, :reward, :campaign
+  attr_reader :member, :member_reward, :reward
 
-  def initialize(member, reward)
+  def initialize(member, member_reward)
     @member = member
-    @reward = reward
-    @campaign = reward.campaign
+    @member_reward = member_reward
+    @reward = member_reward.reward
   end
 
   def claim
