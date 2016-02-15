@@ -160,7 +160,7 @@ class Campaign < ActiveRecord::Base
           RewardWorker.perform_async(@reward.id) unless Rails.env.test?
         end
       else
-        @reward = member_rewards.create!(member_id: member_id, reward: reward_id, reward_status: :not_receive, poll_id: poll_id, ref_no: generate_ref_no)
+        @reward = member_rewards.create!(member_id: member_id, reward_status: :not_receive, poll_id: poll_id , ref_no: generate_ref_no)
         poll = Poll.cached_find(poll_id)
         NotReceiveRandomRewardPollWorker.perform_async(member.id, poll_id, [member_id], "Sorry! You don't get reward from poll: #{poll.title}") if @reward
       end
