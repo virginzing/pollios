@@ -14,7 +14,7 @@ module Member::Private::RewardAction
   end
 
   def check_point_increment
-    campaign.reward_info.present? ? campaign.reward_info['point'].to_i : 0 
+    reward.options.present? ? reward.options['point'].to_i : 0 
   end
 
   def process_delete
