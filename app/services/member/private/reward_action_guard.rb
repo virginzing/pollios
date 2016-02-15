@@ -35,7 +35,7 @@ module Member::Private::RewardActionGuard
   end
 
   def receive_reward
-    reward.waiting_announce?
+    !reward.not_receive?
   end
 
   def not_receive_reward
