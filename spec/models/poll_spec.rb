@@ -119,14 +119,14 @@ RSpec.describe Poll, :type => :model do
 
     it "return two from most the vote of choice at descending as json format" do
       choice_hash = [{
-        "answer" => choice3.answer,
-        "vote" => choice3.vote,
-        "choice_id" => choice3.id
+        answer: choice3.answer,
+        vote: choice3.vote,
+        choice_id: choice3.id
       },
       {
-        "answer" => choice2.answer,
-        "vote" => choice2.vote,
-        "choice_id" => choice2.id
+        answer: choice2.answer,
+        vote: choice2.vote,
+        choice_id: choice2.id
       }]
 
       expect(poll.get_vote_max).to eq(choice_hash)
