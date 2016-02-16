@@ -16,6 +16,7 @@ module Group::Private::MemberList
         "DISTINCT members.*, 
         group_members.is_master as admin, 
         group_members.active as is_active, 
+        group_members.invite_id as inviter_id,
         group_members.created_at as joined_at")
       .order('members.fullname asc')
       #.to_a

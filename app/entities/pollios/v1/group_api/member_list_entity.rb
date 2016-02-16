@@ -4,7 +4,7 @@ module Pollios::V1::GroupAPI
     expose_members :admins, as: :admin
     expose_members :members, as: :member
     expose_members :requesting
-    expose_members :pending
+    expose_members :pending, entity: Pollios::V1::GroupAPI::GroupMemberListEntity
 
     def current_member_linkage
       @current_member_linkage ||= Member::MemberList.new(current_member).social_linkage_ids
