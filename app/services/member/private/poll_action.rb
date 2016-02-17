@@ -241,7 +241,7 @@ module Member::Private::PollAction
 
   def predict_campaign
     return unless poll.get_campaign
-    poll.find_campaign_for_predict?(member)
+    Campaign::RewardPrediction.new(member, poll)
   end
 
   def process_bookmark
