@@ -17,7 +17,7 @@ class Member::PollList
       bookmarked_ids: ids_for(bookmarks),
       saved_ids: ids_for(saved),
       watching_ids: watched_poll_ids,
-      voted_ids: voted_all.collect { |poll| poll[:poll_id]}
+      voted_ids: voted_all.collect { |poll| poll[:poll_id] }
     }
   end
 
@@ -91,6 +91,10 @@ class Member::PollList
   
   def next_index(list)
     next_page_index(list)
+  end
+
+  def recent_public_voted(limit)
+    all_voted.where('polls.public = true').limit(limit)
   end
 
   # private
