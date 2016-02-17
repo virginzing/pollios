@@ -18,6 +18,7 @@ module Campaign::Private::RewardPredictionGuard
   end
 
   def used_to_get_reward
+    return false if member.nil?
     campaign.member_rewards.find_by(member_id: member.id).present?
   end
 

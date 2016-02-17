@@ -3,7 +3,7 @@ class Campaign::RewardPrediction
 
   attr_reader :member, :poll, :campaign
 
-  def initialize(member, poll)
+  def initialize(member = nil, poll)
     @member = member
     @poll = poll
     @campaign = poll.campaign
@@ -22,17 +22,17 @@ class Campaign::RewardPrediction
   end
 
   def random_reward_later
-    create_member_reward(:waiting_announce, ref_no: generate_ref_no)
+    create_member_reward(:waiting_announce, member.id, ref_no: generate_ref_no)
   end
 
   def random_reward
     reward_id = random_reward_id
     if reward_id == 0
-      create_member_reward(:not_receive, ref_no: generate_ref_no)
-      send_not_recive_reward_notification
+      create_member_reward(:not_receive, member.id, ref_no: generate_ref_no)
+      send_not_recive_reward_notification(member_id.to_a)
     else
       increment_used_campaign_claimed_reward(reward_id)
-      member_reward = create_member_reward(:receive, reward_id: reward_id \
+      member_reward = create_member_reward(:receive, member.id, reward_id: reward_id \
         , serial_code: generate_serial_code, ref_no: generate_ref_no)
       send_recive_reward_notification(member_reward.id)
     end
@@ -58,12 +58,32 @@ class Campaign::RewardPrediction
     end
   end
 
-  def create_member_reward(reward_status, options = {})
-    member.member_rewards.create!(poll_id: poll.id, campaign_id: campaign.id, reward_status: reward_status \
-      , reward_id: options[:reward_id], serial_code: options[:serial_code], ref_no: options[:ref_no])
+  def create_member_reward(reward_status, member_id, options = {})
+    campaign.member_rewards.create!(reward_status: reward_status, poll_id: poll.id \
+      , member_id: member_id, reward_id: options[:reward_id] \
+      , serial_code: options[:serial_code], ref_no: options[:ref_no])
   end
 
   def random_from_voter
+    voter_ids = poll.history_votes.map(&:member_id)
+
+    avilable_reward.each do |reward|
+      member_get_reward_ids = voter_ids.sample(reward.total)
+
+      member_get_reward_ids.each do |member_id|
+        member_reward = create_member_reward(:receive, member_id, reward_id: reward.id \
+        , serial_code: generate_serial_code, ref_no: generate_ref_no)
+        increment_used_campaign_claimed_reward(reward.id)
+        send_recive_reward_notification(member_reward.id)
+      end
+
+      voter_ids -= member_get_reward_ids
+    end
+
+    voter_ids.each do |member_id|
+      campaign.member_rewards.find_by(member_id: member_id).update!(reward_status: :not_receive)
+    end
+    send_not_recive_reward_notification(voter_ids)
   end
 
   def generate_serial_code
@@ -82,8 +102,8 @@ class Campaign::RewardPrediction
     RewardWorker.perform_async(member_reward_id) unless Rails.env.test?
   end
 
-  def send_not_recive_reward_notification
-    NotReceiveRandomRewardPollWorker.perform_async(campaign.member_id, poll.id, [member.id] \
+  def send_not_recive_reward_notification(member_ids)
+    NotReceiveRandomRewardPollWorker.perform_async(campaign.member_id, poll.id, member_ids \
       , "Sorry! You don't get reward from poll: #{poll.title}") unless Rails.env.test?
   end
 
