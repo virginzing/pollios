@@ -20,6 +20,11 @@ module Pollios::V1::GroupAPI
           present group, with: Pollios::V1::Shared::GroupEntity, current_member: current_member
         end
 
+        desc 'returns group details with lastest join member for group_id'
+        get '/recents' do
+          present group, with: Pollios::V1::Shared::GroupWithLastestMemberEntity, current_member: current_member
+        end
+
         desc 'returns members of group_id'
         get '/members' do
           members_of_group = Group::MemberList.new(group, viewing_member: current_member)
