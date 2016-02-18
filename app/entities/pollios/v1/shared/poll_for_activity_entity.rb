@@ -1,5 +1,5 @@
 module Pollios::V1::Shared
-  class PollActivityEntity < PollForListEntity
+  class PollForActivityEntity < PollForListEntity
 
     unexpose :member_states
     unexpose :vote_all
@@ -15,11 +15,6 @@ module Pollios::V1::Shared
     unexpose :close_status
     unexpose :campaign
     unexpose :member_reward
-
-    expose :action
-    with_options(format_with: :as_integer) do
-      expose :activity_at
-    end
 
   end
 end
