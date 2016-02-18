@@ -1040,12 +1040,33 @@ class Member < ActiveRecord::Base
   end
 
   def get_recent_activity
-    activity = Activity.find_by(member_id: id)
+    # activity = Activity.find_by(member_id: id)
 
-    if activity.present?
-      activity.items.select{|e| e["type"] == "Poll" && e["authority"] == "Public" && e["action"] != "Share" }[0..2]
-    else
-      []
+    # if activity.present?
+    #   activity.items.select{|e| e["type"] == "Poll" && e["authority"] == "Public" && e["action"] != "Share" }[0..2]
+    # else
+    #   []
+    # end
+
+    Member::PollList.new(self).recent_public_activity(3).map do |poll| 
+      {
+        poll: {
+          id: poll.id,
+          title: poll.title,
+          created_at: poll.created_at.to_i,
+          public: poll.public,
+          series: poll.series
+        },
+        creator: {
+          member_id: poll.member_id,
+          name: poll.member.fullname,
+          avatar: poll.member.get_avatar
+        },
+        authority: 'Public',
+        action: poll.action,
+        type: 'Poll',
+        activity_at: poll.activity_at.to_i
+      }
     end
   end
 
