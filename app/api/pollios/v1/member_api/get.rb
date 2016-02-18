@@ -20,6 +20,11 @@ module Pollios::V1::MemberAPI
           present member, with: Pollios::V1::Shared::MemberEntity, current_member: current_member
         end
 
+        desc 'returns member detail with recents activity for mini profile screen of member'
+        get '/recents' do
+          present member, with: Pollios::V1::Shared::MemberWithActivityEntity, current_member: current_member
+        end
+
         desc "returns list of member's friends & followings"
         resource :friends do
           get do
