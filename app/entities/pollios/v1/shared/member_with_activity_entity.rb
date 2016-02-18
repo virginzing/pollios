@@ -1,5 +1,5 @@
-module Pollios::V1::CurrentMemberAPI
-  class MemberWithActivityEntity < Pollios::V1::Shared::MemberEntity
+module Pollios::V1::Shared
+  class MemberWithActivityEntity < MemberEntity
 
     expose :activity, with: PollActivityEntity
 

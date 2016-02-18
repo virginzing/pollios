@@ -1,5 +1,5 @@
-module Pollios::V1::CurrentMemberAPI
-  class PollActivityEntity < Pollios::V1::Shared::PollForListEntity
+module Pollios::V1::Shared
+  class PollActivityEntity < PollForListEntity
 
     unexpose :member_states
     unexpose :vote_all
