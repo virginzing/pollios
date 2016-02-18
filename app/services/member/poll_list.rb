@@ -93,8 +93,12 @@ class Member::PollList
     next_page_index(list)
   end
 
-  def recent_public_voted(limit)
-    all_voted.where('polls.public = true').limit(limit)
+  def recent_public_activity(limit)
+    (all_voted.where('polls.public = true').select("polls .*, history_votes.created_at AS activity_at, 'Vote' AS action") | \
+      all_created.where('polls.public = true').select("polls .*, polls.created_at AS activity_at, 'Create' AS action"))
+      .sort_by(&:activity_at)
+      .reverse!
+      .take(limit)
   end
 
   # private
