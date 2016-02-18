@@ -267,6 +267,10 @@ Pollios::Application.routes.draw do
     get 'user_and_group', to: 'searches#user_and_group'
   end
 
+  scope 'polls' do
+    get ':id/on_facebook', to: 'polls#on_facebook'
+  end
+
   scope 'poll' do
     get ':id/member_voted', to: 'polls#member_voted'
 

@@ -1,6 +1,6 @@
 class PollsController < ApplicationController
 
-  before_action :authenticate_with_token!
+  before_action :authenticate_with_token!, except: [:on_facebook]
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll,
                                                :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, 
                                                :reward_poll_timeline,
@@ -19,6 +19,10 @@ class PollsController < ApplicationController
   expose(:share_poll_ids) { @current_member.cached_shared_poll.map(&:poll_id) }
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:hash_priority) { @hash_priority }
+
+  def on_facebook
+    @poll
+  end
 
   def un_see
     @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
