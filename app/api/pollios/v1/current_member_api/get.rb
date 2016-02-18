@@ -69,6 +69,12 @@ module Pollios::V1::CurrentMemberAPI
           present requests_for_member, with: RequestListEntity
         end
 
+        get '/card' do
+          options = { clear_new_request_count: params[:clear_new_request_count] }
+          requests_for_member = Member::RequestList.new(current_member, options)
+          present requests_for_member, with: RequestCardListEntity
+        end
+
         desc 'return all requests to groups which current member is admin'
         get '/group_admins' do
           requests_for_member = Member::RequestList.new(current_member)
