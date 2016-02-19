@@ -25,7 +25,7 @@ class PollsController < ApplicationController
     @poll_id_endode = GenerateQrcodeLink.new(@poll).encode
 
     @custom_url = "http://192.168.1.17:3000/polls/direct_access/#{@poll_id_endode}"
-    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(200, 200).to_data_url
+    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(400, 400).to_data_url
     @download_link = 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
   end
 

@@ -1,4 +1,4 @@
-<H1><%= @poll.id %></H1>
+<%= image_tag @poll.member.get_avatar %><%= @poll.member.fullname %>
 <H2><%= @poll.title %></H2>
 
 <%= image_tag @qrcode %>
