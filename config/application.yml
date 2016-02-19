@@ -8,6 +8,8 @@
 
 # GMAIL_USERNAME: "nuttapon@code-app.com"
 # GMAIL_PASSWORD: "Nutty509"
+POLL_URL_ENCODER_KEY: "971044"
+
 GMAIL_USERNAME: "polliosadmin@code-app.com"
 GMAIL_PASSWORD: "9code7app9"
 GROUP_TIMELINE: "group_timeline"

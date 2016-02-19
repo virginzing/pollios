@@ -18,10 +18,10 @@ class GenerateQrcodeLink
   end
 
   def link
-    @open_app + secret_qrcode_key
+    @open_app + encode
   end
 
-  private
+  # private
 
   def questionnaire?
     @poll_or_questionnaire.is_a? PollSeries
@@ -39,6 +39,10 @@ class GenerateQrcodeLink
     string = "id=" + @poll_or_questionnaire.id.to_s + get_qrcode_key + series_key
     Base64.urlsafe_encode64(string)
   end
-  
+
+  def encode
+    custom = (@poll_or_questionnaire.id + ENV['POLL_URL_ENCODER_KEY'].to_i).to_s
+    Base64.urlsafe_encode64(custom)
+  end
   
 end
