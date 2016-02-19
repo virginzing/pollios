@@ -74,6 +74,11 @@ module Pollios::V1::PollAPI
           present poll_detail, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
         end
 
+        desc 'return qrcode of poll'
+        get '/qrcode' do
+          present :qr_code, poll.qrcode_key
+        end
+
         resource :comments do
           desc "returns list of poll[id]'s comments"
           params do
