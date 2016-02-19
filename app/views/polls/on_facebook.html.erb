@@ -1,6 +1,6 @@
 <H1><%= @poll.id %></H1>
 <H2><%= @poll.title %></H2>
 
-<%= link_to 'APP', "polliosbeta://poll?poll_id=#{@poll.id}" %>
+<%= link_to 'APP', "#{GenerateQrcodeLink.new(@poll).link}" %>
 <br>
 <%= link_to 'DOWNLOAD', 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8' %>
