@@ -1,6 +1,6 @@
 class PollsController < ApplicationController
 
-  before_action :authenticate_with_token!, except: [:on_facebook]
+  before_action :authenticate_with_token!, except: [:direct_access]
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll,
                                                :overall_timeline, :public_poll, :friend_following_poll, :group_timeline, 
                                                :reward_poll_timeline,
@@ -20,8 +20,13 @@ class PollsController < ApplicationController
   expose(:watched_poll_ids) { @current_member.cached_watched.map(&:poll_id) }
   expose(:hash_priority) { @hash_priority }
 
-  def on_facebook
-    @poll
+  def direct_access
+    @poll_link = GenerateQrcodeLink.new(@poll).link
+    @poll_id_endode = GenerateQrcodeLink.new(@poll).encode
+
+    @custom_url = "http://192.168.1.17:3000/polls/direct_access/#{@poll_id_endode}"
+    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(200, 200).to_data_url
+    @download_link = 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
   end
 
   def un_see

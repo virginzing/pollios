@@ -268,7 +268,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'polls' do
-    get ':id/on_facebook', to: 'polls#on_facebook'
+    get 'direct_access/:id', to: 'polls#direct_access'
   end
 
   scope 'poll' do

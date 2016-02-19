@@ -1,0 +1,10 @@
+<H1><%= @poll.id %></H1>
+<H2><%= @poll.title %></H2>
+
+<%= image_tag @qrcode %>
+<br>
+<%= link_to 'APP', "#{@poll_link}" %><%= "| #{@poll_link}" %>
+<br>
+<%= link_to 'DOWNLOAD', "#{@download_link}" %><%= "| #{@download_link}" %>
+<br>
+<%= "#{@custom_url}" %>
