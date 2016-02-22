@@ -1,39 +1,38 @@
-<div style="padding: 5px;">
+<div style="margin: 5px">
   <%= image_tag @poll.member.get_avatar, size: "40x40", class: "img-circle" %>
   <b><%= @poll.member.fullname %></b>
 </div>
 
 <div class="text-center">
-  <H2><%= @poll.title %></H2>
-
+  <H5><%= @poll.title %></H5>
   <%= image_tag @poll.get_photo, size: "400x400", class: "img-responsive center-block" %>
-
   <% @poll.choices.each do |choice| %>
-  <div class="choice col-xs-12 col-centered">
-    <p style="font-size: 16px;"><%= choice.answer %></p>
-  </div>
+  
+    <p class="choice col-xs-12 col-centered" style="font-size: 16px;"><%= choice.answer %></p>
+
   <% end %>
 </div>
 
 <div>
-  <p style="float: left; padding: 10px;">
+  <p style="float: left; margin: 0px 0px 0px 10px;">
     <%= "Vote now " %>
     <a href="<%= @poll_link %>">
-      <img src="/assets/pollios_webLogo@2x.png", style="background-color:#d32053;width:120px;height:50px;border:0">
+      <img src="/assets/pollios_webLogo@2x.png", style="background-color:#d32053;width:125px;height:47px;border:0">
     </a>
   </p>
 
   <br>
 
-  <p style="float: left; margin: 50px 0px 0px -191px;">
+  <p style="float: left; margin: 40px 0px 0px -186px;">
 
     <%= "Download " %>
     <a href="<%= @download_link %>">
-      <img src="/images/app-store.png", style="width:120px;height:50px;border:0">
+      <img src="/images/app-store.png", style="width:125px;height:47px;border:0">
     </a>
   </p>
 
-  <p style="float: right; margin: -15px 0px 0px 0px;">
+  <p style="float: right; margin: -25px 5px 0px 0px;">
     <%= image_tag @qrcode %>
+    <img src="/qrcode/pollios_for_qrcode.png" class="img-responsive center-block" width="104" height="104" style="opacity: 0.3; margin: -112px 0px 0px 8px;">
   </p>
 </div>
