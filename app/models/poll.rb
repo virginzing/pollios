@@ -244,7 +244,7 @@ class Poll < ActiveRecord::Base
     group_active_ids = Member::GroupList.new(viewing_member).active_ids
 
     joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
-    .where('poll_groups.group_id IN (?) OR polls.member_id IN (?) OR polls.public = true' \
+    .where('poll_groups.group_id IN (?) OR (polls.member_id IN (?) AND polls.in_group = false) OR polls.public = true' \
       , group_active_ids \
       , (friends_following_ids << viewing_member.id))
   end)
