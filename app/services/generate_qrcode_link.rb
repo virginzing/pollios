@@ -21,6 +21,10 @@ class GenerateQrcodeLink
     @open_app + encode
   end
 
+  def url
+    @host_link + '/polls/direct_access/' + encode
+  end
+
   # private
 
   def questionnaire?

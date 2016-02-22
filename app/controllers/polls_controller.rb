@@ -21,11 +21,13 @@ class PollsController < ApplicationController
   expose(:hash_priority) { @hash_priority }
 
   def direct_access
-    @poll_link = GenerateQrcodeLink.new(@poll).link
-    @poll_id_endode = GenerateQrcodeLink.new(@poll).encode
+    qrcode_link_generator = GenerateQrcodeLink.new(@poll)
 
-    @custom_url = "http://192.168.1.17:3000/polls/direct_access/#{@poll_id_endode}"
-    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(400, 400).to_data_url
+    @poll_link = qrcode_link_generator.link
+    @poll_id_endode = qrcode_link_generator.encode
+    @custom_url = qrcode_link_generator.url
+    
+    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(250, 250).to_data_url
     @download_link = 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
   end
 
