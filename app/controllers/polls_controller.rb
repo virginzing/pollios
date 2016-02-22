@@ -1,5 +1,5 @@
 class PollsController < ApplicationController
-  layout 'mobile'
+  layout 'browser'
 
   before_action :authenticate_with_token!, except: [:direct_access]
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll,
@@ -28,7 +28,7 @@ class PollsController < ApplicationController
     @poll_id_endode = qrcode_link_generator.encode
     @custom_url = qrcode_link_generator.url
     
-    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(250, 250).to_data_url
+    @qrcode = RQRCode::QRCode.new(@custom_url, size: 8, level: :h).to_img.resize(120, 120).to_data_url
     @download_link = 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
   end
 
