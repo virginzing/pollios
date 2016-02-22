@@ -1,4 +1,5 @@
 class PollsController < ApplicationController
+  layout 'mobile'
 
   before_action :authenticate_with_token!, except: [:direct_access]
   before_action :initialize_poll_feed!, only: [:member_voted, :random_poll,
