@@ -163,9 +163,7 @@ class Poll < ActiveRecord::Base
   scope :without_deleted, -> { where(deleted_at: nil) }
 
   scope :have_vote, -> { where("polls.vote_all > 0") }
-  scope :unexpire, -> {
-    where("polls.expire_status = 'f'")
-  }
+  scope :unexpire, -> { where(expire_status: false) }
 
   scope :except_series, -> { where(series: false) }
   scope :except_qrcode, -> { where(qr_only: false) }
@@ -285,6 +283,7 @@ class Poll < ActiveRecord::Base
     .without_reported(viewing_member)
     .without_outgoing_block(viewing_member)
     .without_closed
+    .unexpire
     .without_voted_series(viewing_member)
   end)
 
