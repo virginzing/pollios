@@ -12,7 +12,7 @@ module Poll::Private::MemberList
 
   def can_mention?
     return [true, nil] unless viewing_member
-    return [false, "You aren't vote this poll. Vote to see comments."] if not_voted_and_poll_not_closed
+    return [false, "You aren't vote this poll. Vote to see comments."] if not_voted_and_poll_not_closed_and_poll_creator_and_creator_must_vote
 
     [true, nil]
   end
@@ -78,8 +78,8 @@ module Poll::Private::MemberList
     Member::MemberList.new(viewing_member).blocks
   end
 
-  def not_voted_and_poll_not_closed
-    !poll_inquiry_service.voted? && !poll.close_status
+  def not_voted_and_poll_not_closed_and_poll_creator_and_creator_must_vote
+    (!poll_inquiry_service.voted? && !poll.close_status) && (viewing_member == poll.member && poll.creator_must_vote)
   end
 
   def sort_by_name(list)
