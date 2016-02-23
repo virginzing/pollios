@@ -307,7 +307,6 @@ class Poll < ActiveRecord::Base
   def self.cached_find(id)
     Rails.cache.fetch([name, id]) do
       @poll = find_by(id: id)
-      @poll = find_by(id: (Base64.urlsafe_decode64(id).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i)) unless @poll.present?
       fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::NOT_FOUND unless @poll.present?
       fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Poll::DELETED unless @poll.deleted_at.nil?
       @poll

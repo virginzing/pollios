@@ -8,7 +8,7 @@ class PollsController < ApplicationController
                                                :detail, :hashtag, :scan_qrcode, :tags, :my_poll, :my_vote, 
                                                :my_watched, :hashtag_popular]
 
-  before_action :set_poll, except: [:count_preset, :random_poll, :my_poll, :my_vote, :my_watched, 
+  before_action :set_poll, except: [:direct_access, :count_preset, :random_poll, :my_poll, :my_vote, :my_watched, 
                                     :hashtag_popular, :hashtag, :create_poll, :public_poll, :friend_following_poll, 
                                     :reward_poll_timeline, :overall_timeline, :group_timeline, :tags]
 
@@ -22,6 +22,7 @@ class PollsController < ApplicationController
   expose(:hash_priority) { @hash_priority }
 
   def direct_access
+    @poll = Poll.find_by(id: (Base64.urlsafe_decode64(params[:custom_key]).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i))
     qrcode_link_generator = GenerateQrcodeLink.new(@poll)
 
     @poll_link = qrcode_link_generator.link

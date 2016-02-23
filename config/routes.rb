@@ -268,7 +268,7 @@ Pollios::Application.routes.draw do
   end
 
   scope 'polls' do
-    get 'direct_access/:id', to: 'polls#direct_access'
+    get 'direct_access/:custom_key', to: 'polls#direct_access'
   end
 
   scope 'poll' do
