@@ -34,6 +34,10 @@ class Member::PollFeed
     @polls_feed = cached_group_timeline_polls
   end
 
+  def random
+    public_timeline_polls.sample
+  end
+
   def polls_by_page(list)
     pagination(list, index)
   end

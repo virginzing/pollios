@@ -27,6 +27,12 @@ module Pollios::V1::PollAPI
 
     resource :polls do
 
+      desc 'returns random poll details'
+      get '/random' do
+        present member_poll_feed.random, with: Pollios::V1::Shared::PollDetailEntity \
+          , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+      end
+
       params do
         optional :index, type: Integer, desc: "starting index for polls's list in this request"
       end
