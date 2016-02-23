@@ -5,7 +5,7 @@
 
 <div class="text-center">
   <H5><%= @poll.title %></H5>
-  <%= image_tag @poll.get_photo, size: "400x400", class: "img-responsive center-block" %>
+  <p><%= image_tag @poll.get_photo, size: "400x400", class: "img-responsive center-block" %></p>
   <% @poll.choices.each do |choice| %>
   
     <p class="choice col-xs-12 col-centered" style="font-size: 16px;"><%= choice.answer %></p>
