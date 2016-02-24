@@ -1,15 +1,11 @@
 class Member::RequestList
 
+  attr_reader :member
+
   def initialize(member, options = {})
     @member = member
 
-    if options[:clear_new_request_count]
-      reset_new_request_count
-    end
-  end
-
-  def member
-    @member
+    reset_new_request_count if options[:clear_new_request_count]
   end
 
   def friends_incoming
@@ -48,17 +44,18 @@ class Member::RequestList
     recommendations.facebooks.sample(10)
   end
 
-private
+  private
+
   def member_list
-    @member_list ||= Member::MemberList.new(@member)
+    @member_list ||= Member::MemberList.new(member)
   end
 
   def group_list
-    @group_list ||= Member::GroupList.new(@member)
+    @group_list ||= Member::GroupList.new(member)
   end
 
   def recommendations
-    @recommendations ||= Recommendation.new(@member)
+    @recommendations ||= Recommendation.new(member)
   end
 
   def current_member_linkage
@@ -66,8 +63,8 @@ private
   end
 
   def reset_new_request_count    
-    @member.request_count = 0
-    @member.save!
+    member.request_count = 0
+    member.save!
   end
 
 end
