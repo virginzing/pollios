@@ -56,6 +56,7 @@ class Member::PollInquiry < Member::PollList
 
     voting_allows, message = can_vote?    
     return voting_allows_hash if voting_allows
+    return voting_not_allowed_with_reason_hash(message).merge(voting_detail_creator_must_not_vote) if not_allow_your_own_vote?
     voting_not_allowed_with_reason_hash(message)
   end
 

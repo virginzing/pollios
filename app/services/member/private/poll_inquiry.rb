@@ -108,7 +108,7 @@ module Member::Private::PollInquiry
   end
 
   def voting_detail
-    
+    return {} if poll.vote_all == 0
     if poll.type_poll == 'freeform'
       freeform_voting_detail
     else
@@ -128,6 +128,15 @@ module Member::Private::PollInquiry
     poll.choices.each { |choice| score += (choice.answer.to_i * choice.vote) }
     rating = (score / poll.vote_all).round(1)
     { rating: rating }
+  end
+
+  def voting_detail_creator_must_not_vote
+    return {} if poll.vote_all == 0
+    if poll.type_poll == 'freeform'
+      { choices: poll.get_vote_max }
+    else
+      rating_voting_detail
+    end
   end
   
 end
