@@ -14,6 +14,8 @@ module Pollios::V1::Shared
     expose :type, if: -> (obj, _) { obj.company? } do |obj|
       obj.group_type.downcase
     end
+    expose :admin_post_only
+    expose :opened
     expose :status, if: -> (_, opts) { opts[:current_member_status].present? || opts[:current_member].present? }
 
     private
