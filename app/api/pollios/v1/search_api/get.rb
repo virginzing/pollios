@@ -59,7 +59,7 @@ module Pollios::V1::SearchAPI
         desc 'returns list of group searched by keyword'
         get do
           groups = Member::MemberAndGroupSearch.new(current_member, params[:keyword]).groups_searched
-          present :groups, groups, with: Pollios::V1::Shared::GroupEntity, current_member: current_member
+          present :groups, groups, with: Pollios::V1::Shared::GroupForListEntity, current_member: current_member
         end
       end
 

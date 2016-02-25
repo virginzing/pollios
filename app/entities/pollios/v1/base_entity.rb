@@ -48,7 +48,7 @@ module Pollios::V1
         if local_options[:entity]
           entity = local_options[:entity]
         else
-          entity = Pollios::V1::Shared::GroupEntity
+          entity = Pollios::V1::Shared::GroupForListEntity
         end
 
         if local_options[:without_status]

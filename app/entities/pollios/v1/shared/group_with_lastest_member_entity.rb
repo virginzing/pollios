@@ -1,8 +1,6 @@
 module Pollios::V1::Shared
-  class GroupWithLastestMemberEntity < GroupEntity
+  class GroupWithLastestMemberEntity < GroupForListEntity
 
-    unexpose :admin_post_only
-    unexpose :opened
     expose :lastest_member, with: MemberForListEntity
 
     def lastest_member
