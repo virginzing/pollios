@@ -28,10 +28,7 @@ class Member::Recommendation
 
   def officials
     followings_ids = member_listing.followings.map(&:id)
-    blocks_ids = member_listing.blocks.map(&:id)
-    unrecomment_ids = member.cached_get_unrecomment.map(&:unrecomment_id)
-
-
+    
     Member.where('((member_type = 1) OR (member_type = 3 AND show_recommend = true)) AND id NOT IN (?)' \
       , followings_ids | blocks_ids | friends_ids | unrecomment_ids | [member.id])
       .order('created_at')
@@ -45,8 +42,24 @@ class Member::Recommendation
     member_using_facebook.where('id NOT IN (?)', friends_ids) if friends_ids.count > 0
   end
 
+  # def friends
+  #   have_mutual_friend_ids = []
+
+  #   Member.where('member_type = 0 AND status_account = 1 AND id IN (?) AND id NOT IN (?)' \
+  #     , have_mutual_friend_ids \
+  #     , facebooks.map(&:id) | blocks_ids | friends_ids | unrecomment_ids | [member.id])
+  # end
+
   def friends_ids
-    member_listing.active.map(&:id)
+    @friends_ids ||= member_listing.active.map(&:id)
+  end
+
+  def blocks_ids
+    @blocks_ids ||= member_listing.blocks.map(&:id)
+  end
+
+  def unrecomment_ids
+    @unrecomment_ids ||= member.cached_get_unrecomment.map(&:unrecomment_id)
   end
 
 end
