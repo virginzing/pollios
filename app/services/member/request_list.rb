@@ -55,7 +55,7 @@ class Member::RequestList
   end
 
   def recommendations
-    @recommendations ||= Recommendation.new(member)
+    @recommendations ||= RecommendationLegacy.new(member)
   end
 
   def current_member_linkage

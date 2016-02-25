@@ -1,4 +1,4 @@
-class Recommendation
+class RecommendationLegacy
   def initialize(member)
     @member = member
     @init_list_friend = Member::MemberList.new(@member)
@@ -91,7 +91,7 @@ class Recommendation
     query
   end
 
-  private
+  # private
 
   def find_list_friend_ids
     @list_member_active.map(&:id) << @member.id
