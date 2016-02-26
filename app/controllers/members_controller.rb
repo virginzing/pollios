@@ -22,7 +22,7 @@ class MembersController < ApplicationController
   def recommendations
     init_list_friend = Member::MemberList.new(@current_member)
 
-    @init_recommendation = Recommendation.new(@current_member)
+    @init_recommendation = RecommendationLegacy.new(@current_member)
     @recommendations_official = @init_recommendation.get_recommendations_official.sample(2)
     @group_recomment = @init_recommendation.get_group.sample(2)
     @hash_member_count = @init_recommendation.hash_member_count
@@ -33,18 +33,18 @@ class MembersController < ApplicationController
   end
 
   def recommended_groups
-    @init_recommendation = Recommendation.new(@current_member)
+    @init_recommendation = RecommendationLegacy.new(@current_member)
     @group_recomment = @init_recommendation.get_group
     @hash_member_count = @init_recommendation.hash_member_count
   end
 
   def recommended_official
-    @init_recommendation = Recommendation.new(@current_member)
+    @init_recommendation = RecommendationLegacy.new(@current_member)
     @recommendations_official = @init_recommendation.get_recommendations_official
   end
 
   def recommended_facebook
-    @init_recommendation = Recommendation.new(@current_member)
+    @init_recommendation = RecommendationLegacy.new(@current_member)
     @recommendations_facebook = @init_recommendation.get_member_using_facebook
   end
 
