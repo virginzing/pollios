@@ -80,13 +80,15 @@ module Pollios::V1::CurrentMemberAPI
         desc "returns list of member's bookmarked poll"
         get '/bookmarks' do
           present polls_of_member, poll: :bookmarks, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member \
+            , current_member_states: polls_of_member.member_states_ids
         end
 
         desc "returns list of member's saved vote later poll"
         get '/saved' do
           present polls_of_member, poll: :saved, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member
+            , current_member: current_member \
+            , current_member_states: polls_of_member.member_states_ids
         end
 
         desc "returns list of member's poll presets"
