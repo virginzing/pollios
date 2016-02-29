@@ -36,7 +36,8 @@ class SumVotePollWorker
       }
 
       find_recipient_notify.each_with_index do |member, index|
-        member.apn_devices.each do |device|
+        device = member.apn_devices.last
+        # member.apn_devices.each do |device|
           apn_custom_properties = {
             type: TYPE[:poll],
             poll_id: poll.id,
@@ -53,7 +54,7 @@ class SumVotePollWorker
           @notf.save!
 
           @list_apn_notification << @notf
-        end
+        # end
         member.notification_count = get_hash_list_member_badge[member.id] + 1
         member.save!
       end
