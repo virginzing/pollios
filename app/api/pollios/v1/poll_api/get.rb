@@ -23,6 +23,10 @@ module Pollios::V1::PollAPI
       def member_poll_feed
         @member_poll_feed ||= Member::PollFeed.new(current_member, index: params[:index])
       end
+
+      def current_member_states
+        @current_member_states ||= member_poll_lister.member_states_ids
+      end
     end
 
     resource :polls do
@@ -30,7 +34,7 @@ module Pollios::V1::PollAPI
       desc 'returns random poll details'
       get '/random' do
         present member_poll_feed.random, with: Pollios::V1::Shared::PollDetailEntity \
-          , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+          , current_member: current_member, current_member_states: current_member_states
       end
 
       params do
@@ -40,31 +44,31 @@ module Pollios::V1::PollAPI
         desc 'returns default poll-timeline for requesting member'
         get do
           present member_poll_feed, poll: :default_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+            , current_member: current_member, current_member_states: current_member_states
         end
 
         desc 'returns unvoted poll-timeline for requesting member'
         get '/unvoted' do
           present member_poll_feed, poll: :unvoted_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+            , current_member: current_member, current_member_states: current_member_states
         end
 
         desc 'returns public poll-timeline for requesting member'
         get '/public' do
           present member_poll_feed, poll: :public_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+            , current_member: current_member, current_member_states: current_member_states
         end
 
         desc 'returns friends & followings poll-timeline for requesting member'
         get '/friends' do
           present member_poll_feed, poll: :friends_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+            , current_member: current_member, current_member_states: current_member_states
         end
 
         desc 'returns group poll-timeline for requesting member'
         get '/group' do
           present member_poll_feed, poll: :group_timeline, with: Pollios::V1::Shared::PollListEntity \
-            , current_member: current_member, current_member_states: member_poll_lister.member_states_ids
+            , current_member: current_member, current_member_states: current_member_states
         end
       end
 
@@ -77,7 +81,9 @@ module Pollios::V1::PollAPI
         desc 'returns poll details for requesting member'
         get do
           poll_detail = member_poll_inqury.view
-          present poll_detail, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present poll_detail, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'return qrcode of poll'
@@ -102,7 +108,9 @@ module Pollios::V1::PollAPI
             optional :index, type: Integer, desc: "starting index for members's list in this request"
           end
           get '/voters' do
-            present poll_member_listing, member: :voter, with: MemberVotedDetailEntity, current_member: current_member
+            present poll_member_listing, member: :voter, with: MemberVotedDetailEntity \
+              , current_member: current_member \
+              , current_member_linkage: Member::MemberList.new(current_member).social_linkage_ids
           end
 
           desc "returns list of poll[id]'s mentionable"
@@ -120,7 +128,8 @@ module Pollios::V1::PollAPI
           route_param :choice_id do
             get '/voters' do
               present poll_member_listing(params[:choice_id]), member: :voter, with: MemberVotedDetailEntity \
-                , current_member: current_member
+                , current_member: current_member \
+                , current_member_linkage: Member::MemberList.new(current_member).social_linkage_ids
             end
           end
         end
