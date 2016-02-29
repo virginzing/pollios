@@ -7,8 +7,11 @@ module Pollios
 
         desc "returns list of current member's rewards"
         resource :rewards do
+          params do
+            optional :index, type: Integer, desc: "starting index for rewards's list in this request"
+          end
           get do
-            rewards_of_member = Member::RewardList.new(current_member, page_index: params[:page_index])
+            rewards_of_member = Member::RewardList.new(current_member, index: params[:index])
             present rewards_of_member, with: RewardListEntity
           end
 
