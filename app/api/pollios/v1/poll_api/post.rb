@@ -15,6 +15,11 @@ module Pollios::V1::PollAPI
       def current_member_poll_action
         @current_member_poll_action ||= Member::PollAction.new(current_member, poll)
       end
+
+      def current_member_states
+        @current_member_states ||= Member::PollList.new(current_member).member_states_ids
+      end
+
     end
 
     resource :polls do
@@ -42,7 +47,9 @@ module Pollios::V1::PollAPI
 
       post do
         create = current_member_poll_action.create(params)
-        present create, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+        present create, with: Pollios::V1::Shared::PollDetailEntity \
+          , current_member: current_member \
+          , current_member_states: current_member_states
       end
 
       params do
@@ -54,7 +61,9 @@ module Pollios::V1::PollAPI
         desc 'close for voting poll'
         post '/close' do
           close = current_member_poll_action.close
-          present close, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present close, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         resource :choices do
@@ -68,7 +77,9 @@ module Pollios::V1::PollAPI
           route_param :choice_id do
             post '/vote' do
               vote = current_member_poll_action.vote(params)
-              present vote, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+              present vote, with: Pollios::V1::Shared::PollDetailEntity \
+                , current_member: current_member \
+                , current_member_states: current_member_states
             end
           end
         end
@@ -76,43 +87,57 @@ module Pollios::V1::PollAPI
         desc 'add to bookmark'
         post '/bookmark' do
           bookmark = current_member_poll_action.bookmark
-          present bookmark, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present bookmark, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'remove from bookmark'
         post '/unbookmark' do
           unbookmark = current_member_poll_action.unbookmark
-          present unbookmark, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present unbookmark, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'save for vote later'
         post '/save' do
           save = current_member_poll_action.save
-          present save, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present save, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'turn on notification'
         post '/watch' do
           watch = current_member_poll_action.watch
-          present watch, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present watch, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'turn off notification'
         post '/unwatch' do
           unwatch = current_member_poll_action.unwatch
-          present unwatch, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present unwatch, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'not interested'
         post '/not_interest' do
           not_interest = current_member_poll_action.not_interest
-          present not_interest, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present not_interest, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'promote to public poll'
         post '/promote' do
           promote = current_member_poll_action.promote
-          present promote, with: Pollios::V1::Shared::PollDetailEntity, current_member: current_member
+          present promote, with: Pollios::V1::Shared::PollDetailEntity \
+            , current_member: current_member \
+            , current_member_states: current_member_states
         end
 
         desc 'report poll_id'
