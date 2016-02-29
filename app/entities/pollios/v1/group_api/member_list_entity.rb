@@ -7,7 +7,7 @@ module Pollios::V1::GroupAPI
     expose_members :pending, entity: Pollios::V1::GroupAPI::GroupMemberListEntity
 
     def current_member_linkage
-      @current_member_linkage ||= Member::MemberList.new(current_member).social_linkage_ids
+      options[:current_member_linkage]
     end
 
     def requesting

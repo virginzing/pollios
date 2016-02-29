@@ -5,7 +5,7 @@ module Pollios::V1::MemberAPI
     expose_groups :inactive, as: :pending
 
     def current_member_status
-      @current_member_status ||= Member::GroupList.new(options[:current_member]).relation_status_ids
+      options[:current_member_status]
     end
   end
 end

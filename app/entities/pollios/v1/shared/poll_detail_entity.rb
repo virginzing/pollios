@@ -30,15 +30,14 @@ module Pollios::V1::Shared
     expose :close_status
     expose :get_original_images, as: :original_images, if: -> (_, _) { poll.photo_poll.present? }
 
-    expose :campaign, with: Pollios::V2::CurrentMemberAPI::CampaignEntity, 
-      if: -> (_, _) { poll.get_campaign && member_reward.nil? }
+    expose :campaign, with: Pollios::V2::CurrentMemberAPI::CampaignEntity \
+      , if: -> (_, _) { poll.get_campaign && member_reward.nil? }
 
-    expose :member_reward, with: Pollios::V2::CurrentMemberAPI::MemberRewardInPollEntity,
-      if: -> (_, _) { poll.get_campaign && member_reward.present? }
+    expose :member_reward, with: Pollios::V2::CurrentMemberAPI::MemberRewardInPollEntity \
+      , if: -> (_, _) { poll.get_campaign && member_reward.present? }
 
     expose :creator do |_, _|
       Pollios::V1::PollAPI::MemberInPollEntity.represent creator
-      # Pollios::V1::Shared::MemberForListEntity.represent creator, current_member_linkage: current_member_linkage
     end
 
     expose :member_states do
@@ -58,7 +57,7 @@ module Pollios::V1::Shared
     end
 
     def member_states_ids
-      options[:current_member_states] ||= Member::PollList.new(current_member).member_states_ids
+      options[:current_member_states]
     end
 
     def poll_inquiry_service

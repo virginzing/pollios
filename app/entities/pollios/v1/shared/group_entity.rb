@@ -16,7 +16,7 @@ module Pollios::V1::Shared
     end
     expose :admin_post_only
     expose :opened
-    expose :status, if: -> (_, opts) { opts[:current_member_status].present? || opts[:current_member].present? }
+    expose :status, if: -> (_, opts) { opts[:current_member_status].present? }
 
     private
 
@@ -29,7 +29,7 @@ module Pollios::V1::Shared
     end
 
     def relation
-      options[:current_member_status] ||= Member::GroupList.new(options[:current_member]).relation_status_ids
+      options[:current_member_status]
     end
 
     def admin?
