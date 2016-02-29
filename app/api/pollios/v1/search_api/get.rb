@@ -12,7 +12,9 @@ module Pollios::V1::SearchAPI
         end
         get do
           polls = Member::PollSearch.new(current_member, params[:hashtag], index: params[:index])
-          present polls, poll: :polls_searched, with: Pollios::V1::Shared::PollListEntity, current_member: current_member
+          present polls, poll: :polls_searched, with: Pollios::V1::Shared::PollListEntity \
+            , current_member: current_member \
+            , current_member_states: Member::PollList.new(current_member).member_states_ids
         end
 
         desc 'returns list of recent and popular hashtag'
@@ -29,7 +31,9 @@ module Pollios::V1::SearchAPI
         desc 'returns list of member and group searched by keyword'
         get do
           members_and_groups = Member::MemberAndGroupSearch.new(current_member, params[:keyword])
-          present members_and_groups, with: MemberAndGroupEntity, current_member: current_member
+          present members_and_groups, with: MemberAndGroupEntity \
+            , current_member_linkage: Member::MemberList.new(current_member).social_linkage_ids \
+            , current_member_status: Member::GroupList.new(current_member).relation_status_ids
         end
 
         desc 'returns list of recent searched keyword'
@@ -48,7 +52,8 @@ module Pollios::V1::SearchAPI
         get do
           searched = Member::MemberAndGroupSearch.new(current_member, params[:keyword], index: params[:index])
           present searched, member: :members_searched, with: Pollios::V1::Shared::MemberListEntity \
-            , current_member: current_member
+            , current_member: current_member \
+            , current_member_linkage: Member::MemberList.new(current_member).social_linkage_ids
         end
       end
 
@@ -59,7 +64,8 @@ module Pollios::V1::SearchAPI
         desc 'returns list of group searched by keyword'
         get do
           groups = Member::MemberAndGroupSearch.new(current_member, params[:keyword]).groups_searched
-          present :groups, groups, with: Pollios::V1::Shared::GroupForListEntity, current_member: current_member
+          present :groups, groups, with: Pollios::V1::Shared::GroupForListEntity \
+            , current_member_status: Member::GroupList.new(current_member).relation_status_ids
         end
       end
 
