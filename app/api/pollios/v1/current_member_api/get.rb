@@ -39,25 +39,6 @@ module Pollios::V1::CurrentMemberAPI
         end
       end
 
-      desc "returns list of current member's rewards"
-      resource :rewards do
-        get do
-          rewards_of_member = Member::RewardList.new(current_member, page_index: params[:page_index])
-          present rewards_of_member, with: RewardListEntity
-        end
-
-        desc 'returns reward at id for current member'
-        params do
-          requires :id, type: Integer, desc: 'reward id'
-        end
-        route_param :id do
-          get do
-            reward = MemberReward.cached_find(params[:id])
-            present reward, with: MemberRewardEntity
-          end
-        end
-      end
-
       desc 'returns all requests related to current member'
       resource :requests do
         params do
@@ -68,12 +49,6 @@ module Pollios::V1::CurrentMemberAPI
           requests_for_member = Member::RequestList.new(current_member, options)
           present requests_for_member, with: RequestListEntity
         end
-
-        # get '/recent_actity' do
-        #   options = { clear_new_request_count: params[:clear_new_request_count] }
-        #   requests_for_member = Member::RequestList.new(current_member, options)
-        #   present requests_for_member, with: RequestCardListEntity
-        # end
 
         desc 'return all requests to groups which current member is admin'
         get '/group_admins' do
