@@ -25,7 +25,10 @@ class AllMessageWorker
         }
 
         find_recipient_notify.each_with_index do |recipient, index|
-            recipient.apn_devices.each do |device|
+
+            device = recipient.apn_devices.last
+
+            # recipient.apn_devices.each do |device|
                 apn_custom_properties = {
                     type: [:system_message],
                     notify: hash_list_member_badge[recipient.id] || 0
@@ -38,7 +41,7 @@ class AllMessageWorker
                 @notif.sound = true
                 @notif.custom_properties = apn_custom_properties
                 @notif.save!
-            end
+            # end
         end
 
         find_recipient_notify.each do |recipient|
