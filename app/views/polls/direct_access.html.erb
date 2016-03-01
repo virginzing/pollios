@@ -17,7 +17,7 @@
   <p style="float: left; margin: 0px 0px 0px 10px;">
     <%= "Vote now " %>
     <a href="<%= @poll_link %>">
-      <img src="/images/pollios_webLogo@2x.png", style="background-color:#d32053;width:125px;height:47px;border:0">
+      <img src="/images/pollios_webLogo@2x.png", style="background-color:#d32053;width:125px;height:47px;border:0;border-radius:6px;">
     </a>
   </p>
 
@@ -31,8 +31,11 @@
     </a>
   </p>
 
-  <p style="float: right; margin: -25px 5px 0px 0px;">
-    <%= image_tag @qrcode %>
-    <img src="/qrcode/pollios_for_qrcode.png" class="img-responsive center-block" width="104" height="104" style="opacity: 0.3; margin: -112px 0px 0px 8px;">
-  </p>
+  <div id="pollios_qrcode" >
+    <p style="float: right; margin: -25px 5px 0px 0px;">
+      <%= image_tag @qrcode %>
+      <img src="/qrcode/pollios_for_qrcode.png" class="img-responsive center-block" width="104" height="104" style="opacity: 0.3; margin: -112px 0px 0px 8px;">
+    </p>
+  </div>
+
 </div>
