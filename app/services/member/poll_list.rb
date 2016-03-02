@@ -1,6 +1,5 @@
 class Member::PollList
   include Member::Private::PollList
-  include Member::Private::PollFeedAlgorithm
 
   attr_reader :member, :viewing_member, :index
   
@@ -94,15 +93,7 @@ class Member::PollList
   end
 
   def recent_public_activity(limit)
-    (all_voted.where('polls.public = true')
-      .select("polls .*, history_votes.created_at AS activity_at, 'Vote' AS action")
-      .limit(limit) | \
-      all_created.where('polls.public = true')
-        .select("polls .*, polls.created_at AS activity_at, 'Create' AS action")
-        .limit(limit))
-      .sort_by(&:activity_at)
-      .reverse!
-      .take(limit)
+    public_activity(limit)
   end
 
   # private

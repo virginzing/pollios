@@ -76,6 +76,18 @@ module Member::Private::PollList
       .order('save_poll_laters.created_at DESC')
   end
 
+  def public_activity(limit)
+    (all_voted.where('polls.public = true')
+      .select("polls .*, history_votes.created_at AS activity_at, 'Vote' AS action")
+      .limit(limit) | \
+      all_created.where('polls.public = true')
+        .select("polls .*, polls.created_at AS activity_at, 'Create' AS action")
+        .limit(limit))
+      .sort_by(&:activity_at)
+      .reverse!
+      .take(limit)
+  end
+
   def saved_later_query(type_name)
     member.save_poll_laters.where(savable_type: type_name).map(&:savable_id)
   end
