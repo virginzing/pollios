@@ -186,6 +186,7 @@ module Member::Private::PollAction
 
   def process_close
     poll.update!(close_status: true)
+
     poll
   end
 
@@ -246,7 +247,9 @@ module Member::Private::PollAction
 
   def process_bookmark
     Bookmark.create!(member_id: member.id, bookmarkable: poll)
+
     clear_bookmarked_cached_for_member
+
     poll
   end
 
@@ -256,6 +259,7 @@ module Member::Private::PollAction
     bookmarked_poll.destroy
 
     clear_bookmarked_cached_for_member
+
     poll
   end
 
@@ -263,6 +267,7 @@ module Member::Private::PollAction
     SavePollLater.create!(member_id: member.id, savable: poll)
 
     clear_saved_cached_for_member
+
     poll
   end
 
@@ -277,6 +282,7 @@ module Member::Private::PollAction
     end
 
     clear_watched_cached_for_member
+
     poll
   end
 
@@ -286,6 +292,7 @@ module Member::Private::PollAction
     watched_poll.update!(poll_notify: false, comment_notify: false)
 
     clear_watched_cached_for_member
+
     poll
   end
 
@@ -316,6 +323,7 @@ module Member::Private::PollAction
     HistoryPromotePoll.create!(member_id: member.id, poll: poll)
     poll.update!(public: true)
     PollMember.find_by(poll_id: poll.id, member_id: member.id).update!(public: true)
+
     poll
   end
 
@@ -356,7 +364,7 @@ module Member::Private::PollAction
     NotifyLog.check_update_poll_deleted(poll)
     poll.destroy
 
-    return
+    nil
   end
 
   def sever_member_relation_to_poll
@@ -405,7 +413,7 @@ module Member::Private::PollAction
     increase_report_comment_count
     clear_reported_comment_cached_for_member
 
-    return
+    nil
   end
 
   def increase_report_comment_count
@@ -423,7 +431,7 @@ module Member::Private::PollAction
 
     decrease_comment_count
 
-    return
+    nil
   end
 
   def decrease_comment_count
