@@ -48,7 +48,7 @@ class Group::MemberList
   end
 
   def join_recently
-    active.sort { |x, y| y.joined_at <=> x.joined_at } [0..4]
+    active.sort_by(&:joined_at).reverse!.take(5)
   end
 
   def member_or_admin?(member)

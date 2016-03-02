@@ -19,11 +19,10 @@ module Group::Private::MemberList
         group_members.invite_id as inviter_id,
         group_members.created_at as joined_at")
       .order('members.fullname asc')
-      #.to_a
   end
 
   def all_requests
-    group.members_request.all.to_a
+    group.members_request.all
   end
 
   def member_visibility
@@ -32,6 +31,6 @@ module Group::Private::MemberList
   end
 
   def group_member_ids
-    group.group_members.map(&:member_id)
+    all_members.map(&:id) | all_requests.map(&:id)
   end
 end
