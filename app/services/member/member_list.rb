@@ -170,13 +170,13 @@ class Member::MemberList
   # TODO: Privatize these two cached-methods.
   def cached_all_friends
     Rails.cache.fetch("member/#{member.id}/friends") do
-      friend_visibility.to_a
+      friend_visibility
     end
   end
 
   def cached_all_followers
     Rails.cache.fetch("member/#{member.id}/followers") do
-      follower_visibility.to_a
+      follower_visibility
     end
   end
   
