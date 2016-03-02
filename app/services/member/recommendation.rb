@@ -45,7 +45,7 @@ class Member::Recommendation
   def friends
     Member.viewing_by_member(member)
       .where('status_account = 1 AND member_type = 0 AND id IN (?) AND id NOT IN (?)' \
-      , mutual_friends_ids | mutual_group_ids | most_friends_ids\
+      , mutual_friends_ids | mutual_group_ids | most_friends_ids.take(10)\
       , facebooks.map(&:id) | mebmer_have_relation_member_ids | unrecomment_ids | [member.id])
   end
 
@@ -88,11 +88,11 @@ class Member::Recommendation
   end
 
   def mebmer_have_relation_group_ids
-    @member_relation_status_ids ||= group_listing.relation_status_ids.values.flatten
+    @mebmer_have_relation_group_ids ||= group_listing.relation_status_ids.values.flatten
   end
 
   def mebmer_have_relation_member_ids
-    @member_relation_status_ids ||= member_listing.social_linkage_ids.values.flatten
+    @mebmer_have_relation_member_ids ||= member_listing.social_linkage_ids.values.flatten
   end
 
 end
