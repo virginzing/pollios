@@ -17,7 +17,7 @@ class Poll::MemberList
     return unless options[:choice_id]
     @choice = poll.choices.find_by(id: options[:choice_id])
 
-    fail ExceptionHandler::UnprocessableEntity, "This comment don't exists in poll." unless choice
+    fail ExceptionHandler::UnprocessableEntity, "This choice don't exists in poll." unless choice
   end
 
   def voter
