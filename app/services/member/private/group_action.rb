@@ -33,15 +33,15 @@ module Member::Private::GroupAction
   end
 
   def initialize_new_group
-    process_set_group_cover
-    process_create_creator_as_admin
-    process_create_group_company
+    set_group_cover
+    set_creator_as_admin
+    create_group_company
     process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
 
     clear_group_cache_for_member(member)
   end
 
-  def process_set_group_cover
+  def set_group_cover
     cover = group_params[:cover]
     cover_group_url = ImageUrl.new(cover)
     return unless cover && cover_group_url.from_image_url?
@@ -50,11 +50,11 @@ module Member::Private::GroupAction
     group.update_column(:cover, cover_group_url.split_cloudinary_url)
   end
 
-  def process_create_creator_as_admin
+  def set_creator_as_admin
     group.group_members.create(member_id: member.id, is_master: true, active: true)
   end
 
-  def process_create_group_company
+  def create_group_company
     return unless member.company.present?
     group.create_group_company(company: member.get_company)
   end
@@ -100,7 +100,7 @@ module Member::Private::GroupAction
   end
 
   def process_join_request
-    being_invited_by_admin? ? process_join_group(member) : process_ask_join_request
+    being_invited_by_admin? ? join_group(member) : ask_join_request
   end
 
   def process_cancel_request(member)
@@ -114,7 +114,7 @@ module Member::Private::GroupAction
   end
 
   def process_accept_request
-    being_invited_by_admin? ? process_join_group(member) : process_join_request
+    being_invited_by_admin? ? join_group(member) : process_join_request
     group
   end
 
@@ -132,11 +132,11 @@ module Member::Private::GroupAction
     member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
   end
 
-  def process_ask_join_request
-    group.need_approve ? process_sent_join_request : process_join_group(member)
+  def ask_join_request
+    group.need_approve ? sent_join_request : join_group(member)
   end
 
-  def process_sent_join_request
+  def sent_join_request
     group.request_groups.create(member_id: member.id)
 
     clear_group_member_relation_cache(member)
@@ -147,12 +147,12 @@ module Member::Private::GroupAction
     { group: group, status: :requesting }
   end
 
-  def process_join_group(member)
+  def join_group(member)
     group.group_members.create(member_id: member.id, is_master: false) unless relationship_to_group(member).present?
     relationship_to_group(member).update!(active: true)
 
-    process_add_member_to_company(member)
-    process_set_member_following_company(member)
+    add_member_to_company(member)
+    set_member_following_company(member)
 
     clear_group_member_relation_cache(member)
 
@@ -161,12 +161,12 @@ module Member::Private::GroupAction
     { group: group, status: :member }
   end
 
-  def process_add_member_to_company(member)
+  def add_member_to_company(member)
     return unless group.company? && !group.system_group
     CompanyMember.add_member_to_company(member, group.get_company)
   end
 
-  def process_set_member_following_company(member)
+  def set_member_following_company(member)
     return unless group.member.company?
     Company::FollowOwnerGroup.new(member, group.member_id).follow!
   end
@@ -192,7 +192,7 @@ module Member::Private::GroupAction
   end
 
   def process_approve
-    process_join_group(a_member)
+    join_group(a_member)
     update_member_group_requesting
     clear_request_cache_for_group
 
@@ -217,7 +217,7 @@ module Member::Private::GroupAction
 
   def process_promote
     relationship_to_group(a_member).update!(is_master: true)
-    process_promote_company_admin
+    promote_a_member_to_company_admin
 
     clear_group_member_relation_cache(a_member)
     send_promote_group_admin_notification
@@ -225,21 +225,21 @@ module Member::Private::GroupAction
     group
   end
 
-  def process_promote_company_admin
+  def promote_a_member_to_company_admin
     return unless group.company?
     a_member.add_role :group_admin, group
   end
 
   def process_demote
     relationship_to_group(a_member).update!(is_master: false)
-    process_demote_company_admin
+    demote_a_member_from_company_admin
 
     clear_group_member_relation_cache(a_member)
 
     group
   end
 
-  def process_demote_company_admin
+  def demote_a_member_from_company_admin
     return unless group.company?
     a_member.remove_role :group_admin, group
   end

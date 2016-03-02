@@ -49,6 +49,7 @@ class Member::GroupAdminAction < Member::GroupAction
 
   # refactor this into private module later
   private
+  
   def admin_of_group?
     member_listing_service.admin?(admin_member)
   end

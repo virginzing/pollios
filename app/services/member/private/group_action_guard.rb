@@ -3,82 +3,82 @@ module Member::Private::GroupActionGuard
   private
 
   def can_leave?
-    return false, "You aren't member in #{group.name}." if not_member(member)
-    return false, "You can't leave #{group.name} company." if company_group
-    [true, '']
+    return [false, "You aren't member in #{group.name}."] if not_member(member)
+    return [false, "You can't leave #{group.name} company."] if company_group
+    [true, nil]
   end
 
   def can_join?
-    return false, "You are already member of #{group.name}." if already_member(member)
-    return false, "You already sent join request to #{group.name}." if already_sent_request(member)
-    [true, '']
+    return [false, "You are already member of #{group.name}."] if already_member(member)
+    return [false, "You already sent join request to #{group.name}."] if already_sent_request(member)
+    [true, nil]
   end
 
   def can_cancel_request?
-    return false, "You are already member of #{group.name}." if already_member(member)
-    return false, "You don't sent join request to #{group.name}." if not_exist_join_request(member)
-    [true, '']
+    return [false, "You are already member of #{group.name}."] if already_member(member)
+    return [false, "You don't sent join request to #{group.name}."] if not_exist_join_request(member)
+    [true, nil]
   end
 
   def can_accept_request?
-    return false, "You don't have invitation for #{group.name}." if not_exist_invite_request(member)
-    [true, '']
+    return [false, "You don't have invitation for #{group.name}."] if not_exist_invite_request(member)
+    [true, nil]
   end
 
   def can_reject_request?
-    return false, "You don't have invitation #{group.name}." if not_exist_invite_request(member)
-    [true, '']
+    return [false, "You don't have invitation #{group.name}."] if not_exist_invite_request(member)
+    [true, nil]
   end
 
   def can_invite_friends?
-    return false, "You aren't member in #{group.name}." if not_member(member)
-    return false, "You can't invite friends to #{group.name} company." if company_group
-    [true, '']
+    return [false, "You aren't member in #{group.name}."] if not_member(member)
+    return [false, "You can't invite friends to #{group.name} company."] if company_group
+    [true, nil]
   end
 
   def can_cancel_invite_friends?
-    return false, "#{a_member.get_name} is already in #{group.name}." if already_member(a_member)
+    return [false, "#{a_member.get_name} is already in #{group.name}."] if already_member(a_member)
     return [false, "#{a_member.get_name} doesn't have invite request to #{group.name}."] if not_exist_invite_request(a_member)
     return [false, "You aren't invited #{a_member.get_name} to #{group.name}."] if not_invite
-    [true, '']
+    [true, nil]
   end
 
   def can_approve?
-    return false, "#{a_member.get_name} doesn't sent join request to #{group.name}." if not_exist_join_request(a_member)
-    return false, "#{a_member.get_name} is already in #{group.name}." if already_member(a_member)
-    [true, '']
+    return [false, "#{a_member.get_name} doesn't sent join request to #{group.name}."] if not_exist_join_request(a_member)
+    return [false, "#{a_member.get_name} is already in #{group.name}."] if already_member(a_member)
+    [true, nil]
   end
 
   def can_deny?
-    return false, "#{a_member.get_name} is already in #{group.name}." if already_member(a_member)
-    return false, "#{a_member.get_name} doesn't have any request to #{group.name}." if not_exist_any_request(a_member)
-    [true, '']
+    return [false, "#{a_member.get_name} is already in #{group.name}."] if already_member(a_member)
+    return [false, "#{a_member.get_name} doesn't have any request to #{group.name}."] if not_exist_any_request(a_member)
+    [true, nil]
   end
 
   def can_remove?
-    return false, "#{a_member.get_name} isn't member in #{group.name}." if not_member(a_member)
-    return false, "You can't remove yourself." if same_member
-    return false, "#{a_member.get_name} is group creator." if group_creator
-    [true, '']
+    return [false, "#{a_member.get_name} isn't member in #{group.name}."] if not_member(a_member)
+    return [false, "You can't remove yourself."] if same_member
+    return [false, "#{a_member.get_name} is group creator."] if group_creator
+    [true, nil]
   end
 
   def can_promote?
-    return false, "#{a_member.get_name} isn't member in #{group.name}." if not_member(a_member)
-    return false, "#{a_member.get_name} is already admin." if already_admin
-    [true, '']
+    return [false, "#{a_member.get_name} isn't member in #{group.name}."] if not_member(a_member)
+    return [false, "#{a_member.get_name} is already admin."] if already_admin
+    [true, nil]
   end
 
   def can_demote?
-    return false, "#{a_member.get_name} isn't member in #{group.name}." if not_member(a_member)
-    return false, "#{a_member.get_name} isn't admin." if not_admin
-    return false, "#{a_member.get_name} is group creator." if group_creator
-    [true, '']
+    return [false, "#{a_member.get_name} isn't member in #{group.name}."] if not_member(a_member)
+    return [false, "#{a_member.get_name} isn't admin."] if not_admin
+    return [false, "#{a_member.get_name} is group creator."] if group_creator
+    [true, nil]
   end
 
   def can_delete_poll?
-    return false, "This poll isn't exist in group." if poll_not_in_group
-    return false, 'You are not owner poll.' if not_authority
-    [true, '']
+    return [false, "This poll isn't exist in group."] if poll_not_in_group
+    return [false, 'You are not owner poll.'] if not_authority
+    [true, nil]
   end
 
   def same_member
