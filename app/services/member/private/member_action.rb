@@ -29,13 +29,13 @@ module Member::Private::MemberAction
     @new_incoming, @incoming_relation = first_or_initialize_relationship_between(a_member, member, :invitee)
 
     Friend.transaction do
-      process_outgoing_friend_request
-      process_incoming_friend_request
+      outgoing_friend_request
+      incoming_friend_request
     end
 
     clear_friends_caches_for_members
 
-    return
+    nil
   end
 
   def accept_friendship(src_member, dst_member)
@@ -43,7 +43,7 @@ module Member::Private::MemberAction
     send_friends_notification(src_member, dst_member, accept_friend: true, action: ACTION[:become_friend])
   end
 
-  def process_outgoing_friend_request
+  def outgoing_friend_request
     if @new_outgoing
       send_friends_notification(member, a_member)
     else
@@ -56,7 +56,7 @@ module Member::Private::MemberAction
     end
   end
 
-  def process_incoming_friend_request
+  def incoming_friend_request
     return if @new_incoming
 
     if incoming_relation.invitee?
@@ -75,7 +75,7 @@ module Member::Private::MemberAction
 
     clear_friends_and_follwers_caches_for_members if options[:clear_cached]
 
-    return
+    nil
   end
 
   def process_following
@@ -87,29 +87,30 @@ module Member::Private::MemberAction
 
     clear_following_caches_for_members
 
-    return
+    nil
   end
 
   def process_unfollow
     return unless outgoing_relation
     outgoing_relation.update(following: false)
     clear_following_caches_for_members
-    return
+
+    nil
   end
 
   def process_block
     process_unfriend_request(clear_cached: false)
     process_unfollow
 
-    process_outgoing_block
-    process_incoming_block
+    outgoing_block
+    incoming_block
     
     clear_friends_and_follwers_caches_for_members
 
-    return
+    nil
   end
 
-  def process_outgoing_block
+  def outgoing_block
     if outgoing_relation.present?
       outgoing_relation.update(block: true)
     else
@@ -117,7 +118,7 @@ module Member::Private::MemberAction
     end
   end
 
-  def process_incoming_block
+  def incoming_block
     if incoming_relation.present?
       incoming_relation.update(visible_poll: false)
     else
@@ -131,7 +132,7 @@ module Member::Private::MemberAction
 
     clear_friends_and_follwers_caches_for_members
 
-    return
+    nil
   end
 
   def process_accept_friend_request
@@ -140,7 +141,7 @@ module Member::Private::MemberAction
 
     clear_friends_and_follwers_caches_for_members
 
-    return
+    nil
   end
 
   def process_deny_friend_request
@@ -149,7 +150,7 @@ module Member::Private::MemberAction
 
     clear_friends_and_follwers_caches_for_members
 
-    return
+    nil
   end
 
   def process_cancel_friend_request
@@ -164,7 +165,7 @@ module Member::Private::MemberAction
       a_member.save!
     end
 
-    return
+    nil
   end
 
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
