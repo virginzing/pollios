@@ -18,7 +18,7 @@ module Group::Private::MemberList
         group_members.active AS is_active, 
         group_members.invite_id AS inviter_id,
         group_members.created_at AS joined_at")
-      .order('LOWER(members.fullname)')
+      .order('members.fullname')
   end
 
   def all_requests
