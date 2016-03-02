@@ -26,7 +26,7 @@ class RewardWorker
       member.apn_devices.each do |device|
         apn_custom_properties = {
           type: TYPE[:reward],
-          reward_id: @reward.id,
+          redeemable_info: { redeem_id: @reward.id },
           notify: hash_list_member_badge[member.id] || 0
         }
 
@@ -43,7 +43,7 @@ class RewardWorker
     find_recipient_notify.each do |member|
       hash_custom = {
         notify: hash_list_member_badge[member.id] || 0,
-        reward_id: @reward.id,
+        redeemable_info: { redeem_id: @reward.id },
         worker: WORKER[:reward]
       }
 
