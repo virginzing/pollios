@@ -20,7 +20,7 @@ module Member::Private::RewardAction
   def process_delete
     member_reward.destroy
 
-    return
+    nil
   end
 
 end
