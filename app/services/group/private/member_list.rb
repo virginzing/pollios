@@ -14,11 +14,11 @@ module Group::Private::MemberList
     Member.joins(:group_members).where("group_members.group_id = #{group.id}")
       .select(
         "DISTINCT members.*, 
-        group_members.is_master as admin, 
-        group_members.active as is_active, 
-        group_members.invite_id as inviter_id,
-        group_members.created_at as joined_at")
-      .order('members.fullname asc')
+        group_members.is_master AS admin, 
+        group_members.active AS is_active, 
+        group_members.invite_id AS inviter_id,
+        group_members.created_at AS joined_at")
+      .order('LOWER(members.fullname)')
   end
 
   def all_requests
