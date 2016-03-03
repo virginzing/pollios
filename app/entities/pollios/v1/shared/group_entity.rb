@@ -16,9 +16,7 @@ module Pollios::V1::Shared
     end
     expose :admin_post_only
     expose :opened
-    expose :invited_by, if: -> (obj, _) { obj.member_invite_id.present? } do |_, _|
-      MemberForListEntity.represent invited_by, only: [:member_id, :name, :avatar]
-    end
+    
     expose :status, if: -> (_, opts) { opts[:current_member_status].present? }
 
     private
@@ -49,10 +47,6 @@ module Pollios::V1::Shared
 
     def requesting?
       relation[:requesting_ids].include?(object.id)
-    end
-
-    def invited_by
-      Member.cached_find(object.member_invite_id)
     end
   end
 end

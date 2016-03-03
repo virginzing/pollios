@@ -98,7 +98,7 @@ class Member::GroupList
   end
 
   def requesting_to_joins
-    @member.cached_ask_join_groups
+    member.cached_ask_join_groups
   end
 
   def hash_member_count
@@ -125,13 +125,19 @@ class Member::GroupList
 
 
   def groups
-    Group.joins(:group_members).without_deleted
-      .select(
-        "groups.*, group_members.is_master AS member_admin,
-        group_members.active AS member_is_active,
-        group_members.invite_id AS member_invite_id")
-      .where("group_members.member_id = #{@member.id}")
-      .group('groups.id, member_admin, member_is_active, member_invite_id')
+    groups = Group.joins(:group_members).without_deleted
+             .select(
+               "groups.*, group_members.is_master AS member_admin,
+               group_members.active AS member_is_active,
+               group_members.invite_id AS member_invite_id")
+             .where("group_members.member_id = #{member.id}")
+             .group('groups.id, member_admin, member_is_active, member_invite_id')
+
+    groups.each do |group|
+      group.member_invite_id = nil if group.member_invite_id == member.id
+    end
+
+    groups
   end
 
   def group_member_count
@@ -142,7 +148,7 @@ class Member::GroupList
   end
 
   def cached_groups
-    Rails.cache.fetch("member/#{@member.id}/groups") do
+    Rails.cache.fetch("member/#{member.id}/groups") do
       groups.to_a
     end
   end
