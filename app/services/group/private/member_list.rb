@@ -18,19 +18,22 @@ module Group::Private::MemberList
         group_members.active AS is_active, 
         group_members.invite_id AS inviter_id,
         group_members.created_at AS joined_at")
-      .order('members.fullname')
   end
 
   def all_requests
-    group.members_request.all
+    sort_by_name(group.members_request.all)
   end
 
   def member_visibility
-    return all_members unless viewing_member
-    all_members.viewing_by_member(viewing_member)
+    return sort_by_name(all_members) unless viewing_member
+    sort_by_name(all_members.viewing_by_member(viewing_member))
   end
 
   def group_member_ids
     all_members.map(&:id) | all_requests.map(&:id)
+  end
+
+  def sort_by_name(list)
+    list.sort_by { |m| m.fullname.downcase }
   end
 end
