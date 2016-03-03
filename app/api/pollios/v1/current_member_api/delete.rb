@@ -24,7 +24,6 @@ module Pollios::V1::CurrentMemberAPI
         end
 
       end
-
       
       resource :polls do
         resource :presets do
@@ -37,6 +36,23 @@ module Pollios::V1::CurrentMemberAPI
               presets = Member::PresetAction.new(current_member).delete(params[:index])
               present :presets, presets, with: PresetEntity
             end
+          end
+        end
+      end
+
+      resource :notifications do
+        helpers do
+          def notification
+            @notification = current_member.received_notifies.find_by(id: params[:id])
+          end
+        end
+        params do
+          requires :id, type: Integer, desc: 'notification id'
+        end
+        desc 'delete notification'
+        route_param :id do
+          delete '/delete' do
+            Member::NotificationAction.new(current_member, notification).hide
           end
         end
       end
