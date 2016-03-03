@@ -11,13 +11,20 @@ module Group::Private::MemberList
   end
 
   def all_members
-    Member.joins(:group_members).where("group_members.group_id = #{group.id}")
-      .select(
-        "DISTINCT members.*, 
-        group_members.is_master AS admin, 
-        group_members.active AS is_active, 
-        group_members.invite_id AS inviter_id,
-        group_members.created_at AS joined_at")
+    members = Member.joins(:group_members).where("group_members.group_id = #{group.id}")
+              .select(
+                "DISTINCT members.*, 
+                 group_members.is_master AS admin, 
+                 group_members.active AS is_active, 
+                 group_members.invite_id AS inviter_id,
+                 group_members.created_at AS joined_at,
+                 group_members.invite_id AS member_invite_id")
+
+    members.each do |member|
+      member.member_invite_id = nil if member.member_invite_id == member.id
+    end
+
+    members
   end
 
   def all_requests
