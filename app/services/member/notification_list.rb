@@ -44,7 +44,11 @@ class Member::NotificationList
   end
 
   def notifications_by_page
-    @notifications_by_page ||= member.received_notifies.without_deleted.order('created_at DESC').paginate(page: index)
+    @notifications_by_page ||= all_notificaton.paginate(page: index)
+  end
+
+  def all_notificaton
+    @all_notificaton ||= member.received_notifies.without_deleted.order('created_at DESC')
   end
 
 end
