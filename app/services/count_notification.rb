@@ -1,9 +1,11 @@
 class CountNotification
-  def initialize(list_member)
+  def initialize(list_member, options = {})
     @list_member = list_member
     @hash_list_member_badge = {}
     @hash_list_member_request_count = {}
     @get_hash_list_member_badge_count = {}
+
+    @poll_id = options[:poll_id] || 0
   end
 
   def device_ids
@@ -23,7 +25,7 @@ class CountNotification
 
   def hash_list_member_badge
     @list_member.each do |member|
-      member.increment!(:notification_count)
+      member.increment!(:notification_count) if member.received_notifies.where("custom_properties LIKE ? AND custom_properties LIKE ?", "%action: Create%", "%poll_id: #{@poll_id}%") == []
       @hash_list_member_badge.merge!( { member.id => member.notification_count } )
     end
     @hash_list_member_badge
