@@ -22,6 +22,9 @@ class Trigger::Vote
       triggerable.data["condition"].each do |condition|
         if (condition["choice_id"] == @choice.id) && (condition["group_id"] != 0)
           find_group = Group.find(condition["group_id"])
+
+          # OH GOD WHY??? member voted poll have trigger! and system send invitation but why member add_friend_to_group by self
+
           Group.add_friend_to_group(find_group, @member, @member.id.to_s, { sender_id: find_group.member.id})
         end
       end
