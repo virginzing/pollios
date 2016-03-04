@@ -1,17 +1,17 @@
 class Member::NotificationAction
 
-  attr_reader :member, :notification
+  attr_reader :member, :notification_list
 
-  def initialize(member, notification)
+  def initialize(member, notification_list)
     @member = member
-    @notification = notification
+    @notification_list = notification_list
 
-    fail ExceptionHandler::UnprocessableEntity, "This notification doesn't exist in your notification" \
-      unless notification.recipient_id == member.id
+    fail ExceptionHandler::UnprocessableEntity, "This notification doesn't exist in your notifications" \
+      unless notification_list.map(&:recipient_id).uniq == [member.id]
   end
 
   def hide
-    notification.destroy
+    notification_list.update_all(deleted_at: Time.now)
 
     nil
   end

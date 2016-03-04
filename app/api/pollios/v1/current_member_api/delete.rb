@@ -42,18 +42,16 @@ module Pollios::V1::CurrentMemberAPI
 
       resource :notifications do
         helpers do
-          def notification
-            @notification = current_member.received_notifies.find_by(id: params[:id])
+          def notification_list
+            @notification_list = current_member.received_notifies.where('id IN (?)', params[:ids])
           end
         end
         params do
-          requires :id, type: Integer, desc: 'notification id'
+          requires :ids, type: Array[Integer], desc: 'list of notification id'
         end
-        desc 'delete notification'
-        route_param :id do
-          delete '/delete' do
-            Member::NotificationAction.new(current_member, notification).hide
-          end
+        desc 'delete notifications'
+        delete '/delete' do
+          Member::NotificationAction.new(current_member, notification_list).hide
         end
       end
     end
