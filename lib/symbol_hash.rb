@@ -60,6 +60,7 @@ module SymbolHash
     :not_receive_random_reward_poll => 'NotReceiveRandomRewardPoll',
     :notify_expire_subscription => 'NotifyExpireSubscription',
     :one_gift => 'OneGift',
+    :poke_invites_friend_to_group => 'PokeInvitedFriendToGroupWorker',
     :poke_poll => 'PokePoll',
     :poll => 'Poll',
     :promote_admin => 'PromoteAdmin',

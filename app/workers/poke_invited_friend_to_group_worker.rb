@@ -55,7 +55,7 @@ class PokeInvitedFriendToGroupWorker
         action: ACTION[:poke],
         group: GroupNotifySerializer.new(group).as_json,
         notify: hash_list_member_badge[member.id],
-        worker: WORKER[:invite_friend_to_group]
+        worker: WORKER[:poke_invites_friend_to_group]
       }
 
       NotifyLog.create!(sender_id: member_id, recipient_id: member.id, message: @invite_group.custom_message, custom_properties: @custom_properties.merge!(hash_custom))
@@ -63,6 +63,6 @@ class PokeInvitedFriendToGroupWorker
 
     Apn::App.first.send_notifications
   rescue => e
-    puts "InviteFriendToGroupWorker => #{e.message}"
+    puts "PokeInvitedFriendToGroupWorker => #{e.message}"
   end
 end
