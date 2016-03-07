@@ -261,10 +261,12 @@ class Poll < ActiveRecord::Base
 
   scope :unvoted, (lambda do |viewing_member|
     voted_ids = joins('LEFT OUTER JOIN history_votes on polls.id = history_votes.poll_id')
-    .where("history_votes.member_id = #{viewing_member.id} AND polls.member_id != #{viewing_member.id}")
+    .where("history_votes.member_id = #{viewing_member.id}")
     .map(&:id)
 
-    where('polls.id NOT IN (?)', voted_ids) if voted_ids.count > 0
+    creator_must_not_vote_ids = where("polls.member_id = #{viewing_member.id} AND polls.creator_must_vote = FALSE")
+
+    where('polls.id NOT IN (?)', voted_ids | creator_must_not_vote_ids) if (voted_ids.count + creator_must_not_vote_ids.count) > 0
   end)
 
   scope :overall_timeline, (lambda do |viewing_member|
