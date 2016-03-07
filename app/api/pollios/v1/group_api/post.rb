@@ -93,7 +93,7 @@ module Pollios::V1::GroupAPI
 
             desc "cancel member's friend invite to join group"
             post '/cancel' do
-              current_member_group_action.cancal_invite(a_member)
+              current_member_group_action.cancel_invite(a_member)
             end
 
             desc "approve member's request to join group"

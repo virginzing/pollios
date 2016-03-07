@@ -57,7 +57,7 @@ class Member::GroupAction
     process_invite_friends(friend_ids)
   end
 
-  def cancal_invite(a_member)
+  def cancel_invite(a_member)
     @a_member = a_member
     can_cancel_invite_friends, message = can_cancel_invite_friends?
     fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_invite_friends
