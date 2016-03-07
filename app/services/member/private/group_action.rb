@@ -86,6 +86,12 @@ module Member::Private::GroupAction
     message
   end
 
+  def precess_poke_invited_friends
+    send_poke_invited_friends_to_group_notification(a_member.id)
+
+    nil
+  end
+
   def process_cancel_invite_friends
     process_cancel_request(a_member)
   end
@@ -273,6 +279,10 @@ module Member::Private::GroupAction
 
   def send_invite_friends_to_group_notification(friend_ids)
     InviteFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
+  end
+
+  def send_poke_invited_friends_to_group_notification(friend_ids)
+    PokeInvitedFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
   end
 
   def send_join_group_notification(member)

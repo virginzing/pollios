@@ -57,6 +57,14 @@ class Member::GroupAction
     process_invite_friends(friend_ids)
   end
 
+  def poke_invited(a_member)
+    @a_member = a_member
+    can_poke_invited_friends, message = can_poke_invited_friends?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_poke_invited_friends
+
+    precess_poke_invited_friends
+  end
+
   def cancel_invite(a_member)
     @a_member = a_member
     can_cancel_invite_friends, message = can_cancel_invite_friends?

@@ -2,10 +2,11 @@ class InviteGroup
   include ActionView::Helpers::TextHelper
   include NotificationsHelper
 
-  def initialize(member_id, friend_ids, group)
+  def initialize(member_id, friend_ids, group, options = {})
     @member_id = member_id
     @friend_ids = friend_ids
     @group = group
+    @options = options
   end
 
   def recipient_ids
@@ -29,8 +30,12 @@ class InviteGroup
   def custom_message
     if @member_id == 0
       message = "Pollios System invited you in: \"#{group_name}\""
+    else
+      if @options[:poke]
+        message = "#{member_name} poke invited you in: \"#{group_name}\""
       else
-      message = "#{member_name} invited you in: \"#{group_name}\""
+        message = "#{member_name} invited you in: \"#{group_name}\""
+      end
     end
 
     truncate_message(message)

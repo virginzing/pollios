@@ -91,6 +91,11 @@ module Pollios::V1::GroupAPI
               end
             end
 
+            desc 'poke invited friend to group'
+            post '/poke' do
+              current_member_group_action.poke_invited(a_member)
+            end
+
             desc "cancel member's friend invite to join group"
             post '/cancel' do
               current_member_group_action.cancel_invite(a_member)

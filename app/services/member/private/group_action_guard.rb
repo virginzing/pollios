@@ -36,6 +36,13 @@ module Member::Private::GroupActionGuard
     [true, nil]
   end
 
+  def can_poke_invited_friends?
+    return [false, "You aren't member in #{group.name}."] if not_member(member)
+    return [false, "#{a_member.get_name} is already in #{group.name}."] if already_member(a_member)
+    return [false, "#{a_member.get_name} doesn't have invite request to #{group.name}."] if not_exist_invite_request(a_member)
+    [true, nil]
+  end
+
   def can_cancel_invite_friends?
     return [false, "#{a_member.get_name} is already in #{group.name}."] if already_member(a_member)
     return [false, "#{a_member.get_name} doesn't have invite request to #{group.name}."] if not_exist_invite_request(a_member)
