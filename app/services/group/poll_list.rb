@@ -25,7 +25,7 @@ class Group::PollList
 
   def all_poll
     Poll.joins('LEFT OUTER JOIN poll_groups on polls.id = poll_groups.poll_id')
-      .where("poll_groups.group_id = #{group.id} AND poll_groups.deleted_at = nil")
+      .where("poll_groups.group_id = #{group.id} AND poll_groups.deleted_at IS NULL")
       .paginate(page: index)
   end
 
