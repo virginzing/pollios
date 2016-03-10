@@ -114,7 +114,7 @@ module Member::Private::GroupAction
     process_reject_request(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
-    clear_request_cache_for_group
+    clear_group_member_requesting_cache
 
     group
   end
@@ -146,7 +146,7 @@ module Member::Private::GroupAction
     group.request_groups.create(member_id: member.id)
 
     clear_group_member_relation_cache(member)
-    clear_request_cache_for_group
+    clear_group_member_requesting_cache
 
     send_join_group_request_notification
 
@@ -200,7 +200,7 @@ module Member::Private::GroupAction
   def process_approve
     join_group(a_member)
     update_member_group_requesting
-    clear_request_cache_for_group
+    clear_group_member_requesting_cache
 
     group
   end
@@ -212,7 +212,7 @@ module Member::Private::GroupAction
 
   def process_deny
     process_cancel_request(a_member)
-    clear_request_cache_for_group
+    clear_group_member_requesting_cache
 
     group
   end
@@ -268,8 +268,9 @@ module Member::Private::GroupAction
     FlushCached::Group.new(group).clear_list_members
   end
 
-  def clear_request_cache_for_group
+  def clear_group_member_requesting_cache
     FlushCached::Group.new(group).clear_list_requests
+    FlushCached::Member.new(member).clear_list_requesting_groups
   end
 
   def clear_group_member_relation_cache(member)

@@ -24,6 +24,10 @@ class FlushCached::Member
     Rails.cache.delete("member/#{member.id}/groups")
   end
 
+  def clear_list_requesting_groups
+    Rails.cache.fetch("member/#{member.id}/request_groups")
+  end
+
   def clear_list_report_polls
     Rails.cache.delete("member/#{member.id}/report_polls")
   end

@@ -47,5 +47,11 @@ module Member::Private::GroupList
       groups.to_a
     end
   end
+
+  def cached_requesting_to_joins
+    Rails.cache.fetch("member/#{member.id}/request_groups") do
+      member.ask_join_groups.to_a
+    end
+  end
   
 end

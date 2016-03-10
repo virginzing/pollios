@@ -99,7 +99,7 @@ class Member::GroupList
   end
 
   def requesting_to_joins
-    member.cached_ask_join_groups
+    cached_requesting_to_joins
   end
 
   def hash_member_count
