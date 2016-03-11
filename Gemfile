@@ -180,3 +180,5 @@ gem 'grape'
 gem 'grape-entity'
 #gem 'grape-active_model_serializers'
 gem 'hashie-forbidden_attributes'
+
+gem 'rpush'

@@ -330,6 +330,7 @@ GEM
       activerecord
       activesupport
     nested_form (0.3.2)
+    net-http-persistent (2.9.4)
     netrc (0.10.3)
     newrelic_rpm (3.12.0.288)
     nokogiri (1.6.6.2)
@@ -457,6 +458,13 @@ GEM
     roo (2.0.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
+    rpush (2.7.0)
+      activesupport
+      ansi
+      multi_json (~> 1.0)
+      net-http-persistent
+      railties
+      thor (>= 0.18.1, < 2.0)
     rqrcode (0.6.0)
       chunky_png
     rqrcode-rails3 (0.1.7)
@@ -667,6 +675,7 @@ DEPENDENCIES
   rest-client
   rolify
   roo
+  rpush
   rqrcode
   rqrcode-rails3
   rqrcode_png
@@ -699,4 +708,4 @@ DEPENDENCIES
   zip-zip
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
