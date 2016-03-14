@@ -24,6 +24,12 @@ module Pollios::V1::CurrentMemberAPI
         get '/notifications' do
           present notifications: current_member.notification
         end
+
+        desc "returns list of current member's devices"
+        get '/devices' do
+          devices_of_member = Member::DeviceList.new(current_member).all_device
+          present :devices, devices_of_member, with: DeviceEntity
+        end
       end
 
       desc "returns list of current member's notifications"
