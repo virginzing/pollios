@@ -54,6 +54,20 @@ module Pollios::V1::CurrentMemberAPI
           Member::NotificationAction.new(current_member, notification_list).hide
         end
       end
+
+      resource :settings do
+        resource :devices do
+          params do
+            requires :id, type: Integer, desc: 'device id'
+          end
+          route_param :id do
+            delete do
+              member_device_action = Member::DeviceAction.new(current_member, Apn::Device.find(params[:id]))
+              present :devices, member_device_action.delete, with: DeviceEntity
+            end
+          end
+        end
+      end
     end
 
   end

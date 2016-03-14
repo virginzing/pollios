@@ -16,7 +16,9 @@ class Member::DeviceAction
   end
 
   def delete
-    device.destroy    
+    device.destroy
+    
+    Member::DeviceList.new(member).all_device
   end
 
 end
