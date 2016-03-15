@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314070129) do
+ActiveRecord::Schema.define(version: 20160315054202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +90,7 @@ ActiveRecord::Schema.define(version: 20160314070129) do
   add_index "apn_device_groupings", ["group_id"], name: "index_apn_device_groupings_on_group_id", using: :btree
 
   create_table "apn_devices", force: true do |t|
-    t.string   "token",                               null: false
+    t.string   "token",                                                                     null: false
     t.integer  "member_id"
     t.string   "api_token"
     t.datetime "created_at"
@@ -98,7 +98,8 @@ ActiveRecord::Schema.define(version: 20160314070129) do
     t.datetime "last_registered_at"
     t.integer  "app_id"
     t.boolean  "receive_notification", default: true
-    t.string   "name"
+    t.hstore   "model",                default: {"name"=>nil, "type"=>nil, "version"=>nil}
+    t.hstore   "os",                   default: {"name"=>nil, "version"=>nil}
   end
 
   add_index "apn_devices", ["member_id"], name: "index_apn_devices_on_member_id", using: :btree
