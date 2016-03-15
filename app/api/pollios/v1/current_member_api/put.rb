@@ -63,12 +63,22 @@ module Pollios::V1::CurrentMemberAPI
         desc "returns list of current member's devices"
         params do
           requires :id, type: Integer, desc: 'device id'
+          optional :receive_notification, type: Boolean, desc: 'true when want to receive notification'
+          optional :model, type: Hash do
+            requires :name, type: String, desc: 'device name'
+            requires :type, type: String, desc: 'device type'
+            requires :version, type: String, desc: 'device version'
+          end
+          optional :os, type: Hash do
+            requires :name, type: String, desc: 'os name'
+            requires :version, type: String, desc: 'os version'
+          end
         end
         resource :devices do
           route_param :id do
             put do
               member_device_action = Member::DeviceAction.new(current_member, Apn::Device.find(params[:id]))
-              present :devices, member_device_action.change_receiving_notification_setting, with: DeviceEntity
+              present :devices, member_device_action.undate_info(params), with: DeviceEntity
             end
           end
         end

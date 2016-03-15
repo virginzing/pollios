@@ -9,8 +9,8 @@ class Member::DeviceAction
     fail ExceptionHandler::UnprocessableEntity, "This device isn't exist in your devices" unless device.member_id == member.id
   end
 
-  def change_receiving_notification_setting
-    device.update!(receive_notification: !device.receive_notification)
+  def undate_info(params)
+    device.update!(params)
 
     Member::DeviceList.new(member).all_device
   end
