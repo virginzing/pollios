@@ -34,6 +34,7 @@ class AllGiftWorker
         apn_custom_properties = {
           type: TYPE[:reward],
           reward_id: hash_member_ids_with_reward[member.id],
+          redeemable_info: { redeem_id: hash_member_ids_with_reward[member.id] },
           notify: hash_list_member_badge[member.id] || 0
         }
 
@@ -51,6 +52,7 @@ class AllGiftWorker
       hash_custom = {
         notify: hash_list_member_badge[member.id] || 0,
         reward_id: hash_member_ids_with_reward[member.id],
+        redeemable_info: { redeem_id: hash_member_ids_with_reward[member.id] },
         worker: WORKER[:all_gift]
       }
 

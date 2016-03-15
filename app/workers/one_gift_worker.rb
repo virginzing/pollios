@@ -20,7 +20,8 @@ class OneGiftWorker
 
     @custom_properties = {
       type: TYPE[:reward],
-      reward_id: @reward.id
+      reward_id: @reward.id,
+      redeemable_info: { redeem_id: @reward.id }
     }
 
     find_recipient_notify.each_with_index do |member, index|

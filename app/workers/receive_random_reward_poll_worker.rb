@@ -33,6 +33,7 @@ class ReceiveRandomRewardPollWorker
       apn_custom_properties = {
         type: TYPE[:reward],
         reward_id: list_hash_reward_with_member_ids[member_ids[index]],
+        redeemable_info: { redeem_id: list_hash_reward_with_member_ids[member_ids[index]] },
         notify: hash_list_member_badge[member_ids[index]]
       }
 
@@ -50,6 +51,7 @@ class ReceiveRandomRewardPollWorker
     find_recipient.each do |member|
       hash_custom = {
         reward_id: list_hash_reward_with_member_ids[member.id],
+        redeemable_info: { redeem_id: list_hash_reward_with_member_ids[member.id] },
         notify: hash_list_member_badge[member.id],
         worker: WORKER[:receive_random_reward_poll]
       }
