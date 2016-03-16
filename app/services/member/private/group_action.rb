@@ -106,7 +106,7 @@ module Member::Private::GroupAction
   end
 
   def process_join_request
-    being_invited_by_admin? ? join_group(member) : ask_join_request
+    being_invited_by_admin_or_trigger? ? join_group(member) : ask_join_request
   end
 
   def process_cancel_request(member)
@@ -120,7 +120,7 @@ module Member::Private::GroupAction
   end
 
   def process_accept_request
-    being_invited_by_admin? ? join_group(member) : process_join_request
+    being_invited_by_admin_or_trigger? ? join_group(member) : process_join_request
     group
   end
 
@@ -133,9 +133,10 @@ module Member::Private::GroupAction
     !relationship_to_group(member).active
   end
 
-  def being_invited_by_admin?
+  def being_invited_by_admin_or_trigger?
     return false unless being_invited?(member)
-    member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
+    return true if member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
+    member.id == relationship_to_group(member).invite_id
   end
 
   def ask_join_request
