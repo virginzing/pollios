@@ -25,7 +25,7 @@ class Trigger::Vote
 
           # OH GOD WHY??? member voted poll have trigger! and system send invitation but why member add_friend_to_group by self
 
-          Group.add_friend_to_group(find_group, @member, @member.id.to_s, { sender_id: find_group.member.id})
+          Group.add_friend_to_group(find_group, @member, @member.id.to_s, sender_id: 0)
         end
       end
     end

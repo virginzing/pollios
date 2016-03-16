@@ -29,7 +29,7 @@ class InviteGroup
 
   def custom_message
     if @member_id == 0
-      message = "Pollios System invited you in: \"#{group_name}\""
+      message = "\"#{group_name}\" invited you join in"
     else
       if @options[:poke]
         message = "#{member_name} poke invited you in: \"#{group_name}\""

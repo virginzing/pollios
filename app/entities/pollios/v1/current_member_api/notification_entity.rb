@@ -11,7 +11,8 @@ module Pollios::V1::CurrentMemberAPI
 
     private
     def sender
-      return Pollios::V1::Shared::MemberEntity.default_pollios_member if object.sender.nil?
+      return Pollios::V1::Shared::MemberEntity.default_pollios_member if object.sender.nil? && action != 'Invite'
+      return GroupForNotificationEntity.represent(object.custom_properties[:group]) if object.sender.nil? && action == 'Invite'
       return nil if voted_as_anonymous?
       Pollios::V1::Shared::MemberEntity.represent(object.sender)
     end
