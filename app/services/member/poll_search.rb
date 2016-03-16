@@ -31,7 +31,7 @@ class Member::PollSearch
 
     clear_searched_tags_cached_for_member
   
-    return
+    nil
   end
 
   def polls_by_page(list)
@@ -74,7 +74,8 @@ class Member::PollSearch
 
   def save_recent_tag
     recent_search = TypeSearch.find_by(member_id: member.id)
-    recent_search = TypeSearch.create!(member_id: member.id) unless recent_search.present?
+    recent_search = new_type_search unless recent_search.present?
+    recent_search.update!(search_tags: []) unless recent_search.search_tags.present?
     recent_search.update!(search_tags: TypeSearch.find_by(member_id: member.id)[:search_tags] \
       .unshift(message: hashtag, created_at: Time.now.utc))
 
@@ -83,6 +84,10 @@ class Member::PollSearch
 
   def clear_searched_tags_cached_for_member
     FlushCached::Member.new(member).clear_list_searched_tags
+  end
+
+  def new_type_search
+    TypeSearch.create!(search_tags: [], search_users_and_groups: [], member_id: member.id) 
   end
 
 end

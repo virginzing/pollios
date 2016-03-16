@@ -44,9 +44,9 @@ class Member::MemberAndGroupSearch
     recent_search = TypeSearch.find_by(member_id: member.id)
     recent_search.update!(search_users_and_groups: [])
 
-    clear_searched_keywordscached_for_member
+    clear_searched_keywords_cached_for_member
 
-    return
+    nil
   end
 
   def cached_recent_keywords
@@ -77,14 +77,20 @@ class Member::MemberAndGroupSearch
 
   def save_recent_keyword
     recent_search = TypeSearch.find_by(member_id: member.id)
+    recent_search = new_type_search unless recent_search.present?
+    recent_search.update!(search_users_and_groups: []) unless recent_search.search_users_and_groups.present?
     recent_search.update!(search_users_and_groups: TypeSearch.find_by(member_id: member.id)[:search_users_and_groups] \
       .unshift(message: keyword, created_at: Time.now.utc))
 
-    clear_searched_keywordscached_for_member
+    clear_searched_keywords_cached_for_member
   end
 
-  def clear_searched_keywordscached_for_member
+  def clear_searched_keywords_cached_for_member
     FlushCached::Member.new(member).clear_list_searched_keywords
+  end
+
+  def new_type_search
+    TypeSearch.create!(search_tags: [], search_users_and_groups: [], member_id: member.id) 
   end
 
 end
