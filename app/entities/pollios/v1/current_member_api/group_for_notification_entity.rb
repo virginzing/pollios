@@ -3,7 +3,8 @@ module Pollios::V1::CurrentMemberAPI
 
     expose :id, as: :group_id
     expose :name
-    expose :cover, as: :avatar
-    
+    expose :get_cover_group, as: :cover, if: -> (obj, _) { obj.get_cover_group.present? }
+    expose :cover_preset, unless: -> (obj, _) { obj.get_cover_group.present? }
+
   end
 end
