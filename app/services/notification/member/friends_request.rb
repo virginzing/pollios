@@ -16,26 +16,15 @@ class Notification::Member::FriendsRequest
     [a_member]
   end
 
-  def notification_count
-    a_member.increment!(:notification_count)
-    a_member.notification_count
-  end  
-
-  def request_count
-    a_member.increment!(:request_count)
-    a_member.request_count
-  end
-
   def message
-    return member.fullname + ' had accepted your friend request' if action == 'accept_friend'
+    return member.fullname + ' had accepted your friend request' if action == ACTION[:become_friend]
     member.fullname + ' request friend with you'
   end
 
   def data
-    {
+    @data ||= {
       type: TYPE[:friend],
       member_id: member.id,
-      notify: notification_count,
       action: action,
       friend_id: a_member.id,
       worker: WORKER[:add_friend]

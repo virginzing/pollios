@@ -25,30 +25,52 @@ module Notification::Helper
     Apn::Device.where('receive_notification = true AND member_id IN (?)', member_list.map(&:id)).map(&:token)
   end
 
-  def create_notification_for_push(device_token_list, custom_message, data)
+  def notification_count(member_list, poll_id = 0)
+    member_list.each do |member|
+      member.increment!(:notification_count) if \
+        member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
+          , '%action: Create%', "%poll_id: #{poll_id}%") == []
+      member.notification_count
+    end
+  end  
+
+  def request_count(member_list)
+    member_list.each do |member|
+      member.increment!(:request_count)
+      member.request_count
+    end
+  end
+
+  def create_notification_for_push(device_token_list, custom_message, data = nil)
     device_token_list.each do |device_token|
       notification = Rpush::Apns::Notification.new
       notification.app = Rpush::Apns::App.first
       notification.device_token = device_token
       notification.alert = custom_message
-      notification.badge = notification_count
+      notification.badge = data[:notify]
       notification.sound = true
       notification.data = data
       notification.save!
     end
   end
 
-  def create_notification_log(sender, recipients, message, data)
-    recipients.each do |recipient|
+  def create_notification_log(sender, recipient_list, message, data)
+    recipient_list.each do |recipient|
+      data.merge!(notify: recipient.notification_count)
+
       NotifyLog.create!(sender_id: sender.id, recipient_id: recipient.id, message: message, custom_properties: data)
+
+      create_notification_for_push(device_tokens_receive_notification(recipient), message, data)
     end
   end
 
-  def create_notification(sender, recipients, type, message, data)
-    recipients = members_receive_notification(recipients, type)
+  def create_notification(sender, recipient_list, type, message, data)
+    recipient_list = members_receive_notification(recipient_list, type)
 
-    create_notification_for_push(device_tokens_receive_notification(recipients), truncate_message(message), data)
-    create_notification_log(sender, recipients, truncate_message(message), data)
+    request_count(recipient_list) if type == 'request' || type == 'join_group'
+    notification_count(recipient_list, data[:poll_id] || 0)
+    
+    create_notification_log(sender, recipient_list, truncate_message(message), data)
   end
 
 end
