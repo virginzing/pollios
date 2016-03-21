@@ -7,12 +7,12 @@ class Notification::Member::FriendsRequest
   def initialize(member, a_member, options = {})
     @member = member
     @a_member = a_member
-    @action = options[:action]
+    @action = options['action']
 
-    create_notification(member, recipients, 'request', message, data)
+    create_notification(member, recipient_list, 'request', message, data)
   end
 
-  def recipients
+  def recipient_list
     [a_member]
   end
 
@@ -27,7 +27,7 @@ class Notification::Member::FriendsRequest
       member_id: member.id,
       action: action,
       friend_id: a_member.id,
-      worker: WORKER[:add_friend]
+      worker: WORKER[:friends_request]
     }
   end
 

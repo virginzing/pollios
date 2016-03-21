@@ -21,8 +21,8 @@ module Notification::Helper
     member_list.select { |member| member if member.notification[type].to_b }.uniq
   end
 
-  def device_tokens_receive_notification(member_list)
-    Apn::Device.where('receive_notification = true AND member_id IN (?)', member_list.map(&:id)).map(&:token)
+  def device_tokens_receive_notification(member)
+    Apn::Device.where('receive_notification = true AND member_id IN (?)', member.id).map(&:token)
   end
 
   def notification_count(member_list, poll_id = 0)

@@ -72,7 +72,8 @@ module SymbolHash
     :all_message => 'Message',
     :save_poll => 'SavePoll',
     :sum_vote_poll => 'SumVotePoll',
-    :vote_poll => 'VotePoll'
+    :vote_poll => 'VotePoll',
+    friends_request: 'FriendsRequest'
   }
 
 end
