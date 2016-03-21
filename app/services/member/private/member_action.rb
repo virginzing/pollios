@@ -169,7 +169,7 @@ module Member::Private::MemberAction
   end
 
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
-    V1::FriendsRequestWorker.perform_async(src_member, dst_member, options) unless Rails.env.test?
+    V1::FriendsRequestWorker.perform_async(src_member.id, dst_member.id, options) unless Rails.env.test?
   end
 
   def clear_friends_and_follwers_caches_for_members
