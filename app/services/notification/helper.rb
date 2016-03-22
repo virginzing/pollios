@@ -54,23 +54,23 @@ module Notification::Helper
     end
   end
 
-  def create_notification_log(sender, recipient_list, message, data)
+  def create_notification_log(sender, recipient_list, message, data, push_notification)
     recipient_list.each do |recipient|
       data.merge!(notify: recipient.notification_count)
 
       NotifyLog.create!(sender_id: sender.id, recipient_id: recipient.id, message: message, custom_properties: data)
 
-      create_notification_for_push(device_tokens_receive_notification(recipient), message, data)
+      create_notification_for_push(device_tokens_receive_notification(recipient), message, data) if push_notification
     end
   end
 
-  def create_notification(sender, recipient_list, type, message, data)
+  def create_notification(sender, recipient_list, type, message, data, options = { push_notification: true })
     recipient_list = members_receive_notification(recipient_list, type)
 
     request_count(recipient_list) if type == 'request' || type == 'join_group'
     notification_count(recipient_list, data[:poll_id] || 0)
     
-    create_notification_log(sender, recipient_list, truncate_message(message), data)
+    create_notification_log(sender, recipient_list, truncate_message(message), data, options[:push_notification])
   end
 
 end
