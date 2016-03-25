@@ -1,4 +1,4 @@
-class V1::FriendsRequestWorker
+class V1::Member::FriendsRequestWorker
   include Sidekiq::Worker
   sidekiq_options unique: true
 
