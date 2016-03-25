@@ -1,4 +1,4 @@
-class Notification::Poll::NewPollInGroup
+class Notification::Poll::CreateToGroup
   include Notification::Helper
   include SymbolHash
 
