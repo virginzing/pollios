@@ -1,4 +1,4 @@
-class V1::Poll::CreateInGroupWorker
+class V1::Poll::CreateToGroupWorker
   include Sidekiq::Worker
   sidekiq_options unique: true
 
@@ -7,6 +7,6 @@ class V1::Poll::CreateInGroupWorker
     poll = Poll.cached_find(poll_id)
     group = Group.cached_find(group_id)
 
-    Notification::Poll::NewPollInGroup.new(member, poll, group)
+    Notification::Poll::CreateToGroup.new(member, poll, group)
   end
 end
