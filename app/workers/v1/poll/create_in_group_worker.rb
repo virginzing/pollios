@@ -1,4 +1,4 @@
-class V1::NewPollInGroupWorker
+class V1::Poll::CreateInGroupWorker
   include Sidekiq::Worker
   sidekiq_options unique: true
 
