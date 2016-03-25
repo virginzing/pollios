@@ -480,13 +480,15 @@ module Member::Private::PollAction
   def send_vote_notification
     return if poll.series || owner_poll
     sum_vote_notification
-    Poll::VoteNotifyLog.new(member, poll, show_result).create!
+    # Poll::VoteNotifyLog.new(member, poll, show_result).create!
+    Notification::Poll::Vote(member, poll, vote_params[:anonymous])
   end
 
   def sum_vote_notification
     return unless poll.notify_state.idle?
     poll.update!(notify_state: 1)
     poll.update!(notify_state_at: Time.zone.now)
-    SumVotePollWorker.perform_in(1.minutes, poll.id) unless Rails.env.test?
+    # SumVotePollWorker.perform_in(1.minutes, poll.id) unless Rails.env.test?
+    V1::Poll::SumVotedWorker.perform_in(1.minutes, poll.id) unless Rails.env.test?
   end
 end
