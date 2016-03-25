@@ -1,13 +1,13 @@
-class Notification::Poll::VotePoll
+class Notification::Poll::SumVoted
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :anonymous 
+  attr_reader :poll
 
-  def initialize(member, poll, options = { anonymous: false })
-    @member = member
+  def initialize(poll)
     @poll = poll
-    @anonymous = options[:anonymous]
+
+    create_notification(recipient_list, type, message, data, log: false, push: true)
   end
 
   def type
@@ -15,11 +15,22 @@ class Notification::Poll::VotePoll
   end
 
   def recipient_list
-    member_watched_list - voter_list - [member]
+    member_watched_list - voter_list
   end
 
   def message
-    voter_names + " voted a poll: \"#{poll.title}\""
+    case voter_list.size
+  
+    when 1
+      message = name_or_anonymous(voter_list.first)
+    when 2
+      message = name_or_anonymous(voter_list.first) + ' and ' + name_or_anonymous(voter_list.second)
+    else
+      message = name_or_anonymous(voter_list.first) + ', ' + name_or_anonymous(voter_list.second) + \
+                " and #{voter_list.size - 2} other people"
+    end
+
+    message + " voted a poll: \"#{poll.title}\""
   end
 
   def data
@@ -27,11 +38,11 @@ class Notification::Poll::VotePoll
       type: TYPE[:poll],
       poll_id: poll.id,
       series: poll.series,
-      worker: WORKER[:vote_poll]
+      worker: WORKER[:sum_voted]
     } 
   end
 
-  # private
+  private
 
   def voter_list
     Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
@@ -45,10 +56,8 @@ class Notification::Poll::VotePoll
     poll.notify_state_at || 1.minutes.ago
   end
 
-  def voter_names
-    return voter_list.first.fullname if voter_list.size == 1
-    return voter_list.map(&:fullname).join(' and ') if voter_list.size == 2
-    voter_list.first.fullname + ', ' + voter_list.second.fullname + " and #{voter_list.size - 2} other people"
+  def name_or_anonymous(member)
+    member.anonymous ? 'Anonymous' : (member.fullname || 'No name')
   end
 
   def member_watched_list
