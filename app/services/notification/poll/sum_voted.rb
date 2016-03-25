@@ -7,7 +7,9 @@ class Notification::Poll::SumVoted
   def initialize(poll)
     @poll = poll
 
-    create_notification(recipient_list, type, message, data, log: false, push: true)
+    create_notification(recipient_list, type, message, data, push: true)
+
+    poll.update!(notify_state: 0)
   end
 
   def type
