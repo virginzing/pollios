@@ -6,6 +6,6 @@ class V1::Poll::CreateWorker
     member = Member.cached_find(member_id)
     poll = Poll.cached_find(poll_id)
 
-    Notification::Poll::NewPoll.new(member, poll)
+    Notification::Poll::Create.new(member, poll)
   end
 end

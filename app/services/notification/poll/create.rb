@@ -1,4 +1,4 @@
-class Notification::Poll::NewPoll
+class Notification::Poll::Create
   include Notification::Helper
   include SymbolHash
 
