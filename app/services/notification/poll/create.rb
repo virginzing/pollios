@@ -20,7 +20,7 @@ class Notification::Poll::Create
     member_listing_service = Member::MemberList.new(member)
     blocked_members = member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
 
-    return Member.all - blocked_members - [member] if poll.public
+    return Member.all - blocked_members if poll.public
 
     recipient_list = member_listing_service.friends
     recipient_list << member_listing_service.followers unless member.citizen?

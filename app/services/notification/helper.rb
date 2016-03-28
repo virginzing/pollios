@@ -18,7 +18,7 @@ module Notification::Helper
   end
 
   def members_receive_notification(member_list, type)
-    member_list.select { |member| member if member.notification[type].to_b }.uniq
+    member_list.select { |member| member if member.notification[type].to_b }.uniq - [member]
   end
 
   def devices_receive_notification(member_list)

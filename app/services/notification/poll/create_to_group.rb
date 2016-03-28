@@ -22,7 +22,7 @@ class Notification::Poll::CreateToGroup
 
     member_listing_service = Member::MemberList.new(member)
     blocked_members = member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
-    recipient_list - blocked_members - [member]
+    recipient_list - blocked_members
   end
 
   def message

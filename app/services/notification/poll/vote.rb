@@ -17,7 +17,7 @@ class Notification::Poll::Vote
   end
 
   def recipient_list
-    member_watched_list - [member]
+    member_watched_list
   end
 
   def message

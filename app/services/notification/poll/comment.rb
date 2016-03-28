@@ -26,7 +26,7 @@ class Notification::Poll::Comment
   end
 
   def recipient_list
-    member_watched_list - [member]
+    member_watched_list
   end
 
   def data
