@@ -58,14 +58,14 @@ class Notification::Poll::Comment
   end
 
   def adjustment_message
-    mentioned_name = Member.where(id: mentioned_list).each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
-    comment_message.gsub(/@\[\d+\]/) { |mentioning| mentioned_name[mentioning.scan(/\d+/).first.to_i] }
+    mention_name = Member.where(id: mention_list).each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
+    comment_message.gsub(/@\[\d+\]/) { |mentioning| mention_name[mentioning.scan(/\d+/).first.to_i] }
   end
 
-  def mentioned_list
-    mentioned_ids = []
-    comment_message.gsub(/@\[\d+\]/) { |mentioning| mentioning.gsub(/\d+/) { |number| mentioned_ids << number } }
-    mentioned_ids.map(&:to_i)
+  def mention_list
+    mention_ids = []
+    comment_message.gsub(/@\[\d+\]/) { |mentioning| mentioning.gsub(/\d+/) { |number| mention_ids << number } }
+    mention_ids.map(&:to_i)
   end
 
 end
