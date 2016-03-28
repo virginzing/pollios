@@ -25,10 +25,10 @@ module Notification::Helper
     Apn::Device.where('receive_notification = true AND member_id IN (?)', member_list.map(&:id)) 
   end
 
-  def notification_count(member_list, poll_id = 0)
+  def notification_count(member_list, action, poll_id = 0)
     member_list.each do |member|
       member.increment!(:notification_count) if \
-        member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
+        action != 'Create' || member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
           , '%action: Create%', "%poll_id: #{poll_id}%") == []
       member.notification_count
     end
@@ -67,7 +67,7 @@ module Notification::Helper
     message = truncate_message(message)
 
     request_count(recipient_list) if type == 'request' || type == 'join_group'
-    notification_count(recipient_list, data[:poll_id] || 0)
+    notification_count(recipient_list, data[:action], data[:poll_id] || 0)
     
     create_notification_log(recipient_list, message, data) if options[:log]
 
