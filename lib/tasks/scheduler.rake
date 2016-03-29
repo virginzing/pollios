@@ -15,10 +15,10 @@ namespace :scheduler do
 
   desc "alert notification for save poll"
   
-  task alert_save_poll: :environment do
-    puts "alert notification for save poll later"
-    Member.alert_save_poll
-  end
+  # task alert_save_poll: :environment do
+  #   puts "alert notification for save poll later"
+  #   Member.alert_save_poll
+  # end
 
 
 end

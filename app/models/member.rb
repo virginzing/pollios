@@ -305,9 +305,9 @@ class Member < ActiveRecord::Base
     public_id || ""
   end
 
-  def self.alert_save_poll
-    SavePollWorker.perform_async({})
-  end
+  # def self.alert_save_poll
+  #   SavePollWorker.perform_async({})
+  # end
 
   def self.from_omniauth(auth)
     fb_params = {
