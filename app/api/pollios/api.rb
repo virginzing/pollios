@@ -38,7 +38,7 @@ module Pollios
 
     desc 'return list of all currently available apis'
     get '/apis' do
-      present Pollios::API.routes, with: APIEntity
+      present Pollios::API.routes | Pollios::Sentai.routes, with: APIEntity
     end
 
     mount V1::API

@@ -1,7 +1,7 @@
 namespace :api do
   desc 'routes'
   task routes: :environment do
-    Pollios::API.routes.each do |api|
+    (Pollios::API.routes | Pollios::Sentai.routes).each do |api|
       method = api.route_method.ljust(8)
       if api.route_version
         path = api.route_path.gsub(':version', api.route_version).ljust(55)
