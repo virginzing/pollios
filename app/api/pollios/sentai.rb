@@ -4,7 +4,8 @@ module Pollios
     prefix :sentai
 
     rescue_from ExceptionHandler::UnprocessableEntity do |e|
-      error!(nil, e.message)
+      e = eval(e.message)
+      error!(e[:message], e[:status])
     end
 
     desc 'sign in Pollios app on mobile with sentai'

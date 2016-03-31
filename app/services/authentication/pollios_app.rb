@@ -2,11 +2,11 @@ class Authentication::PolliosApp
 
   def self.sign_in(params)
     sentai_respond = Authentication::Sentai.sign_in(params.merge!(app_name: 'pollios'))
-    fail ExceptionHandler::UnprocessableEntity, 401 unless sentai_respond['response_status'] == 'OK'
+    fail ExceptionHandler::UnprocessableEntity, status: 401, message: ExceptionHandler::Message::Auth::LOGIN_FAIL \
+      unless sentai_respond['response_status'] == 'OK'
     
     hash = {
       provider: 'sentai',
-      web_login: params[:web_login],
       register: :in_app,
       app_id: params[:app_id]
     }
