@@ -3,6 +3,10 @@ module Pollios
     format :json
     prefix :sentai
 
+    rescue_from ExceptionHandler::UnprocessableEntity do |e|
+      error!(nil, e.message)
+    end
+
     desc 'sign in Pollios app on mobile with sentai'
     params do
       requires :authen, type: String, desc: 'email for Pollios app account'
