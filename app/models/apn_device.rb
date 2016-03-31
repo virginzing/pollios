@@ -18,25 +18,34 @@ class ApnDevice
     device
   end
 
-  def self.get_access_api(device_token, member_id)
+  def self.access_api(device_token, member_id)
     Apn::Device.find_by_token_and_member_id(device_token, member_id)
   end
 
   def self.generate_api_token
-    begin
+    api_token = nil
+
+    loop do
       api_token = SecureRandom.hex
-    end while Apn::Device.exists?(api_token: api_token)
-    return api_token
+      break unless Apn::Device.exists?(api_token: api_token)
+    end
+    
+    api_token
   end
 
   def self.check_device?(member, device_token)
-    if device_token.present?
-      @member_device = MemberDevice.new(member, device_token)
-      @device = @member_device.check_device
-      @member_device.get_access_api
-    else
-      nil
-    end
+    return unless device_token.present?
+    @member_device = MemberDevice.new(member, device_token)
+    @device = @member_device.check_device
+    @member_device.access_api
+  end
+
+  def self.update_detail(member, device_token, model, os)
+    return unless device_token.present?
+    member_device = MemberDevice.new(member, device_token)
+    device = member_device.check_device
+    Apn::Device.find_by(token: device_token).update!(model: model, os: os)
+    member_device.access_api
   end
   
 end
