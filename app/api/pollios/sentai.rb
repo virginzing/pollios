@@ -64,13 +64,43 @@ module Pollios
       Authentication::PolliosApp.forgot_password(params)
     end
 
+    helpers do
+
+      def current_member
+        @current_member ||= authenticate_member
+      end
+
+      def authenticate_member
+        member = member_if_allowed
+        authen_token = headers['X-Api-Key']
+        error!('401 Unauthorized: no token', 401) unless authen_token.present?
+
+        member_access_token = member.api_tokens.where('token = ?', authen_token)
+        error!('401 Unauthorized: invalid token', 401) unless member_access_token.present?
+
+        member
+      end
+
+      def member_if_allowed
+        member = Member.find_by(id: params[:member_id])
+        error!('404 Member not found', 404) if member.nil?
+        error!('403 Forbidden', 403) if member.blacklist? || member.ban?
+        member
+      end
+
+    end
+
     desc 'change password password Pollios app on mobile with sentai'
+    before do
+      error!('401 Unauthorized', 401) unless current_member
+    end
     params do
       requires :email, type: String, desc: 'email for Pollios app account'
       requires :old_password, type: String, desc: 'old  password Pollios app' 
       requires :new_password, type: String, desc: 'new password Pollios app' 
     end
     post '/change_password' do
+      error!('401 Unauthorized: invalid email', 401) unless current_member.email == params[:email]
       Authentication::PolliosApp.change_password(params)
     end
 
