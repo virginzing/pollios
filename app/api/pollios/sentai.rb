@@ -65,8 +65,13 @@ module Pollios
     end
 
     desc 'change password password Pollios app on mobile with sentai'
+    params do
+      requires :email, type: String, desc: 'email for Pollios app account'
+      requires :old_password, type: String, desc: 'old  password Pollios app' 
+      requires :new_password, type: String, desc: 'new password Pollios app' 
+    end
     post '/change_password' do
-      
+      Authentication::PolliosApp.change_password(params)
     end
 
     desc 'sign out Pollios app on mobile with sentai'

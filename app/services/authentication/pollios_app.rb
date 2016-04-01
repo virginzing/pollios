@@ -44,4 +44,12 @@ class Authentication::PolliosApp
     { message: 'Password reset instruction was sent to your email address' }
   end
 
+  def self.change_password(params)
+    sentai_respond = Authentication::Sentai.change_password(params)
+    fail ExceptionHandler::UnprocessableEntity, status: 422, message: sentai_respond['response_message'] \
+      unless sentai_respond['response_status'] == 'OK'
+
+    { message: sentai_respond['response_message'] }
+  end
+
 end
