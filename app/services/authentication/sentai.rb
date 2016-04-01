@@ -20,4 +20,8 @@ class Authentication::Sentai
     JSON.parse(RestClient.post("#{host_url}/codeapp/signup.json", params).body)
   end
 
+  def self.forgot_password(params)
+    JSON.parse(RestClient.post("#{host_url}/codeapp/forgot_password.json", params).body)
+  end
+
 end

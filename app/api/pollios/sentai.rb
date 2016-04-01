@@ -57,8 +57,11 @@ module Pollios
     end
 
     desc 'forgot password Pollios app on mobile with sentai'
+    params do
+      requires :email, type: String, desc: 'email for Pollios app account'
+    end
     post '/forgot_password' do
-      
+      Authentication::PolliosApp.forgot_password(params)
     end
 
     desc 'change password password Pollios app on mobile with sentai'

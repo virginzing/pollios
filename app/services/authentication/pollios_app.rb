@@ -35,4 +35,13 @@ class Authentication::PolliosApp
     authenticate.member
   end
 
+  def self.forgot_password(params)
+    sentai_respond = Authentication::Sentai.forgot_password(params)
+    fail ExceptionHandler::UnprocessableEntity, status: 404, message: 'Email address not found' \
+      unless sentai_respond['response_status'] == 'OK'
+
+    MemberMailer.delay.password_reset(Member.find_by(email: params[:email]), sentai_respond['password_reset_token'])
+    { message: 'Password reset instruction was sent to your email address' }
+  end
+
 end
