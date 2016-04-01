@@ -6,6 +6,7 @@ class Member::MemberAndGroupSearch
     @member = member
     @index = options[:index] || 1
 
+    first_or_create_search_keywords
     return unless keyword
     @keyword = keyword.downcase
 
@@ -54,6 +55,11 @@ class Member::MemberAndGroupSearch
   end
 
   private
+
+  def first_or_create_search_keywords
+    TypeSearch.create!(member_id: member.id) if TypeSearch.find_by(member_id: member.id).nil?
+    clear_searched_keywords if TypeSearch.find_by(member_id: member.id).search_users_and_groups.nil?
+  end
 
   def recent_keywords
     TypeSearch.find_by(member_id: member.id)[:search_users_and_groups].map { |tag| tag[:message] }.uniq[0..9]

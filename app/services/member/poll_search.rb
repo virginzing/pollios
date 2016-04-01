@@ -4,9 +4,9 @@ class Member::PollSearch
 
   def initialize(member, hashtag = nil, options = {})
     @member = member
-
     @index = options[:index] || 1
 
+    first_or_create_search_tag
     return unless hashtag
     @hashtag = hashtag.downcase
 
@@ -47,6 +47,11 @@ class Member::PollSearch
   end
 
   private
+
+  def first_or_create_search_tag
+    TypeSearch.create!(member_id: member.id) if TypeSearch.find_by(member_id: member.id).nil?
+    clear_searched_tags if TypeSearch.find_by(member_id: member.id).search_tags.nil?
+  end
 
   def recent_tags
     TypeSearch.find_by(member_id: member.id)[:search_tags].map { |tag| tag[:message] }.uniq[0..9]
