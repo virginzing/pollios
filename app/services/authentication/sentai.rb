@@ -16,4 +16,8 @@ class Authentication::Sentai
     JSON.parse(RestClient.post("#{host_url}/codeapp/signin.json", params).body)
   end
 
+  def self.sign_up(params)
+    JSON.parse(RestClient.post("#{host_url}/codeapp/signup.json", params).body)
+  end
+
 end

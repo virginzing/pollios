@@ -43,7 +43,7 @@ class ApnDevice
   def self.update_detail(member, device_token, model, os)
     return unless device_token.present?
     member_device = MemberDevice.new(member, device_token)
-    device = member_device.check_device
+    member_device.check_device
     Apn::Device.find_by(token: device_token).update!(model: model, os: os)
     member_device.access_api
   end
