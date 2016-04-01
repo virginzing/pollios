@@ -105,8 +105,11 @@ module Pollios
     end
 
     desc 'sign out Pollios app on mobile with sentai'
-    delete '/sign_out' do
-
+    before do
+      error!('401 Unauthorized', 401) unless current_member
+    end
+    delete '/sign_out_all_device' do
+      Authentication::PolliosApp.sign_out_all_device(current_member)
     end
 
   end

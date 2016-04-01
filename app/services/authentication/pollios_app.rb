@@ -52,4 +52,10 @@ class Authentication::PolliosApp
     { message: sentai_respond['response_message'] }
   end
 
+  def self.sign_out_all_device(member)
+    member.api_tokens.delete_all
+
+    nil
+  end
+
 end
