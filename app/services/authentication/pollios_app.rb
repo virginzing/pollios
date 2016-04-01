@@ -11,7 +11,8 @@ class Authentication::PolliosApp
       app_id: params[:app_id]
     }
     authenticate = Authentication.new(sentai_respond.merge!(hash))
-    fail ExceptionHandler::UnprocessableEntity, 403 unless authenticate.check_valid_member?
+    fail ExceptionHandler::UnprocessableEntity, status: 403, message: authenticate.error_message_detail \
+      unless authenticate.check_valid_member?
     ApnDevice.update_detail(authenticate.member, params[:device_token], params[:model], params[:os])
 
     authenticate.member
