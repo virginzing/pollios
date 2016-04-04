@@ -74,7 +74,9 @@ module SymbolHash
     :sum_vote_poll => 'SumVotePoll',
     :vote_poll => 'VotePoll',
     friends_request: 'FriendsRequest',
-    sum_voted: 'SumVoted'
+    sum_voted: 'SumVoted',
+    receive_reward: 'ReceiveReward',
+    not_receive_reward: 'NotReceiveReward'
   }
 
 end
