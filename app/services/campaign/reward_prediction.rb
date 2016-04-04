@@ -29,12 +29,12 @@ class Campaign::RewardPrediction
     reward_id = random_reward_id
     if reward_id == 0
       create_member_reward(:not_receive, member.id)
-      send_not_recive_reward_notification(member.id.to_a)
+      send_not_receive_reward_notification(member.id.to_a)
     else
       increment_used_campaign_claimed_reward(reward_id)
       member_reward = create_member_reward(:receive, member.id, reward_id: reward_id \
         , serial_code: generate_serial_code)
-      send_recive_reward_notification(member_reward.id)
+      send_receive_reward_notification(member_reward.id)
     end
   end
 
@@ -71,19 +71,21 @@ class Campaign::RewardPrediction
       member_get_reward_ids = voter_ids.sample(reward.total)
 
       member_get_reward_ids.each do |member_id|
-        member_reward = campaign.member_rewards.find_by(member_id: member_id).update!(reward_status: :receive \
-                          , reward_id: reward.id, serial_code: generate_serial_code)
+        member_reward = campaign.member_rewards.find_by(member_id: member_id)
+        member_reward.update!(reward_status: :receive, reward_id: reward.id, serial_code: generate_serial_code)
         increment_used_campaign_claimed_reward(reward.id)
-        send_recive_reward_notification(member_reward.id)
+        send_receive_reward_notification(member_reward.id)
       end
 
       voter_ids -= member_get_reward_ids
     end
 
     voter_ids.each do |member_id|
-      campaign.member_rewards.find_by(member_id: member_id).update!(reward_status: :not_receive)
+      member_reward = campaign.member_rewards.find_by(member_id: member_id)
+      member_reward.update!(reward_status: :not_receive)
+
+      send_receive_reward_notification(member_reward.id)
     end
-    send_not_recive_reward_notification(voter_ids)
   end
 
   def generate_serial_code
@@ -98,13 +100,8 @@ class Campaign::RewardPrediction
     ref_no
   end
 
-  def send_recive_reward_notification(member_reward_id)
-    RewardWorker.perform_async(member_reward_id) unless Rails.env.test?
-  end
-
-  def send_not_recive_reward_notification(member_ids)
-    NotReceiveRandomRewardPollWorker.perform_async(campaign.member_id, poll.id, member_ids \
-      , "Sorry! You don't get reward from poll: #{poll.title}") unless Rails.env.test?
+  def send_receive_reward_notification(member_reward_id)
+    V1::Reward::ReceiveWorker.perform_async(member_reward_id) unless Rails.env.test?
   end
 
   # private

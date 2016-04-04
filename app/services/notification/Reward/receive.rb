@@ -21,13 +21,17 @@ class Notification::Reward::Receive
   end
 
   def message
-    "You got reward from campaign: \"#{campaign.name}\""
+    return "You got reward from campaign: \"#{campaign.name}\"" if member_reward.reward_status.receive?
+    "Sorry! You don't get reward from poll: \"#{campaign.poll.title}\""
   end
 
   def data
     @data ||= {
       type: TYPE[:reward],
-      redeemable_info: { redeem_id: member_reward.id },
+      redeemable_info: { 
+        redeem_id: member_reward.id,
+        reward_status: member_reward.reward_status
+      },
       worker: WORKER[:receive_reward]
     }
   end
