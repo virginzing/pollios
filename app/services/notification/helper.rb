@@ -17,7 +17,8 @@ module Notification::Helper
     limit_message + '.'
   end
 
-  def members_receive_notification(member_list, type)
+  def members_receive_notification(member_list, type = nil)
+    return member_list if type.nil?
     member_list.select { |member| member if member.notification[type].to_b }.uniq - [member]
   end
 
@@ -55,10 +56,12 @@ module Notification::Helper
   end
 
   def create_notification_log(recipient_list, message, data)
+    sender_id = (member.present? ? member.id : nil)
+
     recipient_list.each do |recipient|
       data.merge!(notify: recipient.notification_count)
 
-      NotifyLog.create!(sender_id: member.id, recipient_id: recipient.id, message: message, custom_properties: data)
+      NotifyLog.create!(sender_id: sender_id, recipient_id: recipient.id, message: message, custom_properties: data)
     end
   end
 
