@@ -22,7 +22,7 @@ class Notification::Reward::Receive
 
   def message
     return "You got reward from campaign: \"#{campaign.name}\"" if member_reward.reward_status.receive?
-    "Sorry! You don't get reward from poll: \"#{campaign.poll.title}\""
+    "Sorry! You don't get reward from poll: \"#{member_reward.poll.title}\""
   end
 
   def data
