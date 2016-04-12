@@ -60,6 +60,15 @@ module Pollios::V1::CurrentMemberAPI
           present notifications: current_member.notification
         end
 
+        desc "update current member's facebook connection"
+        params do
+          requires :fb_id, type: String, desc: 'facebook id'
+          optional :list_fb_id, type: Array[String], desc: 'list of facebook friend id'
+        end
+        put '/facebook' do
+          current_member_setting.facebook(params)
+        end
+
         desc "update current member's devices"
         params do
           requires :id, type: Integer, desc: 'device id'
