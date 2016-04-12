@@ -60,7 +60,7 @@ module Pollios::V1::CurrentMemberAPI
           present notifications: current_member.notification
         end
 
-        desc "returns list of current member's devices"
+        desc "update current member's devices"
         params do
           requires :id, type: Integer, desc: 'device id'
           optional :receive_notification, type: Boolean, desc: 'true when want to receive notification'
