@@ -33,13 +33,11 @@ class Member::Recommendation
   end
 
   def facebooks
-    return [] unless friends_ids.count > 0
-
     member_using_facebook = Member.viewing_by_member(member)
                             .where('status_account = 1 AND member_type = 0')
                             .where(fb_id: member.list_fb_id, first_signup: false)
 
-    member_using_facebook.where('id NOT IN (?)', friends_ids)
+    member_using_facebook.where('id NOT IN (?)', mebmer_have_relation_member_ids | unrecomment_ids)
   end
 
   def friends
