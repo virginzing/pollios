@@ -9,6 +9,7 @@ module Member::Private::SettingUpdate
     update_cover
     update_cover_preset
 
+    clear_member_cached
     clear_member_cached_for_friends
 
     member
@@ -49,6 +50,8 @@ module Member::Private::SettingUpdate
     member.update(public_id: params_public_id[:public_id])
     fail ExceptionHandler::UnprocessableEntity, 'Public ID has already been take' unless member.valid?
 
+    clear_member_cached
+
     member.save!
   end
 
@@ -56,6 +59,8 @@ module Member::Private::SettingUpdate
     update_birthday
     updata_gender
     member.update!(update_personal: true)
+
+    clear_member_cached
 
     member
   end
@@ -72,10 +77,16 @@ module Member::Private::SettingUpdate
   
   def process_update_notifications
     member.update!(notification: params_notifications.except(:member_id))
+
+    clear_member_cached
   end
 
   def clear_member_cached_for_friends
     FlushCached::Member.new(member).clear_list_friends_all_members
+  end
+
+  def clear_member_cached
+    Rails.cache.delete(['Member', member.id])
   end
 
 end
