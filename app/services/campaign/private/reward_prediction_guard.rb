@@ -3,8 +3,8 @@ module Campaign::Private::RewardPredictionGuard
   private
 
   def can_predict?
-    return [false, 'This campaign was expire.'] if campaign_expire
-    return [false, 'This campaign was limit.'] if campaign_limit_exist
+    return [false, 'This campaign was expired.'] if campaign_expire
+    return [false, 'This campaign was limited.'] if campaign_limit_exceed
     return [false, 'You used to get this reward of this campaign.'] if used_to_get_reward
     [true, nil]
   end
@@ -13,7 +13,7 @@ module Campaign::Private::RewardPredictionGuard
     campaign.expire < Time.now
   end
 
-  def campaign_limit_exist
+  def campaign_limit_exceed
     campaign.limit <= campaign.used
   end
 

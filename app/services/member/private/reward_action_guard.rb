@@ -5,7 +5,7 @@ module Member::Private::RewardActionGuard
   def can_claim?
     return [false, "This reward doesn't exist in your rewards"] if worng_reward
     return [false, 'This reward has expired.'] if expire_reward
-    return [false, 'This campaign has be finished.'] if reward_limit_exist
+    return [false, 'This campaign has be finished.'] if reward_limit_exceed
     return [false, 'You are already claimed this reward.'] if already_claim
     return [false, "You don't receive this reward."] if not_receive_reward
     [true, nil]
@@ -26,7 +26,7 @@ module Member::Private::RewardActionGuard
     reward.reward_expire < Time.zone.now
   end
 
-  def reward_limit_exist
+  def reward_limit_exceed
     reward.claimed >= reward.total
   end
 

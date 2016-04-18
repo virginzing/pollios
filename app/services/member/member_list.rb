@@ -57,7 +57,7 @@ class Member::MemberList
     !ids_include?(outgoing_requests, a_member.id)
   end
 
-  def friends_limit_exist?
+  def friends_limit_exceed?
     friend_count >= @member.friend_limit
   end
     
