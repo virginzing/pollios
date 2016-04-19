@@ -9,6 +9,8 @@ module Member::Private::SettingUpdate
     update_cover
     update_cover_preset
 
+    update_first_signup_to_false
+
     clear_member_cached
     clear_member_cached_for_friends
 
@@ -105,6 +107,12 @@ module Member::Private::SettingUpdate
   
   def process_update_notifications
     member.update!(notification: params_notifications.except(:member_id))
+  end
+
+  def update_first_signup_to_false
+    return unless member.first_signup
+
+    member.update!(first_signup: false)
   end
 
   def clear_member_cached_for_friends
