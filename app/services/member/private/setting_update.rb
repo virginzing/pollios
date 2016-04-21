@@ -9,8 +9,6 @@ module Member::Private::SettingUpdate
     update_cover
     update_cover_preset
 
-    update_first_signup_to_false
-
     clear_member_cached
     clear_member_cached_for_friends
 
@@ -22,6 +20,8 @@ module Member::Private::SettingUpdate
 
     NotifyLog.edit_message_that_change_name(member, params_profile[:name], member.fullname)
     member.update!(fullname: params_profile[:name])
+
+    update_first_signup_to_false
   end
 
   def update_description
@@ -33,11 +33,15 @@ module Member::Private::SettingUpdate
   def update_avatar
     return unless params_profile[:avatar]
 
+    member.remove_avatar!
+
     member.update_column(:avatar, ImageUrl.new(params_profile[:avatar]).split_cloudinary_url)
   end
 
   def update_cover
     return unless params_profile[:cover]
+
+    member.remove_cover!
 
     member.update_column(:cover, ImageUrl.new(params_profile[:cover]).split_cloudinary_url)
 
@@ -54,7 +58,6 @@ module Member::Private::SettingUpdate
     return unless member.cover.present?
 
     member.remove_cover!
-    member.save!
   end
 
   def process_update_facebook_connection
