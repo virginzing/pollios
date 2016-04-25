@@ -12,7 +12,7 @@ module Pollios::V1::CurrentMemberAPI
 
         desc "returns current member's ppublic id"
         get '/public_id' do
-          present publid_id: current_member.public_id
+          present public_id: current_member.public_id
         end
 
         desc "returns current member's personal details"

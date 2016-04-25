@@ -33,7 +33,7 @@ module Pollios::V1::CurrentMemberAPI
         end
         put '/public_id' do
           current_member_setting.public_id(params)
-          present publid_id: current_member.public_id
+          present public_id: current_member.public_id
         end
 
         desc "update current member's personal"
