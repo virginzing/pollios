@@ -30,5 +30,13 @@ module Pollios::V1::CurrentMemberAPI
       ]
     end
 
+    def member
+      object
+    end
+
+    def gender
+      member.gender.value
+    end
+
   end
 end
