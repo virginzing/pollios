@@ -39,7 +39,7 @@ module Pollios::V1::CurrentMemberAPI
         desc "update current member's personal"
         params do
           optional :birthday, type: Date, desc: 'date of birth'
-          optional :gender, type: String, values: %w(male female other), desc: 'gender'
+          optional :gender, type: Integer, values: [1, 2, 3], desc: 'gender'
         end
         put '/personal' do
           update_personal = current_member_setting.personal(params)
