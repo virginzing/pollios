@@ -2,8 +2,10 @@ module Pollios::V1::CurrentMemberAPI
   class SettingPersonalEntity < Pollios::V1::BaseEntity
 
     expose :form
-    expose :birthday
-    expose :gender
+    expose :data do
+      expose :birthday
+      expose :gender
+    end
 
     def form
       [
