@@ -61,6 +61,11 @@ module Pollios::V1::CurrentMemberAPI
           requests_for_member = Member::RequestList.new(current_member)
           present requests_for_member, with: RequestListEntity, only: [:group_admins]
         end
+
+        get '/facebook' do
+          present :members, Member::Recommendation.new(current_member).facebooks \
+            , with: Pollios::V1::Shared::MemberForListEntity
+        end
       end
 
       desc 'returns notification and request counts for current member'
