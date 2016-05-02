@@ -62,6 +62,7 @@ module Pollios::V1::CurrentMemberAPI
           present requests_for_member, with: RequestListEntity, only: [:group_admins]
         end
 
+        desc 'returns list of recommend member from facebook'
         get '/facebook' do
           present :members, Member::Recommendation.new(current_member).facebooks \
             , with: Pollios::V1::Shared::MemberForListEntity
