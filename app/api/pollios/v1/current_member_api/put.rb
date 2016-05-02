@@ -67,6 +67,8 @@ module Pollios::V1::CurrentMemberAPI
         end
         put '/facebook' do
           current_member_setting.facebook(params)
+          present :members, Member::Recommendation.new(current_member).facebooks \
+            , with: Pollios::V1::Shared::MemberForListEntity
         end
 
         desc "update current member's devices"
