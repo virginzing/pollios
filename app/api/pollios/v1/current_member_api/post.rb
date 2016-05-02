@@ -5,7 +5,6 @@ module Pollios::V1::CurrentMemberAPI
     resource :current_member do
 
       resource :rewards do
-
         helpers do
           def member_reward
             @member_reward = MemberReward.cached_find(params[:id])
@@ -37,8 +36,18 @@ module Pollios::V1::CurrentMemberAPI
             present :presets, new_preset, with: PresetEntity
           end
         end
-
       end
+
+      resource :invites do
+        desc 'send invite to join Pollios with email'
+        params do
+          requires :email_list, type: Array[String], desc: 'list of email to invite'
+        end
+        post '/email' do
+          Member::InviteUser.new(current_member).by_email(params[:email_list])
+        end
+      end      
+
     end
 
   end
