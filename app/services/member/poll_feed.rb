@@ -35,6 +35,10 @@ class Member::PollFeed
   end
 
   def random
+    poll = unvoted_timeline_polls.sample
+
+    return poll if poll.present?
+
     public_timeline_polls.sample
   end
 
