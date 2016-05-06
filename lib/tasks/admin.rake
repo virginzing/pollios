@@ -169,7 +169,7 @@ namespace :admin do
   desc "Set default to The Notification of Member"
   task :set_default_notification => :environment do
     Member.all.each do |member|
-      member.notification = Member::Notification::DEFAULT
+      member.notification = Member::OldNotification::DEFAULT
       member.save!
     end
   end

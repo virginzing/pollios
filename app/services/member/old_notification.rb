@@ -1,4 +1,4 @@
-class Member::Notification
+class Member::OldNotification
 
   attr_accessor :options
 
