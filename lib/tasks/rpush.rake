@@ -5,7 +5,7 @@ namespace :rpush do
     app = Rpush::Apns::App.new
     app.name = 'Pollios'
     app.environment = 'development'
-    app.certificate = Rails.root.join('config', 'certificates', 'server_production', 'PolliosCertificateRpush.pem').read
+    app.certificate = Rails.root.join('config', 'certificates', 'server_production', 'new_pollios_production_cer.pem').read
     app.save!
   end
 
@@ -14,7 +14,7 @@ namespace :rpush do
     app = Rpush::Apns::App.new
     app.name = 'Pollios'
     app.environment = 'production'
-    app.certificate = Rails.root.join('config', 'certificates', 'server_production', 'PolliosCertificateRpush.pem').read
+    app.certificate = Rails.root.join('config', 'certificates', 'server_production', 'new_pollios_production_cer.pem').read
     app.save!
   end
 
