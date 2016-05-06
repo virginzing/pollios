@@ -254,7 +254,7 @@ class Member < ActiveRecord::Base
   end
 
   def set_default_notification
-    self.notification = Member::Notification::DEFAULT
+    self.notification = Member::OldNotification::DEFAULT
   end
 
   def check_sync_facebook

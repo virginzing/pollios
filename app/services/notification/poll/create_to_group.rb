@@ -9,7 +9,7 @@ class Notification::Poll::CreateToGroup
     @poll = poll
     @group = group
 
-    create_notification(member, recipient_list, type, message, data)
+    create_notification(recipient_list, type, message, data)
   end
 
   def type

@@ -268,7 +268,7 @@ class MembersController < ApplicationController
   end
 
   def update_notification
-    raise ExceptionHandler::UnprocessableEntity, "Keys of notification don't match" if notification_params.keys.sort != Member::Notification::DEFAULT.keys.sort
+    raise ExceptionHandler::UnprocessableEntity, "Keys of notification don't match" if notification_params.keys.sort != Member::OldNotification::DEFAULT.keys.sort
     @current_member.update!(notification: notification_params)
 
     render json: Hash["response_status" => "OK"], status: :ok
