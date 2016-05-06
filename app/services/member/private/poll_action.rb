@@ -481,7 +481,7 @@ module Member::Private::PollAction
     return if poll.series || owner_poll
     sum_vote_notification
     # Poll::VoteNotifyLog.new(member, poll, show_result).create!
-    Notification::Poll::Vote(member, poll, vote_params[:anonymous])
+    Notification::Poll::Vote.new(member, poll, vote_params[:anonymous])
   end
 
   def sum_vote_notification
