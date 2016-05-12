@@ -102,15 +102,15 @@ module Member::Private::MemberAction
     process_unfriend_request(clear_cached: false)
     process_unfollow
 
-    outgoing_block
-    incoming_block
+    outgoing_relation_block
+    iincoming_relation_block
     
     clear_friends_and_follwers_caches_for_members
 
     nil
   end
 
-  def outgoing_block
+  def outgoing_relation_block
     if outgoing_relation.present?
       outgoing_relation.update(block: true)
     else
@@ -118,7 +118,7 @@ module Member::Private::MemberAction
     end
   end
 
-  def incoming_block
+  def iincoming_relation_block
     if incoming_relation.present?
       incoming_relation.update(visible_poll: false)
     else
