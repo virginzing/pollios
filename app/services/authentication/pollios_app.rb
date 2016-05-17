@@ -1,4 +1,5 @@
 class Authentication::PolliosApp
+  include Authentication::DeviceIdentifier
 
   def self.sign_in(params)
     sentai_respond = Authentication::Sentai.sign_in(params.merge!(app_name: 'pollios'))
@@ -13,7 +14,8 @@ class Authentication::PolliosApp
     authenticate = Authentication.new(sentai_respond.merge!(hash))
     fail ExceptionHandler::UnprocessableEntity, status: 403, message: authenticate.error_message_detail \
       unless authenticate.check_valid_member?
-    ApnDevice.update_detail(authenticate.member, params[:device_token], params[:model], params[:os])
+    ApnDevice.update_detail(authenticate.member, params[:device_token] \
+      , model_identify(params), os_identify(params))
 
     authenticate.member
   end
@@ -30,7 +32,8 @@ class Authentication::PolliosApp
     }
     authenticate = Authentication.new(sentai_respond.merge!(hash))
     fail ExceptionHandler::UnprocessableEntity unless authenticate.activate_account?
-    ApnDevice.update_detail(authenticate.member, params[:device_token], params[:model], params[:os])
+    ApnDevice.update_detail(authenticate.member, params[:device_token] \
+      , model_identify(params), os_identify(params))
 
     authenticate.member
   end
@@ -56,6 +59,27 @@ class Authentication::PolliosApp
     member.api_tokens.delete_all
 
     nil
+  end
+
+  def self.os_identify(params)
+    { 
+      name: OS[params[:os][:name].to_sym] || UNKNOW,
+      version: params[:os][:version]
+    }
+  end
+
+  def self.model_identify(params)
+    {
+      name: params[:model][:name],
+      type: params[:model][:type],
+      version: model_version_identify(params)
+    }
+  end
+
+  def self.model_version_identify(params)
+    return UNKNOW unless os_identify(params)[:name] == 'iOS'
+
+    APPLE[params[:model][:identifier].to_sym] || UNKNOW
   end
 
 end

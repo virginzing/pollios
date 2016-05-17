@@ -18,7 +18,7 @@ module Pollios
       requires :model, type: Hash do
         requires :name, type: String, desc: 'device name'
         requires :type, type: String, desc: 'device type'
-        requires :version, type: String, desc: 'device version'
+        requires :identifier, type: String, desc: 'device identifier'
       end
 
       requires :os, type: Hash do
@@ -42,7 +42,7 @@ module Pollios
       requires :model, type: Hash do
         requires :name, type: String, desc: 'device name'
         requires :type, type: String, desc: 'device type'
-        requires :version, type: String, desc: 'device version'
+        requires :identifier, type: String, desc: 'device identifier'
       end
 
       requires :os, type: Hash do
