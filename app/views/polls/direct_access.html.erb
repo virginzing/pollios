@@ -4,10 +4,10 @@
 </div>
 
 <div class="text-center">
-  <H5><%= @poll.title %></H5>
+  <h5><%= @poll.title %></h5>
   <p><%= image_tag @poll.get_photo, size: "400x400", class: "img-responsive center-block" %></p>
   <% @poll.choices.each do |choice| %>
-  
+
   <p class="choice col-xs-12 col-centered" style="font-size: 16px;"><%= choice.answer %></p>
 
   <% end %>
@@ -26,7 +26,7 @@
   <p style="float: left; margin: 40px 0px 0px -186px;">
 
     <%= "Download " %>
-    <a href="<%= @download_link %>">
+    <a href="<%= @download_lrink %>">
       <img src="/images/app-store.png", style="width:125px;height:47px;border:0">
     </a>
   </p>
