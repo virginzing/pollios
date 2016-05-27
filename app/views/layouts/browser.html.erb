@@ -9,7 +9,7 @@
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <meta property="og:title" content="<%= @poll.title %>" />
     <meta property="og:description" content="<%= @poll.member.fullname %>" />
-    <meta property="og:image" content="<&= @qrcode %>" />
+    <meta property="og:image" content="<%= @qrcode %>" />
     <!-- Use the correct meta names below for your web application
       Ref: http://davidbcalhoun.com/2010/viewport-metatag
 
@@ -86,12 +86,14 @@
     <!-- possible classes: minified, fixed-ribbon, fixed-header, fixed-width-->
     <!-- HEADER -->
     <header id="header">
-      <div id="logo-group">
-        <!-- PLACE YOUR LOGO HERE -->
-        <h1 class="logo pull-left">
-          <%= image_tag 'pollios_webLogo@2x.png', class: 'logo-image', id: 'logo-image' %>
-        </h1>
-        <!-- END LOGO PLACEHOLDER -->
+      <div class="container">
+       <div id="logo-group">
+         <!-- PLACE YOUR LOGO HERE -->
+          <h1 class="logo pull-left">
+            <%= image_tag 'pollios_webLogo@2x.png', class: 'logo-image', id: '  logo-image' %>
+          </h1>
+          <!-- END LOGO PLACEHOLDER -->
+        </div>
       </div>
       <!-- END AJAX-DROPDOWN -->
     </div>
@@ -106,6 +108,12 @@
 
   <!-- END NAVIGATION -->
   <!-- MAIN PANEL -->
+  <style>
+    #main {
+      margin-left: 0 !important;
+      padding-bottom: 65px;
+    }
+  </style>
   <div id="main" role="main" class="">
     <!-- MAIN CONTENT -->
     <div id="content">
