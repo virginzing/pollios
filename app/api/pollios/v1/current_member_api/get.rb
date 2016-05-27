@@ -10,7 +10,7 @@ module Pollios::V1::CurrentMemberAPI
           present current_member, with: SettingAccountEntity
         end
 
-        desc "returns current member's ppublic id"
+        desc "returns current member's public id"
         get '/public_id' do
           present public_id: current_member.public_id
         end
