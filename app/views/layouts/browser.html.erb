@@ -9,7 +9,7 @@
     <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
     <meta property="og:title" content="<%= @poll.title %>" />
     <meta property="og:description" content="<%= @poll.member.fullname %>" />
-    <meta property="og:image" content="canvas" />
+    <meta property="og:image" content="<&= @qrcode %>" />
     <!-- Use the correct meta names below for your web application
       Ref: http://davidbcalhoun.com/2010/viewport-metatag
 
@@ -96,7 +96,7 @@
       <!-- END AJAX-DROPDOWN -->
     </div>
     <!-- pulled right: nav area -->
-    
+
     <!-- end pulled right: nav area -->
   </header>
 
