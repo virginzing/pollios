@@ -103,7 +103,7 @@ module Member::Private::MemberAction
     process_unfollow
 
     outgoing_relation_block
-    iincoming_relation_block
+    incoming_relation_block
     
     clear_friends_and_follwers_caches_for_members
 
@@ -118,7 +118,7 @@ module Member::Private::MemberAction
     end
   end
 
-  def iincoming_relation_block
+  def incoming_relation_block
     if incoming_relation.present?
       incoming_relation.update(visible_poll: false)
     else
