@@ -45,6 +45,41 @@ module Pollios::V1::CurrentMemberAPI
         end
       end
 
+      desc 'returns old reward data with maintenance mode'
+      resource :rewards do
+
+        helpers do
+          def old_reward_data_with_maintenance_mode
+            @old_reward_data_with_maintenance_mode ||= {
+              reward_info: {
+                reward_id: 0,
+                created_at: (Time.zone.now).to_i
+              },
+              campaign_detail: {
+                how_to_redeem: '-',
+                reward_details: {
+                  title: 'Maintenance mode',
+                  detail: 'waiting for development update new version.',
+                  expire: (Time.zone.now + 100.years).to_i
+                },
+                owner_info: Pollios::V1::Shared::MemberEntity.default_pollios_member
+              }
+            }
+          end
+        end
+
+        get do
+          present rewards: [
+            old_reward_data_with_maintenance_mode
+          ]
+        end
+
+        desc 'returns details of old reward data with waintenance mode'
+        get '/0' do
+          old_reward_data_with_maintenance_mode
+        end
+      end 
+
       desc 'returns all requests related to current member'
       resource :requests do
         params do
