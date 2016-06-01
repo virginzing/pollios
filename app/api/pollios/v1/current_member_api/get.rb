@@ -74,7 +74,7 @@ module Pollios::V1::CurrentMemberAPI
           ]
         end
 
-        desc 'returns details of old reward data with waintenance mode'
+        desc 'returns details of old reward data with maintenance mode'
         get '/0' do
           old_reward_data_with_maintenance_mode
         end
