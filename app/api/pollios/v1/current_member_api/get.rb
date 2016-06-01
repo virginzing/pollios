@@ -58,8 +58,8 @@ module Pollios::V1::CurrentMemberAPI
               campaign_detail: {
                 how_to_redeem: '-',
                 reward_details: {
-                  title: 'Maintenance mode',
-                  detail: 'waiting for development update new version.',
+                  title: 'This service is currently unavailable',
+                  detail: "We're sorry, but the reward service is currently not working. Please wait for our new version. Update coming soon!",
                   expire: (Time.zone.now + 100.years).to_i
                 },
                 owner_info: Pollios::V1::Shared::MemberEntity.default_pollios_member
