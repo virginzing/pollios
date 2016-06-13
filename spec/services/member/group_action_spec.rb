@@ -5,7 +5,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   let(:group_admin) { FactoryGirl.create(:member, email: Faker::Internet.email) }
   let(:a_member) { FactoryGirl.create(:member, email: Faker::Internet.email) }
 
-  context '#create: A member create group, becaming admin of the group' do
+  context '#create: A member create group, became admin of the group' do
 
     let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
 
@@ -57,7 +57,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(Group::MemberList.new(new_group).pending.map(&:id)).to match_array([103, 104, 105, 107, 108, 109])
     end
 
-    it '- Members id: 108,109 are already member in group and Members id: 103,104,105,107 are pending in group' do
+    it '- Members id: if 108,109 are already member in group then id: 103,104,105,107 are pending' do
       new_group.group_members.find_by(member_id: 108).update(active: true)
       new_group.group_members.find_by(member_id: 109).update(active: true)
 
