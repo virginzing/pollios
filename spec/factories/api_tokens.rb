@@ -17,7 +17,7 @@ FactoryGirl.define do
 
   factory :api_token_required, class: ApiToken do
     member nil
-    token Faker::Internet.password
+    token { Faker::Internet.password }
     app_id "com.pollios.polliosapp"
   end
 

@@ -10,7 +10,7 @@ FactoryGirl.define do
   factory :comment_required, class: Comment do
     poll nil
     member nil
-    message Faker::Lorem.sentence
+    message { Faker::Lorem.sentence }
   end
 
 end

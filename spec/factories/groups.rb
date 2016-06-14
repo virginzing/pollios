@@ -60,13 +60,13 @@ FactoryGirl.define do
 
   factory :group_required, class: Group do
     member nil
-    name Faker::Name.name
+    name { Faker::Name.name }
   end
 
   factory :group_optional, class: Group do
     member nil
-    name Faker::Name.name
-    description Faker::Lorem.sentence
+    name { Faker::Name.name }
+    description { Faker::Lorem.sentence }
     cover nil
     cover_preset 0
   end

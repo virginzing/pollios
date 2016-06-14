@@ -50,7 +50,7 @@
 FactoryGirl.define do
 
   factory :poll, class: Poll do
-    title Faker::Lorem.sentence
+    title { Faker::Lorem.sentence }
     type_poll :binary
     status_poll :gray
     in_group false
@@ -81,7 +81,7 @@ FactoryGirl.define do
 
   factory :story, class: Poll do
     member nil
-    title Faker::Lorem.sentence
+    title { Faker::Lorem.sentence }
     public false
     allow_comment true
     qr_only false
@@ -116,7 +116,7 @@ FactoryGirl.define do
 
   factory :poll_required, class: Poll do
     member nil
-    title Faker::Lorem.sentence
+    title { Faker::Lorem.sentence }
     public false
     allow_comment true
     creator_must_vote true
