@@ -67,7 +67,7 @@ FactoryGirl.define do
 
   factory :member do
     fullname "A Pollios Member"
-    email Faker::Internet.email
+    email { Faker::Internet.email }
 
     trait :is_company do
       association :company, factory: :company
@@ -77,7 +77,7 @@ FactoryGirl.define do
   end
 
   factory :sequence_member, class: Member do
-    fullname Faker::Name.name
+    fullname { Faker::Name.name }
 
     sequence(:id) { |n| n+101 }
     sequence(:email) { |n| "mail#{n+1}@mail.com" }
@@ -120,12 +120,12 @@ FactoryGirl.define do
   end
 
   factory :member_required, class: Member do
-    fullname Faker::Name.name
-    email Faker::Internet.email
+    fullname { Faker::Name.name }
+    email { Faker::Internet.email }
   end
 
   factory :member_optional, class: Member, parent: :member_required do
-    avatar Faker::Avatar.image
+    avatar { Faker::Avatar.image }
     cover_preset 1
   end
 

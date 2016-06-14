@@ -38,16 +38,16 @@ FactoryGirl.define do
 
   factory :company_required, class: Company do
     member nil
-    name Faker::Name.name
+    name { Faker::Name.name }
     using_service ["Survey"]
   end
 
   factory :company_optional, class: Company do
     member nil
-    name Faker::Company.name
+    name { Faker::Company.name }
     using_service ["Survey"]
-    address Faker::Address.city
-    telephone_number Faker::Company.duns_number
+    address { Faker::Address.city }
+    telephone_number { Faker::Company.duns_number }
   end
 
 end
