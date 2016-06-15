@@ -73,7 +73,7 @@ module Member::Private::PollFeedAlgorithm
   def range_created_time(poll)
     compare_time = RANGE_CREATED_TIME - ((Time.zone.now - poll.created_at) / 60.00).round
 
-    (compare_time >= 0) ? ((RANGE_CREATED_TIME - compare_time) / 30.00).round : 0
+    (compare_time >= 0) ? ((compare_time) / 30.00).round : 0
   end
 
   def range_created_date(poll)
