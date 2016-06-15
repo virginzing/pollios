@@ -62,7 +62,7 @@ class Member::GroupAction
     can_poke_invited_friends, message = can_poke_invited_friends?
     fail ExceptionHandler::UnprocessableEntity, message unless can_poke_invited_friends
 
-    precess_poke_invited_friends
+    process_poke_invited_friends
   end
 
   def cancel_invite(a_member)
@@ -78,7 +78,7 @@ class Member::GroupAction
     can_delete_poll, message = can_delete_poll?
     fail ExceptionHandler::UnprocessableEntity, message unless can_delete_poll
 
-    precess_delete_poll
+    process_delete_poll
   end
 
 end

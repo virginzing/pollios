@@ -86,7 +86,7 @@ module Member::Private::GroupAction
     message
   end
 
-  def precess_poke_invited_friends
+  def process_poke_invited_friends
     send_poke_invited_friends_to_group_notification(a_member.id)
 
     nil
@@ -251,7 +251,7 @@ module Member::Private::GroupAction
     a_member.remove_role :group_admin, group
   end
 
-  def precess_delete_poll
+  def process_delete_poll
     poll = Poll.cached_find(poll_id)
     group.poll_groups.find_by(poll_id: poll_id).update!(deleted_at: Time.now, deleted_by_id: member.id)
     poll.destroy if poll.poll_groups == []

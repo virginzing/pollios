@@ -35,7 +35,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         end
     end
 
-    context "A User with high reporting power reporting user's commennt" do
+    context "A User with high reporting power reporting user's comment" do
         let(:member_with_power_3) { create(:member, fullname: Faker::Name.name, email: Faker::Internet.email, report_power: 3)}
 
         it "has report count 3 when reported by member with report power 3" do
