@@ -20,7 +20,11 @@ FactoryGirl.define do
   factory :friend do
     follower nil
     followed nil
-    active true
+
+    trait :active do
+      need_approve true
+    end
+
     following false
   end
 

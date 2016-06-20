@@ -5,6 +5,10 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   let(:group_admin) { FactoryGirl.create(:member, email: Faker::Internet.email) }
   let(:a_member) { FactoryGirl.create(:member, email: Faker::Internet.email) }
 
+  let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+  let(:group_action) { Member::GroupAction.new(a_member, group) }
+  let(:admin_group_action) { Member::GroupAction.new(group_admin, group) }
+
   context '#create: A member create group, became admin of the group' do
 
     let(:new_group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
@@ -65,11 +69,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
-  let(:group_action) { Member::GroupAction.new(a_member, group) }
-  let(:admin_group_action) { Member::GroupAction.new(group_admin, group) }
-
-
   context '#join: A member request to join group that need approve' do
 
     it '- A member is requesting in group' do
@@ -81,7 +80,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#join: A member request to join group that need approve and being invited by admin' do
 
-    
     let!(:invite) { admin_group_action.invite([a_member.id]) }
 
     it '- A member being invited by admin' do
