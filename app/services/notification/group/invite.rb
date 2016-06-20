@@ -47,10 +47,10 @@ class Notification::Group::Invite
   end
 
   def poke_invite_message
-    member.fullname + "poke invited you in: \"#{group_name}\""
+    member.fullname + "poke invited you in: \"#{group.name}\""
   end
 
   def invite_message
-    member.fullname + "invited you in: \"#{group_name}\""
+    member.fullname + "invited you in: \"#{group.name}\""
   end
 end
