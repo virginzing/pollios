@@ -2,7 +2,7 @@ class Notification::Group::Invite
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :friend_list, :group, :poke
+  attr_reader :member, :friend_list, :group, :poke, :trigger
 
   def initialize(member, friend_list, group, options = {})
     @member = member
