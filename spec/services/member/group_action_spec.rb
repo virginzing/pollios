@@ -65,10 +65,12 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context '#join: A member request to join group that need approve' do
+  let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
+  let(:group_action) { Member::GroupAction.new(a_member, group) }
+  let(:admin_group_action) { Member::GroupAction.new(group_admin, group) }
 
-    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
-    let(:group_action) { Member::GroupAction.new(a_member, group) }
+
+  context '#join: A member request to join group that need approve' do
 
     it '- A member is requesting in group' do
       expect(group_action.join).to eq group: group, status: :requesting
@@ -79,10 +81,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#join: A member request to join group that need approve and being invited by admin' do
 
-    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
-    let(:admin_group_action) { Member::GroupAction.new(group_admin, group) }
+    
     let!(:invite) { admin_group_action.invite([a_member.id]) }
-    let(:group_action) { Member::GroupAction.new(a_member, group) }
 
     it '- A member being invited by admin' do
       expect(Group::MemberList.new(group).pending).to match_array [a_member]
@@ -98,9 +98,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context "#join: A member request to join group that doesn't need approve" do
 
-    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
     let!(:setting_group_doesnt_need_approve) { group.update!(need_approve: false) }
-    let(:group_action) { Member::GroupAction.new(a_member, group) }
 
     it '- A member is member in group' do
       expect(group_action.join).to eq group: group, status: :member
@@ -115,9 +113,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       FactoryGirl.create_list(:sequence_member, 10)
     end
 
-    let(:group) { Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group)) }
-    let(:group_action) { Member::GroupAction.new(group_admin, group) }
-    let!(:invite) { group_action.invite([103, 104, 105, 107, 108, 109]) }
+    let!(:invite) { admin_group_action.invite([103, 104, 105, 107, 108, 109]) }
 
     it '- Members id: 103,104,105,107,108,109 are pending in group' do
       expect(Group::MemberList.new(group).pending.map(&:id)).to match_array([103, 104, 105, 107, 108, 109])
