@@ -2,7 +2,7 @@ class Notification::Group::Invite
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :friend_list, :group, :poke
+  attr_reader :member, :friend_list, :group, :poke, :trigger
 
   def initialize(member, friend_list, group, options = {})
     @member = member
@@ -43,14 +43,14 @@ class Notification::Group::Invite
   private
 
   def invite_by_trigger_message
-    group.name + 'invited you join in'
+    group.name + ' invited you join in'
   end
 
   def poke_invite_message
-    member.fullname + "poke invited you in: \"#{group_name}\""
+    member.fullname + " poke invited you in: \"#{group.name}\""
   end
 
   def invite_message
-    member.fullname + "invited you in: \"#{group_name}\""
+    member.fullname + " invited you in: \"#{group.name}\""
   end
 end
