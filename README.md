@@ -30,8 +30,9 @@ and install [heroku-toolbelt](https://toolbelt.heroku.com/)
 Clone source code from bitbucket:
 
 ```bash
-$ git clone git@bitbucket.org:pollios/pollios.git
+$ git clone https://bitbucket.org/pollios/pollios
 $ cd pollios
+$ git checkout develop
 ```
 
 Update your Gemfile:
