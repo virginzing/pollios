@@ -83,7 +83,6 @@ FactoryGirl.define do
     end
 
     trait :well_described do 
-      with_member_id
       with_tyep_poll
       with_in_group
       with_public
@@ -92,17 +91,30 @@ FactoryGirl.define do
     end
 
     factory :well_described_poll, traits: [:well_described]
-
   end
 
   # This should cause some problem
   factory :create_poll, class: Poll do
 
-    title "ทดสอบ #eiei #nut"
+    title { Faker::Name.title }
     in_group false
+
     choices ["yes", "no"]
     type_poll "binary"
 
+    trait :with_choices do
+      trainsient do 
+        choices_count { Random.rand(2..5) }
+      end
+
+      choices do
+        choice_list = []
+        choice_count.times do
+          choice_list << Faker::Name.titl
+        end
+        choice_list
+      end
+    end
   end
 
   factory :create_poll_public, class: Poll do
