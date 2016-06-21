@@ -23,7 +23,7 @@ class Notification::Poll::Mention
   end
 
   def message
-    member.fullname + 'mentioned you in a comment'
+    member.fullname + ' mentioned you in a comment'
   end
 
   def data
