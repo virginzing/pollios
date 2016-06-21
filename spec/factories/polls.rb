@@ -83,6 +83,7 @@ FactoryGirl.define do
     end
 
     trait :well_described do 
+      with_member_id
       with_tyep_poll
       with_in_group
       with_public
@@ -110,9 +111,8 @@ FactoryGirl.define do
       choices do
         choice_list = []
         choice_count.times do
-          choice_list << Faker::Name.titl
+          choice_list << Faker::Number.number(2..5)
         end
-        choice_list
       end
     end
   end
