@@ -20,7 +20,7 @@ class Notification::Group::JoinRequest
   end
 
   def message
-    member.fullname + "request to join #{group.name} group"
+    member.fullname + " request to join #{group.name} group"
   end
 
   def data

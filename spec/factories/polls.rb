@@ -50,25 +50,71 @@
 FactoryGirl.define do
 
   factory :poll, class: Poll do
-    title { Faker::Lorem.sentence }
-    type_poll :binary
-    status_poll :gray
-    in_group false
-    public false
-    expire_date Time.zone.now + 1.weeks
-    expire_status false
+    
+    title { Faker::Name.title }
+    member_id { Faker::Number.number(2) }
+
+    trait :with_tyep_poll do
+      type_poll :binary
+    end
+
+    trait :with_status_poll do
+      status_poll :gray
+    end
+
+    trait :with_in_group do
+       in_group false
+    end
+
+    trait :with_public do
+      public :false
+    end
+
+    trait :with_expire_date do 
+      expire_date Time.zone.now + 1.weeks
+    end
+
+    trait :with_expire_status do 
+      expire_status false
+    end
 
     trait :not_allow_comment do
       allow_comment false
     end
+
+    trait :well_described do 
+      with_member_id
+      with_tyep_poll
+      with_in_group
+      with_public
+      with_expire_date
+      with_expire_status
+    end
+
+    factory :well_described_poll, traits: [:well_described]
   end
 
   # This should cause some problem
   factory :create_poll, class: Poll do
-    title "ทดสอบ #eiei #nut"
+
+    title { Faker::Name.title }
     in_group false
+
     choices ["yes", "no"]
     type_poll "binary"
+
+    trait :with_choices do
+      trainsient do 
+        choices_count { Random.rand(2..5) }
+      end
+
+      choices do
+        choice_list = []
+        choice_count.times do
+          choice_list << Faker::Number.number(2..5)
+        end
+      end
+    end
   end
 
   factory :create_poll_public, class: Poll do
