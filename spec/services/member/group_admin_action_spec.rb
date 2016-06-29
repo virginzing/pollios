@@ -141,4 +141,19 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#promote #remove: A group admin tries to remove group creator from a group.' do
+    before(:context) {
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group.update(need_approve: false)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member)
+      @one_group_action = Member::GroupAction.new(@member, @group)
+    }
+
+    it '- A group admin should not be able to remove group creator from the group.' do
+      @one_group_action.join
+      @group_admin_action_on_one.promote
+      @one_admin_action_on_group_admin = Member::GroupAdminAction.new(@member, @group, @group_admin)
+      expect{ @one_admin_action_on_group_admin.remove }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} is group creator.")
+    end
+  end
 end
