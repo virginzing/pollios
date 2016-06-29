@@ -22,13 +22,13 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to match_array [@member.id]
     end
 
-    it '- A group admin tries to approve a join request but the member is already in the group.' do
+    it '- A group admin should not be able to approve a join request if the member is already in the group.' do
       @one_group_action.join
       @group_admin_action_on_one.approve
       expect{ @group_admin_action_on_one.approve }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} is already in #{@need_approve_group.name}.")
     end
 
-    it '- A group admin tries to approve a request that has never been sent to admin.' do
+    it '- A group admin should not be able to approve a request that has never been sent to admin.' do
       expect{ @group_admin_action_on_one.approve }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} doesn't sent join request to #{@need_approve_group.name}.")
     end
   end
@@ -48,13 +48,13 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(Group::MemberList.new(@need_approve_group).requesting.size).to eq(0)
     end
 
-    it '- A group admin tries to deny a join request but the member is already in the group.' do
+    it '- A group admin should not be able to deny a join request if the member is already in the group.' do
       @one_group_action.join
       @group_admin_action_on_one.approve
       expect{ @group_admin_action_on_one.deny }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} is already in #{@need_approve_group.name}.")
     end
 
-    it '- A group admin tries to deny a request that has never been sent to admin.' do
+    it '- A group admin should not be able to deny a request that has never been sent to admin.' do
       expect{ @group_admin_action_on_one.deny }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} doesn't have any request to #{@need_approve_group.name}.")
     end
   end
@@ -73,11 +73,11 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to match_array []
     end
 
-    it '- A group admin tries to remove a member who is not member in the group.' do
+    it '- A group admin should not be able to remove a member who is not member in the group.' do
       expect{ @group_admin_action_on_one.remove }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} isn't member in #{@need_approve_group.name}.")
     end
 
-    it '- A group admin tries to remove himself.' do
+    it '- A group admin should not be able to remove himself.' do
       @group_admin_action_on_self = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @group_admin)
       expect{ @group_admin_action_on_self.remove }. to raise_error(ExceptionHandler::UnprocessableEntity, "You can't remove yourself.")
     end
