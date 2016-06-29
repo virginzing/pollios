@@ -18,7 +18,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin approve a join request.' do
       @one_group_action.join
-      @group_admin_action_on_one.approve
+      expect{ @group_admin_action_on_one.approve }.not_to raise_error
       expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to match_array [@member.id]
     end
 
@@ -43,7 +43,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin deny a join request.' do
       @one_group_action.join
-      @group_admin_action_on_one.deny
+      expect{ @group_admin_action_on_one.deny }.not_to raise_error
       expect(Group::MemberList.new(@need_approve_group).members.size).to eq(0)
       expect(Group::MemberList.new(@need_approve_group).requesting.size).to eq(0)
     end
@@ -69,7 +69,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     it '- A group admin remove a member from the group.' do
       @one_group_action.join
       @group_admin_action_on_one.approve
-      @group_admin_action_on_one.remove
+      expect{ @group_admin_action_on_one.remove }.not_to raise_error
       expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to match_array []
     end
 
@@ -93,7 +93,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin promote a member to be an admin.' do
       @one_group_action.join
-      @group_admin_action_on_one.promote
+      expect{ @group_admin_action_on_one.promote }.not_to raise_error
       expect(Group::MemberList.new(@group).admins.map(&:id)).to match_array [@group_admin.id, @member.id]
     end
 
