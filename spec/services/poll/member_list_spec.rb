@@ -18,7 +18,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   let(:new_member1_poll_action) { Member::PollAction.new(new_member1, new_poll) }
   let(:new_member2_poll_action) { Member::PollAction.new(new_member2, new_poll) }
   let(:new_member3_poll_action) { Member::PollAction.new(new_member3, new_poll) }
-  let(:new_member4_poll_action) { Member::PollAction.new(new_member4, new_poll) }
 
   let(:new_member1_action_new_member2) { Member::MemberAction.new(new_member1, new_member2) }
   let(:new_member2_member_list) { Member::MemberList.new(new_member2) }
@@ -49,8 +48,17 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
       expect(new_member2_viewing_new_poll.voter).to match_array([new_member2, new_member3])
     end
-
   end
 
+  context 'Mentionable' do
 
+    it '- Voter can mentionable by members' do
+      new_member1_poll_action.vote(choice_id: new_poll.choices.first.id)
+      new_member2_poll_action.vote(choice_id: new_poll.choices.second.id)
+      new_member3_poll_action.vote(choice_id: new_poll.choices.second.id)
+
+      expect(new_member1_viewing_new_poll.mentionable).to match_array([new_member1, new_member2, new_member3])
+    end
+
+  end
 end
