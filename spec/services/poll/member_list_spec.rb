@@ -12,12 +12,11 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   let(:new_member5) { FactoryGirl.create(:member, email: Faker::Internet.email) }
   let(:new_member6) { FactoryGirl.create(:member, email: Faker::Internet.email) }
 
-  let(:new_member1_action_new_member2) { Member::MemberAction.new(new_member1, new_member2) }
-  let(:new_member2_member_list) { Member::MemberList.new(new_member2) }
-
   let(:new_member1_poll_action) { Member::PollAction.new(new_member1, new_poll) }
   let(:new_member2_poll_action) { Member::PollAction.new(new_member2, new_poll) }
   let(:new_member3_poll_action) { Member::PollAction.new(new_member3, new_poll) }
+
+  let(:new_member1_action_new_member2) { Member::MemberAction.new(new_member1, new_member2) }
 
   let(:new_member1_viewing_new_poll) { Poll::MemberList.new(new_poll, viewing_member: new_member1) }
   let(:new_member2_viewing_new_poll) { Poll::MemberList.new(new_poll, viewing_member: new_member2) }  
