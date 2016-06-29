@@ -51,18 +51,22 @@ FactoryGirl.define do
 
   trait :with_tyep_poll do
       type_poll :binary
-    end
+  end
 
   trait :with_status_poll do
     status_poll :gray
   end
 
   trait :with_in_group do
-     in_group true
+    in_group false
   end
 
-  trait :with_public do
-    public :false
+  trait :with_in_group_ids do
+    in_group_ids "0"
+  end
+
+  trait :with_is_public do
+    public true
   end
 
   trait :with_expire_date do 
@@ -73,76 +77,90 @@ FactoryGirl.define do
     expire_status false
   end
 
-  trait :not_allow_comment do
+  trait :with_not_allow_comment do
     allow_comment false
   end
 
+  trait :with_member do
+    association :member, factory: :member
+  end
+
+  trait :with_choices do 
+    transient do
+      choices_count { Random.rand(2..4) }
+    end
+
+    after(:create) do |poll, evaluator|
+      create_list(:choice, evaluator.choices_count, poll: poll)
+    end
+  end
+
   trait :well_described do 
+    with_member
+    with_choices
     with_tyep_poll
     with_in_group
-    with_public
+    with_is_public
     with_expire_date
     with_expire_status
   end
 
-  factory :well_described_poll, traits: [:well_described]
-
   factory :poll, class: Poll do
-    
     title { Faker::Name.title }
-    member_id { Faker::Number.number(2) }
-
+    well_described
   end
 
-  factory :create_poll_public, class: Poll do
-    title 'Poll Public'
-    expire_within 2
-    type_poll 'binary'
-    is_public true
-  end
+  # factory :well_described_poll, traits: [:well_described]
 
-  factory :story, class: Poll do
-    member nil
-    title { Faker::Lorem.sentence }
-    public false
-    allow_comment true
-    qr_only false
+  # factory :create_poll_public, class: Poll do
+  #   title 'Poll Public'
+  #   expire_within 2
+  #   type_poll 'binary'
+  #   is_public true
+  # end
 
-    factory :poll_with_choices do
-      transient do
-        choices_count 2
-      end
+  # factory :story, class: Poll do
+  #   member nil
+  #   title { Faker::Lorem.sentence }
+  #   public false
+  #   allow_comment true
+  #   qr_only false
 
-      after(:create) do |poll, evaluator|
-        create_list(:choice, evaluator.choices_count, poll: poll)
-      end
-    end
+  #   factory :poll_with_choices do
+  #     transient do
+  #       choices_count 2
+  #     end
 
-    trait :is_public do
-      public true
-    end
+  #     after(:create) do |poll, evaluator|
+  #       create_list(:choice, evaluator.choices_count, poll: poll)
+  #     end
+  #   end
 
-    trait :disable_comment do
-      allow_comment false
-    end
+  #   trait :is_public do
+  #     public true
+  #   end
 
-    trait :in_group do
-      in_group true
-      in_group_ids ""
-    end
+  #   trait :disable_comment do
+  #     allow_comment false
+  #   end
 
-    factory :poll_to_group,   traits: [:in_group]
-    factory :poll_to_public,   traits: [:is_public]
-    factory :poll_that_disable_comment, traits: [:disable_comment]
-  end
+  #   trait :in_group do
+  #     in_group true
+  #     in_group_ids ""
+  #   end
 
-  factory :poll_required, class: Poll do
-    member nil
-    title { Faker::Lorem.sentence }
-    public false
-    allow_comment true
-    creator_must_vote true
-    type_poll "freeform"
-  end
+  #   factory :poll_to_group,   traits: [:in_group]
+  #   factory :poll_to_public,   traits: [:is_public]
+  #   factory :poll_that_disable_comment, traits: [:disable_comment]
+  # end
+
+  # factory :poll_required, class: Poll do
+  #   member nil
+  #   title { Faker::Lorem.sentence }
+  #   public false
+  #   allow_comment true
+  #   creator_must_vote true
+  #   type_poll "freeform"
+  # end
 
 end

@@ -41,5 +41,16 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
       expect(new_member2_viewing_new_poll.voter).to match_array([new_member2, new_member3])
     end
+
+    it '- Voter viewing by members as by anonymous' do
+      new_member1_poll_action.vote(choice_id: new_poll.choices.first.id, anonymous: 'true')
+      new_member2_poll_action.vote(choice_id: new_poll.choices.first.id)
+      new_member3_poll_action.vote(choice_id: new_poll.choices.second.id)
+
+      expect(new_member2_viewing_new_poll.voter).to match_array([new_member2, new_member3])
+    end
+
   end
+
+
 end
