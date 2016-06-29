@@ -57,8 +57,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       new_member2_poll_action.vote(choice_id: new_poll.choices.second.id)
       new_member3_poll_action.vote(choice_id: new_poll.choices.second.id)
 
-      expect(new_member1_viewing_new_poll.mentionable).to match_array([new_member1, new_member2, new_member3])
+      expect(new_member1_viewing_new_poll.mentionable).to match_array([])
     end
-
-  end
 end
