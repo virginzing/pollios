@@ -153,7 +153,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @one_group_action.join
       @group_admin_action_on_one.promote
       @one_admin_action_on_group_admin = Member::GroupAdminAction.new(@member, @group, @group_admin)
-      expect{ @one_admin_action_on_group_admin.remove }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member.get_name} is group creator.")
+      expect{ @one_admin_action_on_group_admin.remove }.to raise_error(ExceptionHandler::UnprocessableEntity, "#{@group_admin.get_name} is group creator.")
     end
   end
 end
