@@ -54,7 +54,11 @@ FactoryGirl.define do
     title { Faker::Name.title }
     member_id { Faker::Number.number(2) }
 
-    trait :with_tyep_poll do
+    trait :with_choices do
+      choices ["yes", "no"]
+    end
+
+    trait :with_type_poll do
       type_poll :binary
     end
 
