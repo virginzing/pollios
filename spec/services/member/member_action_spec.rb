@@ -12,7 +12,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_list_1 = Member::MemberList.new(@member1)
       @member_list_2 = Member::MemberList.new(@member2)
 
-      @member_action = Member::MemberAction.new(member1,member2)
+      @member_action = Member::MemberAction.new(@member1,@member2)
       @add_friend = @member_action.add_friend
     end
     
@@ -58,7 +58,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_list = Member::MemberList.new(@member)
       @celebrity_list = Member::MemberList.new(@celebrity)
 
-      @member_action = Member::MemberAction.new(member1,celebrity)
+      @member_action = Member::MemberAction.new(@member,@celebrity)
       @follow = @member_action.follow
       @unfollow = @member_action.unfollow
     end
