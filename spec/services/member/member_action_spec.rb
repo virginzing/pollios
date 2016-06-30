@@ -65,12 +65,29 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   end
 
   context 'A member denies friend request' do
-    #-- member2 requests to deny friend with member1
+    #-- member2 denies friend request from member1
     before do
       @member_action1 = Member::MemberAction.new(member1,member2)
       @add_friend = @member_action1.add_friend
       @member_action2 = Member::MemberAction.new(member2,member1)
       @deny_friend_request = @member_action2.deny_friend_request
+    end
+
+    it '- A member disappears from outgoing friend request' do
+      expect(member_list1.not_exist_outgoing_request?(member2)).to be true
+    end 
+
+    it '- A member disappears from incoming friend request' do
+      expect(member_list2.not_exist_incoming_request?(member1)).to be true
+    end
+  end
+
+   context 'A member cancel friend request' do
+    #-- member2 cancel friend request from member1
+    before do
+      @member_action = Member::MemberAction.new(member1,member2)
+      @add_friend = @member_action.add_friend
+      @cancel_friend_request = @member_action.cancel_friend_request
     end
 
     it '- A member disappears from outgoing friend request' do
