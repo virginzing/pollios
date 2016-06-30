@@ -97,7 +97,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context 'A member request to add friend' do
+  context 'A member block anather member' do
     #-- member1 block member2
     before do
       @member_action = Member::MemberAction.new(member1,member2)
