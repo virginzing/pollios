@@ -48,13 +48,14 @@
 #
 
 FactoryGirl.define do
+
   factory :poll, class: Poll do
     transient do 
       choice_count { Random.rand(3..5) }
     end
 
     member
-    title { Faker::Name.title }
+    title { Faker::Lorem.sentence }
     allow_comment true
 
     after(:create) do

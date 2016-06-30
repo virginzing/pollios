@@ -69,15 +69,16 @@ FactoryGirl.define do
     fullname { Faker::Name.name }
     email { Faker::Internet.email }
 
-    trait :is_company do
-      association :company, factory: :company
+    trait :in_company do
+      company
     end
 
     trait :is_celebrity do
       member_type 1 
     end
 
-    factory :member_is_company, traits: [:is_company]
+    factory :company_member, traits: [:in_company]
+    factory :celebrity_member, traits: [:is_celebrity]
   end
 
   factory :sequence_member, class: Member do
