@@ -13,10 +13,14 @@
 #
 
 FactoryGirl.define do
+
   factory :choice do
+    poll
     answer { Faker::Name.name }
-    vote 0
-    correct false
+  end
+
+  factory :answer do 
+     answer { Faker::Name.name }
   end
 
   factory :choice_required, class: Choice do
@@ -24,3 +28,5 @@ FactoryGirl.define do
     answer { Faker::Name.name }
   end
 end
+
+
