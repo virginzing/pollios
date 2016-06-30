@@ -97,4 +97,15 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context 'A member request to add friend' do
+    #-- member1 block member2
+    before do
+      @member_action = Member::MemberAction.new(member1,member2)
+      @block = @member_action.block
+    end
+    
+    it '- A member appears in block list' do
+      expect(member_list1.already_block_with?(member2)).to be true
+    end 
+  end
 end
