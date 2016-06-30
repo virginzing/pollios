@@ -2,138 +2,98 @@ require 'rails_helper'
 
 pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::MemberAction" do
-  
-  context 'A member request to add friend' do
-    #-- member1 requests to add friend with member2
-    before do
-      @member1 = FactoryGirl.create(:member, email: Faker::Internet.email) 
-      @member2 = FactoryGirl.create(:member, email: Faker::Internet.email)
 
-      @member_list_1 = Member::MemberList.new(@member1)
-      @member_list_2 = Member::MemberList.new(@member2)
+  before (:context) do
+    @member_1 = FactoryGirl.create(:member) 
+    @member_2 = FactoryGirl.create(:member)
+    @celebrity = FactoryGirl.create(:celebrity)
+  end
 
-      @member_action = Member::MemberAction.new(@member1,@member2)
-      @add_friend = @member_action.add_friend
+  context 'A member[1] sends add friend request to member[2]' do
+    before (:context) do
+      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
     end
     
-    it '- A member appears in outgoing friend request' do
-      expect(@member_list_1.not_exist_outgoing_request?(@member2)).to be false
+    it '- A member[2] appears in outgoing friend request of member[1]' do
+      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be false
     end 
 
-    it '- A member appears in incoming friend request' do
-      expect(@member_list_2.not_exist_incoming_request?(@member1)).to be false
-    end
-
-    it '- The request notify to a member' do
-      expect(@member_list_1.already_sent_request_to?(@member2)).to be true
-    end 
-  end
-
-  context 'A member request to follow celebrity' do
-    before do
-      @member = FactoryGirl.create(:member, email: Faker::Internet.email)
-      @celebrity = FactoryGirl.create(:celebrity, email: Faker::Internet.email)
-
-      @member_list = Member::MemberList.new(@member)
-      @celebrity_list = Member::MemberList.new(@celebrity)
-
-      @member_action = Member::MemberAction.new(@member,@celebrity)
-      @follow = @member_action.follow
-    end
-
-    it '- A celebrity appears in followings list of member' do
-      expect(@member_list.already_follow_with?(@celebrity)).to be true
-    end
-
-    it '- A member appears in follower list of celebrity' do
-      expect(@celebrity_list.followers).to include(@member)
+    it '- A member[1] appears in incoming friend request of member[2]' do
+      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be false
     end
   end
 
-  context 'A member request to unfollow celebrity' do
+  context 'A member[1] sends follow request to celebrity' do
     before do
-      @member = FactoryGirl.create(:member, email: Faker::Internet.email)
-      @celebrity = FactoryGirl.create(:celebrity, email: Faker::Internet.email)
+      @follow = Member::MemberAction.new(@member_1, @celebrity).follow
+    end
 
-      @member_list = Member::MemberList.new(@member)
-      @celebrity_list = Member::MemberList.new(@celebrity)
+    it '- A celebrity appears in followings list of member[1]' do
+      expect(Member::MemberList.new(@member_1).already_follow_with?(@celebrity)).to be true
+    end
 
-      @member_action = Member::MemberAction.new(@member,@celebrity)
+    it '- A member[1] appears in follower list of celebrity' do
+      expect(Member::MemberList.new(@celebrity).followers).to include(@member_1)
+    end
+  end
+
+  context 'A member[1] sends unfollow request to celebrity' do
+    before do
+      @member_action = Member::MemberAction.new(@member_1, @celebrity)
       @follow = @member_action.follow
+
       @unfollow = @member_action.unfollow
     end
 
-    it '- A celebrity disappears from followings list of member' do
-     expect(@member_list.already_follow_with?(@celebrity)).to be false
-     end
+    it '- A celebrity disappears from followings list of member[1]' do
+      expect(Member::MemberList.new(@member_1).already_follow_with?(@celebrity)).to be false
+    end
 
-     it '- A member disappears from follower list of celebrity' do
-      expect(@celebrity_list.followers).not_to include(@member)
+     it '- A member[1] disappears from follower list of celebrity' do
+      expect(Member::MemberList.new(@celebrity).followers).not_to include(@member_1)
     end
   end
 
-  context 'A member denies friend request' do
-    #-- member2 denies friend request from member1
+  context 'A member[2] denies friend request from member[1]' do
     before do
-      @member1 = FactoryGirl.create(:member, email: Faker::Internet.email) 
-      @member2 = FactoryGirl.create(:member, email: Faker::Internet.email)
+      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
 
-      @member_list_1 = Member::MemberList.new(@member1)
-      @member_list_2 = Member::MemberList.new(@member2)
-
-      @member_action_1 = Member::MemberAction.new(@member1,@member2)
-      @add_friend = @member_action_1.add_friend
-      @member_action_2 = Member::MemberAction.new(@member2,@member1)
-      @deny_friend_request = @member_action_2.deny_friend_request
+      @deny_friend_request = Member::MemberAction.new(@member_2, @member_1).deny_friend_request
     end
 
-    it '- A member disappears from outgoing friend request' do
-      expect(@member_list_1.not_exist_outgoing_request?(@member2)).to be true
+    it '- A member[2] disappears from outgoing friend request of member[1]' do
+      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be true
     end 
 
-    it '- A member disappears from incoming friend request' do
-      expect(@member_list_2.not_exist_incoming_request?(@member1)).to be true
+    it '- A member[1] disappears from incoming friend request of member[2]' do
+      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
     end
   end
 
-   context 'A member cancel friend request' do
-    #-- member2 cancel friend request from member1
+   context 'A member[2] cancels friend request from member[1]' do
     before do
-      @member1 = FactoryGirl.create(:member, email: Faker::Internet.email) 
-      @member2 = FactoryGirl.create(:member, email: Faker::Internet.email)
-
-      @member_list_1 = Member::MemberList.new(@member1)
-      @member_list_2 = Member::MemberList.new(@member2)
-
-      @member_action = Member::MemberAction.new(@member1,@member2)
+      @member_action = Member::MemberAction.new(@member_1, @member_2)
       @add_friend = @member_action.add_friend
+
       @cancel_friend_request = @member_action.cancel_friend_request
     end
 
-    it '- A member disappears from outgoing friend request' do
-      expect(@member_list_1.not_exist_outgoing_request?(@member2)).to be true
+    it '- A member[2] disappears from outgoing friend request of member[1]' do
+      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be true
     end 
 
-    it '- A member disappears from incoming friend request' do
-      expect(@member_list_2.not_exist_incoming_request?(@member1)).to be true
+    it '- A member[1] disappears from incoming friend request of member[2]' do
+      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
     end
   end
 
-  context 'A member block anather member' do
-    #-- member1 block member2
+  context 'A member[1] blocks member[2]' do
     before do
-      @member1 = FactoryGirl.create(:member, email: Faker::Internet.email) 
-      @member2 = FactoryGirl.create(:member, email: Faker::Internet.email)
-
-      @member_list_1 = Member::MemberList.new(@member1)
-      @member_list_2 = Member::MemberList.new(@member2)
-
-      @member_action = Member::MemberAction.new(@member1,@member2)
-      @block = @member_action.block
+      @block = Member::MemberAction.new(@member_1, @member_2).block
     end
     
-    it '- A member appears in block list' do
-      expect(@member_list_1.already_block_with?(@member2)).to be true
+    it '- A member[2] appears in block list of member[1]' do
+      expect(Member::MemberList.new(@member_1).already_block_with?(@member_2)).to be true
     end 
   end
 end
