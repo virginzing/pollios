@@ -52,7 +52,20 @@ FactoryGirl.define do
   factory :poll, class: Poll do
     
     title { Faker::Name.title }
-    member_id { Faker::Number.number(2) }
+    member
+    allow_comment true
+
+    transient do 
+      choice_count { Random.rand(3..5) }
+    end
+
+    choices do
+      choice_list = []
+      choice_count.times do
+        choice_list << Faker::Number.between(2, 5)
+      end
+      choice_list
+    end
 
     trait :with_choices do
       choices ["yes", "no"]
@@ -71,7 +84,7 @@ FactoryGirl.define do
     end
 
     trait :with_public do
-      public :false
+      public true
     end
 
     trait :with_expire_date do 
