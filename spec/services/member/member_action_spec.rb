@@ -40,7 +40,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A celebrity appears in followings list of member' do
       expect(member_list1.already_follow_with?(celebrity)).to be true
-      # expect(member_list1.followings).to include(celebrity)
     end
 
     it '- A member appears in follower list of celebrity' do
@@ -65,8 +64,22 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-    # context 'A member denies friend request' do
+  context 'A member denies friend request' do
+    #-- member2 requests to deny friend with member1
+    before do
+      @member_action1 = Member::MemberAction.new(member1,member2)
+      @add_friend = @member_action1.add_friend
+      @member_action2 = Member::MemberAction.new(member2,member1)
+      @deny_friend_request = @member_action2.deny_friend_request
+    end
 
-    # end
+    it '- A member disappears from outgoing friend request' do
+      expect(member_list1.not_exist_outgoing_request?(member2)).to be true
+    end 
 
+    it '- A member disappears from incoming friend request' do
+      expect(member_list2.not_exist_incoming_request?(member1)).to be true
+    end
   end
+
+end
