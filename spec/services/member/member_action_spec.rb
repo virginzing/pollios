@@ -28,7 +28,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- The request notify to a member' do
       expect(member_list1.already_sent_request_to?(member2)).to be true
-      # expect(Member::NotificationList.new(member2).all_notification).to include(member1)
+      expect(Member::NotificationList.new(member2).all_notification).to include(member1)
     end 
   end
 
@@ -56,8 +56,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A celebrity disappears from followings list of member' do
      expect(member_list1.already_follow_with?(celebrity)).to be false
-       # expect(member_list1.followings).not_to include(celebrity)
-     end
+       expect(member_list1.followings).not_to include(celebrity)
+    end
 
      it '- A member disappears from follower list of celebrity' do
       expect(celebrity_list.followers).not_to include(member1)
