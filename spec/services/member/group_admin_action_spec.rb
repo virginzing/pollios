@@ -4,8 +4,8 @@ pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::GroupAdminAction" do
 
   before(:context) {
-    @group_admin = FactoryGirl.create(:member, email: Faker::Internet.email)
-    @member = FactoryGirl.create(:member, fullname: 'Member One', email: Faker::Internet.email)
+    @group_admin = FactoryGirl.create(:member)
+    @member = FactoryGirl.create(:member, fullname: 'Member One')
   }
 
   context '#approve: A need-approve-group admin approves a join request.' do
