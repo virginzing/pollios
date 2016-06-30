@@ -73,6 +73,10 @@ FactoryGirl.define do
       association :company, factory: :company
     end
 
+    trait :is_celebrity do
+      member_type 1 
+    end
+
     factory :member_is_company, traits: [:is_company]
   end
 

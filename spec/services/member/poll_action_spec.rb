@@ -47,4 +47,31 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#vote: A member vote to poll' do
+    before(:context) do
+      @poll = Member::PollAction.new(@poll_creator).create(FactoryGirl.attributes_for(:poll, :with_choices))
+      @member_poll_action = Member::PollAction.new(@member, @poll)
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+
+      @member_member_action = Member::MemberAction.new(@member, @poll_creator)
+      @creator_member_action = Member::MemberAction.new(@poll_creator, @member)
+    end
+
+    it '- Owner of the Poll could not vote for their own poll' do
+      expect{ @creator_poll_action.vote(choice_id: @poll.choices.first.id) }.to raise_error(ExceptionHandler::UnprocessableEntity, "This poll isn't allow your own vote.")
+    end
+
+    it '- A member who is not friend or following with poll creator could not vote this poll' do
+      expect{ @member_poll_action.vote(choice_id: @poll.choices.first.id) }.to raise_error(ExceptionHandler::UnprocessableEntity, "This poll is allow vote for friends or following.")
+    end
+
+    it '- A member who is friend or following with poll creator could vote this poll' do
+      @add_friend = @member_member_action.add_friend
+      @accept_friend = @creator_member_action.accept_friend_request
+
+      expect{ @member_poll_action.vote(choice_id: @poll.choices.first.id) }.not_to raise_error
+    end
+
+  end
+
 end
