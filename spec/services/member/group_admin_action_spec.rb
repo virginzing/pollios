@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'guard_message'
 
 pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::GroupAdminAction" do
@@ -33,12 +34,12 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1_group_action.join
       @group_admin_action_on_one.approve
       expect { @group_admin_action_on_one.approve } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} is already in #{@need_approve_group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_already_in_group(@member_1.get_name, @need_approve_group.name))
     end
 
     it '- A group admin should not be able to approve a request that has never been sent to admin.' do
       expect { @group_admin_action_on_one.approve } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} doesn't sent join request to #{@need_approve_group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, no_join_request_from_member(@member_1.get_name, @need_approve_group.name))
     end
   end
 
@@ -68,12 +69,12 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1_group_action.join
       @group_admin_action_on_one.approve
       expect { @group_admin_action_on_one.deny } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} is already in #{@need_approve_group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_already_in_group(@member_1.get_name, @need_approve_group.name))
     end
 
     it '- A group admin should not be able to deny a request that has never been sent to admin.' do
       expect { @group_admin_action_on_one.deny } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} doesn't have any request to #{@need_approve_group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, no_join_request_from_member(@member_1.get_name, @need_approve_group.name))
     end
   end
 
@@ -100,13 +101,13 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin should not be able to remove a member who is not member in the group.' do
       expect { @group_admin_action_on_one.remove } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} isn't member in #{@need_approve_group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_in_group(@member_1.get_name, @need_approve_group.name))
     end
 
     it '- A group admin should not be able to remove himself.' do
       @group_admin_action_on_self = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @group_admin)
       expect { @group_admin_action_on_self.remove } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "You can't remove yourself.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, cant_remove_yourself)
     end
   end
 
@@ -135,7 +136,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin should not be able to promote a member who is not in the group.' do
       expect { @group_admin_action_on_one.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} isn't member in #{@group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_in_group(@member_1.get_name, @group.name))
     end
 
     it '- A group admin should not be able to promote a member who is a group admin.' do
@@ -143,7 +144,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       @member_1_admin_action_on_group_admin = Member::GroupAdminAction.new(@member_1, @group, @group_admin)
       expect { @member_1_admin_action_on_group_admin.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@group_admin.get_name} is already admin.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_already_admin(@group_admin.get_name))
     end
   end
 
@@ -176,18 +177,18 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       @member_1_admin_action_on_group_admin = Member::GroupAdminAction.new(@member_1, @group, @group_admin)
       expect { @member_1_admin_action_on_group_admin.demote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@group_admin.get_name} is group creator.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_group_creator(@group_admin.get_name))
     end
 
     it '- A group admin should not be able to demote a member who is not admin.' do
       @member_1_group_action.join
       expect { @group_admin_action_on_one.demote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} isn't admin.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_admin(@member_1.get_name))
     end
 
     it '- A group admin should not be able to demote member who is not in the group.' do
       expect { @group_admin_action_on_one.demote }\
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@member_1.get_name} isn't member in #{@group.name}.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_in_group(@member_1.get_name, @group.name))
     end
   end
 
@@ -204,7 +205,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       @member_1_admin_action_on_group_admin = Member::GroupAdminAction.new(@member_1, @group, @group_admin)
       expect { @member_1_admin_action_on_group_admin.remove } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "#{@group_admin.get_name} is group creator.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_group_creator(@group_admin.get_name))
     end
   end
 end
