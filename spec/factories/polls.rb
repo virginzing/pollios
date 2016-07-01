@@ -56,11 +56,12 @@ FactoryGirl.define do
 
     member
     title { Faker::Lorem.sentence }
-    choices { Faker::Lorem.words(choice_count) }
+    choice_params { Faker::Lorem.words(choice_count) }
     allow_comment true
+    expire_date { Time.zone.now + 100.years }
 
     after(:create) do |poll, evaluator|
-      create_list(:choice, choice_count, poll: poll)
+      create_list(:choice, evaluator.choice_count, poll: poll)
     end
 
     trait :with_type_poll do
@@ -75,7 +76,7 @@ FactoryGirl.define do
       in_group false
     end
 
-    trait :with_public do
+    trait :public do
       public true
     end
 
@@ -90,5 +91,7 @@ FactoryGirl.define do
     trait :not_allow_comment do
       allow_comment false
     end
+
+    factory :public_poll, traits: [:public]
   end
 end

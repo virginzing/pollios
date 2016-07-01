@@ -59,7 +59,7 @@ class Poll < ActiveRecord::Base
   include PollAdmin
 
 
-  attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three, :remove_campaign
+  attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three, :remove_campaign, :choice_params
 
   cattr_accessor :custom_error_message
 

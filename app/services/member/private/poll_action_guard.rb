@@ -129,12 +129,12 @@ module Member::Private::PollActionGuard
   end
 
   def less_choices
-    poll_params[:choices].count < 2
+    poll_params[:choice_params].count < 2
   end
 
   def wrong_type_choices
     return false unless poll_params[:type_poll] == 'rating'
-    return false unless poll_params[:choices] != %w(1 2 3 4 5)
+    return false unless poll_params[:choice_params] != %w(1 2 3 4 5)
     true
   end
 

@@ -55,7 +55,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#delete: A member deletes another member poll' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
 
       @member_poll_action = Member::PollAction.new(@member, @poll)
