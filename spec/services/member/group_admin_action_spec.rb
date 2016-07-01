@@ -11,7 +11,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   context '#approve: A need-approve-group admin approves a join request.' do
     before(:context) do
       @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @admin_group_action = Member::GroupAction.new(@group_admin, @need_approve_group)
       @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
     end
@@ -20,6 +19,14 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1_group_action.join
       expect { @group_admin_action_on_one.approve }.not_to raise_error
       expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to include @member_1.id
+    end
+  end
+
+  context '#approve: A need-approve-group admin tries to approves a join request but get an error.' do
+    before(:context) do
+      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
     end
 
     it '- A group admin should not be able to approve a join request if the member is already in the group.' do
@@ -38,7 +45,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   context '#deny: A need-approve-group admin deny a join request.' do
     before(:context) do
       @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @admin_group_action = Member::GroupAction.new(@group_admin, @need_approve_group)
       @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
     end
@@ -48,6 +54,14 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect { @group_admin_action_on_one.deny }.not_to raise_error
       expect(Group::MemberList.new(@need_approve_group).members.size).to eq(0)
       expect(Group::MemberList.new(@need_approve_group).requesting.size).to eq(0)
+    end
+  end
+
+  context '#deny: A need-approve-group admin tries to deny a join request but get an error.' do
+    before(:context) do
+      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
     end
 
     it '- A group admin should not be able to deny a join request if the member is already in the group.' do
@@ -76,6 +90,13 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect { @group_admin_action_on_one.remove }.not_to raise_error
       expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to match_array []
     end
+  end
+
+  context '#remove: A group admin tries to remove a member from a group but get an error.' do
+    before(:context) do
+      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+    end
 
     it '- A group admin should not be able to remove a member who is not member in the group.' do
       expect { @group_admin_action_on_one.remove } \
@@ -101,6 +122,15 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1_group_action.join
       expect { @group_admin_action_on_one.promote }.not_to raise_error
       expect(Group::MemberList.new(@group).admins.map(&:id)).to include @member_1.id
+    end
+  end
+
+  context '#promote: A group admin tries to promote a member to be an admin but get an error.' do
+    before(:context) do
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group.update(need_approve: false)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end
 
     it '- A group admin should not be able to promote a member who is not in the group.' do
@@ -130,6 +160,15 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       expect { @group_admin_action_on_one.demote }.not_to raise_error
       expect(Group::MemberList.new(@group).admins.map(&:id)).to include @group_admin.id
+    end
+  end
+
+  context '#demote: A group admin tries to demote other admin in a group but get an error.' do
+    before(:context) do
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group.update(need_approve: false)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end
 
     it '- A group admin should not be able to demote group creator.' do
