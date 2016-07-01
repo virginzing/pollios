@@ -49,8 +49,8 @@
 
 FactoryGirl.define do
 
-  trait :with_tyep_poll do
-      type_poll :binary
+  trait :with_type_poll do
+    type_poll :binary
   end
 
   trait :with_status_poll do
@@ -62,7 +62,7 @@ FactoryGirl.define do
   end
 
   trait :with_in_group_ids do
-    in_group_ids "0"
+    in_group_ids 0
   end
 
   trait :with_is_public do
@@ -87,20 +87,23 @@ FactoryGirl.define do
 
   trait :with_choices do 
     transient do
-      choices_count { Random.rand(2..4) }
+      choice_count { Random.rand(2..4) }
     end
 
     after(:create) do |poll, evaluator|
-      create_list(:choice, evaluator.choices_count, poll: poll)
+      create_list(:choice, evaluator.choice_count, poll: poll)
     end
+  end
+
+  trait :choice_params do
+    choices %w(yes no)
   end
 
   trait :well_described do 
     with_member
     with_choices
-    with_tyep_poll
+    with_type_poll
     with_in_group
-    with_is_public
     with_expire_date
     with_expire_status
   end
