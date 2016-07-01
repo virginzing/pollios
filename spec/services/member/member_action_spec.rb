@@ -7,7 +7,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before (:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-      @celebrity = FactoryGirl.create(:celebrity)
+      @celebrity = FactoryGirl.create(:celebrity_member)
       @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
     end
    
@@ -24,7 +24,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   #   before(:context) do
   #     @member_1 = FactoryGirl.create(:member) 
   #     @member_2 = FactoryGirl.create(:member)
-  #     @celebrity = FactoryGirl.create(:celebrity)
+  #     @celebrity = FactoryGirl.create(:celebrity_member)
   #   end
 
   #   it '- A member[1] can not add themself as a friend' do
@@ -59,7 +59,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-      @celebrity = FactoryGirl.create(:celebrity)
+      @celebrity = FactoryGirl.create(:celebrity_member)
       @follow = Member::MemberAction.new(@member_1, @celebrity).follow
     end
 
@@ -76,7 +76,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   #   before(:context) do
   #     @member_1 = FactoryGirl.create(:member) 
   #     @member_2 = FactoryGirl.create(:member)
-  #     @celebrity = FactoryGirl.create(:celebrity)
+  #     @celebrity = FactoryGirl.create(:celebrity_member)
   #   end
   #   it '- A celebrity can not follow themself' do
   #     expect{ Member::MemberAction.new(@celebrity, @celebrity).follow } \
@@ -107,7 +107,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:each) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-      @celebrity = FactoryGirl.create(:celebrity)
+      @celebrity = FactoryGirl.create(:celebrity_member)
       @member_action = Member::MemberAction.new(@member_1, @celebrity)
       @follow = @member_action.follow
 
@@ -127,7 +127,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   #   before(:context) do
   #     @member_1 = FactoryGirl.create(:member) 
   #     @member_2 = FactoryGirl.create(:member)
-  #     @celebrity = FactoryGirl.create(:celebrity)
+  #     @celebrity = FactoryGirl.create(:celebrity_member)
   #   end
   #   it '- A member[1] can not send unfollow themself' do
   #     expect{ Member::MemberAction.new(@celebrity, @celebrity).unfollow  } \
@@ -144,7 +144,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:each) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-      @celebrity = FactoryGirl.create(:celebrity)
+      @celebrity = FactoryGirl.create(:celebrity_member)
       @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
 
       @deny_friend_request = Member::MemberAction.new(@member_2, @member_1).deny_friend_request
@@ -163,7 +163,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   #   before(:context) do
   #     @member_1 = FactoryGirl.create(:member) 
   #     @member_2 = FactoryGirl.create(:member)
-  #     @celebrity = FactoryGirl.create(:celebrity)
+  #     @celebrity = FactoryGirl.create(:celebrity_member)
   #   end
   #   it '- A member[1] can not deny friend request to member[2] if member[2] is not official account' do
   #     expect{ Member::MemberAction.new(@celebrity, @celebrity).deny_friend_request } \
@@ -175,7 +175,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-      @celebrity = FactoryGirl.create(:celebrity)
+      @celebrity = FactoryGirl.create(:celebrity_member)
       @member_action = Member::MemberAction.new(@member_1, @member_2)
       @add_friend = @member_action.add_friend
 
@@ -195,7 +195,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   #   before(:context) do
   #     @member_1 = FactoryGirl.create(:member) 
   #     @member_2 = FactoryGirl.create(:member)
-  #     @celebrity = FactoryGirl.create(:celebrity)
+  #     @celebrity = FactoryGirl.create(:celebrity_member)
   #   end
   #   it '- A member[1] can not send cancel friend request to member[2] if member[1] has not send add friend request yet' do
   #     expect{ Member::MemberAction.new(@celebrity, @celebrity).cancel_friend_request } \
@@ -207,7 +207,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-      @celebrity = FactoryGirl.create(:celebrity)
+      @celebrity = FactoryGirl.create(:celebrity_member)
       @block = Member::MemberAction.new(@member_1, @member_2).block
     end
     
@@ -220,7 +220,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   #   before(:context) do
   #     @member_1 = FactoryGirl.create(:member) 
   #     @member_2 = FactoryGirl.create(:member)
-  #     @celebrity = FactoryGirl.create(:celebrity)
+  #     @celebrity = FactoryGirl.create(:celebrity_member)
   #   end
   #   it '- A member[1] can not block themself' do
   #     expect{ Member::MemberAction.new(@member_1, @member_1).block } \
