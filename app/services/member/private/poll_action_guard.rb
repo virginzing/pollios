@@ -3,19 +3,19 @@ module Member::Private::PollActionGuard
   # private
 
   def can_create?
-    return [false, 'Poll must be have 2 choices at least.'] if less_choices
-    return [false, 'Wrong type of choices.'] if wrong_type_choices
-    return [false, "You don't have any public poll quota."] if poll_params[:public] && public_quota_limit_exist
-    return [false, "You aren't member in group."] if out_of_group 
+    return [false, less_choices_message] if less_choices
+    return [false, wrong_type_choices_message] if wrong_type_choices
+    return [false, public_quota_limit_exist_message] if poll_params[:public] && public_quota_limit_exist
+    return [false, out_of_group_message] if out_of_group 
 
     [true, nil]
   end
 
   def can_close?
-    return [false, "You aren't owner of this poll."] if not_owner_poll
+    return [false, not_owner_poll_message] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, 'This poll is already closed for voting.'] if already_close
+    return [false, already_close_message] if already_close
 
     [true, nil]
   end
@@ -25,8 +25,8 @@ module Member::Private::PollActionGuard
     return [false, message] unless can_view
     can_vote, message = poll_inquiry_service.can_vote?
     return [false, message] unless can_vote
-    return [false, 'You are already voted this poll.'] if already_vote
-    return [false, "This poll haven't your selected choice."] if not_match_choice
+    return [false, already_vote_message] if already_vote
+    return [false, not_match_choice_message] if not_match_choice
 
     [true, nil]
   end
@@ -34,13 +34,13 @@ module Member::Private::PollActionGuard
   def can_bookmark?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, 'You are already bookmarked this poll.'] if already_bookmark
+    return [false, already_bookmark_message] if already_bookmark
 
     [true, nil]
   end
 
   def can_unbookmark?
-    return [false, "You aren't bookmarking this poll."] if not_bookmarked
+    return [false, not_bookmarked_message] if not_bookmarked
 
     [true, nil]
   end
@@ -48,7 +48,7 @@ module Member::Private::PollActionGuard
   def can_save?
     can_vote, message = can_vote?
     return [false, message] unless can_vote
-    return [false, 'You are already saved this poll for vote later.'] if already_save
+    return [false, already_save_message] if already_save
 
     [true, nil]
   end
@@ -56,13 +56,13 @@ module Member::Private::PollActionGuard
   def can_watch?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, 'You are already watching this poll.'] if already_watch
+    return [false, already_watch_message] if already_watch
 
     [true, nil]
   end
 
   def can_unwatch?
-    return [false, "You aren't watching this poll."] if not_watching
+    return [false, not_watching_message] if not_watching
 
     [true, nil]
   end
@@ -75,12 +75,12 @@ module Member::Private::PollActionGuard
   end
 
   def can_promote?
-    return [false, "You aren't owner of this poll."] if not_owner_poll
+    return [false, not_owner_poll_message] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, 'This poll is already closed for voting.'] if already_close
-    return [false, 'This poll is already public.'] if already_public
-    return [false, "You don't have any public poll quota."] if public_quota_limit_exist
+    return [false, already_close_message] if already_close
+    return [false, already_public_message] if already_public
+    return [false, public_quota_limit_exist_message] if public_quota_limit_exist
 
     [true, nil]
   end
@@ -88,8 +88,8 @@ module Member::Private::PollActionGuard
   def can_report?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, "You can't report your poll."] if owner_poll
-    return [false, 'You are already reported this poll.'] if already_report
+    return [false, owner_poll_message] if owner_poll
+    return [false, already_report_message] if already_report
 
     [true, nil]
   end
@@ -97,14 +97,14 @@ module Member::Private::PollActionGuard
   def can_delete?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, "You're not owner this poll."] if not_owner_poll
+    return [false, not_owner_poll_message] if not_owner_poll
 
     [true, nil]
   end
 
   def can_comment?
-    return [false, "You aren't vote this poll."] if not_voted_and_poll_not_closed
-    return [false, "This poll isn't allow comment."] if not_allow_comment
+    return [false, not_voted_and_poll_not_closed_message] if not_voted_and_poll_not_closed
+    return [false, not_allow_comment_message] if not_allow_comment
 
     [true, nil]
   end
@@ -112,9 +112,9 @@ module Member::Private::PollActionGuard
   def can_report_comment?
     can_comment, message = can_comment?
     return [false, message] unless can_comment
-    return [false, "This comment don't exists in poll."] if not_match_comment
-    return [false, "You can't report your comment."] if owner_comment
-    return [false, 'You are already reported this comment.'] if already_report_comment
+    return [false, not_match_comment_message] if not_match_comment
+    return [false, owner_comment_message] if owner_comment
+    return [false, already_report_comment_message] if already_report_comment
       
     [true, nil]
   end
@@ -122,8 +122,8 @@ module Member::Private::PollActionGuard
   def can_delete_comment?
     can_comment, message = can_comment?
     return [false, message] unless can_comment
-    return [false, "This comment don't exists in poll."] if not_match_comment
-    return [false, "You aren't owner this comment or this poll."] if not_owner_comment && not_owner_poll 
+    return [false, not_match_comment_message] if not_match_comment
+    return [false, not_owner_poll_message] if not_owner_comment && not_owner_poll 
 
     [true, nil]
   end
