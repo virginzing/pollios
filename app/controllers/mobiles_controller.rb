@@ -116,7 +116,7 @@ class MobilesController < ApplicationController
     answer = []
     id = params[:id]
     member_id = params[:member_id]
-    choice_list = params[:choices]
+    choice_list = params[:choice_params]
 
     params[:polls].each_with_index do |poll_id, index|
       answer << { id: poll_id, choice_id: choice_list[index] }

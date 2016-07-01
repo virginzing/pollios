@@ -81,57 +81,11 @@ FactoryGirl.define do
     factory :celebrity_member, traits: [:is_celebrity]
   end
 
-  factory :sequence_member, class: Member do
-    fullname { Faker::Name.name }
+  # factory :sequence_member, class: Member do
+  #   fullname { Faker::Name.name }
 
-    sequence(:id) { |n| n+101 }
-    sequence(:email) { |n| "mail#{n+1}@mail.com" }
-  end
-
-  factory :one, class: Member do
-    email "nuttapon@code-app.com"
-  end
-
-  factory :two, class: Member do
-    email "nutty@code-app.com"
-  end
-
-  factory :facebook, class: Member do
-    id "123456"
-    name "Nutty Nuttapon Achachotipong"
-    app_id "123"
-  end
-
-  factory :sentai, class: Member do
-    authen "nuttapon@code-app.com"
-    password "1234567"
-    app_id "com.pollios.polliosapp"
-  end
-
-  factory :celebrity, class: Member do
-    fullname "celebrity"
-    email "celebrity@gmail.com"
-    member_type 1
-  end
-
-  factory :member_system, class: Member do
-    fullname "Pollios System"
-    email "system@pollios.com"
-  end
-
-  factory :dummy, class: Member do
-    authen "dummy@pollios.com"
-    app_id "com.pollios.polliosapp"
-  end
-
-  factory :member_required, class: Member do
-    fullname { Faker::Name.name }
-    email { Faker::Internet.email }
-  end
-
-  factory :member_optional, class: Member, parent: :member_required do
-    avatar { Faker::Avatar.image }
-    cover_preset 1
-  end
+  #   sequence(:id) { |n| n+101 }
+  #   sequence(:email) { |n| "mail#{n+1}@mail.com" }
+  # end
 
 end

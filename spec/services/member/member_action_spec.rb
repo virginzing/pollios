@@ -8,7 +8,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before (:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
-
+      
       @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
     end
    
@@ -21,7 +21,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context '#add_friend: A member[1] fails to send add friend request to member[2]' do
+context '#add_friend: A member[1] fails to send add friend request to member[2]' do
     before(:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)

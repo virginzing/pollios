@@ -6,10 +6,10 @@ module Member::Private::PollInquiry
     return [false, ExceptionHandler::Message::Member::BAN] if poll.member.ban?
     return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
     return [false, ExceptionHandler::Message::Poll::DELETED] if poll.deleted_at.present?
-    return [false, "You can't see draft poll."] if poll.draft
+    return [false, draft_poll_message] if poll.draft
     return [false, ExceptionHandler::Message::Poll::OUTSIDE_GROUP] if member_outside_group_visibility?
-    return [false, 'You are already not interested this poll.'] if not_interested?
-    return [false, "You can't see this poll at this moment."] if incoming_block
+    return [false, already_not_interest_message] if not_interested?
+    return [false, poll_incoming_block_message] if incoming_block
 
     [true, nil]
   end
@@ -22,10 +22,10 @@ module Member::Private::PollInquiry
   def can_vote?
     return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
     return [false, ExceptionHandler::Message::Poll::EXPIRED] if poll.expire_date < Time.zone.now
-    return [false, "This poll is allow vote for group's members."] if outside_group?
-    return [false, 'This poll is allow vote for friends or following.'] if only_for_frineds_or_following?
-    return [false, "This poll isn't allow your own vote."] if not_allow_your_own_vote?
-    return [false, "You are already blocked #{poll.member.fullname}."] if outgoing_block
+    return [false, allow_vote_for_group_member_message] if outside_group?
+    return [false, only_for_frineds_or_following_message] if only_for_frineds_or_following?
+    return [false, not_allow_your_own_vote_message] if not_allow_your_own_vote?
+    return [false, you_are_already_block_message(poll.member.fullname)] if outgoing_block
 
     [true, nil]
   end
