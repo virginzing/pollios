@@ -52,13 +52,7 @@ FactoryGirl.define do
       friend_ids [103, 104, 105, 107, 108, 109]
     end
 
-    trait :with_described do 
-      with_name
-      with_public_id
-      with_cover_url
-    end
-
-    factory :group_with_described, traits: [:with_described]
+    factory :group_with_cover_url, traits: [:with_cover_url]
     factory :group_that_need_approve, traits: [:with_need_approve]
     factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
     factory :group_with_invitation_list, traits: [:with_invitation_list]
@@ -81,5 +75,4 @@ FactoryGirl.define do
   factory :group_public, class: Group, parent: :group_required do
     public true
   end
-
 end
