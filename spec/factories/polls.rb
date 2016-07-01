@@ -50,77 +50,48 @@
 FactoryGirl.define do
 
   factory :poll, class: Poll do
+    transient do 
+      choice_count { Random.rand(3..5) }
+    end
+
+    member
     title { Faker::Lorem.sentence }
-    type_poll :binary
-    status_poll :gray
-    in_group false
-    public false
-    expire_date Time.zone.now + 1.weeks
-    expire_status false
+    allow_comment true
+
+    after(:create) do
+      choices { create_list(:choice, evaluator.choices_count, poll: poll) }
+    end
+
+    trait :with_choices do
+      choices ["yes", "no"]
+    end
+
+    trait :with_type_poll do
+      type_poll :binary
+    end
+
+    trait :with_status_poll do
+      status_poll :gray
+    end
+
+    trait :with_in_group do
+      in_group false
+    end
+
+    trait :with_public do
+      public true
+    end
+
+    trait :with_expire_date do 
+      expire_date Time.zone.now + 1.weeks
+    end
+
+    trait :with_expire_status do 
+      expire_status false
+    end
 
     trait :not_allow_comment do
       allow_comment false
     end
   end
-
-  # This should cause some problem
-  factory :create_poll, class: Poll do
-    title "ทดสอบ #eiei #nut"
-    in_group false
-    choices ["yes", "no"]
-    type_poll "binary"
-  end
-
-  factory :create_poll_public, class: Poll do
-    title "Poll Public"
-    expire_within 2
-    choices ["yes", "no"]
-    type_poll "binary"
-    is_public true
-  end
-
-  factory :story, class: Poll do
-    member nil
-    title { Faker::Lorem.sentence }
-    public false
-    allow_comment true
-    qr_only false
-
-    factory :poll_with_choices do
-      transient do
-        choices_count 2
-      end
-
-      after(:create) do |poll, evaluator|
-        create_list(:choice, evaluator.choices_count, poll: poll)
-      end
-    end
-
-    trait :is_public do
-      public true
-    end
-
-    trait :disable_comment do
-      allow_comment false
-    end
-
-    trait :in_group do
-      in_group true
-      in_group_ids ""
-    end
-
-    factory :poll_to_group,   traits: [:in_group]
-    factory :poll_to_public,   traits: [:is_public]
-    factory :poll_that_disable_comment, traits: [:disable_comment]
-  end
-
-  factory :poll_required, class: Poll do
-    member nil
-    title { Faker::Lorem.sentence }
-    public false
-    allow_comment true
-    creator_must_vote true
-    type_poll "freeform"
-  end
-
 end

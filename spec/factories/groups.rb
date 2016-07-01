@@ -28,18 +28,19 @@
 
 FactoryGirl.define do
   factory :group do
-    name "Codeapp"
-    group_type 0
+
+    name { Faker::Name.title }
+    public_id { Faker::Name.name }
 
     trait :with_cover_url do
       cover "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
     end
 
-    trait :need_approve do
+    trait :with_need_approve do
       need_approve true
     end
 
-    trait :dont_need_approve do
+    trait :with_dont_need_approve do
       need_approve false
     end
 
@@ -52,8 +53,8 @@ FactoryGirl.define do
     end
 
     factory :group_with_cover_url, traits: [:with_cover_url]
-    factory :group_that_need_approve, traits: [:need_approve]
-    factory :group_that_dont_need_approve, traits: [:dont_need_approve]
+    factory :group_that_need_approve, traits: [:with_need_approve]
+    factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
     factory :group_with_invitation_list, traits: [:with_invitation_list]
     factory :group_with_invitation_friend_ids, traits: [:with_invitation_friend_ids]
   end
@@ -74,5 +75,4 @@ FactoryGirl.define do
   factory :group_public, class: Group, parent: :group_required do
     public true
   end
-
 end

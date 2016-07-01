@@ -66,14 +66,19 @@ require 'faker'
 FactoryGirl.define do
 
   factory :member do
-    fullname "A Pollios Member"
+    fullname { Faker::Name.name }
     email { Faker::Internet.email }
 
-    trait :is_company do
-      association :company, factory: :company
+    trait :in_company do
+      company
     end
 
-    factory :member_is_company, traits: [:is_company]
+    trait :is_celebrity do
+      member_type 1 
+    end
+
+    factory :company_member, traits: [:in_company]
+    factory :celebrity_member, traits: [:is_celebrity]
   end
 
   factory :sequence_member, class: Member do
