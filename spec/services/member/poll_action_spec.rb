@@ -64,7 +64,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member who is not owner this poll could not deletes this poll' do
       expect { @member_poll_action.delete } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "You're not owner this poll.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
     end
 
   end
@@ -79,7 +79,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- Owner of the Poll could not vote for their own poll' do
       expect { @creator_poll_action.vote(choice_id: @poll.choices.first.id) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, "This poll isn't allow your own vote.")
+        .to raise_error(ExceptionHandler::UnprocessableEntity, not_allow_your_own_vote_message)
     end
 
   end
@@ -108,7 +108,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member who is not friend or following with poll creator could not votes this poll' do
       expect { @member_poll_action.vote(choice_id: @poll.choices.first.id) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, 'This poll is allow vote for friends or following.')
+        .to raise_error(ExceptionHandler::UnprocessableEntity, only_for_frineds_or_following_message)
     end
 
   end
@@ -127,7 +127,23 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     it '- A friend member could not bookmark a poll which already bookmark' do
       @friend_poll_action.bookmark
       expect { @friend_poll_action.bookmark } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, 'You are already bookmarked this poll.')
+        .to raise_error(ExceptionHandler::UnprocessableEntity, already_bookmark_message)
+    end
+
+  end
+
+  context '#bookmark: A member bookmarks poll which not interest' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A member could not bookmark a poll which member not interest' do
+      @friend_poll_action.not_interest
+
+      expect { @friend_poll_action.bookmark } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, already_not_interest_message)
     end
 
   end
