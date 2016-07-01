@@ -81,11 +81,11 @@ FactoryGirl.define do
     factory :celebrity_member, traits: [:is_celebrity]
   end
 
-  factory :sequence_member, class: Member do
-    fullname { Faker::Name.name }
+  # factory :sequence_member, class: Member do
+  #   fullname { Faker::Name.name }
 
-    sequence(:id) { |n| n+101 }
-    sequence(:email) { |n| "mail#{n+1}@mail.com" }
-  end
+  #   sequence(:id) { |n| n+101 }
+  #   sequence(:email) { |n| "mail#{n+1}@mail.com" }
+  # end
 
 end
