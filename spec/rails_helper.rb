@@ -8,6 +8,8 @@ require 'factory_girl_rails'
 require 'shoulda/matchers'
 require 'database_cleaner'
 require 'faker'
+# Requires this file to enable services guard message in rspec test.
+require 'guard_message'
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 

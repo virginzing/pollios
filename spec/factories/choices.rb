@@ -19,14 +19,4 @@ FactoryGirl.define do
     answer { Faker::Name.name }
   end
 
-  factory :answer do 
-     answer { Faker::Name.name }
-  end
-
-  factory :choice_required, class: Choice do
-    poll nil
-    answer { Faker::Name.name }
-  end
 end
-
-
