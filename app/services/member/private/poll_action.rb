@@ -70,8 +70,8 @@ module Member::Private::PollAction
   end
 
   def poll_choice(new_poll)
-    poll_params[:choices].each do |choice|
-      new_poll.choices.create!(answer: choice)
+    poll_params[:choice_params].each do |choice_param|
+      new_poll.choices.create!(answer: choice_param)
     end
   end
 
@@ -119,7 +119,7 @@ module Member::Private::PollAction
   end
 
   def choice_count
-    poll_params[:choices].count
+    poll_params[:choice_params].count
   end
 
   def in_group_ids

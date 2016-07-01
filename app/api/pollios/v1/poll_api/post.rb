@@ -46,6 +46,9 @@ module Pollios::V1::PollAPI
       end
 
       post do
+        # TODO : wait client fix key :choices to :choice_params
+        params[:choice_params] = params.delete(:choices)
+
         create = current_member_poll_action.create(params)
         present create, with: Pollios::V1::Shared::PollDetailEntity \
           , current_member: current_member \
