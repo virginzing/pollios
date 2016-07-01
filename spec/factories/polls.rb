@@ -51,19 +51,16 @@ FactoryGirl.define do
 
   factory :poll, class: Poll do
     transient do 
-      choice_count { Random.rand(3..5) }
+      choice_count { Faker::Number.between(2, 5) }
     end
 
     member
     title { Faker::Lorem.sentence }
+    choices { Faker::Lorem.words(choice_count) }
     allow_comment true
 
-    after(:create) do
-      choices { create_list(:choice, evaluator.choices_count, poll: poll) }
-    end
-
-    trait :with_choices do
-      choices ["yes", "no"]
+    after(:create) do |poll, evaluator|
+      create_list(:choice, choice_count, poll: poll)
     end
 
     trait :with_type_poll do

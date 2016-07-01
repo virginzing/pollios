@@ -16,7 +16,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#create: A member creates poll, became owner of the poll' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
     end
 
@@ -36,7 +36,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#delete: A member deletes poll' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
 
       @member_poll_action = Member::PollAction.new(@member, @poll)
@@ -60,7 +60,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#vote: A member votes own poll when poll creator must not vote' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
       @poll.creator_must_vote = false
       @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
@@ -75,7 +75,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#vote: A member votes poll of friend or following' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
       @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
@@ -90,7 +90,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#vote: A member votes poll of another member who is not friend' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
       @member_poll_action = Member::PollAction.new(@member, @poll)
     end
@@ -104,7 +104,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#bookmark: A member bookmarks poll of friend' do
     before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :choice_params)
+      @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
     end
