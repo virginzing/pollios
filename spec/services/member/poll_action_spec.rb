@@ -148,4 +148,24 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   end
 
+  context '#unbookmark: A member unbookmarks poll of friend' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A friend member could not unbookmark a poll which is not bookmarked' do
+      expect { @friend_poll_action.unbookmark } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, not_bookmarked_message)
+    end
+
+    it '- A friend member could unbookmark a poll which is bookmarked' do
+      @friend_poll_action.bookmark
+      expect { @friend_poll_action.unbookmark } \
+        .not_to raise_error
+    end
+
+  end
+
 end
