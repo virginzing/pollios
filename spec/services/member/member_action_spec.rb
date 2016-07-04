@@ -21,7 +21,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-context '#add_friend: A member[1] fails to send add friend request to member[2]' do
+  context '#add_friend: A member[1] fails to send add friend request to member[2]' do
     before(:context) do
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
@@ -52,6 +52,44 @@ context '#add_friend: A member[1] fails to send add friend request to member[2]'
 
       expect{ Member::MemberAction.new(@member_1, @member_2).add_friend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, " #{already_blocked_message(@member_2)} ")
+    end
+  end
+
+    context '#unfriend: A member[1] sends #unfriend to request A member[2]' do
+    before(:context) do
+      @member_1 = FactoryGirl.create(:member)
+      @member_2 = FactoryGirl.create(:member)
+
+      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
+      @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
+      @unfriend = Member::MemberAction.new(@member_1, @member_2).unfriend
+    end
+
+    it '- A member[2] disappears from incoming unfriend request list of member[1]' do
+      expect(Member::MemberList.new(@member_1).not_exist_incoming_request?(@member_2)).to be true
+    end
+    it '- A member[1] disappears from outgoing unfriend request list of member[2]' do
+      expect(Member::MemberList.new(@member_2).not_exist_outgoing_request?(@member_1)).to be true
+    end
+  end
+
+  context '#unfriend: A member[1] sends #unfriend fails to request A member[2]' do
+    before(:context) do
+      @member_1 = FactoryGirl.create(:member)
+      @member_2 = FactoryGirl.create(:member)
+    end
+    
+     it '- A member[1] can not unfriend your self' do
+      expect{ Member::MemberAction.new(@member_1, @member_1).unfriend } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{unfriend_self_message} ")
+    end
+    it '- A member[1] are not friend member[2]' do
+      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
+      @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
+      @unfriend = Member::MemberAction.new(@member_1, @member_2).unfriend
+
+      expect{ Member::MemberAction.new(@member_1, @member_2).unfriend } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{not_friend_message(@member_2)} ")
     end
   end
 
@@ -96,10 +134,10 @@ context '#add_friend: A member[1] fails to send add friend request to member[2]'
     end
 
     # it '- A celebrity_member blocked member[1]' do
-    #   @block = Member::MemberAction.new(@celebrity_member, @member_1).block
+    #   @block = Member::MemberAction.new(@member_1, @celebrity_member).block
 
     #   expect{ Member::MemberAction.new(@member_1, @celebrity_member).follow  } \
-    #     .to raise_error(ExceptionHandler::UnprocessableEntity, " #{blocking_message(@celebrity_member)} ")
+    #     .to raise_error(ExceptionHandler::UnprocessableEntity, " #{already_blocked_message(@celebrity_member)} ")
     # end
   end
 
@@ -164,11 +202,36 @@ context '#add_friend: A member[1] fails to send add friend request to member[2]'
       @member_2 = FactoryGirl.create(:member)
       @celebrity_member = FactoryGirl.create(:celebrity_member)
     end
-    # it '- A member[1] does not send add friend request' do
-    #   expect{ Member::MemberAction.new(@celebrity_member, @celebrity_member).deny_friend_request } \
-    #     .to raise_error(ExceptionHandler::UnprocessableEntity, " #{not_exist_incoming_request_message(@member_1)} ")
-    # end
+    it '- A member[1] does not send add friend request' do
+      expect{ Member::MemberAction.new(@member_2, @member_1).deny_friend_request } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{not_exist_incoming_request_message(@member_1)} ")
+    end
   end
+
+  context '#accept_friend_request: A member[2] accept sends to  A member[1]' do
+    before(:context) do
+      @member_1 = FactoryGirl.create(:member)
+      @member_2 = FactoryGirl.create(:member)
+
+      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
+      @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
+
+    end
+    it '- A member[2] appears from incoming accept request list of member[1]' do
+      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be true
+    end
+    it '- A member[1] appears from outgoing accept request list of member[2]' do
+      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
+    end
+  end
+
+  # context '#accept_friend_request: A member[2] accept fails sends to  A member[1]' do
+  #   before(:context) do
+  #     @member_1 = FactoryGirl.create(:member)
+  #     @member_2 = FactoryGirl.create(:member)
+  #   end
+
+  # end
 
   context '#cancel: A member[2] cancels friend request from member[1]' do
     before(:context) do
@@ -188,6 +251,11 @@ context '#add_friend: A member[1] fails to send add friend request to member[2]'
     it '- A member[1] disappears from incoming friend request list of member[2]' do
       expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
     end
+    
+    it '- A member[1] dose not send add friend request' do
+      expect{ Member::MemberAction.new(@member_2, @member_1).cancel_friend_request } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{not_exist_outgoing_request_message} ")
+    end
   end
 
   context '#cancel: A member[2] fails to #cancel friend request from member[1]' do
@@ -195,12 +263,6 @@ context '#add_friend: A member[1] fails to send add friend request to member[2]'
       @member_1 = FactoryGirl.create(:member) 
       @member_2 = FactoryGirl.create(:member)
     end
-
-    # it '- A member[1] dose not send add friend request' do
-    #   expect{ Member::MemberAction.new(@celebrity_member, @celebrity_member).cancel_friend_request } \
-    #     .to raise_error(ExceptionHandler::UnprocessableEntity, " #{not_exist_outgoing_request_message} ")
-    # end
-  end
 
   context '#block: A member[1] #blocks member[2]' do
     before(:context) do
@@ -229,6 +291,49 @@ context '#add_friend: A member[1] fails to send add friend request to member[2]'
 
       expect{ Member::MemberAction.new(@member_1, @member_2).block } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, " #{already_blocked_message(@member_2)} ")
+    end
+  end
+end
+
+context '#unblock: A member[1] #unblock to request A member[2]' do
+    before(:context) do
+      @member_1 = FactoryGirl.create(:member)
+      @member_2 = FactoryGirl.create(:member) 
+
+      @block = Member::MemberAction.new(@member_1, @member_2).block
+      @unblock = Member::MemberAction.new(@member_1, @member_2).unblock
+    end
+     it '- A member[2] appears in unblock list of member[1]' do
+      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
+    end 
+  end
+
+  context '#unblock: A member[1] #unblock fails to request' do
+    before(:context) do
+      @member_1 = FactoryGirl.create(:member)
+      @member_2 = FactoryGirl.create(:member)
+    end
+    it '- A member[1] can not unblock your self' do
+      expect{ Member::MemberAction.new(@member_1, @member_1).unblock } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{unblock_self_message} ")
+    end
+    it '- A member[1] are not blocking  member[2]' do
+      @block = Member::MemberAction.new(@member_1, @member_2).block
+      @unblock = Member::MemberAction.new(@member_1, @member_2).unblock
+
+      expect{ Member::MemberAction.new(@member_1, @member_2).unblock } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{not_blocking_message(@member_2)} ")
+    end
+  end
+
+  context '#report: A member[1] #report(and_block) to fails request A member[2]' do
+    before(:context) do
+      @member_1 = FactoryGirl.create(:member)
+      @member_2 = FactoryGirl.create(:member)
+    end
+    it '- A member[1] can not report your self' do
+      expect{ Member::MemberAction.new(@member_1, @member_1).report(true) } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, " #{report_self_message} ")
     end
   end
 end

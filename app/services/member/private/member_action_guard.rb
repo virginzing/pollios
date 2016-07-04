@@ -21,7 +21,7 @@ require 'guard_message'
     return [false, " #{follow_self_message} "] if same_member
     return [false, " #{already_followed_message} "] if already_follow
     return [false, " #{not_official_account_message} "] if not_official_account
-    return [false, " #{blocking_message(a_member)} "] if already_block
+    return [false, " #{already_blocked_message(a_member)} "] if already_block
     [true, nil]
   end
 
@@ -53,12 +53,12 @@ require 'guard_message'
   end
 
   def can_deny_friend_request?
-    return [false, " #{not_exist_incoming_request_message} "] if not_exist_incoming_request
+    return [false, " #{not_exist_incoming_request_message(a_member)} "] if not_exist_incoming_request
     [true, nil]
   end
 
   def can_cancel_friend_request?
-    return [false, " #{not_exist_outgoing_request_message(a_member)} "] if not_exist_outgoing_request
+    return [false, " #{not_exist_outgoing_request_message} "] if not_exist_outgoing_request
     [true, nil]
   end
 
