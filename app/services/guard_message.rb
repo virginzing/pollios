@@ -23,20 +23,18 @@
 # end
 ##########################
 
+####### Member Action Message ##########
+
 def already_friend_message(a_member)
   "You and #{a_member.get_name} are already friends."
 end
 
+def not_friend_message(a_member)
+  "You are not friends with #{a_member.get_name}."
+end
+
 def already_sent_request_message(a_member)
   "You already sent friend request to #{a_member.get_name}."
-end
-
-def already_followed_message
-  "You already followed this account."
-end
-
-def already_blocked_message(a_member)
-  "You already blocked #{a_member.get_name}."
 end
 
 def add_self_as_a_friend_message
@@ -51,12 +49,32 @@ def follow_self_message
   "You can't follow yourself."
 end
 
+def already_followed_message
+  "You already followed this account."
+end
+
+def not_following_message
+  "You are not following this account."
+end
+
 def unfollow_self_message
   "You can't unfollow yourself."
 end
 
 def block_self_message
   "You can't block yourself."
+end
+
+def already_blocked_message(a_member)
+  "You already blocked #{a_member.get_name}."
+end
+
+def not_blocking_message(a_member)
+  "You are not blocking #{a_member.get_name}."
+end
+
+def blocked_message(a_member)
+  "#{a_member.get_name} blocks you."
 end
 
 def unblock_self_message
@@ -67,24 +85,8 @@ def report_self_message
   "You can't report yourself."
 end
 
-def not_friend_message(a_member)
-  "You are not friends with #{a_member.get_name}."
-end
-
 def not_official_account_message
   "This member is not official account."
-end
-
-def not_following_message
-  "You are not following this account."
-end
-
-def not_blocking_message(a_member)
-  "You are not blocking #{a_member.get_name}."
-end
-
-def blocking_message(a_member)
-  "#{a_member.get_name} blocks you."
 end
 
 def friends_limit_exceed_message(a_member)
