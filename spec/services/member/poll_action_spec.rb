@@ -168,4 +168,39 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   end
 
+  context '#close: A member closes own poll' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- A member who is owner of poll could close poll.' do
+      expect { @creator_poll_action.close } \
+        .not_to raise_error
+    end
+
+    it '- A poll must have close_status equal true.' do
+      @creator_poll_action.close 
+      expect(@poll.close_status).to eq(true)
+    end
+
+  end
+
+  context '#close: A member closes another member poll' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @member_poll_action = Member::PollAction.new(@member, @poll)
+    end
+
+    it '- A member who is not owner of poll could not close poll' do
+      expect { @member_poll_action.close } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
+    end
+
+  end
+
 end
