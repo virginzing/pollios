@@ -25,7 +25,7 @@ module Member::Private::PollInquiry
     return [false, allow_vote_for_group_member_message] if outside_group?
     return [false, only_for_frineds_or_following_message] if only_for_frineds_or_following?
     return [false, not_allow_your_own_vote_message] if not_allow_your_own_vote?
-    return [false, you_are_already_block_message(poll.member.fullname)] if outgoing_block
+    return [false, you_are_already_block_message] if outgoing_block
 
     [true, nil]
   end

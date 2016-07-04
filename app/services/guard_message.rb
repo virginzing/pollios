@@ -232,8 +232,8 @@ def not_allow_your_own_vote_message
   "This poll isn't allow your own vote."
 end
 
-def you_are_already_block_message(fullname)
-  "You are already blocked #{fullname}."
+def you_are_already_block_message
+  'You are already blocked.'
 end
 
 def allow_vote_for_group_member_message
