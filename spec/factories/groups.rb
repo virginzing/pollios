@@ -31,10 +31,6 @@ FactoryGirl.define do
 
     name { Faker::Name.title }
     public_id { Faker::Name.name }
-    member { create(:member) }
-    after(:create) do |instance|
-      instance.group_members.create(member_id: instance.member_id, is_master: true, active: true)
-    end
 
     trait :with_cover_url do
       cover "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
@@ -61,6 +57,16 @@ FactoryGirl.define do
         create_list(:member, 4).each do |member|
           instance.group_members.create(member_id: member.id, is_master: false, active: true)
         end
+      end
+    end
+
+    trait :with_creator do
+      ignore do
+        creator { create(:member) }
+      end
+      member { creator }
+      after(:create) do |instance, evaluator|
+        create(:group_member_that_is_admin, :is_active, member: evaluator.creator, group: instance)
       end
     end
 
