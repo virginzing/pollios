@@ -243,4 +243,84 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   end
 
+  context '#promote: A member promotes another member poll' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @member_poll_action = Member::PollAction.new(@member, @poll)
+    end
+
+    it '- A member could not promote another member poll' do
+      expect { @member_poll_action.promote } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
+    end
+
+  end
+
+  context '#promote: A member promotes his own poll when no public poll quota' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- A member could not promote his poll' do
+      expect { @creator_poll_action.promote } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, public_quota_limit_exist_message)
+    end
+
+  end
+
+  context '#promote: A member promotes his own poll when have public poll quota' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- A member could promote his poll' do
+      @poll_creator.point = 2
+      expect { @creator_poll_action.promote } \
+        .not_to raise_error
+    end
+
+  end
+
+  context '#promote: A member promotes his own poll when already promoted' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- A member could not promote poll which already promote' do
+      @poll_creator.point = 2
+      @creator_poll_action.promote
+      expect { @creator_poll_action.promote } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, already_public_message)
+    end
+
+  end
+
+  context '#promote: A member promotes his own poll which already closed' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- A member could not promote poll which already promote' do
+      @poll_creator.point = 2
+      @creator_poll_action.close
+      expect { @creator_poll_action.promote } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, already_closed_message)
+    end
+
+  end
+
 end
