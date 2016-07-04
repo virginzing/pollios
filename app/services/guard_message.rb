@@ -58,11 +58,11 @@ module GuardMessage
   end
 
   def already_followed_message
-    "You already followed this account."
+    'You already followed this account.'
   end
 
   def not_following_message
-    "You are not following this account."
+    'You are not following this account.'
   end
 
   def unfollow_self_message
@@ -94,7 +94,7 @@ module GuardMessage
   end
 
   def not_official_account_message
-    "This member is not official account."
+    'This member is not official account.'
   end
 
   def friends_limit_exceed_message(a_member)
@@ -102,7 +102,7 @@ module GuardMessage
   end
 
   def accept_incoming_block_message
-    "You can't accept this request at this moment."
+    'You can\'t accept this request at this moment.'
   end
 
   def not_exist_incoming_request_message(a_member)
@@ -110,7 +110,7 @@ module GuardMessage
   end
 
   def not_exist_outgoing_request_message
-    "This request is not existing."
+    'This request is not existing.'
   end
 
   #-----------------------------------------------------------
@@ -240,8 +240,8 @@ module GuardMessage
     "This poll isn't allow your own vote."
   end
 
-  def you_are_already_block_message(fullname)
-    "You are already blocked #{fullname}."
+  def you_are_already_block_message
+    'You are already blocked.'
   end
 
   def allow_vote_for_group_member_message
