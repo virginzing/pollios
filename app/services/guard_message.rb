@@ -188,7 +188,7 @@ def not_watching_message
   "You aren't watching this poll."
 end
 
-def owner_poll_message
+def report_own_poll_message
   "You can't report your poll."
 end
 
@@ -204,11 +204,11 @@ def not_allow_comment_message
   "This poll isn't allow comment."
 end
 
-def owner_comment_message_message
+def report_own_comment_message
   "You can't report your comment."
 end
 
-def already_report_comment_message_message
+def already_report_comment_message
   'You are already reported this comment.'
 end 
 
@@ -232,8 +232,8 @@ def not_allow_your_own_vote_message
   "This poll isn't allow your own vote."
 end
 
-def you_are_already_block_message(fullname)
-  "You are already blocked #{fullname}."
+def you_are_already_block_message
+  'You are already blocked.'
 end
 
 def allow_vote_for_group_member_message
