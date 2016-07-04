@@ -3,7 +3,7 @@ require 'rails_helper'
 pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Poll::CommentList" do
 
-  let(:new_poll) { FactoryGirl.create(:poll) }
+  let(:new_poll) { FactoryGirl.create(:public_poll) }
 
   let(:new_member1) { FactoryGirl.create(:member) }
   let(:new_member2) { FactoryGirl.create(:member) }

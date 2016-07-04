@@ -1,68 +1,69 @@
 module Member::Private::MemberActionGuard
+require 'guard_message'
 
   private
   
   def can_add_friend?
-    return [false, "You can't add yourself as a friend."] if same_member
-    return [false, "You and #{a_member.get_name} are already friends."] if already_friend
-    return [false, "You already sent friend request to #{a_member.get_name}."] if already_sent_request
-    return [false, "You are currently blocking #{a_member.get_name}."] if already_block
+    return [false, " #{add_self_as_a_friend_message} "] if same_member
+    return [false, " #{already_friend_message(a_member)} "] if already_friend
+    return [false, " #{already_sent_request_message(a_member)} "] if already_sent_request
+    return [false, " #{already_blocked_message(a_member)} "] if already_block
     [true, nil]
   end
 
   def can_unfriend?
-    return [false, "You can't unfriend yourself."] if same_member
-    return [false, "You are not friends with #{a_member.get_name}."] if not_friend
+    return [false, " #{unfriend_self_message} "] if same_member
+    return [false, " #{not_friend_message(a_member)} "] if not_friend
     [true, nil]
   end
 
   def can_follow?
-    return [false, "You can't follow yourself."] if same_member
-    return [false, 'You already followed this account.'] if already_follow
-    return [false, 'This member is not official account.'] if not_official_account
-    return [false, "You are currently blocking #{a_member.get_name}."] if already_block
+    return [false, " #{follow_self_message} "] if same_member
+    return [false, " #{already_followed_message} "] if already_follow
+    return [false, " #{not_official_account_message} "] if not_official_account
+    return [false, " #{already_blocked_message(a_member)} "] if already_block
     [true, nil]
   end
 
   def can_unfollow?
-    return [false, "You can't unfollow yourself."] if same_member
-    return [false, 'You are not following this account.'] if not_following
+    return [false, " #{unfollow_self_message} "] if same_member
+    return [false, " #{not_following_message} "] if not_following
     [true, nil]
   end
 
   def can_block?
-    return [false, "You can't block yourself."] if same_member
-    return [false, "You already blocked #{a_member.get_name}."] if already_block
+    return [false, " #{block_self_message} "] if same_member
+    return [false, " #{already_blocked_message(a_member)} "] if already_block
     [true, nil]
   end
 
   def can_unblock?
-    return [false, "You can't unblock yourself."] if same_member
-    return [false, "You are not blocking #{a_member.get_name}."] if not_blocking
+    return [false, " #{unblock_self_message} "] if same_member
+    return [false, " #{not_blocking_message(a_member)} "] if not_blocking
     [true, nil]
   end
 
   def can_accept_friend_request?
-    return [false, "You don't have friend request from #{a_member.get_name}"] if not_exist_incoming_request
-    return [false, "Your have over #{member.friend_limit} friends."] if friends_limit_exceed(member)
-    return [false, "#{a_member.get_name} has over #{member.friend_limit} friends."] if friends_limit_exceed(a_member)
-    return [false, "You are currently blocking #{a_member.get_name}."] if already_block
-    return [false, "You can't accept this request at this moment."] if incoming_block
+    return [false, " #{not_exist_incoming_request_message(a_member)} "] if not_exist_incoming_request
+    return [false, " #{friends_limit_exceed_message(a_member)} "] if friends_limit_exceed(member)
+    return [false, " #{friends_limit_exceed_message(a_member)} "] if friends_limit_exceed(a_member)
+    return [false, " #{already_blocked_message(a_member)} "] if already_block
+    return [false, " #{accept_incoming_block_message} "] if incoming_block
     [true, nil]
   end
 
   def can_deny_friend_request?
-    return [false, 'This request is not existing.'] if not_exist_incoming_request
+    return [false, " #{not_exist_incoming_request_message(a_member)} "] if not_exist_incoming_request
     [true, nil]
   end
 
   def can_cancel_friend_request?
-    return [false, 'This request is not existing.'] if not_exist_outgoing_request
+    return [false, " #{not_exist_outgoing_request_message} "] if not_exist_outgoing_request
     [true, nil]
   end
 
   def can_report?
-    return [false, "You can't report yourself."] if same_member
+    return [false, " #{report_self_message} "] if same_member
     [true, nil]
   end
 

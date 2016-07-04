@@ -16,7 +16,7 @@ FactoryGirl.define do
 
   factory :choice do
     poll
-    answer { Faker::Name.name }
+    answer { Faker::Lorem.word }
   end
 
 end
