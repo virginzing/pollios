@@ -28,7 +28,6 @@
 
 FactoryGirl.define do
   factory :group do
-
     name { Faker::Name.title }
     public_id { Faker::Name.name }
 
@@ -52,16 +51,19 @@ FactoryGirl.define do
       friend_ids [103, 104, 105, 107, 108, 109]
     end
 
-    trait :with_4_members do
-      after(:create) do |instance|
-        create_list(:member, 4).each do |member|
-          instance.group_members.create(member_id: member.id, is_master: false, active: true)
+    trait :with_members do
+      transient do
+        numbers_of_members Random.rand(4..7)
+      end
+      after(:create) do |instance, evaluator|
+        create_list(:member, evaluator.numbers_of_members).each do |member|
+          create(:group_member_that_is_active, :is_member, member: member, group: instance)
         end
       end
     end
 
     trait :with_creator do
-      ignore do
+      transient do
         creator { create(:member) }
       end
       member { creator }
@@ -70,6 +72,7 @@ FactoryGirl.define do
       end
     end
 
+    factory :member_created_group, traits: [:with_creator]
     factory :group_with_cover_url, traits: [:with_cover_url]
     factory :group_that_need_approve, traits: [:with_need_approve]
     factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
