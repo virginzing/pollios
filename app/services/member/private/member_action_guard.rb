@@ -8,6 +8,7 @@ require 'guard_message'
     return [false, already_friend_message(a_member)] if already_friend
     return [false, already_sent_request_message(a_member)] if already_sent_request
     return [false, already_blocked_message(a_member)] if already_block
+    return [false, blocked_by_someone_message(a_member)] if blocked_by_someone(a_member)
     [true, nil]
   end
 
@@ -22,6 +23,7 @@ require 'guard_message'
     return [false, already_followed_message] if already_follow
     return [false, not_official_account_message] if not_official_account
     return [false, already_blocked_message(a_member)] if already_block
+    return [false, blocked_by_someone_message(a_member)] if blocked_by_someone(a_member)
     [true, nil]
   end
 
@@ -101,6 +103,10 @@ require 'guard_message'
 
   def not_blocking
     member_list.not_blocking_with?(a_member)
+  end
+
+  def blocked_by_someone(member)
+    member_list.blocked_by_someone.include?(member.id)
   end
 
   def friends_limit_exceed(member)

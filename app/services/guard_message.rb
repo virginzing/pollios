@@ -38,15 +38,15 @@ def already_sent_request_message(a_member)
 end
 
 def add_self_as_a_friend_message
-  'You can\'t add yourself as a friend.'
+  "You can't add yourself as a friend."
 end
 
 def unfriend_self_message
-  'You can\'t unfriend yourself.'
+  "You can't unfriend yourself."
 end
 
 def follow_self_message
-  'You can\'t follow yourself.'
+  "You can't follow yourself."
 end
 
 def already_followed_message
@@ -58,11 +58,11 @@ def not_following_message
 end
 
 def unfollow_self_message
-  'You can\'t unfollow yourself.'
+  "You can't unfollow yourself."
 end
 
 def block_self_message
-  'You can\'t block yourself.'
+  "You can't block yourself."
 end
 
 def already_blocked_message(a_member)
@@ -73,16 +73,16 @@ def not_blocking_message(a_member)
   "You are not blocking #{a_member.get_name}."
 end
 
-def blocked_message(a_member)
-  "#{a_member.get_name} blocks you."
+def blocked_by_someone_message(a_member)
+  "You are blocked by #{a_member.get_name}."
 end
 
 def unblock_self_message
-  'You can\'t unblock yourself.'
+  "You can't unblock yourself."
 end
 
 def report_self_message
-  'You can\'t report yourself.'
+  "You can't report yourself."
 end
 
 def not_official_account_message
@@ -94,7 +94,7 @@ def friends_limit_exceed_message(a_member)
 end
 
 def accept_incoming_block_message
-  'You can\'t accept this request at this moment.'
+  "You can't accept this request at this moment."
 end
 
 def not_exist_incoming_request_message(a_member)
