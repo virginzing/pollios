@@ -186,7 +186,7 @@ def not_watching_message
   "You aren't watching this poll."
 end
 
-def owner_poll_message
+def report_own_poll_message
   "You can't report your poll."
 end
 
@@ -202,11 +202,11 @@ def not_allow_comment_message
   "This poll isn't allow comment."
 end
 
-def owner_comment_message_message
+def report_own_comment_message
   "You can't report your comment."
 end
 
-def already_report_comment_message_message
+def already_report_comment_message
   'You are already reported this comment.'
 end 
 

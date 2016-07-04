@@ -88,7 +88,7 @@ module Member::Private::PollActionGuard
   def can_report?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, owner_poll_message] if owner_poll
+    return [false, report_own_poll_message] if owner_poll
     return [false, already_report_message] if already_report
 
     [true, nil]
@@ -113,7 +113,7 @@ module Member::Private::PollActionGuard
     can_comment, message = can_comment?
     return [false, message] unless can_comment
     return [false, not_match_comment_message] if not_match_comment
-    return [false, owner_comment_message] if owner_comment
+    return [false, report_own_comment_message] if owner_comment
     return [false, already_report_comment_message] if already_report_comment
       
     [true, nil]
@@ -123,7 +123,7 @@ module Member::Private::PollActionGuard
     can_comment, message = can_comment?
     return [false, message] unless can_comment
     return [false, not_match_comment_message] if not_match_comment
-    return [false, not_owner_poll_message] if not_owner_comment && not_owner_poll 
+    return [false, not_owner_comment_and_poll_message] if not_owner_comment && not_owner_poll 
 
     [true, nil]
   end
