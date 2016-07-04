@@ -74,6 +74,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
       @poll.creator_must_vote = false
+
       @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
     end
 
@@ -88,13 +89,18 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
-      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
     end
 
     it '- A friend member could votes this poll' do
       expect { @friend_poll_action.vote(choice_id: @poll.choices.first.id) } \
         .not_to raise_error
+    end
+
+    it '- The poll is voted according to the action.' do
+      @friend_poll_action.vote(choice_id: @poll.choices.first.id)
+      expect(Member::PollList.new(@friend).voted.find(@poll)).to eq @poll
     end
 
   end
@@ -103,6 +109,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
       @member_poll_action = Member::PollAction.new(@member, @poll)
     end
 
@@ -117,6 +124,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
     end
 
@@ -136,6 +144,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
     end
 
@@ -152,6 +161,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
     end
 
@@ -199,6 +209,36 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     it '- A member who is not owner of poll could not close poll' do
       expect { @member_poll_action.close } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
+    end
+
+  end
+
+  context '#report: A member reports his own poll' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- The action guard fails with report_own_poll_message.' do
+      expect { @creator_poll_action.report(@poll) } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, report_own_poll_message)
+    end
+
+  end
+
+  context '#report: A member reports another member poll' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @member_poll_action = Member::PollAction.new(@member, @poll)
+    end
+
+    it '- A member could report poll.' do
+      expect { @member_poll_action.report(@poll) } \
+        .not_to raise_error
     end
 
   end
