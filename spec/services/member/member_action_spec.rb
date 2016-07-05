@@ -238,13 +238,29 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  # context '#accept_friend_request: A member[2] accept fails sends to  A member[1]' do
-  #   before(:context) do
-  #     @member_1 = FactoryGirl.create(:member)
-  #     @member_2 = FactoryGirl.create(:member)
-  #   end
+ context '#accept_friend_request: A member[2] accept fails sends to  A member[1]' do
+    before(:context) do
+       @member_1 = FactoryGirl.create(:member)
+       @member_2 = FactoryGirl.create(:member)
+       @member_3 = FactoryGirl.create(:member)
+     end
+     it '- A Member[1] has already blocked A member[2]  ' do
+        @block = Member::MemberAction.new(@member_2, @member_1).block
+        #@accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
 
-  # end
+        expect{Member::MemberAction.new(@member_2, @member_1).block } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_1))
+    
+     end
+    #  it '- A member[2] friends limit exceed can not accept request list of member[1] ' do
+    #    @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
+    #     @member_2.friend_limit = 1
+    #     @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
+    #     @add_friend = Member::MemberAction.new(@member_3, @member_2).add_friend
+
+    #     expect{Member::MemberAction.new(@member_2, @member_3).accept_friend_request} \
+    #     .to raise_error(ExceptionHandler::UnprocessableEntity, friends_limit_exceed_message(@member_2))
+  end
 
   context '#cancel: A member[2] cancels friend request from member[1]' do
     before(:context) do
