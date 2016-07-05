@@ -25,84 +25,90 @@
 
 ####### Member Action Message ##########
 
-def already_friend_message(a_member)
-  "You and #{a_member.get_name} are already friends."
-end
+module GuardMessage
+  module Member
+    class << self
+      def already_friend_message(a_member)
+        "You and #{a_member.get_name} are already friends."
+      end
 
-def not_friend_message(a_member)
-  "You are not friends with #{a_member.get_name}."
-end
+      def not_friend_message(a_member)
+        "You are not friends with #{a_member.get_name}."
+      end
 
-def already_sent_request_message(a_member)
-  "You already sent friend request to #{a_member.get_name}."
-end
+      def already_sent_request_message(a_member)
+        "You already sent friend request to #{a_member.get_name}."
+      end
 
-def add_self_as_a_friend_message
-  "You can't add yourself as a friend."
-end
+      def add_self_as_a_friend_message
+        "You can't add yourself as a friend."
+      end
 
-def unfriend_self_message
-  "You can't unfriend yourself."
-end
+      def unfriend_self_message
+        "You can't unfriend yourself."
+      end
 
-def follow_self_message
-  "You can't follow yourself."
-end
+      def follow_self_message
+        "You can't follow yourself."
+      end
 
-def already_followed_message
-  'You already followed this account.'
-end
+      def already_followed_message
+        'You already followed this account.'
+      end
 
-def not_following_message
-  'You are not following this account.'
-end
+      def not_following_message
+        'You are not following this account.'
+      end
 
-def unfollow_self_message
-  "You can't unfollow yourself."
-end
+      def unfollow_self_message
+        "You can't unfollow yourself."
+      end
 
-def block_self_message
-  "You can't block yourself."
-end
+      def block_self_message
+        "You can't block yourself."
+      end
 
-def already_blocked_message(a_member)
-  "You already blocked #{a_member.get_name}."
-end
+      def already_blocked_message(a_member)
+        "You already blocked #{a_member.get_name}."
+      end
 
-def not_blocking_message(a_member)
-  "You are not blocking #{a_member.get_name}."
-end
+      def not_blocking_message(a_member)
+        "You are not blocking #{a_member.get_name}."
+      end
 
-def blocked_by_someone_message(a_member)
-  "You are blocked by #{a_member.get_name}."
-end
+      def blocked_by_someone_message(a_member)
+        "You are blocked by #{a_member.get_name}."
+      end
 
-def unblock_self_message
-  "You can't unblock yourself."
-end
+      def unblock_self_message
+        "You can't unblock yourself."
+      end
 
-def report_self_message
-  "You can't report yourself."
-end
+      def report_self_message
+        "You can't report yourself."
+      end
 
-def not_official_account_message
-  'This member is not official account.'
-end
+      def not_official_account_message
+        'This member is not official account.'
+      end
 
-def friends_limit_exceed_message(a_member)
-  "#{a_member.get_name} has over #{a_member.friend_limit} friends."
-end
+      def friends_limit_exceed_message(a_member)
+        "#{a_member.get_name} has over #{a_member.friend_limit} friends."
+      end
 
-def accept_incoming_block_message
-  "You can't accept this request at this moment."
-end
+      def accept_incoming_block_message
+        "You can't accept this request at this moment."
+      end
 
-def not_exist_incoming_request_message(a_member)
-  "You don't have friend request from #{a_member.get_name}"
-end
+      def not_exist_incoming_request_message(a_member)
+        "You don't have friend request from #{a_member.get_name}"
+      end
 
-def not_exist_outgoing_request_message
-  'This request is not existing.'
+      def not_exist_outgoing_request_message
+        'This request is not existing.'
+      end
+    end
+  end
 end
 
 #-----------------------------------------------------------
