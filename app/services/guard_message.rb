@@ -109,6 +109,122 @@ module GuardMessage
       end
     end
   end
+
+  module Poll
+    class << self
+      def less_choices_message
+        'Poll must be have 2 choices at least.'
+      end
+
+      def wrong_type_choices_message
+        'Wrong type of choices.'
+      end
+
+      def public_quota_limit_exist_message
+        "You don't have any public poll quota."
+      end
+
+      def not_owner_poll_message
+        "You aren't owner of this poll."
+      end
+
+      def already_closed_message
+        'This poll is already closed for voting.'
+      end
+
+      def already_voted_message
+        'You are already voted this poll.'
+      end
+
+      def not_match_choice_message
+        "This poll haven't your selected choice."
+      end
+
+      def already_bookmark_message
+        'You are already bookmarked this poll.'
+      end
+
+      def not_bookmarked_message
+        "You aren't bookmarking this poll."
+      end
+
+      def already_saved_message
+        'You are already saved this poll for vote later.'
+      end
+
+      def already_public_message
+        'This poll is already public.'
+      end
+
+      def already_watch_message
+        'You are already watching this poll.'
+      end
+
+      def not_watching_message
+        "You aren't watching this poll."
+      end
+
+      def report_own_poll_message
+        "You can't report your poll."
+      end
+
+      def already_report_message
+        'You are already reported this poll.'
+      end
+
+      def not_voted_and_poll_not_closed_message
+        "You aren't vote this poll."
+      end
+
+      def not_allow_comment_message
+        "This poll isn't allow comment."
+      end
+
+      def report_own_comment_message
+        "You can't report your comment."
+      end
+
+      def already_report_comment_message
+        'You are already reported this comment.'
+      end 
+
+      def not_match_comment_message
+        "This comment don't exists in poll."
+      end
+
+      def not_owner_comment_and_poll_message
+        "You aren't owner this comment or this poll."
+      end
+
+      def only_for_frineds_or_following_message
+        'This poll is allow vote for friends or following.'
+      end
+
+      def already_not_interest_message
+        'You are already not interested this poll.'
+      end
+
+      def not_allow_your_own_vote_message
+        "This poll isn't allow your own vote."
+      end
+
+      def you_are_already_block_message
+        'You are already blocked.'
+      end
+
+      def allow_vote_for_group_member_message
+        "This poll is allow vote for group's members."
+      end
+
+      def poll_incoming_block_message
+        "You can't see this poll at this moment."
+      end
+
+      def draft_poll_message
+        "You can't see draft poll."
+      end
+    end
+  end
 end
 
 #-----------------------------------------------------------
@@ -139,117 +255,4 @@ end
 
 def member_is_not_admin(member_name)
   "#{member_name} is not an admin."
-end
-
-####### Poll Action Message ##########
-def less_choices_message
-  'Poll must be have 2 choices at least.'
-end
-
-def wrong_type_choices_message
-  'Wrong type of choices.'
-end
-
-def public_quota_limit_exist_message
-  "You don't have any public poll quota."
-end
-
-def not_owner_poll_message
-  "You aren't owner of this poll."
-end
-
-def already_closed_message
-  'This poll is already closed for voting.'
-end
-
-def already_voted_message
-  'You are already voted this poll.'
-end
-
-def not_match_choice_message
-  "This poll haven't your selected choice."
-end
-
-def already_bookmark_message
-  'You are already bookmarked this poll.'
-end
-
-def not_bookmarked_message
-  "You aren't bookmarking this poll."
-end
-
-def already_saved_message
-  'You are already saved this poll for vote later.'
-end
-
-def already_public_message
-  'This poll is already public.'
-end
-
-def already_watch_message
-  'You are already watching this poll.'
-end
-
-def not_watching_message
-  "You aren't watching this poll."
-end
-
-def report_own_poll_message
-  "You can't report your poll."
-end
-
-def already_report_message
-  'You are already reported this poll.'
-end
-
-def not_voted_and_poll_not_closed_message
-  "You aren't vote this poll."
-end
-
-def not_allow_comment_message
-  "This poll isn't allow comment."
-end
-
-def report_own_comment_message
-  "You can't report your comment."
-end
-
-def already_report_comment_message
-  'You are already reported this comment.'
-end 
-
-def not_match_comment_message
-  "This comment don't exists in poll."
-end
-
-def not_owner_comment_and_poll_message
-  "You aren't owner this comment or this poll."
-end
-
-def only_for_frineds_or_following_message
-  'This poll is allow vote for friends or following.'
-end
-
-def already_not_interest_message
-  'You are already not interested this poll.'
-end
-
-def not_allow_your_own_vote_message
-  "This poll isn't allow your own vote."
-end
-
-def you_are_already_block_message
-  'You are already blocked.'
-end
-
-def allow_vote_for_group_member_message
-  "This poll is allow vote for group's members."
-end
-
-def poll_incoming_block_message
-  "You can't see this poll at this moment."
-end
-
-def draft_poll_message
-  "You can't see draft poll."
 end
