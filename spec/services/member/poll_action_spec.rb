@@ -323,4 +323,48 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   end
 
+  context '#comment: A member comments poll of friend when did not vote.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A member could not comment poll.' do
+      expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_voted_and_poll_not_closed_message)
+    end
+  end
+
+  context '#comment: A member comments poll of friend when already vote.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A member could comment poll.' do
+      @friend_poll_action.vote(choice_id: @poll.choices.first.id)
+      expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
+        .not_to raise_error
+    end
+  end
+
+  context '#comment: A member comments poll of friend which not allow comment.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A member could not comment poll.' do
+      @friend_poll_action.vote(choice_id: @poll.choices.first.id)
+      expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_allow_comment_message)
+    end
+  end
+
 end
