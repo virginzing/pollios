@@ -143,14 +143,14 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @block = Member::MemberAction.new(@member_1, @celebrity_member).block
 
       expect{ Member::MemberAction.new(@member_1, @celebrity_member).follow  } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@celebrity))
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@celebrity_member))
     end
 
     it '- A member[1] is blocked by celebrity_member' do
       @block = Member::MemberAction.new(@celebrity_member, @member_1).block
 
       expect{ Member::MemberAction.new(@member_1, @celebrity_member).follow  } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by_someone(@celebrity))
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by_someone(@celebrity_member))
     end
   end
 
