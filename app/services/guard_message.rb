@@ -28,83 +28,83 @@
 module GuardMessage
   module Member
     class << self
-      def already_friend_message(a_member)
+      def already_friend(a_member)
         "You and #{a_member.get_name} are already friends."
       end
 
-      def not_friend_message(a_member)
+      def not_friend(a_member)
         "You are not friends with #{a_member.get_name}."
       end
 
-      def already_sent_request_message(a_member)
+      def already_sent_request(a_member)
         "You already sent friend request to #{a_member.get_name}."
       end
 
-      def add_self_as_a_friend_message
+      def add_self_as_a_friend
         "You can't add yourself as a friend."
       end
 
-      def unfriend_self_message
+      def unfriend_self
         "You can't unfriend yourself."
       end
 
-      def follow_self_message
+      def follow_self
         "You can't follow yourself."
       end
 
-      def already_followed_message
+      def already_followed
         'You already followed this account.'
       end
 
-      def not_following_message
+      def not_following
         'You are not following this account.'
       end
 
-      def unfollow_self_message
+      def unfollow_self
         "You can't unfollow yourself."
       end
 
-      def block_self_message
+      def block_self
         "You can't block yourself."
       end
 
-      def already_blocked_message(a_member)
+      def already_blocked(a_member)
         "You already blocked #{a_member.get_name}."
       end
 
-      def not_blocking_message(a_member)
+      def not_blocking(a_member)
         "You are not blocking #{a_member.get_name}."
       end
 
-      def blocked_by_someone_message(a_member)
+      def blocked_by_someone(a_member)
         "You are blocked by #{a_member.get_name}."
       end
 
-      def unblock_self_message
+      def unblock_self
         "You can't unblock yourself."
       end
 
-      def report_self_message
+      def report_self
         "You can't report yourself."
       end
 
-      def not_official_account_message
+      def not_official_account
         'This member is not official account.'
       end
 
-      def friends_limit_exceed_message(a_member)
+      def friends_limit_exceed(a_member)
         "#{a_member.get_name} has over #{a_member.friend_limit} friends."
       end
 
-      def accept_incoming_block_message
+      def accept_incoming_block
         "You can't accept this request at this moment."
       end
 
-      def not_exist_incoming_request_message(a_member)
+      def not_exist_incoming_request(a_member)
         "You don't have friend request from #{a_member.get_name}"
       end
 
-      def not_exist_outgoing_request_message
+      def not_exist_outgoing_request
         'This request is not existing.'
       end
     end
