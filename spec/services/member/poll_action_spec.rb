@@ -367,4 +367,33 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#save: A member saves poll of friend' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A member could save poll.' do
+      expect { @friend_poll_action.save } \
+        .not_to raise_error
+    end
+  end
+
+  context '#save: A member saves poll of friend which already save' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- A member could not save poll.' do
+      @friend_poll_action.save
+      expect { @friend_poll_action.save } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_saved_message)
+    end
+  end
+
 end
