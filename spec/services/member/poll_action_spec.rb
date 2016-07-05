@@ -64,7 +64,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member who is not owner this poll could not deletes this poll' do
       expect { @member_poll_action.delete } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_owner_poll_message)
     end
 
   end
@@ -80,7 +80,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- Owner of the Poll could not vote for their own poll' do
       expect { @creator_poll_action.vote(choice_id: @poll.choices.first.id) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, not_allow_your_own_vote_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_allow_your_own_vote_message)
     end
 
   end
@@ -115,7 +115,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member who is not friend or following with poll creator could not votes this poll' do
       expect { @member_poll_action.vote(choice_id: @poll.choices.first.id) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, only_for_frineds_or_following_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.only_for_frineds_or_following_message)
     end
 
   end
@@ -135,7 +135,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     it '- A friend member could not bookmark a poll which already bookmark' do
       @friend_poll_action.bookmark
       expect { @friend_poll_action.bookmark } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, already_bookmark_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_bookmark_message)
     end
 
   end
@@ -152,7 +152,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @friend_poll_action.not_interest
 
       expect { @friend_poll_action.bookmark } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, already_not_interest_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_not_interest_message)
     end
 
   end
@@ -167,7 +167,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A friend member could not unbookmark a poll which is not bookmarked' do
       expect { @friend_poll_action.unbookmark } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, not_bookmarked_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_bookmarked_message)
     end
 
     it '- A friend member could unbookmark a poll which is bookmarked' do
@@ -208,7 +208,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member who is not owner of poll could not close poll' do
       expect { @member_poll_action.close } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_owner_poll_message)
     end
 
   end
@@ -223,7 +223,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- The action guard fails with report_own_poll_message.' do
       expect { @creator_poll_action.report(@poll) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, report_own_poll_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.report_own_poll_message)
     end
 
   end
@@ -253,7 +253,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member could not promote another member poll' do
       expect { @member_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, not_owner_poll_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_owner_poll_message)
     end
 
   end
@@ -268,7 +268,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A member could not promote his poll' do
       expect { @creator_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, public_quota_limit_exist_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.public_quota_limit_exist_message)
     end
 
   end
@@ -301,7 +301,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @poll_creator.point = 2
       @creator_poll_action.promote
       expect { @creator_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, already_public_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_public_message)
     end
 
   end
@@ -318,7 +318,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @poll_creator.point = 2
       @creator_poll_action.close
       expect { @creator_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, already_closed_message)
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_closed_message)
     end
 
   end
