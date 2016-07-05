@@ -78,7 +78,7 @@ module Member::Private::PollActionGuard
     return [false, not_owner_poll_message] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, already_close_message] if already_close
+    return [false, already_closed_message] if already_close
     return [false, already_public_message] if already_public
     return [false, public_quota_limit_exist_message] if public_quota_limit_exist
 

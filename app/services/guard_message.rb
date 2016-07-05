@@ -50,11 +50,11 @@ def follow_self_message
 end
 
 def already_followed_message
-  "You already followed this account."
+  'You already followed this account.'
 end
 
 def not_following_message
-  "You are not following this account."
+  'You are not following this account.'
 end
 
 def unfollow_self_message
@@ -73,8 +73,8 @@ def not_blocking_message(a_member)
   "You are not blocking #{a_member.get_name}."
 end
 
-def blocked_message(a_member)
-  "#{a_member.get_name} blocks you."
+def blocked_by_someone_message(a_member)
+  "You are blocked by #{a_member.get_name}."
 end
 
 def unblock_self_message
@@ -86,7 +86,7 @@ def report_self_message
 end
 
 def not_official_account_message
-  "This member is not official account."
+  'This member is not official account.'
 end
 
 def friends_limit_exceed_message(a_member)
@@ -102,7 +102,7 @@ def not_exist_incoming_request_message(a_member)
 end
 
 def not_exist_outgoing_request_message
-  "This request is not existing."
+  'This request is not existing.'
 end
 
 #-----------------------------------------------------------
@@ -232,8 +232,8 @@ def not_allow_your_own_vote_message
   "This poll isn't allow your own vote."
 end
 
-def you_are_already_block_message(fullname)
-  "You are already blocked #{fullname}."
+def you_are_already_block_message
+  'You are already blocked.'
 end
 
 def allow_vote_for_group_member_message
