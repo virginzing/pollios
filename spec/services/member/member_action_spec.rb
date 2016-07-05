@@ -244,14 +244,25 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
        @member_2 = FactoryGirl.create(:member)
        @member_3 = FactoryGirl.create(:member)
      end
-     it '- A Member[1] has already blocked A member[2]  ' do
+     it '- A Member[2] has already blocked A member[1]' do
         @block = Member::MemberAction.new(@member_2, @member_1).block
-        #@accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
-
+        
         expect{Member::MemberAction.new(@member_2, @member_1).block } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_1))
-    
+
+        expect{Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.not_exist_incoming_request(@member_1))
      end
+      it '- A Member [2] accept incoming block A member[1]' do
+           @block = Member::MemberAction.new(@member_1, @member_2).block
+        
+        expect{Member::MemberAction.new(@member_1, @member_2).block } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_2))
+
+        expect{Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.not_exist_incoming_request(@member_1))        
+      end
+
     #  it '- A member[2] friends limit exceed can not accept request list of member[1] ' do
     #    @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
     #     @member_2.friend_limit = 1
@@ -292,6 +303,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1 = FactoryGirl.create(:member)
       @member_2 = FactoryGirl.create(:member)
     end
+  end
 
   context '#block: A member[1] #blocks member[2]' do
     before(:context) do
@@ -322,7 +334,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_2))
     end
   end
-end
 
 context '#unblock: A member[1] unblock to request A member[2]' do
     before(:context) do
