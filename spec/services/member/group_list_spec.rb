@@ -26,6 +26,11 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     it '- When the member is admin, the outsider should see that the member is in the group.' do
       expect(Member::GroupList.new(@group_admin, viewing_member: @outsider).member_of?(@group)).to be false
     end
+
+    it '- When the member view himself/herself.' do
+      expect(Member::GroupList.new(@group_admin).member_of?(@group)).to be true
+      expect(Member::GroupList.new(@group_members[0]).member_of?(@group)).to be true
+    end
   end
 
   context '#member_of?: Is a member in a public group in someone point of view.' do
@@ -52,6 +57,10 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(Member::GroupList.new(@group_admin, viewing_member: @group_members[2]).member_of?(@group)).to be true
     end
 
+    it '- When the member view himself/herself.' do
+      expect(Member::GroupList.new(@group_admin).member_of?(@group)).to be true
+      expect(Member::GroupList.new(@group_members[0]).member_of?(@group)).to be true
+    end
   end
 
 
