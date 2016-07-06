@@ -292,16 +292,18 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
     end
 
-    it '- A member[1] dose not send add friend request' do
-      expect{ Member::MemberAction.new(@member_2, @member_1).cancel_friend_request } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.not_exist_outgoing_request)
-    end
   end
 
   context '#cancel: A member[2] fails to cancel friend request from member[1]' do
     before(:context) do
       @member_1 = FactoryGirl.create(:member)
       @member_2 = FactoryGirl.create(:member)
+    end
+  end
+
+    it '- A member[1] dose not send add friend request' do
+      expect{ Member::MemberAction.new(@member_2, @member_1).cancel_friend_request } \
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.not_exist_outgoing_request)
     end
   end
 

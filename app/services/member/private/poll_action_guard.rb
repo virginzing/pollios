@@ -3,19 +3,19 @@ module Member::Private::PollActionGuard
   # private
 
   def can_create?
-    return [false, GuardMessage::Poll.less_choices_message] if less_choices
-    return [false, GuardMessage::Poll.wrong_type_choices_message] if wrong_type_choices
-    return [false, GuardMessage::Poll.public_quota_limit_exist_message] if poll_params[:public] && public_quota_limit_exist
-    return [false, GuardMessage::Poll.out_of_group_message] if out_of_group 
+    return [false, GuardMessage::Poll.less_choices] if less_choices
+    return [false, GuardMessage::Poll.wrong_type_choices] if wrong_type_choices
+    return [false, GuardMessage::Poll.public_quota_limit_exist] if poll_params[:public] && public_quota_limit_exist
+    return [false, GuardMessage::Poll.out_of_group] if out_of_group 
 
     [true, nil]
   end
 
   def can_close?
-    return [false, GuardMessage::Poll.not_owner_poll_message] if not_owner_poll
+    return [false, GuardMessage::Poll.not_owner_poll] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.already_close_message] if already_close
+    return [false, GuardMessage::Poll.already_closed] if already_close
 
     [true, nil]
   end
@@ -25,8 +25,8 @@ module Member::Private::PollActionGuard
     return [false, message] unless can_view
     can_vote, message = poll_inquiry_service.can_vote?
     return [false, message] unless can_vote
-    return [false, GuardMessage::Poll.already_vote_message] if already_vote
-    return [false, GuardMessage::Poll.not_match_choice_message] if not_match_choice
+    return [false, GuardMessage::Poll.already_voted] if already_vote
+    return [false, GuardMessage::Poll.not_match_choice] if not_match_choice
 
     [true, nil]
   end
@@ -34,13 +34,13 @@ module Member::Private::PollActionGuard
   def can_bookmark?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.already_bookmark_message] if already_bookmark
+    return [false, GuardMessage::Poll.already_bookmarked] if already_bookmark
 
     [true, nil]
   end
 
   def can_unbookmark?
-    return [false, GuardMessage::Poll.not_bookmarked_message] if not_bookmarked
+    return [false, GuardMessage::Poll.not_bookmarked] if not_bookmarked
 
     [true, nil]
   end
@@ -48,7 +48,7 @@ module Member::Private::PollActionGuard
   def can_save?
     can_vote, message = can_vote?
     return [false, message] unless can_vote
-    return [false, GuardMessage::Poll.already_save_message] if already_save
+    return [false, GuardMessage::Poll.already_saved] if already_save
 
     [true, nil]
   end
@@ -56,13 +56,13 @@ module Member::Private::PollActionGuard
   def can_watch?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.already_watch_message] if already_watch
+    return [false, GuardMessage::Poll.already_watch] if already_watch
 
     [true, nil]
   end
 
   def can_unwatch?
-    return [false, GuardMessage::Poll.not_watching_message] if not_watching
+    return [false, GuardMessage::Poll.not_watching] if not_watching
 
     [true, nil]
   end
@@ -75,12 +75,12 @@ module Member::Private::PollActionGuard
   end
 
   def can_promote?
-    return [false, GuardMessage::Poll.not_owner_poll_message] if not_owner_poll
+    return [false, GuardMessage::Poll.not_owner_poll] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.already_closed_message] if already_close
-    return [false, GuardMessage::Poll.already_public_message] if already_public
-    return [false, GuardMessage::Poll.public_quota_limit_exist_message] if public_quota_limit_exist
+    return [false, GuardMessage::Poll.already_closed] if already_close
+    return [false, GuardMessage::Poll.already_public] if already_public
+    return [false, GuardMessage::Poll.public_quota_limit_exist] if public_quota_limit_exist
 
     [true, nil]
   end
@@ -88,8 +88,8 @@ module Member::Private::PollActionGuard
   def can_report?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.report_own_poll_message] if owner_poll
-    return [false, GuardMessage::Poll.already_report_message] if already_report
+    return [false, GuardMessage::Poll.report_own_poll] if owner_poll
+    return [false, GuardMessage::Poll.already_report] if already_report
 
     [true, nil]
   end
@@ -97,14 +97,14 @@ module Member::Private::PollActionGuard
   def can_delete?
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.not_owner_poll_message] if not_owner_poll
+    return [false, GuardMessage::Poll.not_owner_poll] if not_owner_poll
 
     [true, nil]
   end
 
   def can_comment?
-    return [false, GuardMessage::Poll.not_voted_and_poll_not_closed_message] if not_voted_and_poll_not_closed
-    return [false, GuardMessage::Poll.not_allow_comment_message] if not_allow_comment
+    return [false, GuardMessage::Poll.not_voted_and_poll_not_closed] if not_voted_and_poll_not_closed
+    return [false, GuardMessage::Poll.not_allow_comment] if not_allow_comment
 
     [true, nil]
   end
@@ -112,9 +112,9 @@ module Member::Private::PollActionGuard
   def can_report_comment?
     can_comment, message = can_comment?
     return [false, message] unless can_comment
-    return [false, GuardMessage::Poll.not_match_comment_message] if not_match_comment
-    return [false, GuardMessage::Poll.report_own_comment_message] if owner_comment
-    return [false, GuardMessage::Poll.already_report_comment_message] if already_report_comment
+    return [false, GuardMessage::Poll.not_match_comment] if not_match_comment
+    return [false, GuardMessage::Poll.report_own_comment] if owner_comment
+    return [false, GuardMessage::Poll.already_report_comment] if already_report_comment
       
     [true, nil]
   end
@@ -122,8 +122,8 @@ module Member::Private::PollActionGuard
   def can_delete_comment?
     can_comment, message = can_comment?
     return [false, message] unless can_comment
-    return [false, GuardMessage::Poll.not_match_comment_message] if not_match_comment
-    return [false, GuardMessage::Poll.not_owner_comment_and_poll_message] if not_owner_comment && not_owner_poll 
+    return [false, GuardMessage::Poll.not_match_comment] if not_match_comment
+    return [false, GuardMessage::Poll.not_owner_comment_and_poll] if not_owner_comment && not_owner_poll 
 
     [true, nil]
   end
