@@ -4,7 +4,7 @@ pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::MemberAction" do
 
   context '#add_friend: A member[1] sends add friend request to member[2]' do
-    before (:context) do
+    before ( :context) do
       @member_1 = FactoryGirl.create(:member)
       @member_2 = FactoryGirl.create(:member)
 
@@ -35,33 +35,33 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
       @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
 
-      expect{ Member::MemberAction.new(@member_1, @member_2).add_friend } \
+      expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_friend(@member_2))
     end
 
     it '- A member[1] already sent request' do
       @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
 
-      expect{ Member::MemberAction.new(@member_1, @member_2).add_friend } \
+      expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_sent_request(@member_2))
     end
 
     it '- A member[1] blocked member[2]' do
       @block = Member::MemberAction.new(@member_1, @member_2).block
 
-      expect{ Member::MemberAction.new(@member_1, @member_2).add_friend } \
+      expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_2))
     end
 
     it '- A member[1] is blocked by member[2]' do
       @block = Member::MemberAction.new(@member_2, @member_1).block
 
-      expect{ Member::MemberAction.new(@member_1, @member_2).add_friend } \
+      expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by_someone(@member_2))
     end
   end
 
-    context '#unfriend: A member[1] sends #unfriend to request A member[2]' do
+  context '#unfriend: A member[1] sends unfriend to request A member[2]' do
     before(:context) do
       @member_1 = FactoryGirl.create(:member)
       @member_2 = FactoryGirl.create(:member)
@@ -85,8 +85,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_2 = FactoryGirl.create(:member)
     end
 
-     it '- A member[1] can not unfriend your self' do
-      expect{ Member::MemberAction.new(@member_1, @member_1).unfriend } \
+    it '- A member[1] can not unfriend your self' do
+      expect { Member::MemberAction.new(@member_1, @member_1).unfriend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.unfriend_self)
     end
     it '- A member[1] are not friend member[2]' do
@@ -94,7 +94,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
       @unfriend = Member::MemberAction.new(@member_1, @member_2).unfriend
 
-      expect{ Member::MemberAction.new(@member_1, @member_2).unfriend } \
+      expect { Member::MemberAction.new(@member_1, @member_2).unfriend } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.not_friend(@member_2))
     end
   end
