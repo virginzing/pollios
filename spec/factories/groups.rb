@@ -28,13 +28,8 @@
 
 FactoryGirl.define do
   factory :group do
-
     name { Faker::Name.title }
     public_id { Faker::Name.name }
-    member { create(:member) }
-    after(:create) do |instance|
-      instance.group_members.create(member_id: instance.member_id, is_master: true, active: true)
-    end
 
     trait :with_cover_url do
       cover "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
@@ -56,14 +51,28 @@ FactoryGirl.define do
       friend_ids [103, 104, 105, 107, 108, 109]
     end
 
-    trait :with_4_members do
-      after(:create) do |instance|
-        create_list(:member, 4).each do |member|
-          instance.group_members.create(member_id: member.id, is_master: false, active: true)
+    trait :with_members do
+      transient do
+        numbers_of_members Random.rand(4..7)
+      end
+      after(:create) do |instance, evaluator|
+        create_list(:member, evaluator.numbers_of_members).each do |member|
+          create(:group_member_that_is_active, :is_member, member: member, group: instance)
         end
       end
     end
 
+    trait :with_creator do
+      transient do
+        creator { create(:member) }
+      end
+      member { creator }
+      after(:create) do |instance, evaluator|
+        create(:group_member_that_is_admin, :is_active, member: evaluator.creator, group: instance)
+      end
+    end
+
+    factory :member_created_group, traits: [:with_creator]
     factory :group_with_cover_url, traits: [:with_cover_url]
     factory :group_that_need_approve, traits: [:with_need_approve]
     factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
