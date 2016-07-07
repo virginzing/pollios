@@ -81,6 +81,10 @@ FactoryGirl.define do
     factory :celebrity_member, traits: [:is_celebrity]
   end
 
+  after(:create) do |member|
+    member.update(friend_limit: 4)
+  end
+
   # factory :sequence_member, class: Member do
   #   fullname { Faker::Name.name }
 
