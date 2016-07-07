@@ -74,9 +74,24 @@ FactoryGirl.define do
     end
 
     trait :is_celebrity do
-      member_type 1 
+      member_type 1
     end
 
+    trait :joins_groups do
+      transient do
+        number_of_groups Random.rand(3..5)
+        groups { create_list(:group, number_of_groups) }
+        is_admin false
+      end
+
+      after(:create) do |instance, evaluator|
+        evaluator.groups.each do |group|
+          create(:group_member_that_is_active, is_master: evaluator.is_admin, group: group, member: instance)
+        end
+      end
+    end
+
+    factory :member_who_joins_groups, traits: [:joins_groups]
     factory :company_member, traits: [:in_company]
     factory :celebrity_member, traits: [:is_celebrity]
   end
