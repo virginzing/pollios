@@ -190,7 +190,7 @@ module GuardMessage
 
       def already_report_comment
         'You are already reported this comment.'
-      end 
+      end
 
       def not_match_comment
         "This comment don't exists in poll."
@@ -229,34 +229,36 @@ module GuardMessage
       end
     end
   end
-end
 
-#-----------------------------------------------------------
+  module GroupAdminAction
+    class << self
+      def member_already_in_group(member, group)
+        "#{member.get_name} is already in #{group.name}."
+      end
 
-def member_already_in_group(member_name, group_name)
-  "#{member_name} is already in #{group_name}."
-end
+      def member_is_not_in_group(member, group)
+        "#{member.get_name} is not a member in #{group.name}."
+      end
 
-def member_is_not_in_group(member_name, group_name)
-  "#{member_name} is not a member in #{group_name}."
-end
+      def no_join_request_from_member(member, group)
+        "#{member.get_name} haven't sent any join request to #{group.name}."
+      end
 
-def no_join_request_from_member(member_name, group_name)
-  "#{member_name} haven't sent any join request to #{group_name}."
-end
+      def cant_remove_yourself
+        'You cannot remove yourself.'
+      end
 
-def cant_remove_yourself
-  'You cannot remove yourself.'
-end
+      def member_is_group_creator(member)
+        "#{member.get_name} is a group creator."
+      end
 
-def member_is_group_creator(member_name)
-  "#{member_name} is a group creator."
-end
+      def member_already_admin(member)
+        "#{member.get_name} is already an admin."
+      end
 
-def member_already_admin(member_name)
-  "#{member_name} is already an admin."
-end
-
-def member_is_not_admin(member_name)
-  "#{member_name} is not an admin."
+      def member_is_not_admin(member)
+        "#{member.get_name} is not an admin."
+      end
+    end
+  end
 end

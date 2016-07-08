@@ -53,34 +53,34 @@ module Member::Private::GroupActionGuard
   end
 
   def can_approve?
-    return [false, member_already_in_group(a_member.get_name, group.name)] if already_member(a_member)
-    return [false, no_join_request_from_member(a_member.get_name, group.name)] if not_exist_join_request(a_member)
+    return [false, GuardMessage::GroupAdminAction.member_already_in_group(a_member, group)] if already_member(a_member)
+    return [false, GuardMessage::GroupAdminAction.no_join_request_from_member(a_member, group)] if not_exist_join_request(a_member)
     [true, nil]
   end
 
   def can_deny?
-    return [false, member_already_in_group(a_member.get_name, group.name)] if already_member(a_member)
-    return [false, no_join_request_from_member(a_member.get_name, group.name)] if not_exist_any_request(a_member)
+    return [false, GuardMessage::GroupAdminAction.member_already_in_group(a_member, group)] if already_member(a_member)
+    return [false, GuardMessage::GroupAdminAction.no_join_request_from_member(a_member, group)] if not_exist_any_request(a_member)
     [true, nil]
   end
 
   def can_remove?
-    return [false, member_is_not_in_group(a_member.get_name, group.name)] if not_member(a_member)
-    return [false, cant_remove_yourself] if same_member
-    return [false, member_is_group_creator(a_member.get_name)] if group_creator
+    return [false, GuardMessage::GroupAdminAction.member_is_not_in_group(a_member, group)] if not_member(a_member)
+    return [false, GuardMessage::GroupAdminAction.cant_remove_yourself] if same_member
+    return [false, GuardMessage::GroupAdminAction.member_is_group_creator(a_member)] if group_creator
     [true, nil]
   end
 
   def can_promote?
-    return [false, member_is_not_in_group(a_member.get_name, group.name)] if not_member(a_member)
-    return [false, member_already_admin(a_member.get_name)] if already_admin
+    return [false, GuardMessage::GroupAdminAction.member_is_not_in_group(a_member, group)] if not_member(a_member)
+    return [false, GuardMessage::GroupAdminAction.member_already_admin(a_member)] if already_admin
     [true, nil]
   end
 
   def can_demote?
-    return [false, member_is_not_in_group(a_member.get_name, group.name)] if not_member(a_member)
-    return [false, member_is_not_admin(a_member.get_name)] if not_admin
-    return [false, member_is_group_creator(a_member.get_name)] if group_creator
+    return [false, GuardMessage::GroupAdminAction.member_is_not_in_group(a_member, group)] if not_member(a_member)
+    return [false, GuardMessage::GroupAdminAction.member_is_not_admin(a_member)] if not_admin
+    return [false, GuardMessage::GroupAdminAction.member_is_group_creator(a_member)] if group_creator
     [true, nil]
   end
 
