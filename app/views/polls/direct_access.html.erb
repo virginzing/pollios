@@ -47,48 +47,10 @@
       <img src="/images/app-store.png", style="width:125px;height:47px;border:0">
     </a>
   </div>
-</div>
-
-
-  <!-- <div id="pollios_qrcode" >
-    <p style="float: right; margin: -25px 5px 0px 0px;">
-      <%= image_tag @qrcode %>
-      <img src="/qrcode/pollios_for_qrcode.png" class="img-responsive center-block" width="104" height="104" style="opacity: 0.3; margin: -112px 0px 0px 8px;">
-    </p>
-  </div> -->
-
-  <canvas id="canvas" width="120" height="120" style="float: right; margin: -25px 5px 0px 0px;"></canvas>
-
-  <script>
-    var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext("2d");
-    var qr = loadImage("<%= @qrcode %>", main);
-    var modal = document.getElementById("qrmodal");
-    var logo = loadImage("/qrcode/pollios_for_qrcode.png", main);
-
-    var imagesLoaded = 0;
-    function main() {
-      imagesLoaded += 1;
-
-      if (imagesLoaded == 2) {
-        ctx.drawImage(qr, 0, 0);
-        ctx.globalAlpha = 0.3;
-        ctx.drawImage(logo, 8, 8, 104, 104);
-      }
-
-      var img = canvas.toDataURL("image/png");
-      $('#qrmodal').attr('src', img);
-    }
-    function loadImage(src, onload) {
-
-      var img = new Image();
-
-      img.onload = onload;
-      img.src = src;
-      return img;
-    }
-  </script>
-
+  <div class="pull-right">
+    <img src="<%= @qr_code_url['secure_url'] %>" alt=""/>
+  </div>
+  <div class="clearfix"></div>
 </div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -99,12 +61,12 @@
         <div class="row">
           <h1 class="text-center" style="font-weight: 400; color: #777777;">VOTE NOW ON <span style="color: #d32053; font-weight: bold">POLLIOS</span> USING THIS QR CODE</h1>
           <div class="col-md-8 col-md-offset-2">
-            <img id="qrmodal" src="" style="display: block; width: 100%; margin: 0 auto;">
+            <img id="qrmodal" src="<%= @qr_code_url['secure_url'] %>" style="display: block; width: 100%; margin: 0 auto;">
           </div>
           <br>
           <div class="text-center" style="margin-top: 15px;">
             <a style="display: inline-block; margin-bottom: 15px;" href="<%= @poll_link %>">
-              <img src="/assets/pollios_webLogo@2x.png", style="background-color:#d32053;width:125px;height:47px;border:0;border-radius:6px;">
+              <img src="/images/pollios_webLogo@2x.png", style="background-color:#d32053;width:125px;height:47px;border:0;border-radius:6px;">
             </a>
             <a style="display: inline-block;" href="<%= @download_lrink %>">
               <img src="/images/app-store.png", style="width:125px;height:47px;border:0">
