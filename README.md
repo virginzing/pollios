@@ -32,6 +32,7 @@ Clone source code from bitbucket:
 ```bash
 $ git clone https://bitbucket.org/pollios/pollios
 $ cd pollios
+$ git checkout develop
 ```
 
 Update your Gemfile:
