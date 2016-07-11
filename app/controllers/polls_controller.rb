@@ -32,10 +32,12 @@ class PollsController < ApplicationController
     @qr_path = "app/assets/images/#{@poll_id_endode}.png"
     @qr_img = RQRCode::QRCode.new(@custom_url, size: 8).as_png
     @qr_overlay = MiniMagick::Image.open('app/assets/images/qr_overlay.png')
+    @qr_overlay.resize "200x200"
 
     IO.write(@qr_path, @qr_img.to_s)
 
     @qr_to_be_overlay = MiniMagick::Image.open(@qr_path)
+    @qr_to_be_overlay.resize "200x200"
     @result = @qr_to_be_overlay.composite(@qr_overlay) do |c|
       c.compose 'Over'
     end
