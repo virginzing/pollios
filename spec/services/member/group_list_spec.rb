@@ -107,4 +107,19 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#requesting_to_join: List groups which a member sent join request to groups.' do
+    before(:all) do
+      @public_groups = FactoryGirl.create_list(:group, 2, public: true)
+      @private_groups = FactoryGirl.create_list(:group, 2)
+      @member_1 = FactoryGirl.create(:member_who_sends_join_requests, groups: [@public_groups[0], @private_groups[0]])
+      @member_2 = FactoryGirl.create(:member)
+    end
+
+    it "- Anyone can see a member's requesting to join groups." do
+      expect(Member::GroupList.new(@member_1, veiwing_member: @member_2).requesting_to_joins) \
+        .to match_array [@public_groups[0], @private_groups[0]]
+    end
+
+  end
+
 end
