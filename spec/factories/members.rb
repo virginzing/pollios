@@ -91,9 +91,27 @@ FactoryGirl.define do
       end
     end
 
+    trait :sends_requests_to_group do
+      transient do
+        number_of_groups Random.rand(3..5)
+        groups { create_list(:group, number_of_groups) }
+      end
+
+      after(:create) do |instance, evaluator|
+        evaluator.groups.each do |group|
+          create(:request_group, member: instance, group: group)
+        end
+      end
+    end
+
+    factory :member_who_sends_join_requests, traits: [:sends_requests_to_group]
     factory :member_who_joins_groups, traits: [:joins_groups]
     factory :company_member, traits: [:in_company]
     factory :celebrity_member, traits: [:is_celebrity]
+  end
+
+  after(:create) do |member|
+    member.update(friend_limit: 4)
   end
 
   # factory :sequence_member, class: Member do
