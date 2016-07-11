@@ -79,7 +79,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context '#as_admin_with_requests' do
+  context '#as_admin_with_requests: List groups which a member administrates, and have requests sent to the group.' do
     before(:all) do
       @public_groups = FactoryGirl.create_list(:group, 2, public: true)
       @private_groups = FactoryGirl.create_list(:group, 2)
