@@ -26,24 +26,28 @@ class PollsController < ApplicationController
     qrcode_link_generator = GenerateQrcodeLink.new(@poll)
 
     @poll_link = qrcode_link_generator.link
-    @poll_id_endode = qrcode_link_generator.encode
-    @custom_url = qrcode_link_generator.url
+    poll_id_encode = qrcode_link_generator.encode
+    custom_url = qrcode_link_generator.url
 
-    @qr_path = "app/assets/images/#{@poll_id_endode}.png"
-    @qr_img = RQRCode::QRCode.new(@custom_url, size: 8).as_png
-    @qr_overlay = MiniMagick::Image.open('app/assets/images/qr_overlay.png')
-    @qr_overlay.resize "200x200"
+    qr_temp_path = "app/assets/images/#{poll_id_encode}_temp.png"
+    qr_final_path = "app/assets/images/#{poll_id_encode}_final.png"
 
-    IO.write(@qr_path, @qr_img.to_s)
+    qr_img = RQRCode::QRCode.new(custom_url, size: 8).as_png
+    IO.write(qr_temp_path, qr_img.to_s)
 
-    @qr_to_be_overlay = MiniMagick::Image.open(@qr_path)
-    @qr_to_be_overlay.resize "200x200"
-    @result = @qr_to_be_overlay.composite(@qr_overlay) do |c|
+    qr_overlay = MiniMagick::Image.open('app/assets/images/qr_overlay.png')
+    qr_overlay.resize('200x200')
+
+    qr_for_compose = MiniMagick::Image.open(qr_temp_path)
+    qr_for_compose.resize('200x200')
+    result = qr_for_compose.composite(qr_overlay) do |c|
       c.compose 'Over'
     end
-    @result.write @qr_path 
-    @qr_code_url = Cloudinary::Uploader.upload(@qr_path,  public_id: @poll_id_endode)
-    File.delete(@qr_path)
+    File.delete(qr_temp_path)
+
+    result.write(qr_final_path) 
+    @qr_code_url = Cloudinary::Uploader.upload(qr_final_path, public_id: poll_id_encode)
+    File.delete(qr_final_path)
 
     @download_link = 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
   end
