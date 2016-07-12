@@ -57,7 +57,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @block = Member::MemberAction.new(@member_2, @member_1).block
 
       expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by_someone(@member_2))
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by(@member_2))
     end
   end
 
@@ -150,7 +150,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @block = Member::MemberAction.new(@celebrity_member, @member_1).block
 
       expect { Member::MemberAction.new(@member_1, @celebrity_member).follow  } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by_someone(@celebrity_member))
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by(@celebrity_member))
     end
   end
 

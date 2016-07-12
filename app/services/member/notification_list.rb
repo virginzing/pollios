@@ -9,6 +9,10 @@ class Member::NotificationList
     reset_new_notification_count if options[:clear_new_count]
   end
 
+  def all
+    all_notification
+  end
+
   def notifications_at_current_page
     notifications_by_page
   end

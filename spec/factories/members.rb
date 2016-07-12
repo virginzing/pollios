@@ -66,8 +66,16 @@ require 'faker'
 FactoryGirl.define do
 
   factory :member do
+    transient do
+      friend_limit 1000
+    end
+
     fullname { Faker::Name.name }
     email { Faker::Internet.email }
+    
+    after(:create) do |member, evaluator|
+      member.update(friend_limit: evaluator.friend_limit)
+    end
 
     trait :in_company do
       company
@@ -108,10 +116,6 @@ FactoryGirl.define do
     factory :member_who_joins_groups, traits: [:joins_groups]
     factory :company_member, traits: [:in_company]
     factory :celebrity_member, traits: [:is_celebrity]
-  end
-
-  after(:create) do |member|
-    member.update(friend_limit: 4)
   end
 
   # factory :sequence_member, class: Member do
