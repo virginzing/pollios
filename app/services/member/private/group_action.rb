@@ -280,28 +280,28 @@ module Member::Private::GroupAction
   end
 
   def send_invite_friends_to_group_notification(friend_ids)
-    # InviteFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
-    V1::Group::InviteWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
+    # InviteFriendToGroupWorker.perform_async(member.id, friend_ids, group.id)
+    V1::Group::InviteWorker.perform_async(member.id, friend_ids, group.id)
   end
 
   def send_poke_invited_friends_to_group_notification(friend_ids)
-    # PokeInvitedFriendToGroupWorker.perform_async(member.id, friend_ids, group.id) unless Rails.env.test?
-    V1::Group::InviteWorker.perform_async(member.id, friend_ids, group.id, poke: true) unless Rails.env.test?
+    # PokeInvitedFriendToGroupWorker.perform_async(member.id, friend_ids, group.id)
+    V1::Group::InviteWorker.perform_async(member.id, friend_ids, group.id, poke: true)
   end
 
   def send_join_group_notification(member)
-    # JoinGroupWorker.perform_async(member.id, group.id) unless Rails.env.test?
-    V1::Group::JoinWorker.perform_async(member.id, group.id) unless Rails.env.test?
+    # JoinGroupWorker.perform_async(member.id, group.id)
+    V1::Group::JoinWorker.perform_async(member.id, group.id)
   end
 
   def send_join_group_request_notification
-    # RequestGroupWorker.perform_async(member.id, group.id) unless Rails.env.test?
-    V1::Group::JoinRequestWorker.perform_async(member.id, group.id) unless Rails.env.test?
+    # RequestGroupWorker.perform_async(member.id, group.id)
+    V1::Group::JoinRequestWorker.perform_async(member.id, group.id)
   end
 
   def send_promote_group_admin_notification
-    # PromoteAdminWorker.perform_async(member.id, a_member.id, group.id) unless Rails.env.test?
-    V1::Group::PromoteAdminWorker.perform_async(member.id, a_member.id, group.id) unless Rails.env.test?
+    # PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
+    V1::Group::PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
   end
 
 end
