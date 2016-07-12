@@ -613,6 +613,9 @@ Pollios::Application.routes.draw do
       get '/v1/admin/signin', to: 'signin#get'
       post '/v1/admin/signin', to: 'signin#post'
     end
+    scope module: 'polls' do
+      get '/v1/polls/:custom_key', to: 'polls#get'
+    end
   end
 
   get '*path' => redirect('/')
