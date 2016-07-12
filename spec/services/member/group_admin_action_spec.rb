@@ -34,12 +34,16 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1_group_action.join
       @group_admin_action_on_one.approve
       expect { @group_admin_action_on_one.approve } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_already_in_group(@member_1.get_name, @need_approve_group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_already_in_group(@member_1, @need_approve_group))
     end
 
     it '- A group admin should not be able to approve a request that has never been sent to admin.' do
       expect { @group_admin_action_on_one.approve } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, no_join_request_from_member(@member_1.get_name, @need_approve_group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.no_join_request_from_member(@member_1, @need_approve_group))
     end
   end
 
@@ -69,12 +73,16 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1_group_action.join
       @group_admin_action_on_one.approve
       expect { @group_admin_action_on_one.deny } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_already_in_group(@member_1.get_name, @need_approve_group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_already_in_group(@member_1, @need_approve_group))
     end
 
     it '- A group admin should not be able to deny a request that has never been sent to admin.' do
       expect { @group_admin_action_on_one.deny } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, no_join_request_from_member(@member_1.get_name, @need_approve_group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.no_join_request_from_member(@member_1, @need_approve_group))
     end
   end
 
@@ -101,13 +109,17 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin should not be able to remove a member who is not member in the group.' do
       expect { @group_admin_action_on_one.remove } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_in_group(@member_1.get_name, @need_approve_group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_is_not_in_group(@member_1, @need_approve_group))
     end
 
     it '- A group admin should not be able to remove himself.' do
       @group_admin_action_on_self = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @group_admin)
       expect { @group_admin_action_on_self.remove } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, cant_remove_yourself)
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.cant_remove_yourself)
     end
   end
 
@@ -136,7 +148,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- A group admin should not be able to promote a member who is not in the group.' do
       expect { @group_admin_action_on_one.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_in_group(@member_1.get_name, @group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_is_not_in_group(@member_1, @group))
     end
 
     it '- A group admin should not be able to promote a member who is a group admin.' do
@@ -144,7 +158,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       @member_1_admin_action_on_group_admin = Member::GroupAdminAction.new(@member_1, @group, @group_admin)
       expect { @member_1_admin_action_on_group_admin.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_already_admin(@group_admin.get_name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_already_admin(@group_admin))
     end
   end
 
@@ -177,18 +193,24 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       @member_1_admin_action_on_group_admin = Member::GroupAdminAction.new(@member_1, @group, @group_admin)
       expect { @member_1_admin_action_on_group_admin.demote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_group_creator(@group_admin.get_name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_is_group_creator(@group_admin))
     end
 
     it '- A group admin should not be able to demote a member who is not admin.' do
       @member_1_group_action.join
       expect { @group_admin_action_on_one.demote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_admin(@member_1.get_name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_is_not_admin(@member_1))
     end
 
     it '- A group admin should not be able to demote member who is not in the group.' do
       expect { @group_admin_action_on_one.demote }\
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_not_in_group(@member_1.get_name, @group.name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_is_not_in_group(@member_1, @group))
     end
   end
 
@@ -205,7 +227,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @group_admin_action_on_one.promote
       @member_1_admin_action_on_group_admin = Member::GroupAdminAction.new(@member_1, @group, @group_admin)
       expect { @member_1_admin_action_on_group_admin.remove } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, member_is_group_creator(@group_admin.get_name))
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::GroupAdminAction.member_is_group_creator(@group_admin))
     end
   end
 end

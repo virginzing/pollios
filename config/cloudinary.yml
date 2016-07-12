@@ -1,6 +1,6 @@
 ---
 development:
-  cloud_name: pollios
+  cloud_name: code-app
   api_key: '543692587982572'
   api_secret: lHBP7L-JOLt-sRXDLMWlI6doib8
   enhance_image_tag: true
