@@ -608,4 +608,11 @@ Pollios::Application.routes.draw do
   # end
   # mount Sidekiq::Web => '/sidekiq'
   get '*path' => redirect('/')
+
+  scope module: 'v1' do
+    scope module: 'admin' do
+      get '/v1/admin/signin', to: 'signin#get'
+      post '/v1/admin/signin', to: 'signin#post'
+    end
+  end
 end
