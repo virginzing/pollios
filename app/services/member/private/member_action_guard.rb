@@ -6,7 +6,7 @@ module Member::Private::MemberActionGuard
     return [false, GuardMessage::Member.already_friend(a_member)] if already_friend
     return [false, GuardMessage::Member.already_sent_request(a_member)] if already_sent_request
     return [false, GuardMessage::Member.already_blocked(a_member)] if already_block
-    return [false, GuardMessage::Member.blocked_by_someone(a_member)] if blocked_by_someone(a_member)
+    return [false, GuardMessage::Member.blocked_by(a_member)] if blocked_by(a_member)
     [true, nil]
   end
 
@@ -21,7 +21,7 @@ module Member::Private::MemberActionGuard
     return [false, GuardMessage::Member.already_followed] if already_follow
     return [false, GuardMessage::Member.not_official_account] if not_official_account
     return [false, GuardMessage::Member.already_blocked(a_member)] if already_block
-    return [false, GuardMessage::Member.blocked_by_someone(a_member)] if blocked_by_someone(a_member)
+    return [false, GuardMessage::Member.blocked_by(a_member)] if blocked_by(a_member)
     [true, nil]
   end
 
@@ -45,9 +45,10 @@ module Member::Private::MemberActionGuard
 
   def can_accept_friend_request?
     return [false, GuardMessage::Member.not_exist_incoming_request(a_member)] if not_exist_incoming_request
-    return [false, GuardMessage::Member.friends_limit_exceed(a_member)] if friends_limit_exceed(member)
+    return [false, GuardMessage::Member.friends_limit_exceed(member)] if friends_limit_exceed(member)
     return [false, GuardMessage::Member.friends_limit_exceed(a_member)] if friends_limit_exceed(a_member)
     return [false, GuardMessage::Member.already_blocked(a_member)] if already_block
+    # TODO : Remove this 
     return [false, GuardMessage::Member.accept_incoming_block] if incoming_block
     [true, nil]
   end
@@ -103,7 +104,7 @@ module Member::Private::MemberActionGuard
     member_list.not_blocking_with?(a_member)
   end
 
-  def blocked_by_someone(member)
+  def blocked_by(member)
     member_list.blocked_by_someone.include?(member.id)
   end
 

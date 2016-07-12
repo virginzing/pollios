@@ -41,7 +41,7 @@ module ExceptionHandler
       NOT_FOUND = 'Poll not found.'
       UNDER_INSPECTION = "Many users had reported this poll to us. We've temporary removed it."
       DELETED = 'This poll was deleted from Pollios.'
-      CLOSED = 'This poll is closed for voting.'
+      CLOSED = 'This poll is already closed.'
       EXPIRED = 'This poll was already expired.'
       POINT_ZERO = 'Poll to public 0 left.'
       VOTED = 'You had already voted this poll.'
