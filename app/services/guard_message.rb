@@ -1,29 +1,34 @@
 # These methods are examples. Please kindly place new error message below these comments
 
-# *** Note : please add /require 'guard_message'/ with no backslashes to the top of every action guard file.
+# module GuardMessage
 
-# def address_not_exist_message
-#   'คุณไม่มีที่อยู่นี้'
+#   module Address 
+#     class << self
+
+#       def not_exist
+#         'คุณไม่มีที่อยู่นี้'
+#       end
+
+#       def name_already_exists(name)
+#         "คุณมีที่อยู่ชื่อ #{name} แล้ว\t\n"
+#       end
+
+#     end
+#   end
+
+#   module Invoice
+#     class << self
+
+#       def not_exist
+#         'คุณไม่มียอดค้างชำระสินค้านี้อยู่'
+#       end
+
+#     end
+#   end
+#   .
+#   .
+#   .
 # end
-
-# def address_name_already_exists_message(name)
-#   "คุณมีที่อยู่ชื่อ #{name} แล้ว"
-# end
-
-# def invoice_not_exist_message
-#   'คุณไม่มียอดค้างชำระสินค้านี้อยู่'
-# end
-
-# def product_already_favourited_message
-#   'สินค้านี้โดนใจคุณไปแล้ว'
-# end
-
-# def insufficient_stock_message
-#   'ปริมาณสินค้าที่จะเพิ่มไม่เพียงพอ'
-# end
-##########################
-
-####### Member Action Message ##########
 
 module GuardMessage
   module Member
@@ -76,7 +81,7 @@ module GuardMessage
         "You are not blocking #{a_member.get_name}."
       end
 
-      def blocked_by_someone(a_member)
+      def blocked_by(a_member)
         "You are blocked by #{a_member.get_name}."
       end
 

@@ -25,6 +25,10 @@ class Member::MemberList
     ids_include?(friends, a_member.id)
   end
 
+  def already_got_request_from?(a_member)
+    ids_include?(incoming_requests, a_member.id)
+  end
+
   def already_sent_request_to?(a_member)
     ids_include?(outgoing_requests, a_member.id)
   end
@@ -104,6 +108,10 @@ class Member::MemberList
 
   def blocks_ids
     ids_for(blocks)
+  end
+
+  def incoming_requests_ids
+    ids_for(incoming_requests).sort
   end
 
   def outgoing_requests_ids
