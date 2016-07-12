@@ -50,7 +50,7 @@
 FactoryGirl.define do
 
   factory :poll, class: Poll do
-    transient do 
+    transient do
       choice_count { Faker::Number.between(2, 5) }
     end
 
@@ -80,12 +80,16 @@ FactoryGirl.define do
       public true
     end
 
-    trait :with_expire_date do 
+    trait :with_expire_date do
       expire_date Time.zone.now + 1.weeks
     end
 
-    trait :with_expire_status do 
+    trait :with_expire_status do
       expire_status false
+    end
+
+    trait :with_creator_must_vote do
+      creator_must_vote true
     end
 
     trait :not_allow_comment do
