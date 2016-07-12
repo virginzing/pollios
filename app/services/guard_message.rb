@@ -81,7 +81,7 @@ module GuardMessage
         "You are not blocking #{a_member.get_name}."
       end
 
-      def blocked_by_someone(a_member)
+      def blocked_by(a_member)
         "You are blocked by #{a_member.get_name}."
       end
 
