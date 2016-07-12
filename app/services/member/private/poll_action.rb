@@ -1,16 +1,16 @@
 module Member::Private::PollAction
 
   private
-  
+
   def poll_inquiry_service
     @poll_inquiry_service ||= Member::PollInquiry.new(member, poll)
   end
 
   def create_poll_viewing_record
     return if HistoryView.exists?(member_id: member.id, poll_id: poll.id)
-    
+
     create_history_view_for_member
-    
+
     clear_history_viewed_cached_for_member
   end
 
@@ -146,7 +146,7 @@ module Member::Private::PollAction
     poll_params[:title].gsub(/\B#([[:word:]]+)/) do
       tags << Regexp.last_match[1]
     end
-    
+
     return unless tags.count > 0
     tags.each do |tag|
       new_poll.tags << Tag.where(name: tag).first_or_create!
@@ -213,7 +213,7 @@ module Member::Private::PollAction
   def increase_vote_count
     choice.with_lock do
       choice.vote += 1
-      choice.save!  
+      choice.save!
     end
 
     poll.with_lock do
@@ -231,7 +231,7 @@ module Member::Private::PollAction
   def poll_series_id
     poll.series ? poll.poll_series_id : 0
   end
-  
+
   def show_result
     !vote_params[:anonymous]
   end
@@ -336,7 +336,7 @@ module Member::Private::PollAction
 
     claer_voted_all_cached_for_member
     clear_reported_cached_for_member
-    
+
     send_report_notification if poll.in_group
 
     poll
@@ -474,7 +474,7 @@ module Member::Private::PollAction
   end
 
   def send_report_notification
-    ReportPollWorker.perform_async(member.id, poll.id) unless Rails.env.test?
+    ReportPollWorker.perform_async(member.id, poll.id)
   end
 
   def send_vote_notification
@@ -488,7 +488,7 @@ module Member::Private::PollAction
     return unless poll.notify_state.idle?
     poll.update!(notify_state: 1)
     poll.update!(notify_state_at: Time.zone.now)
-    # SumVotePollWorker.perform_in(1.minutes, poll.id) unless Rails.env.test?
-    V1::Poll::SumVotedWorker.perform_in(1.minutes, poll.id) unless Rails.env.test?
+    # SumVotePollWorker.perform_in(1.minutes, poll.id)
+    V1::Poll::SumVotedWorker.perform_in(1.minutes, poll.id)
   end
 end
