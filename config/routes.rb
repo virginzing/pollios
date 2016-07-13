@@ -618,8 +618,8 @@ Pollios::Application.routes.draw do
 
   scope module: 'v1' do
     get '*path', to: 'errors#not_found'
+    root to: 'home#landing'
   end
 
-  root to: 'home#index'
   get '(errors)/:status', to: 'errors#show', constraints: { status: /\d{3}/ }
 end
