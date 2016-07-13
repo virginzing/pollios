@@ -1,0 +1,7 @@
+.alert {
+  border-radius: 1px;
+  color: #FEFEFE;
+  &.error {
+    background: #EC644B;
+  }
+}
