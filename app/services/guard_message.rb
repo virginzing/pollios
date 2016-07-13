@@ -101,6 +101,10 @@ module GuardMessage
         "#{a_member.get_name} has over #{a_member.friend_limit} friends."
       end
 
+      def member_friends_limit_exceed(member)
+        "You has over #{member.friend_limit} friends."
+      end
+
       def accept_incoming_block
         "You can't accept this request at this moment."
       end

@@ -1,0 +1,11 @@
+@import "mixins/button";
+@import "mixins/input";
+
+@mixin card-container($padding: 0px) {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1px;
+  padding: $padding;
+
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+}

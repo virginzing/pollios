@@ -1,0 +1,38 @@
+.qrcode-modal {
+  @include card-container(25px);
+  position: relative;
+  display: block;
+  margin: 40px auto 0 auto;
+  width: 640px;
+  max-width: 90%;
+
+  > .close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
+
+  > .title {
+    margin-bottom: 25px;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  > .title > .app {
+    color: $primary-color;
+    font-weight: bold;
+  }
+
+  > .qrcode {
+    display: block;
+
+    margin: 0 auto 25px auto;
+    width: 360px;
+    max-width: 100%;
+  }
+
+  > .links-app {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}

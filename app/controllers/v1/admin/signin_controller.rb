@@ -1,6 +1,6 @@
 module V1::Admin
   class SigninController < ApplicationController
-    layout 'v1/no_navbar_no_sidebar'
+    layout 'v1/navbar_no_sidebar'
 
     def get
       render 'get'

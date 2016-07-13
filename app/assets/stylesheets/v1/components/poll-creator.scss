@@ -1,0 +1,15 @@
+.poll-creator {
+  display: flex;
+  flex-flow: row nowrap;
+  > .avatar {
+    border-radius: 50%;
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  > .name {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 40px;
+  }
+}

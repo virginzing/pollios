@@ -45,7 +45,7 @@ module Member::Private::MemberActionGuard
 
   def can_accept_friend_request?
     return [false, GuardMessage::Member.not_exist_incoming_request(a_member)] if not_exist_incoming_request
-    return [false, GuardMessage::Member.friends_limit_exceed(member)] if friends_limit_exceed(member)
+    return [false, GuardMessage::Member.member_friends_limit_exceed(member)] if friends_limit_exceed(member)
     return [false, GuardMessage::Member.friends_limit_exceed(a_member)] if friends_limit_exceed(a_member)
     return [false, GuardMessage::Member.already_blocked(a_member)] if already_block
     # TODO : Remove this 

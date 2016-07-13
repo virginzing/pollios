@@ -1,0 +1,25 @@
+@mixin button($font-color, $color, $padding: $btn-padding) {
+  border: 1px solid $color;
+  padding: $padding;
+
+  background-color: $color;
+
+  color: $font-color;
+
+  transition: all .2s ease-in-out;
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+  }
+
+  &:hover {
+    border-color: darken($color, 5%);
+    background-color: darken($color, 5%);
+  }
+
+  &:active {
+    transform: translateY(3px);
+  }
+}

@@ -1,0 +1,14 @@
+.input-group {
+  display: block;
+  margin-bottom: 15px;
+  > .label {
+    display: block;
+    padding: 0;
+
+    color: $label-color;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+}
