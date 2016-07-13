@@ -138,7 +138,7 @@ module GuardMessage
       end
 
       def already_closed
-        'This poll is already closed for voting.'
+        'This poll is already closed.'
       end
 
       def already_voted
@@ -231,6 +231,10 @@ module GuardMessage
 
       def draft_poll
         "You can't see draft poll."
+      end
+
+      def already_expired
+        'This poll was already expired.'
       end
     end
   end

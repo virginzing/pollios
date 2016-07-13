@@ -1,0 +1,24 @@
+<div class="poll-container">
+  <div class="poll-creator">
+    <img src="<%= @poll.member.get_avatar %>" class="avatar">
+    <div class="name"><%= @poll.member.fullname %></div>
+  </div>
+  <div class="question"><%= @poll.title %></div>
+  <% unless @poll.get_photo.blank? %>
+    <img class="question-image" src="<%= @poll.get_photo %>">
+  <% end %>
+  <% @poll.choices.each do |choice| %>
+    <a href="#" data-toggle="modal" data-target="#myModal" class="choice"><%= choice.answer %></a>
+  <% end %>
+  <div class="links-bar">
+    <div class="links-app">
+      <a href="<%= @poll_link %>" class="link">
+        <img src="/images/pollios_webLogo@2x.png" alt="">
+      </a>
+      <a href="#" class="link">
+        <img src="/images/app-store.png" alt="">
+      </a>
+    </div>
+    <img class="qrcode" src="<%= @poll_qrcode_image_url %>" alt="">
+  </div>
+</div>

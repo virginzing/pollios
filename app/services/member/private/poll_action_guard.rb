@@ -6,7 +6,7 @@ module Member::Private::PollActionGuard
     return [false, GuardMessage::Poll.less_choices] if less_choices
     return [false, GuardMessage::Poll.wrong_type_choices] if wrong_type_choices
     return [false, GuardMessage::Poll.public_quota_limit_exist] if poll_params[:public] && public_quota_limit_exist
-    return [false, GuardMessage::Poll.out_of_group] if out_of_group 
+    return [false, GuardMessage::Poll.out_of_group] if out_of_group
 
     [true, nil]
   end
