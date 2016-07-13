@@ -2,12 +2,19 @@
   display: flex;
   flex-flow: column nowrap;
   > .link {
-    width: 120px;
+    flex: 1 1 120px;
   }
   > .link > img {
     max-width: 100%;
   }
   > .link:not(:last-child) {
     margin-bottom: 10px;
+  }
+}
+
+.links-app.horizontal {
+  flex-flow: row nowrap;
+  > .link:not(:last-child) {
+    margin-right: 10px;
   }
 }

@@ -2,7 +2,8 @@
   display: flex;
   flex-flow: row nowrap;
   > .links-app {
-    flex-grow: 1;
+    max-width: 160px;
+    max-height: 120px;
     margin-right: 20px;
   }
   > .qrcode {

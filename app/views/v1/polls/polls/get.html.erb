@@ -8,7 +8,7 @@
     <img class="question-image" src="<%= @poll.get_photo %>">
   <% end %>
   <% @poll.choices.each do |choice| %>
-    <a href="#" data-toggle="modal" data-target="#myModal" class="choice"><%= choice.answer %></a>
+    <a href="#" data-toggle="modal" data-target="#qrcode_modal" class="choice"><%= choice.answer %></a>
   <% end %>
   <div class="links-bar">
     <div class="links-app">
@@ -22,3 +22,8 @@
     <img class="qrcode" src="<%= @poll_qrcode_image_url %>" alt="">
   </div>
 </div>
+<%= render(
+    :partial => "v1/partials/poll_qrcode_modal",
+    :locals => { :qrcode_url => @poll_qrcode_image_url, :poll_link => @poll_link }
+  )
+%>
