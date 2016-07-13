@@ -1,0 +1,12 @@
+@mixin input($color) {
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+  }
+
+  &:focus,
+  &:active {
+    border: 1px solid $color;
+  }
+}
