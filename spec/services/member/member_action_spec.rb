@@ -3,63 +3,187 @@ require 'rails_helper'
 pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::MemberAction" do
 
-  context '#add_friend: A member[1] sends add friend request to member[2]' do
-    before(:context) do
-      @member_1 = FactoryGirl.create(:member)
-      @member_2 = FactoryGirl.create(:member)
+  context '#add_friend: Member[1] sends add friend request to member[2]' do
+    before (:context) do
+      @member_1 = create(:member)
+      @member_2 = create(:member)
 
-      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
+      Member::MemberAction.new(@member_1, @member_2).add_friend
     end
 
-    it '- A member[2] appears in outgoing friend request list of member[1]' do
-      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be false
+    it "- Member[1]'s outgoing friend request to member[2] is created." do
+      expect(Member::MemberList.new(@member_1).already_sent_request_to?(@member_2)).to be true
     end
 
-    it '- A member[1] appears in incoming friend request list of member[2]' do
-      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be false
+    it "- Member[1]'s outgoing friend request list contains member[2]." do
+      expect(Member::MemberList.new(@member_1).outgoing_requests_ids.include?(@member_2.id)).to be true
+    end
+
+    it "- Member[2]'s incoming friend request to member[1] is created." do
+      expect(Member::MemberList.new(@member_2).already_got_request_from?(@member_1)).to be true
+    end
+
+    it "- Member[2]'s incoming friend request list contains member[1]." do
+      expect(Member::MemberList.new(@member_2).incoming_requests_ids.include?(@member_1.id)).to be true
+    end
+
+    xit "- Member[2]'s notification list contains incoming friend request from member[1]." do
     end
   end
 
-  context '#add_friend: A member[1] fails to send add friend request to member[2]' do
+  context '#add_friend: Member[1] cannot send add friend request to member[2] when' do
     before(:context) do
-      @member_1 = FactoryGirl.create(:member)
-      @member_2 = FactoryGirl.create(:member)
+      @member_1 = create(:member)
+      @member_2 = create(:member)
     end
 
-    it '- A member[1] can not add self as a friend' do
+    it '- Member[1] and [2] is the same member.' do
       expect { Member::MemberAction.new(@member_1, @member_1).add_friend } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.add_self_as_a_friend)
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.add_self_as_a_friend)
     end
 
-    it '- they are already friends' do
-      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
-      @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
+    it '- Member[1] and [2] are already friends.' do
+      Member::MemberAction.new(@member_1, @member_2).add_friend
+      Member::MemberAction.new(@member_2, @member_1).accept_friend_request
 
       expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_friend(@member_2))
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.already_friend(@member_2))
     end
 
-    it '- A member[1] already sent request' do
-      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
+    it "- Member[1]'s outgoing friend request to member[2] already exists." do
+      Member::MemberAction.new(@member_1, @member_2).add_friend
 
       expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_sent_request(@member_2))
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.already_sent_request(@member_2))
+      # TODO : Change error message + method according to context.
     end
 
-    it '- A member[1] blocked member[2]' do
-      @block = Member::MemberAction.new(@member_1, @member_2).block
+    it '- Member[1] already blocked member[2].' do
+      Member::MemberAction.new(@member_1, @member_2).block
 
       expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_2))
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.already_blocked(@member_2))
     end
 
-    it '- A member[1] is blocked by member[2]' do
-      @block = Member::MemberAction.new(@member_2, @member_1).block
+    it '- Member[1] is blocked by member[2].' do
+      Member::MemberAction.new(@member_2, @member_1).block
 
       expect { Member::MemberAction.new(@member_1, @member_2).add_friend } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.blocked_by(@member_2))
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.blocked_by(@member_2))
     end
   end
+
+  context '#accept_friend_request: Member[2] accepts friend request from member[1]' do
+    before(:context) do
+      @member_1 = create(:member)
+      @member_2 = create(:member)
+      Member::MemberAction.new(@member_1, @member_2).add_friend
+
+      Member::MemberAction.new(@member_2, @member_1).accept_friend_request
+    end
+
+    it "- Member[1]'s outgoing friend request list does not contain member[2]." do
+      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be true
+    end
+
+    it "- Member[2]'s incoming friend request list does not contain member[1]." do
+      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
+    end
+
+    it "- Member[1]'s friend list contains member[2]." do
+      expect(Member::MemberList.new(@member_1).friends.include?(@member_2)).to be true
+    end
+
+    it "- Member[2]'s friend list contains member[1]." do
+      expect(Member::MemberList.new(@member_2).friends.include?(@member_1)).to be true
+    end
+
+    xit "- Member[1]'s notification list contains accept friend request from member[2]." do
+    end
+  end
+
+  context '#accept_friend_request: Member[2] cannot accept friend request from member[1] when' do
+    before(:context) do
+      @friend_limit = 3
+      @member_1 = create(:member, friend_limit: @friend_limit)
+      @member_2 = create(:member, friend_limit: @friend_limit)
+    end
+
+    it '- Member[2] is blocked by member[1].' do
+      Member::MemberAction.new(@member_1, @member_2).add_friend
+      Member::MemberAction.new(@member_1, @member_2).block
+
+      expect {Member::MemberAction.new(@member_2, @member_1).accept_friend_request }
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.not_exist_incoming_request(@member_1))
+    end
+
+    it '- Member[2] already blocked member[1].' do
+      Member::MemberAction.new(@member_1, @member_2).add_friend
+      Member::MemberAction.new(@member_2, @member_1).block
+
+      expect {Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.not_exist_incoming_request(@member_1))
+    end
+
+    it '- Member[1] does not send add friend request to member[2].' do
+      expect {Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.not_exist_incoming_request(@member_1))
+    end
+
+    it "- Member[2]'s friends list is full." do
+      members = create_list(:member, @friend_limit)
+      members.map do |member|
+        Member::MemberAction.new(member, @member_2).add_friend
+        Member::MemberAction.new(@member_2, member).accept_friend_request
+      end
+
+      Member::MemberAction.new(@member_1, @member_2).add_friend
+
+      expect { Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
+      .to raise_error(
+        ExceptionHandler::UnprocessableEntity,
+        GuardMessage::Member.friends_limit_exceed(@member_2))
+    end
+
+    # TODO : Refactor this.
+  #   it '- A member[2] cannot accept request list of member friends limit exceed' do
+  #     @member_3 = create(:member)
+  #     @member_4 = create(:member)
+  #     @member_5 = create(:member)
+  #     @member_6 = create(:member)
+
+  #     @add_friend = Member::MemberAction.new(@member_1, @member_6).add_friend
+  #     @accept_friend = Member::MemberAction.new(@member_6, @member_1).accept_friend_request
+  #     @add_friend_2 = Member::MemberAction.new(@member_3, @member_6).add_friend
+  #     @accept_friend_2 = Member::MemberAction.new(@member_6, @member_3).accept_friend_request
+  #     @add_friend_3 = Member::MemberAction.new(@member_4, @member_6).add_friend
+  #     @accept_friend_3 = Member::MemberAction.new(@member_6, @member_4).accept_friend_request
+  #     @add_friend_4 = Member::MemberAction.new(@member_5, @member_6).add_friend
+  #     @accept_friend_4 = Member::MemberAction.new(@member_6, @member_5).accept_friend_request
+  #     @add_friend_5 = Member::MemberAction.new(@member_6, @member_2).add_friend
+
+  #     expect { Member::MemberAction.new(@member_2, @member_6).accept_friend_request } \
+  #       .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.friends_limit_exceed(@member_6))
+  #   end
+  end
+
+#####-------------------------------------------------------------------------------------------
 
   context '#unfriend: A member[1] sends unfriend to request A member[2]' do
     before(:context) do
@@ -221,91 +345,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context '#accept_friend_request: A member[2] accept sends to  A member[1]' do
-    before(:context) do
-      @member_1 = FactoryGirl.create(:member)
-      @member_2 = FactoryGirl.create(:member)
-
-      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
-      @accept_friend_request = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
-
-    end
-    it '- A member[2] appears from incoming accept request list of member[1]' do
-      expect(Member::MemberList.new(@member_1).not_exist_outgoing_request?(@member_2)).to be true
-    end
-    it '- A member[1] appears from outgoing accept request list of member[2]' do
-      expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
-    end
-  end
-
-  context '#accept_friend_request: A member[2] accept fails sends to  A member[1]' do
-    before(:context) do
-      @member_1 = FactoryGirl.create(:member)
-      @member_2 = FactoryGirl.create(:member)
-    end
-
-    it '- A Member[2] has already blocked A member[1]' do
-      @block = Member::MemberAction.new(@member_2, @member_1).block
-        
-      expect { Member::MemberAction.new(@member_2, @member_1).block } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_1))
-
-      expect { Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.not_exist_incoming_request(@member_1))
-    end
-
-    it '- A Member [2] accept incoming block a member[1]' do
-      @block = Member::MemberAction.new(@member_1, @member_2).block
-        
-      expect { Member::MemberAction.new(@member_1, @member_2).block } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.already_blocked(@member_2))
-
-      expect { Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member \
-          .not_exist_incoming_request(@member_1))        
-    end
-
-    it '- A member[2] friends limit exceed can not accept request list of member ' do
-      @member_3 = FactoryGirl.create(:member)
-      @member_4 = FactoryGirl.create(:member)
-      @member_5 = FactoryGirl.create(:member)
-      @member_6 = FactoryGirl.create(:member)
-
-      @add_friend = Member::MemberAction.new(@member_1, @member_2).add_friend
-      @accept_friend = Member::MemberAction.new(@member_2, @member_1).accept_friend_request
-      @add_friend_2 = Member::MemberAction.new(@member_3, @member_2).add_friend
-      @accept_friend_2 = Member::MemberAction.new(@member_2, @member_3).accept_friend_request
-      @add_friend_3 = Member::MemberAction.new(@member_4, @member_2).add_friend
-      @accept_friend_3 = Member::MemberAction.new(@member_2, @member_4).accept_friend_request
-      @add_friend_4 = Member::MemberAction.new(@member_5, @member_2).add_friend
-      @accept_friend_4 = Member::MemberAction.new(@member_2, @member_5).accept_friend_request
-      @add_friend_5 = Member::MemberAction.new(@member_6, @member_2).add_friend
-      
-      expect { Member::MemberAction.new(@member_2, @member_6).accept_friend_request } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.friends_limit_exceed(@member_6))
-    end
-
-    it 'A member[2] can not accept request list of member friends limit exceed' do
-      @member_3 = FactoryGirl.create(:member)
-      @member_4 = FactoryGirl.create(:member)
-      @member_5 = FactoryGirl.create(:member)
-      @member_6 = FactoryGirl.create(:member)
-
-      @add_friend = Member::MemberAction.new(@member_1, @member_6).add_friend
-      @accept_friend = Member::MemberAction.new(@member_6, @member_1).accept_friend_request
-      @add_friend_2 = Member::MemberAction.new(@member_3, @member_6).add_friend
-      @accept_friend_2 = Member::MemberAction.new(@member_6, @member_3).accept_friend_request
-      @add_friend_3 = Member::MemberAction.new(@member_4, @member_6).add_friend
-      @accept_friend_3 = Member::MemberAction.new(@member_6, @member_4).accept_friend_request
-      @add_friend_4 = Member::MemberAction.new(@member_5, @member_6).add_friend
-      @accept_friend_4 = Member::MemberAction.new(@member_6, @member_5).accept_friend_request
-      @add_friend_5 = Member::MemberAction.new(@member_6, @member_2).add_friend
-
-      expect { Member::MemberAction.new(@member_2, @member_6).accept_friend_request } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.friends_limit_exceed(@member_6))
-    end
-  end
-
   context '#cancel: A member[2] cancels friend request from member[1]' do
     before(:context) do
       @member_1 = FactoryGirl.create(:member)
@@ -377,7 +416,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @block = Member::MemberAction.new(@member_1, @member_2).block
       @unblock = Member::MemberAction.new(@member_1, @member_2).unblock
     end
-    
+
     it '- A member[2] appears in unblock list of member[1]' do
       expect(Member::MemberList.new(@member_2).not_exist_incoming_request?(@member_1)).to be true
     end
