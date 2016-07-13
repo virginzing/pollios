@@ -31,6 +31,12 @@
     font-size: 18px;
     font-weight: 300;
     transition: all .1s ease-out;
+
+    &:focus,
+    &:active {
+      text-decoration: none;
+      outline: none;
+    }
   }
   > .links-bar {
     margin-top: 30px;
