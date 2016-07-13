@@ -12,10 +12,10 @@
   <% end %>
   <div class="links-bar">
     <div class="links-app">
-      <a href="<%= @poll_link %>" class="link">
+      <a href="<%= @poll_open_app_url %>" class="link">
         <img src="/images/logo_pollios_h.png" alt="">
       </a>
-      <a href="#" class="link">
+      <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
         <img src="/images/logo_app_store.png" alt="">
       </a>
     </div>
@@ -24,6 +24,6 @@
 </div>
 <%= render(
     :partial => "v1/partials/poll_qrcode_modal",
-    :locals => { :qrcode_url => @poll_qrcode_image_url, :poll_link => @poll_link }
+    :locals => { :qrcode_url => @poll_qrcode_image_url, :poll_open_app_url => @poll_open_app_url }
   )
 %>

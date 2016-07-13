@@ -249,6 +249,21 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def authenticated?(authen_token)
+    return [false, '403 Forbidden', 403] if forbidden? 
+    return [false, '401 Unauthorized: invalid token', 401] if invalid_authen_token?(authen_token)
+
+    [true, nil]
+  end
+
+  def forbidden?
+    blacklist? || ban?
+  end
+
+  def invalid_authen_token?(authen_token)
+    !api_tokens.exists?(token: authen_token)
+  end
+
   def flush_cache
     Rails.cache.delete([self.class.name, id])
   end
@@ -478,12 +493,14 @@ class Member < ActiveRecord::Base
   #   end
   # end
 
+
+  # TODO : fixed or remove this cached IT fetch but never delete
   def cached_shared_poll
     Rails.cache.fetch("member/#{id}-#{updated_at.to_i}/shared") { share_polls.to_a }
   end
 
   def cached_report_poll
-    Rails.cache.fetch("member/#{id}-#{updated_at.to_i}/reports") { poll_reports.to_a }
+    Rails.cache.fetch("member/#{id}/report_polls") { poll_reports.to_a }
   end
 
   def cached_block_friend
