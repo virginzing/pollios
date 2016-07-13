@@ -52,7 +52,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- Member deletes poll which not own.' do
       expect { @member_poll_action.delete } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_owner_poll)
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.not_owner_poll)
     end
   end
 
@@ -85,7 +87,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- The poll is closed.' do
-      @poll.close_status = true
+      @poll.update(close_status: true)
 
       expect { @friend_poll_action.vote(choice_id: @poll.choices.first.id) } \
         .to raise_error(
@@ -94,7 +96,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- The poll is expired.' do
-      @poll.expire_date = Time.zone.now - 1.weeks
+      @poll.update(expire_date: Time.zone.now - 1.weeks)
 
       expect { @friend_poll_action.vote(choice_id: @poll.choices.first.id) } \
         .to raise_error(
@@ -171,17 +173,21 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     it '- Member cannot bookmark poll which not interest.' do
       @friend_poll_action.not_interest
       expect { @friend_poll_action.bookmark } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_not_interest)
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.already_not_interest)
     end
 
     it '- Member cannot bookmark poll which already bookmark.' do
       @friend_poll_action.bookmark
       expect { @friend_poll_action.bookmark } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_bookmarked)
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.already_bookmarked)
     end
   end
 
-  context '#unbookmark: Member can unbookmarks poll.' do
+  context '#unbookmark: Member unbookmarks poll.' do
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
@@ -206,9 +212,40 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
     end
 
-    it '- Member cannot unbookmark poll which is not bookmarked' do
+    it '- Member cannot unbookmark poll which is not bookmarked.' do
       expect { @friend_poll_action.unbookmark } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_bookmarked)
+    end
+  end
+
+  context '#save: Member saves poll.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- Member can save poll.' do
+      @friend_poll_action.save
+      expect(Member::PollList.new(@friend).saved.include?(@poll)).to be true
+    end
+  end
+
+  context '#save: Member cannot save poll when.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- Member is already saved poll.' do
+      @friend_poll_action.save
+      expect { @friend_poll_action.save } \
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.already_saved)
     end
   end
 
@@ -245,6 +282,72 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#promote: Member promotes poll.' do
+    before(:example) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @poll_creator.update(point: 3)
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+    end
+
+    it '- Before promote the poll must not be public.' do
+      expect(Member::PollList.new(@poll_creator).created.find(@poll.id).public).to be false
+    end
+
+    it '- After promote the poll must be public.' do
+      @creator_poll_action.promote
+      expect(Member::PollList.new(@poll_creator).created.find(@poll.id).public).to be true
+    end
+
+    it "- Member's point must minus one." do
+      @creator_poll_action.promote
+      expect(@creator_poll_action.member.point).to eq 2
+    end
+  end
+
+  context '#promote: Member cannot promote poll when.' do
+    before(:example) do
+      @poll_params = FactoryGirl.attributes_for(:poll)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
+      @member_poll_action = Member::PollAction.new(@member, @poll)
+    end
+
+    it '- Member promotes poll which not own.' do
+      expect { @member_poll_action.promote } \
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.not_owner_poll)
+    end
+
+    it '- Member do not have public poll quota.' do
+      @poll_creator.point = 0
+      expect { @creator_poll_action.promote } \
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.public_quota_limit_exist)
+    end
+
+    it '- The poll is already promoted.' do
+      @poll_creator.point = 2
+      @creator_poll_action.promote
+      expect { @creator_poll_action.promote } \
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.already_public)
+    end
+
+    it '- The poll is already closed.' do
+      @creator_poll_action.close
+      expect { @creator_poll_action.promote } \
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.already_closed)
+    end
+  end
+
   context '#report: Member reports poll.' do
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
@@ -254,8 +357,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- Member can report poll.' do
-      expect { @friend_poll_action.report(@poll) } \
-        .not_to raise_error
+      @friend_poll_action.report(message_preset: Faker::Lorem.sentence)
+      @friend.reload
+      expect(Member::PollList.new(@friend).reports.include?(@poll)).to be true
     end
   end
 
@@ -268,92 +372,14 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- Member cannot report their poll.' do
-      expect { @creator_poll_action.report(@poll) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.report_own_poll)
+      expect { @creator_poll_action.report(message_preset: Faker::Lorem.sentence) } \
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.report_own_poll)
     end
   end
 
-  context '#promote: A member promotes another member poll' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @member_poll_action = Member::PollAction.new(@member, @poll)
-    end
-
-    it '- A member could not promote another member poll' do
-      expect { @member_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_owner_poll)
-    end
-
-  end
-
-  context '#promote: A member promotes his own poll when no public poll quota' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
-    end
-
-    it '- A member could not promote his poll' do
-      expect { @creator_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.public_quota_limit_exist)
-    end
-
-  end
-
-  context '#promote: A member promotes his own poll when have public poll quota' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
-    end
-
-    it '- A member could promote his poll' do
-      @poll_creator.point = 2
-      expect { @creator_poll_action.promote } \
-        .not_to raise_error
-    end
-
-  end
-
-  context '#promote: A member promotes his own poll when already promoted' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
-    end
-
-    it '- A member could not promote poll which already promote' do
-      @poll_creator.point = 2
-      @creator_poll_action.promote
-      expect { @creator_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_public)
-    end
-
-  end
-
-  context '#promote: A member promotes his own poll which already closed' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
-    end
-
-    it '- A member could not promote poll which already promote' do
-      @poll_creator.point = 2
-      @creator_poll_action.close
-      expect { @creator_poll_action.promote } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_closed)
-    end
-
-  end
-
-  context '#comment: A member comments poll of friend when did not vote.' do
+  context '#comment: Member comments poll.' do
     before(:context) do
       @poll_params = FactoryGirl.attributes_for(:poll)
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
@@ -361,68 +387,35 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
     end
 
-    it '- A member could not comment poll.' do
+    it '- Member can comment poll.' do
+      @friend_poll_action.vote(choice_id: @poll.choices.first.id)
+      @poll_comment_list = @friend_poll_action.comment(message: Faker::Lorem.sentence)
+
+      expect(@poll_comment_list.comments.empty?).to be false
+    end
+  end
+
+  context '#comment: Member cannot comment poll when.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+    end
+
+    it '- Member did not vote.' do
       expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_voted_and_poll_not_closed)
-    end
-  end
-
-  context '#comment: A member comments poll of friend when already vote.' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @friend_poll_action = Member::PollAction.new(@friend, @poll)
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.not_voted_and_poll_not_closed)
     end
 
-    it '- A member could comment poll.' do
+    it '- Member comments poll which not allow comment.' do
       @friend_poll_action.vote(choice_id: @poll.choices.first.id)
       expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
-        .not_to raise_error
-    end
-  end
-
-  context '#comment: A member comments poll of friend which not allow comment.' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @friend_poll_action = Member::PollAction.new(@friend, @poll)
-    end
-
-    it '- A member could not comment poll.' do
-      @friend_poll_action.vote(choice_id: @poll.choices.first.id)
-      expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.not_allow_comment)
-    end
-  end
-
-  context '#save: A member saves poll of friend' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @friend_poll_action = Member::PollAction.new(@friend, @poll)
-    end
-
-    it '- A member could save poll.' do
-      expect { @friend_poll_action.save } \
-        .not_to raise_error
-    end
-  end
-
-  context '#save: A member saves poll of friend which already save' do
-    before(:context) do
-      @poll_params = FactoryGirl.attributes_for(:poll, :not_allow_comment)
-      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
-
-      @friend_poll_action = Member::PollAction.new(@friend, @poll)
-    end
-
-    it '- A member could not save poll.' do
-      @friend_poll_action.save
-      expect { @friend_poll_action.save } \
-        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Poll.already_saved)
+        .to raise_error(
+          ExceptionHandler::UnprocessableEntity,
+          GuardMessage::Poll.not_allow_comment)
     end
   end
 
