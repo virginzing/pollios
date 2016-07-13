@@ -158,7 +158,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect { Member::MemberAction.new(@member_2, @member_1).accept_friend_request } \
       .to raise_error(
         ExceptionHandler::UnprocessableEntity,
-        GuardMessage::Member.friends_limit_exceed(@member_2))
+        GuardMessage::Member.member_friends_limit_exceed(@member_2))
     end
 
     # TODO : Refactor this.
