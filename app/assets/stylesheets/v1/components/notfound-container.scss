@@ -1,0 +1,23 @@
+.notfound-container {
+  padding: 25px 0;
+  width: 100%;
+  text-align: center;
+
+  > .title {
+    margin-top: 0;
+    font-size: 140px;
+    font-weight: 300;
+  }
+
+  > .reason {
+    margin-bottom: 25px;
+    font-weight: 300;
+  }
+  > .helper {
+    margin-bottom: 25px;
+  }
+  > .image {
+    width: 300px;
+    max-width: 100%;
+  }
+}
