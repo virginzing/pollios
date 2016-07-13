@@ -14,7 +14,7 @@ module Poll::Private::DirectAccess
   end
 
   def host_app_url
-    @host_app_url ||= Rails.env.production? ? 'http://pollios.com' : 'http://192.168.1.17:3000'
+    @host_app_url ||= Rails.env.production? ? 'http://pollios.com' : 'http://localhost:3000'
   end
 
   def qrcode_raw_image_path
