@@ -30,3 +30,5 @@ curl_testing.rb
 
 # Ignore latest.dump file.
 /latest.dump
+
+node_modules/
