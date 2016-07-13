@@ -33,7 +33,7 @@ class Member::NotificationList
   end
 
   def notifications_by_page
-    @notifications_by_page ||= all_notificaton.paginate(page: index)
+    @notifications_by_page ||= all_notification.paginate(page: index)
   end
 
   def all_notification
