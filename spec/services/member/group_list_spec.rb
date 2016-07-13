@@ -29,54 +29,47 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:all) do
       @public_groups = FactoryGirl.create_list(:group, 2, public: true)
       @private_groups = FactoryGirl.create_list(:group, 2)
-      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_groups[0], @private_groups[1]])
+      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_groups[0]] + @private_groups)
       @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_groups[1]])
       @member_3 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups)
       @member_4 = FactoryGirl.create(:member)
     end
 
     it '- When the member view themself, the member should see all the groups they joined.' do
-      expect(Member::GroupList.new(@member_1).as_member).to match_array [@public_groups[0], @private_groups[1]]
+      expect(Member::GroupList.new(@member_1).as_member).to match_array [@public_groups[0]] + @private_groups
     end
 
-    it '- When the other member who shares the same private groups is viewing, they should see only private groups they join, and public groups the member joins.' do
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_2).as_member) \
+    it '- The other should see only the common private groups, and the public groups the member joined.' do
+      expect(Member::GroupList.new(@member_1, viewing_member: @member_2).as_member)
         .to match_array [@public_groups[0], @private_groups[1]]
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_3).as_member) \
+      expect(Member::GroupList.new(@member_1, viewing_member: @member_3).as_member)
         .to match_array [@public_groups[0]]
     end
 
-    it "- When the other member who doesn't share any common group is viewing, they should only see public groups the member join." do
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_4).as_member) \
-        .to match_array [@public_groups[0]]
-    end
   end
 
   context '#as_admin: List groups which a member administrates, in someone point of view.' do
     before(:all) do
       @public_groups = FactoryGirl.create_list(:group, 2, public: true)
       @private_groups = FactoryGirl.create_list(:group, 2)
-      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_groups[0], @private_groups[1]], is_admin: true)
+      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_groups[0]] + @private_groups, is_admin: true)
       @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_groups[1]])
       @member_3 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups)
       @member_4 = FactoryGirl.create(:member)
     end
 
     it '- When the member view themself, the member should see all the groups they administrate.' do
-      expect(Member::GroupList.new(@member_1).as_admin).to match_array [@public_groups[0], @private_groups[1]]
+      expect(Member::GroupList.new(@member_1).as_admin).to match_array [@public_groups[0]] + @private_groups
     end
 
-    it '- When the other member who share the same private groups is viewing, they should see only private groups they join,and public groups the member joins.' do
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_2).as_admin) \
+    #
+    it '- The other should see only the common private groups, and the public groups the member administrates.' do
+      expect(Member::GroupList.new(@member_1, viewing_member: @member_2).as_admin)
         .to match_array [@public_groups[0], @private_groups[1]]
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_3).as_admin) \
+      expect(Member::GroupList.new(@member_1, viewing_member: @member_3).as_admin)
         .to match_array [@public_groups[0]]
     end
 
-    it "- When the other member who doesn't share any common group is viewing, they should only see public groups the member join." do
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_4).as_admin) \
-        .to match_array [@public_groups[0]]
-    end
   end
 
   context '#as_admin_with_requests: List groups which a member administrates, and have requests sent to the group.' do
@@ -86,23 +79,17 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups + @private_groups, is_admin: true)
       @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_groups[1]])
       @member_3 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups)
-      @member_4 = FactoryGirl.create(:member_who_sends_join_requests, groups: [@public_groups[1], @private_groups[1]])
-      @member_5 = FactoryGirl.create(:member)
+      FactoryGirl.create(:member_who_sends_join_requests, groups: [@public_groups[1], @private_groups[1]])
     end
 
     it '- When the member view themself, the member should see all the groups which they administrate, and have requests.' do
       expect(Member::GroupList.new(@member_1).as_admin_with_requests).to match_array [@public_groups[1], @private_groups[1]]
     end
 
-    it '- When the other member who share the same private groups is viewing, they should see only private groups they join, and public groups the member joins which have requests.' do
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_2).as_admin_with_requests) \
+    it '- The other should see only the common private groups, and the public groups the member is admin and have requests.' do
+      expect(Member::GroupList.new(@member_1, viewing_member: @member_2).as_admin_with_requests)
         .to match_array [@public_groups[1], @private_groups[1]]
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_3).as_admin_with_requests) \
-        .to match_array [@public_groups[1]]
-    end
-
-    it "- When the other member who doesn't share any common group is viewing, they should only see public groups the member join." do
-      expect(Member::GroupList.new(@member_1, viewing_member: @member_5).as_admin_with_requests) \
+      expect(Member::GroupList.new(@member_1, viewing_member: @member_3).as_admin_with_requests)
         .to match_array [@public_groups[1]]
     end
   end
@@ -116,7 +103,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it "- Anyone can see a member's requesting to join groups." do
-      expect(Member::GroupList.new(@member_1, veiwing_member: @member_2).requesting_to_joins) \
+      expect(Member::GroupList.new(@member_1, veiwing_member: @member_2).requesting_to_joins)
         .to match_array [@public_groups[0], @private_groups[0]]
     end
 
