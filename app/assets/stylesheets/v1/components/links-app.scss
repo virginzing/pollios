@@ -1,0 +1,13 @@
+.links-app {
+  display: flex;
+  flex-flow: column nowrap;
+  > .link {
+    width: 120px;
+  }
+  > .link > img {
+    max-width: 100%;
+  }
+  > .link:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}

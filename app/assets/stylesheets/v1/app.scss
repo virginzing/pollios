@@ -1,0 +1,15 @@
+@import "../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+@import "variables";
+@import "mixin";
+
+@import "components/navbar-container";
+@import "components/poll-container";
+@import "components/app-container";
+@import "components/poll-creator";
+@import "components/links-bar";
+@import "components/links-app";
+
+body {
+  background-color: #EFEFEF;
+}

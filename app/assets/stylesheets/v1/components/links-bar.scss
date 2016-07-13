@@ -1,0 +1,19 @@
+.links-bar {
+  display: flex;
+  flex-flow: row nowrap;
+  > .links-app {
+    flex-grow: 1;
+    margin-right: 20px;
+  }
+  > .qrcode {
+    margin-left: auto;
+    width: 120px;
+    height: 120px;
+  }
+  @media (max-width: $screen-sm) {
+    > .qrcode {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}
