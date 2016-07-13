@@ -138,5 +138,5 @@ module Member::Private::PollInquiry
       rating_voting_detail
     end
   end
-  
+
 end

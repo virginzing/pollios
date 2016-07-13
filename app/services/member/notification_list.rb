@@ -10,7 +10,7 @@ class Member::NotificationList
   end
 
   def all
-    all_notification
+    all_notification.to_a
   end
 
   def notifications_at_current_page

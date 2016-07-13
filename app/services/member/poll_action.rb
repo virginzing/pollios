@@ -19,14 +19,14 @@ class Member::PollAction
     @poll_params = params
     can_create, message = can_create?
     fail ExceptionHandler::UnprocessableEntity, message unless can_create
-      
+
     process_create
   end
 
   def close
     can_close, message = can_close?
     fail ExceptionHandler::UnprocessableEntity, message unless can_close
-      
+
     process_close
   end
 
