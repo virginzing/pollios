@@ -10,6 +10,7 @@ class Campaign::RewardPrediction
 
     can_predict, message = can_predict?
     return message unless can_predict
+
     predict
   end
 
@@ -40,9 +41,14 @@ class Campaign::RewardPrediction
 
   def random_reward_id
     avilable_reward.each do |reward|
-      return reward.id if (1..reward.odds).to_a.sample % reward.odds == 0
+      return reward.id if got_reward?(reward)
     end
+
     0
+  end
+
+  def got_reward?(reward)
+    ((1..reward.odds).to_a.sample % reward.odds) == 0
   end
 
   def increment_used_campaign_claimed_reward(reward_id)
@@ -107,7 +113,9 @@ class Campaign::RewardPrediction
   # private
 
   def avilable_reward
-    campaign.rewards.where('total > claimed').where('expire_at > ?', Time.now).order('rewards.id DESC')
+    campaign.rewards.where('expire_at > ?', Time.now).order('rewards.id DESC').select do |reward| 
+      reward.total >= reward.claimed 
+    end
   end
 
 end
