@@ -170,6 +170,8 @@ class Poll < ActiveRecord::Base
 
   scope :without_closed, -> { where(close_status: false) }
 
+  scope :public_available, -> { public_feed.unexpire.without_deleted.without_closed.without_black_status.without_draft.except_series }
+
   scope :viewing_by_member, (lambda do |viewing_member|
     without_banned_member
     .without_black_status
