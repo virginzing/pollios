@@ -1,6 +1,7 @@
+@import "variables";
+
 @import "../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-@import "variables";
 @import "mixins";
 
 @import "input";
@@ -11,6 +12,7 @@
 @import "components/links-app";
 @import "components/links-bar";
 @import "components/navbar-container";
+@import "components/notfound-container";
 @import "components/poll-container";
 @import "components/poll-creator";
 @import "components/qrcode-modal";

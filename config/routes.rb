@@ -597,12 +597,10 @@ Pollios::Application.routes.draw do
 
   match 'users_signin' => 'authen_sentai#signin', via: [:get, :post]
 
-  get '(errors)/:status', to: 'errors#show', constraints: { status: /\d{3}/ }
 
   get 'auth/:provider/callback',  to: 'mobiles#authen_facebook'
   get 'auth/failure', to: redirect('/')
 
-  root to: 'home#index'
   # authenticate :admin do
   #   mount Sidekiq::Web => '/sidekiq'
   # end
@@ -618,7 +616,10 @@ Pollios::Application.routes.draw do
     end
   end
 
-  get '*path' => redirect('/')
+  scope module: 'v1' do
+    get '*path', to: 'errors#not_found'
+  end
 
-
+  root to: 'home#index'
+  get '(errors)/:status', to: 'errors#show', constraints: { status: /\d{3}/ }
 end
