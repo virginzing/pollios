@@ -1,4 +1,9 @@
-@mixin input($color) {
+@mixin input($color, $padding: $input-padding) {
+  display: block;
+  border: 1px solid $gray-border-color;
+  padding: $padding;
+
+  width: 100%;
   &:hover,
   &:focus,
   &:active {

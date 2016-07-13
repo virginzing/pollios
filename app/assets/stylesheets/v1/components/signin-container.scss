@@ -1,13 +1,14 @@
 .signin-container {
-  align-self: center;
-  margin: 25px;
-  padding: 25px;
+  @include card-container(25px)
+  margin: 0 auto;
   width: 400px;
   > .title {
     margin: 0 0 25px 0;
   }
   > .submit {
-    margin-top: 25px;
+    @include button(#FFFFFF, $primary-color);
+    margin-top: 15px;
+    width: 100%;
   }
   @media (max-width: 768px) {
       width: 280px;

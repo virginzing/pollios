@@ -1,7 +1,10 @@
-@mixin button($font-color, $color) {
-  color: $font-color;
-  background-color: $color;
+@mixin button($font-color, $color, $padding: $btn-padding) {
   border: 1px solid $color;
+  padding: $padding;
+
+  background-color: $color;
+
+  color: $font-color;
 
   transition: all .2s ease-in-out;
 
