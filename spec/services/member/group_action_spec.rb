@@ -6,14 +6,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   before(:context) do
     @group_admin = FactoryGirl.create(:member)
     @a_member = FactoryGirl.create(:member)
-
-    @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-    @member_group_action = Member::GroupAction.new(@a_member, @group)
-    @admin_group_action = Member::GroupAction.new(@group_admin, @group)
   end
 
-  context '#create: A member create group, became admin of the group' do
-
+  context '#create: A member create group, became admin of the group.' do
     before(:all) do
       @new_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
     end
@@ -39,8 +34,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  context '#create: A member create group with cover url' do
-
+  context '#create: A member create group with cover url.' do
     before(:all) do
       @new_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_with_cover_url))
     end
@@ -54,87 +48,84 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
-  # context '#create #invite: A member create group with invitation friend ids' do
+  context '#create #invite: A member create group with invitation friend ids.' do
+    before(:all) do
+      @friends = FactoryGirl.create_list(:member, 5)
+      @friend_ids = @friends.map(&:id)
+      @new_group = Member::GroupAction.new(@group_admin).create(
+        FactoryGirl.attributes_for(:group_with_invitation_friend_ids, friend_ids: @friend_ids))
+    end
 
-  #   let(:new_group) do
-  #     Member::GroupAction.new(group_admin).create(FactoryGirl.attributes_for(:group_with_invitation_friend_ids))
-  #   end
+    it '- 5 members are pending in group.' do
+      expect(Group::MemberList.new(@new_group).pending.size).to eq(5)
+    end
 
-  #   before(:context) do
-  #     FactoryGirl.create_list(:sequence_member, 10)
-  #   end
+    it '- If the first two member are already member in group, then the last three are pending.' do
+      @new_group.group_members.where(member_id: @friend_ids[0..1]).each { |m| m.update(active: true) }
+      expect(Group::MemberList.new(@new_group).pending.map(&:id)).to match_array @friend_ids[2..4]
+    end
+  end
 
-  #   it '- Members id: 103,104,105,107,108,109 are pending in group' do
-  #     expect(Group::MemberList.new(new_group).pending.map(&:id)).to match_array([103, 104, 105, 107, 108, 109])
-  #   end
-
-  #   it '- Members id: if 108,109 are already member in group then id: 103,104,105,107 are pending' do
-  #     new_group.group_members.find_by(member_id: 108).update(active: true)
-  #     new_group.group_members.find_by(member_id: 109).update(active: true)
-
-  #     expect(Group::MemberList.new(new_group).pending.map(&:id)).to match_array([103, 104, 105, 107])
-  #   end
-  # end
-
-  context '#join: A member request to join group that need approve' do
+  context '#join: A member request to join group that need approve.' do
+    before(:all) do
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+    end
 
     it '- A member is requesting in group' do
-      expect(@member_group_action.join).to eq group: @group, status: :requesting
+      expect(Member::GroupAction.new(@a_member, @group).join).to eq group: @group, status: :requesting
       expect(@group.members_request.count).to eq 1
       expect(Group::MemberList.new(@group).requesting).to match_array [@a_member]
     end
   end
 
-  context '#join: A member request to join group that need approve and being invited by admin' do
-
+  context '#join: A member request to join group that need approve and being invited by admin.' do
     before(:all) do
-      @admin_group_action.invite([@a_member.id])
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      Member::GroupAction.new(@group_admin, @group).invite([@a_member.id])
     end
 
-    it '- A member being invited by admin' do
+    it '- A member being invited by admin.' do
       expect(Group::MemberList.new(@group).pending).to include(@a_member)
       expect(@group.group_members.find_by(member_id: @a_member.id).invite_id).to eq @group_admin.id
     end
 
-    it '- A member is member in group' do
-      expect(@member_group_action.join).to eq group: @group, status: :member
+    it '- A member is member in group.' do
+      expect(Member::GroupAction.new(@a_member, @group).join).to eq group: @group, status: :member
       expect(@group.members.count).to eq 2
       expect(Group::MemberList.new(@group).members).to include(@a_member)
-
     end
   end
 
-  context "#join: A member request to join group that doesn't need approve" do
-
+  context "#join: A member request to join group that doesn't need approve." do
     before(:all) do
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
       @group.update!(need_approve: false)
     end
 
     it '- A member is member in group' do
-      expect(@member_group_action.join).to eq group: @group, status: :member
+      expect(Member::GroupAction.new(@a_member, @group).join).to eq group: @group, status: :member
       expect(@group.members.count).to eq 2
       expect(Group::MemberList.new(@group).members).to include(@a_member)
     end
   end
 
-  # context '#invite: A member invite friends to group' do
+  context '#invite: A member invite friends to group' do
+    before(:all) do
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @friends = FactoryGirl.create_list(:member, 5)
+      @friend_ids = @friends.map(&:id)
 
-  #   before(:context) do
-  #     FactoryGirl.create_list(:sequence_member, 10)
-  #   end
+      Member::GroupAction.new(@group_admin, @group).invite(@friend_ids)
+    end
 
-  #   let!(:invite) { admin_group_action.invite([103, 104, 105, 107, 108, 109]) }
+    it '- 5 members are pending in group.' do
+      expect(Group::MemberList.new(@group).pending.map(&:id)).to match_array @friend_ids
+    end
 
-  #   it '- Members id: 103,104,105,107,108,109 are pending in group' do
-  #     expect(Group::MemberList.new(group).pending.map(&:id)).to match_array([103, 104, 105, 107, 108, 109])
-  #   end
-
-  #   it '- Members id: 108,109 are already member in group and Members id: 103,104,105,107 are pending in group' do
-  #     group.group_members.find_by(member_id: 108).update(active: true)
-  #     group.group_members.find_by(member_id: 109).update(active: true)
-
-  #     expect(Group::MemberList.new(group).pending.map(&:id)).to match_array([103, 104, 105, 107])
-  #   end
-  # end
+    it '- The first two members are already member in group and the last three members are pending in group.' do
+      @group.group_members.where(member_id: @friend_ids[0..1]).each { |m| m.update(active: true) }
+      expect(Group::MemberList.new(@group).pending.map(&:id)).to match_array @friend_ids[2..4]
+    end
+  end
 
 end
