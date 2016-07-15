@@ -246,7 +246,7 @@ module GuardMessage
   module GroupAction
     class << self
       def member_is_not_in_group(group)
-        "You aren't member in #{group.name}"
+        "You aren't member in #{group.name}."
       end
 
       def cannot_leave_company_group(group)
