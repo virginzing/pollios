@@ -14,8 +14,8 @@
 ActiveRecord::Schema.define(version: 20160315080530) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "hstore"
   enable_extension "plpgsql"
+  enable_extension "hstore"
   enable_extension "pg_trgm"
   enable_extension "unaccent"
 
@@ -43,22 +43,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "activity_feeds", ["group_id"], name: "index_activity_feeds_on_group_id", using: :btree
   add_index "activity_feeds", ["member_id"], name: "index_activity_feeds_on_member_id", using: :btree
   add_index "activity_feeds", ["trackable_id", "trackable_type"], name: "index_activity_feeds_on_trackable_id_and_trackable_type", using: :btree
-
-  create_table "addresses", force: true do |t|
-    t.integer  "buyer_id"
-    t.string   "name",             limit: nil
-    t.string   "address",          limit: nil
-    t.string   "district",         limit: nil
-    t.string   "province",         limit: nil
-    t.string   "postcode",         limit: nil
-    t.string   "telephone",        limit: nil
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
-    t.boolean  "last_selected",                default: false
-    t.string   "address_optional", limit: nil
-  end
-
-  add_index "addresses", ["buyer_id"], name: "index_addresses_on_buyer_id", using: :btree
 
   create_table "admins", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -212,38 +196,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "branches", ["company_id"], name: "index_branches_on_company_id", using: :btree
   add_index "branches", ["slug"], name: "index_branches_on_slug", unique: true, using: :btree
 
-  create_table "buyer_favourite_products", force: true do |t|
-    t.integer  "buyer_id"
-    t.integer  "product_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "buyer_favourite_products", ["buyer_id"], name: "index_buyer_favourite_products_on_buyer_id", using: :btree
-  add_index "buyer_favourite_products", ["product_id"], name: "index_buyer_favourite_products_on_product_id", using: :btree
-
-  create_table "buyer_orderings", force: true do |t|
-    t.integer  "buyer_id"
-    t.integer  "address_id"
-    t.integer  "point_using_id"
-    t.boolean  "admin_approved", default: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.integer  "payment_id"
-  end
-
-  add_index "buyer_orderings", ["address_id"], name: "index_buyer_orderings_on_address_id", using: :btree
-  add_index "buyer_orderings", ["buyer_id"], name: "index_buyer_orderings_on_buyer_id", using: :btree
-  add_index "buyer_orderings", ["payment_id"], name: "index_buyer_orderings_on_payment_id", using: :btree
-  add_index "buyer_orderings", ["point_using_id"], name: "index_buyer_orderings_on_point_using_id", using: :btree
-
-  create_table "buyers", force: true do |t|
-    t.string   "name",       limit: nil
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.integer  "point",                  default: 0
-  end
-
   create_table "campaign_members", force: true do |t|
     t.integer  "campaign_id"
     t.integer  "member_id"
@@ -306,37 +258,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "campaigns", ["reward_info"], name: "index_campaigns_on_reward_info", using: :gist
   add_index "campaigns", ["system_campaign"], name: "index_campaigns_on_system_campaign", where: "(system_campaign = true)", using: :btree
   add_index "campaigns", ["type_campaign"], name: "index_campaigns_on_type_campaign", where: "(type_campaign = 1)", using: :btree
-
-  create_table "carelot_points", force: true do |t|
-    t.float    "get_rate"
-    t.float    "boost"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "carts", force: true do |t|
-    t.integer  "buyer_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "carts", ["buyer_id"], name: "index_carts_on_buyer_id", using: :btree
-
-  create_table "categories", force: true do |t|
-    t.string   "name",       limit: nil
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "category_products", force: true do |t|
-    t.integer  "category_id"
-    t.integer  "product_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "category_products", ["category_id"], name: "index_category_products_on_category_id", using: :btree
-  add_index "category_products", ["product_id"], name: "index_category_products_on_product_id", using: :btree
 
   create_table "choices", force: true do |t|
     t.integer  "poll_id"
@@ -903,39 +824,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "notify_logs", ["recipient_id"], name: "index_notify_logs_on_recipient_id", using: :btree
   add_index "notify_logs", ["sender_id"], name: "index_notify_logs_on_sender_id", using: :btree
 
-  create_table "order_products", force: true do |t|
-    t.integer  "order_id"
-    t.integer  "product_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "quantity",   default: 0
-    t.integer  "price"
-  end
-
-  add_index "order_products", ["order_id"], name: "index_order_products_on_order_id", using: :btree
-  add_index "order_products", ["product_id"], name: "index_order_products_on_product_id", using: :btree
-
-  create_table "orders", force: true do |t|
-    t.integer  "buyer_ordering_id"
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
-    t.integer  "seller_shipping_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "orders", ["buyer_id"], name: "index_orders_on_buyer_id", using: :btree
-  add_index "orders", ["buyer_ordering_id"], name: "index_orders_on_buyer_ordering_id", using: :btree
-  add_index "orders", ["seller_id"], name: "index_orders_on_seller_id", using: :btree
-  add_index "orders", ["seller_shipping_id"], name: "index_orders_on_seller_shipping_id", using: :btree
-
-  create_table "payments", force: true do |t|
-    t.string   "name",       limit: nil
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "logo",       limit: nil
-  end
-
   create_table "pg_search_documents", force: true do |t|
     t.text     "content"
     t.integer  "searchable_id"
@@ -943,16 +831,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "point_usings", force: true do |t|
-    t.integer  "carelot_point_id"
-    t.integer  "point"
-    t.float    "cost"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
-
-  add_index "point_usings", ["carelot_point_id"], name: "index_point_usings_on_carelot_point_id", using: :btree
 
   create_table "poll_attachments", force: true do |t|
     t.integer  "poll_id"
@@ -1171,80 +1049,9 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
   add_index "polls", ["require_info"], name: "index_polls_on_require_info", where: "(require_info = true)", using: :btree
   add_index "polls", ["series"], name: "index_polls_on_series", where: "(series = true)", using: :btree
-  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = '-1'::integer)", using: :btree
+  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = (-1))", using: :btree
   add_index "polls", ["system_poll"], name: "index_polls_on_system_poll", where: "(system_poll = true)", using: :btree
   add_index "polls", ["type_poll"], name: "index_polls_on_type_poll", using: :btree
-
-  create_table "product_in_carts", force: true do |t|
-    t.integer  "cart_id"
-    t.integer  "product_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "quantity",   default: 0
-  end
-
-  add_index "product_in_carts", ["cart_id"], name: "index_product_in_carts_on_cart_id", using: :btree
-  add_index "product_in_carts", ["product_id"], name: "index_product_in_carts_on_product_id", using: :btree
-
-  create_table "product_shippings", force: true do |t|
-    t.integer  "product_id"
-    t.integer  "seller_shipping_id"
-    t.hstore   "rate_cost",          default: [],              array: true
-    t.integer  "max_quantity",       default: 0
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-  end
-
-  add_index "product_shippings", ["product_id"], name: "index_product_shippings_on_product_id", using: :btree
-  add_index "product_shippings", ["seller_shipping_id"], name: "index_product_shippings_on_seller_shipping_id", using: :btree
-
-  create_table "products", force: true do |t|
-    t.string   "name",           limit: nil
-    t.string   "thumbnail",      limit: nil
-    t.string   "code",           limit: nil
-    t.string   "brand",          limit: nil
-    t.string   "taglines",       limit: nil
-    t.text     "description"
-    t.string   "images",         limit: nil, default: [],                 array: true
-    t.string   "properties",     limit: nil, default: [],                 array: true
-    t.string   "dose",           limit: nil, default: [],                 array: true
-    t.string   "tags",           limit: nil, default: [],                 array: true
-    t.hstore   "faq",                        default: [],                 array: true
-    t.float    "price",                      default: 0.0
-    t.integer  "in_stock",                   default: 0
-    t.boolean  "unlimit_stock",              default: false
-    t.boolean  "sellable",                   default: false
-    t.boolean  "selling",                    default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.integer  "seller_id"
-    t.string   "ref_no",         limit: nil
-    t.boolean  "admin_approved",             default: false
-  end
-
-  add_index "products", ["seller_id"], name: "index_products_on_seller_id", using: :btree
-
-  create_table "promotion_products", force: true do |t|
-    t.integer  "promotion_id"
-    t.integer  "product_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  add_index "promotion_products", ["product_id"], name: "index_promotion_products_on_product_id", using: :btree
-  add_index "promotion_products", ["promotion_id"], name: "index_promotion_products_on_promotion_id", using: :btree
-
-  create_table "promotions", force: true do |t|
-    t.string   "name",       limit: nil
-    t.string   "image",      limit: nil
-    t.integer  "discount"
-    t.datetime "start_at"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "seller_id"
-  end
-
-  add_index "promotions", ["seller_id"], name: "index_promotions_on_seller_id", using: :btree
 
   create_table "providers", force: true do |t|
     t.string   "name"
@@ -1410,24 +1217,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "save_poll_laters", ["member_id"], name: "index_save_poll_laters_on_member_id", using: :btree
   add_index "save_poll_laters", ["savable_id", "savable_type"], name: "index_save_poll_laters_on_savable_id_and_savable_type", using: :btree
 
-  create_table "seller_shippings", force: true do |t|
-    t.integer  "seller_id"
-    t.integer  "shipping_id"
-    t.boolean  "using",       default: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-  end
-
-  add_index "seller_shippings", ["seller_id"], name: "index_seller_shippings_on_seller_id", using: :btree
-  add_index "seller_shippings", ["shipping_id"], name: "index_seller_shippings_on_shipping_id", using: :btree
-
-  create_table "sellers", force: true do |t|
-    t.string   "name",       limit: nil
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "avatar",     limit: nil
-  end
-
   create_table "share_polls", force: true do |t|
     t.integer  "member_id"
     t.integer  "poll_id"
@@ -1440,13 +1229,6 @@ ActiveRecord::Schema.define(version: 20160315080530) do
   add_index "share_polls", ["member_id"], name: "index_share_polls_on_member_id", using: :btree
   add_index "share_polls", ["poll_id"], name: "index_share_polls_on_poll_id", using: :btree
   add_index "share_polls", ["shared_group_id"], name: "index_share_polls_on_shared_group_id", using: :btree
-
-  create_table "shippings", force: true do |t|
-    t.string   "name",       limit: nil
-    t.string   "logo",       limit: nil
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
 
   create_table "special_qrcodes", force: true do |t|
     t.string   "code"
