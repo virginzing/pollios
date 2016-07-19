@@ -7,7 +7,7 @@ class Notification::Member::FriendsRequest
   def initialize(member, a_member, options = {})
     @member = member
     @a_member = a_member
-    @action = options['action']
+    @action = options[:action]
 
     create_notification(recipient_list, type, message, data)
   end
