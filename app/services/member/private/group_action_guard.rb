@@ -5,8 +5,8 @@ module Member::Private::GroupActionGuard
   private
 
   def can_leave?
-    return [false, "You aren't member in #{group.name}."] if not_member(member)
-    return [false, "You can't leave #{group.name} company."] if company_group
+    return [false, GuardMessage::GroupAction.member_is_not_in_group(group)] if not_member(member)
+    return [false, GuardMessage::GroupAction.cannot_leave_company_group(group)] if company_group
     [true, nil]
   end
 
@@ -111,7 +111,7 @@ module Member::Private::GroupActionGuard
   end
 
   def company_group
-    group.group_type == :company
+    group[:group_type] == 1
   end
 
   def not_exist_invite_request(member)

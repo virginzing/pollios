@@ -13,7 +13,7 @@ module V1::Polls
     private
 
     def decode_poll_id(custom_key)
-      poll_id = Base64.urlsafe_decode64(custom_key).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i
+      Base64.urlsafe_decode64(custom_key).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i
     end
   end
 end
