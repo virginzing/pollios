@@ -2,7 +2,7 @@
 
 # module GuardMessage
 
-#   module Address 
+#   module Address
 #     class << self
 
 #       def not_exist
@@ -240,6 +240,64 @@ module GuardMessage
       def already_expired
         'This poll was already expired.'
       end
+    end
+  end
+
+  module GroupAction
+    class << self
+      def member_is_not_in_group(group)
+        "You aren't member in #{group.name}."
+      end
+
+      def cannot_leave_company_group(group)
+        "You can't leave #{group.name} company."
+      end
+
+      def member_already_in_group(group)
+        "You are already member of #{group.name}."
+      end
+
+      def already_sent_request(group)
+        "You already sent join request to #{group.name}"
+      end
+
+      def no_join_request(group)
+        "You don't sent join request to #{group.name}"
+        # You haven't sent join request to #{group.name}
+      end
+
+      def no_invitation(group)
+        "You don't have invitation for #{group.name}"
+      end
+
+      def cannot_invite_friends_to_company_group(group)
+        "You can't invite friends to #{group.name} company."
+      end
+
+      def member_not_have_invite_request(a_member, group)
+        "#{a_member.get_name} doesn't have invite request to #{group.name}."
+      end
+
+      def a_member_already_in_group(a_member, group)
+        "#{a_member.get_name} is already in #{group.name}."
+      end
+
+      def a_member_not_have_invite_request(a_member, group)
+        "#{a_member.get_name} doesn't have invite request to #{group.name}"
+      end
+
+      def you_have_not_invite_member(a_member, group)
+        "You have not invited #{a_member.get_name} to #{group.name}."
+      end
+
+      def poll_not_exist_in_group
+        "This poll isn't exist in group."
+      end
+
+      def member_not_poll_owner
+        'You are net poll owner.'
+      end
+
     end
   end
 
