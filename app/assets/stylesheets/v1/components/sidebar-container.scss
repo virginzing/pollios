@@ -1,0 +1,7 @@
+.sidebar-container {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 0 0 200px;
+  height: calc(100vh - 60px);
+  background: #333333;
+}

@@ -1,0 +1,13 @@
+.admin-container{
+  display: flex;
+  flex-flow: row nowrap;
+  padding-top: 60px;
+  overflow: hidden;
+  height: 100vh;
+
+  > .app-container {
+    padding: 0;
+    overflow-y: scroll;
+    min-height: auto;
+  }
+}
