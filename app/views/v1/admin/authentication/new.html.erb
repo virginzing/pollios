@@ -1,13 +1,13 @@
-<form class="signin-container" action="<%= session_path(resource) %>" method="post" novalidate>
+<form class="signin-container" action="/v1/admin/signin" method="post" novalidate>
   <h4 class="title">Sign in</h4>
   <%= render(:partial => "v1/partials/flash_message", locals: { type: 'error', message: flash[:alert] }) if flash[:alert] %>
   <div class="input-group">
     <label class="label">Email</label>
-    <input type="email" name="admin[email]" class="input">
+    <input type="email" name="v1_admin[email]" class="input">
   </div>
   <div class="input-group">
     <label class="label">Password</label>
-    <input type="password" name="admin[password]" class="input">
+    <input type="password" name="v1_admin[password]" class="input">
   </div>
   <%= token_tag %>
   <button type="submit" class="submit">Sign in</button>
