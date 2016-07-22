@@ -1,7 +1,7 @@
 (function() {
-  const sidebarButton = document.getElementById('sidebar-button');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('app-overlay');
+  var sidebarButton = document.getElementById('sidebar-button');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('app-overlay');
 
   sidebarButton.addEventListener('click', toggleSidebar);
 
@@ -20,7 +20,9 @@
   function isSidebarOpen(className) {
     return className
       .split(' ')
-      .filter((c) => c === 'open')
+      .filter(function (c) {
+        return c === 'open'
+      })
       .length > 0;
   }
 
@@ -43,7 +45,9 @@
   function openElement(elm) {
     elm.className = elm.className
         .split(' ')
-        .filter((c) => c !== 'open')
+        .filter(function(c) {
+          return c !== 'open'
+        })   
         .join(' ');
   }
 
