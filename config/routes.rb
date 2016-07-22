@@ -606,9 +606,9 @@ Pollios::Application.routes.draw do
   # end
   # mount Sidekiq::Web => '/sidekiq'
 
-  devise_for :admin, path_prefix: 'v1', controllers: { sessions: 'v1/admin/authentication' }, path_names: { sign_in: 'signin', sign_out: 'signout' }
-
   namespace 'v1' do
+    devise_for :admin, controllers: { sessions: 'v1/admin/authentication' }, path_names: { sign_in: 'signin', sign_out: 'signout' }
+
     namespace 'admin' do
       get 'dashboard', to: 'dashboard#index'
     end
