@@ -1,8 +1,19 @@
 .icon-button {
   display: flex;
 
+  border-left: 3px solid transparent;
   padding: 15px 20px;
-  color: #EEEEEE;
+  color: #BBBBBB;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &.active {
+    border-left-color: $primary-color;
+    color: #EEEEEE;
+    text-decoration: none;
+  }
+
 
   > .fa {
     font-size: 18px;

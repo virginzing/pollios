@@ -9,5 +9,24 @@
     padding: 0;
     overflow-y: scroll;
     min-height: auto;
+    flex-grow: 1;
+  }
+
+  > .sidebar-container {
+    flex: 0 0 200px;
+    height: calc(100vh - 60px);
+  }
+
+  @media (max-width: $screen-sm) {
+    > .sidebar-container {
+      width: 200px;
+      left: -200px;
+      position: fixed;
+      transition: all .4s ease-in-out;
+    }
+
+    > .sidebar-container.open {
+      left: 0;
+    }
   }
 }

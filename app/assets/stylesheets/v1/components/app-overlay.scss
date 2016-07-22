@@ -1,0 +1,20 @@
+.app-overlay {
+  visibility: hidden;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000000;
+  opacity: 0;
+
+  z-index: $z-index-overlay;
+
+  transition: opacity .4s ease-in-out;
+}
+
+.app-overlay.open {
+  display: block;
+  visibility: visible;
+  opacity: .6;
+}
