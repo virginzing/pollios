@@ -31,6 +31,19 @@
 # end
 
 module GuardMessage
+
+  module InAppPurchase
+    class << self
+      def activated(transaction_id)
+        "In-app purchase transaction id: #{transaction_id} is already activated."
+      end
+
+      def product_not_exist(product_id)
+        "Product id: #{product_id} is does not exist."
+      end
+    end
+  end
+
   module Member
     class << self
       def already_friend(a_member)

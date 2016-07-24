@@ -1,20 +1,19 @@
 module Authenticable
 
   def authenticate_with_token!
-    redirect_to_download_link
+    # redirect_to_not_support_link
 
     # closed old API
-
-    # member = valid_current_member
-    # unless Rails.env.test? || Rails.env.development?
-    #   token_from_header = request.headers['Authorization']
-    #   raise ExceptionHandler::Unauthorized, "Access Denied." unless token_from_header.present?
-    #   authenticate_or_request_with_http_token do |token, _options|
-    #     access_token = member.api_tokens.where('token = ?', token)
-    #     raise ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::INVALID unless access_token.present?
-    #     true
-    #   end
-    # end
+    member = valid_current_member
+    unless Rails.env.test? || Rails.env.development?
+      token_from_header = request.headers['Authorization']
+      raise ExceptionHandler::Unauthorized, "Access Denied." unless token_from_header.present?
+      authenticate_or_request_with_http_token do |token, _options|
+        access_token = member.api_tokens.where('token = ?', token)
+        raise ExceptionHandler::Unauthorized, ExceptionHandler::Message::Token::INVALID unless access_token.present?
+        true
+      end
+    end
   end
 
   def valid_current_member
@@ -27,11 +26,10 @@ module Authenticable
 
   private
 
-  def redirect_to_download_link
-    download_link = 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
+  # def redirect_to_not_support_link
+  #   not_support_link = 'http://pollios.com/v1/polls/OTcxOTI3'
 
-
-    redirect_to download_link
-  end
+  #   redirect_to not_support_link
+  # end
 
 end

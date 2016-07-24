@@ -43,7 +43,11 @@ module Pollios::V1
 
       expose object_groups, as: key_name do |obj, _|
 
-        groups = obj.send object_groups
+        if methods.include?(object_groups)
+          groups = send object_groups
+        else
+          groups = obj.send object_groups
+        end
 
         if local_options[:entity]
           entity = local_options[:entity]
