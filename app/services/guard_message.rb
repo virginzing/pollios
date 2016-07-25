@@ -311,6 +311,13 @@ module GuardMessage
         'You are net poll owner.'
       end
 
+      def invalid_secret_code
+        'Invalid Code.'
+      end
+
+      def already_used_secret_code
+        'This code had already used.'
+      end
     end
   end
 

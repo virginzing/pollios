@@ -109,6 +109,21 @@ module Member::Private::GroupAction
     being_invited_by_admin_or_trigger? ? join_group(member) : ask_join_request
   end
 
+  def process_join_with_secret_code
+    used_secret_code
+
+    group.group_members.create!(member_id: member.id, is_master: false, active: true)
+    add_member_to_company(member)
+    clear_group_member_relation_cache(member)
+
+    group
+  end
+
+  def used_secret_code
+    secret_code.update!(used: true)
+    member.member_invite_codes.create!(invite_code_id: secret_code.id)
+  end
+
   def process_cancel_request(member)
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
     process_reject_request(member) if being_invited?(member)
