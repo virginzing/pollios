@@ -31,6 +31,19 @@
 # end
 
 module GuardMessage
+
+  module InAppPurchase
+    class << self
+      def activated(transaction_id)
+        "In-app purchase transaction id: #{transaction_id} is already activated."
+      end
+
+      def product_not_exist(product_id)
+        "Product id: #{product_id} is does not exist."
+      end
+    end
+  end
+
   module Member
     class << self
       def already_friend(a_member)
@@ -298,6 +311,13 @@ module GuardMessage
         'You are net poll owner.'
       end
 
+      def invalid_secret_code
+        'Invalid Code.'
+      end
+
+      def already_used_secret_code
+        'This code had already used.'
+      end
     end
   end
 

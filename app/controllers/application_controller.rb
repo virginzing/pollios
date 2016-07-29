@@ -35,16 +35,7 @@ class ApplicationController < ActionController::Base
 
   before_action :compress_gzip, if: Proc.new { |c| c.request.format.json? }
 
-  before_action :check_authentication_header
-
   helper_method :current_member, :signed_in?, :redirect_back_or, :redirect_back, :current_company
-
-  def check_authentication_header
-    #puts request.headers["X-Api-Key"].inspect
-    if request.headers["User-Agent"].nil? && request.headers["X-Api-Key"].nil?
-      redirect_to 'https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8'
-    end
-  end
 
   def check_app_id
     app_id = request.headers["HTTP_APP_ID"]

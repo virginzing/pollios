@@ -28,15 +28,21 @@ module Pollios::V1::GroupAPI
 
         exactly_one_of :cover_preset, :cover
       end
-
       post do
         current_member_group_action.create(params)
+      end
+
+      desc 'join group with secret code'
+      params do
+        requires :code, type: String, desc: 'secret code'
+      end
+      post '/join_with_secret_code' do
+        current_member_group_action.join_with_secret_code(params[:code])
       end
 
       params do
         requires :id, type: Integer, desc: 'group id'
       end
-
       route_param :id do
 
         desc 'leave group'

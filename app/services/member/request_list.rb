@@ -29,7 +29,7 @@ class Member::RequestList
   end
 
   def recommended_friends
-    recommendations.friends.sample(20)
+    recommendations.friends.sample(10)
   end
 
   def recommended_groups
@@ -37,7 +37,7 @@ class Member::RequestList
   end
 
   def recommended_officials
-    recommendations.officials.sample(5)
+    recommendations.officials.sample(10)
   end
 
   def recommended_via_facebooks

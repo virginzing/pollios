@@ -2,7 +2,7 @@ class Member::GroupAction
   include Member::Private::GroupActionGuard
   include Member::Private::GroupAction
 
-  attr_reader :member, :group, :group_params, :a_member, :poll_id
+  attr_reader :member, :group, :group_params, :a_member, :poll_id, :code
 
   def initialize(member, group = nil, options = {})
     @member = member
@@ -27,6 +27,15 @@ class Member::GroupAction
     fail ExceptionHandler::UnprocessableEntity, message unless can_join
       
     process_join_request
+  end
+
+  def join_with_secret_code(code)
+    @code = code
+
+    can_join_with_secret_code, message = can_join_with_secret_code?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_join_with_secret_code
+      
+    process_join_with_secret_code
   end
 
   def cancel_request
