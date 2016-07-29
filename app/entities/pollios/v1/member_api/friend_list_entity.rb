@@ -2,7 +2,7 @@ module Pollios::V1::MemberAPI
   class FriendListEntity < Pollios::V1::BaseEntity
 
     expose_members :friends
-    expose_members :followers
+    expose_members :followers, unless: -> (_, _) { current_member.citizen? }
     expose_members :followings
     expose_members :blocks
 
