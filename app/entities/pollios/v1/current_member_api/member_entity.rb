@@ -2,7 +2,7 @@ module Pollios::V1::CurrentMemberAPI
   class MemberEntity < Pollios::V1::Shared::MemberEntity
     
     expose :email
-    expose :point
+    expose :point, if: -> (_, _) { member.citizen? }
     expose :notification_count
     expose :request_count
     expose :first_signup
