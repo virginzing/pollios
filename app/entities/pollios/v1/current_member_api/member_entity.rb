@@ -10,6 +10,10 @@ module Pollios::V1::CurrentMemberAPI
 
     private
 
+    def member
+      object
+    end
+
     def waiting_info
       WaitingList.new(object).get_info
     end
