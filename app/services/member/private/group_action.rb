@@ -218,6 +218,8 @@ module Member::Private::GroupAction
     update_member_group_requesting
     clear_group_member_requesting_cache(a_member)
 
+    send_approve_join_group_request_notification
+
     group
   end
 
@@ -317,6 +319,10 @@ module Member::Private::GroupAction
   def send_promote_group_admin_notification
     # PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
     V1::Group::PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
+  end
+
+  def send_approve_join_group_request_notification
+    V1::Group::ApproveWorker.perform_async(member.id, a_member.id, group.id)
   end
 
 end
