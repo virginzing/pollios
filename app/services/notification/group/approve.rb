@@ -21,7 +21,7 @@ class Notification::Group::Approve
   end
 
   def message
-    member.fullname + "had approved your request to join #{group.name} group"
+    member.fullname + " had approved your request to join #{group.name} group"
   end
 
   def data
