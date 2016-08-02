@@ -16,7 +16,7 @@ class Notification::Group::JoinRequest
   end
 
   def recipient_list
-    Group::MemberList.new(group, viewing_member: member).admin
+    Group::MemberList.new(group, viewing_member: member).admins
   end
 
   def message
