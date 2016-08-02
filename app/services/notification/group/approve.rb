@@ -2,7 +2,7 @@ class Notification::Group::Approve
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :group
+  attr_reader :member, :a_member, :group
 
   def initialize(member, a_member, group)
     @member = member
