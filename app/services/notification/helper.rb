@@ -35,14 +35,20 @@ module Notification::Helper
 
   def member_never_received_notification_from_create_poll_id(action, member, poll_id)
     action != 'Create' || member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
-      , '%action: Create%', "%poll_id: #{poll_id}%") == []
+      , '%action: Create%', "%poll_id: #{poll_id}%").empty?
   end
 
-  def request_count(member_list)
+  def increase_request_count(member_list, type)
+    return unless request_notification?(type)
+
     member_list.each do |member|
       member.increment!(:request_count)
       member.request_count
     end
+  end
+
+  def request_notification?(type)
+    type == 'request'
   end
 
   def create_notification_for_push(device_list, custom_message, data = nil)
@@ -72,7 +78,7 @@ module Notification::Helper
     recipient_list = members_receive_notification(recipient_list, type)
     message = truncate_message(message)
 
-    request_count(recipient_list) if type == 'request' || type == 'join_group'
+    increase_request_count(recipient_list, type)
     notification_count(recipient_list, data[:action], data[:poll_id] || 0)
     
     create_notification_log(recipient_list, message, data) if options[:log]

@@ -11,7 +11,7 @@ class Notification::Group::PromoteAdmin
   end
 
   def type
-    'request'
+    nil
   end
 
   def recipient_list
