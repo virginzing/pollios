@@ -26,7 +26,7 @@ module Notification::Helper
     Apn::Device.where('receive_notification = true AND member_id IN (?)', member_list.map(&:id)) 
   end
 
-  def notification_count(member_list, action, poll_id = 0)
+  def increase_notification_count(member_list, action, poll_id = 0)
     member_list.each do |member|
       member.increment!(:notification_count) if member_never_received_notification_from_create_poll_id(action, member, poll_id)
       member.notification_count
@@ -79,7 +79,7 @@ module Notification::Helper
     message = truncate_message(message)
 
     increase_request_count(recipient_list, type)
-    notification_count(recipient_list, data[:action], data[:poll_id] || 0)
+    increase_notification_count(recipient_list, data[:action], data[:poll_id] || 0)
     
     create_notification_log(recipient_list, message, data) if options[:log]
 
