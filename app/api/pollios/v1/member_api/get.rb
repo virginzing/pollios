@@ -36,6 +36,7 @@ module Pollios::V1::MemberAPI
           get do
             friends_of_member = Member::MemberList.new(member, viewing_member: current_member)
             present friends_of_member, with: FriendListEntity \
+              , current_member: current_member \
               , current_member_linkage: current_member_linkage
           end
         end

@@ -1,11 +1,12 @@
-class Notification::Group::JoinRequest
+class Notification::Group::Approve
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :group
+  attr_reader :member, :a_member, :group
 
-  def initialize(member, group)
+  def initialize(member, a_member, group)
     @member = member
+    @a_member = a_member
     @group = group
 
     create_notification(recipient_list, type, message, data)
@@ -16,20 +17,20 @@ class Notification::Group::JoinRequest
   end
 
   def recipient_list
-    Group::MemberList.new(group, viewing_member: member).admins
+    [a_member]
   end
 
   def message
-    member.fullname + " request to join #{group.name} group"
+    member.fullname + " had approved your request to join #{group.name} group"
   end
 
   def data
     @data ||= {
-      type: TYPE[:request_group],
+      type: TYPE[:group],
       group_id: group.id,
-      action: ACTION[:request],
+      action: ACTION[:join],
       group: GroupNotifySerializer.new(group).as_json,
-      worker: WORKER[:request_group]
+      worker: WORKER[:approve_request_group]
     }
   end
 

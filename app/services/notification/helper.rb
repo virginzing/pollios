@@ -28,12 +28,15 @@ module Notification::Helper
 
   def notification_count(member_list, action, poll_id = 0)
     member_list.each do |member|
-      member.increment!(:notification_count) if \
-        action != 'Create' || member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
-          , '%action: Create%', "%poll_id: #{poll_id}%") == []
+      member.increment!(:notification_count) if member_never_received_notification_from_create_poll_id(action, member, poll_id)
       member.notification_count
     end
-  end  
+  end
+
+  def member_never_received_notification_from_create_poll_id(action, member, poll_id)
+    action != 'Create' || member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
+      , '%action: Create%', "%poll_id: #{poll_id}%") == []
+  end
 
   def request_count(member_list)
     member_list.each do |member|

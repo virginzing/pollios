@@ -109,12 +109,27 @@ module Member::Private::GroupAction
     being_invited_by_admin_or_trigger? ? join_group(member) : ask_join_request
   end
 
+  def process_join_with_secret_code
+    used_secret_code
+
+    group.group_members.create!(member_id: member.id, is_master: false, active: true)
+    add_member_to_company(member)
+    clear_group_member_relation_cache(member)
+
+    group
+  end
+
+  def used_secret_code
+    secret_code.update!(used: true)
+    member.member_invite_codes.create!(invite_code_id: secret_code.id)
+  end
+
   def process_cancel_request(member)
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
     process_reject_request(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(member)
 
     group
   end
@@ -147,7 +162,7 @@ module Member::Private::GroupAction
     group.request_groups.create(member_id: member.id)
 
     clear_group_member_relation_cache(member)
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(member)
 
     send_join_group_request_notification
 
@@ -201,7 +216,9 @@ module Member::Private::GroupAction
   def process_approve
     join_group(a_member)
     update_member_group_requesting
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(a_member)
+
+    send_approve_join_group_request_notification
 
     group
   end
@@ -213,7 +230,7 @@ module Member::Private::GroupAction
 
   def process_deny
     process_cancel_request(a_member)
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(a_member)
 
     group
   end
@@ -269,7 +286,7 @@ module Member::Private::GroupAction
     FlushCached::Group.new(group).clear_list_members
   end
 
-  def clear_group_member_requesting_cache
+  def clear_group_member_requesting_cache(member)
     FlushCached::Group.new(group).clear_list_requests
     FlushCached::Member.new(member).clear_list_requesting_groups
   end
@@ -302,6 +319,10 @@ module Member::Private::GroupAction
   def send_promote_group_admin_notification
     # PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
     V1::Group::PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
+  end
+
+  def send_approve_join_group_request_notification
+    V1::Group::ApproveWorker.perform_async(member.id, a_member.id, group.id)
   end
 
 end

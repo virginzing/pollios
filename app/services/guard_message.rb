@@ -106,6 +106,10 @@ module GuardMessage
         "You can't report yourself."
       end
 
+      def official_account
+        'This member is official account.'
+      end
+
       def not_official_account
         'This member is not official account.'
       end
@@ -311,6 +315,13 @@ module GuardMessage
         'You are net poll owner.'
       end
 
+      def invalid_secret_code
+        'Invalid Code.'
+      end
+
+      def already_used_secret_code
+        'This code had already used.'
+      end
     end
   end
 

@@ -5,8 +5,8 @@ module Pollios::V1::Shared
     expose :fullname, as: :name
     expose :description
     expose :get_avatar, as: :avatar
-    expose :get_cover_image, as: :cover, if: -> (obj, _) { obj.get_cover_image.present? }
-    expose :get_cover_preset, as: :cover_preset, unless: -> (obj, _) { obj.get_cover_image.present? }
+    expose :get_cover_image, as: :cover, unless: -> (obj, _) { obj.get_cover_image.empty? }
+    expose :get_cover_preset, as: :cover_preset, if: -> (obj, _) { obj.get_cover_image.empty? }
     expose :member_type_text, as: :type
     expose :get_key_color, as: :key_color, if: -> (obj, _) { obj.get_key_color.present? }
     expose :status, if: -> (_, opts) { opts[:current_member_linkage].present? }
