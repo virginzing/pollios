@@ -1,5 +1,18 @@
 module Notification::Helper
 
+  def create_request_and_notification(recipient_list, type, message, data, options = { log: true, push: true })
+    recipient_list = recipients_receive_notification(recipient_list, type)
+    message = truncate_message(message)
+
+    create_request(recipient_list, type, data)
+    create_notification(recipient_list, message, data, options[:log], options[:push])
+  end
+
+  def recipients_receive_notification(recipient_list, type = nil)
+    return recipient_list if type.nil?
+    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq - [member]
+  end
+
   def truncate_message(message, limit_message_byte = 90, decrement_byte = 8)
     message = message.sub(/\n\n/, ' ')
 
@@ -17,38 +30,86 @@ module Notification::Helper
     limit_message + '.'
   end
 
-  def members_receive_notification(member_list, type = nil)
-    return member_list if type.nil?
-    member_list.select { |member| member if member.notification[type].to_b }.uniq - [member]
-  end
-
-  def devices_receive_notification(member_list)
-    Apn::Device.where('receive_notification = true AND member_id IN (?)', member_list.map(&:id)) 
-  end
-
-  def increase_notification_count(member_list, action, poll_id = 0)
-    member_list.each do |member|
-      member.increment!(:notification_count) if member_never_received_notification_from_create_poll_id(action, member, poll_id)
-      member.notification_count
-    end
-  end
-
-  def member_never_received_notification_from_create_poll_id(action, member, poll_id)
-    action != 'Create' || member.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
-      , '%action: Create%', "%poll_id: #{poll_id}%").empty?
-  end
-
-  def increase_request_count(member_list, type)
+  def create_request(recipient_list, type, data)
     return unless request_notification?(type)
 
-    member_list.each do |member|
-      member.increment!(:request_count)
-      member.request_count
+    recipient_list.each do |recipient|
+      increase_request_count(recipient)
+      create_recent_request(recipient, data)
     end
   end
 
   def request_notification?(type)
     type == 'request'
+  end
+
+  def increase_request_count(recipient)
+    recipient.increment!(:request_count)
+    recipient.request_count
+  end
+
+  def create_recent_request(recipient, data)
+    add_recent_friends_to_request(recipient, data) if accept_friend_request?(data)
+    add_recent_group_to_request(recipient, data) if approve_group_request?(data)
+  end
+
+  def add_recent_friends_to_request(recipient, data)
+    friends = Member.cached_find(data[:member_id])
+    cache_recipient_request_recent_friends = "members/#{recipient.id}/requests/recent_friends"
+
+    write_object_to_recipient_recent_request_cached(cache_recipient_request_recent_friends, friends)
+  end
+
+  def accept_friend_request?(data)
+    data[:action] == ACTION[:become_friend]
+  end
+
+  def add_recent_group_to_request(recipient, data)
+    group = Group.cached_find(data[:group_id])
+    cache_recipient_request_recent_group = "members/#{recipient.id}/requests/recent_groups"
+
+    write_object_to_recipient_recent_request_cached(cache_recipient_request_recent_group, group)
+  end
+
+  def approve_group_request?(data)
+    data[:worker] == WORKER[:approve_request_group]
+  end
+
+  def write_object_to_recipient_recent_request_cached(cache_name, object)
+    Rails.cache.write(cache_name, Rails.cache.fetch(cache_name) | [object])
+  end
+
+  def create_notification(recipient_list, message, data, log, push)
+    increase_notification_count(recipient_list, data[:action], data[:poll_id] || 0)
+
+    create_notification_log(recipient_list, message, data) if log
+    create_notification_for_push(devices_receive_notification(recipient_list), message, data) if push
+  end
+
+  def devices_receive_notification(recipient_list)
+    Apn::Device.where('receive_notification = true AND member_id IN (?)', recipient_list.map(&:id)) 
+  end
+
+  def increase_notification_count(recipient_list, action, poll_id = 0)
+    recipient_list.each do |recipient|
+      recipient.increment!(:notification_count) if recipient_never_received_notification_from_create_poll_id(action, recipient, poll_id)
+      recipient.notification_count
+    end
+  end
+
+  def recipient_never_received_notification_from_create_poll_id(action, recipient, poll_id)
+    action != 'Create' || recipient.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
+      , "%action: #{ACTION[:create]}%", "%poll_id: #{poll_id}%").empty?
+  end
+
+  def create_notification_log(recipient_list, message, data)
+    sender_id = (member.present? ? member.id : nil)
+
+    recipient_list.each do |recipient|
+      data.merge!(notify: recipient.notification_count)
+
+      NotifyLog.create!(sender_id: sender_id, recipient_id: recipient.id, message: message, custom_properties: data)
+    end
   end
 
   def create_notification_for_push(device_list, custom_message, data = nil)
@@ -63,27 +124,4 @@ module Notification::Helper
       notification.save!
     end
   end
-
-  def create_notification_log(recipient_list, message, data)
-    sender_id = (member.present? ? member.id : nil)
-
-    recipient_list.each do |recipient|
-      data.merge!(notify: recipient.notification_count)
-
-      NotifyLog.create!(sender_id: sender_id, recipient_id: recipient.id, message: message, custom_properties: data)
-    end
-  end
-
-  def create_notification(recipient_list, type, message, data, options = { log: true, push: true })
-    recipient_list = members_receive_notification(recipient_list, type)
-    message = truncate_message(message)
-
-    increase_request_count(recipient_list, type)
-    increase_notification_count(recipient_list, data[:action], data[:poll_id] || 0)
-    
-    create_notification_log(recipient_list, message, data) if options[:log]
-
-    create_notification_for_push(devices_receive_notification(recipient_list), message, data) if options[:push]
-  end
-
 end
