@@ -1,0 +1,24 @@
+.dashboard-row {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 20px;
+
+  > .counter-container {
+    margin-right: 15px;
+    flex: 1 1 400px;
+  }
+
+  > .counter-container:last-child {
+    margin-right: 0;
+  }
+
+  @media (max-width: $screen-sm) {
+    flex-flow: column nowrap;
+
+    > .counter-container {
+      flex-basis: 200px;
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  }
+}

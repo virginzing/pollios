@@ -6,10 +6,15 @@
 
 @import "input";
 @import "alert";
+@import "typography";
 
 @import "components/app-container";
 @import "components/app-overlay";
 @import "components/admin-container";
+@import "components/button-group";
+@import "components/chart-container";
+@import "components/stats-container";
+@import "components/stats-dashboard-row";
 @import "components/sidebar-container";
 @import "components/footer-container";
 @import "components/input-group";
@@ -20,9 +25,10 @@
 @import "components/notfound-container";
 @import "components/poll-container";
 @import "components/poll-creator";
+@import "components/title-container";
 @import "components/qrcode-modal";
 @import "components/signin-container";
 
 body {
-  background-color: #EFEFEF;
+  background-color: #FAFAFA;
 }

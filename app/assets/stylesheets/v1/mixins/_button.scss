@@ -23,3 +23,11 @@
     transform: translateY(3px);
   }
 }
+
+@mixin button-clean {
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}

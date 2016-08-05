@@ -6,10 +6,16 @@
   height: 100vh;
 
   > .app-container {
-    padding: 0;
+    padding: 25px;
     overflow-y: scroll;
     min-height: auto;
     flex-grow: 1;
+
+    > .footer-container {
+      margin-bottom: -25px;
+      margin-left: -25px;
+      margin-right: -25px;
+    }
   }
 
   > .sidebar-container {
