@@ -73,4 +73,12 @@ class FlushCached::Member
   def clear_list_searched_keywords
     Rails.cache.delete("members/#{member.id}/searches/keywords")
   end
+
+  def clear_list_recent_friends
+    Rails.cache.delete("members/#{member.id}/requests/recent_friends")
+  end
+
+  def clear_list_recent_groups
+    Rails.cache.delete("members/#{member.id}/requests/recent_groups")
+  end
 end
