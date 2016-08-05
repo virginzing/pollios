@@ -1,9 +1,10 @@
 class Member::RequestList
 
-  attr_reader :member
+  attr_reader :member, :options
 
   def initialize(member, options = {})
     @member = member
+    @options = options
 
     reset_new_request_count if options[:clear_new_request_count]
   end
@@ -12,7 +13,7 @@ class Member::RequestList
   def recent_friends
     friends = cached_recent_friends
 
-    clear_cached_recent_friends
+    clear_cached_recent_friends if options[:clear_new_request_count]
 
     friends
   end
@@ -20,7 +21,7 @@ class Member::RequestList
   def recent_groups
     groups = cached_recent_groups
 
-    clear_cached_recent_groups
+    clear_cached_recent_groups if options[:clear_new_request_count]
 
     groups
   end

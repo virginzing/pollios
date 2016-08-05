@@ -61,7 +61,7 @@ module Notification::Helper
   end
 
   def accept_friend_request?(data)
-    data[:action] == ACTION[:become_friend]
+    data[:action] == 'BecomeFriend'
   end
 
   def add_recent_group_to_request(recipient, data)
@@ -72,7 +72,7 @@ module Notification::Helper
   end
 
   def approve_group_request?(data)
-    data[:worker] == WORKER[:approve_request_group]
+    data[:worker] == 'ApproveRequestGroup'
   end
 
   def write_object_to_recipient_recent_request_cached(cache_name, object)
