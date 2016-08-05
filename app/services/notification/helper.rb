@@ -55,9 +55,10 @@ module Notification::Helper
 
   def add_recent_friends_to_request(recipient, data)
     friends = Member.cached_find(data[:member_id])
-    cache_recipient_request_recent_friends = "members/#{recipient.id}/requests/recent_friends"
 
-    write_object_to_recipient_recent_request_cached(cache_recipient_request_recent_friends, friends)
+    create_recipient_recent_request(recipient, friends)
+
+    FlushCached::Member.new(recipient).clear_list_recent_friends
   end
 
   def accept_friend_request?(data)
@@ -66,17 +67,18 @@ module Notification::Helper
 
   def add_recent_group_to_request(recipient, data)
     group = Group.cached_find(data[:group_id])
-    cache_recipient_request_recent_group = "members/#{recipient.id}/requests/recent_groups"
 
-    write_object_to_recipient_recent_request_cached(cache_recipient_request_recent_group, group)
+    create_recipient_recent_request(recipient, group)
+
+    FlushCached::Member.new(recipient).clear_list_recent_groups
   end
 
   def approve_group_request?(data)
     data[:worker] == 'ApproveRequestGroup'
   end
 
-  def write_object_to_recipient_recent_request_cached(cache_name, object)
-    Rails.cache.write(cache_name, Rails.cache.fetch(cache_name) | [object])
+  def create_recipient_recent_request(recipient, object)
+    MemberRecentRequest.create!(member_id: recipient.id, recent: object)
   end
 
   def create_notification(recipient_list, message, data, log, push)
