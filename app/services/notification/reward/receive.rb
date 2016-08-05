@@ -9,7 +9,7 @@ class Notification::Reward::Receive
     @campaign = member_reward.campaign
     @member = campaign.member
 
-    create_notification(recipient_list, type, message, data)
+    create_request_and_notification(recipient_list, type, message, data)
   end
 
   def type

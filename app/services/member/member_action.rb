@@ -14,7 +14,9 @@ class Member::MemberAction
     can_add_friend, message = can_add_friend?
     fail ExceptionHandler::UnprocessableEntity, message unless can_add_friend
 
-    process_friend_requests_transaction
+    # return follow unless a_member.citizen?
+
+    process_friend_requests_transaction 
   end
 
   def unfriend

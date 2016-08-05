@@ -106,6 +106,10 @@ module GuardMessage
         "You can't report yourself."
       end
 
+      def official_account
+        'This member is official account.'
+      end
+
       def not_official_account
         'This member is not official account.'
       end

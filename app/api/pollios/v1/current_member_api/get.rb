@@ -84,11 +84,8 @@ module Pollios::V1::CurrentMemberAPI
       resource :requests do
         helpers do
           def requests_for_member
-            @requests_for_member = Member::RequestList.new(current_member, options)
-          end
-
-          def options
-            @options ||= { clear_new_request_count: params[:clear_new_request_count] }
+            @requests_for_member = Member::RequestList.new(current_member \
+              , clear_new_request_count: params[:clear_new_request_count])
           end
 
           def member_listing

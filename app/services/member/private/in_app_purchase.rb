@@ -28,9 +28,6 @@ module Member::Private::InAppPurchase
 
   def member_subscription(purchased_subscription, product_name)
     update_member_to_celebrity(purchased_subscription)
-
-    # TODO : Check this logic
-
     clear_member_friends_followers_relation
 
     success_message(product_name)

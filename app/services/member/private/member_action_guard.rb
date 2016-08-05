@@ -5,6 +5,7 @@ module Member::Private::MemberActionGuard
     return [false, GuardMessage::Member.add_self_as_a_friend] if same_member
     return [false, GuardMessage::Member.already_friend(a_member)] if already_friend
     return [false, GuardMessage::Member.already_sent_request(a_member)] if already_sent_request
+    return [false, GuardMessage::Member.official_account] if official_account?
     return [false, GuardMessage::Member.already_blocked(a_member)] if already_block
     return [false, GuardMessage::Member.blocked_by(a_member)] if blocked_by(a_member)
     [true, nil]
@@ -92,8 +93,12 @@ module Member::Private::MemberActionGuard
     member_list.not_following_with?(a_member)
   end
 
+  def official_account?
+    a_member.member_type != 'citizen'
+  end
+
   def not_official_account
-    a_member.member_type == 'citizen'
+    !official_account?
   end
 
   def already_block

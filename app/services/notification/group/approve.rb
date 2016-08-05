@@ -1,6 +1,8 @@
-class Notification::Group::PromoteAdmin
+class Notification::Group::Approve
   include Notification::Helper
   include SymbolHash
+
+  attr_reader :member, :a_member, :group
 
   def initialize(member, a_member, group)
     @member = member
@@ -11,7 +13,7 @@ class Notification::Group::PromoteAdmin
   end
 
   def type
-    nil
+    'request'
   end
 
   def recipient_list
@@ -19,16 +21,17 @@ class Notification::Group::PromoteAdmin
   end
 
   def message
-    member.fullname + " promoted you to administrator of #{@group.name} group"
+    member.fullname + " had approved your request to join #{group.name} group"
   end
 
   def data
     @data ||= {
       type: TYPE[:group],
       group_id: group.id,
+      action: ACTION[:join],
       group: GroupNotifySerializer.new(group).as_json,
-      action: ACTION[:promote_admin],
-      worker: WORKER[:promote_admin]
+      worker: WORKER[:approve_request_group]
     }
   end
+
 end

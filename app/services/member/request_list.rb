@@ -8,6 +8,23 @@ class Member::RequestList
     reset_new_request_count if options[:clear_new_request_count]
   end
 
+  # TODO: implement this with associations
+  def recent_friends
+    friends = cached_recent_friends
+
+    clear_cached_recent_friends
+
+    friends
+  end
+
+  def recent_groups
+    groups = cached_recent_groups
+
+    clear_cached_recent_groups
+
+    groups
+  end
+
   def friends_incoming
     member_listing.friend_request
   end
@@ -63,4 +80,23 @@ class Member::RequestList
     member.save!
   end
 
+  def cached_recent_friends
+    Rails.cache.fetch("members/#{member.id}/requests/recent_friends") do
+      []
+    end
+  end
+
+  def cached_recent_groups
+    Rails.cache.fetch("members/#{member.id}/requests/recent_groups") do
+      []
+    end
+  end
+
+  def clear_cached_recent_friends
+    Rails.cache.delete("members/#{member.id}/requests/recent_friends")
+  end
+
+  def clear_cached_recent_groups
+    Rails.cache.delete("members/#{member.id}/requests/recent_groups")
+  end
 end

@@ -6,15 +6,22 @@ module Pollios::V1::MemberAPI
     expose_members :followings
     expose_members :blocks
 
-    private
+    def followers
+      return [] if citizen_member?
 
-    def current_member_linkage
-      options[:current_member_linkage]
+      object.followers
     end
 
     def blocks
       return object.blocks if viewing_own_friends?
+
       []
+    end
+
+    private
+
+    def current_member_linkage
+      options[:current_member_linkage]
     end
 
     def current_member
@@ -23,6 +30,10 @@ module Pollios::V1::MemberAPI
 
     def viewing_own_friends?
       object.member.id == current_member.id
+    end
+
+    def citizen_member?
+      object.member.citizen?
     end
   end
 end

@@ -8,7 +8,7 @@ class Notification::Group::JoinRequest
     @member = member
     @group = group
 
-    create_notification(recipient_list, type, message, data)
+    create_request_and_notification(recipient_list, type, message, data)
   end
 
   def type
@@ -16,7 +16,7 @@ class Notification::Group::JoinRequest
   end
 
   def recipient_list
-    Group::MemberList.new(group, viewing_member: member).admin
+    Group::MemberList.new(group, viewing_member: member).admins
   end
 
   def message

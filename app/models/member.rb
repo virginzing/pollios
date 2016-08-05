@@ -987,9 +987,9 @@ class Member < ActiveRecord::Base
     @member.update(avatar: file_avatar)
   end
 
-  def self.remove_cover(current_member)
-
-  end
+  # def self.remove_cover(current_member)
+    
+  # end
 
   def serializer_member_detail  # for api
     @find_member_cached ||= Member.cached_find(self.id)

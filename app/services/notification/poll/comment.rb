@@ -12,12 +12,12 @@ class Notification::Poll::Comment
     @poll_creator = poll.member
 
     if member.id == poll_creator.id
-      create_notification(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
+      create_request_and_notification(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
     else
-      create_notification(recipient_list - [poll_creator], type \
+      create_request_and_notification(recipient_list - [poll_creator], type \
         , message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
 
-      create_notification([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
+      create_request_and_notification([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
     end
   end
 

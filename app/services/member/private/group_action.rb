@@ -129,7 +129,7 @@ module Member::Private::GroupAction
     process_reject_request(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(member)
 
     group
   end
@@ -162,7 +162,7 @@ module Member::Private::GroupAction
     group.request_groups.create(member_id: member.id)
 
     clear_group_member_relation_cache(member)
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(member)
 
     send_join_group_request_notification
 
@@ -216,7 +216,9 @@ module Member::Private::GroupAction
   def process_approve
     join_group(a_member)
     update_member_group_requesting
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(a_member)
+
+    send_approve_join_group_request_notification
 
     group
   end
@@ -228,7 +230,7 @@ module Member::Private::GroupAction
 
   def process_deny
     process_cancel_request(a_member)
-    clear_group_member_requesting_cache
+    clear_group_member_requesting_cache(a_member)
 
     group
   end
@@ -284,7 +286,7 @@ module Member::Private::GroupAction
     FlushCached::Group.new(group).clear_list_members
   end
 
-  def clear_group_member_requesting_cache
+  def clear_group_member_requesting_cache(member)
     FlushCached::Group.new(group).clear_list_requests
     FlushCached::Member.new(member).clear_list_requesting_groups
   end
@@ -317,6 +319,10 @@ module Member::Private::GroupAction
   def send_promote_group_admin_notification
     # PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
     V1::Group::PromoteAdminWorker.perform_async(member.id, a_member.id, group.id)
+  end
+
+  def send_approve_join_group_request_notification
+    V1::Group::ApproveWorker.perform_async(member.id, a_member.id, group.id)
   end
 
 end
