@@ -4,6 +4,9 @@ module V1::Admin
 
     def index
       @current_page = 'dashboard'
+
+      admin_stats = Admin::Stats.new()
+      @stats = admin_stats.dashboard
     end
   end
 end

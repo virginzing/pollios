@@ -2,7 +2,7 @@
 <div class="stats-dashboard-row">
   <div class="stats-container">
     <div class="counter">
-      14,304
+      <%= @stats[:vote][:count] %>
     </div>
     <div class="desc">
       Vote happened.
@@ -10,12 +10,12 @@
     <div class="graph"
       pollios-chart
       color="#D32053"
-      label='["label1","label2"]'
-      data="[1,2]"></div>
+      label="<%= @stats[:vote][:graph][:label] %>"
+      data="<%= @stats[:vote][:graph][:data] %>"></div>
   </div>
   <div class="stats-container">
     <div class="counter">
-      302
+      <%= @stats[:poll][:count] %>
     </div>
     <div class="desc">
       Poll created.
@@ -28,7 +28,7 @@
   </div>
   <div class="stats-container">
     <div class="counter">
-      1,603
+      <%= @stats[:user][:count] %>
     </div>
     <div class="desc">
       Active users.
