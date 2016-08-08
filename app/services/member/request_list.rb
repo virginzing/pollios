@@ -97,12 +97,12 @@ class Member::RequestList
   end
 
   def clear_cached_recent_friends
-    cached_recent_friends.each(&:destroy)
+    MemberRecentRequest.where(member_id: member.id, recent_type: 'Member').each(&:destroy)
     FlushCached::Member.new(member).clear_list_recent_friends
   end
 
   def clear_cached_recent_groups
-    cached_recent_groups.each(&:destroy)
+    MemberRecentRequest.where(member_id: member.id, recent_type: 'Group').each(&:destroy)
     FlushCached::Member.new(member).clear_list_recent_groups
   end
 end
