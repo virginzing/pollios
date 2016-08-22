@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160315080530) do
+ActiveRecord::Schema.define(version: 20160805083443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -649,6 +649,17 @@ ActiveRecord::Schema.define(version: 20160315080530) do
 
   add_index "member_invite_codes", ["invite_code_id"], name: "index_member_invite_codes_on_invite_code_id", using: :btree
   add_index "member_invite_codes", ["member_id"], name: "index_member_invite_codes_on_member_id", using: :btree
+
+  create_table "member_recent_requests", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "recent_id"
+    t.string   "recent_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "member_recent_requests", ["member_id"], name: "index_member_recent_requests_on_member_id", using: :btree
+  add_index "member_recent_requests", ["recent_id", "recent_type"], name: "index_member_recent_requests_on_recent_id_and_recent_type", using: :btree
 
   create_table "member_report_comments", force: true do |t|
     t.integer  "member_id"

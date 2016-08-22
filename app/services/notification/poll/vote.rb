@@ -9,7 +9,7 @@ class Notification::Poll::Vote
     @poll = poll
     @anonymous = anonymous
 
-    create_notification(recipient_list, type, message, data, log: true)
+    create_request_and_notification(recipient_list, type, message, data, log: true)
   end
 
   def type

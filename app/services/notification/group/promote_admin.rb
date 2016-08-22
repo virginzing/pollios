@@ -7,11 +7,11 @@ class Notification::Group::PromoteAdmin
     @a_member = a_member
     @group = group
 
-    create_notification(recipient_list, type, message, data)
+    create_request_and_notification(recipient_list, type, message, data)
   end
 
   def type
-    'request'
+    nil
   end
 
   def recipient_list

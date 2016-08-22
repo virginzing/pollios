@@ -9,7 +9,7 @@ class Notification::Member::FriendsRequest
     @a_member = a_member
     @action = options['action']
 
-    create_notification(recipient_list, type, message, data)
+    create_request_and_notification(recipient_list, type, message, data)
   end
 
   def type

@@ -9,7 +9,7 @@ class Notification::Group::Approve
     @a_member = a_member
     @group = group
 
-    create_notification(recipient_list, type, message, data)
+    create_request_and_notification(recipient_list, type, message, data)
   end
 
   def type

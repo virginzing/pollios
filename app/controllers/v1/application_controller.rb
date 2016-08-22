@@ -1,6 +1,6 @@
 module V1
-  class ApplicationController < ActionController::Base
-    rescue_from ArgumentError, with: :not_found_handler
+  class ApplicationController < ::ApplicationController
+    # rescue_from ArgumentError, with: :not_found_handler
     rescue_from ActionController::RoutingError, with: :not_found_handler
 
     private

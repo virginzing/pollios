@@ -1,0 +1,18 @@
+.title-container {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 20px;
+
+  > .button-group {
+    align-self: center;
+    margin-left: auto;
+  }
+
+  @media (max-width: $screen-sm) {
+    flex-flow: column nowrap;
+
+    .title {
+      margin-bottom: 20px;
+    }
+  }
+}
