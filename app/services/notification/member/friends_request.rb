@@ -13,7 +13,7 @@ class Notification::Member::FriendsRequest
   end
 
   def type
-    'request' 
+    'request'
   end
 
   def recipient_list
