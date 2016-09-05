@@ -1,10 +1,10 @@
 module Notification::Helper
 
-  def create_request_and_notification(recipient_list, type, message, data, options = { log: true, push: true })
+  def create(recipient_list, type, message, data, options = { log: true, push: true })
     recipient_list = recipients_receive_notification(recipient_list, type)
     message = truncate_message(message)
 
-    create_request(recipient_list, type, data)
+    create_request(recipient_list, type, data) if request_notification?(type)
     create_notification(recipient_list, message, data, options[:log], options[:push])
   end
 
@@ -30,17 +30,15 @@ module Notification::Helper
     limit_message + '.'
   end
 
-  def create_request(recipient_list, type, data)
-    return unless request_notification?(type)
+  def request_notification?(type)
+    type == 'request'
+  end
 
+  def create_request(recipient_list, type, data)
     recipient_list.each do |recipient|
       increase_request_count(recipient)
       create_recent_request(recipient, data)
     end
-  end
-
-  def request_notification?(type)
-    type == 'request'
   end
 
   def increase_request_count(recipient)

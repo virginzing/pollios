@@ -11,7 +11,7 @@ class Notification::Poll::Mention
 
     @poll = comment.poll
 
-    create_request_and_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type

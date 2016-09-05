@@ -8,7 +8,7 @@ class Notification::Poll::Create
     @member = member
     @poll = poll
 
-    create_request_and_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type

@@ -11,7 +11,7 @@ class Notification::Group::Invite
     @poke = options[:poke] || false
     @trigger = options[:trigger] || false
 
-    create_request_and_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type
