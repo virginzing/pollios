@@ -99,7 +99,7 @@ module Notification::Helper
 
   def recipient_never_received_notification_from_create_poll_id(action, recipient, poll_id)
     action != 'Create' || recipient.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
-      , "%action: #{ACTION[:create]}%", "%poll_id: #{poll_id}%").empty?
+      , "%action: Create%", "%poll_id: #{poll_id}%").empty?
   end
 
   def create_notification_log(recipient_list, message, data)
