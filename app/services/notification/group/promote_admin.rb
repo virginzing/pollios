@@ -2,8 +2,10 @@ class Notification::Group::PromoteAdmin
   include Notification::Helper
   include SymbolHash
 
+  attr_reader :sender, :a_member, :group
+
   def initialize(member, a_member, group)
-    @member = member
+    @sender = member
     @a_member = a_member
     @group = group
 
@@ -19,7 +21,7 @@ class Notification::Group::PromoteAdmin
   end
 
   def message
-    member.fullname + " promoted you to administrator of #{@group.name} group"
+    sender.fullname + " promoted you to administrator of #{group.name} group"
   end
 
   def data

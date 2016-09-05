@@ -10,7 +10,7 @@ module Notification::Helper
 
   def recipients_receive_notification(recipient_list, type = nil)
     return recipient_list if type.nil?
-    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq - [member]
+    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq - [sender]
   end
 
   def truncate_message(message, limit_message_byte = 90, decrement_byte = 8)
@@ -103,7 +103,7 @@ module Notification::Helper
   end
 
   def create_notification_log(recipient_list, message, data)
-    sender_id = (member.present? ? member.id : nil)
+    sender_id = (sender.present? ? sender.id : nil)
 
     recipient_list.each do |recipient|
       data.merge!(notify: recipient.notification_count)

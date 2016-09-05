@@ -2,10 +2,10 @@ class Notification::Group::Join
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :group
+  attr_reader :sender, :group
 
   def initialize(member, group)
-    @member = member
+    @sender = member
     @group = group
 
     create(recipient_list, type, message, data)
@@ -20,7 +20,7 @@ class Notification::Group::Join
   end
 
   def message
-    member.fullname + " joined #{group.name} group"
+    sender.fullname + " joined #{group.name} group"
   end
 
   def data
@@ -36,7 +36,7 @@ class Notification::Group::Join
   private
 
   def members_of_group
-    Group::MemberList.new(group, viewing_member: member).active
+    Group::MemberList.new(group, viewing_member: sender).active
   end
 
 end

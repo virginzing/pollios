@@ -2,10 +2,10 @@ class Notification::Poll::Create
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll
+  attr_reader :sender, :poll
 
   def initialize(member, poll)
-    @member = member
+    @sender = member
     @poll = poll
 
     create(recipient_list, type, message, data)
@@ -23,7 +23,7 @@ class Notification::Poll::Create
   end
 
   def message
-    member.fullname + " added a new poll: \"#{poll.title}\""
+    sender.fullname + " added a new poll: \"#{poll.title}\""
   end
 
   def data
@@ -44,14 +44,14 @@ class Notification::Poll::Create
   end
 
   def member_listing_service
-    Member::MemberList.new(member)
+    Member::MemberList.new(sender)
   end
 
   def friends_and_followers
     friends = member_listing_service.friends
     followers = member_listing_service.followers
 
-    member.citizen? ? friends : (friends | followers)
+    sender.citizen? ? friends : (friends | followers)
   end
 
   def blocked_members

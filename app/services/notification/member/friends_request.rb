@@ -2,10 +2,10 @@ class Notification::Member::FriendsRequest
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :a_member, :action
+  attr_reader :sender, :a_member, :action
 
   def initialize(member, a_member, options = {})
-    @member = member
+    @sender = member
     @a_member = a_member
     @action = options['action']
 
@@ -21,14 +21,14 @@ class Notification::Member::FriendsRequest
   end
 
   def message
-    return member.fullname + ' had accepted your friend request' if action == ACTION[:become_friend]
-    member.fullname + ' request friend with you'
+    return sender.fullname + ' had accepted your friend request' if action == ACTION[:become_friend]
+    sender.fullname + ' request friend with you'
   end
 
   def data
     @data ||= {
       type: TYPE[:friend],
-      member_id: member.id,
+      member_id: sender.id,
       action: action,
       friend_id: a_member.id,
       worker: WORKER[:friends_request]

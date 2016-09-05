@@ -2,10 +2,10 @@ class Notification::Poll::CreateToGroup
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :group
+  attr_reader :sender, :poll, :group
 
   def initialize(member, poll, group)
-    @member = member
+    @sender = member
     @poll = poll
     @group = group
 
@@ -21,7 +21,7 @@ class Notification::Poll::CreateToGroup
   end
 
   def message
-    member.fullname + " asked in #{group.name}: \"#{@poll.title}\""
+    sender.fullname + " asked in #{group.name}: \"#{poll.title}\""
   end
 
   def data
@@ -44,7 +44,7 @@ class Notification::Poll::CreateToGroup
   end
 
   def blocked_members
-    member_listing_service = Member::MemberList.new(member)
+    member_listing_service = Member::MemberList.new(sender)
     
     member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
   end

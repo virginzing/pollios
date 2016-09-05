@@ -2,10 +2,10 @@ class Notification::Poll::Comment
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :comment_message, :poll_creator
+  attr_reader :sender, :poll, :comment_message, :poll_creator
 
   def initialize(member, poll, comment_message)
-    @member = member
+    @sender = member
     @poll = poll
     @comment_message = comment_message
 
@@ -35,7 +35,7 @@ class Notification::Poll::Comment
   private
 
   def onw_poll?
-    member.id == poll_creator.id
+    sender.id == poll_creator.id
   end
 
   def create_from_owner_poll
@@ -54,15 +54,15 @@ class Notification::Poll::Comment
   end
 
   def message_form_poll_creator
-    member.fullname + " also commented on his'poll: \"#{adjustment_message}\""
+    sender.fullname + " also commented on his'poll: \"#{adjustment_message}\""
   end
 
   def message_form_member_to_a_member
-    member.fullname + " also commented on #{poll_creator}'s poll: \"#{adjustment_message}\""
+    sender.fullname + " also commented on #{poll_creator}'s poll: \"#{adjustment_message}\""
   end
 
   def message_from_member_to_creator
-    member.fullname + " commented your poll: \"#{poll.title}\""
+    sender.fullname + " commented your poll: \"#{poll.title}\""
   end
 
   def adjustment_message

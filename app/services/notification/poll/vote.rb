@@ -2,10 +2,10 @@ class Notification::Poll::Vote
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :anonymous
+  attr_reader :sender, :poll, :anonymous
 
   def initialize(member, poll, anonymous = false)
-    @member = member
+    @sender = member
     @poll = poll
     @anonymous = anonymous
 
@@ -21,7 +21,7 @@ class Notification::Poll::Vote
   end
 
   def message
-    name_or_anonymous(member) + " voted a poll: \"#{poll.title}\""
+    name_or_anonymous(sender) + " voted a poll: \"#{poll.title}\""
   end
 
   def data
