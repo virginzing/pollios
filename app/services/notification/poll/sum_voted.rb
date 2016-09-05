@@ -2,7 +2,7 @@ class Notification::Poll::SumVoted
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :poll, :member
+  attr_reader :poll
 
   def initialize(poll)
     @poll = poll

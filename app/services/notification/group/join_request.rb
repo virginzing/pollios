@@ -16,7 +16,7 @@ class Notification::Group::JoinRequest
   end
 
   def recipient_list
-    Group::MemberList.new(group, viewing_member: member).admins
+    admins_of_group
   end
 
   def message
@@ -31,6 +31,12 @@ class Notification::Group::JoinRequest
       group: GroupNotifySerializer.new(group).as_json,
       worker: WORKER[:request_group]
     }
+  end
+
+  private
+
+  def admins_of_group
+    Group::MemberList.new(group, viewing_member: member).admins
   end
 
 end

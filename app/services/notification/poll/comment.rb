@@ -11,14 +11,7 @@ class Notification::Poll::Comment
 
     @poll_creator = poll.member
 
-    if onw_poll?
-      create(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
-    else
-      create(recipient_list - [poll_creator], type \
-        , message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
-
-      create([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
-    end
+    onw_poll? ? create_from_owner_poll : create_from_member
   end
 
   def type
@@ -37,6 +30,21 @@ class Notification::Poll::Comment
       series: poll.series,
       worker: WORKER[:comment_poll]
     }
+  end
+
+  private
+
+  def onw_poll?
+    member.id == poll_creator.id
+  end
+
+  def create_from_owner_poll
+    create(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
+  end
+
+  def create_from_member
+    create(recipient_list - [poll_creator], type, message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
+    create([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
   end
 
   def member_watched_list
@@ -66,12 +74,6 @@ class Notification::Poll::Comment
     mention_ids = []
     comment_message.gsub(/@\[\d+\]/) { |mentioning| mentioning.gsub(/\d+/) { |number| mention_ids << number } }
     mention_ids.map(&:to_i)
-  end
-
-  private
-
-  def onw_poll?
-    member.id == poll_creator.id
   end
 
 end

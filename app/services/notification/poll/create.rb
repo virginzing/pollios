@@ -17,13 +17,7 @@ class Notification::Poll::Create
   end
 
   def recipient_list
-    member_listing_service = Member::MemberList.new(member)
-    blocked_members = member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
-
-    return Member.all - blocked_members if poll.public
-
-    recipient_list = member_listing_service.friends
-    recipient_list << member_listing_service.followers unless member.citizen?
+    recipient_list = poll.public ? all_member : friends_and_followers
 
     recipient_list - blocked_members
   end
@@ -43,4 +37,24 @@ class Notification::Poll::Create
     }
   end
 
+  private
+
+  def all_member
+    Member.all
+  end
+
+  def member_listing_service
+    Member::MemberList.new(member)
+  end
+
+  def friends_and_followers
+    friends = member_listing_service.friends
+    followers = member_listing_service.followers
+
+    member.citizen? ? friends : (friends | followers)
+  end
+
+  def blocked_members
+    member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
+  end
 end

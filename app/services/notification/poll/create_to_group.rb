@@ -17,12 +17,7 @@ class Notification::Poll::CreateToGroup
   end
 
   def recipient_list
-    group_member_listing_service = Group::MemberList.new(group)
-    recipient_list = group_member_listing_service.active
-
-    member_listing_service = Member::MemberList.new(member)
-    blocked_members = member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
-    recipient_list - blocked_members
+    members_of_group - blocked_members
   end
 
   def message
@@ -40,6 +35,18 @@ class Notification::Poll::CreateToGroup
       group_id: group.id,
       group: GroupNotifySerializer.new(group).as_json
     }
+  end
+
+  private
+
+  def members_of_group
+    group_member_listing_service = Group::MemberList.new(group)
+  end
+
+  def blocked_members
+    member_listing_service = Member::MemberList.new(member)
+    
+    member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
   end
 
 end
