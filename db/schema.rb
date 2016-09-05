@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 20160805083443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
   enable_extension "pg_trgm"
   enable_extension "unaccent"
+  enable_extension "hstore"
 
   create_table "access_webs", force: true do |t|
     t.integer  "member_id"
@@ -90,7 +90,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
   add_index "apn_device_groupings", ["group_id"], name: "index_apn_device_groupings_on_group_id", using: :btree
 
   create_table "apn_devices", force: true do |t|
-    t.string   "token",                                                                     null: false
+    t.string   "token",                                                                              null: false
     t.integer  "member_id"
     t.string   "api_token"
     t.datetime "created_at"
@@ -98,8 +98,8 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.datetime "last_registered_at"
     t.integer  "app_id"
     t.boolean  "receive_notification", default: true
-    t.hstore   "model",                default: {"name"=>nil, "type"=>nil, "version"=>nil}
-    t.hstore   "os",                   default: {"name"=>nil, "version"=>nil}
+    t.hstore   "model",                default: "\"name\"=>NULL, \"type\"=>NULL, \"version\"=>NULL"
+    t.hstore   "os",                   default: "\"name\"=>NULL, \"version\"=>NULL"
   end
 
   add_index "apn_devices", ["member_id"], name: "index_apn_devices_on_member_id", using: :btree
@@ -480,7 +480,6 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.integer  "authorize_invite"
     t.text     "description"
     t.boolean  "leave_group",      default: true
-    t.integer  "group_type"
     t.string   "cover"
     t.boolean  "admin_post_only",  default: false
     t.boolean  "need_approve",     default: true
@@ -493,6 +492,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.boolean  "exclusive",        default: false
     t.datetime "deleted_at"
     t.boolean  "opened",           default: false
+    t.integer  "group_type"
   end
 
   add_index "groups", ["deleted_at"], name: "index_groups_on_deleted_at", using: :btree
@@ -716,6 +716,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.datetime "updated_at"
     t.integer  "friend_limit"
     t.integer  "member_type",                default: 0
+    t.integer  "province_id"
     t.string   "key_color"
     t.string   "cover"
     t.text     "description"
@@ -760,7 +761,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.datetime "sync_fb_last_at"
     t.string   "list_fb_id",                 default: [],                 array: true
     t.boolean  "show_recommend",             default: false
-    t.hstore   "notification",               default: {},    null: false
+    t.hstore   "notification",               default: "",    null: false
     t.boolean  "show_search",                default: true
     t.integer  "polls_count",                default: 0
     t.integer  "history_votes_count",        default: 0
@@ -771,6 +772,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
   add_index "members", ["fullname"], name: "index_members_on_fullname", using: :btree
   add_index "members", ["member_type"], name: "index_members_on_member_type", where: "(member_type = 3)", using: :btree
   add_index "members", ["notification"], name: "index_members_on_notification", using: :gist
+  add_index "members", ["province_id"], name: "index_members_on_province_id", using: :btree
   add_index "members", ["public_id"], name: "index_members_on_public_id", using: :btree
   add_index "members", ["setting"], name: "index_members_on_setting", using: :gist
   add_index "members", ["show_recommend"], name: "index_members_on_show_recommend", where: "(show_recommend = true)", using: :btree
@@ -920,7 +922,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.integer  "vote_all",       default: 0
     t.integer  "view_all",       default: 0
     t.datetime "expire_date"
-    t.datetime "start_date",     default: '2014-02-03 15:36:16'
+    t.datetime "start_date",     default: '2016-09-05 10:01:35'
     t.integer  "campaign_id"
     t.integer  "share_count",    default: 0
     t.integer  "type_series",    default: 0
@@ -929,9 +931,9 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.string   "in_group_ids",   default: "0"
     t.boolean  "allow_comment",  default: true
     t.integer  "comment_count",  default: 0
-    t.boolean  "qr_only"
+    t.boolean  "qr_only",        default: true
     t.string   "qrcode_key"
-    t.boolean  "require_info"
+    t.boolean  "require_info",   default: true
     t.boolean  "in_group",       default: false
     t.integer  "recurring_id"
     t.boolean  "feedback",       default: false
@@ -1008,7 +1010,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.string   "photo_poll"
     t.datetime "expire_date"
     t.integer  "view_all",                default: 0
-    t.datetime "start_date",              default: '2014-02-03 15:36:16'
+    t.datetime "start_date",              default: '2016-09-05 10:01:35'
     t.boolean  "series",                  default: false
     t.integer  "poll_series_id"
     t.integer  "choice_count"
@@ -1023,8 +1025,8 @@ ActiveRecord::Schema.define(version: 20160805083443) do
     t.boolean  "allow_comment",           default: true
     t.integer  "comment_count",           default: 0
     t.string   "member_type"
-    t.boolean  "qr_only"
-    t.boolean  "require_info"
+    t.boolean  "qr_only",                 default: false
+    t.boolean  "require_info",            default: false
     t.boolean  "expire_status",           default: false
     t.boolean  "creator_must_vote",       default: true
     t.boolean  "in_group",                default: false
@@ -1060,7 +1062,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
   add_index "polls", ["require_info"], name: "index_polls_on_require_info", where: "(require_info = true)", using: :btree
   add_index "polls", ["series"], name: "index_polls_on_series", where: "(series = true)", using: :btree
-  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = (-1))", using: :btree
+  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = '-1'::integer)", using: :btree
   add_index "polls", ["system_poll"], name: "index_polls_on_system_poll", where: "(system_poll = true)", using: :btree
   add_index "polls", ["type_poll"], name: "index_polls_on_type_poll", using: :btree
 
