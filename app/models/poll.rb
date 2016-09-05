@@ -58,7 +58,7 @@ class Poll < ActiveRecord::Base
   include PollsHelper
   include PollAdmin
 
-
+  attr_accessor :api_version
   attr_accessor :group_id, :tag_tokens, :share_poll_of_id, :choice_one, :choice_two, :choice_three, :remove_campaign, :choice_params
 
   cattr_accessor :custom_error_message
@@ -342,23 +342,32 @@ class Poll < ActiveRecord::Base
   end
 
   def send_notification
+    return unless api_version == 'legacy'
+
     unless Rails.env.test?
       if in_group
         in_group_ids.split(",").each do |group_id|
           unless qr_only
-            AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
+            # AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
+            V1::Poll::CreateToGroupWorker.perform_async(member_id, id , group_id)
           end
         end
       else
         unless qr_only || series
-          if public
-            PollPublicWorker.perform_async(member_id, id)
-          else
-            PollWorker.perform_async(self.member_id, self.id)
-          end
+          # if public
+          #   PollPublicWorker.perform_async(member_id, id)
+
+          # else
+          #   PollWorker.perform_async(self.member_id, self.id)
+          # end
+          V1::Poll::CreateWorker.perform_async(member_id, id)
         end
       end
     end
+  end
+
+  def api_version
+    @api_version ||= 'legacy'
   end
 
   def get_original_images

@@ -36,6 +36,8 @@ module Member::Private::PollAction
     end
   end
 
+  # TODO : refactor this AFTER remove LEGACY API
+
   def process_create
     new_poll = Poll.create!(member_id: member.id \
       , title: poll_params[:title] \
@@ -46,11 +48,14 @@ module Member::Private::PollAction
       , in_group_ids: in_group_ids \
       , thumbnail_type: poll_params[:thumbnail_type] \
       , campaign_id: poll_params[:campaign_id] \
-      , in_group: poll_in_group)
+      , in_group: poll_in_group? \
+      , api_version: 'v1')
 
     poll_set(new_poll)
     own_poll_action(new_poll)
     decrease_point
+
+    send_crete_notification(new_poll)
 
     new_poll
   end
@@ -99,7 +104,7 @@ module Member::Private::PollAction
     #   , member_type: member_type \
     #   , qr_only: false \
     #   , require_info: false \
-    #   , in_group: poll_in_group)
+    #   , in_group: poll_in_group?)
     new_poll.update!(expire_date: expire_date \
       , poll_series_id: 0 \
       , choice_count: choice_count \
@@ -123,11 +128,11 @@ module Member::Private::PollAction
   end
 
   def in_group_ids
-    return unless poll_in_group
+    return unless poll_in_group?
     poll_params[:group_ids].join(',')
   end
 
-  def poll_in_group
+  def poll_in_group?
     poll_params[:group_ids].present?
   end
 
@@ -155,11 +160,11 @@ module Member::Private::PollAction
 
   def poll_member(new_poll)
     member.poll_members.create!(poll_id: new_poll.id, share_poll_of_id: 0, public: poll_public \
-      , expire_date: expire_date, series: false, in_group: poll_in_group)
+      , expire_date: expire_date, series: false, in_group: poll_in_group?)
   end
 
   def poll_group(new_poll)
-    return unless poll_in_group
+    return unless poll_in_group?
     groups = Group.where(id: poll_params[:group_ids])
     groups.each do |group|
       group.poll_groups.create!(poll_id: new_poll.id, member_id: member.id)
@@ -471,6 +476,16 @@ module Member::Private::PollAction
 
   def clear_reported_comment_cached_for_member
     FlushCached::Member.new(member).clear_list_report_comments
+  end
+
+  def send_crete_notification(new_poll)
+    poll_in_group? ? send_crete_to_group_notification(new_poll) : V1::Poll::CreateWorker.perform_async(member.id, new_poll.id)
+  end
+
+  def send_crete_to_group_notification(new_poll)
+    poll_params[:group_ids].each do |group_id|
+      V1::Poll::CreateToGroupWorker.perform_async(member.id, new_poll.id , group_id)
+    end
   end
 
   def send_report_notification
