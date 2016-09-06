@@ -21,7 +21,7 @@ class Notification::Member::FriendsRequest
   end
 
   def message
-    return sender.fullname + ' had accepted your friend request' if action == ACTION[:become_friend]
+    return sender.fullname + ' accepted your friend request' if action == ACTION[:become_friend]
     sender.fullname + ' request friend with you'
   end
 

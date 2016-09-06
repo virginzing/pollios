@@ -20,7 +20,7 @@ class Notification::Group::Join
   end
 
   def message
-    sender.fullname + " joined #{group.name} group"
+    sender.fullname + " joined in #{group.name} group"
   end
 
   def data

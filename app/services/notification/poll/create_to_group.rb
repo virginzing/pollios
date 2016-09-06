@@ -21,7 +21,7 @@ class Notification::Poll::CreateToGroup
   end
 
   def message
-    sender.fullname + " asked in #{group.name}: \"#{poll.title}\""
+    sender.fullname + " asked in #{group.name} \"#{poll.title}\""
   end
 
   def data

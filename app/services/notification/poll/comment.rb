@@ -59,23 +59,23 @@ class Notification::Poll::Comment
   end
 
   def message_form_poll_creator
-    sender.fullname + " also commented on: \"#{adjustment_message}\""
+    sender.fullname + " also commented in \"#{poll.title}\""
   end
 
   def message_form_member_to_a_member
-    sender.fullname + " also commented on #{poll_creator}'s poll: \"#{adjustment_message}\""
+    sender.fullname + " also commented in #{poll_creator}'s poll \"#{poll.title}\""
   end
 
   def message_from_member_to_creator
-    sender.fullname + " commented your poll: \"#{poll.title}\""
+    sender.fullname + " commented in \"#{poll.title}\""
   end
 
-  def adjustment_message
-    return comment_message unless mentioning?
+  # def adjustment_message
+  #   return comment_message unless mentioning?
 
-    mention_name = mention_list.each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
-    comment_message.gsub(/@\[\d+\]/) { |mentioning| mention_name[mentioning.scan(/\d+/).first.to_i] }
-  end
+  #   mention_name = mention_list.each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
+  #   comment_message.gsub(/@\[\d+\]/) { |mentioning| mention_name[mentioning.scan(/\d+/).first.to_i] }
+  # end
 
   def mentioning?
     mention_list.empty?

@@ -32,7 +32,7 @@ class Notification::Poll::SumVoted
                 " and #{recently_voter_list.size - 2} other people"
     end
 
-    message + " voted a poll: \"#{poll.title}\""
+    message + " voted on \"#{poll.title}\""
   end
 
   def data

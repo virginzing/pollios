@@ -43,14 +43,14 @@ class Notification::Group::Invite
   private
 
   def invite_by_trigger_message
-    group.name + ' invited you join in'
+    group.name + ' invited you join in group'
   end
 
   def poke_invite_message
-    sender.fullname + " poke invited you in: \"#{group.name}\""
+    sender.fullname + " poke invited you join in \"#{group.name}\" group"
   end
 
   def invite_message
-    sender.fullname + " invited you in: \"#{group.name}\""
+    sender.fullname + " invited you join in \"#{group.name}\" group"
   end
 end

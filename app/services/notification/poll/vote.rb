@@ -21,7 +21,7 @@ class Notification::Poll::Vote
   end
 
   def message
-    name_or_anonymous(sender) + " voted a poll: \"#{poll.title}\""
+    name_or_anonymous(sender) + " voted on \"#{poll.title}\""
   end
 
   def data

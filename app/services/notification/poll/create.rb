@@ -12,16 +12,16 @@ class Notification::Poll::Create
   end
 
   def type
-    return 'public' if poll.public
+    return 'public' if public_poll?
     'friend'
   end
 
   def recipient_list
-    poll.public ? all_member : friends_and_followers
+    public_poll? ? all_member : friends_and_followers
   end
 
   def message
-    sender.fullname + " added a new poll: \"#{poll.title}\""
+    sender.fullname + " asked \"#{poll.title}\""
   end
 
   def data
@@ -36,6 +36,10 @@ class Notification::Poll::Create
   end
 
   private
+
+  def public_poll?
+    poll.public
+  end
 
   def all_member
     Member.viewing_by_member(sender)
