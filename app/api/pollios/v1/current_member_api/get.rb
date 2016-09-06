@@ -163,7 +163,7 @@ module Pollios::V1::CurrentMemberAPI
 
           desc 'returns list of recommend group' 
           get '/groups' do
-            present :groups, recommendations.facebooks \
+            present :groups, recommendations.groups \
             , with: Pollios::V1::Shared::GroupForListEntity
           end
         end
