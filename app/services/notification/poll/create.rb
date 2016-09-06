@@ -17,9 +17,7 @@ class Notification::Poll::Create
   end
 
   def recipient_list
-    recipient_list = poll.public ? all_member : friends_and_followers
-
-    recipient_list - blocked_members
+    poll.public ? all_member : friends_and_followers
   end
 
   def message
@@ -40,11 +38,11 @@ class Notification::Poll::Create
   private
 
   def all_member
-    Member.all
+    Member.viewing_by_member(sender)
   end
 
   def member_listing_service
-    Member::MemberList.new(sender)
+    Member::MemberList.new(sender, viewing_member: sender)
   end
 
   def friends_and_followers
@@ -52,9 +50,5 @@ class Notification::Poll::Create
     followers = member_listing_service.followers
 
     sender.citizen? ? friends : (friends | followers)
-  end
-
-  def blocked_members
-    member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
   end
 end

@@ -63,9 +63,7 @@ class Notification::Poll::SumVoted
   end
 
   def member_watched_list
-    Member.joins('LEFT OUTER JOIN watcheds ON members.id = watcheds.member_id')
-      .where("watcheds.poll_id = #{poll.id}")
-      .where('watcheds.poll_notify')
+    Poll::MemberList.new(poll, viewing_member: sender).watched
   end
 
 end

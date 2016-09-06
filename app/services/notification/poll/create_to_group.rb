@@ -17,7 +17,7 @@ class Notification::Poll::CreateToGroup
   end
 
   def recipient_list
-    members_of_group - blocked_members
+    members_of_group
   end
 
   def message
@@ -40,13 +40,7 @@ class Notification::Poll::CreateToGroup
   private
 
   def members_of_group
-    group_member_listing_service = Group::MemberList.new(group)
-  end
-
-  def blocked_members
-    member_listing_service = Member::MemberList.new(sender)
-    
-    member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
+    Group::MemberList.new(group, viewing_member: sender).active
   end
 
 end
