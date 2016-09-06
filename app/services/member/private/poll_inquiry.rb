@@ -91,6 +91,40 @@ module Member::Private::PollInquiry
     member_listing.blocks_ids.include?(poll.member_id)
   end
 
+  def poll_in_public?
+    poll.public
+  end
+
+  def poll_in_groups?
+    poll.in_group
+  end
+
+  def poll_in_public_hash
+    { in: 'Public' }
+  end
+
+  def poll_in_groups_hash
+    { 
+      in: 'Group',
+      group_detail: poll_in_groups_details
+    }
+  end
+
+  def poll_in_friend_following 
+    { in: 'Friends & Following' }
+  end
+
+  def poll_in_groups_details
+    groups_available = Member::GroupList.new(member).groups_available_for_poll(poll)
+
+    groups_as_json = []
+    groups_available.each do |group|
+      groups_as_json << GroupDetailSerializer.new(group).as_json
+    end
+
+    groups_as_json
+  end
+
   def voted_hash
     { voted: true, voted_choice_id: voted_choice_for_member[:choice_id] }.merge(voting_detail)
   end
