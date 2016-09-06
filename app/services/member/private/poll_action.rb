@@ -55,7 +55,7 @@ module Member::Private::PollAction
     own_poll_action(new_poll)
     decrease_point
 
-    send_crete_notification(new_poll)
+    send_create_notification(new_poll)
 
     new_poll
   end
@@ -480,15 +480,21 @@ module Member::Private::PollAction
     FlushCached::Member.new(member).clear_list_report_comments
   end
 
-  def send_crete_notification(new_poll)
-    poll_in_group? ? send_crete_to_group_notification(new_poll) : V1::Poll::CreateWorker.perform_async(member.id, new_poll.id)
+  def send_create_notification(new_poll)
+    poll_in_group? ? send_create_to_groups_notification(new_poll) : send_create_to_friends_followings_notification(new_poll)
   end
 
-  def send_crete_to_group_notification(new_poll)
+  def send_create_to_groups_notification(new_poll)
     poll_params[:group_ids].each do |group_id|
       V1::Poll::CreateToGroupWorker.perform_async(member.id, new_poll.id , group_id)
     end
   end
+
+  def send_create_to_friends_followings_notification(new_poll)
+    V1::Poll::CreateWorker.perform_async(member.id, new_poll.id)
+  end
+
+  # TODO : move this to service & worker v1
 
   def send_report_notification
     ReportPollWorker.perform_async(member.id, poll.id)
