@@ -346,11 +346,13 @@ class Poll < ActiveRecord::Base
 
     unless Rails.env.test?
       if in_group
-        in_group_ids.split(",").each do |group_id|
-          unless qr_only
-            # AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
-            V1::Poll::CreateToGroupWorker.perform_async(member_id, id , group_id)
-          end
+        # in_group_ids.split(",").each do |group_id|
+        #   unless qr_only
+        #     AddPollToGroupWorker.perform_async(self.member_id, group_id.to_i, self.id)
+        #   end
+        # end
+        unless qr_only
+          V1::Poll::CreateToGroupWorker.perform_async(member_id, id, in_group_ids.split(','))
         end
       else
         unless qr_only || series

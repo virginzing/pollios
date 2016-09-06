@@ -76,7 +76,7 @@ module Notification::Helper
     log = options[:log]
     push = options[:push]
 
-    increase_notification_count(recipient_list, data[:action], data[:poll_id] || 0)
+    increase_notification_count(recipient_list)
 
     create_notification_log(recipient_list, message, data) if log
     create_notification_for_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) if push
@@ -92,9 +92,9 @@ module Notification::Helper
     recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq
   end
 
-  def increase_notification_count(recipient_list, action, poll_id = 0)
+  def increase_notification_count(recipient_list)
     recipient_list.each do |recipient|
-      recipient.increment!(:notification_count) if first_create_poll_notification(action, recipient, poll_id)
+      recipient.increment!(:notification_count)
       recipient.notification_count
     end
   end
@@ -114,12 +114,6 @@ module Notification::Helper
     limit_message += "...\"" if limit_message != message
 
     limit_message + '.'
-  end
-
-  # TODO : remove this after fix create poll notification logic
-  def first_create_poll_notification(action, recipient, poll_id)
-    action != 'Create' || recipient.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
-      , '%action: Create%', "%poll_id: #{poll_id}%").empty?
   end
 
   def create_notification_log(recipient_list, message, data)

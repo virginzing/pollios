@@ -485,9 +485,7 @@ module Member::Private::PollAction
   end
 
   def send_create_to_groups_notification(new_poll)
-    poll_params[:group_ids].each do |group_id|
-      V1::Poll::CreateToGroupWorker.perform_async(member.id, new_poll.id , group_id)
-    end
+    V1::Poll::CreateToGroupWorker.perform_async(member.id, new_poll.id, poll_params[:group_ids])
   end
 
   def send_create_to_friends_followings_notification(new_poll)

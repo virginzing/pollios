@@ -2,14 +2,16 @@ class Notification::Poll::CreateToGroup
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :sender, :poll, :group
+  attr_reader :sender, :poll, :group_list
 
-  def initialize(member, poll, group)
+  def initialize(member, poll, group_list)
     @sender = member
     @poll = poll
-    @group = group
+    @group_list = group_list
 
-    create(recipient_list, type, message, data)
+    members_of_all_group.each do |recipient|
+      create(recipient, type, message_for(recipient), data)
+    end
   end
 
   def type
@@ -17,11 +19,21 @@ class Notification::Poll::CreateToGroup
   end
 
   def recipient_list
-    members_of_group
+    members_of_all_group
   end
 
-  def message
-    sender.fullname + " asked in #{group.name} \"#{poll.title}\""
+  def message_for(recipient)
+    available_groups = Member::GroupList.new(recipient).groups_available_for_poll(poll)
+
+    case available_groups.size
+
+    when 1
+      groups = available_groups.first.name
+    else
+      groups = "#{available_groups.size} groups"
+    end
+
+    sender.fullname + " asked in #{groups} \"#{poll.title}\""
   end
 
   def data
@@ -39,8 +51,8 @@ class Notification::Poll::CreateToGroup
 
   private
 
-  def members_of_group
-    Group::MemberList.new(group, viewing_member: sender).active
+  def members_of_all_group
+    group_list.map { |group| Group::MemberList.new(group, viewing_member: sender).active }.flatten.uniq
   end
 
 end
