@@ -1,16 +1,34 @@
 module Notification::Helper
 
   def create(recipient_list, type, message, data, options = { log: true, push: true })
-    recipient_list = recipients_receive_notification(recipient_list, type)
+    recipient_list = fillter_recipients(recipient_list, type)
     message = truncate_message(message)
 
     create_request(recipient_list, type, data) if request_notification?(type)
     create_notification(recipient_list, message, data, options[:log], options[:push])
   end
 
-  def recipients_receive_notification(recipient_list, type = nil)
+  def fillter_recipients(recipient_list, type = nil)
+    recipient_list = fillter_recipients_sender(recipient_list)
+    recipient_list = fillter_recipients_outgoing_blocked(recipient_list)
+
     return recipient_list if type.nil?
-    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq - [sender]
+
+    fillter_recipients_turn_on_notification(recipient_list, type)
+  end
+
+  def fillter_recipients_sender(recipient_list)
+    recipient_list - [sender]
+  end
+
+  def fillter_recipients_outgoing_blocked(recipient_list)
+    blocked_members = Member::MemberList.new(sender, viewing_member: sender).blocks
+
+    recipient_list - blocked_members
+  end
+
+  def fillter_recipients_turn_on_notification(recipient_list, type)
+    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq
   end
 
   def truncate_message(message, limit_message_byte = 90, decrement_byte = 8)
