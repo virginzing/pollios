@@ -379,13 +379,15 @@ module Member::Private::PollAction
   end
 
   def process_comment
-    comment = poll.comments.create!(member_id: member.id, message: comment_params[:message])
+    comment = poll.comments.create!(member_id: member.id, message: comment_params[:message], api_version: 'v1')
     increase_comment_count
 
     mentioning(comment, comment_params[:mention_ids])
     process_watch
 
     MemberActiveRecord.record_member_active(member)
+
+    send_comment_notification(comment)
 
     Poll::CommentList.new(poll, viewing_member: member)
   end
@@ -505,5 +507,9 @@ module Member::Private::PollAction
     poll.update!(notify_state_at: Time.zone.now)
     # SumVotePollWorker.perform_in(1.minutes, poll.id)
     V1::Poll::SumVotedWorker.perform_in(1.minutes, poll.id)
+  end
+
+  def send_comment_notification(comment)
+    V1::Poll::CommentWorker.perform_async(member.id, comment.id)
   end
 end

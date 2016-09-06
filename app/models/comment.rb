@@ -16,6 +16,8 @@
 class Comment < ActiveRecord::Base
   acts_as_paranoid
 
+  attr_accessor :api_version
+
   belongs_to :poll
   belongs_to :member
 
@@ -29,7 +31,7 @@ class Comment < ActiveRecord::Base
   validates_presence_of :message
 
   after_commit :send_notification, on: :create
-  after_commit :create_notify_log, on: :create
+  # after_commit :create_notify_log, on: :create
 
   after_commit :flush_cache
 
@@ -48,14 +50,22 @@ class Comment < ActiveRecord::Base
   end)
 
   def send_notification
+    return unless api_version == 'legacy'
+
     unless Rails.env.test?
-      CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message } )
+      # CommentPollWorker.perform_async(self.member_id, self.poll_id, { comment_message: self.message } )
+
+      V1::Poll::CommentWorker.perform_async(member_id, poll_id, message)
     end
   end
 
-  def create_notify_log
-    Poll::CommentNotifyLog.new(self).create!
+  def api_version
+    @api_version ||= 'legacy'
   end
+
+  # def create_notify_log
+  #   Poll::CommentNotifyLog.new(self).create!
+  # end
 
   def create_mentions_list(mentioner, list_mentioned)
     list_member = Member.where(id: list_mentioned)
