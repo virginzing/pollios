@@ -83,11 +83,11 @@ class Member::MemberAction
     process_unblock
   end
 
-  def report(and_block)
+  def report(reason_message, and_block)
     can_report, message = can_report?
     fail ExceptionHandler::UnprocessableEntity, message unless can_report
 
-    process_report
+    process_report(reason_message)
     block if and_block
   end
 end
