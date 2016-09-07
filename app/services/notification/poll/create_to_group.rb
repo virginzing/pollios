@@ -19,7 +19,7 @@ class Notification::Poll::CreateToGroup
   end
 
   def recipient_list
-    members_of_all_group
+    members_of_groups
   end
 
   def message_for(recipient)
@@ -51,7 +51,7 @@ class Notification::Poll::CreateToGroup
 
   private
 
-  def members_of_all_group
+  def members_of_groups
     group_list.map { |group| Group::MemberList.new(group, viewing_member: sender).active }.flatten.uniq
   end
 

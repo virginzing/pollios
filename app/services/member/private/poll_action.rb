@@ -492,10 +492,9 @@ module Member::Private::PollAction
     V1::Poll::CreateWorker.perform_async(member.id, new_poll.id)
   end
 
-  # TODO : move this to service & worker v1
-
   def send_report_notification
-    ReportPollWorker.perform_async(member.id, poll.id)
+    # ReportPollWorker.perform_async(member.id, poll.id)
+    V1::Poll::ReportWorker.perform_async(member.id, poll.id, report_params[:message_preset])
   end
 
   def send_vote_notification
