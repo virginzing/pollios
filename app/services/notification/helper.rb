@@ -18,6 +18,8 @@ module Notification::Helper
   end
 
   def without_outgoing_blocked(recipient_list)
+    return recipient_list unless sender.present?
+
     blocked_members = Member::MemberList.new(sender, viewing_member: sender).blocks
 
     recipient_list - blocked_members
