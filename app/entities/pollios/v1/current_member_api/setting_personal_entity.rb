@@ -35,7 +35,7 @@ module Pollios::V1::CurrentMemberAPI
     end
 
     def gender
-      member.gender.value
+      member.gender.present? ? member.gender.value : nil
     end
 
   end
