@@ -63,7 +63,7 @@ class Notification::Poll::Comment
   end
 
   def message_form_member_to_a_member
-    sender.fullname + " also commented in #{poll_creator}'s poll \"#{poll.title}\""
+    sender.fullname + " also commented in #{poll_creator.fullname}'s poll \"#{poll.title}\""
   end
 
   def message_from_member_to_creator
