@@ -1,6 +1,6 @@
 module Notification::Helper
 
-  def create(recipient_list, type, message, data, options = nil)
+  def create(recipient_list, type, message, data, options = { log: true, push: true })
     recipient_list = fillter_recipients(recipient_list)
 
     create_request(recipient_list, data) if request_notification?(type)
