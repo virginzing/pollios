@@ -2,10 +2,11 @@ class Notification::Poll::SumVoted
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :poll
+  attr_reader :poll, :sender
 
   def initialize(poll)
     @poll = poll
+    @sender = nil
 
     create(recipient_list, type, message, data, push: true)
 
