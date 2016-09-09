@@ -11,7 +11,7 @@
 #  vote_all       :integer          default(0)
 #  view_all       :integer          default(0)
 #  expire_date    :datetime
-#  start_date     :datetime         default(2014-02-03 15:36:16 UTC)
+#  start_date     :datetime         default(2016-09-05 10:01:35 UTC)
 #  campaign_id    :integer
 #  share_count    :integer          default(0)
 #  type_series    :integer          default(0)
@@ -20,9 +20,9 @@
 #  in_group_ids   :string(255)      default("0")
 #  allow_comment  :boolean          default(TRUE)
 #  comment_count  :integer          default(0)
-#  qr_only        :boolean
+#  qr_only        :boolean          default(TRUE)
 #  qrcode_key     :string(255)
-#  require_info   :boolean
+#  require_info   :boolean          default(TRUE)
 #  in_group       :boolean          default(FALSE)
 #  recurring_id   :integer
 #  feedback       :boolean          default(FALSE)

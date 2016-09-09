@@ -36,6 +36,8 @@ module Member::Private::PollAction
     end
   end
 
+  # TODO : refactor this AFTER remove LEGACY API
+
   def process_create
     new_poll = Poll.create!(member_id: member.id \
       , title: poll_params[:title] \
@@ -46,11 +48,14 @@ module Member::Private::PollAction
       , in_group_ids: in_group_ids \
       , thumbnail_type: poll_params[:thumbnail_type] \
       , campaign_id: poll_params[:campaign_id] \
-      , in_group: poll_in_group)
+      , in_group: poll_in_group? \
+      , api_version: 'v1')
 
     poll_set(new_poll)
     own_poll_action(new_poll)
     decrease_point
+
+    send_create_notification(new_poll)
 
     new_poll
   end
@@ -99,7 +104,7 @@ module Member::Private::PollAction
     #   , member_type: member_type \
     #   , qr_only: false \
     #   , require_info: false \
-    #   , in_group: poll_in_group)
+    #   , in_group: poll_in_group?)
     new_poll.update!(expire_date: expire_date \
       , poll_series_id: 0 \
       , choice_count: choice_count \
@@ -123,11 +128,11 @@ module Member::Private::PollAction
   end
 
   def in_group_ids
-    return unless poll_in_group
+    return unless poll_in_group?
     poll_params[:group_ids].join(',')
   end
 
-  def poll_in_group
+  def poll_in_group?
     poll_params[:group_ids].present?
   end
 
@@ -155,11 +160,11 @@ module Member::Private::PollAction
 
   def poll_member(new_poll)
     member.poll_members.create!(poll_id: new_poll.id, share_poll_of_id: 0, public: poll_public \
-      , expire_date: expire_date, series: false, in_group: poll_in_group)
+      , expire_date: expire_date, series: false, in_group: poll_in_group?)
   end
 
   def poll_group(new_poll)
-    return unless poll_in_group
+    return unless poll_in_group?
     groups = Group.where(id: poll_params[:group_ids])
     groups.each do |group|
       group.poll_groups.create!(poll_id: new_poll.id, member_id: member.id)
@@ -374,13 +379,15 @@ module Member::Private::PollAction
   end
 
   def process_comment
-    comment = poll.comments.create!(member_id: member.id, message: comment_params[:message])
+    comment = poll.comments.create!(member_id: member.id, message: comment_params[:message], api_version: 'v1')
     increase_comment_count
 
     mentioning(comment, comment_params[:mention_ids])
     process_watch
 
     MemberActiveRecord.record_member_active(member)
+
+    send_comment_notification(comment)
 
     Poll::CommentList.new(poll, viewing_member: member)
   end
@@ -473,8 +480,21 @@ module Member::Private::PollAction
     FlushCached::Member.new(member).clear_list_report_comments
   end
 
+  def send_create_notification(new_poll)
+    poll_in_group? ? send_create_to_groups_notification(new_poll) : send_create_to_friends_followings_notification(new_poll)
+  end
+
+  def send_create_to_groups_notification(new_poll)
+    V1::Poll::CreateToGroupWorker.perform_async(member.id, new_poll.id, poll_params[:group_ids])
+  end
+
+  def send_create_to_friends_followings_notification(new_poll)
+    V1::Poll::CreateWorker.perform_async(member.id, new_poll.id)
+  end
+
   def send_report_notification
-    ReportPollWorker.perform_async(member.id, poll.id)
+    # ReportPollWorker.perform_async(member.id, poll.id)
+    V1::Poll::ReportWorker.perform_async(member.id, poll.id, report_params[:message_preset])
   end
 
   def send_vote_notification
@@ -490,5 +510,9 @@ module Member::Private::PollAction
     poll.update!(notify_state_at: Time.zone.now)
     # SumVotePollWorker.perform_in(1.minutes, poll.id)
     V1::Poll::SumVotedWorker.perform_in(1.minutes, poll.id)
+  end
+
+  def send_comment_notification(comment)
+    V1::Poll::CommentWorker.perform_async(member.id, comment.id)
   end
 end

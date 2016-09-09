@@ -1060,7 +1060,7 @@ ActiveRecord::Schema.define(version: 20160805083443) do
   add_index "polls", ["recurring_id"], name: "index_polls_on_recurring_id", using: :btree
   add_index "polls", ["require_info"], name: "index_polls_on_require_info", where: "(require_info = true)", using: :btree
   add_index "polls", ["series"], name: "index_polls_on_series", where: "(series = true)", using: :btree
-  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = (-1))", using: :btree
+  add_index "polls", ["status_poll"], name: "index_polls_on_status_poll", where: "(status_poll = '-1'::integer)", using: :btree
   add_index "polls", ["system_poll"], name: "index_polls_on_system_poll", where: "(system_poll = true)", using: :btree
   add_index "polls", ["type_poll"], name: "index_polls_on_type_poll", using: :btree
 

@@ -2,14 +2,14 @@ class Notification::Group::Approve
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :a_member, :group
+  attr_reader :sender, :a_member, :group
 
   def initialize(member, a_member, group)
-    @member = member
+    @sender = member
     @a_member = a_member
     @group = group
 
-    create_request_and_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type
@@ -21,7 +21,7 @@ class Notification::Group::Approve
   end
 
   def message
-    member.fullname + " had approved your request to join #{group.name} group"
+    sender.fullname + " approved your request to join in #{group.name} group"
   end
 
   def data

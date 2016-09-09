@@ -51,6 +51,13 @@ class Member::PollInquiry < Member::PollList
     ids_include?(reports, poll.id)
   end
 
+  def feed_info
+    return poll_in_public_hash if poll_in_public?
+    return poll_in_groups_hash if poll_in_groups?
+
+    poll_in_friend_following
+  end
+
   def voting_info
     return voted_hash if member_voted_choice.present?
 

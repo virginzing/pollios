@@ -1,46 +1,37 @@
 module Notification::Helper
 
-  def create_request_and_notification(recipient_list, type, message, data, options = { log: true, push: true })
-    recipient_list = recipients_receive_notification(recipient_list, type)
-    message = truncate_message(message)
+  def create(recipient_list, type, message, data, options)
+    recipient_list = fillter_recipients(recipient_list)
 
-    create_request(recipient_list, type, data)
-    create_notification(recipient_list, message, data, options[:log], options[:push])
+    create_request(recipient_list, data) if request_notification?(type)
+    create_notification(recipient_list, type, message, data, options)
   end
 
-  def recipients_receive_notification(recipient_list, type = nil)
-    return recipient_list if type.nil?
-    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq - [member]
+  def fillter_recipients(recipient_list)
+    recipient_list = without_sender(recipient_list)
+    
+    without_outgoing_blocked(recipient_list)
   end
 
-  def truncate_message(message, limit_message_byte = 90, decrement_byte = 8)
-    message = message.sub(/\n\n/, ' ')
-
-    limit_message = nil
-
-    loop do
-      limit_message_byte -= decrement_byte
-      limit_message = message.mb_chars.limit(limit_message_byte).to_s
-
-      break unless limit_message.to_json.bytesize > 92
-    end
-
-    limit_message += "...\"" if limit_message != message
-
-    limit_message + '.'
+  def without_sender(recipient_list)
+    recipient_list - [sender]
   end
 
-  def create_request(recipient_list, type, data)
-    return unless request_notification?(type)
+  def without_outgoing_blocked(recipient_list)
+    blocked_members = Member::MemberList.new(sender, viewing_member: sender).blocks
 
-    recipient_list.each do |recipient|
-      increase_request_count(recipient)
-      create_recent_request(recipient, data)
-    end
+    recipient_list - blocked_members
   end
 
   def request_notification?(type)
     type == 'request'
+  end
+
+  def create_request(recipient_list, data)
+    recipient_list.each do |recipient|
+      increase_request_count(recipient)
+      create_recent_request(recipient, data)
+    end
   end
 
   def increase_request_count(recipient)
@@ -81,31 +72,52 @@ module Notification::Helper
     MemberRecentRequest.create!(member_id: recipient.id, recent: object)
   end
 
-  def create_notification(recipient_list, message, data, log, push)
-    increase_notification_count(recipient_list, data[:action], data[:poll_id] || 0)
+  def create_notification(recipient_list, type, message, data, options = { log: true, push: true })
+    log = options[:log]
+    push = options[:push]
+
+    increase_notification_count(recipient_list)
 
     create_notification_log(recipient_list, message, data) if log
-    create_notification_for_push(devices_receive_notification(recipient_list), message, data) if push
+    create_notification_for_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) if push
   end
 
-  def devices_receive_notification(recipient_list)
+  def devices_receive_notification(recipient_list, type)
+    recipient_list = fillter_recipients_turn_on_notification(recipient_list, type)
+
     Apn::Device.where('receive_notification = true AND member_id IN (?)', recipient_list.map(&:id)) 
   end
 
-  def increase_notification_count(recipient_list, action, poll_id = 0)
+  def fillter_recipients_turn_on_notification(recipient_list, type)
+    recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq
+  end
+
+  def increase_notification_count(recipient_list)
     recipient_list.each do |recipient|
-      recipient.increment!(:notification_count) if recipient_never_received_notification_from_create_poll_id(action, recipient, poll_id)
+      recipient.increment!(:notification_count)
       recipient.notification_count
     end
   end
 
-  def recipient_never_received_notification_from_create_poll_id(action, recipient, poll_id)
-    action != 'Create' || recipient.received_notifies.where('custom_properties LIKE ? AND custom_properties LIKE ?' \
-      , "%action: #{ACTION[:create]}%", "%poll_id: #{poll_id}%").empty?
+  def truncate_message(message, limit_message_byte = 90, decrement_byte = 8)
+    message = message.sub(/\n\n/, ' ')
+
+    limit_message = nil
+
+    loop do
+      limit_message_byte -= decrement_byte
+      limit_message = message.mb_chars.limit(limit_message_byte).to_s
+
+      break unless limit_message.to_json.bytesize > 92
+    end
+
+    limit_message += "...\"" if limit_message != message
+
+    limit_message + '.'
   end
 
   def create_notification_log(recipient_list, message, data)
-    sender_id = (member.present? ? member.id : nil)
+    sender_id = (sender.present? ? sender.id : nil)
 
     recipient_list.each do |recipient|
       data.merge!(notify: recipient.notification_count)

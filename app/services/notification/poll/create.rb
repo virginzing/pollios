@@ -2,34 +2,26 @@ class Notification::Poll::Create
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll
+  attr_reader :sender, :poll
 
   def initialize(member, poll)
-    @member = member
+    @sender = member
     @poll = poll
 
-    create_request_and_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type
-    return 'public' if poll.public
+    return 'public' if public_poll?
     'friend'
   end
 
   def recipient_list
-    member_listing_service = Member::MemberList.new(member)
-    blocked_members = member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
-
-    return Member.all - blocked_members if poll.public
-
-    recipient_list = member_listing_service.friends
-    recipient_list << member_listing_service.followers unless member.citizen?
-
-    recipient_list - blocked_members
+    public_poll? ? all_member : friends_and_followers
   end
 
   def message
-    member.fullname + " added a new poll: \"#{poll.title}\""
+    sender.fullname + " asked \"#{poll.title}\""
   end
 
   def data
@@ -43,4 +35,24 @@ class Notification::Poll::Create
     }
   end
 
+  private
+
+  def public_poll?
+    poll.public
+  end
+
+  def all_member
+    Member.viewing_by_member(sender)
+  end
+
+  def member_listing_service
+    Member::MemberList.new(sender, viewing_member: sender)
+  end
+
+  def friends_and_followers
+    friends = member_listing_service.friends
+    followers = member_listing_service.followers
+
+    sender.citizen? ? friends : (friends | followers)
+  end
 end

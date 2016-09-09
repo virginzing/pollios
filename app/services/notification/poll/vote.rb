@@ -2,14 +2,14 @@ class Notification::Poll::Vote
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :anonymous
+  attr_reader :sender, :poll, :anonymous
 
   def initialize(member, poll, anonymous = false)
-    @member = member
+    @sender = member
     @poll = poll
     @anonymous = anonymous
 
-    create_request_and_notification(recipient_list, type, message, data, log: true)
+    create(recipient_list, type, message, data, log: true)
   end
 
   def type
@@ -21,7 +21,7 @@ class Notification::Poll::Vote
   end
 
   def message
-    name_or_anonymous(member) + " voted a poll: \"#{poll.title}\""
+    name_or_anonymous(sender) + " voted on \"#{poll.title}\""
   end
 
   def data
@@ -42,8 +42,6 @@ class Notification::Poll::Vote
   end
 
   def member_watched_list
-    Member.joins('LEFT OUTER JOIN watcheds ON members.id = watcheds.member_id')
-    .where("watcheds.poll_id = #{poll.id}")
-    .where('watcheds.poll_notify')
+    Poll::MemberList.new(poll, viewing_member: sender).watched
   end
 end
