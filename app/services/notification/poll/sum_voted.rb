@@ -47,7 +47,7 @@ class Notification::Poll::SumVoted
   private
 
   def poll_member_listing
-    Poll::MemberList.new(poll, viewing_member: sender)
+    Poll::MemberList.new(poll)
   end
 
   def member_watched_list
