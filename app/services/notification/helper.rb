@@ -131,7 +131,7 @@ module Notification::Helper
   def create_notification_for_push(device_list, custom_message, data = nil)
     device_list.each do |device|
       notification = Rpush::Apns::Notification.new
-      notification.app = Rpush::Apns::App.first
+      notification.app = Rpush::Apns::App.find_by(name: 'Pollios')
       notification.device_token = device.token
       notification.alert = custom_message
       notification.badge = device.member.notification_count

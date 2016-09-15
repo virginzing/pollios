@@ -6,7 +6,7 @@ module Member::Private::SettingUpdate
     update_name
     update_description
     update_avatar
-    update_cover
+    update_cover_image
     update_cover_preset
 
     clear_member_cached
@@ -43,7 +43,7 @@ module Member::Private::SettingUpdate
     member.save!
   end
 
-  def update_cover
+  def update_cover_image
     return unless params_profile[:cover]
 
     remove_cover_image
