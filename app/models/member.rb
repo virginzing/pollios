@@ -233,7 +233,7 @@ class Member < ActiveRecord::Base
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
 
-  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" }, :allow_blank => true , on: :update
+  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken." }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: %(Public ID only allows symbol ("." and "_").) }, :allow_blank => true , on: :update
 
   validates :key_color, length: { is: 6 }, allow_blank: true
 
