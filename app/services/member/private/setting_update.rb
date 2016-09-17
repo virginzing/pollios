@@ -6,7 +6,7 @@ module Member::Private::SettingUpdate
     update_name
     update_description
     update_avatar
-    update_cover
+    update_cover_image
     update_cover_preset
 
     clear_member_cached
@@ -43,7 +43,7 @@ module Member::Private::SettingUpdate
     member.save!
   end
 
-  def update_cover
+  def update_cover_image
     return unless params_profile[:cover]
 
     remove_cover_image
@@ -95,7 +95,7 @@ module Member::Private::SettingUpdate
 
   def process_update_public_id
     member.update(public_id: params_public_id[:public_id])
-    fail ExceptionHandler::UnprocessableEntity, 'Public ID has already been take' unless member.valid?
+    fail ExceptionHandler::UnprocessableEntity, member.errors.messages[:public_id].first unless member.valid?
 
     member.save!
 

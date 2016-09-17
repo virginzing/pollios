@@ -19,11 +19,11 @@ class Group::MemberList
   end
 
   def pending
-    cached_all_members.select { |member| member unless member.is_active } - requesting
+    cached_all_members.select { |member| member unless member.is_active }
   end
 
   def requesting
-    cached_all_requests
+    cached_all_requests - pending
   end
 
   # for testing and emergency only

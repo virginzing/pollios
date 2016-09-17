@@ -1,6 +1,6 @@
 module Notification::Helper
 
-  def create(recipient_list, type, message, data, options)
+  def create(recipient_list, type, message, data, options = { log: true, push: true })
     recipient_list = fillter_recipients(recipient_list)
 
     create_request(recipient_list, data) if request_notification?(type)
@@ -18,6 +18,8 @@ module Notification::Helper
   end
 
   def without_outgoing_blocked(recipient_list)
+    return recipient_list unless sender.present?
+
     blocked_members = Member::MemberList.new(sender, viewing_member: sender).blocks
 
     recipient_list - blocked_members
@@ -129,7 +131,7 @@ module Notification::Helper
   def create_notification_for_push(device_list, custom_message, data = nil)
     device_list.each do |device|
       notification = Rpush::Apns::Notification.new
-      notification.app = Rpush::Apns::App.first
+      notification.app = Rpush::Apns::App.find_by(name: 'Pollios')
       notification.device_token = device.token
       notification.alert = custom_message
       notification.badge = device.member.notification_count

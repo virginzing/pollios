@@ -36,7 +36,7 @@ module Pollios::V1::CurrentMemberAPI
       resource :notifications do
         params do
           optional :index, type: Integer, desc: "starting index for notification's list in this request"
-          optional :clear_new_count, type: Boolean, desc: "should clear member's new notification count"
+          optional :clear_new_count, type: Boolean, default: true, desc: "should clear member's new notification count"
         end
         get do
           options = { index: params[:index], clear_new_count: params[:clear_new_count] }
@@ -103,7 +103,7 @@ module Pollios::V1::CurrentMemberAPI
 
         desc 'returns all requests related to current member'
         params do
-          optional :clear_new_request_count, type: Boolean, desc: "should clear member's new request count"
+          optional :clear_new_request_count, type: Boolean, default: true, desc: "should clear member's new request count"
         end
         get do
           present requests_for_member, with: RequestListEntity
