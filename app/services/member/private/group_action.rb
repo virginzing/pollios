@@ -126,7 +126,7 @@ module Member::Private::GroupAction
 
   def process_cancel_request(member)
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
-    process_reject_request(member) if being_invited?(member)
+    process_reject_invitation(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
     clear_group_member_requesting_cache(member)
