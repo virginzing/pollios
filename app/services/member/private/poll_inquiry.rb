@@ -21,7 +21,7 @@ module Member::Private::PollInquiry
 
   def can_vote?
     return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
-    return [false, ExceptionHandler::Message::Poll::EXPIRED] if poll.expire_date < Time.zone.now
+    return [false, ExceptionHandler::Message::Poll::EXPIRED] if expired_poll?
     return [false, GuardMessage::Poll.allow_vote_for_group_member] if outside_group?
     return [false, GuardMessage::Poll.only_for_frineds_or_following] if only_for_frineds_or_following?
     return [false, GuardMessage::Poll.not_allow_your_own_vote] if not_allow_your_own_vote?
@@ -32,6 +32,12 @@ module Member::Private::PollInquiry
 
   def member_outside_group_visibility?
     need_group_visibility_check? && poll_only_in_closed_group?
+  end
+
+  def expired_poll?
+    return false unless poll.expire_date
+
+    poll.expire_date < Time.zone.now
   end
 
   def outside_group?
