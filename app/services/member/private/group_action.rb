@@ -135,8 +135,7 @@ module Member::Private::GroupAction
   end
 
   def process_accept_invitation
-    being_invited_by_admin_or_trigger? ? join_group(member) : process_join_request
-    group
+    process_join_request
   end
 
   def being_sent_join_request?(member)

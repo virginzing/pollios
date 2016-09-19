@@ -11,7 +11,7 @@ class Group::MemberList
   end
 
   def active
-    cached_all_members.select { |member| member if member.is_active }
+    member_visibility_from(cached_all_members.select { |member| member if member.is_active })
   end
 
   def active_with_no_cache
@@ -19,7 +19,7 @@ class Group::MemberList
   end
 
   def pending
-    cached_all_members.select { |member| member unless member.is_active } - requesting
+    member_visibility_from(cached_all_members.select { |member| member unless member.is_active } - requesting)
   end
 
   def requesting
@@ -40,11 +40,11 @@ class Group::MemberList
   end
 
   def members
-    cached_all_members.select { |member| member if member.is_active && !member.admin }
+    member_visibility_from(cached_all_members.select { |member| member if member.is_active && !member.admin })
   end
 
   def admins
-    cached_all_members.select { |member| member if member.admin }
+    member_visibility_from(cached_all_members.select { |member| member if member.admin })
   end
 
   def join_recently
@@ -81,17 +81,5 @@ class Group::MemberList
 
   def raise_error_not_admin(member)
     fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless admin?(member)
-  end
-
-  def cached_all_members
-    Rails.cache.fetch("group/#{group.id}/members") do
-      member_visibility
-    end
-  end
-  
-  def cached_all_requests
-    Rails.cache.fetch("group/#{group.id}/requests") do
-      all_requests
-    end
   end
 end
