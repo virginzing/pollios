@@ -32,7 +32,7 @@ module Group::Private::MemberList
   end
 
   def member_visibility_from(list)
-    members = Member.where(id: list)
+    members = Member.where(id: list.to_a)
 
     return sort_by_name(members) unless viewing_member
     sort_by_name(members.viewing_by_member(viewing_member))
