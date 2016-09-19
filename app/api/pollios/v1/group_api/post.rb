@@ -63,12 +63,12 @@ module Pollios::V1::GroupAPI
 
           desc 'accept group invitation'
           post '/accept' do
-            current_member_group_action.accept_request
+            current_member_group_action.accept_invitation
           end
 
           desc 'reject group invitation'
           post '/reject' do
-            current_member_group_action.reject_request
+            current_member_group_action.reject_invitation
           end
         end
 

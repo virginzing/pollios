@@ -134,7 +134,7 @@ module Member::Private::GroupAction
     group
   end
 
-  def process_accept_request
+  def process_accept_invitation
     being_invited_by_admin_or_trigger? ? join_group(member) : process_join_request
     group
   end
@@ -193,8 +193,8 @@ module Member::Private::GroupAction
     Company::FollowOwnerGroup.new(member, group.member_id).follow!
   end
 
-  def process_reject_request(member)
-    delete_group_being_invited_notification(member)
+  def process_reject_invitation
+    delete_group_being_invited_notification
     remove_role_group_admin(member)
     
     relationship_to_group(member).destroy
@@ -204,7 +204,7 @@ module Member::Private::GroupAction
     group
   end
 
-  def delete_group_being_invited_notification(member)
+  def delete_group_being_invited_notification
     invitation_sender = Member.cached_find(relationship_to_group(member).invite_id)
     NotifyLog.check_update_cancel_invite_friend_to_group_deleted(invitation_sender, member, group)
   end

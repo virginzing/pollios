@@ -30,13 +30,13 @@ module Member::Private::GroupActionGuard
     [true, nil]
   end
 
-  def can_accept_request?
+  def can_accept_invitation?
     return [false, "You don't have invitation for #{group.name}."] if not_exist_invite_request(member)
     [true, nil]
   end
 
-  def can_reject_request?
-    return [false, "You don't have invitation #{group.name}."] if not_exist_invite_request(member)
+  def can_reject_invitation?
+    return [false, "You don't have invitation for #{group.name}."] if not_exist_invite_request(member)
     [true, nil]
   end
 
