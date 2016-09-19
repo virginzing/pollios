@@ -2,14 +2,16 @@ class Notification::Poll::CreateToGroup
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :group
+  attr_reader :sender, :poll, :group_list
 
-  def initialize(member, poll, group)
-    @member = member
+  def initialize(member, poll, group_list)
+    @sender = member
     @poll = poll
-    @group = group
+    @group_list = group_list
 
-    create_notification(recipient_list, type, message, data)
+    members_of_all_group.each do |recipient|
+      create(recipient, type, message_for(recipient), data)
+    end
   end
 
   def type
@@ -17,16 +19,21 @@ class Notification::Poll::CreateToGroup
   end
 
   def recipient_list
-    group_member_listing_service = Group::MemberList.new(group)
-    recipient_list = group_member_listing_service.active
-
-    member_listing_service = Member::MemberList.new(member)
-    blocked_members = member_listing_service.blocks | Member.find(member_listing_service.blocked_by_someone)
-    recipient_list - blocked_members
+    members_of_groups
   end
 
-  def message
-    member.fullname + " asked in #{group.name}: \"#{@poll.title}\""
+  def message_for(recipient)
+    available_groups = Member::GroupList.new(recipient).groups_available_for_poll(poll)
+
+    case available_groups.size
+
+    when 1
+      groups = available_groups.first.name
+    else
+      groups = "#{available_groups.size} groups"
+    end
+
+    sender.fullname + " asked in #{groups} \"#{poll.title}\""
   end
 
   def data
@@ -40,6 +47,12 @@ class Notification::Poll::CreateToGroup
       group_id: group.id,
       group: GroupNotifySerializer.new(group).as_json
     }
+  end
+
+  private
+
+  def members_of_groups
+    group_list.map { |group| Group::MemberList.new(group, viewing_member: sender).active }.flatten.uniq
   end
 
 end

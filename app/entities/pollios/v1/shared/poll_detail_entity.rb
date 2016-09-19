@@ -73,8 +73,7 @@ module Pollios::V1::Shared
     end
 
     def poll_within
-      # TODO: Make a proper service method in Poll::Listing
-      poll.feed_name_for_member(current_member)
+      poll_inquiry_service.feed_info
     end
 
     def member_reward

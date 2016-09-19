@@ -157,8 +157,8 @@ module Member::Private::MemberAction
     process_deny_friend_request
   end
 
-  def process_report
-    member.sent_reports.create!(reportee_id: a_member.id)
+  def process_report(message)
+    member.sent_reports.create!(reportee_id: a_member.id, message: message)
 
     a_member.with_lock do
       a_member.report_count += 1

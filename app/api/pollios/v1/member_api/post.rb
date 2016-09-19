@@ -67,12 +67,13 @@ module Pollios::V1::MemberAPI
         end
 
         params do
+          optional :message, type: String, default: '', desc: 'report reason'
           optional :block, type: Boolean, desc: 'report and block or just report'
         end
 
         desc 'report member_id'
         post '/report' do
-          current_member_action.report(params[:block])
+          current_member_action.report(params[:message], params[:block])
         end
       end
     end

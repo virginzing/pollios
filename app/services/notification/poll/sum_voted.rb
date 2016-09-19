@@ -2,12 +2,13 @@ class Notification::Poll::SumVoted
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :poll, :member
+  attr_reader :poll, :sender
 
   def initialize(poll)
     @poll = poll
+    @sender = nil
 
-    create_notification(recipient_list, type, message, data, push: true)
+    create(recipient_list, type, message, data, push: true)
 
     poll.update!(notify_state: 0)
   end
@@ -17,22 +18,22 @@ class Notification::Poll::SumVoted
   end
 
   def recipient_list
-    member_watched_list - voter_list
+    member_watched_list - recently_voter_list
   end
 
   def message
-    case voter_list.size
+    case recently_voter_list.size
   
     when 1
-      message = name_or_anonymous(voter_list.first)
+      message = name_or_anonymous(recently_voter_list.first)
     when 2
-      message = name_or_anonymous(voter_list.first) + ' and ' + name_or_anonymous(voter_list.second)
+      message = name_or_anonymous(recently_voter_list.first) + ' and ' + name_or_anonymous(recently_voter_list.second)
     else
-      message = name_or_anonymous(voter_list.first) + ', ' + name_or_anonymous(voter_list.second) + \
-                " and #{voter_list.size - 2} other people"
+      message = name_or_anonymous(recently_voter_list.first) + ', ' + name_or_anonymous(recently_voter_list.second) + \
+                " and #{recently_voter_list.size - 2} other people"
     end
 
-    message + " voted a poll: \"#{poll.title}\""
+    message + " voted on \"#{poll.title}\""
   end
 
   def data
@@ -46,26 +47,20 @@ class Notification::Poll::SumVoted
 
   private
 
-  def voter_list
-    Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
-      .where("history_votes.poll_id = #{poll.id}")
-      .where('history_votes.created_at >= ?', last_push_notification_at)
-      .select('members.*, history_votes.created_at AS voted_at, (NOT history_votes.show_result) AS anonymous')
-      .order('voted_at DESC')
+  def poll_member_listing
+    Poll::MemberList.new(poll)
   end
 
-  def last_push_notification_at
-    poll.notify_state_at || 1.minutes.ago
+  def member_watched_list
+    poll_member_listing.watched
+  end
+
+  def recently_voter_list
+    poll_member_listing.recently_voter
   end
 
   def name_or_anonymous(member)
     member.anonymous ? 'Anonymous' : (member.fullname || 'No name')
-  end
-
-  def member_watched_list
-    Member.joins('LEFT OUTER JOIN watcheds ON members.id = watcheds.member_id')
-      .where("watcheds.poll_id = #{poll.id}")
-      .where('watcheds.poll_notify')
   end
 
 end

@@ -1,0 +1,42 @@
+<div class="title">Overview</div>
+<div class="stats-dashboard-row">
+  <div class="stats-container">
+    <div class="counter">
+      <%= @stats[:vote][:count] %>
+    </div>
+    <div class="desc">
+      Vote happened.
+    </div>
+    <div class="graph"
+      pollios-chart
+      color="#D32053"
+      label="<%= @stats[:vote][:graph][:label] %>"
+      data="<%= @stats[:vote][:graph][:data] %>"></div>
+  </div>
+  <div class="stats-container">
+    <div class="counter">
+      <%= @stats[:poll][:count] %>
+    </div>
+    <div class="desc">
+      Poll created.
+    </div>
+    <div class="graph"]
+      pollios-chart
+      color="#8BC34A"
+      label='["1","2","2","2","2","2","2","2"]'
+      data="[1,2,7,4,3,7,8,3]"></div>
+  </div>
+  <div class="stats-container">
+    <div class="counter">
+      <%= @stats[:user][:count] %>
+    </div>
+    <div class="desc">
+      Active users.
+    </div>
+    <div class="graph"
+      pollios-chart
+      color="#FFC107"
+      label='["label1","label2"]'
+      data="[1,2]"></div>
+  </div>
+</div>

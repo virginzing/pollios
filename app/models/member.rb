@@ -11,6 +11,7 @@
 #  updated_at                 :datetime
 #  friend_limit               :integer
 #  member_type                :integer          default(0)
+#  province_id                :integer
 #  key_color                  :string(255)
 #  cover                      :string(255)
 #  description                :text
@@ -232,7 +233,7 @@ class Member < ActiveRecord::Base
   validates :email, presence: true, :uniqueness => { :case_sensitive => false }, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, :allow_blank => true
   validates :username , :uniqueness => { :case_sensitive => false }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "only allows letters" }, :allow_blank => true , on: :update
 
-  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken" }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: "Public ID only allows letters" }, :allow_blank => true , on: :update
+  validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken." }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: %(Public ID only allows symbol ("." and "_").) }, :allow_blank => true , on: :update
 
   validates :key_color, length: { is: 6 }, allow_blank: true
 
@@ -987,9 +988,9 @@ class Member < ActiveRecord::Base
     @member.update(avatar: file_avatar)
   end
 
-  def self.remove_cover(current_member)
-
-  end
+  # def self.remove_cover(current_member)
+    
+  # end
 
   def serializer_member_detail  # for api
     @find_member_cached ||= Member.cached_find(self.id)

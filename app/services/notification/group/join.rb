@@ -2,13 +2,13 @@ class Notification::Group::Join
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :group
+  attr_reader :sender, :group
 
   def initialize(member, group)
-    @member = member
+    @sender = member
     @group = group
 
-    create_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type
@@ -16,11 +16,11 @@ class Notification::Group::Join
   end
 
   def recipient_list
-    Group::MemberList.new(group, viewing_member: member).active
+    members_of_group
   end
 
   def message
-    member.fullname + " joined #{group.name} group"
+    sender.fullname + " joined in #{group.name} group"
   end
 
   def data
@@ -31,6 +31,12 @@ class Notification::Group::Join
       group: GroupNotifySerializer.new(group).as_json,
       worker: WORKER[:join_group]
     }
+  end
+
+  private
+
+  def members_of_group
+    Group::MemberList.new(group, viewing_member: sender).active
   end
 
 end

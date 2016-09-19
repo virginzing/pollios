@@ -3,6 +3,11 @@ module Pollios::V1::CurrentMemberAPI
 
     expose :group_admins, with: Pollios::V1::Shared::GroupForAdminListEntity
 
+    expose :recents do
+      expose_members :recent_friends, as: :friends, without_linkage: true
+      expose_groups :recent_groups, as: :groups, without_status: true
+    end
+
     expose :friends do
       expose :friends_incoming_count, as: :incoming_count
       expose_members :friends_incoming, as: :incoming

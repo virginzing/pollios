@@ -14,7 +14,9 @@ class Member::MemberAction
     can_add_friend, message = can_add_friend?
     fail ExceptionHandler::UnprocessableEntity, message unless can_add_friend
 
-    process_friend_requests_transaction
+    # return follow unless a_member.citizen?
+
+    process_friend_requests_transaction 
   end
 
   def unfriend
@@ -81,11 +83,11 @@ class Member::MemberAction
     process_unblock
   end
 
-  def report(and_block)
+  def report(reason_message, and_block)
     can_report, message = can_report?
     fail ExceptionHandler::UnprocessableEntity, message unless can_report
 
-    process_report
+    process_report(reason_message)
     block if and_block
   end
 end

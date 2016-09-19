@@ -16,19 +16,27 @@ module Member::Private::GroupActionGuard
     [true, nil]
   end
 
+  def can_join_with_secret_code?
+    return [false, GuardMessage::GroupAction.invalid_secret_code] if invalid_secret_code?
+    return [false, GuardMessage::GroupAction.already_used_secret_code] if already_used_secret_code?
+    return [false, GuardMessage::GroupAction.member_already_in_group(group)] if already_member_in_group_by_secret_code?
+
+    [true, nil]
+  end
+
   def can_cancel_request?
     return [false, "You are already member of #{group.name}."] if already_member(member)
     return [false, "You don't sent join request to #{group.name}."] if not_exist_join_request(member)
     [true, nil]
   end
 
-  def can_accept_request?
+  def can_accept_invitation?
     return [false, "You don't have invitation for #{group.name}."] if not_exist_invite_request(member)
     [true, nil]
   end
 
-  def can_reject_request?
-    return [false, "You don't have invitation #{group.name}."] if not_exist_invite_request(member)
+  def can_reject_invitation?
+    return [false, "You don't have invitation for #{group.name}."] if not_exist_invite_request(member)
     [true, nil]
   end
 
@@ -144,5 +152,23 @@ module Member::Private::GroupActionGuard
 
   def not_authority
     !((Poll.cached_find(poll_id).member_id == member.id) || Group::MemberList.new(group).admin?(member))
+  end
+
+  def secret_code
+    @secret_code ||= InviteCode.find_by(code: code)
+  end
+
+  def invalid_secret_code?
+    secret_code.nil?
+  end
+
+  def already_used_secret_code?
+    secret_code.used
+  end
+
+  def already_member_in_group_by_secret_code?
+    @group = Group.cached_find(secret_code.group_id)
+
+    Group::MemberList.new(group).active?(member)
   end
 end

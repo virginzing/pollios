@@ -2,23 +2,17 @@ class Notification::Poll::Comment
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :poll, :comment_message, :poll_creator
+  attr_reader :sender, :comment, :poll, :comment_message, :poll_creator
 
-  def initialize(member, poll, comment_message)
-    @member = member
-    @poll = poll
-    @comment_message = comment_message
-
+  def initialize(member, comment)
+    @sender = member
+    @comment = comment
+    @poll = comment.poll
+    @comment_message = comment.message
     @poll_creator = poll.member
 
-    if member.id == poll_creator.id
-      create_notification(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
-    else
-      create_notification(recipient_list - [poll_creator], type \
-        , message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
-
-      create_notification([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
-    end
+    onw_poll? ? create_from_owner_poll : create_from_member
+    create_to_mention_list
   end
 
   def type
@@ -26,7 +20,7 @@ class Notification::Poll::Comment
   end
 
   def recipient_list
-    member_watched_list
+    member_watched_list - mention_list
   end
 
   def data
@@ -39,33 +33,60 @@ class Notification::Poll::Comment
     }
   end
 
+  private
+
+  def onw_poll?
+    sender.id == poll_creator.id
+  end
+
+  def create_from_owner_poll
+    create(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
+  end
+
+  def create_from_member
+    create(recipient_list - [poll_creator], type, message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
+    create([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
+  end
+
+  def create_to_mention_list
+    return unless mentioning?
+
+    Notification::Poll::Mention.new(sender, comment, mention_list)
+  end
+
   def member_watched_list
-    Member.joins('LEFT OUTER JOIN watcheds ON members.id = watcheds.member_id')
-      .where("watcheds.poll_id = #{poll.id}")
-      .where('watcheds.comment_notify')
+    Poll::MemberList.new(poll, viewing_member: sender).watched
   end
 
   def message_form_poll_creator
-    member.fullname + " also commented on his'poll: \"#{adjustment_message}\""
+    sender.fullname + " also commented in \"#{poll.title}\""
   end
 
   def message_form_member_to_a_member
-    member.fullname + " also commented on #{poll_creator}'s poll: \"#{adjustment_message}\""
+    sender.fullname + " also commented in #{poll_creator.fullname}'s poll \"#{poll.title}\""
   end
 
   def message_from_member_to_creator
-    member.fullname + " commented your poll: \"#{poll.title}\""
+    sender.fullname + " commented in \"#{poll.title}\""
   end
 
-  def adjustment_message
-    mention_name = Member.where(id: mention_list).each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
-    comment_message.gsub(/@\[\d+\]/) { |mentioning| mention_name[mentioning.scan(/\d+/).first.to_i] }
+  # def adjustment_message
+  #   return comment_message unless mentioning?
+
+  #   mention_name = mention_list.each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
+  #   comment_message.gsub(/@\[\d+\]/) { |mentioning| mention_name[mentioning.scan(/\d+/).first.to_i] }
+  # end
+
+  def mentioning?
+    mention_list.empty?
   end
 
   def mention_list
-    mention_ids = []
-    comment_message.gsub(/@\[\d+\]/) { |mentioning| mentioning.gsub(/\d+/) { |number| mention_ids << number } }
-    mention_ids.map(&:to_i)
+    @mention_list ||= Member.where(id: mention_ids)
+  end
+
+  def mention_ids
+    comment_message.gsub(/@\[\d+\]/).map { |m| m.gsub(/\d+/).peek }
   end
 
 end

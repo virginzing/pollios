@@ -38,6 +38,24 @@ module Poll::Private::MemberList
     sort_by_name(mentionable_member_and_creator)
   end
 
+  def all_watched
+    Member.joins('LEFT OUTER JOIN watcheds ON members.id = watcheds.member_id')
+      .where("watcheds.poll_id = #{poll.id}")
+      .where('watcheds.comment_notify')
+  end
+
+  def all_recently_voter
+    Member.joins('LEFT OUTER JOIN history_votes ON members.id = history_votes.member_id')
+      .where("history_votes.poll_id = #{poll.id}")
+      .where('history_votes.created_at >= ?', last_push_notification_at)
+      .select('members.*, history_votes.created_at AS voted_at, (NOT history_votes.show_result) AS anonymous')
+      .order('voted_at DESC')
+  end
+
+  def last_push_notification_at
+    poll.notify_state_at || 1.minutes.ago
+  end
+
   def vote_as_anonymous
     poll.vote_all - all_voter.count
   end
@@ -48,16 +66,19 @@ module Poll::Private::MemberList
 
   def voter_visibility
     return all_voter unless viewing_member
+
     all_voter.viewing_by_member(viewing_member)
   end
 
   def commenter_visibility
     return all_commenter unless viewing_member
+
     all_commenter.viewing_by_member(viewing_member)
   end
 
   def mentionable_visibility
-    return all_mentionable if outgoing_block_members.count < 0
+    return all_mentionable unless outgoing_block_members.empty?
+
     all_mentionable - outgoing_block_members
   end
 
@@ -69,12 +90,25 @@ module Poll::Private::MemberList
     mentionable_member | [poll.member]
   end
 
+  def watched_visibility
+    return all_watched unless viewing_member
+
+    all_watched.viewing_by_member(viewing_member)
+  end
+
+  def recently_voter_visibility
+    return all_recently_voter unless viewing_member
+
+    all_recently_voter.viewing_by_member(viewing_member)
+  end
+
   def poll_inquiry_service
     Member::PollInquiry.new(viewing_member, poll)
   end
 
   def outgoing_block_members
     return [] unless viewing_member
+
     Member::MemberList.new(viewing_member).blocks
   end
 

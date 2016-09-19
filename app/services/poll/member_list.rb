@@ -36,6 +36,14 @@ class Poll::MemberList
     mentionable_visibility
   end
 
+  def watched
+    watched_visibility
+  end
+
+  def recently_voter
+    recently_voter_visibility
+  end
+
   def members_by_page(list)
     list.paginate(page: index)
   end

@@ -2,16 +2,16 @@ class Notification::Poll::Mention
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member, :comment, :mention_list, :poll
+  attr_reader :sender, :comment, :mention_list, :poll
 
   def initialize(member, comment, mention_list)
-    @member = member
+    @sender = member
     @comment = comment
     @mention_list = mention_list
 
     @poll = comment.poll
 
-    create_notification(recipient_list, type, message, data)
+    create(recipient_list, type, message, data)
   end
 
   def type
@@ -23,7 +23,7 @@ class Notification::Poll::Mention
   end
 
   def message
-    member.fullname + ' mentioned you in a comment'
+    sender.fullname + ' mentioned you in a comment'
   end
 
   def data

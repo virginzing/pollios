@@ -2,7 +2,7 @@ class Member::GroupAction
   include Member::Private::GroupActionGuard
   include Member::Private::GroupAction
 
-  attr_reader :member, :group, :group_params, :a_member, :poll_id
+  attr_reader :member, :group, :group_params, :a_member, :poll_id, :code
 
   def initialize(member, group = nil, options = {})
     @member = member
@@ -29,6 +29,15 @@ class Member::GroupAction
     process_join_request
   end
 
+  def join_with_secret_code(code)
+    @code = code
+
+    can_join_with_secret_code, message = can_join_with_secret_code?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_join_with_secret_code
+      
+    process_join_with_secret_code
+  end
+
   def cancel_request
     can_cancel_request, message = can_cancel_request?
     fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_request
@@ -36,18 +45,18 @@ class Member::GroupAction
     process_cancel_request(member)
   end
 
-  def accept_request
-    can_accept_request, message = can_accept_request?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_accept_request
+  def accept_invitation
+    can_accept_invitation, message = can_accept_invitation?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_accept_invitation
       
-    process_accept_request
+    process_accept_invitation
   end
 
-  def reject_request
-    can_reject_request, message = can_reject_request?
-    fail ExceptionHandler::UnprocessableEntity, message unless can_reject_request
+  def reject_invitation
+    can_reject_invitation, message = can_reject_invitation?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_reject_invitation
       
-    process_reject_request(member)
+    process_reject_invitation
   end
 
   def invite(friend_ids)

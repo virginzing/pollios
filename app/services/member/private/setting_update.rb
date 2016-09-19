@@ -6,7 +6,7 @@ module Member::Private::SettingUpdate
     update_name
     update_description
     update_avatar
-    update_cover
+    update_cover_image
     update_cover_preset
 
     clear_member_cached
@@ -33,19 +33,28 @@ module Member::Private::SettingUpdate
   def update_avatar
     return unless params_profile[:avatar]
 
-    member.remove_avatar!
+    remove_avatar
 
     member.update_column(:avatar, ImageUrl.new(params_profile[:avatar]).split_cloudinary_url)
   end
 
-  def update_cover
+  def remove_avatar
+    member.remove_avatar!
+    member.save!
+  end
+
+  def update_cover_image
     return unless params_profile[:cover]
 
-    member.remove_cover!
+    remove_cover_image
 
     member.update_column(:cover, ImageUrl.new(params_profile[:cover]).split_cloudinary_url)
 
-    return unless member.cover_preset == 0
+    remove_cover_preset
+  end
+
+  def remove_cover_preset
+    return if member.cover_preset == 0
 
     member.update!(cover_preset: '0')
   end
@@ -55,9 +64,14 @@ module Member::Private::SettingUpdate
 
     member.update!(cover_preset: params_profile[:cover_preset])
 
-    return unless member.cover.present?
+    remove_cover_image
+  end
+
+  def remove_cover_image
+    return if member.get_cover_image.empty?
 
     member.remove_cover!
+    member.save!
   end
 
   def process_update_facebook_connection
@@ -81,7 +95,7 @@ module Member::Private::SettingUpdate
 
   def process_update_public_id
     member.update(public_id: params_public_id[:public_id])
-    fail ExceptionHandler::UnprocessableEntity, 'Public ID has already been take' unless member.valid?
+    fail ExceptionHandler::UnprocessableEntity, member.errors.messages[:public_id].first unless member.valid?
 
     member.save!
 

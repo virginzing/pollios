@@ -10,27 +10,27 @@ class Member::PollFeed
   end
 
   def default_timeline
-    Rails.cache.delete('current_member/timeline/default') if index == 0
+    Rails.cache.delete("members/#{member.id}/polls/timeline/default") if index == 0
     @polls_feed = cached_overall_timeline_polls
   end
 
   def unvoted_timeline
-    Rails.cache.delete('current_member/timeline/unvoted') if index == 0
+    Rails.cache.delete("members/#{member.id}/polls/timeline/unvoted") if index == 0
     @polls_feed = cached_unvoted_timeline_polls
   end
 
   def public_timeline
-    Rails.cache.delete('current_member/timeline/public') if index == 0
+    Rails.cache.delete("members/#{member.id}/polls/timeline/public") if index == 0
     @polls_feed = cached_public_timeline_polls
   end
 
   def friends_timeline
-    Rails.cache.delete('current_member/timeline/friends') if index == 0
+    Rails.cache.delete("members/#{member.id}/polls/timeline/friends") if index == 0
     @polls_feed = cached_friends_following_timeline_polls
   end
 
   def group_timeline
-    Rails.cache.delete('current_member/timeline/group') if index == 0
+    Rails.cache.delete("members/#{member.id}/polls/timeline/group") if index == 0
     @polls_feed = cached_group_timeline_polls
   end
 
@@ -51,23 +51,23 @@ class Member::PollFeed
   end
 
   def cached_overall_timeline_polls
-    Rails.cache.fetch('current_member/timeline/default') { sort_by_priority(overall_timeline_polls) }
+    Rails.cache.fetch("members/#{member.id}/polls/timeline/default") { sort_by_priority(overall_timeline_polls) }
   end
 
   def cached_unvoted_timeline_polls
-    Rails.cache.fetch('current_member/timeline/unvoted') { sort_by_priority(unvoted_timeline_polls) }
+    Rails.cache.fetch("members/#{member.id}/polls/timeline/unvoted") { sort_by_priority(unvoted_timeline_polls) }
   end
 
   def cached_public_timeline_polls
-    Rails.cache.fetch('current_member/timeline/public') { sort_by_priority(public_timeline_polls) }
+    Rails.cache.fetch("members/#{member.id}/polls/timeline/public") { sort_by_priority(public_timeline_polls) }
   end
 
   def cached_friends_following_timeline_polls
-    Rails.cache.fetch('current_member/timeline/friends') { sort_by_priority(friends_following_timeline_polls) }
+    Rails.cache.fetch("members/#{member.id}/polls/timeline/friends") { sort_by_priority(friends_following_timeline_polls) }
   end
 
   def cached_group_timeline_polls
-    Rails.cache.fetch('current_member/timeline/group') { sort_by_priority(group_timeline_polls) }
+    Rails.cache.fetch("members/#{member.id}/polls/timeline/group") { sort_by_priority(group_timeline_polls) }
   end
 
   private

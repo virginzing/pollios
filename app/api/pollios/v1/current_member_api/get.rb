@@ -36,7 +36,7 @@ module Pollios::V1::CurrentMemberAPI
       resource :notifications do
         params do
           optional :index, type: Integer, desc: "starting index for notification's list in this request"
-          optional :clear_new_count, type: Boolean, desc: "should clear member's new notification count"
+          optional :clear_new_count, type: Boolean, default: true, desc: "should clear member's new notification count"
         end
         get do
           options = { index: params[:index], clear_new_count: params[:clear_new_count] }
@@ -84,11 +84,8 @@ module Pollios::V1::CurrentMemberAPI
       resource :requests do
         helpers do
           def requests_for_member
-            @requests_for_member = Member::RequestList.new(current_member, options)
-          end
-
-          def options
-            @options ||= { clear_new_request_count: params[:clear_new_request_count] }
+            @requests_for_member = Member::RequestList.new(current_member \
+              , clear_new_request_count: params[:clear_new_request_count])
           end
 
           def member_listing
@@ -106,7 +103,7 @@ module Pollios::V1::CurrentMemberAPI
 
         desc 'returns all requests related to current member'
         params do
-          optional :clear_new_request_count, type: Boolean, desc: "should clear member's new request count"
+          optional :clear_new_request_count, type: Boolean, default: true, desc: "should clear member's new request count"
         end
         get do
           present requests_for_member, with: RequestListEntity
@@ -166,7 +163,7 @@ module Pollios::V1::CurrentMemberAPI
 
           desc 'returns list of recommend group' 
           get '/groups' do
-            present :groups, recommendations.facebooks \
+            present :groups, recommendations.groups \
             , with: Pollios::V1::Shared::GroupForListEntity
           end
         end

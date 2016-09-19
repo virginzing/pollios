@@ -1,11 +1,28 @@
 class Member::RequestList
 
-  attr_reader :member
+  attr_reader :member, :options
 
   def initialize(member, options = {})
     @member = member
+    @options = options
 
     reset_new_request_count if options[:clear_new_request_count]
+  end
+
+  def recent_friends
+    friends = cached_recent_friends
+
+    clear_cached_recent_friends if options[:clear_new_request_count]
+
+    friends
+  end
+
+  def recent_groups
+    groups = cached_recent_groups
+
+    clear_cached_recent_groups if options[:clear_new_request_count]
+
+    groups
   end
 
   def friends_incoming
@@ -63,4 +80,29 @@ class Member::RequestList
     member.save!
   end
 
+  def cached_recent_friends
+    Rails.cache.fetch("members/#{member.id}/requests/recent_friends") do
+      Member.joins('INNER JOIN member_recent_requests ON members.id = member_recent_requests.recent_id')
+        .where("member_recent_requests.member_id = #{member.id}")
+        .to_a
+    end
+  end
+
+  def cached_recent_groups
+    Rails.cache.fetch("members/#{member.id}/requests/recent_groups") do
+      Group.joins('INNER JOIN member_recent_requests ON groups.id = member_recent_requests.recent_id')
+        .where("member_recent_requests.member_id = #{member.id}")
+        .to_a
+    end
+  end
+
+  def clear_cached_recent_friends
+    MemberRecentRequest.where(member_id: member.id, recent_type: 'Member').each(&:destroy)
+    FlushCached::Member.new(member).clear_list_recent_friends
+  end
+
+  def clear_cached_recent_groups
+    MemberRecentRequest.where(member_id: member.id, recent_type: 'Group').each(&:destroy)
+    FlushCached::Member.new(member).clear_list_recent_groups
+  end
 end

@@ -607,9 +607,10 @@ Pollios::Application.routes.draw do
   # mount Sidekiq::Web => '/sidekiq'
 
   namespace 'v1' do
+    devise_for :admin, controllers: { sessions: 'v1/admin/authentication' }, path_names: { sign_in: 'signin', sign_out: 'signout' }
+
     namespace 'admin' do
-      get 'signin', to: 'signin#get'
-      post 'signin', to: 'signin#post'
+      get 'dashboard', to: 'dashboard#index'
     end
     namespace 'polls' do
       get ':custom_key', to: 'polls#get'
