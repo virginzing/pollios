@@ -48,7 +48,7 @@ class Group::MemberList
   end
 
   def join_recently
-    active.sort_by(&:joined_at).reverse!.take(5)
+    member_visibility_from(active_with_no_cache.sort_by(&:joined_at).reverse!).take(5)
   end
 
   def member_or_admin?(member)
