@@ -193,7 +193,7 @@ module Member::Private::GroupAction
     Company::FollowOwnerGroup.new(member, group.member_id).follow!
   end
 
-  def process_reject_invitation(member)
+  def process_reject_invitation(member = @member)
     delete_group_being_invited_notification(member)
     remove_role_group_admin(member)
     
