@@ -2,12 +2,12 @@ class Notification::Reward::Receive
   include Notification::Helper
   include SymbolHash
 
-  attr_reader :member_reward, :campaign, :member
+  attr_reader :sender, :member_reward, :campaign
 
   def initialize(member_reward)
+    @sender = campaign.member
     @member_reward = member_reward
     @campaign = member_reward.campaign
-    @member = campaign.member
 
     create(recipient_list, type, message, data)
   end
