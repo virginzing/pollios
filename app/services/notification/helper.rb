@@ -1,28 +1,28 @@
 module Notification::Helper
 
-  def create(recipient_list, type, message, data, options = { log: true, push: true })
-    recipient_list = fillter_recipients(recipient_list)
+  def create(member_list, type, message, data, options = { log: true, push: true })
+    recipient_list = recipient_list(member_list)
 
     create_request(recipient_list, data) if request_notification?(type)
     create_notification(recipient_list, type, message, data, options)
   end
 
-  def fillter_recipients(recipient_list)
-    recipient_list = without_sender(recipient_list)
+  def recipient_list(member_list)
+    member_list = without_sender(member_list)
     
-    without_outgoing_blocked(recipient_list)
+    without_outgoing_blocked(member_list)
   end
 
-  def without_sender(recipient_list)
-    recipient_list - [sender]
+  def without_sender(member_list)
+    member_list - [sender]
   end
 
-  def without_outgoing_blocked(recipient_list)
-    return recipient_list unless sender.present?
+  def without_outgoing_blocked(member_list)
+    return member_list unless sender.present?
 
     blocked_members = Member::MemberList.new(sender, viewing_member: sender).blocks
 
-    recipient_list - blocked_members
+    member_list - blocked_members
   end
 
   def request_notification?(type)
@@ -80,17 +80,17 @@ module Notification::Helper
 
     increase_notification_count(recipient_list)
 
-    create_notification_log(recipient_list, message, data) if log
+    create_notification_log(recipient_list, message + '.', data) if log
     create_notification_for_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) if push
   end
 
   def devices_receive_notification(recipient_list, type)
-    recipient_list = fillter_recipients_turn_on_notification(recipient_list, type)
+    recipient_list = recipient_list_turn_on_notification(recipient_list, type)
 
     Apn::Device.where('receive_notification = true AND member_id IN (?)', recipient_list.map(&:id)) 
   end
 
-  def fillter_recipients_turn_on_notification(recipient_list, type)
+  def recipient_list_turn_on_notification(recipient_list, type)
     recipient_list.select { |recipient| recipient if recipient.notification[type].to_b }.uniq
   end
 

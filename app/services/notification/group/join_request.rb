@@ -4,18 +4,18 @@ class Notification::Group::JoinRequest
 
   attr_reader :sender, :group
 
-  def initialize(member, group)
-    @sender = member
+  def initialize(sender, group)
+    @sender = sender
     @group = group
 
-    create(recipient_list, type, message, data)
+    create(member_list, type, message, data)
   end
 
   def type
     'request'
   end
 
-  def recipient_list
+  def member_list
     admins_of_group
   end
 

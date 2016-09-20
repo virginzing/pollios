@@ -31,9 +31,9 @@ module Group::Private::MemberList
     sort_by_name(group.members_request.all)
   end
 
-  def member_visibility
-    return sort_by_name(all_members) unless viewing_member
-    sort_by_name(all_members.viewing_by_member(viewing_member))
+  def member_visibility_from(list)
+    return list unless viewing_member
+    list & Member.viewing_by_member(viewing_member)
   end
 
   def group_member_ids
@@ -42,5 +42,17 @@ module Group::Private::MemberList
 
   def sort_by_name(list)
     list.sort_by { |m| m.fullname.downcase }
+  end
+
+  def cached_all_members
+    Rails.cache.fetch("group/#{group.id}/members") do
+      all_members.to_a
+    end
+  end
+  
+  def cached_all_requests
+    Rails.cache.fetch("group/#{group.id}/requests") do
+      all_requests.to_a
+    end
   end
 end

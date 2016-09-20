@@ -4,21 +4,21 @@ class Notification::Group::Invite
 
   attr_reader :sender, :friend_list, :group, :poke, :trigger
 
-  def initialize(member, friend_list, group, options = {})
-    @sender = member
+  def initialize(sender, friend_list, group, options = {})
+    @sender = sender
     @friend_list = friend_list
     @group = group
     @poke = options[:poke] || false
     @trigger = options[:trigger] || false
 
-    create(recipient_list, type, message, data)
+    create(member_list, type, message, data)
   end
 
   def type
     'request'
   end
 
-  def recipient_list
+  def member_list
     friend_list
   end
 

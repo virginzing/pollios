@@ -65,9 +65,9 @@ module Member::Private::PollAction
   end
 
   def poll_set(new_poll)
+    poll_update(new_poll)
     poll_choice(new_poll)
     poll_attachments(new_poll)
-    poll_update(new_poll)
     poll_tag(new_poll)
     poll_member(new_poll)
     poll_group(new_poll)

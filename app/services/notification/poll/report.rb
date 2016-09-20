@@ -4,15 +4,15 @@ class Notification::Poll::Report
 
   attr_reader :sender, :poll, :reason_message
 
-  def initialize(member, poll, reason_message)
-    @sender = member
+  def initialize(sender, poll, reason_message)
+    @sender = sender
     @poll = poll
     @reason_message = reason_message
 
     return unless poll_in_groups?
 
-    recipient_list.each do |recipient|
-      create(recipient, type, message, data)
+    member_list.each do |member|
+      create(member, type, message, data)
     end
   end
 
@@ -20,7 +20,7 @@ class Notification::Poll::Report
     nil
   end
 
-  def recipient_list
+  def member_list
     admins_of_groups
   end
 
@@ -32,6 +32,7 @@ class Notification::Poll::Report
     {
       type: TYPE[:poll],
       poll_id: poll.id,
+      poll: PollSerializer.new(poll).as_json,
       series: poll.series,
       action: ACTION[:report],
       worker: WORKER[:report_poll]

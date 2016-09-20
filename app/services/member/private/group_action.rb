@@ -124,9 +124,9 @@ module Member::Private::GroupAction
     member.member_invite_codes.create!(invite_code_id: secret_code.id)
   end
 
-  def process_cancel_request(member)
+  def process_cancel_request(member = @member)
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
-    process_reject_request(member) if being_invited?(member)
+    process_reject_invitation(member) if being_invited?(member)
 
     clear_group_member_relation_cache(member)
     clear_group_member_requesting_cache(member)
@@ -134,9 +134,8 @@ module Member::Private::GroupAction
     group
   end
 
-  def process_accept_request
-    being_invited_by_admin_or_trigger? ? join_group(member) : process_join_request
-    group
+  def process_accept_invitation
+    process_join_request
   end
 
   def being_sent_join_request?(member)
@@ -193,7 +192,7 @@ module Member::Private::GroupAction
     Company::FollowOwnerGroup.new(member, group.member_id).follow!
   end
 
-  def process_reject_request(member)
+  def process_reject_invitation(member = @member)
     delete_group_being_invited_notification(member)
     remove_role_group_admin(member)
     

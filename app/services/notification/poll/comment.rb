@@ -4,8 +4,8 @@ class Notification::Poll::Comment
 
   attr_reader :sender, :comment, :poll, :comment_message, :poll_creator
 
-  def initialize(member, comment)
-    @sender = member
+  def initialize(sender, comment)
+    @sender = sender
     @comment = comment
     @poll = comment.poll
     @comment_message = comment.message
@@ -19,7 +19,7 @@ class Notification::Poll::Comment
     'watch_poll'
   end
 
-  def recipient_list
+  def member_list
     member_watched_list - mention_list
   end
 
@@ -28,6 +28,7 @@ class Notification::Poll::Comment
       type: TYPE[:comment],
       comment_id: comment.id,
       poll_id: poll.id,
+      poll: PollSerializer.new(poll).as_json,
       series: poll.series,
       worker: WORKER[:comment_poll]
     }
@@ -40,11 +41,11 @@ class Notification::Poll::Comment
   end
 
   def create_from_owner_poll
-    create(recipient_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
+    create(member_list, type, message_form_poll_creator, data.merge!(action: ACTION[:also_comment]))
   end
 
   def create_from_member
-    create(recipient_list - [poll_creator], type, message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
+    create(member_list - [poll_creator], type, message_form_member_to_a_member, data.merge!(action: ACTION[:also_comment]))
     create([poll_creator], type, message_from_member_to_creator, data.merge!(action: ACTION[:comment]))
   end
 

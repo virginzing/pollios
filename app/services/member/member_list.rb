@@ -66,31 +66,31 @@ class Member::MemberList
   end
     
   def friends
-    cached_all_friends.select { |a_member| a_member if friend_with?(a_member) }
+    member_visibility_from(cached_all_friends.select { |a_member| a_member if friend_with?(a_member) })
   end
 
   def followings
-    cached_all_friends.select { |a_member| a_member if following?(a_member) }
+    member_visibility_from(cached_all_friends.select { |a_member| a_member if following?(a_member) })
   end
 
   def followers
-    cached_all_followers.select { |a_member| a_member if followed_by?(a_member) }
+    member_visibility_from(cached_all_followers.select { |a_member| a_member if followed_by?(a_member) })
   end
 
   def blocks
-    cached_all_friends.select { |a_member| a_member if blocked?(a_member) }
+    member_visibility_from(cached_all_friends.select { |a_member| a_member if blocked?(a_member) })
   end
 
   def active_friends
-    cached_all_friends.select { |a_member| a_member if active_friend_with?(a_member) }
+    member_visibility_from(cached_all_friends.select { |a_member| a_member if active_friend_with?(a_member) })
   end
 
   def incoming_requests
-    cached_all_friends.select { |a_member| a_member if being_requested_friend_by?(a_member) }
+    member_visibility_from(cached_all_friends.select { |a_member| a_member if being_requested_friend_by?(a_member) })
   end
 
   def outgoing_requests
-    cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) }
+    member_visibility_from(cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) })
   end
 
   # NOTE: For debuggings and loggings Member::MemberAction's methods
@@ -175,16 +175,19 @@ class Member::MemberList
     member_cache.clear_list_followers
   end
 
-  # TODO: Privatize these two cached-methods.
+  def friends_and_followers
+    member_visibility_from(cached_all_friends | cached_all_followers)
+  end
+
   def cached_all_friends
     Rails.cache.fetch("member/#{member.id}/friends") do
-      friend_visibility.to_a
+      all_friends.to_a
     end
   end
 
   def cached_all_followers
     Rails.cache.fetch("member/#{member.id}/followers") do
-      follower_visibility.to_a
+      all_followers.to_a
     end
   end
   

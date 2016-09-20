@@ -53,6 +53,14 @@ class Member::GroupList
     active.select { |group| group if group.member_admin && group.members_request.size > 0 }
   end
 
+  def got_invitations
+    cached_all_groups.select { |group| group unless group.member_is_active } - requesting_to_joins
+  end
+
+  def requesting_to_joins
+    cached_requesting_to_joins
+  end
+
   def public_groups_for_company_available?
     member.get_company.using_public? && !member.get_company.using_internal?
   end
@@ -92,14 +100,6 @@ class Member::GroupList
 
   def inactive
     cached_all_groups.select { |group| group unless group.member_is_active }
-  end
-
-  def got_invitations
-    cached_all_groups.select { |group| group unless group.member_is_active }
-  end
-
-  def requesting_to_joins
-    cached_requesting_to_joins
   end
 
   def hash_member_count
