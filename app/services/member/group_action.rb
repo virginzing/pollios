@@ -42,7 +42,7 @@ class Member::GroupAction
     can_cancel_request, message = can_cancel_request?
     fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_request
 
-    process_cancel_request(member)
+    process_cancel_request
   end
 
   def accept_invitation
