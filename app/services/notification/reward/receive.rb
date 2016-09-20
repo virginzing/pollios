@@ -5,9 +5,9 @@ class Notification::Reward::Receive
   attr_reader :sender, :member_reward, :campaign
 
   def initialize(member_reward)
-    @sender = campaign.member
     @member_reward = member_reward
     @campaign = member_reward.campaign
+    @sender = campaign.member
 
     create(recipient_list, type, message, data)
   end
