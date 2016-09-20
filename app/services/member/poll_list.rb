@@ -73,7 +73,7 @@ class Member::PollList
   end
 
   def voted
-    poll_visibility_from(all_voted)
+    all_voted
   end
 
   def bookmarks
