@@ -11,7 +11,7 @@ class Group::MemberList
   end
 
   def active
-    member_visibility_from(cached_all_members.select { |member| member if member.is_active })
+    sort_by_name(member_visibility_from(cached_all_members.select { |member| member if member.is_active }))
   end
 
   def active_with_no_cache
@@ -19,7 +19,7 @@ class Group::MemberList
   end
 
   def pending
-    member_visibility_from(cached_all_members.select { |member| member unless member.is_active } - requesting)
+    sort_by_name(member_visibility_from(cached_all_members.select { |member| member unless member.is_active } - requesting))
   end
 
   def requesting
@@ -40,11 +40,11 @@ class Group::MemberList
   end
 
   def members
-    member_visibility_from(cached_all_members.select { |member| member if member.is_active && !member.admin })
+    sort_by_name(member_visibility_from(cached_all_members.select { |member| member if member.is_active && !member.admin }))
   end
 
   def admins
-    member_visibility_from(cached_all_members.select { |member| member if member.admin })
+    sort_by_name(member_visibility_from(cached_all_members.select { |member| member if member.admin }))
   end
 
   def join_recently
