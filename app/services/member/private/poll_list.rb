@@ -99,10 +99,8 @@ module Member::Private::PollList
   end
 
   def poll_visibility_from(list)
-    polls = Poll.where(id: list.to_a)
-
-    return polls.to_a unless viewing_member
-    polls.viewing_by_member(viewing_member).to_a
+    return list unless viewing_member
+    list & Poll.viewing_by_member(viewing_member)
   end
 
 end

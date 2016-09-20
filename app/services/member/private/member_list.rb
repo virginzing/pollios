@@ -31,10 +31,8 @@ module Member::Private::MemberList
   end
 
   def member_visibility_from(list)
-    members = Member.where(id: list.to_a)
-
-    return members.to_a unless viewing_member
-    members.viewing_by_member(viewing_member).to_a
+    return list unless viewing_member
+    list & Member.viewing_by_member(viewing_member)
   end
 
   def query_friend_using_facebook
