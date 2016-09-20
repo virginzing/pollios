@@ -58,7 +58,7 @@ class Member::PollSearch
   end
 
   def popular_tags
-    Tag.joins(:polls).merge(Poll.unscoped.viewing_by_member(member))
+    Tag.joins(:polls).merge(Poll.unscoped.viewing_by_member(member).active_poll.have_vote.without_closed.except_series)
       .select('tags.*, count(taggings.tag_id) as tag_count')
       .select('tags.*, max(taggings.created_at) AS tagged_at')
       .group('tags.id')
