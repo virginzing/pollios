@@ -4,13 +4,13 @@ class Notification::Poll::CreateToGroup
 
   attr_reader :sender, :poll, :group_list
 
-  def initialize(member, poll, group_list)
-    @sender = member
+  def initialize(sender, poll, group_list)
+    @sender = sender
     @poll = poll
     @group_list = group_list
 
-    members_of_all_group.each do |recipient|
-      create(recipient, type, message_for(recipient), data)
+    member_list.each do |member|
+      create(member, type, message_for(member), data)
     end
   end
 
@@ -18,12 +18,12 @@ class Notification::Poll::CreateToGroup
     'group'
   end
 
-  def recipient_list
+  def member_list
     members_of_groups
   end
 
-  def message_for(recipient)
-    available_groups = Member::GroupList.new(recipient).groups_available_for_poll(poll)
+  def message_for(member)
+    available_groups = Member::GroupList.new(member).groups_available_for_poll(poll)
 
     case available_groups.size
 

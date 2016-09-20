@@ -4,19 +4,19 @@ class Notification::Member::FriendsRequest
 
   attr_reader :sender, :a_member, :action
 
-  def initialize(member, a_member, options = {})
-    @sender = member
+  def initialize(sender, a_member, options = {})
+    @sender = sender
     @a_member = a_member
     @action = options['action']
 
-    create(recipient_list, type, message, data)
+    create(member_list, type, message, data)
   end
 
   def type
     'request'
   end
 
-  def recipient_list
+  def member_list
     [a_member]
   end
 

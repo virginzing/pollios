@@ -4,21 +4,21 @@ class Notification::Poll::Mention
 
   attr_reader :sender, :comment, :mention_list, :poll
 
-  def initialize(member, comment, mention_list)
-    @sender = member
+  def initialize(sender, comment, mention_list)
+    @sender = sender
     @comment = comment
     @mention_list = mention_list
 
     @poll = comment.poll
 
-    create(recipient_list, type, message, data)
+    create(member_list, type, message, data)
   end
 
   def type
     'watch_poll'
   end
 
-  def recipient_list
+  def member_list
     mention_list
   end
 
@@ -32,6 +32,7 @@ class Notification::Poll::Mention
       action: ACTION[:mention],
       comment_id: comment.id,
       poll_id: poll.id,
+      poll: PollSerializer.new(poll).as_json,
       series: poll.series,
       worker: WORKER[:mention]
     }

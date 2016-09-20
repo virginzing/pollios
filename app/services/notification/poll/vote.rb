@@ -4,19 +4,19 @@ class Notification::Poll::Vote
 
   attr_reader :sender, :poll, :anonymous
 
-  def initialize(member, poll, anonymous = false)
-    @sender = member
+  def initialize(sender, poll, anonymous = false)
+    @sender = sender
     @poll = poll
     @anonymous = anonymous
 
-    create(recipient_list, type, message, data, log: true)
+    create(member_list, type, message, data, log: true)
   end
 
   def type
     'watch_poll'
   end
 
-  def recipient_list
+  def member_list
     member_watched_list
   end
 
@@ -28,17 +28,17 @@ class Notification::Poll::Vote
     @data ||= {
       type: TYPE[:poll],
       poll_id: poll.id,
+      poll: PollSerializer.new(poll).as_json,
       series: poll.series,
       anonymous: anonymous,
-      action: ACTION[:vote],
-      poll: PollSerializer.new(poll).as_json
+      action: ACTION[:vote]
     } 
   end
 
   private
 
-  def name_or_anonymous(member)
-    anonymous ? 'Anonymous' : (member.fullname || 'No name')
+  def name_or_anonymous(sender)
+    anonymous ? 'Anonymous' : (sender.fullname || 'No name')
   end
 
   def member_watched_list
