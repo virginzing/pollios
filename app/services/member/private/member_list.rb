@@ -31,25 +31,12 @@ module Member::Private::MemberList
   end
 
   def member_visibility_from(list)
-    members = Member.where(id: list)
-
-    return members.to_a unless viewing_member
-    members.viewing_by_member(viewing_member).to_a
+    return list unless viewing_member
+    list & Member.viewing_by_member(viewing_member)
   end
 
   def query_friend_using_facebook
     Member.with_status_account(:normal).where(fb_id: member.list_fb_id).order('LOWER(fullname)')
   end
 
-  def cached_all_friends
-    Rails.cache.fetch("member/#{member.id}/friends") do
-      all_friends.to_a
-    end
-  end
-
-  def cached_all_followers
-    Rails.cache.fetch("member/#{member.id}/followers") do
-      all_followers.to_a
-    end
-  end
 end

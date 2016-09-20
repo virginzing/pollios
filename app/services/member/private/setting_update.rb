@@ -10,7 +10,7 @@ module Member::Private::SettingUpdate
     update_cover_preset
 
     clear_member_cached
-    clear_member_cached_for_friends
+    clear_member_cached_for_friends_and_followings
 
     member
   end
@@ -132,8 +132,8 @@ module Member::Private::SettingUpdate
     member.update!(first_signup: false)
   end
 
-  def clear_member_cached_for_friends
-    FlushCached::Member.new(member).clear_list_friends_all_members
+  def clear_member_cached_for_friends_and_followings
+    FlushCached::Member.new(member).clear_list_friends_and_followings_all_members
   end
 
   def clear_member_cached

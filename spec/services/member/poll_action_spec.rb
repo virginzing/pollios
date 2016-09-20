@@ -33,6 +33,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- Member can delete their poll.' do
       @creator_poll_action.delete
+      puts 'FUCK ' + @poll.deleted_at.inspect
+
       expect(Member::PollList.new(@poll_creator).created.include?(@poll)).to be false
     end
 

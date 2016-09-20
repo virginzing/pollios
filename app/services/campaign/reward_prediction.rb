@@ -28,15 +28,16 @@ class Campaign::RewardPrediction
 
   def random_reward
     reward_id = random_reward_id
+    
     if reward_id == 0
-      create_member_reward(:not_receive, member.id)
-      send_not_receive_reward_notification(member.id.to_a)
+      member_reward = create_member_reward(:not_receive, member.id)
     else
       increment_used_campaign_claimed_reward(reward_id)
       member_reward = create_member_reward(:receive, member.id, reward_id: reward_id \
         , serial_code: generate_serial_code)
-      send_receive_reward_notification(member_reward.id)
     end
+
+    send_receive_reward_notification(member_reward.id)
   end
 
   def random_reward_id

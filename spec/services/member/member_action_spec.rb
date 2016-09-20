@@ -449,7 +449,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- A member[1] can not report your self' do
-      expect { Member::MemberAction.new(@member_1, @member_1).report(true) } \
+      expect { Member::MemberAction.new(@member_1, @member_1).report('test repot' ,true) } \
         .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::Member.report_self)
     end
   end
