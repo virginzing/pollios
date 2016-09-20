@@ -174,5 +174,21 @@ class Member::MemberList
     member_cache.clear_list_friends
     member_cache.clear_list_followers
   end
+
+  def friends_and_followers
+    member_visibility_from(cached_all_friends | cached_all_followers)
+  end
+
+  def cached_all_friends
+    Rails.cache.fetch("member/#{member.id}/friends") do
+      all_friends.to_a
+    end
+  end
+
+  def cached_all_followers
+    Rails.cache.fetch("member/#{member.id}/followers") do
+      all_followers.to_a
+    end
+  end
   
 end

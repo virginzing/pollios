@@ -39,15 +39,4 @@ module Member::Private::MemberList
     Member.with_status_account(:normal).where(fb_id: member.list_fb_id).order('LOWER(fullname)')
   end
 
-  def cached_all_friends
-    Rails.cache.fetch("member/#{member.id}/friends") do
-      all_friends.to_a
-    end
-  end
-
-  def cached_all_followers
-    Rails.cache.fetch("member/#{member.id}/followers") do
-      all_followers.to_a
-    end
-  end
 end
