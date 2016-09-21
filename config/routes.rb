@@ -12,6 +12,7 @@ Pollios::Application.routes.draw do
   end
 
   draw :public_surveys
+  draw :v1
 
   get 'services', to: 'select_services#index',  as: :select_services
 
@@ -605,17 +606,6 @@ Pollios::Application.routes.draw do
   #   mount Sidekiq::Web => '/sidekiq'
   # end
   # mount Sidekiq::Web => '/sidekiq'
-
-  namespace 'v1' do
-    devise_for :admin, controllers: { sessions: 'v1/admin/authentication' }, path_names: { sign_in: 'signin', sign_out: 'signout' }
-
-    namespace 'admin' do
-      get 'dashboard', to: 'dashboard#index'
-    end
-    namespace 'polls' do
-      get ':custom_key', to: 'polls#get'
-    end
-  end
 
   scope module: 'v1' do
     get '*path', to: 'errors#not_found'
