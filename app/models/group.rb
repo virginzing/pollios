@@ -170,7 +170,7 @@ class Group < ActiveRecord::Base
 
     if find_group_member
       find_group_member.destroy
-      NotifyLog.update_cancel_invitation_to_group(member, friend, group)
+      V1::Group::CancelInvitationWorker.perform_async(member.id, friend.id, group.id)
 
       if find_group_member.group.company?
         friend.remove_role :group_admin, find_group_member.group

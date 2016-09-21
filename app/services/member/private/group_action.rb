@@ -205,7 +205,8 @@ module Member::Private::GroupAction
 
   def delete_group_being_invited_notification(member)
     invitation_sender = Member.cached_find(relationship_to_group(member).invite_id)
-    NotifyLog.update_cancel_invitation_to_group(invitation_sender, member, group)
+
+    remove_update_log_cancel_invitation_to_group(invitation_sender, member, group)
   end
 
   def remove_role_group_admin(member)
@@ -343,6 +344,10 @@ module Member::Private::GroupAction
 
   def remove_update_log_delete_poll
     V1::Poll::DeleteWorker.perform_async(poll_id)
+  end
+
+  def remove_update_log_cancel_invitation_to_group(invitation_sender, member)
+    V1::Group::CancelInvitationWorker.perform_async(invitation_sender.id, member.id, group.id)
   end
 
 end
