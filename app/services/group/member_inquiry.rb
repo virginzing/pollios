@@ -26,6 +26,14 @@ class Group::MemberInquiry
     group_member_list.pending.include?(member)
   end
 
+  def members?
+    group_member_list.members.present?
+  end
+
+  def admins?
+    group_member_list.groups.present?
+  end
+
   def has_all?(members)
     if members.is_a?(Array)
       (members - group_member_list.all).empty?
