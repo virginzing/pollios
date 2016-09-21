@@ -303,7 +303,7 @@ module Member::Private::PollAction
 
   def process_not_interest
     NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
-    remove_update_log_not_interested_poll
+    remove_update_log_not_interest_poll
 
     remove_member_relation_to_poll
 
@@ -337,7 +337,7 @@ module Member::Private::PollAction
       , message: report_params[:message], message_preset: report_params[:message_preset])
     reporting
 
-    remove_update_log_not_interested_poll
+    remove_update_log_not_interest_poll
 
     claer_voted_all_cached_for_member
     clear_reported_cached_for_member
@@ -366,7 +366,7 @@ module Member::Private::PollAction
   def process_delete
     remove_member_relation_to_poll
     create_company_group_action_tracking_record_for_action('delete')
-    remove_update_log_for_deleted_poll
+    remove_update_log_delete_poll
     poll.destroy
 
     nil
@@ -433,7 +433,8 @@ module Member::Private::PollAction
 
   def process_delete_comment
     comment = poll.comments.cached_find(comment_params[:comment_id])
-    NotifyLog.update_deleted_comment(comment)
+    # NotifyLog.update_deleted_comment(comment)
+    remove_update_log_delete_comment(comment)
     comment.destroy
 
     decrease_comment_count
@@ -516,11 +517,15 @@ module Member::Private::PollAction
     V1::Poll::CommentWorker.perform_async(member.id, comment.id)
   end
 
-  def remove_update_log_for_deleted_poll
+  def remove_update_log_delete_poll
     V1::Poll::DeleteWorker.perform_async(poll.id)
   end
 
-  def remove_update_log_not_interested_poll
+  def remove_update_log_not_interest_poll
     V1::Poll::NotInterestWorker.perform_async(poll.id, member.id)
+  end
+
+  def remove_update_log_delete_comment(comment)
+    V1::Poll::DeleteCommentWorker.perform_async(comment.id)
   end
 end

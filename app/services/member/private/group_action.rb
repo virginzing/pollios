@@ -287,7 +287,7 @@ module Member::Private::GroupAction
   def delete_poll_from_system(poll)
     poll.destroy
     create_company_group_action_tracking_delete_poll
-    remove_update_log_for_deleted_poll
+    remove_update_log_delete_poll
   end
 
   def create_company_group_action_tracking_delete_poll
@@ -341,7 +341,7 @@ module Member::Private::GroupAction
     V1::Group::ApproveWorker.perform_async(member.id, a_member.id, group.id)
   end
 
-  def remove_update_log_for_deleted_poll
+  def remove_update_log_delete_poll
     V1::Poll::DeleteWorker.perform_async(poll_id)
   end
 
