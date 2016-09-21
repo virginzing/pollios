@@ -149,7 +149,7 @@ module Member::Private::GroupAction
 
   def being_invited_by_admin_or_trigger?
     return false unless being_invited?(member)
-    return true if member_listing_service.admin?(Member.cached_find(relationship_to_group(member).invite_id))
+    return true if group_member_inquiry.admin?(Member.cached_find(relationship_to_group(member).invite_id))
     member.id == relationship_to_group(member).invite_id
   end
 

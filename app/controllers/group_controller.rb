@@ -122,7 +122,7 @@ class GroupController < ApplicationController
 
   def detail_group
     @member = Member.cached_find(params[:member_id])
-    @group_member ||= Group::MemberList.new(@group)
+    @group_member ||= Group::MemberInquiry.new(@group)
     @member_active = @group_member.join_recently
   end
 

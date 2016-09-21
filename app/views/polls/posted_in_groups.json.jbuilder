@@ -1,7 +1,7 @@
 count = 0
 json.groups @posted_in_groups do |group|
 
-    group_member = Group::MemberList.new(group)
+    group_member = Group::MemberInquiry.new(group)
     is_active_member = group_member.active?(@member)
     is_pending = group_member.pending?(@member)
     is_requesting = group_member.requesting?(@member)

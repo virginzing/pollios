@@ -161,7 +161,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.cancel_group(member, friend, group) ## cancel to another people
-    raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberList.new(group).admin?(member)
+    raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberInquiry.new(group).admin?(member)
     raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} had already accepted your request." if Group::MemberList.new(group).active.map(&:id).include?(friend.id)
 
     find_group_member = GroupMember.where(group_id: group.id, member_id: friend.id).first
@@ -430,7 +430,7 @@ class Group < ActiveRecord::Base
   def kick_member_out_group(kicker, friend_id)
     begin
 
-      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberList.new(self).admin?(kicker)
+      raise ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberInquiry.new(self).admin?(kicker)
 
       member = Member.cached_find(friend_id)
 
@@ -456,9 +456,9 @@ class Group < ActiveRecord::Base
     begin
       member = Member.cached_find(friend_id)
 
-      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberList.new(self).admin?(promoter)
+      fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::NOT_ADMIN unless Group::MemberInquiry.new(self).admin?(promoter)
       if admin_status
-        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::MemberList.new(self).admin?(member)
+        fail ExceptionHandler::UnprocessableEntity, ExceptionHandler::Message::Group::ADMIN if Group::MemberInquiry.new(self).admin?(member)
       end
 
       if find_member_in_group = group_members.find_by(member_id: friend_id)

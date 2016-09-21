@@ -66,31 +66,31 @@ class Member::MemberList
   end
     
   def friends
-    member_visibility_from(cached_all_friends.select { |a_member| a_member if friend_with?(a_member) })
+    visible_member_list(cached_all_friends.select { |a_member| a_member if friend_with?(a_member) })
   end
 
   def followings
-    member_visibility_from(cached_all_friends.select { |a_member| a_member if following?(a_member) })
+    visible_member_list(cached_all_friends.select { |a_member| a_member if following?(a_member) })
   end
 
   def followers
-    member_visibility_from(cached_all_followers.select { |a_member| a_member if followed_by?(a_member) })
+    visible_member_list(cached_all_followers.select { |a_member| a_member if followed_by?(a_member) })
   end
 
   def blocks
-    member_visibility_from(cached_all_friends.select { |a_member| a_member if blocked?(a_member) })
+    visible_member_list(cached_all_friends.select { |a_member| a_member if blocked?(a_member) })
   end
 
   def active_friends
-    member_visibility_from(cached_all_friends.select { |a_member| a_member if active_friend_with?(a_member) })
+    visible_member_list(cached_all_friends.select { |a_member| a_member if active_friend_with?(a_member) })
   end
 
   def incoming_requests
-    member_visibility_from(cached_all_friends.select { |a_member| a_member if being_requested_friend_by?(a_member) })
+    visible_member_list(cached_all_friends.select { |a_member| a_member if being_requested_friend_by?(a_member) })
   end
 
   def outgoing_requests
-    member_visibility_from(cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) })
+    visible_member_list(cached_all_friends.select { |a_member| a_member if requesting_friend_with?(a_member) })
   end
 
   # NOTE: For debuggings and loggings Member::MemberAction's methods
@@ -176,7 +176,7 @@ class Member::MemberList
   end
 
   def friends_and_followers
-    member_visibility_from(cached_all_friends | cached_all_followers)
+    visible_member_list(cached_all_friends | cached_all_followers)
   end
 
   def cached_all_friends

@@ -17,7 +17,7 @@ module Pollios::V1::GroupAPI
     end
 
     def admin_of_group?
-      @admin_of_group ||= Group::MemberList.new(group).admin?(current_member)
+      @admin_of_group ||= Group::MemberInquiry.new(group).admin?(current_member)
     end
 
   end

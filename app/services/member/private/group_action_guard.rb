@@ -98,16 +98,20 @@ module Member::Private::GroupActionGuard
     [true, nil]
   end
 
+  def group_member_inquiry
+    Group::MemberInquiry.new(group)
+  end
+
   def same_member
     member.id == a_member.id
   end
 
   def already_member(member)
-    member_listing_service.active?(member)
+    group_member_inquiry.active?(member)
   end
 
   def already_sent_request(member)
-    member_listing_service.requesting?(member)
+    group_member_inquiry.requesting?(member)
   end
 
   def not_exist_join_request(member)
@@ -123,7 +127,7 @@ module Member::Private::GroupActionGuard
   end
 
   def not_exist_invite_request(member)
-    !member_listing_service.pending?(member)
+    !group_member_inquiry.pending?(member)
   end
 
   def not_invite
@@ -135,7 +139,7 @@ module Member::Private::GroupActionGuard
   end
 
   def already_admin
-    member_listing_service.admin?(a_member)
+    group_member_inquiry.admin?(a_member)
   end
 
   def not_admin
@@ -151,7 +155,7 @@ module Member::Private::GroupActionGuard
   end
 
   def not_authority
-    !((Poll.cached_find(poll_id).member_id == member.id) || Group::MemberList.new(group).admin?(member))
+    !((Poll.cached_find(poll_id).member_id == member.id) || group_member_inquiry.admin?(member))
   end
 
   def secret_code
@@ -169,6 +173,6 @@ module Member::Private::GroupActionGuard
   def already_member_in_group_by_secret_code?
     @group = Group.cached_find(secret_code.group_id)
 
-    Group::MemberList.new(group).active?(member)
+    group_member_inquiry.active?(member)
   end
 end
