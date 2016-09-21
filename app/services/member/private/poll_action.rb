@@ -305,7 +305,7 @@ module Member::Private::PollAction
     NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
     NotifyLog.update_deleted_poll_for_member(poll, member)
 
-    sever_member_relation_to_poll
+    remove_member_relation_to_poll
 
     poll
   end
@@ -350,7 +350,7 @@ module Member::Private::PollAction
   def reporting
     increase_report_count
 
-    sever_member_relation_to_poll
+    remove_member_relation_to_poll
 
     return unless poll.report_count >= 10
     poll.update!(status_poll: :black)
@@ -364,7 +364,7 @@ module Member::Private::PollAction
   end
 
   def process_delete
-    sever_member_relation_to_poll
+    remove_member_relation_to_poll
     create_company_group_action_tracking_record_for_action('delete')
     remove_update_log_for_deleted_poll(poll)
     poll.destroy
@@ -372,7 +372,7 @@ module Member::Private::PollAction
     nil
   end
 
-  def sever_member_relation_to_poll
+  def remove_member_relation_to_poll
     process_unbookmark
     delete_saved_poll
     process_unwatch
