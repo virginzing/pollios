@@ -179,7 +179,7 @@ class PollsController < ApplicationController
   def delete_my_poll
     raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" unless @poll.member_id == @member_id
     @poll.destroy
-    NotifyLog.update_deleted_poll(@poll)
+    V1::Poll::DeleteWorker.perform_async(@poll.id)
     DeletePoll.create_log(@poll)
   end
 

@@ -366,7 +366,7 @@ module Member::Private::PollAction
   def process_delete
     sever_member_relation_to_poll
     create_company_group_action_tracking_record_for_action('delete')
-    NotifyLog.update_deleted_poll(poll)
+    remove_update_log_for_deleted_poll(poll)
     poll.destroy
 
     nil
@@ -514,5 +514,9 @@ module Member::Private::PollAction
 
   def send_comment_notification(comment)
     V1::Poll::CommentWorker.perform_async(member.id, comment.id)
+  end
+
+  def remove_update_log_for_deleted_poll(poll)
+    V1::Poll::DeleteWorker.perform_async(poll.id)
   end
 end
