@@ -30,9 +30,9 @@ module Member::Private::PollAction
     poll = @poll || new_poll
     return unless poll.in_group
 
-    group_ids = poll.in_group_ids.split(',').map(&:to_i)
-    group_ids.each do |group_id|
-      member.activity_feeds.create! action: action, trackable: poll, group_id: group_id
+    group_list = Group.find(poll.in_group_ids.split(',').map(&:to_i))
+    group_list.each do |group|
+      member.activity_feeds.create!(action: action, trackable: poll, group_id: group.id) if group.company?
     end
   end
 
