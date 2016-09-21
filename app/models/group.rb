@@ -295,7 +295,7 @@ class Group < ActiveRecord::Base
 
       if find_current_ask_group.present?
         find_current_ask_group.destroy
-        NotifyLog.update_cancel_request_to_join_group(member, group)
+        V1::Group::CancelRequestWorker.perform_async(member.id, group.id)
 
         member.flush_cache_ask_join_groups
         group

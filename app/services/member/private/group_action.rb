@@ -128,6 +128,8 @@ module Member::Private::GroupAction
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
     process_reject_invitation(member) if being_invited?(member)
 
+    remove_update_log_cancel_request(member)
+
     clear_group_member_relation_cache(member)
     clear_group_member_requesting_cache(member)
 
@@ -348,6 +350,10 @@ module Member::Private::GroupAction
 
   def remove_update_log_cancel_invitation_to_group(invitation_sender, member)
     V1::Group::CancelInvitationWorker.perform_async(invitation_sender.id, member.id, group.id)
+  end
+
+  def remove_update_log_cancel_request(member)
+    V1::Group::CancelRequestWorker.perform_async(member.id, group.id)
   end
 
 end
