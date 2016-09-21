@@ -10,7 +10,7 @@ class Notification::Poll::CreateToGroup
     @group_list = group_list
 
     member_list.each do |member|
-      create(member, type, message_for(member), data)
+      create([member], type, message_for(member), data)
     end
   end
 

@@ -12,7 +12,7 @@ class Notification::Poll::Report
     return unless poll_in_groups?
 
     member_list.each do |member|
-      create(member, type, message, data)
+      create([member], type, message, data)
     end
   end
 
