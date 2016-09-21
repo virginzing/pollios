@@ -12,6 +12,7 @@
 #  deleted_at        :datetime
 #
 
+# TODO : rename -> UpdateLog
 class NotifyLog < ActiveRecord::Base
   serialize :custom_properties, Hash
 
@@ -36,12 +37,6 @@ class NotifyLog < ActiveRecord::Base
     NotifyLog.without_deleted
       .where('custom_properties LIKE ?', "%poll_id: #{poll.id}%")
       .where("recipient_id = #{member.id}")
-      .update_all(deleted_at: Time.now)
-  end
-
-  def self.update_deleted_feedback(poll_series)
-    NotifyLog.without_deleted
-      .where('custom_properties LIKE ? AND custom_properties LIKE ?', "%poll_id: #{poll_series.id}%", '%series: true%')
       .update_all(deleted_at: Time.now)
   end
 
@@ -74,10 +69,18 @@ class NotifyLog < ActiveRecord::Base
       .update_all(deleted_at: Time.now)
   end
 
+  # TODO : remove methods below after changed this model to UpdateLog & implement new structure 
+
   def self.update_deleted_poll_in_group(poll, group)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?' \
         , '%type: Poll%', "%poll_id: #{poll.id}%", "%group_id: #{group.id}%")
+      .update_all(deleted_at: Time.now)
+  end
+
+  def self.update_deleted_feedback(poll_series)
+    NotifyLog.without_deleted
+      .where('custom_properties LIKE ? AND custom_properties LIKE ?', "%poll_id: #{poll_series.id}%", '%series: true%')
       .update_all(deleted_at: Time.now)
   end
 
