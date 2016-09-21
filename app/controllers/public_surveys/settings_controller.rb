@@ -16,7 +16,7 @@ class PublicSurveys::SettingsController < ApplicationController
     find_member.show_recommend = setting_params[:show_recommend].to_b
 
     if find_member.fullname_changed?
-      NotifyLog.edit_message_that_change_name(find_member, setting_params[:fullname], old_name)
+      NotifyLog.update_changed_member_name(find_member, setting_params[:fullname], old_name)
       Activity.create_activity_my_self(find_member, ACTION[:change_name])
     end
 

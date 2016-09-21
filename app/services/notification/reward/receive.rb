@@ -9,14 +9,14 @@ class Notification::Reward::Receive
     @campaign = member_reward.campaign
     @sender = campaign.member
 
-    create(recipient_list, type, message, data)
+    create(member_list, type, message, data)
   end
 
   def type
     nil
   end
 
-  def recipient_list
+  def member_list
     [member_reward.member]
   end
 

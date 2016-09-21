@@ -229,7 +229,7 @@ class MembersController < ApplicationController
 
       if @current_member.update(update_profile_params.except(:member_id))
         if fullname
-          NotifyLog.edit_message_that_change_name(@current_member, fullname, old_name)
+          NotifyLog.update_changed_member_name(@current_member, fullname, old_name)
           Activity.create_activity_my_self(@current_member, ACTION[:change_name])
         end
 

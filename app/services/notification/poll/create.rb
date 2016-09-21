@@ -4,11 +4,11 @@ class Notification::Poll::Create
 
   attr_reader :sender, :poll
 
-  def initialize(member, poll)
-    @sender = member
+  def initialize(sender, poll)
+    @sender = sender
     @poll = poll
 
-    create(recipient_list, type, message, data)
+    create(member_list, type, message, data)
   end
 
   def type
@@ -16,7 +16,7 @@ class Notification::Poll::Create
     'friend'
   end
 
-  def recipient_list
+  def member_list
     public_poll? ? all_member : friends_and_followers
   end
 

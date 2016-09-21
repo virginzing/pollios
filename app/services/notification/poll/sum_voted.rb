@@ -8,7 +8,7 @@ class Notification::Poll::SumVoted
     @poll = poll
     @sender = nil
 
-    create(recipient_list, type, message, data, push: true)
+    create(member_list, type, message, data, push: true)
 
     poll.update!(notify_state: 0)
   end
@@ -17,7 +17,7 @@ class Notification::Poll::SumVoted
     'watch_poll'
   end
 
-  def recipient_list
+  def member_list
     member_watched_list - recently_voter_list
   end
 
@@ -40,6 +40,7 @@ class Notification::Poll::SumVoted
     @data ||= {
       type: TYPE[:poll],
       poll_id: poll.id,
+      poll: PollSerializer.new(poll).as_json,
       series: poll.series,
       worker: WORKER[:sum_voted]
     } 

@@ -31,7 +31,7 @@ class Group::MemberInquiry
   end
 
   def admins?
-    group_member_list.groups.present?
+    group_member_list.admins.present?
   end
 
   def has_all?(members)

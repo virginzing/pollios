@@ -79,7 +79,7 @@ class PublicSurveys::PollsController < ApplicationController
 
   def destroy
     @poll.groups.each do |group|
-      NotifyLog.poll_with_group_deleted(@poll, group)
+      NotifyLog.update_deleted_poll_in_group(@poll, group)
     end
 
     if @poll.in_group
@@ -87,7 +87,7 @@ class PublicSurveys::PollsController < ApplicationController
       Company::TrackActivityFeedPoll.new(current_member, @poll.in_group_ids, @poll, 'delete').tracking
     end
 
-    NotifyLog.check_update_poll_deleted(@poll)
+    V1::Poll::DeleteWorker.perform_async(@poll.id)
     @poll.destroy
     @poll.member.flush_cache_about_poll
     DeletePoll.create_log(@poll)

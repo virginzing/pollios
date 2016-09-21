@@ -170,7 +170,7 @@ class Group < ActiveRecord::Base
 
     if find_group_member
       find_group_member.destroy
-      NotifyLog.check_update_cancel_invite_friend_to_group_deleted(member, friend, group)
+      V1::Group::CancelInvitationWorker.perform_async(member.id, friend.id, group.id)
 
       if find_group_member.group.company?
         friend.remove_role :group_admin, find_group_member.group
@@ -295,7 +295,7 @@ class Group < ActiveRecord::Base
 
       if find_current_ask_group.present?
         find_current_ask_group.destroy
-        NotifyLog.check_update_cancel_request_group_deleted(member, group)
+        V1::Group::CancelRequestWorker.perform_async(member.id, group.id)
 
         member.flush_cache_ask_join_groups
         group

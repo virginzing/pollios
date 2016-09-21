@@ -128,6 +128,8 @@ module Member::Private::GroupAction
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
     process_reject_invitation(member) if being_invited?(member)
 
+    remove_update_log_cancel_request(member)
+
     clear_group_member_relation_cache(member)
     clear_group_member_requesting_cache(member)
 
@@ -205,7 +207,8 @@ module Member::Private::GroupAction
 
   def delete_group_being_invited_notification(member)
     invitation_sender = Member.cached_find(relationship_to_group(member).invite_id)
-    NotifyLog.check_update_cancel_invite_friend_to_group_deleted(invitation_sender, member, group)
+
+    remove_update_log_cancel_invitation_to_group(invitation_sender, member, group)
   end
 
   def remove_role_group_admin(member)
@@ -269,12 +272,29 @@ module Member::Private::GroupAction
 
   def process_delete_poll
     poll = Poll.cached_find(poll_id)
-    group.poll_groups.find_by(poll_id: poll_id).update!(deleted_at: Time.now, deleted_by_id: member.id)
-    poll.destroy if poll.poll_groups == []
-    NotifyLog.check_update_poll_deleted(poll)
-    NotifyLog.poll_with_group_deleted(poll, group)
+    
+    delere_poll_in_group
+    delete_poll_from_system(poll) if poll_not_in_groups?(poll)
 
     group
+  end
+
+  def delere_poll_in_group
+    group.poll_groups.find_by(poll_id: poll_id).update!(deleted_at: Time.now, deleted_by_id: member.id)
+  end
+
+  def poll_not_in_groups?(poll)
+    poll.poll_groups.empty?
+  end
+
+  def delete_poll_from_system(poll)
+    poll.destroy
+    create_company_group_action_tracking_delete_poll
+    remove_update_log_delete_poll
+  end
+
+  def create_company_group_action_tracking_delete_poll
+    member.activity_feeds.create!(action: :delete, trackable: poll, group_id: group.id) if group.company?
   end
 
   def clear_group_cache_for_member(member)
@@ -322,6 +342,18 @@ module Member::Private::GroupAction
 
   def send_approve_join_group_request_notification
     V1::Group::ApproveWorker.perform_async(member.id, a_member.id, group.id)
+  end
+
+  def remove_update_log_delete_poll
+    V1::Poll::DeleteWorker.perform_async(poll_id)
+  end
+
+  def remove_update_log_cancel_invitation_to_group(invitation_sender, member)
+    V1::Group::CancelInvitationWorker.perform_async(invitation_sender.id, member.id, group.id)
+  end
+
+  def remove_update_log_cancel_request(member)
+    V1::Group::CancelRequestWorker.perform_async(member.id, group.id)
   end
 
 end
