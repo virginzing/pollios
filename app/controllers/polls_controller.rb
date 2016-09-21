@@ -56,7 +56,7 @@ class PollsController < ApplicationController
     @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
-      NotifyLog.update_deleted_poll_for_member(@poll, @current_member)
+      V1::Poll::NotInterestWorker.perform_async(@poll.id, @current_member.id)
       SavePollLater.delete_save_later(@current_member.id, @poll)
       render status: :created
     rescue => e
