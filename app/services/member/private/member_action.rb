@@ -146,7 +146,7 @@ module Member::Private::MemberAction
 
   def process_deny_friend_request
     update_both_relations(status: :nofriend)
-    NotifyLog.check_update_cancel_request_friend_deleted(member, a_member)
+    NotifyLog.update_cancel_friend_request(member, a_member)
 
     clear_friends_and_follwers_caches_for_members
 

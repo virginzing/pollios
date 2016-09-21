@@ -15,7 +15,7 @@ class Report::Poll
       send_notification if in_group?
       clear_cached
       SavePollLater.delete_save_later(@member.id, @poll)
-      NotifyLog.deleted_with_poll_and_member(@poll, @member)
+      NotifyLog.update_deleted_poll_for_member(@poll, @member)
       FlushCached::Member.new(@member).clear_list_report_polls
     end
     reporting

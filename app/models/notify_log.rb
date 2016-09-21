@@ -26,39 +26,39 @@ class NotifyLog < ActiveRecord::Base
   belongs_to :recipient, class_name: 'Member'
   belongs_to :sender, class_name: 'Member'
 
-  def self.check_update_poll_deleted(poll)
+  def self.update_deleted_poll(poll)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ?', "%poll_id: #{poll.id}%")
       .update_all(deleted_at: Time.now)
   end
 
-  def self.deleted_with_poll_and_member(poll, member)
+  def self.update_deleted_poll_for_member(poll, member)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ?', "%poll_id: #{poll.id}%")
       .where("recipient_id = #{member.id}")
       .update_all(deleted_at: Time.now)
   end
 
-  def self.deleted_feedback(poll_series)
+  def self.update_deleted_feedback(poll_series)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ?', "%poll_id: #{poll_series.id}%", '%series: true%')
       .update_all(deleted_at: Time.now)
   end
 
-  def self.check_update_cancel_request_friend_deleted(sender, recipient)
+  def self.update_cancel_friend_request(sender, recipient)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ?', '%type: Friend%', '%action: RequestFriend%')
       .where("sender_id = #{sender.id} AND recipient_id = #{recipient.id}")
       .update_all(deleted_at: Time.now)
   end
 
-  def self.check_update_comment_deleted(comment)
+  def self.update_deleted_comment(comment)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ?', '%type: Comment%', "%comment_id: #{comment.id}%")
       .update_all(deleted_at: Time.now)
   end
 
-  def self.check_update_cancel_invite_friend_to_group_deleted(sender, recipient, group)
+  def self.update_cancel_invitation_to_group(sender, recipient, group)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?' \
         , '%type: Group%', '%action: Invite%', "%group_id: #{group.id}%")
@@ -66,7 +66,7 @@ class NotifyLog < ActiveRecord::Base
       .update_all(deleted_at: Time.now)
   end
 
-  def self.check_update_cancel_request_group_deleted(sender, group)
+  def self.update_cancel_request_to_join_group(sender, group)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?' \
         , '%type: RequestGroup%', '%action: Request%', "%group_id: #{group.id}%")
@@ -74,14 +74,14 @@ class NotifyLog < ActiveRecord::Base
       .update_all(deleted_at: Time.now)
   end
 
-  def self.poll_with_group_deleted(poll, group)
+  def self.update_deleted_poll_in_group(poll, group)
     NotifyLog.without_deleted
       .where('custom_properties LIKE ? AND custom_properties LIKE ? AND custom_properties LIKE ?' \
         , '%type: Poll%', "%poll_id: #{poll.id}%", "%group_id: #{group.id}%")
       .update_all(deleted_at: Time.now)
   end
 
-  def self.edit_message_that_change_name(member, new_name, old_name)
+  def self.update_changed_member_name(member, new_name, old_name)
     NotifyLog.without_deleted
       .where("sender_id = #{member.id} AND message LIKE ?", "%#{old_name}%").all.each do |notify_log|
       begin

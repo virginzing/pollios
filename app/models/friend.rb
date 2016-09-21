@@ -245,7 +245,7 @@ class Friend < ActiveRecord::Base
         raise ExceptionHandler::UnprocessableEntity, "#{friend.get_name} had already denied your request." unless init_member_list_friend.cached_all_friends.map(&:id).include?(friend.id)
 
         check_that_follow(member, find_member, friend, find_friend)
-        NotifyLog.check_update_cancel_request_friend_deleted(member, friend)
+        NotifyLog.update_cancel_friend_request(member, friend)
       end
 
       FlushCached::Member.new(member).clear_list_friends

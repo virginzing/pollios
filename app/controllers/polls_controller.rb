@@ -56,7 +56,7 @@ class PollsController < ApplicationController
     @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
-      NotifyLog.deleted_with_poll_and_member(@poll, @current_member)
+      NotifyLog.update_deleted_poll_for_member(@poll, @current_member)
       SavePollLater.delete_save_later(@current_member.id, @poll)
       render status: :created
     rescue => e
@@ -144,7 +144,7 @@ class PollsController < ApplicationController
             else
               delete_poll_in_one_group
             end
-            NotifyLog.poll_with_group_deleted(@poll, set_group)
+            NotifyLog.update_deleted_poll_in_group(@poll, set_group)
           else
             delete_my_poll
             PollGroup.own_deleted(@current_member, @poll)
@@ -179,7 +179,7 @@ class PollsController < ApplicationController
   def delete_my_poll
     raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" unless @poll.member_id == @member_id
     @poll.destroy
-    NotifyLog.check_update_poll_deleted(@poll)
+    NotifyLog.update_deleted_poll(@poll)
     DeletePoll.create_log(@poll)
   end
 
@@ -439,7 +439,7 @@ class PollsController < ApplicationController
         @comment = Comment.cached_find(comment_params[:comment_id])
         fail ExceptionHandler::UnprocessableEntity, "You can't delete this comment. Because you're not owner comment or owner poll." unless (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
         @comment.destroy
-        NotifyLog.check_update_comment_deleted(@comment)
+        NotifyLog.update_deleted_comment(@comment)
         if @poll.comment_count > 0
           @poll.with_lock do
             @poll.comment_count -= 1

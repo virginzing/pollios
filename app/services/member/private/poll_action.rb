@@ -303,7 +303,7 @@ module Member::Private::PollAction
 
   def process_not_interest
     NotInterestedPoll.create!(member_id: member.id, unseeable: poll)
-    NotifyLog.deleted_with_poll_and_member(poll, member)
+    NotifyLog.update_deleted_poll_for_member(poll, member)
 
     sever_member_relation_to_poll
 
@@ -337,7 +337,7 @@ module Member::Private::PollAction
       , message: report_params[:message], message_preset: report_params[:message_preset])
     reporting
 
-    NotifyLog.deleted_with_poll_and_member(poll, member)
+    NotifyLog.update_deleted_poll_for_member(poll, member)
 
     claer_voted_all_cached_for_member
     clear_reported_cached_for_member
@@ -366,7 +366,7 @@ module Member::Private::PollAction
   def process_delete
     sever_member_relation_to_poll
     create_company_group_action_tracking_record_for_action('delete')
-    NotifyLog.check_update_poll_deleted(poll)
+    NotifyLog.update_deleted_poll(poll)
     poll.destroy
 
     nil
@@ -433,7 +433,7 @@ module Member::Private::PollAction
 
   def process_delete_comment
     comment = poll.comments.cached_find(comment_params[:comment_id])
-    NotifyLog.check_update_comment_deleted(comment)
+    NotifyLog.update_deleted_comment(comment)
     comment.destroy
 
     decrease_comment_count

@@ -18,7 +18,7 @@ module Member::Private::SettingUpdate
   def update_name
     return unless params_profile[:name]
 
-    NotifyLog.edit_message_that_change_name(member, params_profile[:name], member.fullname)
+    NotifyLog.update_changed_member_name(member, params_profile[:name], member.fullname)
     member.update!(fullname: params_profile[:name])
 
     update_first_signup_to_false
