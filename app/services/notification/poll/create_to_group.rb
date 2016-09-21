@@ -43,9 +43,7 @@ class Notification::Poll::CreateToGroup
       poll: PollSerializer.new(poll).as_json,
       series: poll.series,
       action: ACTION[:create],
-      worker: WORKER[:poll],
-      group_id: group.id,
-      group: GroupNotifySerializer.new(group).as_json
+      worker: WORKER[:poll]
     }
   end
 
