@@ -278,14 +278,14 @@ module Member::Private::GroupAction
   def process_delete_poll
     poll = Poll.cached_find(poll_id)
     
-    delere_poll_in_group
+    delete_poll_in_group
     delete_poll_from_system(poll) if poll_not_in_groups?(poll)
 
     group
   end
 
-  def delere_poll_in_group
-    group.poll_groups.find_by(poll_id: poll_id).update!(deleted_at: Time.now, deleted_by_id: member.id)
+  def delete_poll_in_group
+    PollGroup.find_by(poll_id: poll_id, group_id: group.id).update!(deleted_at: Time.now, deleted_by_id: member.id)
   end
 
   def poll_not_in_groups?(poll)
