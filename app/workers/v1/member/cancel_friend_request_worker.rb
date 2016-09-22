@@ -1,6 +1,8 @@
 class V1::Member::CancelFriendRequestWorker
+  include Sidekiq::Worker
+  sidekiq_options unique: true
 
-  def perform_async(member_id, a_member_id)
+  def perform(member_id, a_member_id)
     member = Member.cached_find(member_id)
     a_member = Member.cached_find(a_member_id)
 
