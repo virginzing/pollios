@@ -101,7 +101,7 @@ module Member::Private::GroupAction
     relationship_to_group(member).destroy
 
     clear_group_member_relation_cache(member)
-    group.destroy unless Group::MemberInquiry.new(group).members?
+    group.destroy unless Group::MemberInquiry.new(group).all?
 
     group
   end
