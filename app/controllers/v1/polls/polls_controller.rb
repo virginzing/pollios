@@ -10,10 +10,18 @@ module V1::Polls
       @poll_qrcode_image_url = poll_direct_access.qrcode_image_url
     end
 
+    def qsncc
+      @poll = ::Poll.first
+    end
+
     private
 
     def decode_poll_id(custom_key)
       Base64.urlsafe_decode64(custom_key).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i
+    end
+
+    def poll_member_list(poll)
+      @poll_member_list ||= Poll::MemberList.new(poll)
     end
   end
 end
