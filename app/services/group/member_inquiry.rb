@@ -34,6 +34,10 @@ class Group::MemberInquiry
     group_member_list.admins.present?
   end
 
+  def all?
+    group_member_list.all.present?
+  end
+
   def has_all?(members)
     if members.is_a?(Array)
       (members - group_member_list.all).empty?
