@@ -45,8 +45,12 @@ class Notification::Poll::Report
     poll.in_group
   end
 
+  def groups_available_for_poll
+    Member::GroupList.new(sender).groups_available_for_poll(poll)
+  end
+
   def admins_of_groups
-    group_list.map { |group| Group::MemberList.new(group, viewing_member: sender).admins }.flatten.uniq
+    groups_available_for_poll.map { |group| Group::MemberList.new(group, viewing_member: sender).admins }.flatten.uniq
   end
 
 end
