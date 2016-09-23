@@ -2,7 +2,7 @@ class V1::Group::CancelRequestWorker
   include Sidekiq::Worker
   sidekiq_options unique: true
 
-  def perform_async(member_id, group_id)
+  def perform(member_id, group_id)
     member = Member.cached_find(member_id)
     group = Group.cached_find(group_id)
 
