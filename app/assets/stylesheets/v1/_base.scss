@@ -1,0 +1,22 @@
+*,
+html,
+body {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: $font-size-raw;
+  background: #FAFAFA;
+}
+
+button {
+  outline: 0;
+  border: 0;
+  padding: .6rem 1rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+a {
+  cursor: pointer;
+}

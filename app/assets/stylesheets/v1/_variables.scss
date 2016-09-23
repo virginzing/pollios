@@ -15,5 +15,30 @@ $z-index-overlay: 9980;
 
 $primary-font: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
+$font-size-raw: 16px;
+$font-size-base: 1rem;
+$font-size-title: 2.5rem;
+$font-size-sub-title: 1.7rem;
+
 $title-font-size: 4rem;
 $sub-title-font-size: 2.5rem;
+
+$navbar-height: 60px;
+$footer-height: 50px;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 544px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+$container-max-widths: (
+  sm: 576px,
+  md: 720px,
+  lg: 940px,
+  xl: 1140px
+) !default;
+
+$screen-sm: 768px;

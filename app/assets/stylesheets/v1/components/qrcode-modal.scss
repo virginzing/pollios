@@ -1,17 +1,4 @@
 .qrcode-modal {
-  @include card-container(25px);
-  position: relative;
-  display: block;
-  margin: 40px auto 0 auto;
-  width: 640px;
-  max-width: 90%;
-
-  > .close {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-  }
-
   > .title {
     margin-bottom: 25px;
     font-size: 24px;
