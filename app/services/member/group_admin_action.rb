@@ -51,7 +51,7 @@ class Member::GroupAdminAction < Member::GroupAction
   private
   
   def admin_of_group?
-    member_listing_service.admin?(admin_member)
+    Group::MemberInquiry.new(group).admin?(admin_member)
   end
 
 end

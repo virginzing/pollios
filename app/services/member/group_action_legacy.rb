@@ -118,7 +118,7 @@ class Member::GroupActionLegacy
       new_request = true
       joined = false
 
-      is_member_active_in_group = Group::MemberList.new(@group).active?(member)
+      is_member_active_in_group = Group::MemberInquiry.new(@group).active?(member)
 
       if is_member_active_in_group
         raise ExceptionHandler::UnprocessableEntity, "You have already joined #{group.name}"

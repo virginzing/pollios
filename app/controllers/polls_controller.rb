@@ -56,7 +56,7 @@ class PollsController < ApplicationController
     @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
-      NotifyLog.update_deleted_poll_for_member(@poll, @current_member)
+      V1::Poll::NotInterestWorker.perform_async(@poll.id, @current_member.id)
       SavePollLater.delete_save_later(@current_member.id, @poll)
       render status: :created
     rescue => e
@@ -138,7 +138,7 @@ class PollsController < ApplicationController
 
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
-            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless Group::MemberList.new(set_group).admin?(@current_member) || @poll.member_id == @member_id
+            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless Group::MemberInquiry.new(set_group).admin?(@current_member) || @poll.member_id == @member_id
             if @poll.groups.size > 1
               delete_poll_in_more_group
             else
@@ -179,7 +179,7 @@ class PollsController < ApplicationController
   def delete_my_poll
     raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" unless @poll.member_id == @member_id
     @poll.destroy
-    NotifyLog.update_deleted_poll(@poll)
+    V1::Poll::DeleteWorker.perform_async(@poll.id)
     DeletePoll.create_log(@poll)
   end
 

@@ -146,7 +146,7 @@ module Member::Private::MemberAction
 
   def process_deny_friend_request
     update_both_relations(status: :nofriend)
-    NotifyLog.update_cancel_friend_request(member, a_member)
+    remove_update_log_for_cancel_friend_request
 
     clear_friends_and_follwers_caches_for_members
 
@@ -188,6 +188,10 @@ module Member::Private::MemberAction
   def clear_following_caches_for_members
     FlushCached::Member.new(member).clear_list_friends
     FlushCached::Member.new(a_member).clear_list_followers
+  end
+
+  def remove_update_log_for_cancel_friend_request
+    V1::Member::CancelFriendRequestWorker.perform_async(member.id, a_member.id)
   end
 
   def find_relationship_between(src_member, dst_member)

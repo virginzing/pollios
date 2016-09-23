@@ -38,6 +38,13 @@ class Member::GroupAction
     process_join_with_secret_code
   end
 
+  def promote_self
+    can_promote_self, message = can_promote_self?
+    fail ExceptionHandler::UnprocessableEntity, message unless can_promote_self
+
+    process_promote_self
+  end
+
   def cancel_request
     can_cancel_request, message = can_cancel_request?
     fail ExceptionHandler::UnprocessableEntity, message unless can_cancel_request

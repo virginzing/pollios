@@ -30,8 +30,9 @@ module Member::Private::MemberList
       .order('LOWER(members.fullname)')
   end
 
-  def member_visibility_from(list)
+  def visible_member_list(list)
     return list unless viewing_member
+    
     list & Member.viewing_by_member(viewing_member)
   end
 

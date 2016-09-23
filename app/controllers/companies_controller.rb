@@ -474,7 +474,7 @@ class CompaniesController < ApplicationController
     end
 
     unless @poll.in_group
-      NotifyLog.update_deleted_poll(@poll)
+      V1::Poll::DeleteWorker.perform_async(@poll.id)
     end
 
     @poll.destroy

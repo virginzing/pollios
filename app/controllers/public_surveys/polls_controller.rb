@@ -87,7 +87,7 @@ class PublicSurveys::PollsController < ApplicationController
       Company::TrackActivityFeedPoll.new(current_member, @poll.in_group_ids, @poll, 'delete').tracking
     end
 
-    NotifyLog.update_deleted_poll(@poll)
+    V1::Poll::DeleteWorker.perform_async(@poll.id)
     @poll.destroy
     @poll.member.flush_cache_about_poll
     DeletePoll.create_log(@poll)
