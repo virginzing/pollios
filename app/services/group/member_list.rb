@@ -1,34 +1,76 @@
 class Group::MemberList
   include Group::Private::MemberList
 
-  attr_reader :group, :viewing_member
+  attr_reader :group, :viewing_member, :visible_member_list
 
   def initialize(group, options = {})
     @group = group
 
     return unless options[:viewing_member]
+
     @viewing_member = options[:viewing_member]
+    @visible_member_list = Member.viewing_by_member(viewing_member)
+  end
+
+  def all
+    cached_all_members
+      .select(&method(:active?))
   end
 
   def active
-    sort_by_name(member_visibility_from(cached_all_members.select { |member| member if member.is_active }))
+    cached_all_members
+      .select(&method(:active?))
+      .select(&method(:visible?))
+      .sort_by(&method(:downcased_fullname))
   end
 
   def active_with_no_cache
-    all_members.select { |member| member if member.is_active }
+    queried_all_members
+      .select(&method(:active?))
+      .select(&method(:visible?))
+      .sort_by(&method(:downcased_fullname))
   end
 
   def pending
-    sort_by_name(member_visibility_from(cached_all_members.select { |member| member unless member.is_active } - requesting))
+    cached_all_members
+      .reject(&method(:active?))
+      .reject(&method(:requesting?))
+      .select(&method(:visible?))
+      .sort_by(&method(:downcased_fullname))
   end
 
   def requesting
     cached_all_requests
   end
 
+  def members
+    cached_all_members
+      .select(&method(:active?))
+      .reject(&method(:admin?))
+      .select(&method(:visible?))
+      .sort_by(&method(:downcased_fullname))
+  end
+
+  def admins
+    cached_all_members
+      .select(&method(:admin?))
+      .select(&method(:visible?))
+      .sort_by(&method(:downcased_fullname))
+  end
+
+  def join_recently
+    queried_all_members
+      .select(&method(:active?))
+      .select(&method(:visible?))
+      .sort_by(&method(:duration_since_joined))
+      .take(5)
+  end
+
   # for testing and emergency only
   def pending_ids_non_cache
-    all_members.select { |member| member unless member.is_active }.map(&:id)
+    queried_all_members
+      .reject(&method(:active?))
+      .map(&:id)
   end
 
   def filter_members_from_list(member_ids)
@@ -37,42 +79,6 @@ class Group::MemberList
 
   def filter_non_members_from_list(member_ids)
     member_ids - group_member_ids
-  end
-
-  def members
-    sort_by_name(member_visibility_from(cached_all_members.select { |member| member if member.is_active && !member.admin }))
-  end
-
-  def admins
-    sort_by_name(member_visibility_from(cached_all_members.select { |member| member if member.admin }))
-  end
-
-  def join_recently
-    member_visibility_from(active_with_no_cache.sort_by(&:joined_at).reverse!).take(5)
-  end
-
-  def member_or_admin?(member)
-    ids_include?(cached_all_members, member.id)
-  end
-
-  def member?(member)
-    ids_include?(members, member.id)
-  end
-
-  def admin?(member)
-    ids_include?(admins, member.id)  
-  end
-
-  def active?(member)
-    ids_include?(active, member.id)
-  end
-
-  def requesting?(member)
-    ids_include?(requesting, member.id)
-  end
-
-  def pending?(member)
-    ids_include?(pending, member.id)
   end
 
   def raise_error_not_member(member)

@@ -63,7 +63,7 @@ class Authentication::PolliosApp
 
   def self.os_identify(params)
     { 
-      name: OS[params[:os][:name].to_sym] || UNKNOW,
+      name: OS[params[:os][:name].to_sym] || UNKNOWN,
       version: params[:os][:version]
     }
   end
@@ -77,9 +77,9 @@ class Authentication::PolliosApp
   end
 
   def self.model_version_identify(params)
-    return UNKNOW unless os_identify(params)[:name] == 'iOS'
+    return UNKNOWN unless os_identify(params)[:name] == 'iOS'
 
-    APPLE[params[:model][:identifier].to_sym] || UNKNOW
+    APPLE[params[:model][:identifier].to_sym] || UNKNOWN
   end
 
 end

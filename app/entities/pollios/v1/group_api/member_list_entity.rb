@@ -17,15 +17,19 @@ module Pollios::V1::GroupAPI
     end
 
     def current_member
-      options[:current_member]  
+      options[:current_member]
     end
 
     def viewing_own_group?
-      object.admin?(current_member)
+      group_member_inquiry.admin?(current_member)
     end
 
     def viewing_requesting_group?
-      object.requesting?(current_member)
+      group_member_inquiry.requesting?(current_member)
+    end
+
+    def group_member_inquiry
+      @group_member_inquiry ||= Group::MemberInquiry.new(object.group)
     end
   end
 end

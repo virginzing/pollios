@@ -1,9 +1,9 @@
 module Authentication::DeviceIdentifier
 
-  UNKNOW = 'UNKNOW'
+  UNKNOWN = 'UNKNOWN'
 
   APPLE = {
-    'iPad1,1': 'iPad',
+    # 'iPad1,1': 'iPad',
     'iPad2,1': 'iPad 2',
     'iPad2,2': 'iPad 2',
     'iPad2,3': 'iPad 2',
@@ -30,17 +30,17 @@ module Authentication::DeviceIdentifier
     'iPad5,2': 'iPad mini 4',
     'iPad5,3': 'iPad Air 2',
     'iPad5,4': 'iPad Air 2',
-    'iPad6,3': 'iPad Pro',
-    'iPad6,4': 'iPad Pro',
-    'iPad6,7': 'iPad Pro',
-    'iPad6,8': 'iPad Pro', \
+    'iPad6,3': 'iPad Pro (9.7 inch)',
+    'iPad6,4': 'iPad Pro (9.7 inch)',
+    'iPad6,7': 'iPad Pro (12.9 inch)',
+    'iPad6,8': 'iPad Pro (12.9 inch)', \
     
-    'iPhone1,1': 'iPhone',
-    'iPhone1,2': 'iPhone 3G',
-    'iPhone2,1': 'iPhone 3GS',
-    'iPhone3,1': 'iPhone 4',
-    'iPhone3,2': 'iPhone 4',
-    'iPhone3,3': 'iPhone 4',
+    # 'iPhone1,1': 'iPhone',
+    # 'iPhone1,2': 'iPhone 3G',
+    # 'iPhone2,1': 'iPhone 3GS',
+    # 'iPhone3,1': 'iPhone 4',
+    # 'iPhone3,2': 'iPhone 4',
+    # 'iPhone3,3': 'iPhone 4',
     'iPhone4,1': 'iPhone 4S',
     'iPhone5,1': 'iPhone 5',
     'iPhone5,2': 'iPhone 5',
@@ -52,18 +52,23 @@ module Authentication::DeviceIdentifier
     'iPhone7,2': 'iPhone 6',
     'iPhone8,1': 'iPhone 6s',
     'iPhone8,2': 'iPhone 6s Plus',
-    'iPhone8,4': 'iPhone SE', \
+    'iPhone8,4': 'iPhone SE',
+    'iPhone9,1': 'iPhone 7',
+    'iPhone9,2': 'iPhone 7 Plus',
+    'iPhone9,3': 'iPhone 7',
+    'iPhone9,4': 'iPhone 7 Plus', \
     
-    'iPod1,1': 'iPod touch',
-    'iPod2,1': 'iPod touch 2G',
-    'iPod3,1': 'iPod touch 3G',
-    'iPod4,1': 'iPod touch 4G',
+    # 'iPod1,1': 'iPod touch',
+    # 'iPod2,1': 'iPod touch 2G',
+    # 'iPod3,1': 'iPod touch 3G',
+    # 'iPod4,1': 'iPod touch 4G',
     'iPod5,1': 'iPod touch 5G',
     'iPod7,1': 'iPod touch 6G'
   }
 
   OS = {
-    'iPhone OS': 'iOS'
+    'iPhone OS': 'iOS',
+    'iOS': 'iOS'
   }
 
 end

@@ -84,7 +84,7 @@ class PublicSurveys::FeedbacksController < ApplicationController
   end
 
   def destroy
-    NotifyLog.deleted_feedback(@poll_series)
+    NotifyLog.update_deleted_feedback(@poll_series)
     @poll_series.destroy
     flash[:success] = "Successfully destroyed feedback."
     redirect_to public_survey_feedbacks_path

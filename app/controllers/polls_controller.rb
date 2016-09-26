@@ -56,7 +56,7 @@ class PollsController < ApplicationController
     @un_see_poll = NotInterestedPoll.new(member_id: @current_member.id, unseeable: @poll)
     begin
       @un_see_poll.save
-      NotifyLog.deleted_with_poll_and_member(@poll, @current_member)
+      V1::Poll::NotInterestWorker.perform_async(@poll.id, @current_member.id)
       SavePollLater.delete_save_later(@current_member.id, @poll)
       render status: :created
     rescue => e
@@ -138,13 +138,13 @@ class PollsController < ApplicationController
 
         if @poll.in_group
           if params[:group_id].present? ## delete poll in some group.
-            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless Group::MemberList.new(set_group).admin?(@current_member) || @poll.member_id == @member_id
+            raise ExceptionHandler::UnprocessableEntity, "You're not an admin of the group" unless Group::MemberInquiry.new(set_group).admin?(@current_member) || @poll.member_id == @member_id
             if @poll.groups.size > 1
               delete_poll_in_more_group
             else
               delete_poll_in_one_group
             end
-            NotifyLog.poll_with_group_deleted(@poll, set_group)
+            NotifyLog.update_deleted_poll_in_group(@poll, set_group)
           else
             delete_my_poll
             PollGroup.own_deleted(@current_member, @poll)
@@ -179,7 +179,7 @@ class PollsController < ApplicationController
   def delete_my_poll
     raise ExceptionHandler::UnprocessableEntity, "You're not owner of this poll" unless @poll.member_id == @member_id
     @poll.destroy
-    NotifyLog.check_update_poll_deleted(@poll)
+    V1::Poll::DeleteWorker.perform_async(@poll.id)
     DeletePoll.create_log(@poll)
   end
 
@@ -439,7 +439,7 @@ class PollsController < ApplicationController
         @comment = Comment.cached_find(comment_params[:comment_id])
         fail ExceptionHandler::UnprocessableEntity, "You can't delete this comment. Because you're not owner comment or owner poll." unless (@comment.member_id == @current_member.id) || (@comment.poll.member_id == @current_member.id)
         @comment.destroy
-        NotifyLog.check_update_comment_deleted(@comment)
+        NotifyLog.update_deleted_comment(@comment)
         if @poll.comment_count > 0
           @poll.with_lock do
             @poll.comment_count -= 1

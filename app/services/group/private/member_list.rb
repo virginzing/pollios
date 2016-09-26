@@ -2,15 +2,38 @@ module Group::Private::MemberList
 
   private
 
-  def ids_include?(ids_list, id)
-    ids_list.map(&:id).include?(id)
+  def group_member_ids
+    queried_all_members.map(&:id) | queried_all_requests.map(&:id)
   end
 
-  def group_member_query(member)
-    GroupMember.where('group_id = ? AND member_id = ?', group.id, member.id)
+  def visible?(member)
+    return true unless viewing_member
+
+    visible_member_list.include?(member)
   end
 
-  def all_members
+  def active?(member)
+    member.is_active
+  end
+
+  def requesting?(member)
+    cached_all_requests.include?(member)
+  end
+
+  def admin?(member)
+    member.admin
+  end
+
+  def downcased_fullname(member)
+    member.fullname.downcase
+  end
+
+  def duration_since_joined(member)
+    Time.zone.now - member.joined_at
+  end
+
+
+  def queried_all_members
     members = Member.joins(:group_members).where("group_members.group_id = #{group.id}")
               .select(
                 "DISTINCT members.*, 
@@ -27,32 +50,21 @@ module Group::Private::MemberList
     members
   end
 
-  def all_requests
-    sort_by_name(group.members_request.all)
-  end
-
-  def member_visibility_from(list)
-    return list unless viewing_member
-    list & Member.viewing_by_member(viewing_member)
-  end
-
-  def group_member_ids
-    all_members.map(&:id) | all_requests.map(&:id)
-  end
-
-  def sort_by_name(list)
-    list.sort_by { |m| m.fullname.downcase }
+  def queried_all_requests
+    group.members_request.all
+      .sort_by(&method(:downcased_fullname))
   end
 
   def cached_all_members
     Rails.cache.fetch("group/#{group.id}/members") do
-      all_members.to_a
+      queried_all_members.to_a
     end
   end
   
   def cached_all_requests
     Rails.cache.fetch("group/#{group.id}/requests") do
-      all_requests.to_a
+      queried_all_requests.to_a
     end
   end
+
 end

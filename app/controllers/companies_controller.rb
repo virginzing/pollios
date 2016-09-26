@@ -470,11 +470,11 @@ class CompaniesController < ApplicationController
 
   def delete_poll
     @poll.groups.each do |group|
-      NotifyLog.poll_with_group_deleted(@poll, group)
+      NotifyLog.update_deleted_poll_in_group(@poll, group)
     end
 
     unless @poll.in_group
-      NotifyLog.check_update_poll_deleted(@poll)
+      V1::Poll::DeleteWorker.perform_async(@poll.id)
     end
 
     @poll.destroy

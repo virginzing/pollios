@@ -71,15 +71,8 @@ class Notification::Poll::Comment
     sender.fullname + " commented in \"#{poll.title}\""
   end
 
-  # def adjustment_message
-  #   return comment_message unless mentioning?
-
-  #   mention_name = mention_list.each_with_object({}) { |member, hash| hash[member.id] = member.fullname }
-  #   comment_message.gsub(/@\[\d+\]/) { |mentioning| mention_name[mentioning.scan(/\d+/).first.to_i] }
-  # end
-
   def mentioning?
-    mention_list.empty?
+    mention_list.present?
   end
 
   def mention_list

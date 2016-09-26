@@ -18,7 +18,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- A member is an admin of the created group' do
-      expect(Group::MemberList.new(@group).admin?(@group_admin)).to be true
+      expect(Group::MemberInquiry.new(@group).admin?(@group_admin)).to be true
     end
 
     it '- A member does not upload cover photo, should be set between 1-26' do
