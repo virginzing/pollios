@@ -22,7 +22,7 @@ class Authentication::PolliosApp
 
   def self.sign_up(params)
     sentai_respond = Authentication::Sentai.sign_up(params.merge!(app_name: 'pollios'))
-    fail ExceptionHandler::UnprocessableEntity, status: 422, message: 'Email is already registered with Pollios' \
+    fail ExceptionHandler::UnprocessableEntity, status: 422, message: authenticate.error_message_detail \
       unless sentai_respond['response_status'] == 'OK'
 
     hash = {
