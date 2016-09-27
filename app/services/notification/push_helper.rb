@@ -2,30 +2,20 @@ module Notification::PushHelper
 
   private
 
-  def device_list_of(device_list_or_recipient_list)
-    device_list = recipient_list = device_list_or_recipient_list
-
-    return device_list if device_list?(device_list_or_recipient_list)
-
-    recipient_list.map(&:apn_devices)
+  def device_list(recipient_list)
+    recipient_list.map(&:apn_devices).flatten
   end
 
-  def device_list?(device_list_or_recipient_list)
-    device_list_or_recipient_list.first.is_a?(Apn::Device)
-  end
-
-  def notification_data_for(device, type, data, message)
+  def push_data(device, type, data, message)
     recipient = device.member
     notification_data = notification_data(device.token, data)
 
-    return notification_data if pusu_data_only?(recipient, device, type)
+    return notification_data if push_data_only?(recipient, device, type)
 
-    alert_data = alert_data(recipient, message)
-
-    notification_data.merge(alert_data)
+    notification_data.merge(alert_data(recipient, message))
   end
 
-  def pusu_data_only?(recipient, device, type)
+  def push_data_only?(recipient, device, type)
     remove_action?(type) || turn_off_notification?(recipient, device, type)
   end
 
