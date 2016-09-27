@@ -7,7 +7,7 @@ class Length < Grape::Validations::Base
 
     fail Grape::Exceptions::Validation \
     , params: [@scope.full_name(attr_name)] \
-    , message: "must be at the most #{@option} characters long"
+    , message: "must be #{@option} characters length at most"
   end
 end
 
@@ -17,6 +17,6 @@ class EachLength < Grape::Validations::Base
 
     fail Grape::Exceptions::Validation \
     , params: [@scope.full_name(attr_name)] \
-    , message: "must be at the most #{@option} characters long"
+    , message: "must be #{@option} characters length at most"
   end
 end
