@@ -24,13 +24,6 @@ module Member::Private::GroupActionGuard
     [true, nil]
   end
 
-  def can_promote_self?
-    return [false, GuardMessage::GroupAction.member_is_not_in_group(group)] if not_member?(member)
-    return [false, GuardMessage::GroupAction.cannot_promote_self] if group_already_had_admins?
-
-    [true, nil]
-  end
-
   def can_cancel_request?
     return [false, GuardMessage::GroupAction.member_already_in_group(group)] if already_member?(member)
     return [false, GuardMessage::GroupAction.no_join_request(group)] if not_exist_join_request?(member)
@@ -151,10 +144,6 @@ module Member::Private::GroupActionGuard
 
   def not_admin?
     !already_admin?
-  end
-
-  def group_already_had_admins?
-    group_member_inquiry.admins?
   end
 
   def group_creator?

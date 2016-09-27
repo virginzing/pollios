@@ -301,10 +301,6 @@ module GuardMessage
         "You have not invited #{member.get_name} to #{group.name}."
       end
 
-      def cannot_promote_self
-        "You can't promote yourself to an admin."
-      end
-
       def poll_not_exist_in_group
         "This poll isn't exist in group."
       end

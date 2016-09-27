@@ -125,10 +125,6 @@ module Member::Private::GroupAction
     member.member_invite_codes.create!(invite_code_id: secret_code.id)
   end
 
-  def process_promote_self
-    process_promote
-  end
-
   def process_cancel_request(member = @member)
     group.request_groups.find_by(member_id: member.id).destroy if being_sent_join_request?(member)
     process_reject_invitation(member) if being_invited?(member)
