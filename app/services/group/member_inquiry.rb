@@ -26,6 +26,16 @@ class Group::MemberInquiry
     group_member_list.pending.include?(member)
   end
 
+  def inviter(member)
+    equal_member_method = member.method(:==)
+
+    inviter_id = group_member_list.all
+      .bsearch(&equal_member_method)
+      .member_invite_id
+
+    Member.find(inviter_id)
+  end
+
   def members?
     group_member_list.members.present?
   end
@@ -36,22 +46,6 @@ class Group::MemberInquiry
 
   def all?
     group_member_list.all.present?
-  end
-
-  def has_all?(members)
-    if members.is_a?(Array)
-      (members - group_member_list.all).empty?
-    else
-      has?(members)
-    end
-  end
-
-  def has_any?(members)
-    if members.is_a?(Array)
-      (group_member_list.all - members) != group_member_list.all
-    else
-      has?(members)
-    end
   end
 
 end
