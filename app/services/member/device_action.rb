@@ -1,24 +1,27 @@
 class Member::DeviceAction
+  include Member::Private::DeviceAction
 
   attr_reader :member, :device
 
-  def initialize(member, device)
+  def initialize(member, device = nil)
     @member = member
     @device = device
+
+    return unless device.present?
 
     fail ExceptionHandler::UnprocessableEntity, "This device isn't exist in your devices" unless device.member_id == member.id
   end
 
-  def undate_info(params)
-    device.update!(params)
+  def create(params)
+    process_create(params)
+  end
 
-    Member::DeviceList.new(member).all_device
+  def undate_info(params)
+    process_undate_info(params)
   end
 
   def delete
-    device.destroy
-    
-    Member::DeviceList.new(member).all_device
+    process_delete
   end
 
 end

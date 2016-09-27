@@ -27,7 +27,7 @@ module Pollios::V1::PollAPI
       desc 'create a new poll'
       params do
         requires :title, type: String, desc: 'poll title'
-        requires :choices, type: Array[String], desc: 'poll choices'
+        requires :choices, type: Array[String], each_length: 255, desc: 'poll choices'
         requires :type_poll, type: String, values: %w(rating freeform), desc: 'poll choices type'
 
         optional :allow_comment, type: Boolean, default: true, desc: 'true if allows comments'
