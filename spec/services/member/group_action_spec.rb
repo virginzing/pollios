@@ -109,6 +109,50 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#promote_self: Given a member,' do
+    before(:all) do
+      @member = FactoryGirl.create(:member)
+    end
+
+    xspecify 'nil.' do
+      Member::GroupAction.new(@member, nil).promote_self
+    end
+
+    specify "the member cannot promote himself to admin in the group which the member didn't joined." do
+      @group = FactoryGirl.create(:group_with_creator)
+
+      expect { Member::GroupAction.new(@member, @group).promote_self }
+        .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::GroupAction.member_is_not_in_group(@group))
+
+      expect(Group::MemberInquiry.new(@group).admin?(@member)).to be false
+    end
+
+    context 'given a group which the member joined,' do
+      before(:all) do
+        @group = FactoryGirl.create(:group_with_creator, :with_members, :with_dont_need_approve)
+        Member::GroupAction.new(@member, @group).join
+      end
+
+      specify 'the member can promote himself to admin in the group if the group has no admin.' do
+        @group_admins = Group::MemberList.new(@group).admins
+        @group_admins.map { |admin| Member::GroupAction.new(admin, @group).leave }
+
+        expect(Group::MemberInquiry.new(@group).admins?).to be false
+
+        Member::GroupAction.new(@member, @group).promote_self
+
+        expect(Group::MemberInquiry.new(@group).admin?(@member)).to be true
+      end
+
+      specify 'the member cannot promote himself to admin if the group has at least one admin.' do
+        expect { Member::GroupAction.new(@member, @group).promote_self }
+          .to raise_error(ExceptionHandler::UnprocessableEntity, GuardMessage::GroupAction.cannot_promote_self)
+
+        expect(Group::MemberInquiry.new(@group).admin?(@member)).to be false
+      end
+    end
+  end
+
   context '#invite: A member invite friends to group' do
     before(:all) do
       @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
