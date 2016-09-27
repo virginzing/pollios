@@ -270,8 +270,10 @@ module GuardMessage
         "You can't leave #{group.name} company."
       end
 
-      def member_already_in_group(group)
-        "You are already member of #{group.name}."
+      def member_already_in_group(group, member = nil)
+        subject = member ? "You are" : "#{member} is"
+
+        "#{subject} already member of #{group.name}."
       end
 
       def already_sent_request(group)
@@ -291,20 +293,12 @@ module GuardMessage
         "You can't invite friends to #{group.name} company."
       end
 
-      def member_not_have_invite_request(a_member, group)
-        "#{a_member.get_name} doesn't have invite request to #{group.name}."
+      def member_not_have_invite_request(group, member)
+        "#{member.get_name} doesn't have invite request to #{group.name}."
       end
 
-      def a_member_already_in_group(a_member, group)
-        "#{a_member.get_name} is already in #{group.name}."
-      end
-
-      def a_member_not_have_invite_request(a_member, group)
-        "#{a_member.get_name} doesn't have invite request to #{group.name}"
-      end
-
-      def you_have_not_invite_member(a_member, group)
-        "You have not invited #{a_member.get_name} to #{group.name}."
+      def you_have_not_invite_member(group, member)
+        "You have not invited #{member.get_name} to #{group.name}."
       end
 
       def cannot_promote_self
