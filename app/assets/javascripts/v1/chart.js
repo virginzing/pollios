@@ -1,64 +1,40 @@
-//ChartJS
-(function() {
-  var charts = document.querySelectorAll('div[pollios-chart]');
-  charts.forEach(createChart);
+const Chart = require('chart.js')
+const chartElement = document.getElementById('result')
 
-  function createChart(chart) {
-    let data = createChartData(createDataset(extractChartAttr(chart)));
-    let canvas = createCanvas(chart);
+if (chartElement) {
+  setupChart()
+}
 
-    Chart.Line(canvas, data);
-  }
+function setupChart () {
+  const ctx = chartElement.getContext('2d')
+  const choicesData = JSON.parse(chartElement.getAttribute('data'))
 
-  function extractChartAttr(chart) {
-    return {
-      data: JSON.parse(chart.getAttribute('data')),
-      labels: JSON.parse(chart.getAttribute('data')),
-      color: chart.getAttribute('color')
+  const backgroundColors = [
+    '#e74c3c',
+    '#3498db',
+    '#f1c40f',
+    '#1abc9c',
+    '#9b59b6',
+    '#e67e22',
+    '#34495e',
+    '#c0392b',
+    '#2980b9',
+    '#f39c12',
+    '#27ae60',
+    '#8e44ad',
+    '#d35400'
+  ]
+
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: choicesData.label,
+      datasets: [{
+        label: '# of Votes',
+        data: choicesData.data,
+        backgroundColor: backgroundColors,
+        borderWidth: 0
+      }]
     }
-  }
-
-  function createCanvas(elm) {
-    let canvas = document.createElement('canvas');
-    elm.appendChild(canvas);
-    return canvas;
-  }
-
-  function createDataset(chartData) {
-    return {
-      labels: chartData.labels,
-      datasets: [
-          {
-              lineTension: 0.1,
-              fill: false,
-              borderWidth: 2,
-              borderColor: chartData.color,
-              pointRadius: 0,
-              data: chartData.data
-          }
-      ]
-    }
-  }
-
-  function createChartData(dataset) {
-    return {
-      data: dataset,
-      options: {
-        title: {
-          display: false
-        },
-        legend: {
-          display: false
-        },
-        scales: {
-          xAxes: [ {
-            display: false
-          } ],
-          yAxes: [ {
-            display: false
-          } ]
-        }
-      }
-    }
-  }
-})();
+  })
+}

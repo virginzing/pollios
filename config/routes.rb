@@ -609,7 +609,10 @@ Pollios::Application.routes.draw do
 
   scope module: 'v1' do
     scope module: 'polls' do
-      get 'qsncc', to: 'polls#qsncc'
+      get 'qsncc', to: 'qsncc#get'
+      get 'qsncc/close', to: 'qsncc#close'
+      get 'qsncc/result', to: 'qsncc#result'
+      get 'qsncc/polling', to: 'qsncc#polling'
     end
 
     get '*path', to: 'errors#not_found'

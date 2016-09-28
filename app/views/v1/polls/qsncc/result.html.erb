@@ -1,0 +1,30 @@
+<div class="poll-container">
+  <div class="poll-creator">
+    <img src="<%= @poll.member.get_avatar %>" class="avatar">
+    <div class="name"><%= @poll.member.fullname %></div>
+  </div>
+  <div class="question"><%= @poll.title %></div>
+  <% unless @poll.get_photo.blank? %>
+    <img class="question-image" src="<%= @poll.get_photo %>">
+  <% end %>
+  <canvas data="<%= @poll.choices.to_json %>" id="result"></canvas>
+  <% if @show_next_poll_button %>
+    <a class="next-poll" href="/qsncc">โพลถัดไป</a>
+  <% end %>
+  <div class="links-bar">
+    <div class="links-app">
+      <a href="<%= @poll_open_app_url %>" class="link">
+        <img src="/images/logo_pollios_h.png" alt="">
+      </a>
+      <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
+        <img src="/images/logo_app_store.png" alt="">
+      </a>
+    </div>
+    <img href="#" data-toggle="modal" data-target="#qrcode_modal" class="qrcode" src="<%= @poll_qrcode_image_url %>" alt="">
+  </div>
+</div>
+<%= render(
+    :partial => "v1/partials/poll_qrcode_modal",
+    :locals => { :qrcode_url => @poll_qrcode_image_url, :poll_open_app_url => @poll_open_app_url }
+  )
+%>
