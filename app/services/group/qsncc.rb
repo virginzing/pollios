@@ -2,7 +2,7 @@ class Group::QSNCC
   attr_reader :group, :group_poll_list
 
   def initialize()
-    @group = Group.find(2)
+    @group = Group.find(25)
   end
 
   def current_poll
