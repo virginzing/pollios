@@ -36,10 +36,9 @@ module Group::Private::MemberList
   def queried_all_members
     members = Member.joins(:group_members).where("group_members.group_id = #{group.id}")
               .select(
-                "DISTINCT members.*, 
-                 group_members.is_master AS admin, 
-                 group_members.active AS is_active, 
-                 group_members.invite_id AS inviter_id,
+                "DISTINCT members.*,
+                 group_members.is_master AS admin,
+                 group_members.active AS is_active,
                  group_members.created_at AS joined_at,
                  group_members.invite_id AS member_invite_id")
 

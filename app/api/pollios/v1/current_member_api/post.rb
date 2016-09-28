@@ -23,6 +23,29 @@ module Pollios::V1::CurrentMemberAPI
         end
       end
 
+      resource :devices do
+        desc 'add new device'
+        params do
+          requires :device_token, type: String, desc: 'device token'
+          requires :receive_notification, type: Boolean, desc: 'true when want to receive notification'
+          requires :model, type: Hash do
+            requires :name, type: String, desc: 'device name'
+            requires :type, type: String, desc: 'device type'
+            requires :version, type: String, desc: 'device version'
+          end
+          requires :os, type: Hash do
+            requires :name, type: String, desc: 'os name'
+            requires :version, type: String, desc: 'os version'
+          end
+        end
+        post do
+          params[:token] = params.delete(:device_token)
+
+          member_device_action = Member::DeviceAction.new(current_member)
+          present :devices, member_device_action.create(params), with: DeviceEntity
+        end
+      end
+
       resource :polls do
         resource :presets do
           desc 'add new poll preset'

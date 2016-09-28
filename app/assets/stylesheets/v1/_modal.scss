@@ -1,0 +1,25 @@
+.remodal-overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.remodal-wrapper {
+  overflow: hidden;
+}
+
+.remodal {
+  @include card-container(25px);
+
+  display: block;
+
+  margin: 3rem auto 0;
+  max-width: 90%;
+  width: 640px;
+
+  > .close {
+    position: absolute;
+    right: 1em;
+    top: 1rem;
+
+    padding: 0;
+  }
+}

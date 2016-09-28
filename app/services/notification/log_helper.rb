@@ -2,25 +2,7 @@ module Notification::LogHelper
 
   private
 
-  def recipient_list(member_list, sender)
-    member_list = without_sender(member_list, sender)
-    
-    without_outgoing_blocked(member_list, sender)
-  end
-
-  def without_sender(member_list, sender)
-    member_list - [sender]
-  end
-
-  def without_outgoing_blocked(member_list, sender)
-    return member_list unless sender.present?
-
-    blocked_members = Member::MemberList.new(sender, viewing_member: sender).blocks
-
-    member_list - blocked_members
-  end
-
-  def create_update_log(recipient_list, data, message, sender = nil)
+  def create_update_log(recipient_list, data, message, sender)
     sender_id = sender_id_or_nil(sender)
     message = log_message(message)
 

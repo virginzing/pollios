@@ -7,21 +7,18 @@
   <% unless @poll.get_photo.blank? %>
     <img class="question-image" src="<%= @poll.get_photo %>">
   <% end %>
-  <h1><%= @poll.inspect %></h1>
+  <div class="voter-container">
+    <h3 class="header">จำนวนผู้โหวต</h1>
+    <h1 id="counter" class="counter"><%= @poll.vote_all %></h1>
+  </div>
+  <% if @show_close_poll_button %>
+    <a class="close-poll" href="/qsncc/close">ปิดรับผลโหวต</a>
+  <% end %>
   <div class="links-bar">
     <div class="links-app">
-      <a href="<%= @poll_open_app_url %>" class="link">
-        <img src="/images/logo_pollios_h.png" alt="">
-      </a>
       <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
         <img src="/images/logo_app_store.png" alt="">
       </a>
     </div>
-    <img href="#" data-toggle="modal" data-target="#qrcode_modal" class="qrcode" src="<%= @poll_qrcode_image_url %>" alt="">
   </div>
 </div>
-<%= render(
-    :partial => "v1/partials/poll_qrcode_modal",
-    :locals => { :qrcode_url => @poll_qrcode_image_url, :poll_open_app_url => @poll_open_app_url }
-  )
-%>

@@ -92,13 +92,24 @@ $ git flow init
 
 Check out this link for information: [A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 
+### Frontend
+Install all dependencies
+```bash
+npm install
+```
+
+Run gulp to take care of parsing SCSS and bundle JS
+```bash
+gulp
+```
+
 # Deploy
 
 ### Development server on heroku
 
 1) Add the remote to development server on heroku.
 
-```	
+```
 $ git remote add development git@heroku.com:codeapp-polliosdev.git
 ```		
 2) Push your code to the heroku remote.
@@ -111,12 +122,12 @@ $ git push development develop:master
 
 1) Add the remote to production server on heroku.
 
-```	
+```
 $ git remote add production git@heroku.com:codeapp-pollios.git
 ```
 
 2) Push your code to the heroku remote.
-	
+
 ```
 $ git push production master
 ```

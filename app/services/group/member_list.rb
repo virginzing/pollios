@@ -14,29 +14,24 @@ class Group::MemberList
 
   def all
     cached_all_members
-      .select(&method(:active?))
+      .select(&method(:visible?))
+      .sort_by(&method(:downcased_fullname))
   end
 
   def active
-    cached_all_members
-      .select(&method(:active?))
-      .select(&method(:visible?))
-      .sort_by(&method(:downcased_fullname))
+    all.select(&method(:active?))
   end
 
   def active_with_no_cache
     queried_all_members
-      .select(&method(:active?))
       .select(&method(:visible?))
+      .select(&method(:active?))
       .sort_by(&method(:downcased_fullname))
   end
 
   def pending
-    cached_all_members
-      .reject(&method(:active?))
+    all.reject(&method(:active?))
       .reject(&method(:requesting?))
-      .select(&method(:visible?))
-      .sort_by(&method(:downcased_fullname))
   end
 
   def requesting
@@ -44,18 +39,11 @@ class Group::MemberList
   end
 
   def members
-    cached_all_members
-      .select(&method(:active?))
-      .reject(&method(:admin?))
-      .select(&method(:visible?))
-      .sort_by(&method(:downcased_fullname))
+    active.reject(&method(:admin?))
   end
 
   def admins
-    cached_all_members
-      .select(&method(:admin?))
-      .select(&method(:visible?))
-      .sort_by(&method(:downcased_fullname))
+    active.select(&method(:admin?))
   end
 
   def join_recently

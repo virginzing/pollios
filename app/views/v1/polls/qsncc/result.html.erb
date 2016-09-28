@@ -7,8 +7,9 @@
   <% unless @poll.get_photo.blank? %>
     <img class="question-image" src="<%= @poll.get_photo %>">
   <% end %>
-  <% @poll.choices.each do |choice| %>
-    <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
+  <canvas data="<%= @poll.choices.to_json %>" id="result"></canvas>
+  <% if @show_next_poll_button %>
+    <a class="next-poll" href="/qsncc">โพลถัดไป</a>
   <% end %>
   <div class="links-bar">
     <div class="links-app">
@@ -19,7 +20,7 @@
         <img src="/images/logo_app_store.png" alt="">
       </a>
     </div>
-    <img data-remodal-target="qr_modal" class="qrcode" src="<%= @poll_qrcode_image_url %>" />
+    <img href="#" data-toggle="modal" data-target="#qrcode_modal" class="qrcode" src="<%= @poll_qrcode_image_url %>" alt="">
   </div>
 </div>
 <%= render(

@@ -130,7 +130,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#leave: A member is leaving a group.' do
     before(:each) do
-      @group = FactoryGirl.create(:member_created_group, creator: @group_member)
+      @group = FactoryGirl.create(:group_with_creator, creator: @group_member)
       FactoryGirl.create(:group_member_that_is_active, :is_member, group: @group, member: @member)
     end
 
@@ -157,7 +157,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- The member is not in the group.' do
-      @group = FactoryGirl.create(:member_created_group, creator: @group_admin)
+      @group = FactoryGirl.create(:group_with_creator, creator: @group_admin)
       expect { Member::GroupAction.new(@member, @group).leave }
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
