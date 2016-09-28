@@ -53,7 +53,15 @@ module Member::Private::GroupUpdate
     fail ExceptionHandler::UnprocessableEntity, 'Public ID has already been take' unless group.valid?
     group.save!
 
+    approve_all unless group.need_approve?
+
     group
+  end
+
+  def approve_all
+    Group::MemberList.new(group).requesting.map do |member|
+      Member::GroupAdminAction.new(admin_member, group, member).approve
+    end
   end
 
   def clear_members_and_group_relation_cached

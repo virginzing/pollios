@@ -1,7 +1,6 @@
 module Pollios::V1::Shared
   class GroupForListEntity < GroupEntity
 
-    unexpose :admin_post_only
     unexpose :opened
 
     expose :invited_by, if: -> (obj, _) { obj.has_attribute?(:member_invite_id) && obj.member_invite_id.present? } do |_, _|

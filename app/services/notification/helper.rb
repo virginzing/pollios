@@ -80,8 +80,8 @@ module Notification::Helper
 
     increase_notification_count(recipient_list)
 
-    create_notification_log(recipient_list, message + '.', data) if log
-    create_notification_for_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) if push
+    create_update_log(recipient_list, message + '.', data) if log
+    create_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) # if push
   end
 
   def devices_receive_notification(recipient_list, type)
@@ -118,7 +118,7 @@ module Notification::Helper
     limit_message + '.'
   end
 
-  def create_notification_log(recipient_list, message, data)
+  def create_update_log(recipient_list, message, data)
     sender_id = (sender.present? ? sender.id : nil)
 
     recipient_list.each do |recipient|
@@ -128,7 +128,7 @@ module Notification::Helper
     end
   end
 
-  def create_notification_for_push(device_list, custom_message, data = nil)
+  def create_push(device_list, custom_message, data = nil)
     device_list.each do |device|
       notification = Rpush::Apns::Notification.new
       notification.app = Rpush::Apns::App.find_by(name: 'Pollios')
