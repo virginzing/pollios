@@ -21,7 +21,7 @@ function fetchVoteCount () {
       return response.json()
     })
     .then(function (json) {
-      counterElement.innerHTML = json.vote_all
+      counterElement.innerHTML = json.vote_all.toLocaleString()
       run()
     })
 }
