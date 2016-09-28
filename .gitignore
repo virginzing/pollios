@@ -32,4 +32,3 @@ curl_testing.rb
 /latest.dump
 
 node_modules/
-gulpfile.js

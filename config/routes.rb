@@ -608,9 +608,10 @@ Pollios::Application.routes.draw do
   # mount Sidekiq::Web => '/sidekiq'
 
   scope module: 'v1' do
-    scope module: 'polls' do
-      get 'qsncc', to: 'polls#qsncc'
-    end
+    get 'qsncc', to: 'qsncc#get'
+    get 'qsncc/close', to: 'qsncc#close'
+    get 'qsncc/result', to: 'qsncc#result'
+    get 'qsncc/polling', to: 'qsncc#polling'
 
     get '*path', to: 'errors#not_found'
     root to: 'home#landing'

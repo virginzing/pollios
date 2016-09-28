@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Pollios</title>
+  <title>Pollios | <%= @meta[:title] %></title>
   <meta charset="utf-8">
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,9 +10,9 @@
   <meta name="apple-itunes-app" content="app-id=901397748">
   <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
 
-  <meta property="og:title" content="<%= @poll.title %>" />
-  <meta property="og:description" content="<%= @poll.member.fullname %>" />
-  <meta property="og:image" content="<%= @poll_qrcode_image_url %>" />
+  <meta property="og:title" content="<%= @meta[:title] %>" />
+  <meta property="og:description" content="<%= @meta[:description] %>" />
+  <meta property="og:image" content="<%= @meta[:image] %>" />
 
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -27,7 +27,9 @@
     </a>
   </nav>
   <div class="app-container">
-    <%= yield %>
+    <div class="poll-container qsncc">
+      <%= yield %>
+    </div>
   </div>
   <footer class="footer-container">
     Pollios © 2016

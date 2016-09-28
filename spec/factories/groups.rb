@@ -72,7 +72,7 @@ FactoryGirl.define do
       end
     end
 
-    factory :member_created_group, traits: [:with_creator]
+    factory :group_with_creator, traits: [:with_creator]
     factory :group_with_cover_url, traits: [:with_cover_url]
     factory :group_that_need_approve, traits: [:with_need_approve]
     factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
