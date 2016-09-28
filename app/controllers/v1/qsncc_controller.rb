@@ -1,4 +1,4 @@
-module V1::Polls
+module V1
   class QsnccController < V1::ApplicationController
     layout 'v1/qsncc'
 
