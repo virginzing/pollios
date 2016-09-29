@@ -1,38 +1,16 @@
 .admin-container{
   display: flex;
-  flex-flow: row nowrap;
-  padding-top: 60px;
+  flex-flow: column;
   overflow: hidden;
   height: 100vh;
 
-  > .app-container {
-    padding: 25px;
-    overflow-y: scroll;
-    min-height: auto;
-    flex-grow: 1;
+  > .main-container {
+    display: flex;
+    flex-flow: row;
 
-    > .footer-container {
-      margin-bottom: -25px;
-      margin-left: -25px;
-      margin-right: -25px;
-    }
-  }
-
-  > .sidebar-container {
-    flex: 0 0 200px;
-    height: calc(100vh - 60px);
-  }
-
-  @media (max-width: $screen-sm) {
-    > .sidebar-container {
-      width: 200px;
-      left: -200px;
-      position: fixed;
-      transition: all .4s ease-in-out;
-    }
-
-    > .sidebar-container.open {
-      left: 0;
+    > .content {
+      flex-grow: 1;
+      overflow: scroll;
     }
   }
 }

@@ -10,10 +10,19 @@
 
   padding: 0 1rem;
   height: $navbar-height;
-  
+
   background-color: $primary-color;
 
   z-index: $z-index-navbar;
+
+  &.admin {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+
+    flex: 0 0 60px;
+  }
 
   > .logo {
     display: block;

@@ -1,8 +1,14 @@
 .sidebar-container {
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 10px 0;
-  background: #333333;
+  display: none;
+}
 
-  z-index: $z-index-sidebar;
+@media (min-width: $screen-sm) {
+  .sidebar-container {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 10px 0;
+    background: #333333;
+
+    z-index: $z-index-sidebar;
+  }
 }
