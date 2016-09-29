@@ -1,4 +1,4 @@
-module V1::Polls
+module V1
   class QsnccChoiceDecorator < V1::ApplicationDecorator
 
     delegate :answer, :vote

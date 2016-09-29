@@ -1,4 +1,4 @@
-module V1::Polls
+module V1
   class QsnccPollDecorator < V1::ApplicationDecorator
     delegate :title, :member, :get_photo, :choices
 
