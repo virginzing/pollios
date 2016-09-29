@@ -1,4 +1,4 @@
-const Chart = require('chart.js')
+const Chart = require('./libs/chart')
 const chartElement = document.getElementById('result')
 
 if (chartElement) {
@@ -25,16 +25,44 @@ function setupChart () {
     '#d35400'
   ]
 
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: choicesData.label,
-      datasets: [{
-        label: '# of Votes',
-        data: choicesData.data,
-        backgroundColor: backgroundColors,
-        borderWidth: 0
-      }]
+  const data = {
+    labels: choicesData.label,
+    datasets: [{
+      label: '# of Votes',
+      data: choicesData.data,
+      backgroundColor: backgroundColors,
+      borderWidth: 0
+    }]
+  }
+
+  const options = {
+    responsive: true,
+    legend: {
+      position: 'bottom',
+      labels: { fontSize: 16 }
+    },
+    showAllTooltips: true,
+    tooltips: {
+      callbacks: { label: handleToolTipsLabelCallback },
+      bodyFontSize: 20
     }
-  })
+  }
+
+  const config = {
+    type: 'pie',
+    data: data,
+    options: options
+  }
+
+  var piechart = new Chart(ctx, config)
+}
+
+function handleToolTipsLabelCallback (tooltipItem, data) {
+  var dataset = data.datasets[tooltipItem.datasetIndex];
+  var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+    return previousValue + currentValue;
+  });
+  var currentValue = dataset.data[tooltipItem.index];
+  var precentage = Math.floor(((currentValue/total) * 100)+0.5);
+  return precentage + "%";
 }
