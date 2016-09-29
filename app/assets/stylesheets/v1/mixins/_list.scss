@@ -1,0 +1,19 @@
+@mixin lists($margin: 1rem) {
+  @include card-container(1rem);
+
+  display: flex;
+  flex-flow: column;
+
+  margin: 0 0 $margin;
+}
+
+@mixin list-item() {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+
+  min-height: 32px;
+
+  font-size: .9rem;
+  line-height: 1.4;
+}
