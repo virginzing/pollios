@@ -56,7 +56,7 @@ gulp.task('js', function (cb) {
   pump([
     gulp.src(mainJs),
     wp({
-      entry: mainJs,
+      entry: ['whatwg-fetch', mainJs],
       output: { path: jsDistPath, filename: 'app.js' },
       plugins: [
         new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),

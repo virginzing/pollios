@@ -10,7 +10,8 @@
     "chance": "^1.0.4",
     "chart.js": "^2.3.0",
     "webpack": "^1.13.2",
-    "webpack-stream": "^3.2.0"
+    "webpack-stream": "^3.2.0",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.1",
