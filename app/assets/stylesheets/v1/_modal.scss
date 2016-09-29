@@ -2,16 +2,12 @@
   background: rgba(0, 0, 0, 0.4);
 }
 
-.remodal-wrapper {
-  overflow: hidden;
-}
-
 .remodal {
   @include card-container(25px);
 
   display: block;
 
-  margin: 3rem auto 0;
+  margin: 3rem auto;
   max-width: 90%;
   width: 640px;
 
@@ -22,4 +18,8 @@
 
     padding: 0;
   }
+}
+
+.remodal-wrapper:after {
+  display: none;
 }
