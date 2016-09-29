@@ -409,7 +409,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect { @friend_poll_action.comment(message: Faker::Lorem.sentence) } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
-          GuardMessage::Poll.not_voted_and_poll_not_closed)
+          GuardMessage::Poll.have_to_vote_before('comment'))
     end
 
     it '- Member comments poll which not allow comment.' do

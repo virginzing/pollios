@@ -1,7 +1,5 @@
 module Member::Private::PollInquiry
 
-  # private
-
   def can_view?
     return [false, ExceptionHandler::Message::Member::BAN] if poll.member.ban?
     return [false, ExceptionHandler::Message::Poll::UNDER_INSPECTION] if poll.black?
@@ -14,11 +12,6 @@ module Member::Private::PollInquiry
     [true, nil]
   end
 
-  def process_view
-    Member::PollAction.new(member, poll).view
-    poll
-  end
-
   def can_vote?
     return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
     return [false, ExceptionHandler::Message::Poll::EXPIRED] if expired_poll?
@@ -28,6 +21,23 @@ module Member::Private::PollInquiry
     return [false, GuardMessage::Poll.you_are_already_block] if outgoing_block
 
     [true, nil]
+  end
+
+  def can_comment?
+    can_view, message = can_view?
+    return [false, message] unless can_view
+
+    return [false, GuardMessage::Poll.have_to_vote_before('comment')] if not_closed_and_must_vote?
+    return [false, GuardMessage::Poll.not_allow_comment] if not_allow_comment?
+
+    [true, nil]
+  end
+
+  # private
+
+  def process_view
+    Member::PollAction.new(member, poll).view
+    poll
   end
 
   def member_outside_group_visibility?
@@ -95,6 +105,30 @@ module Member::Private::PollInquiry
 
   def outgoing_block
     member_listing.blocks_ids.include?(poll.member_id)
+  end
+
+  def not_closed_and_must_vote?
+    not_closed? && must_vote?
+  end
+
+  def not_closed?
+    !poll.close_status
+  end
+
+  def must_vote?
+    allow_your_own_vote? && not_voted?
+  end
+
+  def allow_your_own_vote?
+    !not_allow_your_own_vote?
+  end
+
+  def not_voted?
+    !Member::PollInquiry.new(member, poll).voted?
+  end
+
+  def not_allow_comment?
+    !poll.allow_comment
   end
 
   def poll_in_public?
