@@ -2,8 +2,9 @@ module V1
   class QsnccController < V1::ApplicationController
     layout 'v1/qsncc'
 
-    before_filter :set_group_qsncc
-    before_action :set_meta, :validate_group
+    before_action :set_meta
+    before_action :set_group_qsncc
+    before_action :validate_group
     before_action :must_be_admin, only: [:close]
     before_action :must_has_active_polls, only: [:get, :close]
     before_action :must_has_closed_polls, only: [:result]
@@ -40,11 +41,12 @@ module V1
     end
 
     def set_group_qsncc
-      @group_qsncc = ::Group::QSNCC.new()
+      @group_qsncc ||= ::Group::QSNCC.new(params[:group_public_id])
     end
 
     def validate_group
-      return render('not_has_polls') unless @group_qsncc.has_polls?
+      return render('error', locals: { message: 'ไม่พบกลุ่มที่ต้องการ'}) if @group_qsncc.group.nil?
+      return render('error', locals: { message: 'ยังไม่มีโพลเกิดขึ้น'}) unless @group_qsncc.has_polls?
     end
 
     def must_be_admin
