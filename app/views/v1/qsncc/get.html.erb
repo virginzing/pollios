@@ -4,7 +4,7 @@
 <% end %>
 <div class="voter-container">
   <h3 class="header">จำนวนผู้โหวต</h1>
-  <h1 id="counter" class="counter"><%= @poll.vote_all %></h1>
+  <h1 id="counter" class="counter" group="<%= @group_public_id %>"><%= @poll.vote_all %></h1>
 </div>
 <% if @show_close_poll_button %>
   <a class="close-poll" href="<%= @close_poll_url %>">ปิดรับผลโหวต</a>

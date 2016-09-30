@@ -12,6 +12,7 @@ module V1
     def get
       @show_close_poll_button = v1_admin_signed_in?
       @poll = @group_qsncc.current_poll
+      @group_public_id = @group_qsncc.group_public_id
 
       @close_poll_url = @group_qsncc.close_poll_url
     end
