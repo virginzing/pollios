@@ -4,7 +4,7 @@
 <% end %>
 <canvas data="<%= @poll.choices.to_json %>" id="result"></canvas>
 <% if @show_next_poll_button %>
-  <a class="next-poll" href="/qsncc">โพลถัดไป</a>
+  <a class="next-poll" href="<%= @next_poll_url %>">โพลถัดไป</a>
 <% end %>
 <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
   <img src="/images/logo_app_store.png" alt="">

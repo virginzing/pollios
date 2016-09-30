@@ -12,15 +12,19 @@ module V1
     def get
       @show_close_poll_button = v1_admin_signed_in?
       @poll = @group_qsncc.current_poll
+
+      @close_poll_url = @group_qsncc.close_poll_url
     end
 
     def close
       @group_qsncc.close_current_poll
-      redirect_to(action: 'result')
+      redirect_to(action: 'result', group_public_id: params[:group_public_id])
     end
 
     def result
       @show_next_poll_button = v1_admin_signed_in? && !@group_qsncc.all_polls_already_close?
+      @next_poll_url = @group_qsncc.next_poll_url
+
       @poll = QsnccPollDecorator.new(@group_qsncc.recently_closed_poll)
     end
 

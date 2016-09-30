@@ -7,7 +7,7 @@
   <h1 id="counter" class="counter"><%= @poll.vote_all %></h1>
 </div>
 <% if @show_close_poll_button %>
-  <a class="close-poll" href="/qsncc/close">ปิดรับผลโหวต</a>
+  <a class="close-poll" href="<%= @close_poll_url %>">ปิดรับผลโหวต</a>
 <% end %>
 <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
   <img src="/images/logo_app_store.png" alt="">

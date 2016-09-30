@@ -1,10 +1,10 @@
 class Group::QSNCC
-  attr_reader :group
+  attr_reader :group, :group_public_id
 
   def initialize(group_public_id)
-    group_public_id = group_public_id.nil? ? 'qsncc' : group_public_id
+    @group_public_id ||= group_public_id.nil? ? 'qsncc' : group_public_id
 
-    @group = Group.where(public_id: group_public_id).first
+    @group ||= Group.where(public_id: @group_public_id).first
   end
 
   def current_poll
@@ -36,6 +36,14 @@ class Group::QSNCC
 
   def no_closed_poll?
     closed_polls.size == 0
+  end
+
+  def close_poll_url
+    '/qsncc/close?group_public_id=' + @group_public_id
+  end
+
+  def next_poll_url
+    '/qsncc?group_public_id=' + @group_public_id
   end
 
   private
