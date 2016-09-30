@@ -1,5 +1,5 @@
 const change = require('chance')
-const url = 'http://localhost:3000/qsncc/polling'
+const url = 'http://http://codeapp-polliosdev.herokuapp.com/qsncc/polling'
 
 const counterElement = document.getElementById('counter')
 
