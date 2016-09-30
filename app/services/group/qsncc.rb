@@ -1,8 +1,10 @@
 class Group::QSNCC
-  attr_reader :group, :group_poll_list
+  attr_reader :group
 
-  def initialize()
-    @group = Group.find(25)
+  def initialize(group_public_id)
+    group_public_id = group_public_id.nil? ? 'qsncc' : group_public_id
+
+    @group = Group.where(public_id: group_public_id).first
   end
 
   def current_poll
