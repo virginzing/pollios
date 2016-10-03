@@ -5,7 +5,7 @@ class Group::QSNCC
     @public_id ||= public_id
     @group ||= Group.where(public_id: @public_id).first
 
-    raise ActionController::RoutingError, 'The group cannot be found.' if @group.nil?
+    fail ActionController::RoutingError, 'The group cannot be found.' if @group.nil?
   end
 
   def poll_by_index(index)
@@ -15,9 +15,14 @@ class Group::QSNCC
            .paginate(page: index, per_page: 1)
            .first
 
-    raise ActionController::RoutingError, 'The poll cannot be found.' if poll.nil?
+    fail ActionController::RoutingError, 'The poll cannot be found.' if poll.nil?
 
     poll
+  end
+
+  def close_poll_by_index(index)
+    poll = poll_by_index(index)
+    poll.update!(close_status: true)
   end
 
   def current_poll
