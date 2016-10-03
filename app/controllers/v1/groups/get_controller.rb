@@ -19,6 +19,7 @@ module V1::Groups
     end
 
     def poll_summary
+      render('v1/groups/get/polls/summary')
     end
 
     def poll_detail_result
