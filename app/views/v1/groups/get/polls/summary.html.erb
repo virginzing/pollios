@@ -1,8 +1,18 @@
 <% @polls.each do |poll| %>
-<div class="poll-container">
+<div class="groups-poll-container">
   <div class="poll-creator">
     <%= @group.name %>
   </div>
-  <div class="question"><%= poll.title %></div>
+  <div class="question"><span class="close">ปิดโหวตแล้ว</span><%= poll.title %></div>
+  <div class="answer header">
+    <span class="text">ตัวเลือก</span>
+    <span class="count">โหวต</span>
+  </div>
+  <% poll.choices.each do |choice| %>
+  <div class="answer">
+    <span class="text"><%= choice.answer %></span>
+    <span class="count"><%= choice.vote %></span>
+  </div>
+  <% end %>
 </div>
 <% end %>
