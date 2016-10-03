@@ -41,6 +41,10 @@ FactoryGirl.define do
       create(:group_member_that_is_admin, :is_active, group: group, member: evaluator.creator)
     end
 
+    trait :no_need_approve do
+      need_approve false
+    end
+
     trait :with_cover_url do
       cover 'http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png'
     end

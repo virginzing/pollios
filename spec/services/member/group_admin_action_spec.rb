@@ -120,7 +120,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#promote: A group admin promote a member to be an admin.' do
     before(:context) do
-      @group = FactoryGirl.create(:group, creator: @group_admin, need_approve: false)
+      @group = FactoryGirl.create(:group, :no_need_approve, creator: @group_admin)
     end
 
     it '- A group admin promote a member to be an admin.' do
@@ -133,7 +133,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#promote: A group admin tries to promote a member to be an admin but get an error.' do
     before(:context) do
-      @group = FactoryGirl.create(:group, creator: @group_admin, need_approve: false)
+      @group = FactoryGirl.create(:group, :no_need_approve, creator: @group_admin)
     end
 
     it '- A group admin should not be able to promote a member who is not in the group.' do
@@ -156,7 +156,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#demote: A group admin demote other admin in a group.' do
     before(:context) do
-      @group = FactoryGirl.create(:group, creator: @group_admin, need_approve: false)
+      @group = FactoryGirl.create(:group, :no_need_approve, creator: @group_admin)
     end
 
     it '- A group admin demote other group admin.' do
@@ -171,7 +171,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#demote: A group admin tries to demote other admin in a group but get an error.' do
     before(:context) do
-      @group = FactoryGirl.create(:group, creator: @group_admin, need_approve: false)
+      @group = FactoryGirl.create(:group, :no_need_approve, creator: @group_admin)
     end
 
     it '- A group admin should not be able to demote group creator.' do
@@ -202,7 +202,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#promote #remove: A group admin tries to remove group creator from a group.' do
     before(:context) do
-      @group = FactoryGirl.create(:group, creator: @group_admin, need_approve: false)
+      @group = FactoryGirl.create(:group, :no_need_approve, creator: @group_admin)
     end
 
     it '- A group admin should not be able to remove group creator from the group.' do
