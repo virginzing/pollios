@@ -14,24 +14,28 @@ module V1::Groups::Polls
       object
     end
 
+    def base_url
+      "/groups/#{poll.groups.first.public_id}/polls"
+    end
+
     def next_poll_url
       return '' if last_poll?
 
-      "/groups/#{poll.groups.first.public_id}/polls/#{next_index}"
+      "#{base_url}/#{next_index}"
     end
 
     def prev_poll_url
       return '' if first_poll?
 
-      "/groups/#{poll.groups.first.public_id}/polls/#{last_index}"
+      "#{base_url}/#{last_index}"
     end
 
     def close_poll_url
-      "/groups/#{poll.groups.first.public_id}/polls/#{@index}/close"
+      "#{base_url}/#{@index}/close"
     end
 
     def vote_result_url
-      "/groups/#{poll.groups.first.public_id}/polls/#{@index}/result"
+      "#{base_url}/#{@index}/result"
     end
 
     def next_poll_button_class

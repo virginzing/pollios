@@ -12,13 +12,13 @@ module V1::Groups::Polls
     def next_poll_url
       return '' if last_poll?
 
-      "/groups/#{poll.groups.first.public_id}/polls/#{next_index}/result"
+      "#{base_url}/#{next_index}/result"
     end
 
     def prev_poll_url
       return '' if first_poll?
 
-      "/groups/#{poll.groups.first.public_id}/polls/#{last_index}/result"
+      "#{base_url}/#{last_index}/result"
     end
   end
 end
