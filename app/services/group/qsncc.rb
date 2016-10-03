@@ -1,10 +1,23 @@
 class Group::QSNCC
-  attr_reader :group, :group_public_id
+  attr_reader :group, :public_id
 
-  def initialize(group_public_id)
-    @group_public_id ||= group_public_id.nil? ? 'qsncc' : group_public_id
+  def initialize(public_id)
+    @public_id ||= public_id
+    @group ||= Group.where(public_id: @public_id).first
 
-    @group ||= Group.where(public_id: @group_public_id).first
+    raise ActionController::RoutingError, 'The group cannot be found.' if @group.nil?
+  end
+
+  def poll_by_index(index)
+    poll = all_polls
+           .unscope(:order)
+           .order(created_at: :asc)
+           .paginate(page: index, per_page: 1)
+           .first
+
+    raise ActionController::RoutingError, 'The poll cannot be found.' if poll.nil?
+
+    poll
   end
 
   def current_poll
@@ -27,31 +40,31 @@ class Group::QSNCC
   end
 
   def has_polls?
-    all_polls.size != 0
+    all_polls.size.nonzero?
   end
 
   def all_polls_already_close?
-    active_polls.size == 0
+    active_polls.size.zero?
   end
 
   def no_closed_poll?
-    closed_polls.size == 0
+    closed_polls.size.zero?
   end
 
   def close_poll_url
-    '/qsncc/close?group_public_id=' + @group_public_id
+    '/qsncc/close?public_id=' + @public_id
   end
 
   def next_poll_url
-    '/qsncc?group_public_id=' + @group_public_id
+    '/qsncc?public_id=' + @public_id
   end
 
   private
 
   def all_polls
     Poll.joins(:poll_groups)
-      .where(poll_groups: { group_id: group.id })
-      .where(poll_groups: { deleted_at: nil })
+        .where(poll_groups: { group_id: group.id })
+        .where(poll_groups: { deleted_at: nil })
   end
 
   def active_polls
@@ -62,7 +75,7 @@ class Group::QSNCC
     all_polls.where(close_status: true)
   end
 
-  def can_close?(poll)
+  def can_close?
     !all_polls_already_close?
   end
 
@@ -72,6 +85,8 @@ class Group::QSNCC
 
   def poll_page(polls)
     page = polls.size
-    return page == 0 ? 1 : page
+    return 1 if page.zero?
+
+    page
   end
 end

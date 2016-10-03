@@ -36,7 +36,6 @@ function setupChart () {
   }
 
   const options = {
-    responsive: true,
     legend: {
       position: 'bottom',
       labels: { fontSize: 16 }
