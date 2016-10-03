@@ -3,7 +3,12 @@
   <div class="poll-creator">
     <%= @group.name %>
   </div>
-  <div class="question"><span class="close">ปิดโหวตแล้ว</span><%= poll.title %></div>
+  <div class="question">
+    <% if @poll.close_status %>
+    <span class="close">ปิดโหวตแล้ว</span>
+    <% end %>
+    <%= poll.title %>
+  </div>
   <div class="answer header">
     <span class="text">ตัวเลือก</span>
     <span class="count">โหวต</span>
