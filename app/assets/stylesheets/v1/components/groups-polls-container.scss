@@ -1,8 +1,23 @@
 .groups-poll-container {
   @extend .poll-container;
+  margin-bottom: 2rem;
 
   > .question {
+    display: flex;
+    align-items: center;
     margin: 2rem 0;
+
+    > .close {
+      margin-right: 1rem;
+
+      border-radius: 4px;
+      padding: .3rem .5rem;
+
+      font-size: .7rem;
+      color: white;
+      text-align: center;
+      background: $brand-primary;
+    }
   }
 
   > .voter-container {
@@ -20,6 +35,44 @@
       margin: 0 0 1.5rem;
 
       font-size: 12rem;
+    }
+  }
+
+  > .answer {
+    display: flex;
+    flex-flow: row nowrap;
+
+    margin: 0 auto;
+
+    border-bottom: 1px solid #eeeeee;
+    padding: 1rem 2rem;
+    width: 600px;
+    max-width: 100%;
+
+    color: #444444;
+    font-weight: 300;
+
+    &.header {
+      border-bottom-width: 3px;
+      padding-bottom: .5rem;
+
+      font-weight: normal;
+
+      > .count {
+        font-weight: normal;
+        color: #777777;
+      }
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    > .count {
+      margin: 0 0 0 auto;
+
+      color: $brand-primary;
+      font-weight: bold;
     }
   }
 
