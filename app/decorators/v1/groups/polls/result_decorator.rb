@@ -18,7 +18,7 @@ module V1::Groups::Polls
     def prev_poll_url
       return '' if first_poll?
 
-      "#{base_url}/#{last_index}/result"
+      "#{base_url}/#{prev_index}/result"
     end
   end
 end
