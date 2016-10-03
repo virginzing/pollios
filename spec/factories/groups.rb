@@ -38,7 +38,7 @@ FactoryGirl.define do
     need_approve true
 
     after(:create) do |group, evaluator|
-      create(:group_member_that_is_admin, :is_active, member: evaluator.creator, group: group)
+      create(:group_member_that_is_admin, :is_active, group: group, member: evaluator.creator)
     end
 
     trait :with_cover_url do
@@ -47,17 +47,20 @@ FactoryGirl.define do
 
     trait :with_members do
       transient do
-        numbers_of_members Random.rand(4..7)
+        member_count { Faker::Number.between(4, 7) }
+        member_factory :member
+        members { create_list(member_factory, member_count) }
       end
-      
-      after(:create) do |instance, evaluator|
-        create_list(:member, evaluator.numbers_of_members).each do |member|
-          create(:group_member_that_is_active, :is_member, member: member, group: instance)
+
+      after(:create) do |group, evaluator|
+        evaluator.members.each do |member|
+          create(:group_member_that_is_active, :is_member, group: group, member: member)
         end
       end
     end
 
     factory :group_with_cover_url, traits: [:with_cover_url]
+    factory :group_with_members, traits: [:with_members]
   end
 
   factory :group_required, class: Group do
