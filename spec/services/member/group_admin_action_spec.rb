@@ -125,8 +125,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#promote: A group admin promote a member to be an admin.' do
     before(:context) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-      @group.update(need_approve: false)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group, need_approve: false))
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
       @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end
@@ -140,8 +139,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#promote: A group admin tries to promote a member to be an admin but get an error.' do
     before(:context) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-      @group.update(need_approve: false)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group, need_approve: false))
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
       @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end
@@ -166,8 +164,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#demote: A group admin demote other admin in a group.' do
     before(:context) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-      @group.update(need_approve: false)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group, need_approve: false))
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
       @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end
@@ -182,8 +179,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#demote: A group admin tries to demote other admin in a group but get an error.' do
     before(:context) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-      @group.update(need_approve: false)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group, need_approve: false))
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
       @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end
@@ -216,8 +212,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#promote #remove: A group admin tries to remove group creator from a group.' do
     before(:context) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-      @group.update(need_approve: false)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group, need_approve: false))
       @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
       @member_1_group_action = Member::GroupAction.new(@member_1, @group)
     end

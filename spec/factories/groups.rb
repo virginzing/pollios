@@ -45,10 +45,6 @@ FactoryGirl.define do
       cover 'http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png'
     end
 
-    trait :with_dont_need_approve do
-      need_approve false
-    end
-
     trait :with_members do
       transient do
         numbers_of_members Random.rand(4..7)
@@ -62,7 +58,6 @@ FactoryGirl.define do
     end
 
     factory :group_with_cover_url, traits: [:with_cover_url]
-    factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
   end
 
   factory :group_required, class: Group do

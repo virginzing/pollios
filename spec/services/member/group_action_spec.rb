@@ -100,7 +100,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context "#join: A member request to join group that doesn't need approve." do
     before(:all) do
-      @group = FactoryGirl.create(:group_that_dont_need_approve)
+      @group = FactoryGirl.create(:group, need_approve: false)
     end
 
     it '- A member is member in group' do
