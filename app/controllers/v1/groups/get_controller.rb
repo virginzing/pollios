@@ -19,7 +19,7 @@ module V1::Groups
     end
 
     def poll_summary
-      @polls = @group_qsncc.all_polls
+      @polls = Polls::SummaryListDecorator.decorate_collection(@group_qsncc.all_polls)
       render('v1/groups/get/polls/summary')
     end
 
