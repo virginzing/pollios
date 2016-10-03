@@ -134,7 +134,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
   context '#leave: A member is leaving a group.' do
     before(:each) do
       @group = FactoryGirl.create(:group)
-      FactoryGirl.create(:group_member_that_is_active, :is_member, group: @group, member: @member)
+      FactoryGirl.create(:group_member, group: @group, member: @member)
     end
 
     it '- The member is in the group, but they are leaving' do
