@@ -35,6 +35,7 @@ FactoryGirl.define do
     name { Faker::Name.title }
     public_id { Faker::Name.name }
     member { creator }
+    need_approve true
 
     after(:create) do |group, evaluator|
       create(:group_member_that_is_admin, :is_active, member: evaluator.creator, group: group)
