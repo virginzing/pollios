@@ -10,3 +10,8 @@ namespace 'v1' do
   end
 end
 
+scope module: 'v1' do
+  namespace 'groups' do
+    get ':group_id', to: 'get#detail'
+  end
+end
