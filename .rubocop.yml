@@ -45,3 +45,6 @@ Style/EmptyLinesAroundModuleBody:
 
 Style/EmptyLinesAroundAccessModifier:
   Enabled: false
+
+Style/PredicateName:
+  Enabled: false
