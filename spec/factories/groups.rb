@@ -41,7 +41,7 @@ FactoryGirl.define do
     end
 
     trait :with_cover_url do
-      cover "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
+      cover 'http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png'
     end
 
     trait :with_need_approve do
