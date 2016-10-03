@@ -8,17 +8,26 @@
   <% end %>
   <div class="voter-container">
     <h3 class="header">จำนวนผู้โหวต</h1>
-    <h1 id="counter" class="counter" group="<%= @group_public_id %>"><%= @poll.vote_all %></h1>
+    <h1 id="counter" class="counter" group="<%= @group.public_id %>"><%= @poll.vote_all %></h1>
   </div>
+  <% if @poll.close_status %>
+  <div class="voter-container">
+    <h3 class="header">ปิดรับผลโหวตแล้ว</h1>
+  </div>
+  <% end %>
+  <% if @show_actions_button %>
   <div class="actions">
-    <a class="close-poll" href="#">ปิดรับผลโหวต</a>
-    <a class="result" href="#">ดูผลโหวต</a>
+    <% unless @poll.close_status %>
+    <a class="close-poll" href="<%= @poll.close_poll_url %>">ปิดรับผลโหวต</a>
+    <% end %>
+    <a class="result" href="<%= @poll.vote_result_url %>">ดูผลโหวต</a>
   </div>
+  <% end %>
   <div class="paginate">
-    <a class="prev-poll" href="#">
+    <a class="prev-poll <%= @poll.prev_poll_button_class %>" href="<%= @poll.prev_poll_url %>">
       โพลก่อนหน้า
     </a>
-    <a class="next-poll" href="#">
+    <a class="next-poll <%= @poll.next_poll_button_class %>" href="<%= @poll.next_poll_url %>">
       โพลถัดไป
     </a>
   </div>
