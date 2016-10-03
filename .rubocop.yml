@@ -1,6 +1,9 @@
 # inherit_from:
 #   - .rubocop_todo.yml
 
+Style/SignalException:
+  EnforcedStyle: only_fail
+
 Style/Documentation:
   Enabled: false
 
