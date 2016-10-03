@@ -18,6 +18,9 @@ module V1::Groups
       render('v1/groups/get/polls/detail')
     end
 
+    def poll_summary
+    end
+
     def poll_detail_result
       @poll = Polls::ResultDecorator.new(@poll, params[:index], request.host)
 
