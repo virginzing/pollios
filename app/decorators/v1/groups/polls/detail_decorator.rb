@@ -23,6 +23,10 @@ module V1::Groups::Polls
       "http://#{@hostname}#{base_url}/#{@index}/polling"
     end
 
+    def summary_url
+      "#{base_url}/summary"
+    end
+
     def next_poll_url
       return '' if last_poll?
 
