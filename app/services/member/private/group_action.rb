@@ -32,7 +32,8 @@ module Member::Private::GroupAction
       name: group_params[:name],
       description: group_params[:description],
       cover: group_params[:cover],
-      cover_preset: group_params[:cover_preset]
+      cover_preset: group_params[:cover_preset],
+      need_approve: group_params[:need_approve]
     }
   end
 
