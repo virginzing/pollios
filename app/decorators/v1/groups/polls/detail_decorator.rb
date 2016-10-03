@@ -36,7 +36,7 @@ module V1::Groups::Polls
     end
 
     def close_poll_url
-      "#{base_url}/#{@index}/close"
+      "#{base_url}/close"
     end
 
     def vote_result_url
