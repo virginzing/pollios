@@ -10,3 +10,10 @@ namespace 'v1' do
   end
 end
 
+scope module: 'v1' do
+  namespace 'groups' do
+    get ':group_id', to: 'get#detail'
+    get ':group_id/polls/:index', to: 'get#poll_detail'
+    get ':group_id/polls/:index/result', to: 'get#poll_detail_result'
+  end
+end
