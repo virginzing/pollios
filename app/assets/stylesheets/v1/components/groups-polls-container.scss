@@ -76,6 +76,11 @@
       width: 100%;
 
       text-align: center;
+
+      &.disabled {
+        cursor: not-allowed;
+        opacity: .5;
+      }
     }
 
     > .next-poll {
@@ -87,6 +92,11 @@
         color: white;
 
         background: $brand-primary;
+      }
+
+      &.disabled:hover {
+        color: $brand-primary;
+        background: white;
       }
     }
 
@@ -101,6 +111,11 @@
         color: white;
 
         background: #444444;
+      }
+
+      &.disabled:hover {
+        color: #444444;
+        background: white;
       }
     }
   }
