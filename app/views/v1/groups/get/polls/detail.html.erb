@@ -21,12 +21,15 @@
   </div>
   <% end %>
   <% if @show_actions_button %>
-  <div class="actions">
+  <form class="actions" action="<%= @poll.close_poll_url %>" method="post">
     <% unless @poll.close_status %>
-    <a class="close-poll" href="<%= @poll.close_poll_url %>">ปิดรับผลโหวต</a>
+    <input type="hidden" name="group_id" value="<%= @group.public_id %>" />
+    <input type="hidden" name="index" value="<%= @poll.index %>" />
+    <%= token_tag %>
+    <button type="submit" class="close-poll">ปิดรับผลโหวต</button>
     <% end %>
     <a class="result" href="<%= @poll.vote_result_url %>">ดูผลโหวต</a>
-  </div>
+  </form>
   <% end %>
   <div class="paginate">
     <a
