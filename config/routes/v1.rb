@@ -13,5 +13,6 @@ end
 scope module: 'v1' do
   namespace 'groups' do
     get ':group_id', to: 'get#detail'
+    get ':group_id/polls/:index', to: 'get#poll_detail'
   end
 end

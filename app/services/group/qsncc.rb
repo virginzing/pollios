@@ -8,6 +8,17 @@ class Group::QSNCC
     fail ActionController::RoutingError, 'The group cannot be found.' if @group.nil?
   end
 
+  def poll_by_index(index)
+    poll = all_polls
+      .order(id: :asc)
+      .paginate(page: index, per_page: 1)
+      .first
+
+    fail ActionController::RoutingError, 'The group cannot be found.' if poll.nil?
+
+    poll
+  end
+
   def current_poll
     active_polls
       .order(id: :asc)

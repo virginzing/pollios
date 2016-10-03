@@ -1,0 +1,28 @@
+<div class="groups-poll-container">
+  <div class="poll-creator">
+    <%= @group.name %>
+  </div>
+  <div class="question"><%= @poll.title %></div>
+  <% unless @poll.get_photo.blank? %>
+    <img class="question-image" src="<%= @poll.get_photo %>">
+  <% end %>
+  <div class="voter-container">
+    <h3 class="header">จำนวนผู้โหวต</h1>
+    <h1 id="counter" class="counter" group="<%= @group_public_id %>"><%= @poll.vote_all %></h1>
+  </div>
+  <div class="actions">
+    <a class="close-poll" href="#">ปิดรับผลโหวต</a>
+    <a class="result" href="#">ดูผลโหวต</a>
+  </div>
+  <div class="paginate">
+    <a class="prev-poll" href="#">
+      โพลก่อนหน้า
+    </a>
+    <a class="next-poll" href="#">
+      โพลถัดไป
+    </a>
+  </div>
+  <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
+    <img src="/images/logo_app_store.png" alt="">
+  </a>
+</div>
