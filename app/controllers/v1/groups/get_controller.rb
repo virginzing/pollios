@@ -12,14 +12,14 @@ module V1::Groups
     end
 
     def poll_detail
-      @poll = Polls::DetailDecorator.new(@poll, params[:index])
+      @poll = Polls::DetailDecorator.new(@poll, params[:index], request.host)
       @show_actions_button = v1_admin_signed_in?
 
       render('v1/groups/get/polls/detail')
     end
 
     def poll_detail_result
-      @poll = Polls::ResultDecorator.new(@poll, params[:index])
+      @poll = Polls::ResultDecorator.new(@poll, params[:index], request.host)
 
       render('v1/groups/get/polls/result')
     end

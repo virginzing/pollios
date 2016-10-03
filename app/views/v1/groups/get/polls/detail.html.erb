@@ -8,7 +8,12 @@
   <% end %>
   <div class="voter-container">
     <h3 class="header">จำนวนผู้โหวต</h1>
-    <h1 id="counter" class="counter" group="<%= @group.public_id %>"><%= @poll.vote_all %></h1>
+    <h1
+      id="counter"
+      class="counter"
+      polling="<%= @poll.polling_url %>"
+      close="<%= @poll.close_status %>"
+      group="<%= @group.public_id %>"><%= @poll.vote_all %></h1>
   </div>
   <% if @poll.close_status %>
   <div class="voter-container">
@@ -24,10 +29,14 @@
   </div>
   <% end %>
   <div class="paginate">
-    <a class="prev-poll <%= @poll.prev_poll_button_class %>" href="<%= @poll.prev_poll_url %>">
+    <a
+      class="prev-poll <%= @poll.prev_poll_button_class %>"
+      href="<%= @poll.prev_poll_url %>">
       โพลก่อนหน้า
     </a>
-    <a class="next-poll <%= @poll.next_poll_button_class %>" href="<%= @poll.next_poll_url %>">
+    <a
+      class="next-poll <%= @poll.next_poll_button_class %>"
+      href="<%= @poll.next_poll_url %>">
       โพลถัดไป
     </a>
   </div>

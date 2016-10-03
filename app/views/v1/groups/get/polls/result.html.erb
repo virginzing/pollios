@@ -6,7 +6,11 @@
   <% unless @poll.get_photo.blank? %>
     <img class="question-image" src="<%= @poll.get_photo %>">
   <% end %>
-  <canvas height="<%= @chart_height %>" data="<%= @poll.choices.to_json %>" id="result"></canvas>
+  <canvas
+    id="result"
+    height="<%= @chart_height %>"
+    data="<%= @poll.choices.to_json %>"
+    polling="<%= @poll.polling_url %>"></canvas>
   <div class="paginate">
     <a class="prev-poll <%= @poll.prev_poll_button_class %>" href="<%= @poll.prev_poll_url %>">
       โพลก่อนหน้า

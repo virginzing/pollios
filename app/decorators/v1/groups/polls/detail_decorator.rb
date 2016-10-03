@@ -1,11 +1,12 @@
 module V1::Groups::Polls
   class DetailDecorator < V1::ApplicationDecorator
-    attr_reader :index
+    attr_reader :index, :hostname
 
     delegate :title, :member, :get_photo, :vote_all, :close_status
 
-    def initialize(poll, index)
+    def initialize(poll, index, hostname)
       @index ||= index
+      @hostname ||= hostname
 
       super(poll)
     end
@@ -16,6 +17,10 @@ module V1::Groups::Polls
 
     def base_url
       "/groups/#{poll.groups.first.public_id}/polls"
+    end
+
+    def polling_url
+      "http://#{@hostname}#{base_url}/#{@index}/polling"
     end
 
     def next_poll_url
