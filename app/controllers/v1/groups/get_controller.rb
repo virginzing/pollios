@@ -13,6 +13,10 @@ module V1::Groups
       render('v1/groups/get/polls/detail')
     end
 
+    def poll_detail_result
+      render('v1/groups/get/polls/result')
+    end
+
     private
 
     def set_meta
