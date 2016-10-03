@@ -1,5 +1,4 @@
 const change = require('chance')
-const url = 'http://http://codeapp-polliosdev.herokuapp.com/qsncc/polling'
 
 const counterElement = document.getElementById('counter')
 
@@ -17,7 +16,7 @@ function run() {
 
 function fetchVoteCount () {
   const groupPublicID = counterElement.getAttribute('group')
-  const pollingURL = url + '?group_public_id=' + String(groupPublicID)
+  const pollingURL = counterElement.getAttribute('polling')
 
   fetch(pollingURL)
     .then(function (response) {
