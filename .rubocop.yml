@@ -1,6 +1,9 @@
 # inherit_from:
 #   - .rubocop_todo.yml
 
+Style/SignalException:
+  EnforcedStyle: only_fail
+
 Style/Documentation:
   Enabled: false
 
@@ -44,4 +47,7 @@ Style/EmptyLinesAroundModuleBody:
   Enabled: false
 
 Style/EmptyLinesAroundAccessModifier:
+  Enabled: false
+
+Style/PredicateName:
   Enabled: false

@@ -202,8 +202,8 @@ module GuardMessage
         'You are already reported this poll.'
       end
 
-      def not_voted_and_poll_not_closed
-        "You aren't vote this poll."
+      def have_to_vote_before(action)
+        "You have to vote before #{action} this poll."
       end
 
       def not_allow_comment

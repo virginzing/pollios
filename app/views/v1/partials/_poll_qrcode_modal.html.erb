@@ -1,15 +1,21 @@
-<div id="qrcode_modal" class="modal fade" tabindex="-1" role="dialog">
+<div data-remodal-id="qr_modal" class="remodal">
+  <button data-remodal-action="close" class="close">X</button>
   <div class="qrcode-modal">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <div class="title">VOTE NOW ON <span class="app">POLLIOS</span> USING THIS QR CODE</div>
-    <img class="qrcode" src="<%= qrcode_url %>" alt="">
-    <div class="links-app horizontal">
-      <a href="<%= poll_open_app_url %>" class="link">
-        <img src="/images/logo_pollios_h.png" alt="">
-      </a>
-      <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
-        <img src="/images/logo_app_store.png" alt="">
-      </a>
+    <div class="title">VOTE NOW ON <span class="app">POLLIOS</span></div>
+    <div class="qrcode-container">
+      <div class="header">USING THIS QR CODE</div>
+      <img class="qrcode" src="<%= qrcode_url %>" alt="">
+    </div>
+    <div class="use-app-container">
+      <div class="header">USING POLLIOS APP</div>
+      <div class="links">
+        <a href="<%= poll_open_app_url %>" class="link">
+          <img src="/images/logo_pollios_h.png" alt="">
+        </a>
+        <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
+          <img src="/images/logo_app_store.png" alt="">
+        </a>
+      </div>
     </div>
   </div>
 </div>

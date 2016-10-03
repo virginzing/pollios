@@ -15,7 +15,7 @@ module Member::Private::PollActionGuard
     return [false, GuardMessage::Poll.not_owner_poll] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.already_closed] if already_close
+    return [false, GuardMessage::Poll.already_closed] if already_closed?
 
     [true, nil]
   end
@@ -78,7 +78,7 @@ module Member::Private::PollActionGuard
     return [false, GuardMessage::Poll.not_owner_poll] if not_owner_poll
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
-    return [false, GuardMessage::Poll.already_closed] if already_close
+    return [false, GuardMessage::Poll.already_closed] if already_closed?
     return [false, GuardMessage::Poll.already_public] if already_public
     return [false, GuardMessage::Poll.public_quota_limit_exist] if public_quota_limit_exist
 
@@ -103,8 +103,8 @@ module Member::Private::PollActionGuard
   end
 
   def can_comment?
-    return [false, GuardMessage::Poll.not_voted_and_poll_not_closed] if not_voted_and_poll_not_closed
-    return [false, GuardMessage::Poll.not_allow_comment] if not_allow_comment
+    can_comment, message = poll_inquiry_service.can_comment?
+    return [false, message] unless can_comment
 
     [true, nil]
   end
@@ -115,7 +115,7 @@ module Member::Private::PollActionGuard
     return [false, GuardMessage::Poll.not_match_comment] if not_match_comment
     return [false, GuardMessage::Poll.report_own_comment] if owner_comment
     return [false, GuardMessage::Poll.already_report_comment] if already_report_comment
-      
+
     [true, nil]
   end
 
@@ -156,7 +156,7 @@ module Member::Private::PollActionGuard
     !owner_poll
   end
 
-  def already_close
+  def already_closed?
     poll_inquiry_service.closed?
   end
 
@@ -203,14 +203,6 @@ module Member::Private::PollActionGuard
 
   def already_report
     poll_inquiry_service.reported?
-  end
-
-  def not_voted_and_poll_not_closed
-    not_voted && !poll.close_status
-  end
-
-  def not_allow_comment
-    !poll.allow_comment
   end
 
   def not_match_comment

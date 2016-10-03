@@ -1,4 +1,5 @@
 class Group::CheckUserInGroup
+
   def initialize(member, group)
     @member = member
     @group = group

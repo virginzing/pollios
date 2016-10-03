@@ -1,24 +1,34 @@
 .navbar-container {
   position: fixed;
   top: 0;
-  
+  left: 0;
+  right: 0;
+
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  
-  padding: 0 15px;
-  width: 100%;
-  height: 60px;
-  
+
+  padding: 0 1rem;
+  height: $navbar-height;
+
   background-color: $primary-color;
-  
+
   z-index: $z-index-navbar;
-  
+
+  &.admin {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+
+    flex: 0 0 60px;
+  }
+
   > .logo {
     display: block;
     max-height: 60px;
   }
-  
+
   > .logo > img {
     height: 50px;
   }
@@ -42,10 +52,10 @@
   }
 
   @media (max-width: $screen-sm) {
-    > .button { 
+    > .button {
       display: inline-block;
     }
-    
+
     > .no-mobile {
       display: none;
     }

@@ -4,6 +4,7 @@ module Poll::Private::MemberList
 
   def can_view?
     return [true, nil] unless viewing_member
+
     can_view, message = poll_inquiry_service.can_view?
     return [false, message] unless can_view
 
@@ -12,7 +13,9 @@ module Poll::Private::MemberList
 
   def can_mention?
     return [true, nil] unless viewing_member
-    return [false, "You aren't vote this poll. Vote to see comments."] if not_voted_and_poll_not_closed_and_poll_creator_and_creator_must_vote
+
+    can_comment, message = poll_inquiry_service.can_comment?
+    return [false, message] unless can_comment
 
     [true, nil]
   end
@@ -112,7 +115,7 @@ module Poll::Private::MemberList
     Member::MemberList.new(viewing_member).blocks
   end
 
-  def not_voted_and_poll_not_closed_and_poll_creator_and_creator_must_vote
+  def not_voted_and_poll_not_closed_and_poll_creator_and_creator_must_vote?
     (!poll_inquiry_service.voted? && !poll.close_status) && (viewing_member == poll.member && poll.creator_must_vote)
   end
 

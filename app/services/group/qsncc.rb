@@ -1,25 +1,52 @@
 class Group::QSNCC
-  attr_reader :group, :group_poll_list
+  attr_reader :group, :group_public_id
 
-  def initialize()
-    @group = Group.find(2)
+  def initialize(group_public_id)
+    @group_public_id ||= group_public_id.nil? ? 'qsncc' : group_public_id
+
+    @group ||= Group.where(public_id: @group_public_id).first
   end
 
   def current_poll
-    active_polls.order(id: :asc).paginate(page: poll_page(active_polls), per_page: 1)
+    active_polls
+      .order(id: :asc)
+      .paginate(page: poll_page(active_polls), per_page: 1)
+      .first
   end
 
   def close_current_poll
-    poll = current_poll.first
+    poll = current_poll
 
     return false unless can_close?(poll)
 
-    close_poll(poll)
-
-    poll.choices
+    close(poll)
   end
 
-  # private
+  def recently_closed_poll
+    closed_polls.limit(1).first
+  end
+
+  def has_polls?
+    all_polls.size != 0
+  end
+
+  def all_polls_already_close?
+    active_polls.size == 0
+  end
+
+  def no_closed_poll?
+    closed_polls.size == 0
+  end
+
+  def close_poll_url
+    '/qsncc/close?group_public_id=' + @group_public_id
+  end
+
+  def next_poll_url
+    '/qsncc?group_public_id=' + @group_public_id
+  end
+
+  private
 
   def all_polls
     Poll.joins(:poll_groups)
@@ -31,12 +58,16 @@ class Group::QSNCC
     all_polls.where(close_status: false)
   end
 
-  def close_poll(poll)
-    poll.update!(close_status: true)
+  def closed_polls
+    all_polls.where(close_status: true)
   end
 
   def can_close?(poll)
-    poll != nil
+    !all_polls_already_close?
+  end
+
+  def close(poll)
+    poll.update!(close_status: true)
   end
 
   def poll_page(polls)
