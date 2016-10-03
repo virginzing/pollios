@@ -1,8 +1,10 @@
-class Group::MemberInquiry
+class Group::MemberInquiry < Group::MemberList
 
   attr_reader :group_member_list
 
   def initialize(group)
+    super(group)
+
     @group_member_list = Group::MemberList.new(group)
   end
 
