@@ -1,10 +1,11 @@
 class Group::QSNCC
-  attr_reader :group, :group_public_id
+  attr_reader :group, :public_id
 
-  def initialize(group_public_id)
-    @group_public_id ||= group_public_id.nil? ? 'qsncc' : group_public_id
+  def initialize(public_id)
+    @public_id ||= public_id
+    @group ||= Group.where(public_id: @public_id).first
 
-    @group ||= Group.where(public_id: @group_public_id).first
+    fail ActionController::RoutingError, 'The group cannot be found.' if @group.nil?
   end
 
   def current_poll
@@ -39,11 +40,11 @@ class Group::QSNCC
   end
 
   def close_poll_url
-    '/qsncc/close?group_public_id=' + @group_public_id
+    '/qsncc/close?public_id=' + @public_id
   end
 
   def next_poll_url
-    '/qsncc?group_public_id=' + @group_public_id
+    '/qsncc?public_id=' + @public_id
   end
 
   private
