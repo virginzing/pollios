@@ -45,10 +45,6 @@ FactoryGirl.define do
       cover 'http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png'
     end
 
-    trait :with_need_approve do
-      need_approve true
-    end
-
     trait :with_dont_need_approve do
       need_approve false
     end
@@ -66,7 +62,6 @@ FactoryGirl.define do
     end
 
     factory :group_with_cover_url, traits: [:with_cover_url]
-    factory :group_that_need_approve, traits: [:with_need_approve]
     factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
   end
 

@@ -9,25 +9,25 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     @member_1 = FactoryGirl.create(:member, fullname: 'Member One')
   end
 
-  context '#approve: A need-approve-group admin approves a join request.' do
+  context '#approve: A group admin approves a join request.' do
     before(:context) do
-      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
-      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
     end
 
     it '- A group admin approve a join request.' do
       @member_1_group_action.join
       expect { @group_admin_action_on_one.approve }.not_to raise_error
-      expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to include @member_1.id
+      expect(Group::MemberList.new(@group).members.map(&:id)).to include @member_1.id
     end
   end
 
-  context '#approve: A need-approve-group admin tries to approves a join request but get an error.' do
+  context '#approve: A group admin tries to approves a join request but get an error.' do
     before(:context) do
-      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
-      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
     end
 
     it '- A group admin should not be able to approve a join request if the member is already in the group.' do
@@ -36,37 +36,37 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect { @group_admin_action_on_one.approve } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
-          GuardMessage::GroupAdminAction.member_already_in_group(@member_1, @need_approve_group))
+          GuardMessage::GroupAdminAction.member_already_in_group(@member_1, @group))
     end
 
     it '- A group admin should not be able to approve a request that has never been sent to admin.' do
       expect { @group_admin_action_on_one.approve } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
-          GuardMessage::GroupAdminAction.no_join_request_from_member(@member_1, @need_approve_group))
+          GuardMessage::GroupAdminAction.no_join_request_from_member(@member_1, @group))
     end
   end
 
-  context '#deny: A need-approve-group admin deny a join request.' do
+  context '#deny: A group admin deny a join request.' do
     before(:context) do
-      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
-      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
     end
 
     it '- A group admin deny a join request.' do
       @member_1_group_action.join
       expect { @group_admin_action_on_one.deny }.not_to raise_error
-      expect(Group::MemberList.new(@need_approve_group).members.size).to eq(0)
-      expect(Group::MemberList.new(@need_approve_group).requesting.size).to eq(0)
+      expect(Group::MemberList.new(@group).members.size).to eq(0)
+      expect(Group::MemberList.new(@group).requesting.size).to eq(0)
     end
   end
 
-  context '#deny: A need-approve-group admin tries to deny a join request but get an error.' do
+  context '#deny: A group admin tries to deny a join request but get an error.' do
     before(:context) do
-      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
-      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
     end
 
     it '- A group admin should not be able to deny a join request if the member is already in the group.' do
@@ -75,47 +75,47 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect { @group_admin_action_on_one.deny } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
-          GuardMessage::GroupAdminAction.member_already_in_group(@member_1, @need_approve_group))
+          GuardMessage::GroupAdminAction.member_already_in_group(@member_1, @group))
     end
 
     it '- A group admin should not be able to deny a request that has never been sent to admin.' do
       expect { @group_admin_action_on_one.deny } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
-          GuardMessage::GroupAdminAction.no_join_request_from_member(@member_1, @need_approve_group))
+          GuardMessage::GroupAdminAction.no_join_request_from_member(@member_1, @group))
     end
   end
 
   context '#remove: A group admin remove a member from a group.' do
     before(:context) do
-      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @member_1_group_action = Member::GroupAction.new(@member_1, @need_approve_group)
-      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @member_1_group_action = Member::GroupAction.new(@member_1, @group)
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
     end
 
     it '- A group admin remove a member from the group.' do
       @member_1_group_action.join
       @group_admin_action_on_one.approve
       expect { @group_admin_action_on_one.remove }.not_to raise_error
-      expect(Group::MemberList.new(@need_approve_group).members.map(&:id)).to match_array []
+      expect(Group::MemberList.new(@group).members.map(&:id)).to match_array []
     end
   end
 
   context '#remove: A group admin tries to remove a member from a group but get an error.' do
     before(:context) do
-      @need_approve_group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_that_need_approve))
-      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @member_1)
+      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group_admin_action_on_one = Member::GroupAdminAction.new(@group_admin, @group, @member_1)
     end
 
     it '- A group admin should not be able to remove a member who is not member in the group.' do
       expect { @group_admin_action_on_one.remove } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
-          GuardMessage::GroupAdminAction.member_is_not_in_group(@member_1, @need_approve_group))
+          GuardMessage::GroupAdminAction.member_is_not_in_group(@member_1, @group))
     end
 
     it '- A group admin should not be able to remove himself.' do
-      @group_admin_action_on_self = Member::GroupAdminAction.new(@group_admin, @need_approve_group, @group_admin)
+      @group_admin_action_on_self = Member::GroupAdminAction.new(@group_admin, @group, @group_admin)
       expect { @group_admin_action_on_self.remove } \
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,
