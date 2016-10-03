@@ -8,6 +8,12 @@ class Group::QSNCC
     fail ActionController::RoutingError, 'The group cannot be found.' if @group.nil?
   end
 
+  def all_polls
+    @group
+      .polls
+      .without_deleted
+  end
+
   def poll_by_index(index)
     poll = all_polls
            .unscope(:order)
@@ -65,12 +71,6 @@ class Group::QSNCC
   end
 
   private
-
-  def all_polls
-    Poll.joins(:poll_groups)
-        .where(poll_groups: { group_id: group.id })
-        .where(poll_groups: { deleted_at: nil })
-  end
 
   def active_polls
     all_polls.where(close_status: false)
