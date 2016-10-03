@@ -134,8 +134,8 @@ module Member::Private::GroupActionGuard
     group[:group_type] == 1
   end
 
-  def not_invite?(inviter, member)
-    group_member_inquiry.inviter(a_member) != member
+  def not_invite?
+    group_member_inquiry.inviter_of(a_member) != member
   end
 
   def already_admin?
