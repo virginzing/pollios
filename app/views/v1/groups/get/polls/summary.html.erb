@@ -1,4 +1,8 @@
+<% @polls.each do |poll| %>
 <div class="poll-container">
   <div class="poll-creator">
+    <%= @group.name %>
   </div>
+  <div class="question"><%= poll.title %></div>
 </div>
+<% end %>
