@@ -52,15 +52,6 @@ FactoryGirl.define do
       need_approve false
     end
 
-    trait :with_invitation_friend_ids do
-      transient do
-        numbers_of_friends Random.rand(3..5)
-        member_ids { FactoryGirl.create_list(:member, numbers_of_friends).map(&:id) }
-      end
-
-      friend_ids { member_ids }
-    end
-
     trait :with_members do
       transient do
         numbers_of_members Random.rand(4..7)
@@ -76,7 +67,6 @@ FactoryGirl.define do
     factory :group_with_cover_url, traits: [:with_cover_url]
     factory :group_that_need_approve, traits: [:with_need_approve]
     factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
-    factory :group_with_invitation_friend_ids, traits: [:with_invitation_friend_ids]
   end
 
   factory :group_required, class: Group do
