@@ -6,6 +6,7 @@ module V1::Groups
     before_action :set_meta
     before_action :set_poll
     before_action :must_be_admin, only: [:poll_detail_result]
+    before_action :set_chart_height, only: [:poll_detail_result]
 
     def detail
     end
@@ -43,6 +44,14 @@ module V1::Groups
 
     def must_be_admin
       return redirect_to(action: :poll_detail) unless v1_admin_signed_in?
+    end
+
+    def mobile_device?
+      request.user_agent =~ /Mobile|webOS/
+    end
+
+    def set_chart_height
+      @chart_height = mobile_device? ? 500 : 150
     end
   end
 end
