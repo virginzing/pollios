@@ -10,7 +10,8 @@ class Group::QSNCC
 
   def poll_by_index(index)
     poll = all_polls
-           .order(id: :asc)
+           .unscope(:order)
+           .order(created_at: :asc)
            .paginate(page: index, per_page: 1)
            .first
 
