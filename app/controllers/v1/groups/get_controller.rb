@@ -5,7 +5,7 @@ module V1::Groups
     before_action :set_group
     before_action :set_meta
     before_action :set_poll
-    before_action :must_be_admin, only: [:poll_detail_result]
+    before_action :must_be_admin, only: [:poll_detail_result, :poll_summary]
     before_action :set_chart_height, only: [:poll_detail_result]
 
     def detail
