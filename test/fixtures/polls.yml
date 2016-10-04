@@ -12,7 +12,7 @@
 #  photo_poll              :string(255)
 #  expire_date             :datetime
 #  view_all                :integer          default(0)
-#  start_date              :datetime         default(2016-09-05 10:01:35 UTC)
+#  start_date              :datetime         default(2014-02-03 15:36:16 UTC)
 #  series                  :boolean          default(FALSE)
 #  poll_series_id          :integer
 #  choice_count            :integer
@@ -27,8 +27,8 @@
 #  allow_comment           :boolean          default(TRUE)
 #  comment_count           :integer          default(0)
 #  member_type             :string(255)
-#  qr_only                 :boolean          default(FALSE)
-#  require_info            :boolean          default(FALSE)
+#  qr_only                 :boolean
+#  require_info            :boolean
 #  expire_status           :boolean          default(FALSE)
 #  creator_must_vote       :boolean          default(TRUE)
 #  in_group                :boolean          default(FALSE)

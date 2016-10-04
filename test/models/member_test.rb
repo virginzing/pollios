@@ -11,7 +11,6 @@
 #  updated_at                 :datetime
 #  friend_limit               :integer
 #  member_type                :integer          default(0)
-#  province_id                :integer
 #  key_color                  :string(255)
 #  cover                      :string(255)
 #  description                :text
