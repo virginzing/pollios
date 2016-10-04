@@ -6,3 +6,18 @@ $font-size-sub-title: 1.8rem;
 $color-primary: #CF1E4F;
 
 $navbar-height: 60px;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 544px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+$container-max-widths: (
+  sm: 576px,
+  md: 720px,
+  lg: 940px,
+  xl: 1140px
+) !default;
