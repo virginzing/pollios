@@ -4,13 +4,12 @@ pathname = Pathname.new(__FILE__)
 RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n Member::GroupAction" do
 
   before(:context) do
-    @group_admin = FactoryGirl.create(:member)
     @member = FactoryGirl.create(:member)
   end
 
   context '#create: A member create group, became admin of the group.' do
     before(:all) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group = Member::GroupAction.new(@member).create(FactoryGirl.attributes_for(:group))
     end
 
     it '- A member could create a group' do
@@ -18,7 +17,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- A member is an admin of the created group' do
-      expect(Group::MemberInquiry.new(@group).admin?(@group_admin)).to be true
+      expect(Group::MemberInquiry.new(@group).admin?(@member)).to be true
     end
 
     it '- A member does not upload cover photo, should be set between 1-26' do
@@ -36,7 +35,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#create: A member create group with cover url.' do
     before(:all) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group_with_cover_url))
+      @group = Member::GroupAction.new(@member).create(FactoryGirl.attributes_for(:group_with_cover_url))
     end
 
     it '- A cover URL is given and set to group' do
@@ -52,8 +51,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:all) do
       @friends = FactoryGirl.create_list(:member, 5)
       @friend_ids = @friends.map(&:id)
-      @group = Member::GroupAction.new(@group_admin).create(
-        FactoryGirl.attributes_for(:group_with_invitation_friend_ids, friend_ids: @friend_ids))
+      @group = Member::GroupAction.new(@member).create(
+        FactoryGirl.attributes_for(:group).merge(friend_ids: @friend_ids)
+      )
     end
 
     it '- 5 members are pending in group.' do
@@ -68,7 +68,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#join: A member request to join group that need approve.' do
     before(:all) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group = FactoryGirl.create(:group)
     end
 
     it '- A member is requesting in group' do
@@ -80,7 +80,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#join: A member request to join group that need approve and being invited by admin.' do
     before(:all) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group = FactoryGirl.create(:group)
+      @group_admin = Group::MemberList.new(@group).admins.sample
+
       Member::GroupAction.new(@group_admin, @group).invite([@member.id])
     end
 
@@ -98,8 +100,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context "#join: A member request to join group that doesn't need approve." do
     before(:all) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
-      @group.update!(need_approve: false)
+      @group = FactoryGirl.create(:group, :no_need_approve)
     end
 
     it '- A member is member in group' do
@@ -111,7 +112,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#invite: A member invite friends to group' do
     before(:all) do
-      @group = Member::GroupAction.new(@group_admin).create(FactoryGirl.attributes_for(:group))
+      @group = FactoryGirl.create(:group)
+      @group_admin = Group::MemberList.new(@group).admins.sample
+
       @friends = FactoryGirl.create_list(:member, 5)
       @friend_ids = @friends.map(&:id)
 
@@ -130,8 +133,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
   context '#leave: A member is leaving a group.' do
     before(:each) do
-      @group = FactoryGirl.create(:group_with_creator, creator: @group_member)
-      FactoryGirl.create(:group_member_that_is_active, :is_member, group: @group, member: @member)
+      @group = FactoryGirl.create(:group)
+      FactoryGirl.create(:group_member, group: @group, member: @member)
     end
 
     it '- The member is in the group, but they are leaving' do
@@ -157,7 +160,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
 
     it '- The member is not in the group.' do
-      @group = FactoryGirl.create(:group_with_creator, creator: @group_admin)
+      @group = FactoryGirl.create(:group)
       expect { Member::GroupAction.new(@member, @group).leave }
         .to raise_error(
           ExceptionHandler::UnprocessableEntity,

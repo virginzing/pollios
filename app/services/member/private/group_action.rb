@@ -17,8 +17,12 @@ module Member::Private::GroupAction
   end
 
   def build_new_group
-    group = Group.new new_group_params_hash
+    group = Group.new(new_group_params_hash)
+    
+    group.assign_attributes(public_id: unique_group_public_id(group))
+
     group.save!
+
     group
   end
 
@@ -28,12 +32,13 @@ module Member::Private::GroupAction
       name: group_params[:name],
       description: group_params[:description],
       cover: group_params[:cover],
-      cover_preset: group_params[:cover_preset]
-    }    
+      cover_preset: group_params[:cover_preset],
+      need_approve: group_params[:need_approve]
+    }
   end
 
   def initialize_new_group
-    set_group_cover
+    set_cover(group)
     set_creator_as_admin
     create_group_company
     process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
@@ -41,13 +46,46 @@ module Member::Private::GroupAction
     clear_group_cache_for_member(member)
   end
 
-  def set_group_cover
+  def unique_group_public_id(group)
+    joined_name = group.name.scan(/[a-zA-Z0-9_.]+/).join
+    public_id = joined_name.first(20)
+  
+    public_id = joined_name.first(10) + Time.now.to_i.to_s while Group.exists?(public_id: public_id)
+
+    public_id
+  end
+
+  def set_cover(group)
+    if uploaded_cover_given?(group)
+      set_uploaded_cover(group)
+    elsif !cover_preset_given?(group)
+      set_random_cover_preset(group)
+    end
+  end
+
+  def set_uploaded_cover(group)
     cover = group_params[:cover]
     cover_group_url = ImageUrl.new(cover)
-    return unless cover && cover_group_url.from_image_url?
 
-    group.update_column(:cover_preset, '0')
     group.update_column(:cover, cover_group_url.split_cloudinary_url)
+  end
+
+  def set_random_cover_preset(group)
+    group.cover_preset = random_cover_preset
+  end
+
+  def random_cover_preset
+    rand(1..26).to_s
+  end
+
+  def uploaded_cover_given?(group)
+    group_params[:cover] && ImageUrl.new(group_params[:cover]).from_image_url?
+  end
+
+  def cover_preset_given?(group)
+    group_params[:cover_preset] \
+      && group_params[:cover_preset].gsub(/\D/, ' ') == group_params[:cover_preset] \
+      && group_params[:cover_preset].to_i.between(1, 26)
   end
 
   def set_creator_as_admin
@@ -101,7 +139,7 @@ module Member::Private::GroupAction
     relationship_to_group(member).destroy
 
     clear_group_member_relation_cache(member)
-    group.destroy unless Group::MemberInquiry.new(group).all?
+    group.destroy unless Group::MemberInquiry.new(group).has_active?
 
     group
   end

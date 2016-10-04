@@ -73,9 +73,6 @@ class Group < ActiveRecord::Base
 
   after_commit :flush_cache
 
-  after_create :set_public_id
-  before_create :set_cover_preset
-
   default_scope { with_deleted.where(visible: true) }
 
   scope :without_deleted, -> { where(deleted_at: nil) }
@@ -91,34 +88,6 @@ class Group < ActiveRecord::Base
 
   def flush_cache
     Rails.cache.delete([self.class.name, id])
-  end
-
-  def set_cover_preset
-    unless self.cover.present?
-      if self.cover_preset.present?
-        self.cover_preset = Group.random_cover_preset unless self.cover_preset != "0"
-      else
-        self.cover_preset = Group.random_cover_preset
-      end
-    else
-      self.cover_preset = "0"
-    end
-  end
-
-  def set_public_id
-    exist_count = 0
-    begin
-      join_name = name.scan(/[a-zA-Z0-9_.]+/).join
-      public_id = join_name[0..19]
-
-      if exist_count > 0
-        public_id = join_name[0..9] + Time.now.to_i.to_s
-      end
-
-      exist_count = exist_count + 1
-    end while Group.exists?(public_id: public_id)
-
-    update!(public_id: public_id)
   end
 
   def get_photo_group

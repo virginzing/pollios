@@ -95,7 +95,7 @@ FactoryGirl.define do
 
       after(:create) do |instance, evaluator|
         evaluator.groups.each do |group|
-          create(:group_member_that_is_active, is_master: evaluator.is_admin, group: group, member: instance)
+          create(:group_member, is_master: evaluator.is_admin, group: group, member: instance)
         end
       end
     end
