@@ -13,6 +13,10 @@ scope module: 'v1' do
     namespace 'dashboard' do
       get '', to: 'get#index'
     end
+
+    namespace 'polls' do
+      get '', to: 'get#index'
+    end
   end
 
   namespace 'groups' do
