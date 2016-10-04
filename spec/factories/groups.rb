@@ -28,55 +28,43 @@
 
 FactoryGirl.define do
   factory :group do
+    transient do
+      creator { create(:member) }
+    end
+
     name { Faker::Name.title }
     public_id { Faker::Name.name }
+    member { creator }
+    need_approve true
 
-    trait :with_cover_url do
-      cover "http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png"
+    after(:create) do |group, evaluator|
+      create(:group_member, :admin, group: group, member: evaluator.creator)
     end
 
-    trait :with_need_approve do
-      need_approve true
-    end
-
-    trait :with_dont_need_approve do
+    trait :no_need_approve do
       need_approve false
     end
 
-    trait :with_invitation_friend_ids do
-      transient do
-        numbers_of_friends Random.rand(3..5)
-        member_ids { FactoryGirl.create_list(:member, numbers_of_friends).map(&:id) }
-      end
-      friend_ids { member_ids }
+    trait :with_cover_url do
+      cover 'http://res.cloudinary.com/code-app/image/upload/v1436275533/mkhzo71kca62y9btz3bd.png'
     end
 
     trait :with_members do
       transient do
-        numbers_of_members Random.rand(4..7)
+        member_count { Faker::Number.between(4, 7) }
+        member_factory :member
+        members { create_list(member_factory, member_count) }
       end
-      after(:create) do |instance, evaluator|
-        create_list(:member, evaluator.numbers_of_members).each do |member|
-          create(:group_member_that_is_active, :is_member, member: member, group: instance)
+
+      after(:create) do |group, evaluator|
+        evaluator.members.each do |member|
+          create(:group_member, group: group, member: member)
         end
       end
     end
 
-    trait :with_creator do
-      transient do
-        creator { create(:member) }
-      end
-      member { creator }
-      after(:create) do |instance, evaluator|
-        create(:group_member_that_is_admin, :is_active, member: evaluator.creator, group: instance)
-      end
-    end
-
-    factory :group_with_creator, traits: [:with_creator]
     factory :group_with_cover_url, traits: [:with_cover_url]
-    factory :group_that_need_approve, traits: [:with_need_approve]
-    factory :group_that_dont_need_approve, traits: [:with_dont_need_approve]
-    factory :group_with_invitation_friend_ids, traits: [:with_invitation_friend_ids]
+    factory :group_with_members, traits: [:with_members]
   end
 
   factory :group_required, class: Group do

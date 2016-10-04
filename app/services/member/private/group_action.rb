@@ -32,7 +32,8 @@ module Member::Private::GroupAction
       name: group_params[:name],
       description: group_params[:description],
       cover: group_params[:cover],
-      cover_preset: group_params[:cover_preset]
+      cover_preset: group_params[:cover_preset],
+      need_approve: group_params[:need_approve]
     }
   end
 
@@ -138,7 +139,7 @@ module Member::Private::GroupAction
     relationship_to_group(member).destroy
 
     clear_group_member_relation_cache(member)
-    group.destroy unless Group::MemberInquiry.new(group).all?
+    group.destroy unless Group::MemberInquiry.new(group).has_active?
 
     group
   end

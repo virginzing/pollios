@@ -31,7 +31,7 @@ class Group::MemberList
 
   def pending
     all.reject(&method(:active?))
-      .reject(&method(:requesting?))
+       .reject(&method(:requesting?))
   end
 
   def requesting
