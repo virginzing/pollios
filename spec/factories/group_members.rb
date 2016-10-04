@@ -15,6 +15,8 @@
 
 FactoryGirl.define do
   factory :group_member do
+    group
+    member
     active true
     is_master false
     notification true
