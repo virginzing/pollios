@@ -1,0 +1,22 @@
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  border-bottom: 1px solid darken($color-primary, 3%);
+  padding: 0 1rem;
+  height: $navbar-height;
+
+  background: $color-primary;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+
+  > .logo {
+    padding: .3rem 0;
+    height: $navbar-height;
+  }
+}
