@@ -67,6 +67,12 @@ FactoryGirl.define do
     factory :group_with_members, traits: [:with_members]
   end
 
+  factory :empty_group, class: Group do
+    name { Faker::Name.title }
+    public_id { Faker::Name.name }
+    need_approve false
+  end
+
   factory :group_required, class: Group do
     member nil
     name { Faker::Name.name }
