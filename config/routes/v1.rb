@@ -3,16 +3,18 @@ namespace 'v1' do
              controllers: { sessions: 'v1/admin/authentication' },
              path_names: { sign_in: 'signin', sign_out: 'signout' }
 
-  namespace 'admin' do
-    get 'dashboard', to: 'dashboard#index'
-  end
-
   namespace 'polls' do
     get ':custom_key', to: 'polls#get'
   end
 end
 
 scope module: 'v1' do
+  namespace 'admin' do
+    namespace 'dashboard' do
+      get '', to: 'get#index'
+    end
+  end
+
   namespace 'groups' do
     get ':group_id', to: 'get#detail'
     get ':group_id/polls/summary', to: 'get#poll_summary'

@@ -1,0 +1,29 @@
+<div class="dashboard-container">
+  <div class="title">Overview</div>
+  <div class="stats-list">
+    <div class="stats-container">
+      <div class="counter">
+        <%= @usage_stats[:voted] %>
+      </div>
+      <div class="desc">
+        Vote happened.
+      </div>
+    </div>
+    <div class="stats-container">
+      <div class="counter">
+        <%= @usage_stats[:poll_created] %>
+      </div>
+      <div class="desc">
+        Poll created.
+      </div>
+    </div>
+    <div class="stats-container">
+      <div class="counter">
+        <%= @usage_stats[:active_users] %>
+      </div>
+      <div class="desc">
+        Active users.
+      </div>
+    </div>
+  </div>
+</div>
