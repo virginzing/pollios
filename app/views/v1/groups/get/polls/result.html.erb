@@ -2,7 +2,12 @@
   <div class="poll-creator">
     <%= @group.name %>
   </div>
-  <div class="question"><%= @poll.title %></div>
+  <div class="question">
+    <% if @poll.close_status %>
+    <span class="close">ปิดโหวตแล้ว</span>
+    <% end %>
+    <%= @poll.title %>
+  </div>
   <% unless @poll.get_photo.blank? %>
     <img class="question-image" src="<%= @poll.get_photo %>">
   <% end %>
@@ -11,6 +16,9 @@
     height="<%= @chart_height %>"
     data="<%= @poll.choices.to_json %>"
     polling="<%= @poll.polling_url %>"></canvas>
+  <div class="actions">
+    <a class="result" href="<%= @poll.summary_url %>">สรุปผลการโหวตทุกโพล</a>
+  </div>
   <div class="paginate">
     <a class="prev-poll <%= @poll.prev_poll_button_class %>" href="<%= @poll.prev_poll_url %>">
       โพลก่อนหน้า

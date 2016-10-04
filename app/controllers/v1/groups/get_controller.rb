@@ -5,7 +5,7 @@ module V1::Groups
     before_action :set_group
     before_action :set_meta
     before_action :set_poll
-    before_action :must_be_admin, only: [:poll_detail_result]
+    before_action :must_be_admin, only: [:poll_detail_result, :poll_summary]
     before_action :set_chart_height, only: [:poll_detail_result]
 
     def detail
@@ -18,10 +18,19 @@ module V1::Groups
       render('v1/groups/get/polls/detail')
     end
 
+    def poll_summary
+      @polls = Polls::SummaryListDecorator.decorate_collection(@group_qsncc.all_polls)
+      render('v1/groups/get/polls/summary')
+    end
+
     def poll_detail_result
       @poll = Polls::ResultDecorator.new(@poll, params[:index], request.host)
 
       render('v1/groups/get/polls/result')
+    end
+
+    def poll_polling
+      render json: { vote_all: @poll.vote_all }
     end
 
     private

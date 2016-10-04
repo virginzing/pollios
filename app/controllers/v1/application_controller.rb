@@ -6,7 +6,7 @@ module V1
     private
 
     def not_found_handler
-      render 'v1/errors/not_found', layout: 'v1/navbar_no_sidebar'
+      render 'v1/errors/not_found', layout: 'v1/navbar_no_sidebar', status: :not_found
     end
   end
 end
