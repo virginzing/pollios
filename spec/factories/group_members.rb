@@ -26,6 +26,11 @@ FactoryGirl.define do
     trait :pending do
       active false
     end
+
+    after(:create) do |group_member, _|
+      FlushCached::Group.new(group_member.group).clear_list_members
+      FlushCached::Group.new(group_member.group).clear_list_requests
+    end
   end
 
 end
