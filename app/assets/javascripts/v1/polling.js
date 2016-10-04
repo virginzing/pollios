@@ -3,7 +3,12 @@ const change = require('chance')
 const counterElement = document.getElementById('counter')
 
 if (counterElement) {
-  run()
+  const isPollClosed = counterElement.getAttribute('close')
+  const needFetch = isPollClosed === 'false'
+
+  if (needFetch) {
+    run()
+  }
 }
 
 function run() {

@@ -18,6 +18,7 @@ scope module: 'v1' do
     get ':group_id/polls/summary', to: 'get#poll_summary'
     get ':group_id/polls/:index', to: 'get#poll_detail'
     get ':group_id/polls/:index/result', to: 'get#poll_detail_result'
+    get ':group_id/polls/:index/polling', to: 'get#poll_polling'
 
     post ':group_id/polls/close', to: 'post#close_poll'
   end

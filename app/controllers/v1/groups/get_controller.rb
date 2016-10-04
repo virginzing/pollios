@@ -29,6 +29,10 @@ module V1::Groups
       render('v1/groups/get/polls/result')
     end
 
+    def poll_polling
+      render json: { vote_all: @poll.vote_all }
+    end
+
     private
 
     def set_meta
