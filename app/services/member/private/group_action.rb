@@ -43,7 +43,7 @@ module Member::Private::GroupAction
     create_group_company
     process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
 
-    clear_group_cache_for_member(member)
+    clear_group_member_relation_cache(member)
   end
 
   def unique_group_public_id(group)
