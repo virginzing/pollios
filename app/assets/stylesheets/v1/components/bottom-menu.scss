@@ -1,0 +1,17 @@
+.bottom-menu {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+
+  border: 1px solid #dddddd;
+  padding: .5rem 0;
+  align-items: center;
+  height: $bottom-menu-height;
+
+  background: white;
+}
