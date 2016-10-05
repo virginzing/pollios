@@ -1,0 +1,21 @@
+.label {
+  display: block;
+  margin: 0 0 .3rem;
+}
+
+.input {
+  outline: none;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  padding: .5rem .8rem;
+  width: 100%;
+
+  &:active,
+  &:focus {
+    border-color: $color-primary;
+  }
+}
+
+.input-group {
+  margin: 0 0 1rem;
+}
