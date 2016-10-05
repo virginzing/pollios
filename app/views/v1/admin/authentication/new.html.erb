@@ -6,7 +6,7 @@
     <%= render(:partial => "v1/partials/flash_message", locals: { type: 'error', message: flash[:alert] }) if flash[:alert] %>
     <div class="input-group">
       <label class="label">Email</label>
-      <input type="email" name="v1_admin[email]" class="input">
+      <input placeholder="example@mail.com" type="email" name="v1_admin[email]" class="input">
     </div>
     <div class="input-group">
       <label class="label">Password</label>
