@@ -6,7 +6,7 @@ module V1::Admin
 
     private
 
-    def after_sign_in_path_for
+    def after_sign_in_path_for(resource)
       '/admin/dashboard'
     end
 
