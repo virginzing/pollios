@@ -10,22 +10,21 @@
   <link rel="stylesheet" type="text/css" href="/css/app.css" data-turbolinks-track="true">
 </head>
 <body>
-  <div class="admin-container">
-    <nav class="navbar-container admin">
-      <a href="/" class="logo">
-        <img src="http://pollios.com/assets/pollios_webLogo@2x-2bb08c5287b8429c2b2c5a3bc4a5d433.png" class="logo">
-      </a>
-      <a href="/v1/admin/signout" class="link">Signout</a>
-    </nav>
-
+  <nav class="navbar-container admin">
+    <a href="/" class="logo">
+      <img src="http://pollios.com/assets/pollios_webLogo@2x-2bb08c5287b8429c2b2c5a3bc4a5d433.png" class="logo">
+    </a>
+    <a href="/v1/admin/signout" class="link">Signout</a>
+  </nav>
+  <div class="app-container admin">
     <div class="main-container">
       <%= render(:partial => "v1/partials/admin/side_menu") %>
       <div class="content">
         <%= yield %>
       </div>
     </div>
-    <%= render(:partial => "v1/partials/admin/bottom_menu") %>
   </div>
+  <%= render(:partial => "v1/partials/admin/bottom_menu") %>
   <script src="/js/app.js"></script>
 </body>
 </html>
