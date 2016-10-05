@@ -16,6 +16,10 @@ class Group::MemberInquiry < Group::MemberList
     group_member_list.admins.include?(member)
   end
 
+  def sole_admin?(member)
+    group_member_list.admins == [member]
+  end
+
   def active?(member)
     group_member_list.active.include?(member)
   end
