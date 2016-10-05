@@ -1,0 +1,40 @@
+.poll-container {
+  @include card;
+
+  margin: 0 auto;
+  max-width: 640px;
+
+  background: white;
+
+  > .creator {
+    @include card-header;
+  }
+}
+
+.poll-container > .content {
+  @include card-body;
+
+  > .question {
+    font-weight: 300;
+  }
+
+  > .image {
+    margin: 0 0 1rem;
+
+    border: 1px solid #dddddd;
+    width: 100%;
+  }
+
+  > .choice {
+    display: block;
+
+    margin: 0 0 1rem;
+
+    border-bottom: 5px solid #cccccc;
+    padding: 1rem 2rem;
+
+    font-size: $font-size-sub-title - .7;
+    font-weight: 300;
+    background-color: #dddddd;
+  }
+}
