@@ -4,6 +4,8 @@
   border-radius: 2px;
   border: 1px solid #dddddd;
   padding: $padding;
+
+  background: white;
 }
 
 @mixin card-header($margin: 0, $padding: 1rem) {
@@ -27,6 +29,7 @@
   }
 
   > .title {
+    margin: 0;
     word-wrap: break-word;
   }
 
