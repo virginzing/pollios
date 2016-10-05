@@ -1,0 +1,18 @@
+.stats-list {
+  margin: 0 0 2rem;
+}
+
+.stats-list > .stats-container {
+  @include card(0 0 1rem, 1rem);
+
+  font-weight: 300;
+
+  > .counter {
+    margin: 0 0 .2rem;
+    font-weight: 300;
+  }
+
+  > .desc {
+    color: #999999;
+  }
+}
