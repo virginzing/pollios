@@ -19,10 +19,38 @@ class GroupMember < ActiveRecord::Base
   belongs_to :member, touch: true
   belongs_to :group,  touch: true
 
+  validates :member, presence: true
+  validates :group, presence: true
   validate :admin_exist
 
+  before_destroy { validate_sole_admin }
+
   def admin_exist
-    errors.add(:base, "Group must have at least one admin") unless Group::MemberInquiry.new(self.group).admins?
+    errors.add(:group, 'must have at least one admin') unless will_be_sole_admin? || group_has_admin?
+  end
+
+  def validate_sole_admin
+    return unless sole_admin?
+
+    errors.add(:group, 'must have at least one admin')
+      
+    fail ExceptionHandler::Forbidden
+  end
+
+  def sole_admin?
+    Group::MemberInquiry.new(group).sole_admin?(member)
+  end
+
+  def will_be_sole_admin?
+    admin? && !Group::MemberInquiry.new(group).has_admin?
+  end
+
+  def admin?
+    (is_master.nil? || is_master)
+  end
+
+  def group_has_admin?
+    Group::MemberInquiry.new(group).has_admin?
   end
 
   def self.have_request_group?(group, member)
