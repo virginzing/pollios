@@ -1,11 +1,10 @@
 @import "variables";
-
 @import "mixins";
-@import "typography";
-@import "form";
-@import "modal";
 
 @import "components";
+@import "form";
+@import "typography";
+@import "modal";
 
 html,
 body {
