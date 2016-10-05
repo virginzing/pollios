@@ -6,6 +6,10 @@
 }
 
 .app-container.admin {
-  padding: calc(1rem + #{$navbar-height}) 0 calc(1rem + #{$bottom-menu-height});
+  padding: 0;
   min-height: 100%;
+
+  > .content {
+    padding: calc(1rem + #{$navbar-height}) 1rem calc(1rem + #{$bottom-menu-height});
+  }
 }

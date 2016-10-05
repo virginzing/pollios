@@ -18,11 +18,9 @@
     <a href="/v1/admin/signout" class="link">Signout</a>
   </nav>
   <div class="app-container admin">
-    <div class="main-container">
-      <%= render(:partial => "v1/partials/admin/side_menu") %>
-      <div class="content">
-        <%= yield %>
-      </div>
+    <%= render(:partial => "v1/partials/admin/side_menu") %>
+    <div class="content">
+      <%= yield %>
     </div>
   </div>
   <%= render(:partial => "v1/partials/admin/bottom_menu") %>
