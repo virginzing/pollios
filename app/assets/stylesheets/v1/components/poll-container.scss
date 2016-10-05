@@ -38,3 +38,30 @@
     background-color: #dddddd;
   }
 }
+
+.poll-container > .content > .portals {
+  display: flex;
+  flex-flow: row nowrap;
+  margin: 3rem 0 0;
+
+  > .app,
+  > .qrcode {
+    max-width: 200px;
+    width: 50%;
+  }
+
+  > .app {
+    margin: 0 1rem 0 0;
+  }
+
+  > .qrcode {
+    margin: 0 0 0 auto;
+  }
+}
+
+.poll-container > .content > .portals > .app {
+  > .link {
+    display: block;
+    margin: 0 0 1rem;
+  }
+}
