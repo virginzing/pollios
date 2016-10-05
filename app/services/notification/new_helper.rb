@@ -37,13 +37,23 @@ module Notification::NewHelper
   end
 
   def recipient_list(member_list, sender)
-    member_list - [sender] - members_blocked_by(sender)
+    return member_list unless sender.present?
+
+    member_list - [sender] - members_blocked_by(sender) - members_blocked(sender)
   end
 
   def members_blocked_by(sender)
-    return [] unless sender.present?
+    member_list_service(sender).blocks
+  end
 
-    Member::MemberList.new(sender, viewing_member: sender).blocks
+  def members_blocked(sender)
+    member_blocked_sender_ids = member_list_service(sender).blocked_by_someone
+
+    Member.find(member_blocked_sender_ids)
+  end
+
+  def member_list_service(sender)
+    @member_list_service ||= Member::MemberList.new(sender, viewing_member: sender)
   end
 
 end
