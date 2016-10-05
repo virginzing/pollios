@@ -15,7 +15,7 @@
 
 class GroupMember < ActiveRecord::Base
   include GroupMemberHelper
-  
+
   belongs_to :member, touch: true
   belongs_to :group,  touch: true
 
@@ -33,7 +33,7 @@ class GroupMember < ActiveRecord::Base
     return unless sole_admin?
 
     errors.add(:group, 'must have at least one admin')
-      
+
     fail ExceptionHandler::Forbidden
   end
 
@@ -46,7 +46,7 @@ class GroupMember < ActiveRecord::Base
   end
 
   def admin?
-    (is_master.nil? || is_master)
+    is_master
   end
 
   def group_has_admin?
