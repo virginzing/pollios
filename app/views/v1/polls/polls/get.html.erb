@@ -1,25 +1,29 @@
 <div class="poll-container">
-  <div class="poll-creator">
+  <div class="creator">
     <img src="<%= @poll.member.get_avatar %>" class="avatar">
     <div class="name"><%= @poll.member.fullname %></div>
   </div>
-  <div class="question"><%= @poll.title %></div>
-  <% unless @poll.get_photo.blank? %>
-    <img class="question-image" src="<%= @poll.get_photo %>">
-  <% end %>
-  <% @poll.choices.each do |choice| %>
-    <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
-  <% end %>
-  <div class="links-bar">
-    <div class="links-app">
-      <a href="<%= @poll_open_app_url %>" class="link">
-        <img src="/images/logo_pollios_h.png" alt="">
-      </a>
-      <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
-        <img src="/images/logo_app_store.png" alt="">
+  <div class="content">
+    <h2 class="question"><%= @poll.title %></h2>
+    <% unless @poll.get_photo.blank? %>
+      <img class="image" src="<%= @poll.get_photo %>">
+    <% end %>
+    <% @poll.choices.each do |choice| %>
+      <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
+    <% end %>
+    <div class="portals">
+      <div class="app">
+        <a href="<%= @poll_open_app_url %>" class="link">
+          <img src="/images/logo_pollios_h.png" alt="">
+        </a>
+        <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
+          <img src="/images/logo_app_store.png" alt="">
+        </a>
+      </div>
+      <a class="qrcode" data-remodal-target="qr_modal">
+        <img src="<%= @poll_qrcode_image_url %>" />
       </a>
     </div>
-    <img data-remodal-target="qr_modal" class="qrcode" src="<%= @poll_qrcode_image_url %>" />
   </div>
 </div>
 <%= render(
