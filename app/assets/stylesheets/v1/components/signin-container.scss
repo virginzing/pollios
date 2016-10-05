@@ -1,0 +1,21 @@
+.signin-container {
+  @include card(0 auto);
+
+  max-width: 500px;
+
+  > .header {
+    @include card-header;
+  }
+}
+
+.signin-container > .body {
+  @include card-body;
+
+  > .submit {
+    @include button($color-primary, #ffffff);
+    margin: 2rem 0 0;
+
+    display: block;
+    width: 100%;
+  }
+}
