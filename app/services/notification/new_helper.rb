@@ -2,23 +2,12 @@ module Notification::NewHelper
   include Notification::LogHelper
   include Notification::PushHelper
 
-  def create_only_log(member_list, type, data, message, sender = nil)
-    recipient_list = recipient_list(member_list, sender)
-
-    create_log(recipient_list, type, data, message, sender)
-  end
-
-  def create_only_push(member_list, type, data, message = nil, sender = nil)
+  def create(member_list, type, data, message = nil, sender = nil)
     recipient_list = recipient_list(member_list, sender)
 
     create_push(recipient_list, type, data, message)
-  end
 
-  def create_log_and_push(member_list, type, data, message, sender = nil)
-    recipient_list = recipient_list(member_list, sender)
-
-    create_log(recipient_list, type, data, message, sender)
-    create_push(recipient_list, type, data, message)
+    create_log(recipient_list, type, data, message, sender) if log?
   end
 
   private
