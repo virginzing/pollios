@@ -2,4 +2,5 @@
   @include container(2rem);
 
   padding: calc(1rem + #{$navbar-height}) 0 1rem;
+  min-height: calc(100% - #{$navbar-height});
 }
