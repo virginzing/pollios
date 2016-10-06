@@ -6,7 +6,7 @@ module Notification::LogHelper
     create_update_log(recipient_list, data, message, sender)
     create_request_log(recipient_list, data) if request_notification?
   end
-  
+
 
   def create_update_log(recipient_list, data, message, sender)
     sender_id = sender.id if sender.present?
@@ -90,4 +90,5 @@ module Notification::LogHelper
   def clear_cached_recent_group_for(recipient)
     FlushCached::Member.new(recipient).clear_list_recent_groups
   end
+
 end

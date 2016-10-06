@@ -78,4 +78,5 @@ module Notification::PushHelper
 
     limit_message + '.'
   end
+  
 end
