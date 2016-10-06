@@ -96,29 +96,31 @@ FactoryGirl.define do
       member_type 1
     end
 
-    trait :joins_groups do
+    trait :in_groups do
       transient do
-        number_of_groups Random.rand(3..5)
-        groups { create_list(:group, number_of_groups) }
-        is_admin false
+        group_count { Faker::Number.between(3, 5) }
+        groups { create_list(:group, group_count) }
+        
+        admin false
+        group_member_factory { admin ? :group_member_admin : :group_member }
       end
 
-      after(:create) do |instance, evaluator|
+      after(:create) do |member, evaluator|
         evaluator.groups.each do |group|
-          create(:group_member, is_master: evaluator.is_admin, group: group, member: instance)
+          create(evaluator.group_member_factory, member: member, group: group)
         end
       end
     end
 
     trait :sends_requests_to_group do
       transient do
-        number_of_groups Random.rand(3..5)
-        groups { create_list(:group, number_of_groups) }
+        group_count { Faker::Number.between(3, 5) }
+        groups { create_list(:group, group_count) }
       end
 
-      after(:create) do |instance, evaluator|
+      after(:create) do |member, evaluator|
         evaluator.groups.each do |group|
-          create(:request_group, member: instance, group: group)
+          create(:request_group, member: member, group: group)
         end
       end
     end
@@ -163,7 +165,7 @@ FactoryGirl.define do
     end
 
     factory :member_who_sends_join_requests, traits: [:sends_requests_to_group]
-    factory :member_who_joins_groups, traits: [:joins_groups]
+    factory :member_in_groups, traits: [:in_groups]
     factory :company_member, traits: [:in_company]
     factory :celebrity_member, traits: [:is_celebrity]
   end
