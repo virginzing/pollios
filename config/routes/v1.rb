@@ -4,17 +4,15 @@ namespace 'v1' do
              path_names: { sign_in: 'signin', sign_out: 'signout' }
 
   namespace 'polls' do
-    get ':custom_key', to: 'polls#get'
+    get ':custom_key', to: 'get#detail'
+
+    post ':custom_key/vote', to: 'post#vote'
   end
 end
 
 scope module: 'v1' do
   namespace 'admin' do
     namespace 'dashboard' do
-      get '', to: 'get#index'
-    end
-
-    namespace 'polls' do
       get '', to: 'get#index'
     end
   end
