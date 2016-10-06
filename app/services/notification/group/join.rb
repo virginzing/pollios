@@ -1,5 +1,5 @@
 class Notification::Group::Join
-  include Notification::Helper
+  include Notification::NewHelper
   include SymbolHash
 
   attr_reader :sender, :group
@@ -8,19 +8,17 @@ class Notification::Group::Join
     @sender = sender
     @group = group
 
-    create(member_list, type, message, data)
+    create(member_list, message, sender)
   end
 
-  def type
+  private
+
+  def log?
+    true
+  end
+
+  def alert_type
     'join_group'
-  end
-
-  def member_list
-    members_of_group
-  end
-
-  def message
-    sender.fullname + " joined in #{group.name} group"
   end
 
   def data
@@ -33,7 +31,13 @@ class Notification::Group::Join
     }
   end
 
-  private
+  def member_list
+    members_of_group
+  end
+
+  def message
+    sender.fullname + " joined in #{group.name} group"
+  end
 
   def members_of_group
     Group::MemberList.new(group, viewing_member: sender).active
