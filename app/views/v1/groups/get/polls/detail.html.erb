@@ -1,49 +1,49 @@
-<div class="groups-poll-container">
-  <div class="poll-creator">
+<div class="poll-container">
+  <div class="creator">
     <%= @group.name %>
   </div>
-  <div class="question"><%= @poll.title %></div>
-  <% unless @poll.get_photo.blank? %>
-    <img class="question-image" src="<%= @poll.get_photo %>">
-  <% end %>
-  <div class="voter-container">
-    <h3 class="header">จำนวนผู้โหวต</h1>
-    <h1
-      id="counter"
-      class="counter"
-      polling="<%= @poll.polling_url %>"
-      close="<%= @poll.close_status %>"
-      group="<%= @group.public_id %>"><%= @poll.vote_all %></h1>
-  </div>
-  <% if @poll.close_status %>
-  <div class="voter-container">
-    <h3 class="header">ปิดรับผลโหวตแล้ว</h3>
-  </div>
-  <% end %>
-  <% if @show_actions_button %>
-  <form class="actions" action="<%= @poll.close_poll_url %>" method="post">
-    <% unless @poll.close_status %>
-    <input type="hidden" name="group_id" value="<%= @group.public_id %>" />
-    <input type="hidden" name="index" value="<%= @poll.index %>" />
-    <%= token_tag %>
-    <button type="submit" class="close-poll">ปิดรับผลโหวต</button>
+  <div class="content">
+    <h2 class="question"><%= @poll.title %></h2>
+    <% unless @poll.get_photo.blank? %>
+      <img class="image" src="<%= @poll.get_photo %>">
     <% end %>
-    <a class="result" href="<%= @poll.vote_result_url %>">ดูผลโหวต</a>
-  </form>
-  <% end %>
-  <div class="paginate">
-    <a
-      class="prev-poll <%= @poll.prev_poll_button_class %>"
-      href="<%= @poll.prev_poll_url %>">
-      โพลก่อนหน้า
-    </a>
-    <a
-      class="next-poll <%= @poll.next_poll_button_class %>"
-      href="<%= @poll.next_poll_url %>">
-      โพลถัดไป
+    <div class="voter-container">
+      <h3 class="header">จำนวนผู้โหวต</h1>
+      <h1
+        id="counter"
+        class="counter"
+        polling="<%= @poll.polling_url %>"
+        close="<%= @poll.close_status %>"
+        group="<%= @group.public_id %>"><%= @poll.vote_all %></h1>
+        <% if @poll.close_status %>
+        <h3 class="header">ปิดรับผลโหวตแล้ว</h3>
+        <% end %>
+    </div>
+    <% if @show_actions_button %>
+    <form class="actions" action="<%= @poll.close_poll_url %>" method="post">
+      <% unless @poll.close_status %>
+      <input type="hidden" name="group_id" value="<%= @group.public_id %>" />
+      <input type="hidden" name="index" value="<%= @poll.index %>" />
+      <%= token_tag %>
+      <button type="submit" class="close-poll">ปิดรับผลโหวต</button>
+      <% end %>
+      <a class="result" href="<%= @poll.vote_result_url %>">ดูผลโหวต</a>
+    </form>
+    <% end %>
+    <div class="paginate">
+      <a
+        class="prev-poll <%= @poll.prev_poll_button_class %>"
+        href="<%= @poll.prev_poll_url %>">
+        โพลก่อนหน้า
+      </a>
+      <a
+        class="next-poll <%= @poll.next_poll_button_class %>"
+        href="<%= @poll.next_poll_url %>">
+        โพลถัดไป
+      </a>
+    </div>
+    <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
+      <img src="/images/logo_app_store.png" alt="">
     </a>
   </div>
-  <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
-    <img src="/images/logo_app_store.png" alt="">
-  </a>
 </div>

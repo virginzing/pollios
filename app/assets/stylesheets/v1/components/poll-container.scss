@@ -65,3 +65,79 @@
     margin: 0 0 1rem;
   }
 }
+
+.poll-container > .content > .voter-container {
+  margin: 3rem 0;
+
+  text-align: center;
+
+  > .header {
+    font-weight: 300;
+  }
+
+  > .counter {
+    color: darken($color-primary, 8%);
+    font-size: 10rem;
+  }
+}
+
+.poll-container > .content > .actions,
+.poll-container > .content > .paginate {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.poll-container > .content > .actions {
+  border-bottom: 1px solid #dddddd;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+
+  > .close-poll,
+  > .result {
+    display: block;
+
+    flex-grow: 1;
+    width: 50%;
+
+    font-weight: 300;
+    text-align: center;
+  }
+
+  > .close-poll {
+    @include button(#444444, #ffffff, 1rem);
+    margin: 0 1rem 0 0;
+  }
+
+  > .result {
+    @include button($color-primary, #ffffff, 1rem);
+  }
+}
+
+.poll-container > .content > .paginate {
+  margin-bottom: 3rem;
+
+  > .prev-poll,
+  > .next-poll {
+    display: block;
+
+    flex-grow: 1;
+    width: 50%;
+
+    font-weight: 300;
+    text-align: center;
+  }
+
+  > .prev-poll {
+    @include button-ghost($color-primary, 1rem);
+    margin: 0 1rem 0 0;
+  }
+
+  > .next-poll {
+    @include button-ghost($color-primary, 1rem);
+  }
+}
+
+.poll-container > .content > .link {
+  display: block;
+  max-width: 200px;
+}
