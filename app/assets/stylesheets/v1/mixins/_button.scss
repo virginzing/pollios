@@ -1,7 +1,7 @@
-@mixin button($color: #dddddd, $font-color: #444444) {
+@mixin button($color: #dddddd, $font-color: #444444, $padding: .5rem .8rem) {
   border: 1px solid darken($color, 8%);
   border-radius: 2px;
-  padding: .5rem .8rem;
+  padding: $padding;
 
   color: $font-color;
   background: $color;
