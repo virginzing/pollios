@@ -2,12 +2,12 @@ module Notification::NewHelper
   include Notification::LogHelper
   include Notification::PushHelper
 
-  def create(member_list, data, message = nil, sender = nil)
+  def create(member_list, message = nil, sender = nil)
     recipient_list = recipient_list(member_list, sender)
 
-    create_push(recipient_list, data, message)
+    create_push(recipient_list, message)
 
-    create_log(recipient_list, data, message, sender) if log
+    create_log(recipient_list, message, sender) if log
   end
 
   private
@@ -17,6 +17,10 @@ module Notification::NewHelper
   end
 
   def log
+    fail NotImplementedError
+  end
+
+  def data
     fail NotImplementedError
   end
 

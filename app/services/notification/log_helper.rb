@@ -2,13 +2,13 @@ module Notification::LogHelper
 
   private
 
-  def create_log(recipient_list, data, message, sender = nil)
-    create_update_log(recipient_list, data, message, sender)
-    create_request_log(recipient_list, data) if request_notification?
+  def create_log(recipient_list, message, sender = nil)
+    create_update_log(recipient_list, message, sender)
+    create_request_log(recipient_list) if request_notification?
   end
 
 
-  def create_update_log(recipient_list, data, message, sender)
+  def create_update_log(recipient_list, message, sender)
     sender_id = sender.id if sender.present?
     message = log_message(message)
 
@@ -20,10 +20,10 @@ module Notification::LogHelper
     end
   end
 
-  def create_request_log(recipient_list, data)
+  def create_request_log(recipient_list)
     recipient_list.each do |recipient|
       increase_request_count_for(recipient)
-      create_recent_request(recipient, data)
+      create_recent_request(recipient)
     end
   end
 
@@ -51,28 +51,28 @@ module Notification::LogHelper
     recipient.increment!(:request_count)
   end
 
-  def create_recent_request(recipient, data)
-    return create_request_log_recent_friends(recipient, data) if accept_friend_request?(data)
+  def create_recent_request(recipient)
+    return create_request_log_recent_friends(recipient) if accept_friend_request?
 
-    create_request_log_recent_group(recipient, data) if approve_group_request?(data)
+    create_request_log_recent_group(recipient) if approve_group_request?
   end
 
-  def accept_friend_request?(data)
+  def accept_friend_request?
     data[:action] == 'BecomeFriend'
   end
 
-  def approve_group_request?(data)
+  def approve_group_request?
     data[:action] == 'Join'
   end
 
-  def create_request_log_recent_friends(recipient, data)
+  def create_request_log_recent_friends(recipient)
     friends = Member.cached_find(data[:member_id])
 
     create_recent_request_for(recipient, friends)
     clear_cached_recent_friends_for(recipient)
   end
 
-  def create_request_log_recent_group(recipient, data)
+  def create_request_log_recent_group(recipient)
     group = Group.cached_find(data[:group_id])
 
     create_recent_request_for(recipient, group)

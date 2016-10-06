@@ -2,11 +2,11 @@ module Notification::PushHelper
 
   private
 
-  def create_push(recipient_list, data, message = nil)
+  def create_push(recipient_list, message = nil)
     device_list = device_list(recipient_list)
 
     device_list.each do |device|
-      Rpush::Apns::Notification.create!(push_data(device, data, message))
+      Rpush::Apns::Notification.create!(push_data(device, message))
     end
   end
 
@@ -15,9 +15,9 @@ module Notification::PushHelper
     recipient_list.map(&:apn_devices).flatten
   end
 
-  def push_data(device, data, message)
+  def push_data(device, message)
     recipient = device.member
-    notification_data = notification_data(device.token, data)
+    notification_data = notification_data(device.token)
 
     return notification_data unless alert?(device)
 
@@ -43,7 +43,7 @@ module Notification::PushHelper
     device.receive_notification
   end
 
-  def notification_data(device_token, data)
+  def notification_data(device_token)
     {
       app: Rpush::Apns::App.find_by(name: 'Pollios'),
       device_token: device_token,
@@ -78,5 +78,5 @@ module Notification::PushHelper
 
     limit_message + '.'
   end
-  
+
 end
