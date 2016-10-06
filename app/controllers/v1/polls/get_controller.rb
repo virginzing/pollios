@@ -1,12 +1,12 @@
 module V1::Polls
-  class PollsController < V1::ApplicationController
+  class GetController < V1::ApplicationController
     layout 'v1/main'
 
     before_action :set_poll
     before_action :set_poll_direct_access
     before_action :set_meta
 
-    def get
+    def detail
       @poll_open_app_url = @poll_direct_access.open_app_url
       @poll_qrcode_image_url = @poll_direct_access.qrcode_image_url
     end
@@ -28,7 +28,8 @@ module V1::Polls
     def set_meta
       @meta ||= {
         title: @poll.title,
-        description: @poll.member.fullname
+        description: @poll.member.fullname,
+        image: @poll_direct_access.qrcode_image_url
       }
     end
   end
