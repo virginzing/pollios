@@ -2,6 +2,15 @@ module Notification::PushHelper
 
   private
 
+  def create_push(recipient_list, data, message = nil)
+    device_list = device_list(recipient_list)
+
+    device_list.each do |device|
+      Rpush::Apns::Notification.create!(push_data(device, data, message))
+    end
+  end
+
+
   def device_list(recipient_list)
     recipient_list.map(&:apn_devices).flatten
   end

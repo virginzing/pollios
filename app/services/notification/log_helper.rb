@@ -2,6 +2,12 @@ module Notification::LogHelper
 
   private
 
+  def create_log(recipient_list, data, message, sender = nil)
+    create_update_log(recipient_list, data, message, sender)
+    create_request_log(recipient_list, data) if request_notification?
+  end
+  
+
   def create_update_log(recipient_list, data, message, sender)
     sender_id = sender.id if sender.present?
     message = log_message(message)
@@ -11,6 +17,13 @@ module Notification::LogHelper
       data_with_badge_data = data.merge(badge_data(recipient))
 
       create_update_log_for(recipient, sender_id, data_with_badge_data, message)
+    end
+  end
+
+  def create_request_log(recipient_list, data)
+    recipient_list.each do |recipient|
+      increase_request_count_for(recipient)
+      create_recent_request(recipient, data)
     end
   end
 
@@ -32,13 +45,6 @@ module Notification::LogHelper
 
   def request_notification?
     alert_type == 'request'
-  end
-
-  def create_request_log(recipient_list, data)
-    recipient_list.each do |recipient|
-      increase_request_count_for(recipient)
-      create_recent_request(recipient, data)
-    end
   end
 
   def increase_request_count_for(recipient)
