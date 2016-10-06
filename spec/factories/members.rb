@@ -68,13 +68,24 @@ FactoryGirl.define do
   factory :member do
     transient do
       friend_limit 1000
+
+      notification do
+        Hashie::Mash.new(
+          public: :true, \
+          group: :true, \
+          friend: :true, \
+          watch_poll: :true, \
+          request: :true, \
+          join_group: :true \
+        )
+      end
     end
 
     fullname { Faker::Name.name }
     email { Faker::Internet.email }
     
     after(:create) do |member, evaluator|
-      member.update(friend_limit: evaluator.friend_limit)
+      member.update(friend_limit: evaluator.friend_limit, notification: evaluator.notification)
     end
 
     trait :in_company do
@@ -110,6 +121,45 @@ FactoryGirl.define do
           create(:request_group, member: instance, group: group)
         end
       end
+    end
+
+    trait :custom_notification do
+      transient do
+        public_notification :false
+        group_notification :false
+        friend_notification :false
+        watch_poll_notification :false
+        request_notification :false
+        join_group_notification :false
+
+        notification do
+          Hashie::Mash.new(
+            public: public_notification, \
+            group: group_notification, \
+            friend: friend_notification, \
+            watch_poll: watch_poll_notification, \
+            request: request_notification, \
+            join_group: join_group_notification \
+          )
+        end
+      end
+    end
+
+    trait :default_notification do
+      custom_notification
+
+      transient do
+        public_notification :false
+        group_notification :true
+        friend_notification :true
+        watch_poll_notification :true
+        request_notification :true
+        join_group_notification :false
+      end
+    end
+
+    trait :disabled_notification do
+      custom_notification
     end
 
     factory :member_who_sends_join_requests, traits: [:sends_requests_to_group]
