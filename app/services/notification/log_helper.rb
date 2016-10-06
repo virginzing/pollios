@@ -8,9 +8,9 @@ module Notification::LogHelper
 
     recipient_list.each do |recipient|
       increase_notification_count_for(recipient)
-      data = data_with_update_badge_for(recipient, data)
+      data_with_badge_data = data.merge(badge_data(recipient))
 
-      create_update_log_for(recipient, sender_id, data, message)
+      create_update_log_for(recipient, sender_id, data_with_badge_data, message)
     end
   end
 
@@ -22,8 +22,8 @@ module Notification::LogHelper
     recipient.increment!(:notification_count)
   end
 
-  def data_with_update_badge_for(recipient, data)
-    data.merge(notify: recipient.notification_count)
+  def badge_data(recipient)
+    { notify: recipient.notification_count }
   end
 
   def create_update_log_for(recipient, sender_id, data, message)
