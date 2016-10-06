@@ -1,0 +1,10 @@
+@mixin alert($margin: 0 0 1rem, $padding: 1rem 3rem, $color: #cccccc, $font-color: #ffffff) {
+  display: block;
+  margin: $margin;
+
+  border: 1px solid darken($color, 8%);
+  padding: $padding;
+
+  color: $font-color;
+  background: $color;
+}
