@@ -81,7 +81,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
       context 'given some additional admins to group,' do
         before(:all) do
-          create_list(:group_member, 3, :admin, group: @group)
+          create_list(:group_member_admin, 3, group: @group)
         end
 
         specify 'sole_admin? return false for all group admins.' do
