@@ -136,12 +136,12 @@ FactoryGirl.define do
 
         notification do
           Hashie::Mash.new(
-            public: public_notification, \
-            group: group_notification, \
-            friend: friend_notification, \
-            watch_poll: watch_poll_notification, \
-            request: request_notification, \
-            join_group: join_group_notification \
+            public: public_notification.to_s, \
+            group: group_notification.to_s, \
+            friend: friend_notification.to_s, \
+            watch_poll: watch_poll_notification.to_s, \
+            request: request_notification.to_s, \
+            join_group: join_group_notification.to_s \
           )
         end
       end
