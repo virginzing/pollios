@@ -1,0 +1,25 @@
+.error-container {
+  @include container(2rem);
+
+  color: #444444;
+
+  > .status,
+  > .title,
+  > .redirect {
+    font-weight: 300;
+    text-align: center;
+  }
+
+  > .status {
+    font-size: 10rem;
+  }
+
+  > .image {
+    display: block;
+
+    margin: 0 auto;
+
+    width: 100%;
+    max-width: 300px;
+  }
+}

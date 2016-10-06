@@ -5,27 +5,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pollios</title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="/css/app.css" data-turbolinks-track="true">
+
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/bundle.css" />
+  <link rel="stylesheet" type="text/css" href="/css/app.css" />
 </head>
 <body>
-  <div class="admin-container">
-    <nav class="navbar-container admin">
-      <a href="/" class="logo">
-        <img src="http://pollios.com/assets/pollios_webLogo@2x-2bb08c5287b8429c2b2c5a3bc4a5d433.png" class="logo">
-      </a>
-      <a href="/v1/admin/signout" class="link">Signout</a>
-    </nav>
-
-    <div class="main-container">
-      <%= render(:partial => "v1/partials/admin_sidebar") %>
-      <div class="content">
-        <%= yield %>
-      </div>
+  <nav class="navbar-container">
+    <a href="/" class="logo">
+      <img src="http://pollios.com/assets/pollios_webLogo@2x-2bb08c5287b8429c2b2c5a3bc4a5d433.png" class="logo">
+    </a>
+    <a href="/v1/admin/signout" class="link">Signout</a>
+  </nav>
+  <div class="app-container admin">
+    <%= render(:partial => "v1/partials/admin/side_menu") %>
+    <div class="content">
+      <%= yield %>
     </div>
-    <%= render(:partial => "v1/partials/admin_buttom_menu") %>
   </div>
+  <%= render(:partial => "v1/partials/admin/bottom_menu") %>
   <script src="/js/app.js"></script>
 </body>
 </html>

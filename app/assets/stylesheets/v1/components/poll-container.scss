@@ -1,64 +1,161 @@
 .poll-container {
-  @include card-container(25px);
-  background-color: #FFFFFF;
-  > .poll-creator {
-    border-bottom: 1px solid #EFEFEF;
-    margin: -25px -25px 30px -25px;
-    padding: 15px 15px;
-  }
-  > .question {
-    font-size: 24px;
-    font-weight: 300;
-    margin-bottom: 25px;
-    line-height: 1.6;
-  }
-  > .question-image {
-    display: block;
-    margin: 0 auto 30px auto;
-    max-width: 400px;
-  }
-  > .choice {
-    display: block;
-    margin: 0 auto 10px auto;
-    padding: 15px;
-    max-width: 400px;
+  @include card;
 
-    border-radius: 2px;
-    border-bottom: 2px solid $gray-border-color;
-    border-right: 1px solid $gray-border-color;
-    background: $gray-bg-color;
+  margin: 0 auto 3rem;
+  max-width: 640px;
 
-    color: #222;
-    font-size: 18px;
-    font-weight: 300;
-    transition: all .1s ease-out;
+  background: white;
 
-    &:focus,
-    &:active {
-      text-decoration: none;
-      outline: none;
-    }
-  }
-  > .links-bar {
-    margin-top: 30px;
-  }
-
-  @media (max-width: $screen-sm) {
-    .question {
-      font-size: 18px;
-    }
-    .question-image {
-      max-width: 100%;
-    }
-    .choice {
-      font-size: 14px;
-      padding: 10px;
-    }
+  > .creator {
+    @include card-header;
   }
 }
 
-.poll-container > .choice:hover,
-.poll-container > .choice:active {
-  text-decoration: none;
-  background-color: darken(#EFEFEF, 5%);
+.poll-container > .content {
+  @include card-body;
+
+  > .question {
+    font-weight: 300;
+  }
+
+  > .image {
+    margin: 0 0 1rem;
+
+    border: 1px solid #dddddd;
+    width: 100%;
+  }
+
+  > .choice {
+    display: block;
+
+    margin: 0 0 1rem;
+
+    border-bottom: 5px solid #cccccc;
+    padding: 1rem 2rem;
+
+    color: #444444;
+    font-size: $font-size-sub-title - .7;
+    font-weight: 300;
+    background-color: #dddddd;
+  }
+}
+
+.poll-container > .content > .portals {
+  display: flex;
+  flex-flow: row nowrap;
+  margin: 3rem 0 0;
+
+  > .app,
+  > .qrcode {
+    max-width: 200px;
+    width: 50%;
+  }
+
+  > .app {
+    margin: 0 1rem 0 0;
+  }
+
+  > .qrcode {
+    margin: 0 0 0 auto;
+  }
+}
+
+.poll-container > .content > .portals > .app {
+  > .link {
+    display: block;
+    margin: 0 0 1rem;
+  }
+}
+
+/* group poll */
+.poll-container > .content > .question {
+  > .close {
+    border-radius: 2px;
+    padding: .3rem .5rem;
+
+    color: #ffffff;
+    font-size: .7rem;
+
+    background: $color-primary;
+  }
+}
+
+.poll-container > .content > .voter-container {
+  margin: 3rem 0;
+
+  text-align: center;
+
+  > .header {
+    font-weight: 300;
+  }
+
+  > .counter {
+    color: darken($color-primary, 8%);
+    font-size: 10rem;
+  }
+}
+
+.poll-container > .content > .actions,
+.poll-container > .content > .paginate {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.poll-container > .content > .actions {
+  border-bottom: 1px solid #dddddd;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+
+  > .close-poll,
+  > .result {
+    display: block;
+
+    flex-grow: 1;
+    width: 50%;
+
+    font-weight: 300;
+    text-align: center;
+  }
+
+  > .close-poll {
+    @include button(#444444, #ffffff, 1rem);
+    margin: 0 1rem 0 0;
+  }
+
+  > .result {
+    @include button($color-primary, #ffffff, 1rem);
+  }
+}
+
+.poll-container > .content > .paginate {
+  margin-bottom: 3rem;
+
+  > .prev-poll,
+  > .next-poll {
+    display: block;
+
+    flex-grow: 1;
+    width: 50%;
+
+    font-weight: 300;
+    text-align: center;
+  }
+
+  > .prev-poll {
+    @include button-ghost($color-primary, 1rem);
+    margin: 0 1rem 0 0;
+  }
+
+  > .next-poll {
+    @include button-ghost($color-primary, 1rem);
+  }
+}
+
+.poll-container > .content > .link {
+  display: block;
+  max-width: 200px;
+}
+
+.poll-container > .content > .poll-list {
+  margin: 0;
 }

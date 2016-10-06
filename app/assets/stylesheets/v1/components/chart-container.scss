@@ -1,9 +1,0 @@
-.chart-container {
-  @include card-container(20px);
-  margin-bottom: 20px;
-
-  > .name {
-    margin-top: 0;
-    margin-bottom: 20px;
-  }
-}

@@ -1,21 +1,11 @@
-@mixin lists($margin: 1rem, $padding: 1rem) {
-  @include card-container($padding);
-
+@mixin list-item($margin: 0, $padding: .8rem 1rem) {
   display: flex;
-  flex-flow: column;
-
-  margin: $margin;
-}
-
-@mixin list-item($margin: 1rem, $padding: .5rem 1rem) {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
+  flex-flow: row nowrap;
 
   margin: $margin;
   padding: $padding;
-  min-height: 32px;
 
-  font-size: .9rem;
-  line-height: 1.4;
+  font-weight: 300;
+
+  background: white;
 }

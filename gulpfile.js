@@ -1,6 +1,8 @@
 const path = require('path')
 
 const gulp = require('gulp')
+const watch = require('gulp-watch')
+const batch = require('gulp-batch')
 const pump = require('pump')
 const bs = require('browser-sync').create()
 const wp = require('webpack-stream')
@@ -53,7 +55,7 @@ gulp.task('css', function () {
 })
 
 gulp.task('js', function (cb) {
-  pump([
+  return pump([
     gulp.src(mainJs),
     wp({
       entry: ['whatwg-fetch', mainJs],
@@ -76,9 +78,16 @@ gulp.task('js', function (cb) {
 })
 
 gulp.task('watch', function () {
-  gulp.watch(scssWatchPath, ['css'])
-  gulp.watch(jsWatchPath, ['js'])
-  gulp.watch(viewWatchPath).on('change', bs.reload)
+  watch(scssWatchPath, batch(function (events, done) {
+    gulp.start('css', done);
+  }));
+  watch(jsWatchPath, batch(function (events, done) {
+    gulp.start('js', done);
+  }));
+  watch(viewWatchPath, batch(function (events, done) {
+    bs.reload()
+    done()
+  }));
 })
 
 gulp.task('bs', function () {

@@ -1,17 +1,21 @@
 .signin-container {
-  @include card-container(25px)
-  margin: 0 auto;
-  width: 400px;
-  > .title {
-    font-size: 24px;
-    margin: 0 0 25px 0;
+  @include card(0 auto);
+
+  max-width: 500px;
+
+  > .header {
+    @include card-header;
   }
+}
+
+.signin-container > .body {
+  @include card-body;
+
   > .submit {
-    @include button(#FFFFFF, $primary-color);
-    margin-top: 15px;
+    @include button($color-primary, #ffffff);
+    margin: 2rem 0 0;
+
+    display: block;
     width: 100%;
-  }
-  @media (max-width: 768px) {
-      width: 280px;
   }
 }

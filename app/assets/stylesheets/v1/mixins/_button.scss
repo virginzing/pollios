@@ -1,33 +1,25 @@
-@mixin button($font-color, $color, $padding: $btn-padding) {
-  border: 1px solid $color;
+@mixin button($color: #dddddd, $font-color: #444444, $padding: .5rem .8rem) {
+  border: 1px solid darken($color, 8%);
+  border-radius: 2px;
   padding: $padding;
 
-  background-color: $color;
-
   color: $font-color;
-
-  transition: all .2s ease-in-out;
-
-  &:hover,
-  &:focus,
-  &:active {
-    outline: none;
-  }
+  background: $color;
 
   &:hover {
-    border-color: darken($color, 5%);
-    background-color: darken($color, 5%);
-  }
-
-  &:active {
-    transform: translateY(3px);
+    background: darken($color, 8%)
   }
 }
 
-@mixin button-clean {
-  &:hover,
-  &:focus,
-  &:active {
-    outline: none;
+@mixin button-ghost($color: #dddddd, $padding: .5rem .8rem) {
+  border: 1px solid $color;
+  border-radius: 2px;
+  padding: $padding;
+
+  color: $color;
+
+  &:hover {
+    color: #ffffff;
+    background: $color;
   }
 }

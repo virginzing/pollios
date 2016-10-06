@@ -1,38 +1,42 @@
 .bottom-menu {
-  display: flex;
-  flex-flow: row;
-  justify-content: space-around;
-  align-items: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  border-top: 1px solid #dddddd;
-  padding: .3rem 0;
-  flex: 0 0 44px;
-  height: 44px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+
+  border: 1px solid #dddddd;
+  padding: .5rem 0;
+  align-items: center;
+  height: $bottom-menu-height;
 
   background: white;
+}
 
-  > .link {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
+.bottom-menu > .link {
+  display: block;
 
-    max-height: 100%;
-    flex: 1 1 100px;
+  width: 50px;
 
-    color: #999999;
+  color: #aaaaaa;
+  font-weight: 300;
+  text-align: center;
 
-    > .fa {
-      margin: 0 0 .1rem;
-      font-size: 1.4rem;
-    }
+  > i {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
 
-    > .text {
-      font-size: .6rem;
-    }
+  > .text {
+    display: block;
+    font-size: .5rem;
+  }
 
-    &.active {
-      color: $brand-primary;
-    }
+  &.active {
+    color: $color-primary;
   }
 }

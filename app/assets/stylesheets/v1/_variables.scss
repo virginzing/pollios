@@ -1,30 +1,12 @@
-$primary-color: #D32053;
-$brand-primary: $primary-color;
-$gray-border-color: #CCCCCC;
-$gray-bg-color: #DDDDDD;
-$btn-padding: 8px 12px;
-$label-color: #444444;
-$input-padding: 6px 12px;
-
-$positive-color: #6FBD7E;
-$negative-color: #DC6868;
-
-$z-index-navbar: 9999;
-$z-index-sidebar: 9990;
-$z-index-overlay: 9980;
-
-$primary-font: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-
 $font-size-raw: 16px;
 $font-size-base: 1rem;
 $font-size-title: 2.5rem;
-$font-size-sub-title: 1.7rem;
+$font-size-sub-title: 2rem;
 
-$title-font-size: 4rem;
-$sub-title-font-size: 2.5rem;
+$color-primary: #CF1E4F;
 
 $navbar-height: 60px;
-$footer-height: 50px;
+$bottom-menu-height: 44px;
 
 $grid-breakpoints: (
   xs: 0,
@@ -40,5 +22,3 @@ $container-max-widths: (
   lg: 940px,
   xl: 1140px
 ) !default;
-
-$screen-sm: 768px;

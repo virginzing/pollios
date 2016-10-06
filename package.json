@@ -19,14 +19,16 @@
     "css-loader": "^0.25.0",
     "cssnano": "^3.7.5",
     "cssnext": "^1.8.4",
+    "extract-text-webpack-plugin": "^1.0.1",
     "gulp": "^3.9.1",
+    "gulp-batch": "^1.0.5",
     "gulp-postcss": "^6.2.0",
     "gulp-sass": "^2.3.2",
+    "gulp-watch": "^4.3.10",
     "normalize.css": "^4.2.0",
     "precss": "^1.4.0",
     "remodal": "^1.1.0",
-    "style-loader": "^0.13.1",
-    "extract-text-webpack-plugin": "^1.0.1"
+    "style-loader": "^0.13.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

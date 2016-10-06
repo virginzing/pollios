@@ -1,25 +1,51 @@
 .remodal-overlay {
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.remodal {
-  @include card-container(25px);
-
-  display: block;
-
-  margin: 3rem auto;
-  max-width: 90%;
-  width: 640px;
-
-  > .close {
-    position: absolute;
-    right: 1em;
-    top: 1rem;
-
-    padding: 0;
-  }
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .remodal-wrapper:after {
   display: none;
+}
+
+.remodal {
+  @include card(3rem 1rem, 0);
+
+  background: white;
+}
+
+.remodal > .header {
+  @include card-header(0, 1rem);
+  flex-flow: column nowrap;
+
+  > .close {
+    position: absolute;
+    right: .3rem;
+    top: 0rem;
+
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  > .title {
+    margin: 0 0 .5rem;
+
+    font-weight: 300;
+  }
+
+  > .brand {
+    margin: 0;
+
+    color: $color-primary;
+    font-weight: bold;
+    line-height: 1;
+  }
+}
+
+.remodal > .body {
+  @include card-body(0, 1rem);
+}
+
+@media (min-width: 768px) {
+  .remodal {
+    max-width: 640px;
+  }
 }

@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Pollios</title>
+  <title>Pollios | <%= @meta[:title] %></title>
   <meta charset="utf-8">
-
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="keywords" content="Pollios">
+  <meta name="google" value="notranslate">
 
   <meta name="apple-itunes-app" content="app-id=901397748">
   <meta name="google-site-verification" content="I2xo0fFPaR3DKiQhcqD5MnlpSUUKDnEQMksDzYVTJnM" />
 
-  <meta property="og:title" content="<%= @poll.title %>" />
-  <meta property="og:description" content="<%= @poll.member.fullname %>" />
-  <meta property="og:image" content="<%= @poll_qrcode_image_url %>" />
+  <meta name="og:title" content="<%= @meta[:title] %>" />
+  <meta name="og:description" content="<%= @meta[:description] %>" />
+  <meta name="og:site_name" content="Pollios : Raise Your Hand">
+  <meta name="og:url" content="http://www.pollios.com" />
+  <meta name="og:image" content="http://www.pollios.com/images/logo/1024logo.png" />
 
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" type="text/css" href="/css/bundle.css" />
   <link rel="stylesheet" type="text/css" href="/css/app.css" />
   <%= csrf_meta_tag %>

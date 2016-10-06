@@ -1,0 +1,83 @@
+.qr-modal .use-app,
+.qr-modal .qrcode {
+  display: flex;
+  flex-flow: column nowrap;
+
+  padding: 1rem 0;
+
+  > .title {
+    margin: 0 0 .5rem;
+
+    font-weight: 300;
+  }
+}
+
+.qr-modal .use-app > .links {
+  display: flex;
+  flex-flow: row nowrap;
+
+  > .link:first-child {
+    margin: 0 1rem 0 0;
+  }
+}
+
+.qr-modal .qrcode {
+  margin: 0;
+
+  border-top: 1px solid #dddddd;
+
+  > .image {
+    margin: 0 auto;
+
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .qr-modal > .header {
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+
+    > .title {
+      margin: 0 .7rem 0 0;
+    }
+  }
+
+  .qr-modal > .body {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    > .use-app,
+    > .qrcode {
+      padding: 1rem;
+      flex: 0 0 50%;
+      width: 50%;
+    }
+
+    > .use-app {
+      margin: 0 1rem 0 0;
+    }
+
+    > .qrcode {
+      border: 0;
+      border-left: 1px solid #dddddd;
+    }
+  }
+
+  .qr-modal > .body > .use-app > .links {
+    flex-flow: column;
+
+    > .link {
+      margin: 0 auto;
+
+      max-width: 200px;
+    }
+
+    > .link:first-child {
+      margin: 0 auto 1rem;
+    }
+  }
+}

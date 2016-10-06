@@ -1,13 +1,44 @@
 @import "variables";
-
-@import "../../../../node_modules/normalize.css/normalize.css";
-
 @import "mixins";
 
-@import "base";
-@import "layout";
 @import "components";
-@import "input";
-@import "alert";
+@import "form";
 @import "typography";
 @import "modal";
+
+html,
+body {
+  margin: 0;
+
+  padding: 0;
+  height: 100%;
+
+  background: #E9EBEE;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+}
+
+button {
+  outline: 0;
+  border: 0;
+
+  background: none;
+}
+
+a, button {
+  cursor: pointer;
+}

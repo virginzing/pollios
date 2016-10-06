@@ -8,56 +8,15 @@
   flex-flow: row nowrap;
   align-items: center;
 
+  border-bottom: 1px solid darken($color-primary, 3%);
   padding: 0 1rem;
   height: $navbar-height;
 
-  background-color: $primary-color;
-
-  z-index: $z-index-navbar;
-
-  &.admin {
-    position: static;
-    top: auto;
-    left: auto;
-    right: auto;
-
-    flex: 0 0 60px;
-  }
+  background: $color-primary;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 
   > .logo {
-    display: block;
-    max-height: 60px;
-  }
-
-  > .logo > img {
-    height: 50px;
-  }
-
-  > .button {
-    display: none;
-    border: 1px solid #FEFEFE;
-    padding: 8px 8px;
-    background: none;
-    color: #FEFEFE;
-    font-weight: 300;
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
-  > .link {
-    padding: 5px 10px;
-    margin-left: auto;
-    color: #FFFFFF;
-    text-transform: uppercase;
-  }
-
-  @media (max-width: $screen-sm) {
-    > .button {
-      display: inline-block;
-    }
-
-    > .no-mobile {
-      display: none;
-    }
+    padding: .3rem 0;
+    height: $navbar-height;
   }
 }

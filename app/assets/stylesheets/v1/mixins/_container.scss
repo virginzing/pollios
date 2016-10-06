@@ -1,15 +1,37 @@
-@mixin section-container($padding: 1rem) {
-  padding: $padding;
-  width: 100%;
-
-  font-weight: 300;
+@function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
 }
 
-@mixin card-container($padding: 0) {
-  border: 1px solid;
-  border-color: #e5e6e9 #dfe0e4 #d0d1d5;
-  border-radius: 2px;
-  padding: $padding;
+@mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+  $min: breakpoint-min($name, $breakpoints);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
 
-  background-color: #FFFFFF;
+@mixin container($padding: 0) {
+  @include make-container($padding);
+  @include make-container-max-widths;
+}
+
+@mixin make-container($gutter: 0) {
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: ($gutter / 2);
+  padding-left: ($gutter / 2);
+}
+
+
+// For each breakpoint, define the maximum width of the container in a media query
+@mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
+  @each $breakpoint, $container-max-width in $max-widths {
+    @include media-breakpoint-up($breakpoint, $breakpoints) {
+      max-width: $container-max-width;
+    }
+  }
 }

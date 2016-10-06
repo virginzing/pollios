@@ -1,7 +1,15 @@
 .app-container {
-  @include container;
-  padding-top: calc(1rem + #{$navbar-height});
-  padding-bottom: 1rem;
+  @include container(2rem);
 
-  min-height: calc(100vh - #{$footer-height});
+  padding: calc(1rem + #{$navbar-height}) 0 1rem;
+  min-height: calc(100% - #{$navbar-height});
+}
+
+.app-container.admin {
+  padding: 0;
+  min-height: 100%;
+
+  > .content {
+    padding: calc(1rem + #{$navbar-height}) 1rem calc(1rem + #{$bottom-menu-height});
+  }
 }
