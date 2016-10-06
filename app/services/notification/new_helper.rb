@@ -7,7 +7,7 @@ module Notification::NewHelper
 
     create_push(recipient_list, message)
 
-    create_log(recipient_list, message, sender) if log
+    create_log(recipient_list, message, sender) if log?
   end
 
   private
@@ -16,7 +16,7 @@ module Notification::NewHelper
     fail NotImplementedError
   end
 
-  def log
+  def log?
     fail NotImplementedError
   end
 
