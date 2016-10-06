@@ -3,7 +3,7 @@ module Notification::LogHelper
   private
 
   def create_update_log(recipient_list, data, message, sender)
-    sender_id = sender_id_or_nil(sender)
+    sender_id = sender.id if sender.present?
     message = log_message(message)
 
     recipient_list.each do |recipient|
@@ -12,10 +12,6 @@ module Notification::LogHelper
 
       create_update_log_for(recipient, sender_id, data, message)
     end
-  end
-
-  def sender_id_or_nil(sender)
-    sender.present? ? sender.id : nil
   end
 
   def log_message(message)
