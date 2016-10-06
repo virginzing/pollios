@@ -18,5 +18,13 @@ module V1
       @meta[:url] ||= 'http://www.pollios.com'
       @meta[:image] ||= 'http://www.pollios.com/images/logo/1024logo.png'
     end
+
+    def set_member
+      @member ||= Member.where(id: session[:member_id]).first
+    end
+
+    def member_signed_in?
+      !session[:member_id].nil?
+    end
   end
 end
