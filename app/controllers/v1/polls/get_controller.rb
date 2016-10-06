@@ -28,7 +28,8 @@ module V1::Polls
     def set_meta
       @meta ||= {
         title: @poll.title,
-        description: @poll.member.fullname
+        description: @poll.member.fullname,
+        image: @poll_direct_access.qrcode_image_url
       }
     end
   end
