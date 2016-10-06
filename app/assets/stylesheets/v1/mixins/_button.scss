@@ -10,3 +10,16 @@
     background: darken($color, 8%)
   }
 }
+
+@mixin button-ghost($color: #dddddd, $padding: .5rem .8rem) {
+  border: 1px solid $color;
+  border-radius: 2px;
+  padding: $padding;
+
+  color: $color;
+
+  &:hover {
+    color: #ffffff;
+    background: $color;
+  }
+}
