@@ -47,4 +47,52 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#sole_admin?:' do
+    context 'Given a group with some members,' do
+      before(:all) do
+        @group = create(:group_with_members)
+      end
+
+      specify 'sole_admin? return true for all group admins.' do
+        @group_admins = Group::MemberList.new(@group).admins
+
+        expect(@group_admins.map { |group_admin| Group::MemberInquiry.new(@group).sole_admin?(group_admin) })
+          .to all be true
+      end
+
+      context 'sole_admin? return false for' do
+        specify 'nil.' do
+          expect(Group::MemberInquiry.new(@group).sole_admin?(nil)).to be false
+        end
+
+        specify 'member not in group.' do
+          @member = create(:member)
+
+          expect(Group::MemberInquiry.new(@group).sole_admin?(@member)).to be false
+        end
+
+        specify 'all members in group.' do
+          @group_members = Group::MemberList.new(@group).members
+
+          expect(@group_members.map { |group_member| Group::MemberInquiry.new(@group).sole_admin?(group_member) })
+            .to all be false
+        end
+      end
+
+      context 'given some additional admins to group,' do
+        before(:all) do
+          create_list(:group_member, 3, :admin, group: @group)
+        end
+
+        specify 'sole_admin? return false for all group admins.' do
+          @group_admins = Group::MemberList.new(@group).admins
+
+          expect(@group_admins.map { |group_admin| Group::MemberInquiry.new(@group).sole_admin?(group_admin) })
+            .to all be false
+        end
+      end
+
+    end
+  end
+
 end
