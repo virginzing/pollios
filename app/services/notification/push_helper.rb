@@ -65,7 +65,7 @@ module Notification::PushHelper
       break unless limit_message.to_json.bytesize > 92
     end
 
-    limit_message += "...\"" if limit_message != message
+    limit_message += '..."' if limit_message != message
 
     limit_message + '.'
   end
