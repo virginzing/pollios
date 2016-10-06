@@ -2,8 +2,6 @@ module Notification::NewHelper
   include Notification::LogHelper
   include Notification::PushHelper
 
-  attr_reader :alert_type, :log
-
   def create(member_list, data, message = nil, sender = nil)
     recipient_list = recipient_list(member_list, sender)
 
@@ -13,6 +11,14 @@ module Notification::NewHelper
   end
 
   private
+
+  def alert_type
+    fail NotImplementedError
+  end
+
+  def log
+    fail NotImplementedError
+  end
 
   def recipient_list(member_list, sender)
     return member_list unless sender.present?
