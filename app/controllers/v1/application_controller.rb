@@ -14,7 +14,7 @@ module V1
       @meta = meta
 
       @meta[:title] ||= 'Pollios'
-      @meta[:description] ||= 'Raise your hand.'
+      @meta[:description] ||= 'Raise your hand. Your voice matters. Join us and vote!'
       @meta[:url] ||= 'http://www.pollios.com'
       @meta[:image] ||= 'http://www.pollios.com/images/logo/1024logo.png'
     end
