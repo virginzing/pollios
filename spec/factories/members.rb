@@ -85,12 +85,13 @@ FactoryGirl.define do
       member_type 1
     end
 
-    trait :joins_groups do
+    trait :in_groups do
       transient do
         group_count { Faker::Number.between(3, 5) }
         groups { create_list(:group, group_count) }
-        is_admin false
-        group_member_factory { is_admin ? :group_member_admin : :group_member }
+        
+        admin false
+        group_member_factory { admin ? :group_member_admin : :group_member }
       end
 
       after(:create) do |member, evaluator|
@@ -114,7 +115,7 @@ FactoryGirl.define do
     end
 
     factory :member_who_sends_join_requests, traits: [:sends_requests_to_group]
-    factory :member_who_joins_groups, traits: [:joins_groups]
+    factory :member_in_groups, traits: [:in_groups]
     factory :company_member, traits: [:in_company]
     factory :celebrity_member, traits: [:is_celebrity]
   end
