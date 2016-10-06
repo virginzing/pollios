@@ -4,7 +4,15 @@ module V1::Polls
 
     before_action :set_poll
     before_action :set_poll_direct_access
-    before_action :set_meta
+
+    before_action do
+      set_meta(
+        title: @poll.title,
+        description: @poll.member.fullname,
+        url: request.original_url,
+        image: @poll_direct_access.qrcode_image_url
+      )
+    end
 
     def detail
       @poll_open_app_url = @poll_direct_access.open_app_url
@@ -23,14 +31,6 @@ module V1::Polls
 
     def set_poll
       @poll ||= ::Poll.find_by(id: decode_poll_id(params[:custom_key]))
-    end
-
-    def set_meta
-      @meta ||= {
-        title: @poll.title,
-        description: @poll.member.fullname,
-        image: @poll_direct_access.qrcode_image_url
-      }
     end
   end
 end

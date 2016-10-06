@@ -81,7 +81,7 @@ module Notification::Helper
     increase_notification_count(recipient_list)
 
     create_update_log(recipient_list, message + '.', data) if log
-    create_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) # if push
+    create_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) if push
   end
 
   def devices_receive_notification(recipient_list, type)
