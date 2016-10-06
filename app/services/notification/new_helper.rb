@@ -2,26 +2,28 @@ module Notification::NewHelper
   include Notification::LogHelper
   include Notification::PushHelper
 
-  def create(member_list, type, data, message = nil, sender = nil)
+  attr_reader :alert_type, :log
+
+  def create(member_list, data, message = nil, sender = nil)
     recipient_list = recipient_list(member_list, sender)
 
-    create_push(recipient_list, type, data, message)
+    create_push(recipient_list, data, message)
 
-    create_log(recipient_list, type, data, message, sender) if log?
+    create_log(recipient_list, data, message, sender) if log
   end
 
   private
 
-  def create_log(recipient_list, type, data, message, sender = nil)
+  def create_log(recipient_list, data, message, sender = nil)
     create_update_log(recipient_list, data, message, sender)
-    create_request_log(recipient_list, data) if request_notification?(type)
+    create_request_log(recipient_list, data) if request_notification?
   end
 
-  def create_push(recipient_list, type, data, message = nil)
+  def create_push(recipient_list, data, message = nil)
     device_list = device_list(recipient_list)
 
     device_list.each do |device|
-      Rpush::Apns::Notification.create!(push_data(device, type, data, message))
+      Rpush::Apns::Notification.create!(push_data(device, data, message))
     end
   end
 

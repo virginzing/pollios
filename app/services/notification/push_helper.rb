@@ -6,28 +6,28 @@ module Notification::PushHelper
     recipient_list.map(&:apn_devices).flatten
   end
 
-  def push_data(device, type, data, message)
+  def push_data(device, data, message)
     recipient = device.member
     notification_data = notification_data(device.token, data)
 
-    return notification_data unless alert?(device, type)
+    return notification_data unless alert?(device)
 
     notification_data.merge(alert_data(recipient, message))
   end
 
-  def alert?(device, type)
-    return true if type == :always
-    return false if type == :never
+  def alert?(device)
+    return true if alert_type == :always
+    return false if alert_type == :never
 
-    receive_notification?(device, type)
+    receive_notification?(device)
   end
 
-  def receive_notification?(device, type)
-    recipient_receive_notification?(device.member, type) && device_receive_notification?(device)
+  def receive_notification?(device)
+    recipient_receive_notification?(device.member) && device_receive_notification?(device)
   end
 
-  def recipient_receive_notification?(recipient, type)
-    recipient.notification[type].to_b
+  def recipient_receive_notification?(recipient)
+    recipient.notification[alert_type].to_b
   end
 
   def device_receive_notification?(device)

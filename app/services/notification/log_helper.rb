@@ -34,8 +34,8 @@ module Notification::LogHelper
     NotifyLog.create!(recipient_id: recipient.id, sender_id: sender_id, custom_properties: data, message: message)
   end
 
-  def request_notification?(type)
-    type == 'request'
+  def request_notification?
+    alert_type == 'request'
   end
 
   def create_request_log(recipient_list, data)
