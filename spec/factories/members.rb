@@ -87,27 +87,28 @@ FactoryGirl.define do
 
     trait :joins_groups do
       transient do
-        number_of_groups Random.rand(3..5)
-        groups { create_list(:group, number_of_groups) }
+        group_count { Faker::Number.between(3, 5) }
+        groups { create_list(:group, group_count) }
         is_admin false
+        group_member_factory { is_admin ? :group_member_admin : :group_member }
       end
 
-      after(:create) do |instance, evaluator|
+      after(:create) do |member, evaluator|
         evaluator.groups.each do |group|
-          create(:group_member, is_master: evaluator.is_admin, group: group, member: instance)
+          create(evaluator.group_member_factory, member: member, group: group)
         end
       end
     end
 
     trait :sends_requests_to_group do
       transient do
-        number_of_groups Random.rand(3..5)
-        groups { create_list(:group, number_of_groups) }
+        group_count { Faker::Number.between(3, 5) }
+        groups { create_list(:group, group_count) }
       end
 
-      after(:create) do |instance, evaluator|
+      after(:create) do |member, evaluator|
         evaluator.groups.each do |group|
-          create(:request_group, member: instance, group: group)
+          create(:request_group, member: member, group: group)
         end
       end
     end
