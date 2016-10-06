@@ -1,33 +1,32 @@
-<div class="groups-poll-container">
-  <div class="poll-creator">
+<div class="poll-container">
+  <div class="creator">
     <%= @group.name %>
   </div>
-  <div class="question">
-    <% if @poll.close_status %>
-    <span class="close">ปิดโหวตแล้ว</span>
+  <div class="content">
+    <div class="question">
+      <% if @poll.close_status %>
+      <span class="close">ปิดโหวตแล้ว</span>
+      <% end %>
+      <%= @poll.title %>
+    </div>
+    <% unless @poll.get_photo.blank? %>
+      <img class="question-image" src="<%= @poll.get_photo %>">
     <% end %>
-    <%= @poll.title %>
+    <canvas
+      id="result"
+      height="<%= @chart_height %>"
+      data="<%= @poll.choices.to_json %>"
+      polling="<%= @poll.polling_url %>"></canvas>
+    <div class="actions">
+      <a class="result" href="<%= @poll.summary_url %>">สรุปผลการโหวตทุกโพล</a>
+    </div>
+    <div class="paginate">
+      <a class="prev-poll <%= @poll.prev_poll_button_class %>" href="<%= @poll.prev_poll_url %>">
+        โพลก่อนหน้า
+      </a>
+      <a class="next-poll <%= @poll.next_poll_button_class %>" href="<%= @poll.next_poll_url %>">
+        โพลถัดไป
+      </a>
+    </div>
   </div>
-  <% unless @poll.get_photo.blank? %>
-    <img class="question-image" src="<%= @poll.get_photo %>">
-  <% end %>
-  <canvas
-    id="result"
-    height="<%= @chart_height %>"
-    data="<%= @poll.choices.to_json %>"
-    polling="<%= @poll.polling_url %>"></canvas>
-  <div class="actions">
-    <a class="result" href="<%= @poll.summary_url %>">สรุปผลการโหวตทุกโพล</a>
-  </div>
-  <div class="paginate">
-    <a class="prev-poll <%= @poll.prev_poll_button_class %>" href="<%= @poll.prev_poll_url %>">
-      โพลก่อนหน้า
-    </a>
-    <a class="next-poll <%= @poll.next_poll_button_class %>" href="<%= @poll.next_poll_url %>">
-      โพลถัดไป
-    </a>
-  </div>
-  <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
-    <img src="/images/logo_app_store.png" alt="">
-  </a>
 </div>

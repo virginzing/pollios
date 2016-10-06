@@ -1,7 +1,7 @@
 .poll-container {
   @include card;
 
-  margin: 0 auto;
+  margin: 0 auto 3rem;
   max-width: 640px;
 
   background: white;
@@ -63,6 +63,19 @@
   > .link {
     display: block;
     margin: 0 0 1rem;
+  }
+}
+
+/* group poll */
+.poll-container > .content > .question {
+  > .close {
+    border-radius: 2px;
+    padding: .3rem .5rem;
+
+    color: #ffffff;
+    font-size: .7rem;
+
+    background: $color-primary;
   }
 }
 
@@ -140,4 +153,8 @@
 .poll-container > .content > .link {
   display: block;
   max-width: 200px;
+}
+
+.poll-container > .content > .poll-list {
+  margin: 0;
 }
