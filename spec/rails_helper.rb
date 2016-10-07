@@ -25,6 +25,7 @@ RSpec.configure do |config|
 
   config.before :each do
     DatabaseCleaner.start
+    Rails.application.load_seed # loading seeds
   end
 
   config.after :each do
