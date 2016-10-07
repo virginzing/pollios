@@ -14,11 +14,7 @@ module V1::Polls
       )
     end
 
-    before_action :set_member
-
     def detail
-      puts @member.inspect
-
       @poll_open_app_url = @poll_direct_access.open_app_url
       @poll_qrcode_image_url = @poll_direct_access.qrcode_image_url
     end
