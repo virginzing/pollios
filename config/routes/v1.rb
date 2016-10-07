@@ -5,8 +5,7 @@ namespace 'v1' do
 
   namespace 'polls' do
     get ':custom_key', to: 'get#detail'
-
-    post ':custom_key/vote', to: 'post#vote'
+    get ':custom_key/vote', to: 'get#vote'
   end
 end
 
