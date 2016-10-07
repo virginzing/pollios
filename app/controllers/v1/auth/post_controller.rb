@@ -1,7 +1,5 @@
 module V1::Auth
   class PostController < V1::ApplicationController
-    skip_before_action :verify_authenticity_token
-
     before_action :set_web_app_authentication
 
     before_action :must_not_signed_in, only: [:sign_in]
