@@ -1,3 +1,4 @@
+<%= render(:partial => "v1/partials/flash_message", locals: { type: flash[:type], message: flash[:message] }) if flash[:message] %>
 <div class="poll-container">
   <div class="creator">
     <img src="<%= @poll.member.get_avatar %>" class="avatar">
