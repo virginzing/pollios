@@ -15,6 +15,9 @@
 
 FactoryGirl.define do
   factory :group_member do
+    factory :group_member_admin, traits: [:admin]
+    factory :group_member_pending, traits: [:pending]
+
     group
     member
     active true

@@ -38,7 +38,7 @@ FactoryGirl.define do
     need_approve true
 
     after(:create) do |group, evaluator|
-      create(:group_member, :admin, group: group, member: evaluator.creator)
+      create(:group_member_admin, group: group, member: evaluator.creator)
     end
 
     trait :no_need_approve do

@@ -23,7 +23,7 @@ RSpec.describe GroupMember, type: :model do
   end
 
   it 'can be created with an empty group and a member if the member is the admin.' do
-    GroupMember.create!(attributes_for(:group_member, :admin).merge(member: @member, group: @group))
+    GroupMember.create!(attributes_for(:group_member_admin).merge(member: @member, group: @group))
   end
 
   it 'cannot be created with an empty group and a member if the member is not the admin.' do
@@ -34,7 +34,7 @@ RSpec.describe GroupMember, type: :model do
   end
 
   it 'cannot be destroyed if the member is the last admin of the group.' do
-    group_member = GroupMember.create!(attributes_for(:group_member, :admin).merge(member: @member, group: @group))
+    group_member = GroupMember.create!(attributes_for(:group_member_admin).merge(member: @member, group: @group))
 
     expect { group_member.destroy }
       .to raise_error(ExceptionHandler::Forbidden)

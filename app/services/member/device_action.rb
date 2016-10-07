@@ -16,8 +16,8 @@ class Member::DeviceAction
     process_create(params)
   end
 
-  def undate_info(params)
-    process_undate_info(params)
+  def update_info(params)
+    process_update_info(params)
   end
 
   def delete
