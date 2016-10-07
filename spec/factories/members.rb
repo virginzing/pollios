@@ -83,7 +83,8 @@ FactoryGirl.define do
 
     fullname { Faker::Name.name }
     email { Faker::Internet.email }
-    
+    with_apn_devices
+
     after(:create) do |member, evaluator|
       member.update(friend_limit: evaluator.friend_limit, notification: evaluator.notification)
     end
@@ -162,6 +163,17 @@ FactoryGirl.define do
 
     trait :disabled_notification do
       custom_notification
+    end
+
+    trait :with_apn_devices do
+      transient do
+        device_count { Faker::Number.between(1, 2) }
+        device_factory :apn_device
+      end
+
+      after(:create) do |member, evaluator|
+        create_list(evaluator.device_factory, evaluator.device_count, member: member)
+      end
     end
 
     factory :member_who_sends_join_requests, traits: [:sends_requests_to_group]
