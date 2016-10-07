@@ -89,7 +89,7 @@ end
 
 gem 'wannabe_bool'
 gem 'versioncake', github: 'bwillis/versioncake'
-gem 'rest-client'
+gem 'rest-client', '~> 2.0.0'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'bson' #, '~> 2.2'
 gem 'bson_ext'

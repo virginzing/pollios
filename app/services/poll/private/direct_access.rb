@@ -2,13 +2,6 @@ module Poll::Private::DirectAccess
 
   private
 
-  def encode_poll_id
-    secret_key = ENV['POLL_URL_ENCODER_KEY'].to_i
-    custom_key = (poll.id + secret_key).to_s
-
-    @encode_poll_id ||= Base64.urlsafe_encode64(custom_key)
-  end
-
   def open_app_link
     @open_app_link ||= 'pollios://poll?poll_id='
   end

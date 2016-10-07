@@ -1,0 +1,12 @@
+<nav class="navbar-container">
+  <a href="/" class="logo">
+    <img src="http://pollios.com/assets/pollios_webLogo@2x-2bb08c5287b8429c2b2c5a3bc4a5d433.png">
+  </a>
+  <button dropdown class="member">
+    <img class="avatar" src="<%= member.avatar %>" />
+    <span class="name"><%= member.fullname %></span>
+    <div class="dropdown">
+      <a class="menu" href="/auth/sign_out">Log out</a>
+    </div>
+  </button>
+</nav>

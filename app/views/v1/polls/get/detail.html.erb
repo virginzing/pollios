@@ -1,3 +1,4 @@
+<%= render(:partial => "v1/partials/flash_message", locals: { type: flash[:type], message: flash[:message] }) if flash[:message] %>
 <div class="poll-container">
   <div class="creator">
     <img src="<%= @poll.member.get_avatar %>" class="avatar">
@@ -9,7 +10,11 @@
       <img class="image" src="<%= @poll.get_photo %>">
     <% end %>
     <% @poll.choices.each do |choice| %>
-      <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
+      <% if member_signed_in? %>
+        <a href="<%= choice.vote_url %>" class="choice"><%= choice.answer %></a>
+      <% else %>
+        <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
+      <% end %>
     <% end %>
     <div class="portals">
       <div class="app">

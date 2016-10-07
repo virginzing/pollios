@@ -20,3 +20,45 @@
     height: $navbar-height;
   }
 }
+
+.navbar-container > .member {
+  @include dropdown-container($navbar-height, block, auto, 0, 200px);
+
+  margin: 0 0 0 auto;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  height: 100%;
+
+  > .avatar {
+    margin: 0 1rem 0 0;
+
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    width: 32px;
+    height: 32px;
+  }
+
+  > .name {
+    color: white;
+    align-self: center;
+  }
+}
+
+.navbar-container > .member > .dropdown {
+  border-radius: 2px;
+  background: white;
+  text-align: left;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+
+  > .menu {
+    @include list-item;
+
+    &:hover {
+      background: #efefef;
+    }
+  }
+}

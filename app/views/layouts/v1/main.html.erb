@@ -4,7 +4,7 @@
   <title>Pollios | <%= @meta[:title] %></title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <meta name="keywords" content="Pollios">
   <meta name="google" value="notranslate">
@@ -27,11 +27,7 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-  <nav class="navbar-container">
-    <a href="/" class="logo">
-      <img src="http://pollios.com/assets/pollios_webLogo@2x-2bb08c5287b8429c2b2c5a3bc4a5d433.png">
-    </a>
-  </nav>
+  <%= render(partial: "v1/partials/navbar/navbar", locals: { member: @member }) %>
   <div class="app-container">
     <%= yield %>
   </div>
