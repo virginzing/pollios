@@ -1,1 +1,5 @@
-<%= render(partial: "v1/partials/navbar/member", locals: { member: member })%>
+<% if member_signed_in? %>
+  <%= render(partial: "v1/partials/navbar/member", locals: { member: member }) %>
+<% else %>
+  <%= render(partial: "v1/partials/navbar/guest") %>
+<% end %>
