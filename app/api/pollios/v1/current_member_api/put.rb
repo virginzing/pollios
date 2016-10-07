@@ -89,7 +89,7 @@ module Pollios::V1::CurrentMemberAPI
           route_param :id do
             put do
               member_device_action = Member::DeviceAction.new(current_member, Apn::Device.find(params[:id]))
-              present :devices, member_device_action.undate_info(params), with: DeviceEntity
+              present :devices, member_device_action.update_info(params), with: DeviceEntity
             end
           end
         end
