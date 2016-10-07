@@ -2,6 +2,8 @@ module V1
   class ApplicationController < ::ApplicationController
     rescue_from ActionController::RoutingError, with: :not_found_handler
 
+    before_action :set_current_member
+
     helper_method :member_signed_in?
 
     private
@@ -21,8 +23,8 @@ module V1
       @meta[:image] ||= 'http://www.pollios.com/images/logo/1024logo.png'
     end
 
-    def set_member
-      @member ||= Member.where(id: session[:member_id]).first
+    def set_current_member
+      @current_member ||= ::Member.where(id: session[:member_id]).first
     end
 
     def member_signed_in?
