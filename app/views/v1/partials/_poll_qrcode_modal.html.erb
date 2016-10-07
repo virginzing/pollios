@@ -20,5 +20,8 @@
       <h5 class="title">USING THIS QR CODE</h5>
       <img class="image" src="<%= qrcode_url %>" alt="">
     </div>
-  </section>
+    <% if member_signed_in? %>
+    <% else %>
+      <%= render(partial: 'v1/partials/polls/modal/sign_in_form') %>
+    <% end %>
 </div>

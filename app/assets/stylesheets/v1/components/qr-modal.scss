@@ -34,6 +34,27 @@
   }
 }
 
+.qr-modal > .body > .signin-container {
+  margin-top: 1rem;
+
+  border: 0;
+  border-top: 1px solid #dddddd;
+  padding: 1rem 0;
+  max-width: none;
+
+  flex-grow: 1;
+
+  text-align: left;
+
+  > .title {
+    font-weight: 300;
+  }
+
+  > .body {
+    padding: 0;
+  }
+}
+
 @media (min-width: 768px) {
   .qr-modal > .header {
     flex-flow: row nowrap;
@@ -47,24 +68,15 @@
 
   .qr-modal > .body {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: center;
+  }
 
-    > .use-app,
-    > .qrcode {
-      padding: 1rem;
-      flex: 0 0 50%;
-      width: 50%;
-    }
-
-    > .use-app {
-      margin: 0 1rem 0 0;
-    }
-
-    > .qrcode {
-      border: 0;
-      border-left: 1px solid #dddddd;
-    }
+  .qr-modal > .body > .use-app,
+  .qr-modal > .body > .qrcode {
+    padding: 1rem;
+    flex: 1 0 45%;
+    width: 45%;
   }
 
   .qr-modal > .body > .use-app > .links {
@@ -79,5 +91,10 @@
     > .link:first-child {
       margin: 0 auto 1rem;
     }
+  }
+
+  .qr-modal > .body > .qrcode {
+    border: 0;
+    border-left: 1px solid #dddddd;
   }
 }

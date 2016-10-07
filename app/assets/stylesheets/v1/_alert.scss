@@ -1,0 +1,5 @@
+.alert {
+  @include alert(0 auto 1rem, 1rem, #c0392b, #ffffff)
+
+  max-width: 640px;
+}
