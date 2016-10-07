@@ -3,10 +3,10 @@ module Member::Private::DeviceAction
   private
 
   def process_create(params)
-    Apn::Device.crete!(params)
+    Apn::Device.create!(params)
   end
 
-  def process_undate_info(params)
+  def process_update_info(params)
     device.update!(params)
 
     Member::DeviceList.new(member).all_device
