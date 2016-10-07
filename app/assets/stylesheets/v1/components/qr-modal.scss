@@ -34,6 +34,27 @@
   }
 }
 
+.qr-modal > .body > .signin-container {
+  margin-top: 1rem;
+
+  border: 0;
+  border-top: 1px solid #dddddd;
+  padding: 1rem 0;
+  max-width: none;
+
+  flex-grow: 1;
+
+  text-align: left;
+
+  > .title {
+    font-weight: 300;
+  }
+
+  > .body {
+    padding: 0;
+  }
+}
+
 @media (min-width: 768px) {
   .qr-modal > .header {
     flex-flow: row nowrap;
@@ -75,20 +96,5 @@
   .qr-modal > .body > .qrcode {
     border: 0;
     border-left: 1px solid #dddddd;
-  }
-
-  .qr-modal > .body > .signin {
-    margin-top: 1rem;
-
-    border-top: 1px solid #dddddd;
-    padding: 1rem;
-
-    flex-grow: 1;
-
-    text-align: left;
-
-    > .title {
-      font-weight: 300;
-    }
   }
 }

@@ -20,5 +20,20 @@
       <h5 class="title">USING THIS QR CODE</h5>
       <img class="image" src="<%= qrcode_url %>" alt="">
     </div>
+    <form method="post" action="/auth/sign_in" class="signin-container">
+      <h5 class="title">Sign in to vote</h5>
+      <div class="body">
+        <div class="input-group">
+          <label class="label">Email</label>
+          <input placeholder="example@mail.com" type="email" name="email" class="input">
+        </div>
+        <div class="input-group">
+          <label class="label">Password</label>
+          <input type="password" name="email" class="input">
+        </div>
+        <%= token_tag %>
+        <button type="submit" class="submit">Sign in</button>
+      </div>
+    </form>
   </section>
 </div>
