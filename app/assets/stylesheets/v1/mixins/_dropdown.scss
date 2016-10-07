@@ -7,10 +7,13 @@
     top: $container-height;
     left: $left;
     right: $right;
+
+    border-radius: 2px;
+    border: 1px solid #dddddd;
     width: $width;
   }
 
-  &:focus > .dropdown {
+  &.dropdown-open > .dropdown {
     display: $display;
   }
 }

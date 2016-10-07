@@ -2,6 +2,8 @@ module V1
   class ApplicationController < ::ApplicationController
     rescue_from ActionController::RoutingError, with: :not_found_handler
 
+    helper_method :member_signed_in?
+
     private
 
     def not_found_handler

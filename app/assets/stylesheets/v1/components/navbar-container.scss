@@ -22,7 +22,7 @@
 }
 
 .navbar-container > .member {
-  @include dropdown-container(calc(#{$navbar-height} + 1rem), block, auto, 0, 200px);
+  @include dropdown-container($navbar-height, block, auto, 0, 200px);
 
   margin: 0 0 0 auto;
 
@@ -43,6 +43,7 @@
 
   > .name {
     color: white;
+    align-self: center;
   }
 }
 
