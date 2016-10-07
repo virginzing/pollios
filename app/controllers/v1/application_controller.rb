@@ -1,6 +1,7 @@
 module V1
   class ApplicationController < ::ApplicationController
     rescue_from ActionController::RoutingError, with: :not_found_handler
+    rescue_from ActionController::RedirectBackError, with: :handle_redirect_error
 
     before_action :set_current_member
 
@@ -29,6 +30,10 @@ module V1
 
     def member_signed_in?
       !session[:member_id].nil?
+    end
+
+    def handle_redirect_error
+      redirect_to root_path
     end
   end
 end
