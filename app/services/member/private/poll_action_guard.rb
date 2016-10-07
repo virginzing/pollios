@@ -21,8 +21,6 @@ module Member::Private::PollActionGuard
   end
 
   def can_vote?
-    can_view, message = poll_inquiry_service.can_view?
-    return [false, message] unless can_view
     can_vote, message = poll_inquiry_service.can_vote?
     return [false, message] unless can_vote
     return [false, GuardMessage::Poll.already_voted] if already_vote

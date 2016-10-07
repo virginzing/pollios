@@ -206,6 +206,20 @@ module GuardMessage
         "You have to vote before #{action} this poll."
       end
 
+      def have_to_action_before_vote(action, objects)
+        case action
+
+        when :groups
+          action_message = 'join group'
+        when :friends
+          action_message = 'be friends with'
+        end
+
+        object_ids_message = objects.map { |object| "@[#{object.id}]" }.join(' ')
+
+        "You have to #{action_message} #{object_ids_message} before vote this poll."
+      end
+
       def not_allow_comment
         "This poll isn't allow comment."
       end
