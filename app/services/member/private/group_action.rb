@@ -18,7 +18,7 @@ module Member::Private::GroupAction
 
   def build_new_group
     group = Group.new(new_group_params_hash)
-    
+
     group.assign_attributes(public_id: unique_group_public_id(group))
 
     group.save!
@@ -49,7 +49,7 @@ module Member::Private::GroupAction
   def unique_group_public_id(group)
     joined_name = group.name.scan(/[a-zA-Z0-9_.]+/).join
     public_id = joined_name.first(20)
-  
+
     public_id = joined_name.first(10) + Time.now.to_i.to_s while Group.exists?(public_id: public_id)
 
     public_id
@@ -99,7 +99,7 @@ module Member::Private::GroupAction
 
   def process_invite_friends(friend_ids)
     member_ids_to_invite = member_listing_service.filter_non_members_from_list(friend_ids)
-    
+
     member_ids_to_invite.each do |id_to_invite|
       invite_friend_id(id_to_invite)
     end
@@ -220,6 +220,8 @@ module Member::Private::GroupAction
 
     send_join_group_notification(member)
 
+    trigger_pending_vote_for(member, group)
+
     { group: group, status: :member }
   end
 
@@ -233,10 +235,18 @@ module Member::Private::GroupAction
     Company::FollowOwnerGroup.new(member, group.member_id).follow!
   end
 
+  def trigger_pending_vote_for(member, group)
+    pending_votes = PendingVote.where(member_id: member.id).pending_for('Group', group.id)
+
+    pending_votes.map do |pending_vote|
+      Member::PollAction.new(pending_vote.member, pending_vote.poll).trigger_pending_vote
+    end
+  end
+
   def process_reject_invitation(member = @member)
     delete_group_being_invited_notification(member)
     remove_role_group_admin(member)
-    
+
     relationship_to_group(member).destroy
 
     clear_group_member_relation_cache(member)
@@ -311,7 +321,7 @@ module Member::Private::GroupAction
 
   def process_delete_poll
     poll = Poll.cached_find(poll_id)
-    
+
     delete_poll_in_group
     delete_poll_from_system(poll) if poll_not_in_groups?(poll)
 
