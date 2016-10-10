@@ -7,6 +7,7 @@ module V1::Polls
     before_action :set_poll
     before_action :set_poll_direct_access
     before_action :current_member_poll_action
+    before_action :current_member_poll_inquiry
 
     before_action do
       set_meta(
@@ -20,6 +21,7 @@ module V1::Polls
     def detail
       @poll_open_app_url = @poll_direct_access.open_app_url
       @poll_qrcode_image_url = @poll_direct_access.qrcode_image_url
+      @already_voted = @current_member_poll_inquiry.voted?
 
       @poll = DetailDecorator.decorate(@poll)
     end
@@ -40,6 +42,10 @@ module V1::Polls
 
     def current_member_poll_action
       @current_member_poll_action ||= ::Member::PollAction.new(@current_member, @poll)
+    end
+
+    def current_member_poll_inquiry
+      @current_member_poll_inquiry ||= ::Member::PollInquiry.new(@current_member, @poll)
     end
 
     def vote_params
