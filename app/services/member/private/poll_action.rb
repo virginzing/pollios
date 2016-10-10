@@ -213,7 +213,8 @@ module Member::Private::PollAction
 
   def process_pending_vote(condition)
     PendingVote.create!(member_id: member.id, poll_id: poll.id, choice_id: choice.id \
-      , pending_type: condition[:pending_type], pending_ids: condition[:pending_ids])
+      , pending_type: condition[:pending_type], pending_ids: condition[:pending_ids] \
+      , anonymous: vote_params[:anonymous])
 
     poll
   end

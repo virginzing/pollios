@@ -10,6 +10,7 @@
 #  pending_ids  :integer          is an Array
 #  created_at   :datetime
 #  updated_at   :datetime
+#  anonymous    :boolean          default(FALSE)
 #
 
 class PendingVote < ActiveRecord::Base
