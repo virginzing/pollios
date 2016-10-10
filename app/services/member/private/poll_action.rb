@@ -211,6 +211,13 @@ module Member::Private::PollAction
     poll
   end
 
+  def process_pending_vote(condition)
+    PendingVote.create!(member_id: member.id, poll_id: poll.id, choice_id: choice.id \
+      , pending_type: condition[:pending_type], pending_ids: condition[:pending_ids])
+
+    poll
+  end
+
   def choice
     Choice.cached_find(vote_params[:choice_id])
   end

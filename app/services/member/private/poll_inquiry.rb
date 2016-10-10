@@ -14,19 +14,15 @@ module Member::Private::PollInquiry
 
   def pending_groups
     {
-      type: :group,
-      group: poll.groups.map do |group|
-        { group_id: group.id, name: group.name }
-      end
+      pending_type: 'Group',
+      pending_ids: poll.groups.map(&:id)
     }
   end
 
   def pending_friends
     {
-      type: :member,
-      member: [poll.member].map do |member|
-        { member_id: member.id, name: member.fullname }
-      end
+      pending_type: 'Member',
+      pending_ids: [poll.member].map(&:id)
     }
   end
 
@@ -36,8 +32,6 @@ module Member::Private::PollInquiry
 
     return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
     return [false, ExceptionHandler::Message::Poll::EXPIRED] if expired_poll?
-    # return [false, GuardMessage::Poll.allow_vote_for_group_member] if outside_group?
-    # return [false, GuardMessage::Poll.only_for_frineds_or_following] if only_for_frineds_or_following?
     return [false, GuardMessage::Poll.not_allow_your_own_vote] if not_allow_your_own_vote?
     return [false, GuardMessage::Poll.you_are_already_block] if outgoing_block
 
@@ -192,8 +186,12 @@ module Member::Private::PollInquiry
     { voted: true, voted_choice_id: voted_choice_for_member[:choice_id] }.merge(voting_detail)
   end
 
-  def voting_allows_hash(object, message)
-    { voted: false, can_vote: true, object: object, message: message }
+  def pending_vote_hash(message)
+    { voted: true, voted_choice_id: pending_vote_choice_for_member.choice_id, message: message }
+  end
+
+  def voting_allows_hash(message)
+    { voted: false, can_vote: true, message: message }
   end
 
   def voting_not_allowed_with_reason_hash(message)
@@ -202,6 +200,11 @@ module Member::Private::PollInquiry
 
   def voted_choice_for_member
     voted_all.find { |vote_info| vote_info[:poll_id] == poll.id }
+  end
+
+
+  def pending_vote_choice_for_member
+    PendingVote.find_by(member_id: member.id, poll_id: poll.id)
   end
 
   def voting_detail

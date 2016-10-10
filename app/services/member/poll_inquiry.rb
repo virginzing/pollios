@@ -65,9 +65,11 @@ class Member::PollInquiry < Member::PollList
   def voting_info
     return voted_hash if member_voted_choice.present?
 
-    voting_allows, message = can_vote?
+    voting_allows, condition = can_vote?
+    message = condition.is_a?(Hash) ? condition[:message] : condition
 
-    return voting_allows_hash(voting_allows, message) if voting_allows
+    return pending_vote_hash(message) if pending_vote?
+    return voting_allows_hash(message) if voting_allows
     return voting_not_allowed_with_reason_hash(message).merge(voting_detail_creator_must_not_vote) if not_allow_your_own_vote?
 
     voting_not_allowed_with_reason_hash(message)

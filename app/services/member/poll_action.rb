@@ -32,10 +32,12 @@ class Member::PollAction
 
   def vote(params)
     @vote_params = params
-    can_vote, message = can_vote?
+    can_vote, condition = can_vote?
+    message = condition.is_a?(Hash) ? condition[:message] : condition
+
     fail ExceptionHandler::UnprocessableEntity, message unless can_vote
 
-    process_vote
+    condition.nil? ? process_vote : process_pending_vote(condition)
   end
 
   def bookmark
