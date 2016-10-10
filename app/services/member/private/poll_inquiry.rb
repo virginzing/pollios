@@ -41,8 +41,8 @@ module Member::Private::PollInquiry
     return [false, GuardMessage::Poll.not_allow_your_own_vote] if not_allow_your_own_vote?
     return [false, GuardMessage::Poll.you_are_already_block] if outgoing_block
 
-    return [pending_groups, GuardMessage::Poll.pending_vote(:groups, poll.groups)] if outside_group?
-    return [pending_friends, GuardMessage::Poll.pending_vote(:friends, [poll.member])] if only_for_frineds_or_following?
+    return [true, pending_groups.merge(message: GuardMessage::Poll.pending_vote(:group, poll.groups))] if outside_group?
+    return [true, pending_friends.merge(message: GuardMessage::Poll.pending_vote(:member, [poll.member]))] if only_for_frineds_or_following?
     [true, nil]
   end
 

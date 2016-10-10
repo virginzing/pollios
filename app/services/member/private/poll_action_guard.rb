@@ -22,9 +22,10 @@ module Member::Private::PollActionGuard
 
   def can_vote?
     can_vote, message = poll_inquiry_service.can_vote?
+
     return [false, message] unless can_vote
     return [false, GuardMessage::Poll.already_voted] if already_vote
-    return [false, GuardMessage::Poll.already_voted + ' ' + message] if pending_vote?
+    return [false, GuardMessage::Poll.already_voted + ' ' + message[:message]] if pending_vote?
     return [false, GuardMessage::Poll.not_match_choice] if not_match_choice
 
     [true, message]
