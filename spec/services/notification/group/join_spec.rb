@@ -39,6 +39,27 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       expect(@latest_notification_pushes.map(&:alert)).to all include "#{@some_member.fullname} joined in #{@group.name} group."
     end
 
+    context 'given some more members in group with join_group notification off,' do
+      before(:all) do
+        @disabled_notification_members = create_list(:member_in_groups, 3, :custom_notification, join_group_notification: false, groups: [@group])
+      end
+
+      specify 'members in group with join_group notification off cannot be notified if someone join the group.' do
+        Notification::Group::Join.new(@some_member, @group)
+
+        @devices = @disabled_notification_members.map(&:apn_devices).flatten
+        @device_tokens = @devices.map(&:token).map { |token| token.gsub(/\s+/, '') }
+
+        @latest_notification_pushes = Rpush::Apns::Notification
+                                      .where(device_token: @device_tokens)
+                                      .order(updated_at: :desc)
+                                      .group_by(&:device_token)
+                                      .map { |pair| pair[1][0] }
+
+        expect(@latest_notification_pushes.map(&:alert)).to all eq nil
+      end
+    end
+
   end
   
 end
