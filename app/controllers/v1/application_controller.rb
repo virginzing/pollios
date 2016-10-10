@@ -4,6 +4,7 @@ module V1
     rescue_from ActiveRecord::RecordNotFound, with: :not_found_handler
     rescue_from ActionController::RedirectBackError, with: :handle_redirect_error
 
+    before_action :set_meta
     before_action :set_current_member
 
     helper_method :member_signed_in?
@@ -11,12 +12,12 @@ module V1
     private
 
     def not_found_handler
-      render 'v1/errors/not_found', layout: 'v1/navbar_no_sidebar', status: :not_found
+      render 'v1/errors/not_found', layout: 'v1/main', status: :not_found
     end
 
     protected
 
-    def set_meta(meta)
+    def set_meta(meta = {})
       @meta = meta
 
       @meta[:title] ||= 'Pollios'
