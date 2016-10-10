@@ -16,7 +16,11 @@ module V1::Polls
     end
 
     def choices
-      poll.choices.map { |choice| Choices::DetailDecorator.decorate(choice) }
+      # rubocop:disable Style/SingleLineBlockParams
+      # rubocop:disable Lint/UselessAssignment
+      total_vote = poll.choices.inject(0) { |sum, choice| sum += choice.vote }
+
+      poll.choices.map { |choice| Choices::DetailDecorator.new(choice, total_vote) }
     end
   end
 end

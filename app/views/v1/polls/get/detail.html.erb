@@ -9,12 +9,10 @@
     <% unless @poll.get_photo.blank? %>
       <img class="image" src="<%= @poll.get_photo %>">
     <% end %>
-    <% @poll.choices.each do |choice| %>
-      <% if member_signed_in? %>
-        <%= render(partial: "v1/partials/polls/get/member_choice", locals: { choice: choice }) %>
-      <% else %>
-        <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
-      <% end %>
+    <% if @already_voted %>
+      <%= render(partial: "v1/partials/polls/result") %>
+    <% else %>
+      <%= render(partial: "v1/partials/polls/choices") %>
     <% end %>
     <div class="portals">
       <div class="app">

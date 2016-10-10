@@ -41,6 +41,20 @@
     text-align: left;
     background-color: #dddddd;
   }
+
+  > .choice.result {
+    position: relative;
+
+    > .percentage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: auto;
+      bottom: -5px;
+
+      background-color: transparentize($color-primary, .5);
+    }
+  }
 }
 
 .poll-container > .content > .portals {
