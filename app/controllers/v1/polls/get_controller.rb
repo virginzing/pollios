@@ -53,6 +53,10 @@ module V1::Polls
 
     def vote_params
       params.permit(:choice_id)
+
+      params[:choice_id] = params[:choice_id].to_i unless params[:choice_id].nil?
+
+      params
     end
 
     def handle_status_422(e)
