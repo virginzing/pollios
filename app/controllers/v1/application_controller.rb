@@ -1,6 +1,7 @@
 module V1
   class ApplicationController < ::ApplicationController
     rescue_from ActionController::RoutingError, with: :not_found_handler
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found_handler
     rescue_from ActionController::RedirectBackError, with: :handle_redirect_error
 
     before_action :set_current_member
