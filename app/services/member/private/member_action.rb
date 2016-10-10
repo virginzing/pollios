@@ -140,6 +140,7 @@ module Member::Private::MemberAction
     send_friends_notification(member, a_member, action: ACTION[:become_friend])
 
     clear_friends_and_follwers_caches_for_members
+    trigger_both_pending_vote
 
     nil
   end
@@ -166,6 +167,19 @@ module Member::Private::MemberAction
     end
 
     nil
+  end
+
+  def trigger_both_pending_vote
+    trigger_pending_vote_for(member, a_member)
+    trigger_pending_vote_for(a_member, member)
+  end
+
+  def trigger_pending_vote_for(member, a_member)
+    pending_votes = PendingVote.where(member_id: member.id).pending_for('Member', a_member.id)
+
+    pending_votes.map do |pending_vote|
+      Member::PollAction.new(pending_vote.member, pending_vote.poll).trigger_pending_vote
+    end
   end
 
   def send_friends_notification(src_member, dst_member, options = { action: ACTION[:request_friend] })
