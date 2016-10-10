@@ -209,10 +209,10 @@ module GuardMessage
       def pending_vote(type, objects)
         case type
 
-        when :group
+        when 'Group'
           objects_name = objects.map { |group| "\"#{group.name}\"" }
           action_message = 'approve your request to join group'
-        when :member
+        when 'Member'
           objects_name = objects.map { |member| "\"#{member.fullname}\"" }
           action_message = 'accept your friends request'
         end

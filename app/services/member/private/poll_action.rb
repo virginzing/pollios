@@ -212,11 +212,31 @@ module Member::Private::PollAction
   end
 
   def process_pending_vote(condition)
+    pending_vote = create_pending_vote(condition)
+
+    create_request(pending_vote)
+
+    poll
+  end
+
+  def create_request(pending_vote)
+    case pending_vote.pending_type
+
+    when 'Group'
+      pending_vote.pending_ids.map do |group_id|
+        Member::GroupAction.new(member, Group.cached_find(group_id)).join
+      end
+    when 'Member'
+      pending_vote.pending_ids.map do |member_id|
+        Member::MemberAction.new(member, Member.cached_find(member_id)).add_friend
+      end
+    end
+  end
+
+  def create_pending_vote(condition)
     PendingVote.create!(member_id: member.id, poll_id: poll.id, choice_id: choice.id \
       , pending_type: condition[:pending_type], pending_ids: condition[:pending_ids] \
       , anonymous: vote_params[:anonymous])
-
-    poll
   end
 
   def process_trigger_pending_vote
