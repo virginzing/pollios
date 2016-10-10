@@ -58,7 +58,7 @@
         <ul>
           <% @popular_poll.each do |poll| %>
           <li>
-            <%= link_to poll.title, poll.share_url %>
+            <%= link_to poll.title, poll.url %>
             <%= poll_that_image(poll) %>
           </li>
           <% end %>
