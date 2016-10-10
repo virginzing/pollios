@@ -25,17 +25,20 @@
     width: 100%;
   }
 
-  > .choice {
+  > .choice,
+  > form > .choice {
     display: block;
 
     margin: 0 0 1rem;
 
     border-bottom: 5px solid #cccccc;
     padding: 1rem 2rem;
+    width: 100%;
 
     color: #444444;
     font-size: $font-size-sub-title - .7;
     font-weight: 300;
+    text-align: left;
     background-color: #dddddd;
   }
 }

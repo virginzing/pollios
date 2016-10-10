@@ -9,7 +9,7 @@ module V1::Polls::Choices
     def vote_url
       poll_direct_access = ::Poll::DirectAccess.new(choice.poll)
 
-      "/v1/polls/#{poll_direct_access.encode_poll_id}/vote?choice_id=#{choice.id}"
+      "/v1/polls/#{poll_direct_access.encode_poll_id}/vote"
     end
   end
 end

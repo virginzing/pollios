@@ -24,11 +24,6 @@ module V1::Polls
       @poll = DetailDecorator.decorate(@poll)
     end
 
-    def vote
-      poll = @current_member_poll_action.vote(vote_params)
-      render json: { poll: poll }
-    end
-
     private
 
     def decode_poll_id(custom_key)
@@ -40,7 +35,7 @@ module V1::Polls
     end
 
     def set_poll
-      @poll ||= ::Poll.find_by(id: decode_poll_id(params[:custom_key]))
+      @poll ||= ::Poll.find(decode_poll_id(params[:custom_key]))
     end
 
     def current_member_poll_action
