@@ -1,0 +1,19 @@
+@mixin dropdown-container($container-height: 50px, $display: flex, $left: 0, $right: 0, $width: auto) {
+  position: relative;
+
+  > .dropdown {
+    display: none;
+    position: absolute;
+    top: $container-height;
+    left: $left;
+    right: $right;
+
+    border-radius: 2px;
+    border: 1px solid #dddddd;
+    width: $width;
+  }
+
+  &.dropdown-open > .dropdown {
+    display: $display;
+  }
+}

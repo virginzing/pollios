@@ -1,6 +1,6 @@
 module V1::Admin
   class AuthenticationController < Devise::SessionsController
-    layout 'v1/main'
+    layout 'v1/admin/auth'
 
     before_action :set_meta
 

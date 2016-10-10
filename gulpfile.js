@@ -3,7 +3,7 @@ const path = require('path')
 const gulp = require('gulp')
 const watch = require('gulp-watch')
 const batch = require('gulp-batch')
-const pump = require('pump')
+const plumber = require('gulp-plumber')
 const bs = require('browser-sync').create()
 const wp = require('webpack-stream')
 const webpack = require('webpack')
@@ -55,26 +55,27 @@ gulp.task('css', function () {
 })
 
 gulp.task('js', function (cb) {
-  return pump([
-    gulp.src(mainJs),
-    wp({
-      entry: ['whatwg-fetch', mainJs],
-      output: { path: jsDistPath, filename: 'app.js' },
-      plugins: [
-        new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
-        new ExtractTextPlugin(path.resolve(scssDistPath, 'bundle.css'))
-      ],
-      module: {
-        loaders: [
-          {
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
-          }
-        ]
-      }
-    }),
-    gulp.dest(jsDistPath)
-  ], cb)
+  const wpConfig = {
+    entry: ['whatwg-fetch', mainJs],
+    output: { path: jsDistPath, filename: 'app.js' },
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+      new ExtractTextPlugin(path.resolve(scssDistPath, 'bundle.css'))
+    ],
+    module: {
+      loaders: [
+        {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+        }
+      ]
+    }
+  }
+
+  return gulp.src(mainJs)
+    .pipe(plumber())
+    .pipe(wp(wpConfig))
+    .pipe(gulp.dest(jsDistPath))
 })
 
 gulp.task('watch', function () {
@@ -82,12 +83,17 @@ gulp.task('watch', function () {
     gulp.start('css', done);
   }));
   watch(jsWatchPath, batch(function (events, done) {
-    gulp.start('js', done);
+    gulp.start('js-reload', done);
   }));
   watch(viewWatchPath, batch(function (events, done) {
     bs.reload()
     done()
   }));
+})
+
+gulp.task('js-reload', ['js'], function (done) {
+  bs.reload()
+  done()
 })
 
 gulp.task('bs', function () {
@@ -96,4 +102,4 @@ gulp.task('bs', function () {
   })
 })
 
-gulp.task('default', ['bs', 'watch'])
+gulp.task('default', ['css', 'js', 'watch', 'bs'])

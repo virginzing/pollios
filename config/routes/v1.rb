@@ -26,4 +26,10 @@ scope module: 'v1' do
 
     post ':group_id/polls/close', to: 'post#close_poll'
   end
+
+  namespace 'auth' do
+    get '/sign_out', to: 'get#sign_out'
+
+    post '/sign_in', to: 'post#sign_in'
+  end
 end

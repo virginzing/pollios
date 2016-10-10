@@ -7,8 +7,8 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:all) do
       @public_group = FactoryGirl.create(:group, public: true)
       @private_group = FactoryGirl.create(:group)
-      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_group, @private_group])
-      @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_group])
+      @member_1 = FactoryGirl.create(:member_in_groups, groups: [@public_group, @private_group])
+      @member_2 = FactoryGirl.create(:member_in_groups, groups: [@private_group])
       @member_3 = FactoryGirl.create(:member)
     end
 
@@ -29,9 +29,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:all) do
       @public_groups = FactoryGirl.create_list(:group, 2, public: true)
       @private_groups = FactoryGirl.create_list(:group, 2)
-      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_groups[0]] + @private_groups)
-      @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_groups[1]])
-      @member_3 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups)
+      @member_1 = FactoryGirl.create(:member_in_groups, groups: [@public_groups[0]] + @private_groups)
+      @member_2 = FactoryGirl.create(:member_in_groups, groups: [@private_groups[1]])
+      @member_3 = FactoryGirl.create(:member_in_groups, groups: @public_groups)
       @member_4 = FactoryGirl.create(:member)
     end
 
@@ -52,9 +52,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:all) do
       @public_groups = FactoryGirl.create_list(:group, 2, public: true)
       @private_groups = FactoryGirl.create_list(:group, 2)
-      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: [@public_groups[0]] + @private_groups, is_admin: true)
-      @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_groups[1]])
-      @member_3 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups)
+      @member_1 = FactoryGirl.create(:member_in_groups, groups: [@public_groups[0]] + @private_groups, admin: true)
+      @member_2 = FactoryGirl.create(:member_in_groups, groups: [@private_groups[1]])
+      @member_3 = FactoryGirl.create(:member_in_groups, groups: @public_groups)
       @member_4 = FactoryGirl.create(:member)
     end
 
@@ -76,9 +76,9 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     before(:all) do
       @public_groups = FactoryGirl.create_list(:group, 2, public: true)
       @private_groups = FactoryGirl.create_list(:group, 2)
-      @member_1 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups + @private_groups, is_admin: true)
-      @member_2 = FactoryGirl.create(:member_who_joins_groups, groups: [@private_groups[1]])
-      @member_3 = FactoryGirl.create(:member_who_joins_groups, groups: @public_groups)
+      @member_1 = FactoryGirl.create(:member_in_groups, groups: @public_groups + @private_groups, admin: true)
+      @member_2 = FactoryGirl.create(:member_in_groups, groups: [@private_groups[1]])
+      @member_3 = FactoryGirl.create(:member_in_groups, groups: @public_groups)
       FactoryGirl.create(:member_who_sends_join_requests, groups: [@public_groups[1], @private_groups[1]])
     end
 

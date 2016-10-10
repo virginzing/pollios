@@ -25,18 +25,35 @@
     width: 100%;
   }
 
-  > .choice {
+  > .choice,
+  > form > .choice {
     display: block;
 
     margin: 0 0 1rem;
 
     border-bottom: 5px solid #cccccc;
     padding: 1rem 2rem;
+    width: 100%;
 
     color: #444444;
     font-size: $font-size-sub-title - .7;
     font-weight: 300;
+    text-align: left;
     background-color: #dddddd;
+  }
+
+  > .choice.result {
+    position: relative;
+
+    > .percentage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: auto;
+      bottom: -5px;
+
+      background-color: transparentize($color-primary, .5);
+    }
   }
 }
 
