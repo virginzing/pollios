@@ -219,6 +219,12 @@ module Member::Private::PollAction
     poll
   end
 
+  def process_trigger_pending_vote
+    pending_vote.destroy!
+
+    process_vote
+  end
+
   def choice
     Choice.cached_find(vote_params[:choice_id])
   end
