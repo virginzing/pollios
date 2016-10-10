@@ -21,7 +21,8 @@ module V1::Polls
     def detail
       @poll_open_app_url = @poll_direct_access.open_app_url
       @poll_qrcode_image_url = @poll_direct_access.qrcode_image_url
-      @already_voted = @current_member_poll_inquiry.voted?
+
+      @already_voted = @current_member_poll_inquiry.voted? if member_signed_in?
 
       @poll = DetailDecorator.decorate(@poll)
     end
@@ -45,6 +46,8 @@ module V1::Polls
     end
 
     def current_member_poll_inquiry
+      return false unless member_signed_in?
+
       @current_member_poll_inquiry ||= ::Member::PollInquiry.new(@current_member, @poll)
     end
 
