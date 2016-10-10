@@ -27,6 +27,10 @@ class Member::PollInquiry < Member::PollList
     member_voted_choice.present?
   end
 
+  def pending_vote?
+    ids_include?(pending_vote, poll.id)
+  end
+
   def bookmarked?
     ids_include?(bookmarks, poll.id)
   end

@@ -12,14 +12,14 @@ module Member::Private::PollInquiry
     [true, nil]
   end
 
-  # def pending_groups
-  #   {
-  #     type: group,
-  #     group: poll.groups.map do |group|
-  #       { group_id: group.id, name: group.name }
-  #     end
-  #   }
-  # end
+  def pending_groups
+    {
+      type: :group,
+      group: poll.groups.map do |group|
+        { group_id: group.id, name: group.name }
+      end
+    }
+  end
 
   def pending_friends
     {
@@ -36,13 +36,13 @@ module Member::Private::PollInquiry
 
     return [false, ExceptionHandler::Message::Poll::CLOSED] if poll.closed?
     return [false, ExceptionHandler::Message::Poll::EXPIRED] if expired_poll?
-    return [false, GuardMessage::Poll.allow_vote_for_group_member] if outside_group?
+    # return [false, GuardMessage::Poll.allow_vote_for_group_member] if outside_group?
     # return [false, GuardMessage::Poll.only_for_frineds_or_following] if only_for_frineds_or_following?
     return [false, GuardMessage::Poll.not_allow_your_own_vote] if not_allow_your_own_vote?
     return [false, GuardMessage::Poll.you_are_already_block] if outgoing_block
 
-    # return [pending_groups, GuardMessage::Poll.have_to_action_before_vote(:groups, poll.groups)] if outside_group?
-    return [pending_friends, GuardMessage::Poll.have_to_action_before_vote(:friends, [poll.member])] if only_for_frineds_or_following?
+    return [pending_groups, GuardMessage::Poll.pending_vote(:groups, poll.groups)] if outside_group?
+    return [pending_friends, GuardMessage::Poll.pending_vote(:friends, [poll.member])] if only_for_frineds_or_following?
     [true, nil]
   end
 

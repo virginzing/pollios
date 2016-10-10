@@ -206,18 +206,18 @@ module GuardMessage
         "You have to vote before #{action} this poll."
       end
 
-      def have_to_action_before_vote(action, objects)
+      def pending_vote(action, objects)
+        object_ids_message = objects.map { |object| "@[#{object.id}]" }.join(', ')
+
         case action
 
         when :groups
-          action_message = 'join group'
+          action_message = 'approve your request to join group'
         when :friends
-          action_message = 'be friends with'
+          action_message = 'accept your friends request'
         end
 
-        object_ids_message = objects.map { |object| "@[#{object.id}]" }.join(' ')
-
-        "You have to #{action_message} #{object_ids_message} before vote this poll."
+        "Pending for #{object_ids_message} #{action_message}."
       end
 
       def not_allow_comment
