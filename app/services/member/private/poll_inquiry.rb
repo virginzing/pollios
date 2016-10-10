@@ -192,8 +192,8 @@ module Member::Private::PollInquiry
     { voted: true, voted_choice_id: voted_choice_for_member[:choice_id] }.merge(voting_detail)
   end
 
-  def voting_allows_hash
-    { voted: false, can_vote: true }
+  def voting_allows_hash(object, message)
+    { voted: false, can_vote: true, object: object, message: message }
   end
 
   def voting_not_allowed_with_reason_hash(message)
