@@ -2,40 +2,48 @@ module Notification::PushHelper
 
   private
 
+  def create_push(recipient_list, message = nil)
+    device_list = device_list(recipient_list)
+
+    device_list.each do |device|
+      Rpush::Apns::Notification.create!(push_data(device, message))
+    end
+  end
+
+
   def device_list(recipient_list)
     recipient_list.map(&:apn_devices).flatten
   end
 
-  def push_data(device, type, data, message)
+  def push_data(device, message)
     recipient = device.member
-    notification_data = notification_data(device.token, data)
+    notification_data = notification_data(device.token)
 
-    return notification_data if push_data_only?(recipient, device, type)
+    return notification_data unless alert?(device)
 
     notification_data.merge(alert_data(recipient, message))
   end
 
-  def push_data_only?(recipient, device, type)
-    remove_action?(type) || turn_off_notification?(recipient, device, type)
+  def alert?(device)
+    return true if alert_type == :always
+    return false if alert_type == :never
+
+    receive_notification?(device)
   end
 
-  def remove_action?(type)
-    type == 'remove'
+  def receive_notification?(device)
+    recipient_receive_notification?(device.member) && device_receive_notification?(device)
   end
 
-  def turn_off_notification?(recipient, device, type)
-    recipient_turn_off_notification?(recipient, type) || device_turn_off_notification?(device)
+  def recipient_receive_notification?(recipient)
+    recipient.notification[alert_type].to_b
   end
 
-  def recipient_turn_off_notification?(recipient, type)
-    !recipient.notification[type].to_b
+  def device_receive_notification?(device)
+    device.receive_notification
   end
 
-  def device_turn_off_notification?(device)
-    !device.receive_notification
-  end
-
-  def notification_data(device_token, data)
+  def notification_data(device_token)
     {
       app: Rpush::Apns::App.find_by(name: 'Pollios'),
       device_token: device_token,
@@ -66,8 +74,9 @@ module Notification::PushHelper
       break unless limit_message.to_json.bytesize > 92
     end
 
-    limit_message += "...\"" if limit_message != message
+    limit_message += '..."' if limit_message != message
 
     limit_message + '.'
   end
+
 end

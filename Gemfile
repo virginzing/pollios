@@ -103,7 +103,7 @@ gem 'will_paginate-foundation'
 gem 'nested_form'
 gem 'simple_form'
 gem 'decent_exposure'
-gem 'apn_on_rails', github: 'Nuttapon/apn_on_rails'
+gem 'apn_on_rails', github: 'CatFlyFlyFly/apn_on_rails'
 
 gem 'rqrcode'
 gem 'rqrcode-rails3'

@@ -68,13 +68,25 @@ FactoryGirl.define do
   factory :member do
     transient do
       friend_limit 1000
+
+      notification do
+        Hashie::Mash.new(
+          public: :true, \
+          group: :true, \
+          friend: :true, \
+          watch_poll: :true, \
+          request: :true, \
+          join_group: :true \
+        )
+      end
     end
 
     fullname { Faker::Name.name }
     email { Faker::Internet.email }
-    
+    with_apn_devices
+
     after(:create) do |member, evaluator|
-      member.update(friend_limit: evaluator.friend_limit)
+      member.update(friend_limit: evaluator.friend_limit, notification: evaluator.notification)
     end
 
     trait :in_company do
@@ -111,6 +123,56 @@ FactoryGirl.define do
         evaluator.groups.each do |group|
           create(:request_group, member: member, group: group)
         end
+      end
+    end
+
+    trait :custom_notification do
+      transient do
+        public_notification :false
+        group_notification :false
+        friend_notification :false
+        watch_poll_notification :false
+        request_notification :false
+        join_group_notification :false
+
+        notification do
+          Hashie::Mash.new(
+            public: public_notification.to_s, \
+            group: group_notification.to_s, \
+            friend: friend_notification.to_s, \
+            watch_poll: watch_poll_notification.to_s, \
+            request: request_notification.to_s, \
+            join_group: join_group_notification.to_s \
+          )
+        end
+      end
+    end
+
+    trait :default_notification do
+      custom_notification
+
+      transient do
+        public_notification :false
+        group_notification :true
+        friend_notification :true
+        watch_poll_notification :true
+        request_notification :true
+        join_group_notification :false
+      end
+    end
+
+    trait :disabled_notification do
+      custom_notification
+    end
+
+    trait :with_apn_devices do
+      transient do
+        device_count { Faker::Number.between(1, 2) }
+        device_factory :apn_device
+      end
+
+      after(:create) do |member, evaluator|
+        create_list(evaluator.device_factory, evaluator.device_count, member: member)
       end
     end
 
