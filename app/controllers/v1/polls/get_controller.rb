@@ -24,7 +24,9 @@ module V1::Polls
 
       @already_voted = @current_member_poll_inquiry.voted? if member_signed_in?
 
-      @poll = DetailDecorator.decorate(@poll)
+      return @poll = DetailForMemberDecorator.new(@poll, @current_member) if member_signed_in?
+
+      @poll = DetailForGuestDecorator.new(@poll)
     end
 
     private
