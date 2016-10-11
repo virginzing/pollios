@@ -1,5 +1,11 @@
 .alert {
-  @include alert(0 auto 1rem, 1rem, #c0392b, #ffffff)
-
   max-width: 640px;
+}
+
+.alert.error {
+  @include alert(0 auto 1rem, 1rem, #c0392b, #ffffff)
+}
+
+.alert.info {
+  @include alert(0 auto 1rem, 1rem, #3498db, #ffffff)
 }

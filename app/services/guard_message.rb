@@ -217,7 +217,7 @@ module GuardMessage
           action_message = 'accept your friends request'
         end
 
-        "Pending for #{objects_name.join(' or ')} #{action_message}."
+        "Your vote will be counted when #{objects_name.join(' or ')} #{action_message}."
       end
 
       def not_allow_comment
