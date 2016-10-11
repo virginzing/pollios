@@ -18,7 +18,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
     end
 
-    it '- Member can create poll according to aciton.' do
+    it '- Member can create poll according to action.' do
       expect(Member::PollList.new(@poll_creator).created.include?(@poll)).to be true
     end
   end
@@ -33,7 +33,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
     it '- Member can delete their poll.' do
       @creator_poll_action.delete
-      puts 'FUCK ' + @poll.deleted_at.inspect
 
       expect(Member::PollList.new(@poll_creator).created.include?(@poll)).to be false
     end
@@ -80,6 +79,26 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
     end
   end
 
+  context '#vote: Member can vote poll. But be pending vote.' do
+    before(:context) do
+      @poll_params = FactoryGirl.attributes_for(:poll, :with_creator_must_vote)
+      @poll = Member::PollAction.new(@poll_creator).create(@poll_params)
+
+      @a_member = FactoryGirl.create(:member)
+
+      @a_member_poll_action = Member::PollAction.new(@a_member, @poll)
+      @a_member_poll_inquiry = Member::PollInquiry.new(@a_member, @poll)
+    end
+
+    it '- Member votes poll which only for friends and following' do
+      expect(@a_member_poll_inquiry.can_vote?.first).to be true
+      Member::PollAction.new(@a_member, @poll).vote(choice_id: @poll.choices.first.id)
+      expect(@a_member_poll_inquiry.pending_vote?).to be true
+    end
+
+    xit '- Member votes poll which only for group members'
+  end
+
   context '#vote: Member cannot vote poll which closed or expired.' do
     before(:each) do
       @poll_params = FactoryGirl.attributes_for(:poll)
@@ -115,13 +134,6 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
       @creator_poll_action = Member::PollAction.new(@poll_creator, @poll)
       @friend_poll_action = Member::PollAction.new(@friend, @poll)
       @member_poll_action = Member::PollAction.new(@member, @poll)
-    end
-
-    it '- Member votes poll which only for friends and following.' do
-      expect { @member_poll_action.vote(choice_id: @poll.choices.first.id) } \
-        .to raise_error(
-          ExceptionHandler::UnprocessableEntity,
-          GuardMessage::Poll.only_for_frineds_or_following)
     end
 
     it '- Creator votes their poll which not allow your own vote.' do
