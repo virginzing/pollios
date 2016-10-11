@@ -16,7 +16,7 @@
     <% end %>
     <div class="portals">
       <div class="app">
-        <a href="<%= @poll_open_app_url %>" class="link">
+        <a href="<%= @poll.open_app_url %>" class="link">
           <img src="/images/logo_pollios_h.png" alt="">
         </a>
         <a href="https://itunes.apple.com/us/app/pollios/id901397748?ls=1&mt=8" class="link">
@@ -24,13 +24,13 @@
         </a>
       </div>
       <a class="qrcode" data-remodal-target="qr_modal">
-        <img src="<%= @poll_qrcode_image_url %>" />
+        <img src="<%= @poll.qrcode_image_url %>" />
       </a>
     </div>
   </div>
 </div>
 <%= render(
     partial: "v1/partials/poll_qrcode_modal",
-    locals: { qrcode_url: @poll_qrcode_image_url, poll_open_app_url: @poll_open_app_url }
+    locals: { qrcode_url: @poll.qrcode_image_url, poll_open_app_url: @poll.open_app_url }
   )
 %>
