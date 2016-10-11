@@ -9,7 +9,7 @@ module V1::Polls
 
     def detail
       @poll = DetailForMemberDecorator.new(@poll, @current_member) if member_signed_in?
-      @poll = DetailForGuestDecorator.new(@poll)
+      @poll = DetailForGuestDecorator.new(@poll) unless member_signed_in?
 
       set_meta(
         title: @poll.title,
@@ -23,10 +23,6 @@ module V1::Polls
 
     def decode_poll_id(custom_key)
       Base64.urlsafe_decode64(custom_key).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i
-    end
-
-    def set_poll_direct_access
-      @poll_direct_access ||= ::Poll::DirectAccess.new(@poll)
     end
 
     def set_poll

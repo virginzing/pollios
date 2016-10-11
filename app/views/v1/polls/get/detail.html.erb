@@ -9,7 +9,7 @@
     <% unless @poll.get_photo.blank? %>
       <img class="image" src="<%= @poll.get_photo %>">
     <% end %>
-    <% if @already_voted %>
+    <% if @poll.voted? %>
       <%= render(partial: "v1/partials/polls/result") %>
     <% else %>
       <%= render(partial: "v1/partials/polls/choices") %>

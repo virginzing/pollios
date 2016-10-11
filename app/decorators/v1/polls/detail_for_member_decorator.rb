@@ -1,13 +1,10 @@
 module V1::Polls
-  class DetailForMemberDecorator < V1::ApplicationDecorator
-    attr_reader :current_member, :current_member_poll_inquiry
-
-    delegate :title, :member, :get_photo
-
+  class DetailForMemberDecorator < DetailForGuestDecorator
     def initialize(poll, current_member)
       @current_member ||= current_member
       @current_member_poll_inquiry ||= ::Member::PollInquiry.new(@current_member, poll)
 
+      puts poll.id
       super(poll)
     end
 
@@ -23,7 +20,7 @@ module V1::Polls
       poll.choices.map { |choice| Choices::DetailDecorator.new(choice, total_vote) }
     end
 
-    def vote?
+    def voted?
       @current_member_poll_inquiry.voted?
     end
   end
