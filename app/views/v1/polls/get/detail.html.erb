@@ -16,7 +16,7 @@
       locals: {
         type: 'info',
         message: @poll.voting_info[:message]
-      }) if @poll.voting_info
+      }) unless @poll.voting_info[:message].blank?
     %>
     <h2 class="question"><%= @poll.title %></h2>
     <% unless @poll.get_photo.blank? %>
