@@ -12,8 +12,6 @@ module V1::Polls
     end
 
     def choices
-      total_vote = poll.choices.sum(&:vote)
-
       poll.choices.map { |choice| Choices::DetailDecorator.new(choice, total_vote, voting_info[:voted_choice_id]) }
     end
 
@@ -30,7 +28,14 @@ module V1::Polls
     end
 
     def average_rating
+      point = poll.choices.sum { |choice| choice.vote.to_f * choice.answer.to_f }
+      avg = point.fdiv(total_vote).round(2)
 
+      avg
+    end
+
+    def total_vote
+      poll.choices.sum(&:vote)
     end
   end
 end
