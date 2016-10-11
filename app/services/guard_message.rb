@@ -206,6 +206,20 @@ module GuardMessage
         "You have to vote before #{action} this poll."
       end
 
+      def pending_vote(type, objects)
+        case type
+
+        when 'Group'
+          objects_name = objects.map { |group| "\"#{group.name}\"" }
+          action_message = 'approve your request to join group'
+        when 'Member'
+          objects_name = objects.map { |member| "\"#{member.fullname}\"" }
+          action_message = 'accept your friends request'
+        end
+
+        "Pending for #{objects_name.join(' or ')} #{action_message}."
+      end
+
       def not_allow_comment
         "This poll isn't allow comment."
       end

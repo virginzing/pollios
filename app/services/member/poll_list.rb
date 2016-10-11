@@ -69,11 +69,15 @@ class Member::PollList
   end
 
   def viewed
-    cached_history_viewed_polls  
+    cached_history_viewed_polls
   end
 
   def voted
     all_voted
+  end
+
+  def pending_vote
+    all_pending_vote
   end
 
   def bookmarks
@@ -87,7 +91,7 @@ class Member::PollList
   def polls_by_page(list)
     list.paginate(page: index)
   end
-  
+
   def next_index(list)
     next_page_index(list)
   end
@@ -97,7 +101,7 @@ class Member::PollList
   end
 
   # private
-  
+
   def cached_report_polls
     Rails.cache.fetch("member/#{member.id}/report_polls") { member_report_polls }
   end

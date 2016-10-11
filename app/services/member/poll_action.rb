@@ -3,7 +3,7 @@ class Member::PollAction
   include Member::Private::PollActionGuard
   include Member::Private::PollAction
 
-  attr_reader :member, :poll, :poll_params, :vote_params, :report_params, :comment_params
+  attr_reader :member, :poll, :poll_params, :vote_params, :report_params, :comment_params, :pending_vote
 
   def initialize(member, poll = nil, options = {})
     @member = member
@@ -32,10 +32,21 @@ class Member::PollAction
 
   def vote(params)
     @vote_params = params
-    can_vote, message = can_vote?
+    can_vote, condition = can_vote?
+    message = condition.is_a?(Hash) ? condition[:message] : condition
+
     fail ExceptionHandler::UnprocessableEntity, message unless can_vote
 
-    process_vote
+    condition.nil? ? process_vote : process_pending_vote(condition)
+  end
+
+  # TODO : move this to service trigger
+  def trigger_pending_vote
+    @vote_params = @pending_vote = PendingVote.find_by(member_id: member.id, poll_id: poll.id)
+
+    return unless pending_vote.present?
+
+    process_trigger_pending_vote
   end
 
   def bookmark

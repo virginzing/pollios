@@ -21,14 +21,15 @@ module Member::Private::PollActionGuard
   end
 
   def can_vote?
-    can_view, message = poll_inquiry_service.can_view?
-    return [false, message] unless can_view
-    can_vote, message = poll_inquiry_service.can_vote?
+    can_vote, condition = poll_inquiry_service.can_vote?
+    message = condition.is_a?(Hash) ? condition[:message] : condition
+
     return [false, message] unless can_vote
     return [false, GuardMessage::Poll.already_voted] if already_vote
+    return [false, GuardMessage::Poll.already_voted + ' ' + message] if pending_vote?
     return [false, GuardMessage::Poll.not_match_choice] if not_match_choice
 
-    [true, nil]
+    [true, condition]
   end
 
   def can_bookmark?
@@ -167,6 +168,10 @@ module Member::Private::PollActionGuard
 
   def already_vote
     poll_inquiry_service.voted?
+  end
+
+  def pending_vote?
+    poll_inquiry_service.pending_vote?
   end
 
   def not_voted

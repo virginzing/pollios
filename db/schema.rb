@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805083443) do
+ActiveRecord::Schema.define(version: 20161010094735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -834,6 +834,21 @@ ActiveRecord::Schema.define(version: 20160805083443) do
   add_index "notify_logs", ["custom_properties"], name: "index_notify_logs_on_custom_properties", using: :btree
   add_index "notify_logs", ["recipient_id"], name: "index_notify_logs_on_recipient_id", using: :btree
   add_index "notify_logs", ["sender_id"], name: "index_notify_logs_on_sender_id", using: :btree
+
+  create_table "pending_votes", force: true do |t|
+    t.integer  "member_id"
+    t.integer  "poll_id"
+    t.integer  "choice_id"
+    t.string   "pending_type"
+    t.integer  "pending_ids",                  array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "anonymous",    default: false
+  end
+
+  add_index "pending_votes", ["choice_id"], name: "index_pending_votes_on_choice_id", using: :btree
+  add_index "pending_votes", ["member_id"], name: "index_pending_votes_on_member_id", using: :btree
+  add_index "pending_votes", ["poll_id"], name: "index_pending_votes_on_poll_id", using: :btree
 
   create_table "pg_search_documents", force: true do |t|
     t.text     "content"
