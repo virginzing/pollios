@@ -24,18 +24,22 @@ module V1::Polls
     end
 
     def rating?
-      poll.poll_type == 2
+      poll.type_poll == 'rating'
     end
 
     def average_rating
-      point = poll.choices.sum { |choice| choice.vote.to_f * choice.answer.to_f }
+      point = poll.choices.to_a.sum { |choice| choice.vote.to_f * choice.answer.to_f }
       avg = point.fdiv(total_vote).round(2)
 
       avg
     end
 
+    def rating_width
+      "#{(average_rating * 100) / 5}%"
+    end
+
     def total_vote
-      poll.choices.sum(&:vote)
+      poll.choices.to_a.sum(&:vote)
     end
   end
 end
