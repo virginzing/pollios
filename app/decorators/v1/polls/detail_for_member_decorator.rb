@@ -4,7 +4,6 @@ module V1::Polls
       @current_member ||= current_member
       @current_member_poll_inquiry ||= ::Member::PollInquiry.new(@current_member, poll)
 
-      puts poll.id
       super(poll)
     end
 
@@ -22,6 +21,10 @@ module V1::Polls
 
     def voted?
       @current_member_poll_inquiry.voted?
+    end
+
+    def voting_info
+      @current_member_poll_inquiry.voting_info
     end
   end
 end
