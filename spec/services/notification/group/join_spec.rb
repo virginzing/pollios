@@ -14,11 +14,7 @@ RSpec.describe "[Service: #{pathname.dirname.basename}/#{pathname.basename}]\n\n
 
       Notification::Group::Join.new(@some_member, @group)
 
-      @latest_notification_logs = NotifyLog \
-                                  .where(recipient: @group_members) \
-                                  .order(updated_at: :desc) \
-                                  .group_by(&:recipient_id) \
-                                  .map { |pair| pair[1][0] }
+      @latest_notification_logs = NotifyLog.where(recipient: @group_members).latest
 
       expect(@latest_notification_logs.size).to be @group_members.size
       expect(@latest_notification_logs.map(&:message)).to all include "#{@some_member.fullname} joined in #{@group.name} group."
