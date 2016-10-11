@@ -42,6 +42,11 @@
     background-color: #dddddd;
   }
 
+  > .choice.voted {
+    border-bottom: 5px solid transparentize($color-primary, .3);
+    background-color: transparentize($color-primary, .5);
+  }
+
   > .choice.result {
     position: relative;
 

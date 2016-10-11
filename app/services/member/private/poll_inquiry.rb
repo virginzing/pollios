@@ -36,7 +36,7 @@ module Member::Private::PollInquiry
     return [false, GuardMessage::Poll.you_are_already_block] if outgoing_block
 
     return [true, pending_groups.merge(message: GuardMessage::Poll.pending_vote('Group', poll.groups))] if outside_group?
-    return [true, pending_friends.merge(message: GuardMessage::Poll.pending_vote('Member', [poll.member]))] if only_for_frineds_or_following?
+    return [true, pending_friends.merge(message: GuardMessage::Poll.pending_vote('Member', [poll.member]))] if only_for_friends_or_following?
     [true, nil]
   end
 
@@ -71,7 +71,7 @@ module Member::Private::PollInquiry
     need_group_visibility_check? && !group_ids_visible_to_member?
   end
 
-  def only_for_frineds_or_following?
+  def only_for_friends_or_following?
     need_friends_following_visibility_check? && not_friends_or_following_with_creator
   end
 
@@ -161,13 +161,13 @@ module Member::Private::PollInquiry
   end
 
   def poll_in_groups_hash
-    { 
+    {
       in: 'Group',
       group_detail: poll_in_groups_details
     }
   end
 
-  def poll_in_friend_following 
+  def poll_in_friend_following
     { in: 'Friends & Following' }
   end
 
@@ -187,7 +187,11 @@ module Member::Private::PollInquiry
   end
 
   def pending_vote_hash(message)
-    { voted: true, voted_choice_id: pending_vote_choice_for_member.choice_id, message: message }
+    {
+      voted: true,
+      voted_choice_id: pending_vote_choice_for_member.choice_id,
+      message: "You are already voted this poll. #{message}"
+    }
   end
 
   def voting_allows_hash(message)

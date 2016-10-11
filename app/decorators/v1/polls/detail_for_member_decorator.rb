@@ -16,7 +16,7 @@ module V1::Polls
       # rubocop:disable Lint/UselessAssignment
       total_vote = poll.choices.inject(0) { |sum, choice| sum += choice.vote }
 
-      poll.choices.map { |choice| Choices::DetailDecorator.new(choice, total_vote) }
+      poll.choices.map { |choice| Choices::DetailDecorator.new(choice, total_vote, voting_info[:voted_choice_id]) }
     end
 
     def voted?

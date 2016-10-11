@@ -1,10 +1,12 @@
 module V1::Polls::Choices
   class DetailDecorator < V1::ApplicationDecorator
-    attr_reader :total_vote
+    attr_reader :total_vote, :voted_choice_id
+
     delegate :id, :answer
 
-    def initialize(choice, total_vote)
+    def initialize(choice, total_vote, voted_choice_id)
       @total_vote ||= total_vote
+      @voted_choice_id ||= voted_choice_id
 
       super(choice)
     end
@@ -21,6 +23,9 @@ module V1::Polls::Choices
       "#{vote}%"
     end
 
+    def voted?
+      choice.id == voted_choice_id
+    end
 
     def vote_url
       poll_direct_access = ::Poll::DirectAccess.new(choice.poll)

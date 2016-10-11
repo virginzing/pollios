@@ -1,10 +1,23 @@
-<%= render(:partial => "v1/partials/flash_message", locals: { type: flash[:type], message: flash[:message] }) if flash[:message] %>
+<%= render(
+  partial: "v1/partials/flash_message",
+  locals: {
+    type: flash[:type],
+    message: flash[:message]
+  }) if flash[:message]
+%>
 <div class="poll-container">
   <div class="creator">
     <img src="<%= @poll.member.get_avatar %>" class="avatar">
     <div class="name"><%= @poll.member.fullname %></div>
   </div>
   <div class="content">
+    <%= render(
+      partial: "v1/partials/flash_message",
+      locals: {
+        type: 'info',
+        message: @poll.voting_info[:message]
+      }) if @poll.voting_info
+    %>
     <h2 class="question"><%= @poll.title %></h2>
     <% unless @poll.get_photo.blank? %>
       <img class="image" src="<%= @poll.get_photo %>">

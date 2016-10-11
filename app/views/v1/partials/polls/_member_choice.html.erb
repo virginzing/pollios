@@ -1,5 +1,9 @@
+<% if @poll.voting_info[:voted] %>
+<div class="choice <%= 'voted' if choice.voted? %>"><%= choice.answer %></div>
+<% else %>
 <form action="<%= choice.vote_url %>" method="post">
   <input type="hidden" name="choice_id" value="<%= choice.id %>" />
   <button class="choice" type="submit"><%= choice.answer %></button>
   <%= token_tag %>
 </form>
+<% end %>
