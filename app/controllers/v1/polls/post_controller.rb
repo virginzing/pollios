@@ -11,6 +11,14 @@ module V1::Polls
     end
 
     private
+    
+    def decode_poll_id(custom_key)
+      Base64.urlsafe_decode64(custom_key).to_i - ENV['POLL_URL_ENCODER_KEY'].to_i
+    end
+
+    def poll
+      @poll ||= ::Poll.find(decode_poll_id(params[:custom_key]))
+    end
 
     def current_member_poll_action
       @current_member_poll_action ||= ::Member::PollAction.new(@current_member, @poll)
