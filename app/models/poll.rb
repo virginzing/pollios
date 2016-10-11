@@ -114,6 +114,8 @@ class Poll < ActiveRecord::Base
   has_many :triggers, as: :triggerable
   has_many :member_report_comments
 
+  has_many :pending_votes
+
   has_one :poll_company
 
   belongs_to :member, counter_cache: true

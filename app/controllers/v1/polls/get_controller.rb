@@ -7,6 +7,7 @@ module V1::Polls
     before_action :set_poll
     before_action :set_poll_direct_access
     before_action :current_member_poll_action
+    before_action :current_member_poll_inquiry
 
     before_action do
       set_meta(
@@ -21,12 +22,9 @@ module V1::Polls
       @poll_open_app_url = @poll_direct_access.open_app_url
       @poll_qrcode_image_url = @poll_direct_access.qrcode_image_url
 
-      @poll = DetailDecorator.decorate(@poll)
-    end
+      @already_voted = @current_member_poll_inquiry.voted? if member_signed_in?
 
-    def vote
-      poll = @current_member_poll_action.vote(vote_params)
-      render json: { poll: poll }
+      @poll = DetailDecorator.decorate(@poll)
     end
 
     private
@@ -40,15 +38,25 @@ module V1::Polls
     end
 
     def set_poll
-      @poll ||= ::Poll.find_by(id: decode_poll_id(params[:custom_key]))
+      @poll ||= ::Poll.find(decode_poll_id(params[:custom_key]))
     end
 
     def current_member_poll_action
       @current_member_poll_action ||= ::Member::PollAction.new(@current_member, @poll)
     end
 
+    def current_member_poll_inquiry
+      return false unless member_signed_in?
+
+      @current_member_poll_inquiry ||= ::Member::PollInquiry.new(@current_member, @poll)
+    end
+
     def vote_params
       params.permit(:choice_id)
+
+      params[:choice_id] = params[:choice_id].to_i unless params[:choice_id].nil?
+
+      params
     end
 
     def handle_status_422(e)

@@ -15,21 +15,21 @@ class Member::GroupAdminAction < Member::GroupAction
   def approve
     can_approve, message = can_approve?
     fail ExceptionHandler::UnprocessableEntity, message unless can_approve
-      
+
     process_approve
   end
 
   def deny
     can_deny, message = can_deny?
     fail ExceptionHandler::UnprocessableEntity, message unless can_deny
-      
+
     process_deny
   end
 
   def remove
     can_remove, message = can_remove?
     fail ExceptionHandler::UnprocessableEntity, message unless can_remove
-      
+
     process_remove
   end
 
@@ -49,7 +49,7 @@ class Member::GroupAdminAction < Member::GroupAction
 
   # refactor this into private module later
   private
-  
+
   def admin_of_group?
     Group::MemberInquiry.new(group).admin?(admin_member)
   end

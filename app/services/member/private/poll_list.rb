@@ -15,7 +15,7 @@ module Member::Private::PollList
   end
 
   def member_report_commments
-    member.comment_reports.to_a  
+    member.comment_reports.to_a
   end
 
   def member_history_viewed_polls
@@ -27,18 +27,19 @@ module Member::Private::PollList
   end
 
   def member_voted_all_polls
-    Poll.joins(history_votes: :choice)
+    Poll
+      .joins(history_votes: :choice)
       .select('polls.*, history_votes.choice_id as choice_id')
       .where("(history_votes.member_id = #{member.id} " \
         'AND history_votes.poll_series_id = 0)' \
         "OR (history_votes.member_id = #{member.id} " \
         'AND history_votes.poll_series_id != 0 AND polls.order_poll = 1)')
-      .collect! do |poll| 
+      .collect! do |poll|
         Hash[
-          poll_id: poll.id, 
-          choice_id: poll.choice_id, 
-          poll_series_id: poll.poll_series_id, 
-          show_result: poll.show_result, 
+          poll_id: poll.id,
+          choice_id: poll.choice_id,
+          poll_series_id: poll.poll_series_id,
+          show_result: poll.show_result,
           system_poll: poll.system_poll
         ]
       end
@@ -54,7 +55,8 @@ module Member::Private::PollList
   end
 
   def all_voted
-    Poll.unscoped.viewing_by_member(viewing_member)
+    Poll
+      .unscoped.viewing_by_member(viewing_member)
       .joins('LEFT OUTER JOIN history_votes ON polls.id = history_votes.poll_id')
       .where.not("polls.member_id = #{member.id}")
       .where("history_votes.member_id = #{member.id}")
@@ -62,14 +64,25 @@ module Member::Private::PollList
       .order('voted_at DESC')
   end
 
+  def all_pending_vote
+    Poll
+      .unscoped.viewing_by_member(viewing_member)
+      .joins(:pending_votes)
+      .where(pending_votes: { member_id: member.id })
+  end
+
   def all_bookmarked
-    Poll.unscoped.joins('LEFT OUTER JOIN bookmarks ON polls.id = bookmarks.bookmarkable_id')
+    Poll
+      .unscoped
+      .joins('LEFT OUTER JOIN bookmarks ON polls.id = bookmarks.bookmarkable_id')
       .where("bookmarks.member_id = #{member.id}")
       .order('bookmarks.created_at DESC')
   end
 
   def all_saved_vote_later
-    Poll.unscoped.joins('LEFT OUTER JOIN save_poll_laters ON polls.id = save_poll_laters.savable_id')
+    Poll
+      .unscoped
+      .joins('LEFT OUTER JOIN save_poll_laters ON polls.id = save_poll_laters.savable_id')
       .where("save_poll_laters.member_id = #{member.id}")
       .order('save_poll_laters.created_at DESC')
   end

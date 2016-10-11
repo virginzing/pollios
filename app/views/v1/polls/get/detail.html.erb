@@ -9,12 +9,10 @@
     <% unless @poll.get_photo.blank? %>
       <img class="image" src="<%= @poll.get_photo %>">
     <% end %>
-    <% @poll.choices.each do |choice| %>
-      <% if member_signed_in? %>
-        <a href="<%= choice.vote_url %>" class="choice"><%= choice.answer %></a>
-      <% else %>
-        <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
-      <% end %>
+    <% if @already_voted %>
+      <%= render(partial: "v1/partials/polls/result") %>
+    <% else %>
+      <%= render(partial: "v1/partials/polls/choices") %>
     <% end %>
     <div class="portals">
       <div class="app">
@@ -32,7 +30,7 @@
   </div>
 </div>
 <%= render(
-    :partial => "v1/partials/poll_qrcode_modal",
-    :locals => { :qrcode_url => @poll_qrcode_image_url, :poll_open_app_url => @poll_open_app_url }
+    partial: "v1/partials/poll_qrcode_modal",
+    locals: { qrcode_url: @poll_qrcode_image_url, poll_open_app_url: @poll_open_app_url }
   )
 %>

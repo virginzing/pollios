@@ -1,0 +1,7 @@
+<% @poll.choices.each do |choice| %>
+  <% if member_signed_in? %>
+    <%= render(partial: "v1/partials/polls/member_choice", locals: { choice: choice }) %>
+  <% else %>
+    <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
+  <% end %>
+<% end %>
