@@ -2,7 +2,6 @@ module V1::Polls
   class GetController < V1::ApplicationController
     layout 'v1/main'
 
-    rescue_from ExceptionHandler::UnprocessableEntity, with: :handle_status_422
 
     before_action :poll
 
@@ -26,13 +25,6 @@ module V1::Polls
 
     def poll
       @poll ||= ::Poll.find(decode_poll_id(params[:custom_key]))
-    end
-
-    def handle_status_422(e)
-      flash[:type] = 'error'
-      flash[:message] = e.message
-
-      redirect_to :back
     end
   end
 end
