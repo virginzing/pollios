@@ -1,0 +1,18 @@
+<%= render(
+  partial: "v1/partials/flash_message",
+  locals: {
+    type: 'info',
+    message: @poll.voting_info[:message]
+  }) unless @poll.voting_info[:message].blank?
+%>
+<h2 class="question"><%= @poll.title %></h2>
+<% unless @poll.get_photo.blank? %>
+  <img class="image" src="<%= @poll.get_photo %>">
+<% end %>
+<% @poll.choices.each do |choice| %>
+  <% if @poll.voted? %>
+    <%= render(partial: "v1/partials/polls/result", locals: { choice: choice }) %>
+  <% else %>
+    <%= render(partial: "v1/partials/polls/member_choice", locals: { choice: choice }) %>
+  <% end %>
+<% end %>

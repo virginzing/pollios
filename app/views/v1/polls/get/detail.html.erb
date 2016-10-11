@@ -11,22 +11,8 @@
     <div class="name"><%= @poll.member.fullname %></div>
   </div>
   <div class="content">
-    <%= render(
-      partial: "v1/partials/flash_message",
-      locals: {
-        type: 'info',
-        message: @poll.voting_info[:message]
-      }) unless @poll.voting_info[:message].blank?
-    %>
-    <h2 class="question"><%= @poll.title %></h2>
-    <% unless @poll.get_photo.blank? %>
-      <img class="image" src="<%= @poll.get_photo %>">
-    <% end %>
-    <% if @poll.voted? %>
-      <%= render(partial: "v1/partials/polls/result") %>
-    <% else %>
-      <%= render(partial: "v1/partials/polls/choices") %>
-    <% end %>
+    <%= render(partial: 'v1/partials/polls/detail_for_member') if member_signed_in? %>
+    <%= render(partial: 'v1/partials/polls/detail_for_guest') unless member_signed_in? %>
     <div class="portals">
       <div class="app">
         <a href="<%= @poll.open_app_url %>" class="link">
