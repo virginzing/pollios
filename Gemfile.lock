@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/Nuttapon/apn_on_rails.git
+  remote: git://github.com/CatFlyFlyFly/apn_on_rails.git
   revision: 0076e32f5e4794a6526780a0cbcd7f3d2801e1e7
   specs:
     apn_on_rails (0.5.1)
