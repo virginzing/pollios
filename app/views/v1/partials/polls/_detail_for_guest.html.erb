@@ -1,0 +1,7 @@
+<h2 class="question"><%= @poll.title %></h2>
+<% unless @poll.get_photo.blank? %>
+  <img class="image" src="<%= @poll.get_photo %>">
+<% end %>
+<% @poll.choices.each do |choice| %>
+  <a data-remodal-target="qr_modal" class="choice"><%= choice.answer %></a>
+<% end %>

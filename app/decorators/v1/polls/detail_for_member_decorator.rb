@@ -12,10 +12,6 @@ module V1::Polls
     end
 
     def choices
-      # rubocop:disable Style/SingleLineBlockParams
-      # rubocop:disable Lint/UselessAssignment
-      total_vote = poll.choices.inject(0) { |sum, choice| sum += choice.vote }
-
       poll.choices.map { |choice| Choices::DetailDecorator.new(choice, total_vote, voting_info[:voted_choice_id]) }
     end
 
@@ -25,6 +21,25 @@ module V1::Polls
 
     def voting_info
       @current_member_poll_inquiry.voting_info
+    end
+
+    def rating?
+      poll.type_poll == 'rating'
+    end
+
+    def average_rating
+      point = poll.choices.to_a.sum { |choice| choice.vote.to_f * choice.answer.to_f }
+      avg = point.fdiv(total_vote).round(2)
+
+      avg
+    end
+
+    def rating_width
+      "#{(average_rating * 100) / 5}%"
+    end
+
+    def total_vote
+      poll.choices.to_a.sum(&:vote)
     end
   end
 end

@@ -1,6 +1,4 @@
-<% @poll.choices.each do |choice| %>
-  <div class="choice result">
-    <%= choice.answer %> - <%= choice.vote %>
-    <span class="percentage" style="width: <%=  choice.vote %>"></span>
-  </div>
-<% end %>
+<div class="choice result">
+  <%= choice.answer %> - <%= choice.vote %>
+  <span class="percentage" style="width: <%= choice.vote %>"></span>
+</div>

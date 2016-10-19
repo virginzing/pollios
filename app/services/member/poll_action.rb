@@ -31,6 +31,7 @@ class Member::PollAction
   end
 
   def vote(params)
+    params[:anonymous] = false unless params[:anonymous].present?
     @vote_params = params
     can_vote, condition = can_vote?
     message = condition.is_a?(Hash) ? condition[:message] : condition
