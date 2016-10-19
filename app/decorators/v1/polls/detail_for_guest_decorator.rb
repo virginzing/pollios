@@ -10,12 +10,16 @@ module V1::Polls
       super(poll)
     end
 
+    def url
+      "/v1/polls/#{poll_direct_access.encode_poll_id}"
+    end
+
     def open_app_url
-      @poll_direct_access.open_app_url
+      poll_direct_access.open_app_url
     end
 
     def qrcode_image_url
-      @poll_direct_access.qrcode_image_url
+      poll_direct_access.qrcode_image_url
     end
   end
 end

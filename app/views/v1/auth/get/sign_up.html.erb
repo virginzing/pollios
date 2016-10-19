@@ -1,0 +1,21 @@
+<form class="signin-container" action="/auth/sign_up" method="post" novalidate>
+  <header class="header">
+    <h3 class="title">Sign up</h3>
+  </header>
+  <section class="body">
+    <%= render(:partial => "v1/partials/flash_message", locals: { type: flash[:type], message: flash[:message] }) if flash[:message] %>
+    <div class="input-group">
+      <label class="label">Email</label>
+      <input placeholder="example@mail.com" type="email" name="email" class="input">
+    </div>
+    <div class="input-group">
+      <label class="label">Password</label>
+      <input type="password" name="password" class="input">
+    </div>
+    <input type="hidden" name="redirect_path" value="<%= @redirect_path %>" />
+    <%= token_tag %>
+    <div class='action'>
+      <button type="submit" class="submit">Sign up</button>
+    </div>
+  </section>
+</form>

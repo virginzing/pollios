@@ -33,6 +33,5 @@ module Pollios
     end
 
     mount Auth::App
-    mount Auth::WebApp
   end
 end

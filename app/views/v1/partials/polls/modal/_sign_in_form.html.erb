@@ -11,7 +11,7 @@
     </div>
     <%= token_tag %>
     <div class="action">
-      <a href="/auth/signup" class="register">Register</a>
+      <a href="/auth/sign_up?redirect_path=<%= @poll.url %>" class="register">Register</a>
       or
       <button type="submit" class="submit">Sign in</button>
     </div>
