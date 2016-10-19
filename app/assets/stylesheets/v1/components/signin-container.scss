@@ -11,11 +11,24 @@
 .signin-container > .body {
   @include card-body;
 
-  > .submit {
-    @include button($color-primary, #ffffff);
-    margin: 2rem 0 0;
+  > .action {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
 
-    display: block;
+    margin-left: auto;
+
     width: 100%;
+  }
+
+  > .action > a {
+    margin-right: 1rem;
+  }
+
+  > .action > .submit {
+    @include button($color-primary, #ffffff);
+
+    margin: 0 0 0 1rem;
   }
 }

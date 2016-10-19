@@ -10,6 +10,10 @@
       <input type="password" name="password" class="input">
     </div>
     <%= token_tag %>
-    <button type="submit" class="submit">Sign in</button>
+    <div class="action">
+      <a href="/auth/sign_up?redirect_path=<%= @poll.url %>" class="register">Register</a>
+      or
+      <button type="submit" class="submit">Sign in</button>
+    </div>
   </div>
 </form>

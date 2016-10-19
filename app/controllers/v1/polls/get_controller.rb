@@ -2,7 +2,6 @@ module V1::Polls
   class GetController < V1::ApplicationController
     layout 'v1/main'
 
-
     before_action :poll
 
     def detail

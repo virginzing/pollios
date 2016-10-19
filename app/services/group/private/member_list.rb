@@ -34,13 +34,17 @@ module Group::Private::MemberList
 
 
   def queried_all_members
-    members = Member.joins(:group_members).where("group_members.group_id = #{group.id}")
-              .select(
-                "DISTINCT members.*,
-                 group_members.is_master AS admin,
-                 group_members.active AS is_active,
-                 group_members.created_at AS joined_at,
-                 group_members.invite_id AS member_invite_id")
+    members =
+      Member
+      .joins(:group_members)
+      .where("group_members.group_id = #{group.id}")
+      .select("
+        DISTINCT members.*,
+        group_members.is_master AS admin,
+        group_members.active AS is_active,
+        group_members.created_at AS joined_at,
+        group_members.invite_id AS member_invite_id
+      ")
 
     members.each do |member|
       member.member_invite_id = nil if member.member_invite_id == member.id
@@ -50,7 +54,9 @@ module Group::Private::MemberList
   end
 
   def queried_all_requests
-    group.members_request.all
+    group
+      .members_request
+      .all
       .sort_by(&method(:downcased_fullname))
   end
 

@@ -57,6 +57,12 @@
       right: auto;
       bottom: -5px;
 
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  > .choice.result.selected {
+    > .percentage {
       background-color: transparentize($color-primary, .5);
     }
   }
