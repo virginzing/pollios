@@ -15,7 +15,6 @@
   <% @poll.choices.each do |choice| %>
       <%= render(partial: "v1/partials/polls/result", locals: { choice: choice }) %>
     <% end %>
-  <% end %>
 <% else %>
   <% @poll.choices.each do |choice| %>
     <%= render(partial: "v1/partials/polls/member_choice", locals: { choice: choice }) %>
