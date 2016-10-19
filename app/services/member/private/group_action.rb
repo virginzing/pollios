@@ -38,7 +38,7 @@ module Member::Private::GroupAction
   end
 
   def initialize_new_group
-    set_cover(group)
+    set_cover
     set_creator_as_admin
     create_group_company
     process_invite_friends(group_params[:friend_ids]) if group_params[:friend_ids].present?
@@ -55,37 +55,35 @@ module Member::Private::GroupAction
     public_id
   end
 
-  def set_cover(group)
-    if uploaded_cover_given?(group)
-      set_uploaded_cover(group)
-    elsif !cover_preset_given?(group)
-      set_random_cover_preset(group)
+  def set_cover
+    if uploaded_cover_given?
+      set_uploaded_cover
+    elsif !cover_preset_given?
+      set_random_cover_preset
     end
   end
 
-  def set_uploaded_cover(group)
+  def set_uploaded_cover
     cover = group_params[:cover]
     cover_group_url = ImageUrl.new(cover)
 
     group.update_column(:cover, cover_group_url.split_cloudinary_url)
   end
 
-  def set_random_cover_preset(group)
+  def set_random_cover_preset
     group.cover_preset = random_cover_preset
   end
 
   def random_cover_preset
-    rand(1..26).to_s
+    rand(1..26)
   end
 
-  def uploaded_cover_given?(group)
+  def uploaded_cover_given?
     group_params[:cover] && ImageUrl.new(group_params[:cover]).from_image_url?
   end
 
-  def cover_preset_given?(group)
-    group_params[:cover_preset] \
-      && group_params[:cover_preset].gsub(/\D/, ' ') == group_params[:cover_preset] \
-      && group_params[:cover_preset].to_i.between(1, 26)
+  def cover_preset_given?
+    group_params[:cover_preset].present? && !group_params[:cover_preset].zero?
   end
 
   def set_creator_as_admin

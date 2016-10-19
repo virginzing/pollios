@@ -25,9 +25,10 @@ module V1::Polls
     end
 
     def vote_params
-      params.permit(:choice_id)
+      params.permit(:choice_id, :anonymous)
 
       params[:choice_id] = params[:choice_id].to_i unless params[:choice_id].nil?
+      params[:anonymous] = params[:anonymous].present?
 
       params
     end

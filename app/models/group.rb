@@ -68,6 +68,8 @@ class Group < ActiveRecord::Base
 
   validates :public_id , :uniqueness => { :case_sensitive => false, message: "Public ID has already been taken." }, format: { with: /\A[a-zA-Z0-9_.]+\z/i, message: %(Public ID only allows symbol ("." and "_").) } ,:allow_blank => true , on: :update
 
+  validates :cover_preset, inclusion: { in: ('0'..'26').to_a | (0..26).to_a | [nil] }
+
   mount_uploader :photo_group, PhotoGroupUploader
   mount_uploader :cover, PhotoGroupUploader
 
