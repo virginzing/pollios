@@ -9,14 +9,15 @@
 <% unless @poll.get_photo.blank? %>
   <img class="image" src="<%= @poll.get_photo %>">
 <% end %>
-<% if @poll.rating? %>
-  <%= render(partial: "v1/partials/polls/rating_result") %>
+<% if @poll.voted? && @poll.rating? %>
+    <%= render(partial: "v1/partials/polls/rating_result") %>
+<% elsif @poll.voted? %>
+  <% @poll.choices.each do |choice| %>
+      <%= render(partial: "v1/partials/polls/result", locals: { choice: choice }) %>
+    <% end %>
+  <% end %>
 <% else %>
   <% @poll.choices.each do |choice| %>
-    <% if @poll.voted? %>
-      <%= render(partial: "v1/partials/polls/result", locals: { choice: choice }) %>
-    <% else %>
-      <%= render(partial: "v1/partials/polls/member_choice", locals: { choice: choice }) %>
-    <% end %>
+    <%= render(partial: "v1/partials/polls/member_choice", locals: { choice: choice }) %>
   <% end %>
 <% end %>
