@@ -15,6 +15,10 @@ module V1::Polls::Choices
       object
     end
 
+    def selected?
+      voted_choice_id == choice.id
+    end
+
     def vote
       vote = choice.vote.fdiv(total_vote)
       vote *= 100
