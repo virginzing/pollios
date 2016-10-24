@@ -398,6 +398,11 @@ namespace :admin do
     HistoryPromotePoll.delete_all
     HistoryPromotePoll.connection.execute('ALTER SEQUENCE history_promote_polls_id_seq RESTART WITH 1')
 
+    Rpush::Notification.delete_all
+    Rpush::Notification.connection.execute('ALTER SEQUENCE rpush_notifications_id_seq RESTART WITH 1')
+
+    Rpush::Apns::Feedback.delete_all
+    Rpush::Apns::Feedback.connection.execute('ALTER SEQUENCE rpush_feedback_id_seq RESTART WITH 1')
   end
 
   desc "Users in group that follow to owner group"
