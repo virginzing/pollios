@@ -5,6 +5,7 @@ module V1::Polls
     before_action :poll
 
     def detail
+      @show_sign_in_button = true
       @poll = DetailForMemberDecorator.new(@poll, @current_member) if member_signed_in?
       @poll = DetailForGuestDecorator.new(@poll) unless member_signed_in?
 

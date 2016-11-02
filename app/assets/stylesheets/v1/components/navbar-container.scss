@@ -6,6 +6,7 @@
 
   display: flex;
   flex-flow: row nowrap;
+  justify-content: flex-end;
   align-items: center;
 
   border-bottom: 1px solid darken($color-primary, 3%);
@@ -18,8 +19,16 @@
   z-index: 9000;
 
   > .logo {
+    margin-right: auto;
+
     padding: .3rem 0;
     height: $navbar-height;
+  }
+
+  > .link {
+    margin-left: 1.5rem;
+
+    color: white;
   }
 }
 

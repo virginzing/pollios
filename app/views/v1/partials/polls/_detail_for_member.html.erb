@@ -13,8 +13,8 @@
     <%= render(partial: "v1/partials/polls/rating_result") %>
 <% elsif @poll.voted? %>
   <% @poll.choices.each do |choice| %>
-      <%= render(partial: "v1/partials/polls/result", locals: { choice: choice }) %>
-    <% end %>
+    <%= render(partial: "v1/partials/polls/result", locals: { choice: choice }) %>
+  <% end %>
 <% else %>
   <% @poll.choices.each do |choice| %>
     <%= render(partial: "v1/partials/polls/member_choice", locals: { choice: choice }) %>
