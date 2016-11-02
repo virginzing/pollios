@@ -19,8 +19,6 @@ module Member::Private::GroupAction
   def build_new_group
     group = Group.new(new_group_params_hash)
 
-    group.assign_attributes(public_id: unique_group_public_id(group))
-
     group.save!
 
     group
@@ -38,6 +36,7 @@ module Member::Private::GroupAction
   end
 
   def initialize_new_group
+    generate_public_id
     set_cover
     set_creator_as_admin
     create_group_company
@@ -46,10 +45,15 @@ module Member::Private::GroupAction
     clear_group_member_relation_cache(member)
   end
 
+  def generate_public_id
+    group.assign_attributes(public_id: unique_group_public_id(group))
+  end
+
   def unique_group_public_id(group)
     joined_name = group.name.scan(/[a-zA-Z0-9_.]+/).join
     public_id = joined_name.first(20)
 
+    public_id = 'group' + group.id.to_s if group.public_id.nil? || group.public_id.empty?
     public_id = joined_name.first(10) + Time.now.to_i.to_s while Group.exists?(public_id: public_id)
 
     public_id
