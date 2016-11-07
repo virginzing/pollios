@@ -24,7 +24,7 @@ class WebApp::Authentication
     return nil if @failed
 
     authentication = ::Authentication.new(sentai_respond)
-    update_profile(authentication.member.email)
+    update_profile(authentication.member)
 
     authentication.member
   end
@@ -33,7 +33,10 @@ class WebApp::Authentication
     @failed
   end
 
-  def update_profile(email)
-    Member::SettingUpdate.new(Member.find_by(email: email)).profile(name: email.split('@').first)
+  def update_profile(member)
+    Member::SettingUpdate.new(member).profile(
+      name: member.email.split('@').first \
+      , description: 'Pollios User (via Pollios Web)'
+    )
   end
 end
