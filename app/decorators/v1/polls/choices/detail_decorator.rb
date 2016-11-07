@@ -27,6 +27,10 @@ module V1::Polls::Choices
       "#{vote}%"
     end
 
+    def vote_count
+      choice.vote
+    end
+
     def voted?
       choice.id == voted_choice_id
     end

@@ -1,4 +1,4 @@
 <div class="choice result <%= choice.selected? ? 'selected' : '' %>">
-  <%= choice.answer %> - <%= choice.vote %>
+  <%= choice.answer %> - <%= choice.vote %> (<%= choice.vote_count %>)
   <span class="percentage" style="width: <%= choice.vote %>"></span>
 </div>
