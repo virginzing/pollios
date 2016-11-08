@@ -66,7 +66,7 @@ class Authentication::PolliosApp
     end
 
     def update_profile(member)
-      Member::SettingUpdate.new(member).profile(name: member.email.split('@').first)
+      member.update!(fullname: member.email.split('@').first)
     end
 
     def os_identify(params)
