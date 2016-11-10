@@ -408,7 +408,7 @@ class Member < ActiveRecord::Base
   end
 
   def get_name
-    fullname.presence || ""
+    fullname.presence || 'No name'
   end
 
   def get_username

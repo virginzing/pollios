@@ -39,8 +39,8 @@ class WebApp::Authentication
   end
 
   def update_profile(member)
-    Member::SettingUpdate.new(member).profile(
-      name: member.email.split('@').first \
+    member.update!(
+      fullname: member.email.split('@').first \
       , description: 'Pollios User (via Pollios Web)'
     )
   end

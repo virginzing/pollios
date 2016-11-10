@@ -2,7 +2,7 @@ module Pollios::V1::Shared
   class MemberEntity < Pollios::V1::BaseEntity
 
     expose :id, as: :member_id
-    expose :fullname, as: :name
+    expose :get_name, as: :name
     expose :description
     expose :get_avatar, as: :avatar
     expose :get_cover_image, as: :cover, unless: -> (obj, _) { obj.get_cover_image.empty? }
