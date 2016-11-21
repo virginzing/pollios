@@ -18,13 +18,13 @@ module Pollios::V1::CurrentMemberAPI
     end
 
     def message
-      return poll_message if type == 'Poll'
+      return poll_message if type == 'Poll' || type == 'Comment'
       object.message
     end
 
     def poll_message
       return "#{sender_name} #{action_message} \"#{poll_title}\"" if voted_or_asked?
-      object.message 
+      object.message
     end
 
     def action_message

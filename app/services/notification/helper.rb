@@ -9,7 +9,7 @@ module Notification::Helper
 
   def recipient_list(member_list)
     member_list = without_sender(member_list)
-    
+
     without_outgoing_blocked(member_list)
   end
 
@@ -77,11 +77,12 @@ module Notification::Helper
   def create_notification(recipient_list, type, message, data, options = { log: true, push: true })
     log = options[:log]
     push = options[:push]
+    truncated_message = truncate_message(message)
 
     increase_notification_count(recipient_list)
 
-    create_update_log(recipient_list, message + '.', data) if log
-    create_push(devices_receive_notification(recipient_list, type), truncate_message(message), data) if push
+    create_update_log(recipient_list, truncated_message, data) if log
+    create_push(devices_receive_notification(recipient_list, type), truncated_message, data) if push
   end
 
   def devices_receive_notification(recipient_list, type)

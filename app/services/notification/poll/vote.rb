@@ -32,7 +32,7 @@ class Notification::Poll::Vote
       series: poll.series,
       anonymous: anonymous,
       action: ACTION[:vote]
-    } 
+    }
   end
 
   private
