@@ -63,7 +63,7 @@ module Poll::Private::DirectAccess
     request = Net::HTTP::Get.new(uri.request_uri)
     response = http.request(request)
 
-    response.code == Net::HTTPOK
+    response.code.to_i == Net::HTTPOK
   end
 
   def qrcode_image_url_on_cloudinary
