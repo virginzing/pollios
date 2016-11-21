@@ -24,8 +24,9 @@ class Member::Recommendation
 
   def officials
     followings_ids = member_listing.followings.map(&:id)
-    
+
     Member.viewing_by_member(member)
+      .where(first_signup: false)
       .where('((member_type = 1) OR (member_type = 3 AND show_recommend = true)) AND id NOT IN (?)' \
       , followings_ids | blocks_ids | friends_ids | unrecomment_ids | [member.id])
       .order('created_at desc')
@@ -34,6 +35,7 @@ class Member::Recommendation
 
   def facebooks
     member_using_facebook = Member.viewing_by_member(member)
+                            .where(first_signup: false)
                             .where('status_account = 1 AND member_type = 0')
                             .where(fb_id: member.list_fb_id, first_signup: false)
 
@@ -42,6 +44,7 @@ class Member::Recommendation
 
   def friends
     Member.viewing_by_member(member)
+      .where(first_signup: false)
       .where('status_account = 1 AND member_type = 0 AND id IN (?) AND id NOT IN (?)' \
       , mutual_friends_ids | mutual_group_ids | most_friends_ids.take(10)\
       , facebooks.map(&:id) | mebmer_have_relation_member_ids | unrecomment_ids | [member.id])

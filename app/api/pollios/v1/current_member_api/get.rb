@@ -1,7 +1,7 @@
 module Pollios::V1::CurrentMemberAPI
   class Get < Grape::API
     version 'v1', using: :path
-    
+
     resource :current_member do
 
       resource :settings do
@@ -78,9 +78,9 @@ module Pollios::V1::CurrentMemberAPI
         get '/0' do
           old_reward_data_with_maintenance_mode
         end
-      end 
+      end
 
-      
+
       resource :requests do
         helpers do
           def requests_for_member
@@ -115,13 +115,13 @@ module Pollios::V1::CurrentMemberAPI
         end
 
         resource :friends do
-          desc 'returns list of incoming friends requests' 
+          desc 'returns list of incoming friends requests'
           get '/incoming' do
             present :members, member_listing.friend_request \
             , with: Pollios::V1::Shared::MemberForListEntity
           end
 
-          desc 'returns list of outgoing friends requests' 
+          desc 'returns list of outgoing friends requests'
           get '/outgoing' do
             present :members, member_listing.your_request \
             , with: Pollios::V1::Shared::MemberForListEntity
@@ -129,13 +129,13 @@ module Pollios::V1::CurrentMemberAPI
         end
 
         resource :groups do
-          desc 'returns list of incoming groups requests' 
+          desc 'returns list of incoming groups requests'
           get '/incoming' do
             present :groups, group_listing.got_invitations \
             , with: Pollios::V1::Shared::GroupForListEntity
           end
 
-          desc 'returns list of outgoing groups requests' 
+          desc 'returns list of outgoing groups requests'
           get '/outgoing' do
             present :groups, group_listing.requesting_to_joins \
             , with: Pollios::V1::Shared::GroupForListEntity
@@ -143,13 +143,13 @@ module Pollios::V1::CurrentMemberAPI
         end
 
         resource :recommendations do
-          desc 'returns list of recommend official member' 
+          desc 'returns list of recommend official member'
           get '/officials' do
             present :members, recommendations.officials \
             , with: Pollios::V1::Shared::MemberForListEntity
           end
 
-          desc 'returns list of recommend member' 
+          desc 'returns list of recommend member'
           get '/friends' do
             present :members, recommendations.friends \
             , with: Pollios::V1::Shared::MemberForListEntity
@@ -161,7 +161,7 @@ module Pollios::V1::CurrentMemberAPI
             , with: Pollios::V1::Shared::MemberForListEntity
           end
 
-          desc 'returns list of recommend group' 
+          desc 'returns list of recommend group'
           get '/groups' do
             present :groups, recommendations.groups \
             , with: Pollios::V1::Shared::GroupForListEntity
@@ -171,8 +171,8 @@ module Pollios::V1::CurrentMemberAPI
 
       desc 'returns notification and request counts for current member'
       get '/badges' do
-        { 
-          notifications: current_member.notification_count, 
+        {
+          notifications: current_member.notification_count,
           requests: current_member.request_count
         }
       end
@@ -207,9 +207,9 @@ module Pollios::V1::CurrentMemberAPI
         get '/presets' do
           presets = Member::PresetList.new(current_member).presets
           present :presets, presets, with: PresetEntity
-        end    
+        end
       end
     end
-    
+
   end
 end
