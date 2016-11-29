@@ -41,6 +41,12 @@ module Poll::Private::DirectAccess
     Cloudinary::Uploader.upload(qrcode_composed_image_path, public_id: encode_poll_id)
   end
 
+  def qrcode_image_url_with_poll_image
+    photo = @poll.get_photo.split('/')
+    photo.insert(7, "w_588,o_78,l_#{encode_poll_id}.png")
+    photo.join('/')
+  end
+
   def delete_qrcode_image
     File.delete(qrcode_raw_image_path)
     File.delete(qrcode_composed_image_path)
@@ -52,10 +58,14 @@ module Poll::Private::DirectAccess
     url = upload_composed_qrcode_to_cloudinary['secure_url']
     delete_qrcode_image
 
-    url
+    return url if @poll.get_photo.blank?
+
+    qrcode_image_url_with_poll_image
   end
 
   def qrcode_image_on_cloudinary_exist?
+    return @has_image unless @has_image.nil?
+    
     uri = URI.parse(qrcode_image_url_on_cloudinary)
 
     http = Net::HTTP.new(uri.host, uri.port)
@@ -63,10 +73,14 @@ module Poll::Private::DirectAccess
     request = Net::HTTP::Get.new(uri.request_uri)
     response = http.request(request)
 
-    response.code.to_i == 200
+    @has_image = response.code.to_i == 200
+
+    @has_image
   end
 
   def qrcode_image_url_on_cloudinary
-    Cloudinary::Utils.cloudinary_url(encode_poll_id + '.png')
+    return Cloudinary::Utils.cloudinary_url(encode_poll_id + '.png') if @poll.get_photo.blank?
+
+    qrcode_image_url_with_poll_image
   end
 end

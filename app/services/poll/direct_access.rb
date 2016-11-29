@@ -3,10 +3,11 @@ require 'net/http'
 class Poll::DirectAccess
   include Poll::Private::DirectAccess
 
-  attr_reader :poll
+  attr_reader :poll, :has_image
 
   def initialize(poll)
     @poll = poll
+    @has_image = nil
   end
   
   def open_app_url
