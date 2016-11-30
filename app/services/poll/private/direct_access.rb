@@ -44,7 +44,7 @@ module Poll::Private::DirectAccess
   def qrcode_image_url_with_poll_image
     photo = @poll.get_photo.split('/')
     photo.insert(7, "w_588,o_78,l_#{encode_poll_id}.png")
-    photo.join('/')
+    photo.join('/').gsub(/_588/, '_200')
   end
 
   def delete_qrcode_image
