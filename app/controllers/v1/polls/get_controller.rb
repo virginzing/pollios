@@ -11,7 +11,7 @@ module V1::Polls
 
       set_meta(
         title: @poll.title,
-        description: @poll.member.fullname,
+        description: "asked by #{@poll.member.fullname}",
         url: request.original_url,
         image: @poll.qrcode_image_url
       )
