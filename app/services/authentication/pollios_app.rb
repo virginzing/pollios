@@ -33,7 +33,7 @@ class Authentication::PolliosApp
       }
       authenticate = Authentication.new(sentai_respond.merge!(hash))
       fail ExceptionHandler::UnprocessableEntity unless authenticate.activate_account?
-      update_profile(authentication.member)
+      update_profile(authenticate.member)
 
       ApnDevice.update_detail(authenticate.member, params[:device_token] \
         , model_identify(params), os_identify(params))
