@@ -121,7 +121,7 @@ gem 'devise'
 gem "sass", "~> 3.2.5"
 gem "gretel"
 
-gem 'rails_admin_flatly_theme', :git => 'git://github.com/konjoot/rails_admin_flatly_theme.git'
+gem 'rails_admin_flatly_theme', :git => 'https://github.com/konjoot/rails_admin_flatly_theme.git'
 gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem "sidekiq-cron", "~> 0.2.0"
@@ -144,7 +144,7 @@ gem 'will_paginate_mongoid'
 
 # gem 'rollbar'  # for Notifier
 
-gem 'itunes-receipt' , :git => 'git://github.com/nov/itunes-receipt.git'
+gem 'itunes-receipt' , :git => 'https://github.com/nov/itunes-receipt.git'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 # gem 'zeus'
@@ -166,7 +166,7 @@ gem 'actionpack-page_caching'
 gem 'active_model_serializers', '0.9.2'
 gem 'draper', '1.4.0'
 
-gem 'batch_api', :git => 'git://github.com/easyPEP/batch_api.git'
+gem 'batch_api', :git => 'https://github.com/easyPEP/batch_api.git'
 
 gem 'api_taster'
 gem 'friendly_id', '5.0.4'
