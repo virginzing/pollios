@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/CatFlyFlyFly/apn_on_rails.git
+  remote: https://github.com/CatFlyFlyFly/apn_on_rails
   revision: 0076e32f5e4794a6526780a0cbcd7f3d2801e1e7
   specs:
     apn_on_rails (0.5.1)
@@ -8,45 +8,21 @@ GIT
       configatron
 
 GIT
-  remote: git://github.com/amoeba-rb/amoeba.git
-  revision: 6ebb1a26393ce66f668e3582e6a938aed3431e91
+  remote: https://github.com/amoeba-rb/amoeba
+  revision: 2471031c2643f784cc1f705ef87bcacb04d152ee
   specs:
-    amoeba (3.0.0)
+    amoeba (3.1.0)
       activerecord (>= 3.2.6)
 
 GIT
-  remote: git://github.com/bwillis/versioncake.git
-  revision: d6a8972f014eab58b38f267fada269e72f0aa89b
+  remote: https://github.com/bwillis/versioncake
+  revision: 7c1d9d2694abc3954cf709ef072700e79e1042aa
   specs:
-    versioncake (2.5.0)
+    versioncake (3.2.0)
       actionpack (>= 3.2)
       activesupport (>= 3.2)
       railties (>= 3.2)
       tzinfo
-
-GIT
-  remote: git://github.com/mongoid/mongoid.git
-  revision: 63ece9973709a837a1817824d202b367db3e3688
-  specs:
-    mongoid (5.0.0.beta)
-      activemodel (~> 4.0)
-      mongo (= 2.1.0.beta)
-      origin (~> 2.1)
-      tzinfo (>= 0.3.37)
-
-GIT
-  remote: git://github.com/mperham/dalli.git
-  revision: 819dc9dce78aa678233ba58722a6f3dd6b6ff508
-  specs:
-    dalli (2.7.4)
-
-GIT
-  remote: git://github.com/rails/jbuilder.git
-  revision: dfc58d44b7327bc9032f96aa0f8bf440d0e4e5e1
-  specs:
-    jbuilder (2.3.0)
-      activesupport (>= 3.0.0, < 5)
-      multi_json (~> 1.2)
 
 GIT
   remote: https://github.com/easyPEP/batch_api.git
@@ -64,6 +40,22 @@ GIT
       rails_admin (< 0.6.6)
 
 GIT
+  remote: https://github.com/mongoid/mongoid
+  revision: 63ece9973709a837a1817824d202b367db3e3688
+  specs:
+    mongoid (5.0.0.beta)
+      activemodel (~> 4.0)
+      mongo (= 2.1.0.beta)
+      origin (~> 2.1)
+      tzinfo (>= 0.3.37)
+
+GIT
+  remote: https://github.com/mperham/dalli
+  revision: 0af0200475db5ab6aa551dae026a932f6fece210
+  specs:
+    dalli (2.7.6)
+
+GIT
   remote: https://github.com/nov/itunes-receipt.git
   revision: cbe5d7f912f46cdb1cd93c8974677db6c090881b
   specs:
@@ -72,6 +64,14 @@ GIT
       i18n
       json (>= 1.4.3)
       restclient_with_cert
+
+GIT
+  remote: https://github.com/rails/jbuilder.git
+  revision: 1e8b7416609d51fa6e3a32d7e7d17b9cf50e11f0
+  specs:
+    jbuilder (2.6.1)
+      activesupport (>= 3.0.0, < 5.1)
+      multi_json (~> 1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -351,7 +351,7 @@ GEM
     omniauth-oauth2 (1.0.3)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
-    origin (2.1.1)
+    origin (2.3.0)
     orm_adapter (0.5.0)
     paranoia (2.1.3)
       activerecord (~> 4.0)
