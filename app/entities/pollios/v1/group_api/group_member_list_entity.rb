@@ -8,7 +8,7 @@ module Pollios::V1::GroupAPI
 
     def inviter_name
       return Member.cached_find(object.member_invite_id).fullname if object.member_invite_id.present?
-      "Anonymous Pollios User"
+      "Voting on a group poll"
     end
   end
 end
