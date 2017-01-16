@@ -26,7 +26,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', github: 'rails/jbuilder'
+gem 'jbuilder', :git 'https://github.com/rails/jbuilder.git' 
 
 # gem 'foundation-rails', github: 'zurb/foundation-rails'
 # gem 'foundation_rails_helper'
@@ -60,7 +60,7 @@ end
 group :production do
   gem 'rails_12factor'
   gem 'libv8', '~> 3.16.14.0'
-  gem 'therubyracer', :platform => :ruby
+  gem 'therubyracer', platform: :ruby
   gem 'unicorn'
   gem 'unicorn-worker-killer'
 end
@@ -88,13 +88,13 @@ group :test do
 end
 
 gem 'wannabe_bool'
-gem 'versioncake', github: 'bwillis/versioncake'
+gem 'versioncake', git: 'https://github.com/bwillis/versioncake'
 gem 'rest-client', '~> 2.0.0'
-gem 'mongoid', github: 'mongoid/mongoid'
+gem 'mongoid', git: 'https://github.com/mongoid/mongoid'
 gem 'bson' #, '~> 2.2'
 gem 'bson_ext'
 # gem 'mongoid_auto_increment_id'
-gem 'dalli',  github: 'mperham/dalli'
+gem 'dalli',  git: 'https://github.com/mperham/dalli'
 gem 'memcachier'
 gem 'carrierwave'
 gem 'cloudinary'
@@ -103,7 +103,7 @@ gem 'will_paginate-foundation'
 gem 'nested_form'
 gem 'simple_form'
 gem 'decent_exposure'
-gem 'apn_on_rails', github: 'CatFlyFlyFly/apn_on_rails'
+gem 'apn_on_rails', git: 'https://github.com/CatFlyFlyFly/apn_on_rails'
 
 gem 'rqrcode'
 gem 'rqrcode-rails3'
@@ -113,7 +113,7 @@ gem 'mini_magick'
 
 gem 'randumb'
 gem 'figaro'
-gem 'amoeba', github: 'amoeba-rb/amoeba'
+gem 'amoeba', git: 'https://github.com/amoeba-rb/amoeba'
 
 gem 'rails_admin'
 gem 'devise'
@@ -121,12 +121,12 @@ gem 'devise'
 gem "sass", "~> 3.2.5"
 gem "gretel"
 
-gem 'rails_admin_flatly_theme', :git => 'https://github.com/konjoot/rails_admin_flatly_theme.git'
+gem 'rails_admin_flatly_theme', git: 'https://github.com/konjoot/rails_admin_flatly_theme.git'
 gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem "sidekiq-cron", "~> 0.2.0"
 
-gem 'sinatra', '>= 1.3.0', :require => nil
+gem 'sinatra', '>= 1.3.0', require: nil
 # gem 'houston'
 gem 'htmlentities'
 # gem 'breadcrumbs_on_rails'
@@ -144,7 +144,7 @@ gem 'will_paginate_mongoid'
 
 # gem 'rollbar'  # for Notifier
 
-gem 'itunes-receipt' , :git => 'https://github.com/nov/itunes-receipt.git'
+gem 'itunes-receipt' , git: 'https://github.com/nov/itunes-receipt.git'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 # gem 'zeus'
@@ -166,7 +166,7 @@ gem 'actionpack-page_caching'
 gem 'active_model_serializers', '0.9.2'
 gem 'draper', '1.4.0'
 
-gem 'batch_api', :git => 'https://github.com/easyPEP/batch_api.git'
+gem 'batch_api', git: 'https://github.com/easyPEP/batch_api.git'
 
 gem 'api_taster'
 gem 'friendly_id', '5.0.4'

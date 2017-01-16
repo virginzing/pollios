@@ -25,21 +25,6 @@ GIT
       tzinfo
 
 GIT
-  remote: git://github.com/easyPEP/batch_api.git
-  revision: d44a3718f78d78773340619c988cbb80d56e18df
-  specs:
-    batch_api (0.2.1)
-      middleware
-
-GIT
-  remote: git://github.com/konjoot/rails_admin_flatly_theme.git
-  revision: 1156afdb42832c58c84b796ee182892604fe7a5f
-  specs:
-    rails_admin_flatly_theme (1.1.0)
-      rails (> 3.1.3)
-      rails_admin (< 0.6.6)
-
-GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: 63ece9973709a837a1817824d202b367db3e3688
   specs:
@@ -56,7 +41,30 @@ GIT
     dalli (2.7.4)
 
 GIT
-  remote: git://github.com/nov/itunes-receipt.git
+  remote: git://github.com/rails/jbuilder.git
+  revision: dfc58d44b7327bc9032f96aa0f8bf440d0e4e5e1
+  specs:
+    jbuilder (2.3.0)
+      activesupport (>= 3.0.0, < 5)
+      multi_json (~> 1.2)
+
+GIT
+  remote: https://github.com/easyPEP/batch_api.git
+  revision: d44a3718f78d78773340619c988cbb80d56e18df
+  specs:
+    batch_api (0.2.1)
+      middleware
+
+GIT
+  remote: https://github.com/konjoot/rails_admin_flatly_theme.git
+  revision: 1156afdb42832c58c84b796ee182892604fe7a5f
+  specs:
+    rails_admin_flatly_theme (1.1.0)
+      rails (> 3.1.3)
+      rails_admin (< 0.6.6)
+
+GIT
+  remote: https://github.com/nov/itunes-receipt.git
   revision: cbe5d7f912f46cdb1cd93c8974677db6c090881b
   specs:
     itunes-receipt (1.1.0)
@@ -64,14 +72,6 @@ GIT
       i18n
       json (>= 1.4.3)
       restclient_with_cert
-
-GIT
-  remote: git://github.com/rails/jbuilder.git
-  revision: dfc58d44b7327bc9032f96aa0f8bf440d0e4e5e1
-  specs:
-    jbuilder (2.3.0)
-      activesupport (>= 3.0.0, < 5)
-      multi_json (~> 1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -710,4 +710,4 @@ RUBY VERSION
    ruby 2.2.2p95
 
 BUNDLED WITH
-   1.13.1
+   1.13.2
