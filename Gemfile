@@ -9,7 +9,6 @@ gem 'sass-rails'
 gem 'less-rails'
 gem 'compass-rails'
 
-# gem 'therubyracer'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
@@ -28,9 +27,6 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', git: 'https://github.com/rails/jbuilder.git' 
 
-# gem 'foundation-rails', github: 'zurb/foundation-rails'
-# gem 'foundation_rails_helper'
-
 gem 'enumerize', '0.8.0'
 gem 'pg', '0.17.0'
 gem 'activerecord-postgres-hstore'
@@ -39,22 +35,17 @@ gem 'roo'
 gem 'benchmark-ips'
 gem "paranoia", "~> 2.0"
 
-# gem "squeel"
 
 group :doc do
-  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
 
 group :development do
-  # gem 'sqlite3'
-  # gem 'thin'
   gem 'quiet_assets'
   gem 'proxylocal'
   gem 'meta_request'
   gem 'annotate'
   gem 'pry-rails'
-  # gem 'rack-mini-profiler'
 end
 
 group :production do
@@ -91,9 +82,8 @@ gem 'wannabe_bool'
 gem 'versioncake', git: 'https://github.com/bwillis/versioncake'
 gem 'rest-client', '~> 2.0.0'
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid'
-gem 'bson' #, '~> 2.2'
+gem 'bson'
 gem 'bson_ext'
-# gem 'mongoid_auto_increment_id'
 gem 'dalli',  git: 'https://github.com/mperham/dalli'
 gem 'memcachier'
 gem 'carrierwave'
@@ -117,7 +107,6 @@ gem 'amoeba', git: 'https://github.com/amoeba-rb/amoeba'
 
 gem 'rails_admin'
 gem 'devise'
-# gem 'paper_trail', '~> 3.0.6'
 gem "sass", "~> 3.2.5"
 gem "gretel"
 
@@ -127,9 +116,7 @@ gem 'sidekiq-unique-jobs'
 gem "sidekiq-cron", "~> 0.2.0"
 
 gem 'sinatra', '>= 1.3.0', require: nil
-# gem 'houston'
 gem 'htmlentities'
-# gem 'breadcrumbs_on_rails'
 gem 'nprogress-rails'
 gem 'yajl-ruby'
 gem 'jbuilder_cache_multi'
@@ -142,17 +129,12 @@ gem 'pg_search'
 
 gem 'will_paginate_mongoid'
 
-# gem 'rollbar'  # for Notifier
-
 gem 'itunes-receipt' , git: 'https://github.com/nov/itunes-receipt.git'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
-# gem 'zeus'
 
 gem 'rack-cache'
 
-# gem 'axlsx'
-# gem 'axlsx_rails'
 gem 'rubyzip', '>= 1.0.0'
 gem 'zip-zip'
 gem 'rolify'
@@ -174,12 +156,8 @@ gem 'friendly_id', '5.0.4'
 gem 'settingslogic'
 gem 'unscoped_associations'
 
-# gem 'oink'
-
 gem 'grape'
-#gem 'grape-jbuilder'
 gem 'grape-entity'
-#gem 'grape-active_model_serializers'
 gem 'hashie-forbidden_attributes'
 
 gem 'rpush'
