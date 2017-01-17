@@ -15,16 +15,6 @@ GIT
       activerecord (>= 3.2.6)
 
 GIT
-  remote: https://github.com/bwillis/versioncake
-  revision: 7c1d9d2694abc3954cf709ef072700e79e1042aa
-  specs:
-    versioncake (3.2.0)
-      actionpack (>= 3.2)
-      activesupport (>= 3.2)
-      railties (>= 3.2)
-      tzinfo
-
-GIT
   remote: https://github.com/easyPEP/batch_api.git
   revision: d44a3718f78d78773340619c988cbb80d56e18df
   specs:
@@ -575,6 +565,11 @@ GEM
     uniform_notifier (1.9.0)
     unscoped_associations (0.6.5)
       activerecord
+    versioncake (2.5.0)
+      actionpack (>= 3.2)
+      activesupport (>= 3.2)
+      railties (>= 3.2)
+      tzinfo
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -697,7 +692,7 @@ DEPENDENCIES
   unicorn
   unicorn-worker-killer
   unscoped_associations
-  versioncake!
+  versioncake (~> 2.5.0)
   wannabe_bool
   will_paginate
   will_paginate-bootstrap
@@ -710,4 +705,4 @@ RUBY VERSION
    ruby 2.2.2p95
 
 BUNDLED WITH
-   1.13.2
+   1.13.3

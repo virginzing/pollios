@@ -79,7 +79,7 @@ group :test do
 end
 
 gem 'wannabe_bool'
-gem 'versioncake', git: 'https://github.com/bwillis/versioncake'
+gem 'versioncake', '~> 2.5.0'
 gem 'rest-client', '~> 2.0.0'
 gem 'mongoid', git: 'https://github.com/mongoid/mongoid'
 gem 'bson'
