@@ -436,7 +436,7 @@ GEM
     rb-fsevent (0.9.5)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
-    rdoc (4.2.0)
+    rdoc (4.3.0)
     redcarpet (3.3.2)
     redis (3.2.1)
     redis-namespace (1.5.2)
@@ -707,7 +707,7 @@ DEPENDENCIES
   zip-zip
 
 RUBY VERSION
-   ruby 2.2.2p95
+   ruby 2.3.1p112
 
 BUNDLED WITH
-   1.13.3
+   1.15.0
