@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.3.1"
+ruby "2.3.3"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'
 
@@ -34,7 +34,6 @@ gem 'nested-hstore'
 gem 'roo'
 gem 'benchmark-ips'
 gem "paranoia", "~> 2.0"
-
 
 group :doc do
   gem 'sdoc', require: false
@@ -73,7 +72,9 @@ group :test do
   gem 'launchy'
   gem 'guard'
   gem 'shoulda-matchers', require: false
-  gem 'minitest-reporters', '1.0.5'
+  gem 'listen', '~> 2.10'
+  gem 'minitest', '~> 5.10.2'
+  gem 'minitest-reporters', '1.1.14'
   gem 'mini_backtrace',     '0.1.3'
   gem 'guard-minitest',     '2.3.1'
 end
