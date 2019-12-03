@@ -122,7 +122,7 @@ gem 'nprogress-rails', '0.1.6.7'
 gem 'yajl-ruby', '1.2.1'
 gem 'jbuilder_cache_multi', '0.0.3'
 
-gem 'chartkick', '1.3.2'
+gem 'chartkick', '3.3.0'
 
 gem 'configatron', '3.2.0'
 
