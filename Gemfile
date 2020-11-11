@@ -142,7 +142,7 @@ gem 'rolify', '4.0.0'
 
 gem 'apns', '1.0.0'
 
-gem 'omniauth', '1.2.2'
+gem 'omniauth', '1.4.2'
 gem 'omniauth-facebook', '1.4.0'
 
 gem 'actionpack-page_caching', '1.0.2'
