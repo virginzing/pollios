@@ -112,7 +112,7 @@ gem 'sass', '~> 3.2.5'
 gem 'gretel', '3.0.8'
 
 gem 'rails_admin_flatly_theme', git: 'https://github.com/konjoot/rails_admin_flatly_theme.git'
-gem 'sidekiq', '3.4.1'
+gem 'sidekiq', '5.2.8'
 gem 'sidekiq-unique-jobs', '3.0.14'
 gem 'sidekiq-cron', '~> 0.2.0'
 
