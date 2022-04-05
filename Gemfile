@@ -119,7 +119,7 @@ gem 'sidekiq-cron', '~> 0.2.0'
 gem 'sinatra', '>= 1.3.0', require: nil
 gem 'htmlentities', '4.3.3'
 gem 'nprogress-rails', '0.1.6.7'
-gem 'yajl-ruby', '1.2.1'
+gem 'yajl-ruby', '1.4.1'
 gem 'jbuilder_cache_multi', '0.0.3'
 
 gem 'chartkick', '1.3.2'
